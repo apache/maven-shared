@@ -1,4 +1,4 @@
-package org.apache.maven.script.marmalade;
+package org.apache.maven.script.marmalade.tags;
 
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
@@ -16,21 +16,19 @@ package org.apache.maven.script.marmalade;
  * limitations under the License.
  */
 
+import org.codehaus.marmalade.runtime.MarmaladeExecutionException;
+
 /**
  * @author jdcasey Created on Feb 8, 2005
  */
-public final class MarmaladeMojoExecutionDirectives
+public class RequiresProjectTag
+    extends AbstractBooleanValuedBodyTag
 {
 
-    public static final String METADATA_OUTVAR = "metadata";
-
-    public static final String SCRIPT_BASEPATH_INVAR = "basePath";
-
-    public static final String REQUEST_INVAR = "request";
-
-    public static final String RESPONSE_INVAR = "response";
-
-    private MarmaladeMojoExecutionDirectives()
+    protected void setValue( Boolean value ) throws MarmaladeExecutionException
     {
+        MetadataTag metadataTag = (MetadataTag) requireParent( MetadataTag.class );
+        metadataTag.setRequiresProject( value.booleanValue() );
     }
+
 }

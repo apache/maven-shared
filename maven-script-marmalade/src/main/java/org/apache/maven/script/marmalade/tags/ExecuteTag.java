@@ -1,4 +1,4 @@
-package org.apache.maven.script.marmalade;
+package org.apache.maven.script.marmalade.tags;
 
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
@@ -16,21 +16,16 @@ package org.apache.maven.script.marmalade;
  * limitations under the License.
  */
 
+import org.codehaus.marmalade.model.AbstractMarmaladeTag;
+
 /**
+ * Aggregator tag for the actual meat of the mojo. Simply a pass-through
+ * surrogate root tag for the eventual component-script (@see MojoTag).
+ * 
  * @author jdcasey Created on Feb 8, 2005
  */
-public final class MarmaladeMojoExecutionDirectives
+public class ExecuteTag
+    extends AbstractMarmaladeTag
 {
 
-    public static final String METADATA_OUTVAR = "metadata";
-
-    public static final String SCRIPT_BASEPATH_INVAR = "basePath";
-
-    public static final String REQUEST_INVAR = "request";
-
-    public static final String RESPONSE_INVAR = "response";
-
-    private MarmaladeMojoExecutionDirectives()
-    {
-    }
 }

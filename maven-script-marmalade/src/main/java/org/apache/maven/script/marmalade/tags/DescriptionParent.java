@@ -1,4 +1,4 @@
-package org.apache.maven.script.marmalade;
+package org.apache.maven.script.marmalade.tags;
 
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
@@ -17,20 +17,11 @@ package org.apache.maven.script.marmalade;
  */
 
 /**
- * @author jdcasey Created on Feb 8, 2005
+ * @author jdcasey
  */
-public final class MarmaladeMojoExecutionDirectives
+public interface DescriptionParent
 {
 
-    public static final String METADATA_OUTVAR = "metadata";
+    void setDescription( String description );
 
-    public static final String SCRIPT_BASEPATH_INVAR = "basePath";
-
-    public static final String REQUEST_INVAR = "request";
-
-    public static final String RESPONSE_INVAR = "response";
-
-    private MarmaladeMojoExecutionDirectives()
-    {
-    }
 }

@@ -1,7 +1,7 @@
-package org.apache.maven.tools.plugin.extractor;
+package org.apache.maven.tools.plugin;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,22 @@ package org.apache.maven.tools.plugin.extractor;
  * limitations under the License.
  */
 
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.plugin.descriptor.PluginDescriptor;
-import org.apache.maven.tools.plugin.PluginToolsException;
-
-import java.util.Set;
-
 /**
- * @author jdcasey
+ * Error during the plugin tools.
+ *
+ * @author <a href="mailto:brett@apache.org">Brett Porter</a>
+ * @version $Id$
  */
-public interface MojoDescriptorExtractor
+public class PluginToolsException
+    extends Exception
 {
-    String ROLE = MojoDescriptorExtractor.class.getName();
+    public PluginToolsException( String message, Throwable throwable )
+    {
+        super( message, throwable );
+    }
 
-    Set execute( MavenProject project, PluginDescriptor pluginDescriptor )
-        throws PluginToolsException;
+    public PluginToolsException( String message )
+    {
+        super( message );    
+    }
 }

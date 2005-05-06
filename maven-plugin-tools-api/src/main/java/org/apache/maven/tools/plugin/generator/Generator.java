@@ -16,9 +16,8 @@ package org.apache.maven.tools.plugin.generator;
  * limitations under the License.
  */
 
-import org.apache.maven.project.MavenProject;
+import org.apache.maven.plugin.descriptor.PluginDescriptor;
 
-import java.util.Set;
 import java.io.IOException;
 
 /**
@@ -27,6 +26,6 @@ import java.io.IOException;
  */
 public interface Generator
 {
-    void execute( String destinationDirectory, Set mojoDescriptors, MavenProject project, String goalPrefix )
+    void execute( String destinationDirectory, PluginDescriptor pluginDescriptor )
         throws IOException;
 }

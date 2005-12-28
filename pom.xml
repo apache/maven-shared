@@ -6,7 +6,7 @@
   <groupId>org.apache.maven.shared</groupId>
   <artifactId>shared-components-parent</artifactId>
   <packaging>pom</packaging>
-  <version>1</version>
+  <version>1.0-SNAPSHOT</version>
   <name>Maven Shared APIs</name>
   <description>Maven shared-API parent</description>
   <url>http://maven.apache.org/maven2/shared/</url>
@@ -110,11 +110,8 @@
     </pluginRepository>
   </pluginRepositories>
   <modules>
-    <module>maven-shared-ant-caller</module>
     <module>maven-shared-io</module>
-    <module>maven-shared-make-tools</module>
     <module>maven-shared-monitor</module>
-    <module>maven-shared-rpm-tools</module>
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>

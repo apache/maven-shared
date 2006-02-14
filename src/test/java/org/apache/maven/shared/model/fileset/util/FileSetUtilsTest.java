@@ -13,6 +13,8 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.maven.shared.model.fileset.FileSet;
+import org.apache.maven.shared.monitor.BasicMonitor;
+import org.apache.maven.shared.monitor.Monitor;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.Commandline;
@@ -50,7 +52,10 @@ public class FileSetUtilsTest
         set.setDirectory( directory.getPath() );
         set.addInclude( "**/included.txt" );
         
-        String[] included = FileSetUtils.getIncludedFiles( set );
+        Monitor monitor = new BasicMonitor( System.out );
+        FileSetManager fileSetManager = new FileSetManager( monitor, true );
+        
+        String[] included = fileSetManager.getIncludedFiles( set );
         
         Assert.assertEquals( 1, included.length );
     }
@@ -72,7 +77,10 @@ public class FileSetUtilsTest
             set.addInclude( "**/included.txt" );
             set.setFollowSymlinks( false );
             
-            String[] included = FileSetUtils.getIncludedFiles( set );
+            Monitor monitor = new BasicMonitor( System.out );
+            FileSetManager fileSetManager = new FileSetManager( monitor, true );
+            
+            String[] included = fileSetManager.getIncludedFiles( set );
             
             Assert.assertEquals( 1, included.length );
         }        
@@ -96,7 +104,10 @@ public class FileSetUtilsTest
             set.addInclude( "**/linked-to-self" );
             set.setFollowSymlinks( false );
             
-            FileSetUtils.delete( set );
+            Monitor monitor = new BasicMonitor( System.out );
+            FileSetManager fileSetManager = new FileSetManager( monitor, true );
+            
+            fileSetManager.delete( set );
             
             Assert.assertFalse( subdir.exists() );
         }        
@@ -112,7 +123,10 @@ public class FileSetUtilsTest
         set.addInclude( "**/included.txt" );
         set.addInclude( "**/subdir" );
         
-        FileSetUtils.delete( set );
+        Monitor monitor = new BasicMonitor( System.out );
+        FileSetManager fileSetManager = new FileSetManager( monitor, true );
+        
+        fileSetManager.delete( set );
         
         Assert.assertFalse( "file in marked subdirectory still exists.", subdirFile.exists() );
     }

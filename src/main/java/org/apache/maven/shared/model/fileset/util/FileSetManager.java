@@ -11,21 +11,26 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.maven.shared.model.fileset.FileSet;
+import org.apache.maven.shared.monitor.Monitor;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 
-public final class FileSetUtils
+public class FileSetManager
 {
     
     private static final int DELETE_RETRY_SLEEP_MILLIS = 10;
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
+    
+    private final Monitor monitor;
+    private final boolean verbose;
 
-    private FileSetUtils()
+    public FileSetManager( Monitor monitor, boolean verbose )
     {
-        // deny construction.
+        this.monitor = monitor;
+        this.verbose = verbose;
     }
     
-    public static String[] getIncludedFiles( FileSet fileSet )
+    public String[] getIncludedFiles( FileSet fileSet )
     {
         DirectoryScanner scanner = scan( fileSet );
         
@@ -39,7 +44,7 @@ public final class FileSetUtils
         }
     }
 
-    public static String[] getIncludedDirectories( FileSet fileSet )
+    public String[] getIncludedDirectories( FileSet fileSet )
     {
         DirectoryScanner scanner = scan( fileSet );
         
@@ -53,7 +58,7 @@ public final class FileSetUtils
         }
     }
 
-    public static String[] getExcludedFiles( FileSet fileSet )
+    public String[] getExcludedFiles( FileSet fileSet )
     {
         DirectoryScanner scanner = scan( fileSet );
         
@@ -67,7 +72,7 @@ public final class FileSetUtils
         }
     }
 
-    public static String[] getExcludedDirectories( FileSet fileSet )
+    public String[] getExcludedDirectories( FileSet fileSet )
     {
         DirectoryScanner scanner = scan( fileSet );
         
@@ -81,7 +86,7 @@ public final class FileSetUtils
         }
     }
     
-    public static void delete( FileSet fileSet ) throws IOException
+    public void delete( FileSet fileSet ) throws IOException
     {
         Set deletablePaths = findDeletablePaths( fileSet );
         
@@ -95,10 +100,20 @@ public final class FileSetUtils
             {
                 if ( file.isDirectory() && ( fileSet.isFollowSymlinks() || !isSymlink( file ) ) )
                 {
+                    if ( verbose )
+                    {
+                        monitor.info( "Deleting directory: " + file );
+                    }
+                    
                     FileUtils.deleteDirectory( file );
                 }
                 else
                 {
+                    if ( verbose )
+                    {
+                        monitor.info( "Deleting file: " + file );
+                    }
+                    
                     if ( !delete( file ) )
                     {
                         throw new IOException( "Failed to delete file: " + file + ". Reason is unknown." );
@@ -108,7 +123,7 @@ public final class FileSetUtils
         }
     }
     
-    private static boolean isSymlink( File file ) throws IOException
+    private boolean isSymlink( File file ) throws IOException
     {
         File parent = file.getParentFile();
         File canonicalFile = file.getCanonicalFile();
@@ -116,7 +131,7 @@ public final class FileSetUtils
         return parent != null && ( !canonicalFile.getName().equals( file.getName() ) || !canonicalFile.getPath().startsWith( parent.getCanonicalPath() ) );
     }
 
-    private static Set findDeletablePaths( FileSet fileSet )
+    private Set findDeletablePaths( FileSet fileSet )
     {
         Set includes = findDeletableDirectories( fileSet );
         includes.addAll( findDeletableFiles( fileSet, includes ) );
@@ -124,7 +139,7 @@ public final class FileSetUtils
         return includes;
     }
 
-    private static Set findDeletableDirectories( FileSet fileSet )
+    private Set findDeletableDirectories( FileSet fileSet )
     {
         DirectoryScanner scanner = scan( fileSet );
         
@@ -175,7 +190,7 @@ public final class FileSetUtils
         return includes;
     }
 
-    private static Set findDeletableFiles( FileSet fileSet, Set deletableDirectories )
+    private Set findDeletableFiles( FileSet fileSet, Set deletableDirectories )
     {
         DirectoryScanner scanner = scan( fileSet );
         
@@ -242,7 +257,7 @@ public final class FileSetUtils
      * Others possible. If the delete does not work, call System.gc(),
      * wait a little and try again.
      */
-    private static boolean delete( File f )
+    private boolean delete( File f )
     {
         if ( !f.delete() )
         {
@@ -264,7 +279,7 @@ public final class FileSetUtils
         return true;
     }
 
-    private static DirectoryScanner scan( FileSet fileSet )
+    private DirectoryScanner scan( FileSet fileSet )
     {
         File basedir = new File( fileSet.getDirectory() );
         if ( !basedir.exists() )

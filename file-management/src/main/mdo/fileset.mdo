@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+
+<model>
+  <id>fileset</id>
+  <name>FileSet</name>
+  <description>
+    <![CDATA[
+	<p>
+	A definition of a file-set. This model defines how file-sets can be
+        captured, using directory, includes, and excludes.
+	</p>
+    ]]>
+  </description>
+  <defaults>
+    <default>
+      <key>package</key>
+      <value>org.apache.maven.shared.model.fileset</value>
+    </default>
+  </defaults>
+  <classes>
+    <class>
+      <name>SetBase</name>
+      <version>1.0.0</version>
+      <fields>
+        <field>
+          <name>followSymlinks</name>
+          <version>1.0.0</version>
+          <type>boolean</type>
+          <default>false</default>
+          <description>
+            Specifies whether symbolic links should be traversed, or handled as-is.
+          </description>
+        </field>
+        <field>
+          <name>outputDirectory</name>
+          <version>1.0.0</version>
+          <type>String</type>
+          <description>
+            Specifies the output directory relative to the root
+            of the root directory of the assembly.  For example,
+            "log" will put the specified files in the log directory.
+          </description>
+        </field>
+        <field>
+          <name>includes</name>
+          <version>1.0.0</version>
+          <association>
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
+          <description>
+            <![CDATA[
+            When &lt;include&gt; subelements are present, they define
+            a set of files and directory to include.
+            ]]>
+          </description>
+        </field>
+        <field>
+          <name>excludes</name>
+          <version>1.0.0</version>
+          <association>
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
+          <description>
+            <![CDATA[
+            When &lt;exclude&gt; subelements are present, they define
+            a set of files and directory to exclude.
+            ]]>
+          </description>
+        </field>
+        <field>
+          <name>fileMode</name>
+          <version>1.0.0</version>
+          <type>String</type>
+          <defaultValue>0644</defaultValue>
+          <description>
+            <![CDATA[
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other 
+            read-only. 
+            <a href="http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html">(more on unix-style permissions)</a>
+          	]]>
+          </description>
+        </field>
+        <field>
+          <name>directoryMode</name>
+          <version>1.0.0</version>
+          <type>String</type>
+          <defaultValue>0755</defaultValue>
+          <description>
+            <![CDATA[
+            Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
+            component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
+            the default value of 0644 translates to User read-write, Group and Other 
+            read-only. 
+            <a href="http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html">(more on unix-style permissions)</a>
+          	]]>
+          </description>
+        </field>
+      </fields>
+      <codeSegments>
+        <codeSegment>
+          <version>1.0.0</version>
+          <code><![CDATA[
+    public String[] getIncludesArray()
+    {
+        String[] includesArry = null;
+        java.util.Collection includes = getIncludes();
+        if ( includes != null && !includes.isEmpty() )
+        {
+            includesArry = new String[includes.size()];
+            includesArry = (String[]) includes.toArray( includesArry );
+        }
+        else if ( includes != null )
+        {
+            includesArry = new String[0];
+        }
+          
+        return includesArry;
+    }
+
+    public String[] getExcludesArray()
+    {
+        String[] excludesArry = null;
+        java.util.Collection excludes = getExcludes();
+        if ( excludes != null && !excludes.isEmpty() )
+        {
+            excludesArry = new String[excludes.size()];
+            excludesArry = (String[]) excludes.toArray( excludesArry );
+        }
+        else if ( excludes != null )
+        {
+            excludesArry = new String[0];
+        }
+          
+        return excludesArry;
+    }
+
+          ]]></code>
+        </codeSegment>
+      </codeSegments>
+    </class>
+    <class rootElement="true" xml.tagName="fileSet">
+      <name>FileSet</name>
+      <version>1.0.0</version>
+      <superClass>SetBase</superClass>
+      <fields>
+        <field>
+          <name>directory</name>
+          <version>1.0.0</version>
+          <type>String</type>
+          <description>
+            Absolute or relative from the module's directory.  For
+            example, "src/main/bin" would select this subdirectory
+            of the project in which this dependency is defined.
+          </description>
+          <required>true</required>
+        </field>
+        <field>
+          <name>lineEnding</name>
+          <version>1.0.0</version>
+          <type>String</type>
+          <description>
+            <![CDATA[
+            Controls the line-endings of files in this fileSet.
+            Valid values: 
+            <ul>
+              <li><b>"keep"</b> - Preserve all line endings</li>
+              <li><b>"unix"</b> - Use Unix-style line endings</li>
+              <li><b>"lf"</b> - Use a single line-feed line endings</li>
+              <li><b>"dos"</b> - Use DOS-style line endings</li>
+              <li><b>"crlf"</b> - Use Carraige-return, line-feed line endings</li>
+            </ul>
+            ]]>
+          </description>
+        </field>
+      </fields>
+    </class>
+  </classes>
+</model>
+

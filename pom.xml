@@ -112,6 +112,7 @@
   <modules>
     <module>maven-shared-io</module>
     <module>maven-shared-monitor</module>
+    <module>file-management</module>
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>

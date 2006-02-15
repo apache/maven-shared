@@ -13,8 +13,6 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.maven.shared.model.fileset.FileSet;
-import org.apache.maven.shared.monitor.BasicMonitor;
-import org.apache.maven.shared.monitor.Monitor;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.Commandline;
@@ -52,8 +50,7 @@ public class FileSetUtilsTest
         set.setDirectory( directory.getPath() );
         set.addInclude( "**/included.txt" );
         
-        Monitor monitor = new BasicMonitor( System.out );
-        FileSetManager fileSetManager = new FileSetManager( monitor, true );
+        FileSetManager fileSetManager = new FileSetManager();
         
         String[] included = fileSetManager.getIncludedFiles( set );
         
@@ -77,8 +74,7 @@ public class FileSetUtilsTest
             set.addInclude( "**/included.txt" );
             set.setFollowSymlinks( false );
             
-            Monitor monitor = new BasicMonitor( System.out );
-            FileSetManager fileSetManager = new FileSetManager( monitor, true );
+            FileSetManager fileSetManager = new FileSetManager();
             
             String[] included = fileSetManager.getIncludedFiles( set );
             
@@ -104,8 +100,7 @@ public class FileSetUtilsTest
             set.addInclude( "**/linked-to-self" );
             set.setFollowSymlinks( false );
             
-            Monitor monitor = new BasicMonitor( System.out );
-            FileSetManager fileSetManager = new FileSetManager( monitor, true );
+            FileSetManager fileSetManager = new FileSetManager();
             
             fileSetManager.delete( set );
             
@@ -123,8 +118,7 @@ public class FileSetUtilsTest
         set.addInclude( "**/included.txt" );
         set.addInclude( "**/subdir" );
         
-        Monitor monitor = new BasicMonitor( System.out );
-        FileSetManager fileSetManager = new FileSetManager( monitor, true );
+        FileSetManager fileSetManager = new FileSetManager();
         
         fileSetManager.delete( set );
         

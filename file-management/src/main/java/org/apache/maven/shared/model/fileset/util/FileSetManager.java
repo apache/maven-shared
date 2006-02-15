@@ -10,8 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.shared.model.fileset.FileSet;
-import org.apache.maven.shared.monitor.Monitor;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 
@@ -21,13 +21,25 @@ public class FileSetManager
     private static final int DELETE_RETRY_SLEEP_MILLIS = 10;
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
     
-    private final Monitor monitor;
     private final boolean verbose;
+    private final Log log;
 
-    public FileSetManager( Monitor monitor, boolean verbose )
+    public FileSetManager( Log log, boolean verbose )
     {
-        this.monitor = monitor;
+        this.log = log;
         this.verbose = verbose;
+    }
+    
+    public FileSetManager( Log log )
+    {
+        this.log = log;
+        this.verbose = false;
+    }
+    
+    public FileSetManager()
+    {
+        this.log = null;
+        this.verbose = false;
     }
     
     public String[] getIncludedFiles( FileSet fileSet )
@@ -102,7 +114,7 @@ public class FileSetManager
                 {
                     if ( verbose )
                     {
-                        monitor.info( "Deleting directory: " + file );
+                        log.info( "Deleting directory: " + file );
                     }
                     
                     FileUtils.deleteDirectory( file );
@@ -111,7 +123,7 @@ public class FileSetManager
                 {
                     if ( verbose )
                     {
-                        monitor.info( "Deleting file: " + file );
+                        log.info( "Deleting file: " + file );
                     }
                     
                     if ( !delete( file ) )

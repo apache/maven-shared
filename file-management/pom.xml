@@ -25,9 +25,9 @@
   
   <dependencies>
     <dependency>
-      <groupId>org.apache.maven.shared</groupId>
-      <artifactId>maven-shared-monitor</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <version>2.0</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>

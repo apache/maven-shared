@@ -13,7 +13,6 @@ import java.util.Set;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.codehaus.plexus.util.FileUtils;
 
 public class FileSetManager
 {
@@ -102,6 +101,11 @@ public class FileSetManager
     {
         Set deletablePaths = findDeletablePaths( fileSet );
         
+        if ( log != null && log.isDebugEnabled() )
+        {
+            log.debug( "Found deletable paths: " + String.valueOf( deletablePaths ).replace( ',', '\n' ) );
+        }        
+        
         for ( Iterator it = deletablePaths.iterator(); it.hasNext(); )
         {
             String path = (String) it.next();
@@ -112,16 +116,16 @@ public class FileSetManager
             {
                 if ( file.isDirectory() && ( fileSet.isFollowSymlinks() || !isSymlink( file ) ) )
                 {
-                    if ( verbose )
+                    if ( verbose && log != null )
                     {
                         log.info( "Deleting directory: " + file );
                     }
                     
-                    FileUtils.deleteDirectory( file );
+                    removeDir( file, fileSet.isFollowSymlinks() );
                 }
                 else
                 {
-                    if ( verbose )
+                    if ( verbose && log != null )
                     {
                         log.info( "Deleting file: " + file );
                     }
@@ -140,6 +144,11 @@ public class FileSetManager
         File parent = file.getParentFile();
         File canonicalFile = file.getCanonicalFile();
         
+        if ( log != null && log.isDebugEnabled() )
+        {
+            log.debug( "Checking for symlink:\nParent file's canonical path: " + parent.getCanonicalPath()
+                + "\nMy canonical path: " + canonicalFile.getPath() );
+        }        
         return parent != null && ( !canonicalFile.getName().equals( file.getName() ) || !canonicalFile.getPath().startsWith( parent.getCanonicalPath() ) );
     }
 
@@ -153,6 +162,11 @@ public class FileSetManager
 
     private Set findDeletableDirectories( FileSet fileSet )
     {
+        if ( verbose && log != null )
+        {
+            log.info( "Scanning for deletable directories." );
+        }
+        
         DirectoryScanner scanner = scan( fileSet );
         
         if ( scanner == null )
@@ -169,14 +183,30 @@ public class FileSetManager
         
         if ( !fileSet.isFollowSymlinks() )
         {
+            if ( verbose && log != null )
+            {
+                log.info( "Adding symbolic link dirs which were previously excluded to the list being deleted." );
+            }
+            
             // we need to see which entries were excluded because they're symlinks...
             scanner.setFollowSymlinks( true );
             scanner.scan();
+            
+            if ( log != null && log.isDebugEnabled() )
+            {
+                log.debug( "Originally marked for delete: " + includes );
+                log.debug( "Marked for preserve (with followSymlinks == false): " + excludes );
+            }
             
             List notSymlinks = Arrays.asList( scanner.getIncludedDirectories() );
             
             linksForDeletion.addAll( excludes );
             linksForDeletion.retainAll( notSymlinks );
+            
+            if ( log != null && log.isDebugEnabled() )
+            {
+                log.debug( "Symlinks marked for deletion (originally mismarked): " + linksForDeletion );
+            }
             
             excludes.removeAll( notSymlinks );
         }
@@ -191,7 +221,17 @@ public class FileSetManager
             
             while( parentPath != null )
             {
-                includes.remove( parentPath );
+                if ( log != null && log.isDebugEnabled() )
+                {
+                    log.debug( "Verifying path: " + parentPath + " is not present; contains file which is excluded." );
+                }
+                
+                boolean removed = includes.remove( parentPath );
+                
+                if ( removed && log != null && log.isDebugEnabled() )
+                {
+                    log.debug( "Path: " + parentPath + " was removed from delete list." );
+                }
                 
                 parentPath = new File( parentPath ).getParent();
             }
@@ -204,6 +244,11 @@ public class FileSetManager
 
     private Set findDeletableFiles( FileSet fileSet, Set deletableDirectories )
     {
+        if ( verbose && log != null )
+        {
+            log.info( "Re-scanning for deletable files." );
+        }
+        
         DirectoryScanner scanner = scan( fileSet );
         
         if ( scanner == null )
@@ -221,14 +266,30 @@ public class FileSetManager
         
         if ( !fileSet.isFollowSymlinks() )
         {
+            if ( verbose && log != null )
+            {
+                log.info( "Adding symbolic link files which were previously excluded to the list being deleted." );
+            }
+            
             // we need to see which entries were excluded because they're symlinks...
             scanner.setFollowSymlinks( true );
             scanner.scan();
+            
+            if ( log != null && log.isDebugEnabled() )
+            {
+                log.debug( "Originally marked for delete: " + includes );
+                log.debug( "Marked for preserve (with followSymlinks == false): " + excludes );
+            }
             
             List notSymlinks = Arrays.asList( scanner.getExcludedFiles() );
             
             linksForDeletion.addAll( excludes );
             linksForDeletion.retainAll( notSymlinks );
+            
+            if ( log != null && log.isDebugEnabled() )
+            {
+                log.debug( "Symlinks marked for deletion (originally mismarked): " + linksForDeletion );
+            }
             
             excludes.removeAll( notSymlinks );
         }
@@ -243,7 +304,17 @@ public class FileSetManager
             
             while( parentPath != null )
             {
-                includes.remove( parentPath );
+                if ( log != null && log.isDebugEnabled() )
+                {
+                    log.debug( "Verifying path: " + parentPath + " is not present; contains file which is excluded." );
+                }
+                
+                boolean removed = includes.remove( parentPath );
+                
+                if ( removed && log != null && log.isDebugEnabled() )
+                {
+                    log.debug( "Path: " + parentPath + " was removed from delete list." );
+                }
                 
                 parentPath = new File( parentPath ).getParent();
             }
@@ -251,19 +322,74 @@ public class FileSetManager
         
         includes.addAll( linksForDeletion );
         
-        for ( Iterator it = includes.iterator(); it.hasNext(); )
-        {
-            String path = (String) it.next();
-            
-            if ( includes.contains( new File( path ).getParent() ) )
-            {
-                it.remove();
-            }
-        }
+//        for ( Iterator it = includes.iterator(); it.hasNext(); )
+//        {
+//            String path = (String) it.next();
+//            
+//            if ( includes.contains( new File( path ).getParent() ) )
+//            {
+//                it.remove();
+//            }
+//        }
         
         return includes;
     }
 
+    /**
+     * Delete a directory
+     *
+     * @param dir the directory to delete
+     * @param followSymlinks whether to follow symbolic links, or simply delete the link
+     */
+    protected void removeDir( File dir, boolean followSymlinks )
+        throws IOException
+    {
+        String[] list = dir.list();
+        if ( list == null )
+        {
+            list = new String[0];
+        }
+        for ( int i = 0; i < list.length; i++ )
+        {
+            String s = list[i];
+            File f = new File( dir, s );
+            if ( f.isDirectory() && ( followSymlinks || !isSymlink( f ) ) )
+            {
+                removeDir( f, followSymlinks );
+            }
+            else
+            {
+                if ( !delete( f ) )
+                {
+                    String message = "Unable to delete file " + f.getAbsolutePath();
+// TODO:...
+//                    if ( failOnError )
+//                    {
+                        throw new IOException( message );
+//                    }
+//                    else
+//                    {
+//                        getLog().info( message );
+//                    }
+                }
+            }
+        }
+
+        if ( !delete( dir ) )
+        {
+            String message = "Unable to delete directory " + dir.getAbsolutePath();
+// TODO:...
+//            if ( failOnError )
+//            {
+                throw new IOException( message );
+//            }
+//            else
+//            {
+//                getLog().info( message );
+//            }
+        }
+    }
+    
     /**
      * Accommodate Windows bug encountered in both Sun and IBM JDKs.
      * Others possible. If the delete does not work, call System.gc(),

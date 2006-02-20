@@ -1,5 +1,21 @@
 package org.apache.maven.shared.model.fileset.util;
 
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +30,13 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.codehaus.plexus.util.DirectoryScanner;
 
+/**
+ * Provides operations for use with FileSet instances, such as retrieving the included/excluded
+ * files, deleting all matching entries, etc.
+ * 
+ * @author jdcasey
+ *
+ */
 public class FileSetManager
 {
     
@@ -23,24 +46,46 @@ public class FileSetManager
     private final boolean verbose;
     private final Log log;
 
+    /**
+     * Create a new manager instance with the supplied log instance and flag for whether to output
+     * verbose messages.
+     * 
+     * @param log The mojo log instance
+     * @param verbose Whether to output verbose messages
+     */
     public FileSetManager( Log log, boolean verbose )
     {
         this.log = log;
         this.verbose = verbose;
     }
     
+    /**
+     * Create a new manager instance with the supplied log instance. Verbose flag is set to false.
+     * 
+     * @param log The mojo log instance
+     */
     public FileSetManager( Log log )
     {
         this.log = log;
         this.verbose = false;
     }
     
+    /**
+     * Create a new manager instance with an empty log. Verbose flag is set to false.
+     * 
+     * @param log The mojo log instance
+     */
     public FileSetManager()
     {
         this.log = null;
         this.verbose = false;
     }
     
+    /**
+     * Get all the filenames which have been included by the rules in this fileset.
+     * @param fileSet The fileset defining rules for inclusion/exclusion, and base directory.
+     * @return the array of matching filenames, relative to the basedir of the file-set.
+     */
     public String[] getIncludedFiles( FileSet fileSet )
     {
         DirectoryScanner scanner = scan( fileSet );
@@ -55,6 +100,11 @@ public class FileSetManager
         }
     }
 
+    /**
+     * Get all the directory names which have been included by the rules in this fileset.
+     * @param fileSet The fileset defining rules for inclusion/exclusion, and base directory.
+     * @return the array of matching dirnames, relative to the basedir of the file-set.
+     */
     public String[] getIncludedDirectories( FileSet fileSet )
     {
         DirectoryScanner scanner = scan( fileSet );
@@ -69,6 +119,11 @@ public class FileSetManager
         }
     }
 
+    /**
+     * Get all the filenames which have been excluded by the rules in this fileset.
+     * @param fileSet The fileset defining rules for inclusion/exclusion, and base directory.
+     * @return the array of non-matching filenames, relative to the basedir of the file-set.
+     */
     public String[] getExcludedFiles( FileSet fileSet )
     {
         DirectoryScanner scanner = scan( fileSet );
@@ -83,6 +138,11 @@ public class FileSetManager
         }
     }
 
+    /**
+     * Get all the directory names which have been excluded by the rules in this fileset.
+     * @param fileSet The fileset defining rules for inclusion/exclusion, and base directory.
+     * @return the array of non-matching dirnames, relative to the basedir of the file-set.
+     */
     public String[] getExcludedDirectories( FileSet fileSet )
     {
         DirectoryScanner scanner = scan( fileSet );
@@ -97,6 +157,11 @@ public class FileSetManager
         }
     }
     
+    /**
+     * Delete the matching files and directories for the given file-set definition.
+     * @param fileSet The file-set matching rules, along with search base directory
+     * @throws IOException If a matching file cannot be deleted
+     */
     public void delete( FileSet fileSet ) throws IOException
     {
         Set deletablePaths = findDeletablePaths( fileSet );
@@ -341,7 +406,7 @@ public class FileSetManager
      * @param dir the directory to delete
      * @param followSymlinks whether to follow symbolic links, or simply delete the link
      */
-    protected void removeDir( File dir, boolean followSymlinks )
+    private void removeDir( File dir, boolean followSymlinks )
         throws IOException
     {
         String[] list = dir.list();

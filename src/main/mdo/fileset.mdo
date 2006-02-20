@@ -104,6 +104,9 @@
         <codeSegment>
           <version>1.0.0</version>
           <code><![CDATA[
+    /**
+     * Return the file-set inclusion rules in array form.
+     */
     public String[] getIncludesArray()
     {
         String[] includesArry = null;
@@ -121,6 +124,9 @@
         return includesArry;
     }
 
+    /**
+     * Return the file-set exclusion rules in array form.
+     */
     public String[] getExcludesArray()
     {
         String[] excludesArry = null;
@@ -146,6 +152,9 @@
       <name>FileSet</name>
       <version>1.0.0</version>
       <superClass>SetBase</superClass>
+      <description>
+        Defines the rules for matching and working with files in a given base directory.
+      </description>
       <fields>
         <field>
           <name>directory</name>

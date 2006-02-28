@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>shared-components-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1</version>
   </parent>
 
   <artifactId>maven-shared-io</artifactId>
@@ -25,14 +25,14 @@
   
   <dependencies>
     <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact-manager</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
       <version>1.0.4</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.shared</groupId>
-      <artifactId>maven-shared-monitor</artifactId>
-      <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

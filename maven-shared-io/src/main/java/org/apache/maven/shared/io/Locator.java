@@ -16,8 +16,6 @@ package org.apache.maven.shared.io;
  * limitations under the License.
  */
 
-import org.apache.maven.shared.monitor.BasicMonitor;
-import org.apache.maven.shared.monitor.Monitor;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -34,30 +32,13 @@ import java.net.URL;
  */
 public class Locator
 {
-    private Monitor monitor;
-
     /**
      * Create a Locator object.
      * 
      * @param logger the logger object to log with.
      */
-    public Locator( Monitor logger )
+    public Locator()
     {
-        this.monitor = logger;
-    }
-
-    /**
-     * Obtain a Log object.
-     * 
-     * @return the Log object.
-     */
-    private Monitor getLog()
-    {
-        if ( this.monitor == null )
-        {
-            this.monitor = new BasicMonitor( System.out );
-        }
-        return this.monitor;
     }
 
     /**
@@ -79,7 +60,6 @@ public class Locator
     public File resolveLocation( String location, String localfile )
         throws IOException
     {
-        getLog().debug( "resolveLocation(" + location + ", " + localfile + ")" );
         if ( StringUtils.isEmpty( location ) )
         {
             return null;
@@ -92,34 +72,28 @@ public class Locator
         {
             // Found a URL
             URL url = new URL( location );
-            getLog().debug( "Potential URL: " + url.toExternalForm() );
             FileUtils.copyURLToFile( url, retFile );
         }
         else
         {
-            getLog().debug( "Location is not a URL." );
             // Attempt a File.
             File fileLocation = new File( location );
             if ( fileLocation.exists() )
             {
                 // Found a File.
-                getLog().debug( "Potential File: " + fileLocation.getAbsolutePath() );
                 FileUtils.copyFile( fileLocation, retFile );
             }
             else
             {
-                getLog().debug( "Location is not a File." );
                 // Attempt a Resource.
                 URL url = this.getClass().getClassLoader().getResource( location );
                 if ( url != null )
                 {
                     // Found a Resource.
-                    getLog().debug( "Potential Resource: " + url.toExternalForm() );
                     FileUtils.copyURLToFile( url, retFile );
                 }
                 else
                 {
-                    getLog().debug( "Location is not a Resource." );
                     throw new IOException( "Unable to find location '" + location + "' as URL, File or Resource." );
                 }
             }

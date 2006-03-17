@@ -3,6 +3,12 @@
   xsi:noNamespaceSchemaLocation="http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.maven</groupId>
+    <artifactId>maven-parent</artifactId>
+    <version>1</version>
+    <relativePath>../pom/maven/pom.xml</relativePath>
+  </parent>
   <groupId>org.apache.maven.shared</groupId>
   <artifactId>shared-components-parent</artifactId>
   <packaging>pom</packaging>
@@ -14,29 +20,6 @@
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MNG</url>
   </issueManagement>
-  <ciManagement>
-    <system>continuum</system>
-    <notifiers>
-      <notifier>
-        <type>mail</type>
-        <configuration>
-          <address>commits@maven.apache.org</address>
-        </configuration>
-      </notifier>
-    </notifiers>
-  </ciManagement>
-  <developers>
-    <developer>
-      <id>jdcasey</id>
-      <name>John Casey</name>
-      <email>jdcasey@maven.org</email>
-      <organization>ASF</organization>
-      <roles>
-        <role>PMC Member</role>
-      </roles>
-      <timezone>-5</timezone>
-    </developer>
-  </developers>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -69,46 +52,12 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-  <organization>
-    <name>Apache Software Foundation</name>
-    <url>http://www.apache.org/</url>
-  </organization>
   <distributionManagement>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <name>Maven Central Development Repository</name>
-      <url>scp://repo1.maven.org/home/projects/maven/repository-staging/snapshots/maven2</url>
-    </snapshotRepository>
-    <repository>
-      <id>repo1</id>
-      <name>Maven Central Repository</name>
-      <url>scp://repo1.maven.org/home/projects/maven/repository-staging/to-ibiblio/maven2</url>
-    </repository>
     <site>
       <id>website</id>
       <url>scp://minotaur.apache.org/www/maven.apache.org/shared/</url>
     </site>
   </distributionManagement>
-  <repositories>
-    <repository>
-      <id>snapshots</id>
-      <name>Maven Central Development Repository</name>
-      <url>http://snapshots.maven.codehaus.org/maven2</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>snapshots</id>
-      <name>Maven Central Development Repository</name>
-      <url>http://snapshots.maven.codehaus.org/maven2</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </pluginRepository>
-  </pluginRepositories>
   <modules>
     <module>maven-shared-io</module>
     <module>maven-shared-monitor</module>
@@ -130,13 +79,6 @@
         </plugin>
       </plugins>
     </pluginManagement>
-    <extensions>
-      <extension>
-        <groupId>org.apache.maven.wagon</groupId>
-         <artifactId>wagon-ssh-external</artifactId>
-         <version>1.0-alpha-5</version>
-      </extension>
-    </extensions>
   </build>
   <reporting>
     <plugins>

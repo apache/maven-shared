@@ -1,0 +1,20 @@
+<component-set>
+  <components>
+    <component>
+      <role>org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator</role>
+      <role-hint>stub-evaluator</role-hint>
+      <implementation>org.apache.maven.plugins.testing.StubResolverExpressionEvaluator</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.plexus.PlexusContainer</role>
+          <field-name>container</field-name>
+        </requirement>
+      </requirements>
+    </component>
+    <component>
+      <role>org.apache.maven.artifact.Artifact</role>
+      <role-hint>stub</role-hint>
+      <implementation>org.apache.maven.plugins.testing.stubs.StubArtifact</implementation>
+    </component>
+  </components>
+</component-set>

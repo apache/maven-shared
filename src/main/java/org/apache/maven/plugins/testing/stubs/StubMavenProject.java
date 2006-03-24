@@ -118,18 +118,20 @@ public class StubMavenProject extends MavenProject
     private String defaultGoal;
 
 
-    public StubMavenProject() {}
+    public StubMavenProject() { super( (Model) null ); }
 
     // kinda dangerous...
     public StubMavenProject(Model model)
     {
       //  super(model);
+      super( (Model) null );
     }
 
     // kinda dangerous...
     public StubMavenProject(MavenProject project)
     {
         //super(project);
+      super( (Model) null );
     }
 
     public String getModulePathAdjustment( MavenProject mavenProject )

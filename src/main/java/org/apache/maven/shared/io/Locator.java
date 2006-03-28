@@ -53,6 +53,30 @@ public class Locator
      * </p>
      * 
      * @param location the location string to match against.
+     * @return the File of the resolved location.
+     * @throws IOException if file is unable to be found or copied into <code>localfile</code> destination.
+     */
+    public File resolveLocation( String location )
+        throws IOException
+    {
+        File tmpFile = File.createTempFile( "locator.resolveLocation", ".result" );
+        tmpFile.deleteOnExit();
+        
+        return resolveLocation( location, tmpFile );
+    }
+
+    /**
+     * <p>
+     * Attempts to resolve a location parameter into a real file.
+     * </p>
+     * 
+     * <p>
+     * Checks a location string to for a resource, URL, or File that matches.
+     * If a resource or URL is found, then a local file is created with that
+     * locations contents.
+     * </p>
+     * 
+     * @param location the location string to match against.
      * @param localfile the local file to use in case of resource or URL.
      * @return the File of the resolved location.
      * @throws IOException if file is unable to be found or copied into <code>localfile</code> destination.
@@ -60,19 +84,40 @@ public class Locator
     public File resolveLocation( String location, String localfile )
         throws IOException
     {
+        File retFile = new File( localfile );
+        return resolveLocation( location, retFile );
+    }
+
+    /**
+     * <p>
+     * Attempts to resolve a location parameter into a real file.
+     * </p>
+     * 
+     * <p>
+     * Checks a location string to for a resource, URL, or File that matches.
+     * If a resource or URL is found, then a local file is created with that
+     * locations contents.
+     * </p>
+     * 
+     * @param location the location string to match against.
+     * @param localfile the local file to use in case of resource or URL.
+     * @return the File of the resolved location.
+     * @throws IOException if file is unable to be found or copied into <code>localfile</code> destination.
+     */
+    public File resolveLocation( String location, File localfile )
+        throws IOException
+    {
         if ( StringUtils.isEmpty( location ) )
         {
             return null;
         }
-
-        File retFile = new File( localfile );
 
         // Attempt a URL
         if ( location.indexOf( "://" ) > 1 )
         {
             // Found a URL
             URL url = new URL( location );
-            FileUtils.copyURLToFile( url, retFile );
+            FileUtils.copyURLToFile( url, localfile );
         }
         else
         {
@@ -81,7 +126,7 @@ public class Locator
             if ( fileLocation.exists() )
             {
                 // Found a File.
-                FileUtils.copyFile( fileLocation, retFile );
+                FileUtils.copyFile( fileLocation, localfile );
             }
             else
             {
@@ -90,7 +135,7 @@ public class Locator
                 if ( url != null )
                 {
                     // Found a Resource.
-                    FileUtils.copyURLToFile( url, retFile );
+                    FileUtils.copyURLToFile( url, localfile );
                 }
                 else
                 {
@@ -99,16 +144,16 @@ public class Locator
             }
         }
 
-        if ( !retFile.exists() )
+        if ( !localfile.exists() )
         {
             throw new FileNotFoundException( "Destination file does not exist." );
         }
 
-        if ( retFile.length() <= 0 )
+        if ( localfile.length() <= 0 )
         {
             throw new IOException( "Destination file has no content." );
         }
 
-        return retFile;
+        return localfile;
     }
 }

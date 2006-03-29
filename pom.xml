@@ -31,4 +31,9 @@
       <version>1.2-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/sandbox/maven-plugin-testing-harness</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/sandbox/maven-plugin-testing-harness</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/sandbox/maven-plugin-testing-harness</url>
+  </scm>
 </project>

@@ -269,8 +269,11 @@ public abstract class AbstractMojoTestCase
     protected Object getVariableValueFromObject( Object object, String variable )
         throws IllegalAccessException
     {
-        return ReflectionUtils.getFieldByNameIncludingSuperclasses( variable, object.getClass() );
+        Field field = ReflectionUtils.getFieldByNameIncludingSuperclasses( variable, object.getClass() );
 
+        field.setAccessible( true );
+
+        return field.get( object );
     }
 
 
@@ -279,6 +282,21 @@ public abstract class AbstractMojoTestCase
      *
      * Note: the values in the map are of type Object so the caller is responsible for casting to desired types.
      *
+     * @param object
+     * @return map of variable names and values
+     */
+    protected Map getVariablesAndValuesFromObject( Object object )
+        throws IllegalAccessException
+    {
+        return getVariablesAndValuesFromObject( object.getClass(), object );
+    }
+
+    /**
+     * convience method to obtain all variables and values from the mojo (including its superclasses)
+     *
+     * Note: the values in the map are of type Object so the caller is responsible for casting to desired types.
+     *
+     * @param clazz
      * @param object
      * @return map of variable names and values
      */

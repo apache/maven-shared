@@ -29,9 +29,9 @@ import java.io.File;
  *
  * @author: jesse
  * @date: Feb 24, 2006
- * @version: $Id:$
+ * @version: $Id$
  */
-public class StubResolverExpressionEvaluator
+public class ResolverExpressionEvaluatorStub
     implements ExpressionEvaluator
 {
     

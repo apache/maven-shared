@@ -37,7 +37,7 @@ import java.util.List;
  * @date: Feb 24, 2006
  * @version: $ID:$
  */
-public class StubArtifact implements Artifact
+public class ArtifactStub implements Artifact
 {
 
     public int compareTo( Object object )

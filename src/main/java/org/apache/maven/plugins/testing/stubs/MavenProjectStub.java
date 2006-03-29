@@ -55,7 +55,7 @@ import java.util.Collections;
 /**
  *  very simple stub of maven project, going to take a lot of work to make it useful as a stub though
  */
-public class StubMavenProject extends MavenProject
+public class MavenProjectStub extends MavenProject
 {
     private String groupId;
     private String artifactId;
@@ -118,17 +118,17 @@ public class StubMavenProject extends MavenProject
     private String defaultGoal;
 
 
-    public StubMavenProject() { super( (Model) null ); }
+    public MavenProjectStub() { super( (Model) null ); }
 
     // kinda dangerous...
-    public StubMavenProject(Model model)
+    public MavenProjectStub(Model model)
     {
       //  super(model);
       super( (Model) null );
     }
 
     // kinda dangerous...
-    public StubMavenProject(MavenProject project)
+    public MavenProjectStub(MavenProject project)
     {
         //super(project);
       super( (Model) null );

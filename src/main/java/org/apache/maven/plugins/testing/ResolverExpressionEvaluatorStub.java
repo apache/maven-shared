@@ -1,15 +1,7 @@
 package org.apache.maven.plugins.testing;
 
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.DefaultPlexusContainer;
-import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
-import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
-
-import java.io.File;
 /*
- * Copyright 2005 The Codehaus.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +15,12 @@ import java.io.File;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import java.io.File;
+
+import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
+import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 
 /**
  * StubResolverExpressionEvaluator:

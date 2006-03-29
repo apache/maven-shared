@@ -1,7 +1,7 @@
 package org.apache.maven.plugins.testing;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,22 @@ package org.apache.maven.plugins.testing;
  * limitations under the License.
  */
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.Map;
 
-import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.codehaus.plexus.util.ReflectionUtils;
-import org.codehaus.plexus.configuration.PlexusConfiguration;
-import org.codehaus.plexus.configuration.xml.XmlPlexusConfiguration;
-import org.codehaus.plexus.component.configurator.ComponentConfigurator;
-import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
+import org.apache.maven.monitor.logging.DefaultLog;
 import org.apache.maven.plugin.Mojo;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.monitor.logging.DefaultLog;
-import org.apache.maven.project.MavenProjectBuilder;
-
-import java.io.Reader;
-import java.io.FileReader;
-import java.io.File;
-import java.util.Map;
+import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.component.configurator.ComponentConfigurator;
+import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
+import org.codehaus.plexus.configuration.PlexusConfiguration;
+import org.codehaus.plexus.configuration.xml.XmlPlexusConfiguration;
+import org.codehaus.plexus.util.ReflectionUtils;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 
 // todo: add a way to use the plugin POM for the lookup so that the user doesn't have to provide the a:g:v:goal
 // as the role hint for the mojo lookup.
@@ -171,7 +169,7 @@ public abstract class AbstractMojoTestCase
             /* requires v10 of plexus container for lookup on expression evaluator
             ExpressionEvaluator evaluator = (ExpressionEvaluator) getContainer().lookup( ExpressionEvaluator.ROLE, "stub-evaluator" );
             */
-            ExpressionEvaluator evaluator = new StubResolverExpressionEvaluator();
+            ExpressionEvaluator evaluator = new ResolverExpressionEvaluatorStub();
 
             configurator.configureComponent( mojo, pluginConfiguration, evaluator, getContainer().getContainerRealm() );
         }
@@ -226,7 +224,7 @@ public abstract class AbstractMojoTestCase
 
         PlexusConfiguration pluginConfiguration = extractPluginConfiguration( artifactId, pom );
 
-        ExpressionEvaluator evaluator = new StubResolverExpressionEvaluator();
+        ExpressionEvaluator evaluator = new ResolverExpressionEvaluatorStub();
 
 
         configurator.configureComponent( mojo, pluginConfiguration, evaluator, getContainer().getContainerRealm() );
@@ -247,7 +245,7 @@ public abstract class AbstractMojoTestCase
     {
         validateContainerStatus();
 
-        ExpressionEvaluator evaluator = new StubResolverExpressionEvaluator();
+        ExpressionEvaluator evaluator = new ResolverExpressionEvaluatorStub();
 
         configurator.configureComponent( mojo, pluginConfiguration, evaluator, getContainer().getContainerRealm() );
 

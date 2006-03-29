@@ -1,8 +1,7 @@
 package org.apache.maven.plugins.testing.stubs;
 
-
 /*
- * Copyright 2005 The Codehaus.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

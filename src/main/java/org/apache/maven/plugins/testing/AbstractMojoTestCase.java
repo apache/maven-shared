@@ -16,11 +16,6 @@ package org.apache.maven.plugins.testing;
  * limitations under the License.
  */
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
-import java.util.Map;
-
 import org.apache.maven.monitor.logging.DefaultLog;
 import org.apache.maven.plugin.Mojo;
 import org.apache.maven.plugin.logging.Log;
@@ -32,6 +27,14 @@ import org.codehaus.plexus.configuration.xml.XmlPlexusConfiguration;
 import org.codehaus.plexus.util.ReflectionUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.reflect.Field;
+import java.lang.reflect.AccessibleObject;
 
 // todo: add a way to use the plugin POM for the lookup so that the user doesn't have to provide the a:g:v:goal
 // as the role hint for the mojo lookup.
@@ -266,7 +269,7 @@ public abstract class AbstractMojoTestCase
     protected Object getVariableValueFromObject( Object object, String variable )
         throws IllegalAccessException
     {
-        return ReflectionUtils.getValueIncludingSuperclasses( variable, object );
+        return ReflectionUtils.getFieldByNameIncludingSuperclasses( variable, object.getClass() );
 
     }
 
@@ -279,10 +282,31 @@ public abstract class AbstractMojoTestCase
      * @param object
      * @return map of variable names and values
      */
-    protected Map getVariablesAndValuesFromObject( Object object )
+    protected Map getVariablesAndValuesFromObject( Class clazz, Object object )
         throws IllegalAccessException
     {
-        return ReflectionUtils.getVariablesAndValuesIncludingSuperclasses( object );
+        Map map = new HashMap();
+
+        Field[] fields = clazz.getDeclaredFields();
+
+        AccessibleObject.setAccessible( fields, true);
+
+        for (int i = 0; i < fields.length; ++i)
+        {
+            Field field = fields[i];
+
+            map.put( field.getName(), field.get( object ) );
+
+        }
+
+        Class superclass = clazz.getSuperclass();
+
+        if ( !Object.class.equals(  superclass ) )
+        {
+            map.putAll( getVariablesAndValuesFromObject( superclass, object ) );
+        }
+
+        return map;
     }
 
 
@@ -296,7 +320,11 @@ public abstract class AbstractMojoTestCase
     protected void setVariableValueToObject( Object object, String variable, Object value )
         throws IllegalAccessException
     {
-        ReflectionUtils.setVariableValueInObject( object, variable, value );
+        Field field = ReflectionUtils.getFieldByNameIncludingSuperclasses( variable, object.getClass() );
+
+        field.setAccessible( true );
+
+        field.set(object, value );
     }
     /**
      * sometimes the parent element might contain the correct value so generalize that access

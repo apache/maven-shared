@@ -21,6 +21,9 @@ import java.io.File;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.repository.DefaultArtifactRepository;
+import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
 
 /**
  * StubResolverExpressionEvaluator:
@@ -32,7 +35,7 @@ import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator
 public class ResolverExpressionEvaluatorStub
     implements ExpressionEvaluator
 {
-    
+
     public Object evaluate( String expr )
         throws ExpressionEvaluationException
     {
@@ -94,6 +97,11 @@ public class ResolverExpressionEvaluatorStub
                 System.out.println( "Got expression '" + expression + "' that was not recognised" );
             }
             return value;
+        }
+        else if ( "localRepository".equals( expression ) )
+        {
+            return new DefaultArtifactRepository( "localRepository", "file://" + System.getProperty( "localRepository"),
+                                                  new DefaultRepositoryLayout() );
         }
         else
         {

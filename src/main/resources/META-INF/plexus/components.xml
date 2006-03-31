@@ -3,7 +3,7 @@
     <component>
       <role>org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator</role>
       <role-hint>stub-evaluator</role-hint>
-      <implementation>org.apache.maven.plugins.testing.StubResolverExpressionEvaluator</implementation>
+      <implementation>org.apache.maven.plugin.testing.StubResolverExpressionEvaluator</implementation>
       <requirements>
         <requirement>
           <role>org.codehaus.plexus.PlexusContainer</role>
@@ -14,7 +14,7 @@
     <component>
       <role>org.apache.maven.artifact.Artifact</role>
       <role-hint>stub</role-hint>
-      <implementation>org.apache.maven.plugins.testing.stubs.StubArtifact</implementation>
+      <implementation>org.apache.maven.plugin.testing.stubs.StubArtifact</implementation>
     </component>
   </components>
 </component-set>

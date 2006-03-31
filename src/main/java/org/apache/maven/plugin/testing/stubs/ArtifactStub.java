@@ -1,4 +1,4 @@
-package org.apache.maven.plugins.testing.stubs;
+package org.apache.maven.plugin.testing.stubs;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.

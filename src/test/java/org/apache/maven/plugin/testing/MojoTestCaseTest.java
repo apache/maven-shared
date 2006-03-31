@@ -3,7 +3,6 @@ package org.apache.maven.plugin.testing;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
-import org.apache.maven.plugins.testing.AbstractMojoTestCase;
 
 import java.io.StringReader;
 import java.util.Map;

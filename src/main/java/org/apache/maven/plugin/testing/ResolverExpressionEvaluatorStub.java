@@ -1,4 +1,4 @@
-package org.apache.maven.plugins.testing;
+package org.apache.maven.plugin.testing;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -21,7 +21,6 @@ import java.io.File;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
 

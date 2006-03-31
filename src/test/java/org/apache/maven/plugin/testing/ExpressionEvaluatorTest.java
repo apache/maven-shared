@@ -1,10 +1,9 @@
 package org.apache.maven.plugin.testing;
 
-import org.apache.maven.plugins.testing.AbstractMojoTestCase;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 
 import java.io.StringReader;
 

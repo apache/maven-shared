@@ -99,7 +99,8 @@ public class ResolverExpressionEvaluatorStub
         }
         else if ( "localRepository".equals( expression ) )
         {
-            return new DefaultArtifactRepository( "localRepository", "file://" + System.getProperty( "localRepository"),
+            File localRepo = new File( PlexusTestCase.getBasedir(), "target/local-repo" );
+            return new DefaultArtifactRepository( "localRepository", "file://" + localRepo.getAbsolutePath(),
                                                   new DefaultRepositoryLayout() );
         }
         else

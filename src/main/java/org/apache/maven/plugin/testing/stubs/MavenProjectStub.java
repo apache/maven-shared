@@ -916,16 +916,6 @@ public class MavenProjectStub extends MavenProject
         return originalModel;
     }
 
-    public boolean equals( Object object )
-    {
-        return false;
-    }
-
-    public int hashCode()
-    {
-        return this.hashCode();
-    }
-
     public List getBuildExtensions()
     {
         return Collections.singletonList( "" );

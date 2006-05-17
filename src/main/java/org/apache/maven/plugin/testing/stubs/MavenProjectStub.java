@@ -939,7 +939,7 @@ public class MavenProjectStub extends MavenProject
 
     public Properties getProperties()
     {
-        return new java.util.Properties();
+        return new Properties();
     }
 
     public List getFilters()

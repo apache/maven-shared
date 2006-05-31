@@ -1,0 +1,108 @@
+  ---
+  Maven Forked Invocation API - Usage
+  ---
+  John Casey
+  ---
+  31-May-2006
+
+Maven Forked Invocation API - Usage
+
+* Introduction
+
+  This page documents the basic usage of the invocation API.
+  
+* Hello, World
+
+  The simplest possible way to use the invocation API is to construct the
+  invoker and request at the same time, and simply call
+  <<<invoker.execute(request)>>>. In this example, we don't care about the build
+  result:
+  
++---+
+InvocationRequest request = new DefaultInvocationRequest();
+request.setPomFile( new File( "/path/to/pom.xml" ) );
+request.setGoals( Collections.singletonList( "install" ) );
+
+Invoker invoker = new DefaultInvoker();
+invoker.execute( request );
++---+
+
+  This code will execute a new Maven build to the <<<install>>> lifecycle phase
+  for the project defined at <<</path/to/pom.xml>>>. If the build fails, we will
+  remain blissfully ignorant...
+  
+* Checking the Exit Code
+
+  If we wanted to detect a build failure in the above example, we could simple
+  add the following lines:
+  
++---+
+InvocationResult result = invoker.execute( request );
+
+if ( result.getExitCode() != 0 )
+{
+    throw new IllegalStateException( "Build failed." );
+}
++---+
+
+  This will simply retrieve the exit code from the invocation result, and throw
+  an exception if it's not <<<0>>> (the traditional all-clear code). Note that
+  we could capture the build output by adding an <<<InvocationOutputHandler>>>
+  instance to either the <<<invoker>>> or <<<request>>>.
+  
+* Caching the Invoker
+
+  Since you can specify global options for Maven invocations via the
+  <<<Invoker>>> configuration, it will often make sense to configure a single
+  <<<Invoker>>> instance, and reuse it over multiple method calls:
+  
++---+
+// we will always call the same goals...
+private static final String[] GOALS_ARRAY = { "clean", "site-deploy" };
+
+private static final List PUBLISH_GOALS = Arrays.asList( GOALS_ARRAY );
+
+// define a field for the Invoker instance.
+private final Invoker invoker;
+
+// now, instantiate the invoker in the class constructor...
+public SomeClass( File localRepositoryDir )
+{
+    Invoker i = new DefaultInvoker();
+    i.setLocalRepositoryDirectory( localRepositoryDir );
+    
+    this.invoker = i;
+}
+
+// this method will be called repeatedly, and fire off new builds...
+public void publishSite( File siteDirectory ) throws PublishException
+{
+    InvocationRequest request = new DefaultInvocationRequest();
+    request.setBaseDirectory( siteDirectory );
+    request.setInteractive( false );
+    request.setGoals( PUBLISH_GOALS );
+    
+    InvocationResult result = invoker.execute( request );
+    
+    if ( result.getExitCode() != 0 )
+    {
+        if ( result.getExecutionException() != null )
+        {
+            throw new PublishException( "Failed to publish site.", e );
+        }
+        else
+        {
+            throw new PublishException( "Failed to publish site. Exit code: " + 
+                                         result.getExitCode() );
+        }
+    }
+}
++---+
+
+  As you can see, we're using the same local repository location (since the
+  site-generation artifacts will most likely be common to most sites), the same
+  invoker instance (it's configured, we may as well reuse it), and the same set
+  of goals per build. We can actually accommodate a fairly complex configuration
+  of the Invoker without adding complexity to the publish method in this manner.
+
+

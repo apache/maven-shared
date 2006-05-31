@@ -1,0 +1,93 @@
+  ---
+  Maven Forked Invocation API - Overview
+  ---
+  John Casey
+  ---
+  31-May-2006
+
+Maven Forked Invocation API - Overview
+
+* Introduction
+
+  In many cases, tools (including Maven itself) may want to fire off a Maven
+  build in a clean environment. Why? Perhaps you want to avoid polluting the
+  current system environment with side-effects produced by Maven plugins. Maybe
+  you want to run the build from a different working directory than the current
+  <<<${user.dir}>>>. Maybe you want to retain the ability to surgically kill one
+  of many Maven builds if it hangs for some reason.
+  
+  This API is concerned with firing a Maven build in a new JVM. It accomplishes
+  its task by building up a conventional Maven command line from options given
+  in the current request, along with those global options specified in the
+  invoker itself. Once it has the command line, the invoker will execute it, and
+  capture the resulting exit code or any exception thrown to signal a failure to
+  execute. Input/Output control can be specified using an <<<InputStream>>> and
+  up to two <<<InvocationOutputHandler>>>s.
+  
+* Table of Contents
+
+  * {{{usage.html}Basic Usage Instructions}}
+
+  * {{{examples/index.html}Examples}}
+
+  []
+  
+* Features
+
+  * Tracking of exit code and exception resulting from an invocation
+
+  * Global Options:
+  
+    * Maven-Home Location (location of Maven application directory)
+  
+    * Global Checksum policy (fail/warn, global across defined repositories)
+    
+    * Local Repository Location
+    
+    * Working Directory
+    
+    * Input/Output Handlers
+    
+    * API Logger
+    
+    []
+    
+  * Request Options:
+  
+    * Global Checksum Policy (fail/warn, global across defined repositories)
+    
+    * Local Repository Location
+    
+    * Project Base Directory
+    
+    * POM File
+    
+    * POM File-Name (used in conjunction with Base Directory)
+    
+    * Interactive/Batch Mode (determines whether Maven prompts for input)
+    
+    * Offline Mode
+    
+    * Update-Snapshots Flag
+    
+    * Debug Flag (show debug-level output)
+    
+    * Show-Errors Flag (show exception stacktraces, but not full debug output)
+    
+    * Inherit-Shell-Environment Flag (inherit envars from the shell used to
+      start the current JVM)
+      
+    * Reactor-Failure Behavior (fail-at-end, fail-never, etc.)
+    
+    * Input/Output Handlers
+    
+    * Build Properties (-D switches)
+    
+    * Build Goals
+    
+    * Settings Location (<<<settings.xml>>> file path)
+
+    []
+    
+  []
+

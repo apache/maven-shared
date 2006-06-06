@@ -1,4 +1,4 @@
-package org.apache.maven.shared.io;
+package org.apache.maven.shared.io.download;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,17 +24,20 @@ public class DefaultDownloadManager implements DownloadManager
     
     private WagonManager wagonManager;
     
-    /* (non-Javadoc)
-     * @see org.apache.maven.shared.io.DownloadManager#download(java.lang.String)
-     */
+    public DefaultDownloadManager()
+    {
+    }
+    
+    public DefaultDownloadManager( WagonManager wagonManager )
+    {
+        this.wagonManager = wagonManager;
+    }
+    
     public File download( String url ) throws DownloadFailedException
     {
         return download( url, Collections.EMPTY_LIST );
     }
     
-    /* (non-Javadoc)
-     * @see org.apache.maven.shared.io.DownloadManager#download(java.lang.String, java.util.List)
-     */
     public File download( String url, List transferListeners ) throws DownloadFailedException
     {
         URL sourceUrl;

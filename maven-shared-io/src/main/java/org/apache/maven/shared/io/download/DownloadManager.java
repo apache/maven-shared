@@ -1,4 +1,4 @@
-package org.apache.maven.shared.io;
+package org.apache.maven.shared.io.download;
 
 import java.io.File;
 import java.util.List;

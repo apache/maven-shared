@@ -1,4 +1,4 @@
-package org.apache.maven.shared.io;
+package org.apache.maven.shared.io.download;
 
 public class DownloadFailedException
     extends Exception

@@ -5,7 +5,7 @@ import java.net.URL;
 
 import org.apache.maven.shared.io.logging.MessageHolder;
 
-public class UrlBasedLocatorStrategy
+public class URLLocatorStrategy
     implements LocatorStrategy
 {
 
@@ -15,11 +15,11 @@ public class UrlBasedLocatorStrategy
 
     private boolean tempFileDeleteOnExit = true;
 
-    public UrlBasedLocatorStrategy()
+    public URLLocatorStrategy()
     {
     }
 
-    public UrlBasedLocatorStrategy( String tempFilePrefix, String tempFileSuffix, boolean tempFileDeleteOnExit )
+    public URLLocatorStrategy( String tempFilePrefix, String tempFileSuffix, boolean tempFileDeleteOnExit )
     {
         this.tempFilePrefix = tempFilePrefix;
         this.tempFileSuffix = tempFileSuffix;
@@ -30,7 +30,6 @@ public class UrlBasedLocatorStrategy
     {
         Location location = null;
 
-        messageHolder.append( "Building URL from location: " + locationSpecification );
         try
         {
             URL url = new URL( locationSpecification );
@@ -40,7 +39,7 @@ public class UrlBasedLocatorStrategy
         }
         catch ( MalformedURLException e )
         {
-            messageHolder.append( e );
+            messageHolder.addMessage( "Building URL from location: " + locationSpecification, e );
         }
 
         return location;

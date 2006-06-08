@@ -10,7 +10,7 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.shared.io.logging.MessageHolder;
 
-public class ArtifactBasedLocatorStrategy
+public class ArtifactLocatorStrategy
     implements LocatorStrategy
 {
     private final ArtifactFactory factory;
@@ -23,8 +23,8 @@ public class ArtifactBasedLocatorStrategy
 
     private final List remoteRepositories;
 
-    public ArtifactBasedLocatorStrategy( ArtifactFactory factory, ArtifactResolver resolver,
-                                         ArtifactRepository localRepository, List remoteRepositories )
+    public ArtifactLocatorStrategy( ArtifactFactory factory, ArtifactResolver resolver,
+                                    ArtifactRepository localRepository, List remoteRepositories )
     {
         this.factory = factory;
         this.resolver = resolver;
@@ -32,9 +32,9 @@ public class ArtifactBasedLocatorStrategy
         this.remoteRepositories = remoteRepositories;
     }
 
-    public ArtifactBasedLocatorStrategy( ArtifactFactory factory, ArtifactResolver resolver,
-                                         ArtifactRepository localRepository, List remoteRepositories,
-                                         String defaultArtifactType )
+    public ArtifactLocatorStrategy( ArtifactFactory factory, ArtifactResolver resolver,
+                                    ArtifactRepository localRepository, List remoteRepositories,
+                                    String defaultArtifactType )
     {
         this.factory = factory;
         this.resolver = resolver;
@@ -43,6 +43,11 @@ public class ArtifactBasedLocatorStrategy
         this.defaultArtifactType = defaultArtifactType;
     }
 
+    /**
+     * Assumes artifact identity is given in a set of comma-delimited tokens of
+     * the form: <code>groupId:artifactId:version:type:classifier</code>, where
+     * type and classifier are optional.
+     */
     public Location resolve( String locationSpecification, MessageHolder messageHolder )
     {
         String[] parts = locationSpecification.split( ":" );
@@ -58,13 +63,26 @@ public class ArtifactBasedLocatorStrategy
             String type = defaultArtifactType;
             if ( parts.length > 3 )
             {
-                type = parts[3];
+                if ( parts[3].trim().length() > 0 )
+                {
+                    type = parts[3];
+                }
             }
 
             String classifier = null;
             if ( parts.length > 4 )
             {
                 classifier = parts[4];
+            }
+
+            if ( parts.length > 5 )
+            {
+                messageHolder.newMessage().append( "Location specification has unused tokens: \'" );
+
+                for ( int i = 5; i < parts.length; i++ )
+                {
+                    messageHolder.append( ":" + parts[i] );
+                }
             }
 
             Artifact artifact;
@@ -77,24 +95,35 @@ public class ArtifactBasedLocatorStrategy
                 artifact = factory.createArtifactWithClassifier( groupId, artifactId, version, type, classifier );
             }
 
-            messageHolder.append( "Resolving artifact: " + artifact.getId() );
             try
             {
                 resolver.resolve( artifact, remoteRepositories, localRepository );
-                
+
                 if ( artifact.getFile() != null )
                 {
                     location = new ArtifactLocation( artifact, locationSpecification );
                 }
+                else
+                {
+                    messageHolder.addMessage( "Supposedly resolved artifact: " + artifact.getId()
+                        + " does not have an associated file." );
+                }
             }
             catch ( ArtifactResolutionException e )
             {
-                messageHolder.append( e );
+                messageHolder.addMessage( "Failed to resolve artifact: " + artifact.getId() + " for location: "
+                    + locationSpecification, e );
             }
             catch ( ArtifactNotFoundException e )
             {
-                messageHolder.append( e );
+                messageHolder.addMessage( "Failed to resolve artifact: " + artifact.getId() + " for location: "
+                    + locationSpecification, e );
             }
+        }
+        else
+        {
+            messageHolder.addMessage( "Invalid artifact specification: \'" + locationSpecification
+                + "\'. Must contain at least three fields, separated by ':'." );
         }
 
         return location;

@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class FileBasedLocationTest
-    extends AbstractLocationTest
+import org.apache.maven.shared.io.TestUtils;
+
+import junit.framework.TestCase;
+
+public class FileLocationTest
+    extends TestCase
 {
     
     public void testShouldConstructWithFileThenRetrieveSameFile() throws IOException
@@ -13,7 +17,7 @@ public class FileBasedLocationTest
         File file = File.createTempFile( "test.", ".file-location" );
         file.deleteOnExit();
         
-        FileBasedLocation location = new FileBasedLocation( file, file.getAbsolutePath() );
+        FileLocation location = new FileLocation( file, file.getAbsolutePath() );
         
         assertSame( file, location.getFile() );
         assertEquals( file.getAbsolutePath(), location.getSpecification() );
@@ -26,9 +30,9 @@ public class FileBasedLocationTest
         
         String testStr = "This is a test";
         
-        writeToFile( file, testStr );
+        TestUtils.writeToFile( file, testStr );
         
-        FileBasedLocation location = new FileBasedLocation( file, file.getAbsolutePath() );
+        FileLocation location = new FileLocation( file, file.getAbsolutePath() );
         
         location.open();
         
@@ -45,9 +49,9 @@ public class FileBasedLocationTest
         
         String testStr = "This is a test";
         
-        writeToFile( file, testStr );
+        TestUtils.writeToFile( file, testStr );
         
-        FileBasedLocation location = new FileBasedLocation( file, file.getAbsolutePath() );
+        FileLocation location = new FileLocation( file, file.getAbsolutePath() );
         
         location.open();
         
@@ -64,9 +68,9 @@ public class FileBasedLocationTest
         
         String testStr = "This is a test";
         
-        writeToFile( file, testStr );
+        TestUtils.writeToFile( file, testStr );
         
-        FileBasedLocation location = new FileBasedLocation( file, file.getAbsolutePath() );
+        FileLocation location = new FileLocation( file, file.getAbsolutePath() );
         
         location.open();
         
@@ -120,7 +124,7 @@ public class FileBasedLocationTest
         assertEquals( file.getAbsolutePath(), location.getSpecification() );
     }
     
-    private static final class TestFileLocation extends FileBasedLocation
+    private static final class TestFileLocation extends FileLocation
     {
 
         TestFileLocation( String specification )

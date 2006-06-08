@@ -31,15 +31,17 @@ public class ClasspathResourceLocatorStrategy
 
         URL resource = cloader.getResource( locationSpecification );
 
-        messageHolder.addMessage( "Resolved url: " + resource + " from classloader: " + cloader + " for location: "
-            + locationSpecification );
-        
         Location location = null;
 
         if ( resource != null )
         {
             location = new URLLocation( resource, locationSpecification, tempFilePrefix, tempFileSuffix,
                                         tempFileDeleteOnExit );
+        }
+        else
+        {
+            messageHolder.addMessage( "Failed to resolve classpath resource: " + locationSpecification
+                + " from classloader: " + cloader );
         }
 
         return location;

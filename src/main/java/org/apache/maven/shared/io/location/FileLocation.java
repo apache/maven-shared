@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 
-public class FileBasedLocation
+public class FileLocation
     implements Location
 {
 
@@ -15,13 +15,13 @@ public class FileBasedLocation
     private FileChannel channel;
     private final String specification;
     
-    public FileBasedLocation( File file, String specification )
+    public FileLocation( File file, String specification )
     {
         this.file = file;
         this.specification = specification;
     }
     
-    protected FileBasedLocation( String specification )
+    protected FileLocation( String specification )
     {
         this.specification = specification;
     }

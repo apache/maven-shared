@@ -25,6 +25,11 @@ public final class Locator
         this.strategies = new ArrayList();
     }
     
+    public MessageHolder getMessageHolder()
+    {
+        return messageHolder;
+    }
+    
     public void addStrategy( LocatorStrategy strategy )
     {
         this.strategies.add( strategy );

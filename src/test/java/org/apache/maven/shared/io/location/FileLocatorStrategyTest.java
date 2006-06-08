@@ -8,14 +8,6 @@ import org.apache.maven.shared.io.logging.MessageHolder;
 
 import junit.framework.TestCase;
 
-/*
- * NOTE: Coverage reporting shows that this strategy is a bit on the low side.
- * However, looking deeper it becomes apparent that the reason for this is the 
- * try/catch when trying to canonicalize the file...and I haven't been able to 
- * find a reliable way to break canonicalization. Either way, it will only change
- * the message output, not the resulting location's reachability...so this is
- * non-critical.
- */
 public class FileLocatorStrategyTest
     extends TestCase
 {
@@ -50,6 +42,8 @@ public class FileLocatorStrategyTest
         Location location = fls.resolve( f.getAbsolutePath(), mh );
         
         assertNull( location );
+        
+        System.out.println( mh.render() );
         
         assertEquals( 1, mh.size() );
     }

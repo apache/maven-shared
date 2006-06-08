@@ -3,19 +3,23 @@ package org.apache.maven.shared.io.location;
 import java.io.File;
 import java.io.IOException;
 
+import junit.framework.TestCase;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.artifact.versioning.VersionRange;
+import org.apache.maven.shared.io.TestUtils;
 
 public class ArtifactLocationTest
-    extends AbstractLocationTest
+    extends TestCase
 {
     
     public void testShouldConstructFromTempFileSpecification()
         throws IOException
     {
         File f = File.createTempFile( "artifact-location.", ".test" );
+        f.deleteOnExit();
 
         Artifact a = new DefaultArtifact( "group", "artifact", VersionRange.createFromVersion( "1" ), null, "jar",
                                           null, new DefaultArtifactHandler() );
@@ -31,10 +35,11 @@ public class ArtifactLocationTest
         throws IOException
     {
         File f = File.createTempFile( "url-location.", ".test" );
+        f.deleteOnExit();
 
         String testStr = "This is a test";
 
-        writeToFile( f, testStr );
+        TestUtils.writeToFile( f, testStr );
 
         Artifact a = new DefaultArtifact( "group", "artifact", VersionRange.createFromVersion( "1" ), null, "jar",
                                           null, new DefaultArtifactHandler() );

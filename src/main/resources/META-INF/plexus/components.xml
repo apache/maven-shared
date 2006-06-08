@@ -1,9 +1,9 @@
 <component-set>
   <components>
     <component>
-      <role>org.apache.maven.shared.io.DownloadManager</role>
+      <role>org.apache.maven.shared.io.download.DownloadManager</role>
       <role-hint>default</role-hint>
-      <implementation>org.apache.maven.shared.io.DefaultDownloadManager</implementation>
+      <implementation>org.apache.maven.shared.io.download.DefaultDownloadManager</implementation>
       <requirements>
         <requirement>
           <role>org.apache.maven.artifact.manager.WagonManager</role>

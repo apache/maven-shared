@@ -7,7 +7,7 @@ import java.net.URL;
 import org.codehaus.plexus.util.FileUtils;
 
 public class URLLocation
-    extends FileBasedLocation
+    extends FileLocation
 {
 
     private final URL url;

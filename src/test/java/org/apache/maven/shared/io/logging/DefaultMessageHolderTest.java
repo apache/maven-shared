@@ -274,4 +274,12 @@ public class DefaultMessageHolderTest
         assertFalse( new DefaultMessageHolder().newMessage().isEmpty() );
     }
     
+    public void testAppendCharSequence()
+    {
+        MessageHolder mh = new DefaultMessageHolder();
+        mh.newMessage().append( new StringBuffer( "This is a test" ) );
+        
+        assertTrue( mh.render().indexOf( "This is a test" ) > -1 );
+    }
+    
 }

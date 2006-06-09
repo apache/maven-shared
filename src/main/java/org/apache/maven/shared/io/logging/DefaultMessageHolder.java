@@ -17,7 +17,7 @@ public class DefaultMessageHolder
     public MessageHolder addMessage( CharSequence messagePart, Throwable error )
     {
         newMessage();
-        append( messagePart );
+        append( messagePart.toString() );
         append( error );
         
         return this;
@@ -26,7 +26,7 @@ public class DefaultMessageHolder
     public MessageHolder addMessage( CharSequence messagePart )
     {
         newMessage();
-        append( messagePart );
+        append( messagePart.toString() );
         
         return this;
     }
@@ -46,7 +46,7 @@ public class DefaultMessageHolder
             newMessage();
         }        
         
-        currentMessage.append( messagePart );
+        currentMessage.append( messagePart.toString() );
         
         return this;
     }
@@ -90,7 +90,7 @@ public class DefaultMessageHolder
             if ( content.length() > 0 )
             {
                 buffer.append( '[' ).append( counter++ ).append( "] " );
-                buffer.append( content );
+                buffer.append( content.toString() );
                 
                 if ( it.hasNext() )
                 {
@@ -120,7 +120,7 @@ public class DefaultMessageHolder
         
         public Message append( CharSequence message )
         {
-            this.message.append( message );
+            this.message.append( message.toString() );
             return this;
         }
         

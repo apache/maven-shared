@@ -5,8 +5,10 @@ import java.io.InputStream;
 
 public interface Invoker
 {
+    
+    String ROLE = Invoker.class.getName();
 
-    static final String userHome = System.getProperty( "user.home" );
+    String userHome = System.getProperty( "user.home" );
 
     InvocationResult execute( InvocationRequest request )
         throws MavenInvocationException;

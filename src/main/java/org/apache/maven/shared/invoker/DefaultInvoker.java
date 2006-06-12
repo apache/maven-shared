@@ -28,10 +28,14 @@ import org.codehaus.plexus.util.cli.Commandline;
  * process from their applications
  *
  * @author jdcasey
+ * 
+ * @plexus.component role="org.apache.maven.shared.invoker.Invoker" role-hint="default"
  */
 public class DefaultInvoker
     implements Invoker
 {
+    
+    public static final String ROLE_HINT = "default";
     
     private static final InvocationOutputHandler DEFAULT_OUTPUT_HANDLER = new SystemOutHandler();
 

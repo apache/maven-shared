@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,34 @@ public class MavenArchiver
     private JarArchiver archiver;
 
     private File archiveFile;
-    
+
+    /**
+     * Return a pre-configured manifest
+     *
+     * @todo Add user attributes list and user groups list
+     */
+    public Manifest getManifest( MavenProject project, MavenArchiveConfiguration config )
+        throws ManifestException, DependencyResolutionRequiredException
+    {
+        boolean hasManifestEntries = !config.isManifestEntriesEmpty();
+        Map entries = hasManifestEntries ? config.getManifestEntries() : Collections.EMPTY_MAP;
+        Manifest manifest = getManifest( project, config.getManifest(), entries );
+
+        // any custom manifest entries in the archive configuration manifest?
+        if ( hasManifestEntries )
+        {
+            Set keys = entries.keySet();
+            for ( Iterator iter = keys.iterator(); iter.hasNext(); )
+            {
+                String key = (String) iter.next();
+                String value = (String) entries.get( key );
+                addManifestAttribute( manifest, key, value );
+            }
+        }
+
+        return manifest;
+    }
+
     /**
      * Return a pre-configured manifest
      *
@@ -52,12 +80,39 @@ public class MavenArchiver
     public Manifest getManifest( MavenProject project, ManifestConfiguration config )
         throws ManifestException, DependencyResolutionRequiredException
     {
+        return getManifest( project, config, Collections.EMPTY_MAP );
+    }
+
+    private void addManifestAttribute( Manifest manifest, Map map, String key, String value )
+        throws ManifestException
+    {
+        if ( map.containsKey( key ) )
+        {
+            return;  // The map value will be added later
+        }
+        addManifestAttribute( manifest, key, value );
+    }
+
+    private void addManifestAttribute( Manifest manifest, String key, String value )
+        throws ManifestException
+    {
+        // Use the empty string to suppress a Manifest entry
+        if ( value != null && !"".equals( value ) )
+        {
+            Manifest.Attribute attr = new Manifest.Attribute( key, value );
+            manifest.addConfiguredAttribute( attr );
+        }
+    }
+
+    protected Manifest getManifest( MavenProject project, ManifestConfiguration config, Map entries )
+        throws ManifestException, DependencyResolutionRequiredException
+    {
+        // Should we replace "map" with a copy? Note, that we modify it!
+
         // Added basic entries
         Manifest m = new Manifest();
-        Manifest.Attribute buildAttr = new Manifest.Attribute( "Built-By", System.getProperty( "user.name" ) );
-        m.addConfiguredAttribute( buildAttr );
-        Manifest.Attribute createdAttr = new Manifest.Attribute( "Created-By", "Apache Maven" );
-        m.addConfiguredAttribute( createdAttr );
+        addManifestAttribute( m, entries, "Built-By", System.getProperty( "user.name" ) );
+        addManifestAttribute( m, entries, "Created-By", "Apache Maven" );
 
 /* TODO: rethink this, it wasn't working
         Artifact projectArtifact = project.getArtifact();
@@ -72,12 +127,10 @@ public class MavenArchiver
 */
         if ( config.getPackageName() != null )
         {
-            Manifest.Attribute packageAttr = new Manifest.Attribute( "Package", config.getPackageName() );
-            m.addConfiguredAttribute( packageAttr );
+            addManifestAttribute( m, entries, "Package", config.getPackageName() );
         }
 
-        Manifest.Attribute buildJdkAttr = new Manifest.Attribute( "Build-Jdk", System.getProperty( "java.version" ) );
-        m.addConfiguredAttribute( buildJdkAttr );
+        addManifestAttribute( m, entries, "Build-Jdk", System.getProperty( "java.version" ) );
 
         if ( config.isAddClasspath() )
         {
@@ -102,44 +155,32 @@ public class MavenArchiver
 
             if ( classpath.length() > 0 )
             {
-                Manifest.Attribute classpathAttr = new Manifest.Attribute( "Class-Path", classpath.toString() );
-                m.addConfiguredAttribute( classpathAttr );
+                addManifestAttribute( m, entries, "Class-Path", classpath.toString() );
             }
         }
 
         // Added supplementary entries
-        Manifest.Attribute extensionNameAttr = new Manifest.Attribute( "Extension-Name", project.getArtifactId() );
-        m.addConfiguredAttribute( extensionNameAttr );
+        addManifestAttribute( m, entries, "Extension-Name", project.getArtifactId() );
 
         if ( project.getDescription() != null )
         {
-            Manifest.Attribute specificationTitleAttr = new Manifest.Attribute( "Specification-Title",
-                                                                                project.getDescription() );
-            m.addConfiguredAttribute( specificationTitleAttr );
+            // NOTE This should probably be project.getName() but it remains for backwards compatability
+            addManifestAttribute( m, entries, "Specification-Title", project.getDescription() );
         }
 
         if ( project.getOrganization() != null )
         {
-            Manifest.Attribute specificationVendor = new Manifest.Attribute( "Specification-Vendor",
-                                                                             project.getOrganization().getName() );
-            m.addConfiguredAttribute( specificationVendor );
-            Manifest.Attribute implementationVendorAttr = new Manifest.Attribute( "Implementation-Vendor",
-                                                                                  project.getOrganization().getName() );
-            m.addConfiguredAttribute( implementationVendorAttr );
+            addManifestAttribute( m, entries, "Specification-Vendor", project.getOrganization().getName() );
+            addManifestAttribute( m, entries, "Implementation-Vendor", project.getOrganization().getName() );
         }
 
-        Manifest.Attribute implementationTitleAttr = new Manifest.Attribute( "Implementation-Title",
-                                                                             project.getArtifactId() );
-        m.addConfiguredAttribute( implementationTitleAttr );
-        Manifest.Attribute implementationVersionAttr = new Manifest.Attribute( "Implementation-Version",
-                                                                               project.getVersion() );
-        m.addConfiguredAttribute( implementationVersionAttr );
+        addManifestAttribute( m, entries, "Implementation-Title", project.getArtifactId() );
+        addManifestAttribute( m, entries, "Implementation-Version", project.getVersion() );
 
         String mainClass = config.getMainClass();
         if ( mainClass != null && !"".equals( mainClass ) )
         {
-            Manifest.Attribute mainClassAttr = new Manifest.Attribute( "Main-Class", mainClass );
-            m.addConfiguredAttribute( mainClassAttr );
+            addManifestAttribute( m, entries, "Main-Class", mainClass );
         }
 
         // Added extensions
@@ -168,9 +209,7 @@ public class MavenArchiver
 
             if ( extensionsList.length() > 0 )
             {
-                Manifest.Attribute extensionsListAttr = new Manifest.Attribute( "Extension-List",
-                                                                                extensionsList.toString() );
-                m.addConfiguredAttribute( extensionsListAttr );
+                addManifestAttribute( m, entries, "Extension-List", extensionsList.toString() );
             }
 
             for ( Iterator iter = artifacts.iterator(); iter.hasNext(); )
@@ -178,20 +217,17 @@ public class MavenArchiver
                 Artifact artifact = (Artifact) iter.next();
                 if ( "jar".equals( artifact.getType() ) )
                 {
-                    Manifest.Attribute archExtNameAttr = new Manifest.Attribute(
-                        artifact.getArtifactId() + "-Extension-Name", artifact.getArtifactId() );
-                    m.addConfiguredAttribute( archExtNameAttr );
-                    String name = artifact.getArtifactId() + "-Implementation-Version";
-                    Manifest.Attribute archImplVersionAttr = new Manifest.Attribute( name, artifact.getVersion() );
-                    m.addConfiguredAttribute( archImplVersionAttr );
+                    String ename = artifact.getArtifactId() + "-Extension-Name";
+                    addManifestAttribute( m, entries, ename, artifact.getArtifactId() );
+                    String iname = artifact.getArtifactId() + "-Implementation-Version";
+                    addManifestAttribute( m, entries, iname, artifact.getVersion() );
 
                     if ( artifact.getRepository() != null )
                     {
                         // TODO: is this correct
-                        name = artifact.getArtifactId() + "-Implementation-URL";
+                        iname = artifact.getArtifactId() + "-Implementation-URL";
                         String url = artifact.getRepository().getUrl() + "/" + artifact.toString();
-                        Manifest.Attribute archImplUrlAttr = new Manifest.Attribute( name, url );
-                        m.addConfiguredAttribute( archImplUrlAttr );
+                        addManifestAttribute( m, entries, iname, url );
                     }
                 }
             }
@@ -236,7 +272,7 @@ public class MavenArchiver
             // top-level POM elements so that applications that wish to access
             // POM information without the use of maven tools can do so.
             // ----------------------------------------------------------------------
-    
+
             if ( workingProject.getArtifact().isSnapshot() )
             {
                 workingProject.setVersion( workingProject.getArtifact().getVersion() );
@@ -246,9 +282,8 @@ public class MavenArchiver
 
             String artifactId = workingProject.getArtifactId();
 
-        	archiver.addFile( project.getFile(), "META-INF/maven/" + groupId + "/" + artifactId + "/pom.xml" );
-            
-            
+            archiver.addFile( project.getFile(), "META-INF/maven/" + groupId + "/" + artifactId + "/pom.xml" );
+
             // ----------------------------------------------------------------------
             // Create pom.properties file
             // ----------------------------------------------------------------------
@@ -267,7 +302,7 @@ public class MavenArchiver
 
             os.close(); // stream is flushed but not closed by Properties.store()
 
-        	archiver.addFile( pomPropertiesFile, "META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties" );
+            archiver.addFile( pomPropertiesFile, "META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties" );
         }
 
         // ----------------------------------------------------------------------
@@ -281,7 +316,7 @@ public class MavenArchiver
             archiver.setManifest( manifestFile );
         }
 
-        Manifest manifest = getManifest( workingProject, archiveConfiguration.getManifest() );
+        Manifest manifest = getManifest( workingProject, archiveConfiguration );
 
         // any custom manifest entries in the archive configuration manifest?
         if ( !archiveConfiguration.isManifestEntriesEmpty() )
@@ -300,29 +335,30 @@ public class MavenArchiver
         // any custom manifest sections in the archive configuration manifest?
         if ( !archiveConfiguration.isManifestSectionsEmpty() )
         {
-        	List sections = archiveConfiguration.getManifestSections();
-        	for ( Iterator iter = sections.iterator(); iter.hasNext(); )
-        	{
-        		ManifestSection section = (ManifestSection) iter.next();
-        		Manifest.Section theSection = new Manifest.Section();
-        		theSection.setName( section.getName() );
-        		
-        		if( !section.isManifestEntriesEmpty() ) {
-        			Map entries = section.getManifestEntries();
-        			Set keys = entries.keySet();
-        			for ( Iterator it = keys.iterator(); it.hasNext(); )
-        			{
+            List sections = archiveConfiguration.getManifestSections();
+            for ( Iterator iter = sections.iterator(); iter.hasNext(); )
+            {
+                ManifestSection section = (ManifestSection) iter.next();
+                Manifest.Section theSection = new Manifest.Section();
+                theSection.setName( section.getName() );
+
+                if ( !section.isManifestEntriesEmpty() )
+                {
+                    Map entries = section.getManifestEntries();
+                    Set keys = entries.keySet();
+                    for ( Iterator it = keys.iterator(); it.hasNext(); )
+                    {
                         String key = (String) it.next();
                         String value = (String) entries.get( key );
                         Manifest.Attribute attr = new Manifest.Attribute( key, value );
-        				theSection.addConfiguredAttribute( attr );
-        			}
-        		}
-        		
-        		manifest.addConfiguredSection( theSection );
-        	}
+                        theSection.addConfiguredAttribute( attr );
+                    }
+                }
+
+                manifest.addConfiguredSection( theSection );
+            }
         }
-        
+
         // Configure the jar
         archiver.addConfiguredManifest( manifest );
 
@@ -339,10 +375,10 @@ public class MavenArchiver
             for ( Iterator iter = artifacts.iterator(); iter.hasNext(); )
             {
                 File f = new File( (String) iter.next() );
-                archiver.addConfiguredIndexJars(f);
+                archiver.addConfiguredIndexJars( f );
             }
         }
-        
+
         // create archive
         archiver.createArchive();
 

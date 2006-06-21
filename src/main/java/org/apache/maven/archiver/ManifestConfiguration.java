@@ -29,20 +29,24 @@ public class ManifestConfiguration
 
     private String packageName;
 
-    /**
-     * @todo boolean instead
-     */
-    private String addClasspath;
+    private boolean addClasspath;
 
-    /**
-     * @todo boolean instead
-     */
-    private String addExtensions;
+    private boolean addExtensions;
 
     /**
      * This gets prefixed to all classpath entries.
      */
     private String classpathPrefix = "";
+
+    /**
+     * Add default implementation entries if this is an extension specification.
+     */
+    private boolean addDefaultSpecificationEntries;
+
+    /**
+     * Add default implementation entries if this is an extension.
+     */
+    private boolean addDefaultImplementationEntries;
 
     public String getMainClass()
     {
@@ -51,12 +55,12 @@ public class ManifestConfiguration
 
     public boolean isAddClasspath()
     {
-        return addClasspath != null ? Boolean.valueOf( addClasspath ).booleanValue() : false;
+        return addClasspath;
     }
 
     public boolean isAddExtensions()
     {
-        return addExtensions != null ? Boolean.valueOf( addExtensions ).booleanValue() : false;
+        return addExtensions;
     }
 
     public String getPackageName()
@@ -68,11 +72,21 @@ public class ManifestConfiguration
     {
         String cpp = classpathPrefix.replaceAll( "\\\\", "/" );
 
-        if ( cpp.length() != 0 && !cpp.endsWith("/") )
+        if ( cpp.length() != 0 && !cpp.endsWith( "/" ) )
         {
             cpp += "/";
         }
-        
+
         return cpp;
+    }
+
+    public boolean isAddDefaultImplementationEntries()
+    {
+        return addDefaultImplementationEntries;
+    }
+
+    public boolean isAddDefaultSpecificationEntries()
+    {
+        return addDefaultSpecificationEntries;
     }
 }

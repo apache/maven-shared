@@ -107,30 +107,13 @@ public class MavenArchiver
     protected Manifest getManifest( MavenProject project, ManifestConfiguration config, Map entries )
         throws ManifestException, DependencyResolutionRequiredException
     {
-        // Should we replace "map" with a copy? Note, that we modify it!
+        // TODO: Should we replace "map" with a copy? Note, that we modify it!
 
         // Added basic entries
         Manifest m = new Manifest();
-        addManifestAttribute( m, entries, "Built-By", System.getProperty( "user.name" ) );
         addManifestAttribute( m, entries, "Created-By", "Apache Maven" );
 
-/* TODO: rethink this, it wasn't working
-        Artifact projectArtifact = project.getArtifact();
-
-        if ( projectArtifact.isSnapshot() )
-        {
-            Manifest.Attribute buildNumberAttr = new Manifest.Attribute( "Build-Number", "" +
-                project.getSnapshotDeploymentBuildNumber() );
-            m.addConfiguredAttribute( buildNumberAttr );
-        }
-
-*/
-        if ( config.getPackageName() != null )
-        {
-            addManifestAttribute( m, entries, "Package", config.getPackageName() );
-        }
-
-        addManifestAttribute( m, entries, "Build-Jdk", System.getProperty( "java.version" ) );
+        addCustomEntries( m, entries, config );
 
         if ( config.isAddClasspath() )
         {
@@ -159,23 +142,27 @@ public class MavenArchiver
             }
         }
 
-        // Added supplementary entries
-        addManifestAttribute( m, entries, "Extension-Name", project.getArtifactId() );
-
-        if ( project.getDescription() != null )
+        if ( config.isAddDefaultSpecificationEntries() )
         {
-            // NOTE This should probably be project.getName() but it remains for backwards compatability
-            addManifestAttribute( m, entries, "Specification-Title", project.getDescription() );
+            addManifestAttribute( m, entries, "Specification-Title", project.getName() );
+            addManifestAttribute( m, entries, "Specification-Version", project.getVersion() );
+
+            if ( project.getOrganization() != null )
+            {
+                addManifestAttribute( m, entries, "Specification-Vendor", project.getOrganization().getName() );
+            }
         }
 
-        if ( project.getOrganization() != null )
+        if ( config.isAddDefaultImplementationEntries() )
         {
-            addManifestAttribute( m, entries, "Specification-Vendor", project.getOrganization().getName() );
-            addManifestAttribute( m, entries, "Implementation-Vendor", project.getOrganization().getName() );
-        }
+            addManifestAttribute( m, entries, "Implementation-Title", project.getName() );
+            addManifestAttribute( m, entries, "Implementation-Version", project.getVersion() );
 
-        addManifestAttribute( m, entries, "Implementation-Title", project.getArtifactId() );
-        addManifestAttribute( m, entries, "Implementation-Version", project.getVersion() );
+            if ( project.getOrganization() != null )
+            {
+                addManifestAttribute( m, entries, "Implementation-Vendor", project.getOrganization().getName() );
+            }
+        }
 
         String mainClass = config.getMainClass();
         if ( mainClass != null && !"".equals( mainClass ) )
@@ -186,24 +173,23 @@ public class MavenArchiver
         // Added extensions
         if ( config.isAddExtensions() )
         {
+            // TODO: this is only for applets - should we distinguish them as a packaging?
             StringBuffer extensionsList = new StringBuffer();
             Set artifacts = project.getArtifacts();
 
             for ( Iterator iter = artifacts.iterator(); iter.hasNext(); )
             {
                 Artifact artifact = (Artifact) iter.next();
-                if ( "test".equals( artifact.getScope() ) )
+                if ( !Artifact.SCOPE_TEST.equals( artifact.getScope() ) )
                 {
-                    continue;
-                }
-                // TODO: type of ejb should be added too?
-                if ( "jar".equals( artifact.getType() ) )
-                {
-                    if ( extensionsList.length() > 0 )
+                    if ( "jar".equals( artifact.getType() ) )
                     {
-                        extensionsList.append( " " );
+                        if ( extensionsList.length() > 0 )
+                        {
+                            extensionsList.append( " " );
+                        }
+                        extensionsList.append( artifact.getArtifactId() );
                     }
-                    extensionsList.append( artifact.getArtifactId() );
                 }
             }
 
@@ -214,6 +200,8 @@ public class MavenArchiver
 
             for ( Iterator iter = artifacts.iterator(); iter.hasNext(); )
             {
+                // TODO: the correct solution here would be to have an extension type, and to read
+                // the real extension values either from the artifact's manifest or some part of the POM
                 Artifact artifact = (Artifact) iter.next();
                 if ( "jar".equals( artifact.getType() ) )
                 {
@@ -224,7 +212,6 @@ public class MavenArchiver
 
                     if ( artifact.getRepository() != null )
                     {
-                        // TODO: is this correct
                         iname = artifact.getArtifactId() + "-Implementation-URL";
                         String url = artifact.getRepository().getUrl() + "/" + artifact.toString();
                         addManifestAttribute( m, entries, iname, url );
@@ -234,6 +221,29 @@ public class MavenArchiver
         }
 
         return m;
+    }
+
+    private void addCustomEntries( Manifest m, Map entries, ManifestConfiguration config )
+        throws ManifestException
+    {
+        addManifestAttribute( m, entries, "Built-By", System.getProperty( "user.name" ) );
+        addManifestAttribute( m, entries, "Build-Jdk", System.getProperty( "java.version" ) );
+
+/* TODO: rethink this, it wasn't working
+        Artifact projectArtifact = project.getArtifact();
+
+        if ( projectArtifact.isSnapshot() )
+        {
+            Manifest.Attribute buildNumberAttr = new Manifest.Attribute( "Build-Number", "" +
+                project.getSnapshotDeploymentBuildNumber() );
+            m.addConfiguredAttribute( buildNumberAttr );
+        }
+
+*/
+        if ( config.getPackageName() != null )
+        {
+            addManifestAttribute( m, entries, "Package", config.getPackageName() );
+        }
     }
 
     public JarArchiver getArchiver()

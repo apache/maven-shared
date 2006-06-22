@@ -157,6 +157,8 @@ public class MavenArchiver
         {
             addManifestAttribute( m, entries, "Implementation-Title", project.getName() );
             addManifestAttribute( m, entries, "Implementation-Version", project.getVersion() );
+            // MJAR-5
+            addManifestAttribute( m, entries, "Implementation-Vendor-Id", project.getGroupId() );
 
             if ( project.getOrganization() != null )
             {

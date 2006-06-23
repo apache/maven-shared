@@ -65,7 +65,18 @@ public class MavenArchiver
             {
                 String key = (String) iter.next();
                 String value = (String) entries.get( key );
-                addManifestAttribute( manifest, key, value );
+                Manifest.Attribute attr = manifest.getMainSection().getAttribute(key);
+                if ( key.equals( "Class-Path" ) && attr != null )
+                {
+                    // Merge the user-supplied Class-Path value with the programmatically
+                    // generated Class-Path.  Note that the user-supplied value goes first
+                    // so that resources there will override any in the standard Class-Path.
+                    attr.setValue( value + " " + attr.getValue() );
+                }
+                else
+                {
+                    addManifestAttribute( manifest, key, value );
+                }
             }
         }
 

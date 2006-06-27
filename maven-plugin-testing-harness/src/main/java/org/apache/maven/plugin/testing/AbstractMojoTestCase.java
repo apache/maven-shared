@@ -194,27 +194,37 @@ public abstract class AbstractMojoTestCase
     protected PlexusConfiguration extractPluginConfiguration( String artifactId, Xpp3Dom pomDom )
         throws Exception
     {
-        Xpp3Dom[] pluginElements = pomDom.getChild( "build" ).getChild( "plugins" ).getChildren();
-
         Xpp3Dom pluginConfigurationElement = null;
 
-        for ( int i = 0; i < pluginElements.length; i++ )
+        Xpp3Dom buildElement = pomDom.getChild( "build" );
+        if ( buildElement != null )
         {
-            Xpp3Dom pluginElement = pluginElements[i];
+            Xpp3Dom pluginsRootElement = buildElement.getChild( "plugins" );
 
-            String pluginElementArtifactId = pluginElement.getChild( "artifactId" ).getValue();
-
-            if ( pluginElementArtifactId.equals( artifactId ) )
+            if ( pluginsRootElement != null )
             {
-                pluginConfigurationElement = pluginElement.getChild( "configuration" );
+                Xpp3Dom[] pluginElements = pluginsRootElement.getChildren();
 
-                break;
+                for ( int i = 0; i < pluginElements.length; i++ )
+                {
+                    Xpp3Dom pluginElement = pluginElements[i];
+
+                    String pluginElementArtifactId = pluginElement.getChild( "artifactId" ).getValue();
+
+                    if ( pluginElementArtifactId.equals( artifactId ) )
+                    {
+                        pluginConfigurationElement = pluginElement.getChild( "configuration" );
+
+                        break;
+                    }
+                }
             }
         }
 
         if ( pluginConfigurationElement == null )
         {
-            throw new ConfigurationException( "Cannot find a configuration element for a plugin with an artifactId of " + artifactId + "." );
+            throw new ConfigurationException( "Cannot find a configuration element for a plugin with an artifactId of "
+                + artifactId + "." );
         }
 
         return new XmlPlexusConfiguration( pluginConfigurationElement );

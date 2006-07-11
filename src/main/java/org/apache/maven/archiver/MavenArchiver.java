@@ -149,7 +149,9 @@ public class MavenArchiver
 
             if ( classpath.length() > 0 )
             {
-                addManifestAttribute( m, entries, "Class-Path", classpath.toString() );
+                // Class-Path is special and should be added to manifest even if
+                // it is specified in the manifestEntries section
+                addManifestAttribute( m, "Class-Path", classpath.toString() );
             }
         }
 
@@ -340,20 +342,6 @@ public class MavenArchiver
         }
 
         Manifest manifest = getManifest( workingProject, archiveConfiguration );
-
-        // any custom manifest entries in the archive configuration manifest?
-        if ( !archiveConfiguration.isManifestEntriesEmpty() )
-        {
-            Map entries = archiveConfiguration.getManifestEntries();
-            Set keys = entries.keySet();
-            for ( Iterator iter = keys.iterator(); iter.hasNext(); )
-            {
-                String key = (String) iter.next();
-                String value = (String) entries.get( key );
-                Manifest.Attribute attr = new Manifest.Attribute( key, value );
-                manifest.addConfiguredAttribute( attr );
-            }
-        }
 
         // any custom manifest sections in the archive configuration manifest?
         if ( !archiveConfiguration.isManifestSectionsEmpty() )

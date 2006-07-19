@@ -42,7 +42,7 @@ public class DefaultMessageHolderTest
 
         assertEquals( 1, mh.size() );
 
-        assertEquals( "[1] test", mh.render() );
+        assertEquals( "[1] [INFO] test", mh.render() );
     }
 
     // MessageHolder append( Throwable error );
@@ -67,7 +67,7 @@ public class DefaultMessageHolderTest
         
         npe.printStackTrace( pw );
 
-        assertEquals( "[1] Error:\n" + sw.toString(), mh.render() );
+        assertEquals( "[1] [INFO] Error:\n" + sw.toString(), mh.render() );
     }
 
     // MessageHolder newMessage();
@@ -90,7 +90,7 @@ public class DefaultMessageHolderTest
 
         assertEquals( 1, mh.size() );
 
-        assertEquals( "[1] test", mh.render() );
+        assertEquals( "[1] [INFO] test", mh.render() );
     }
 
     // MessageHolder newMessage();
@@ -118,7 +118,7 @@ public class DefaultMessageHolderTest
 
         assertEquals( 1, mh.size() );
 
-        assertEquals( "[1] test again", mh.render() );
+        assertEquals( "[1] [INFO] test again", mh.render() );
     }
 
     // MessageHolder newMessage();
@@ -153,7 +153,7 @@ public class DefaultMessageHolderTest
         
         npe.printStackTrace( pw );
 
-        assertEquals( "[1] test\nError:\n" + sw.toString(), mh.render() );
+        assertEquals( "[1] [INFO] test\nError:\n" + sw.toString(), mh.render() );
     }
     
     // MessageHolder addMessage( CharSequence messagePart );
@@ -167,7 +167,7 @@ public class DefaultMessageHolderTest
         assertSame( mh, check );
         
         assertEquals( 1, mh.size() );
-        assertEquals( "[1] test", mh.render() );
+        assertEquals( "[1] [INFO] test", mh.render() );
     }
     
     // MessageHolder addMessage( CharSequence messagePart );
@@ -185,7 +185,7 @@ public class DefaultMessageHolderTest
         assertSame( mh, check );
         
         assertEquals( 2, mh.size() );
-        assertEquals( "[1] test\n\n[2] test2", mh.render() );
+        assertEquals( "[1] [INFO] test\n\n[2] [INFO] test2", mh.render() );
     }
     
     // MessageHolder addMessage( CharSequence messagePart, Throwable error );
@@ -208,7 +208,7 @@ public class DefaultMessageHolderTest
         
         npe.printStackTrace( pw );
 
-        assertEquals( "[1] test\nError:\n" + sw.toString(), mh.render() );
+        assertEquals( "[1] [INFO] test\nError:\n" + sw.toString(), mh.render() );
     }
     
     // MessageHolder addMessage( CharSequence messagePart, Throwable error );
@@ -236,7 +236,7 @@ public class DefaultMessageHolderTest
         
         npe.printStackTrace( pw );
 
-        assertEquals( "[1] test\nError:\n" + sw.toString() + "\n\n[2] test2", mh.render() );
+        assertEquals( "[1] [INFO] test\nError:\n" + sw.toString() + "\n\n[2] [INFO] test2", mh.render() );
     }
     
     // MessageHolder addMessage( Throwable error );
@@ -259,7 +259,7 @@ public class DefaultMessageHolderTest
         
         npe.printStackTrace( pw );
 
-        assertEquals( "[1] Error:\n" + sw.toString(), mh.render() );
+        assertEquals( "[1] [INFO] Error:\n" + sw.toString(), mh.render() );
     }
     
     // boolean isEmpty();

@@ -530,7 +530,7 @@ public class FileSetManager
     private DirectoryScanner scan( FileSet fileSet )
     {
         File basedir = new File( fileSet.getDirectory() );
-        if ( !basedir.exists() )
+        if ( !basedir.exists() || !basedir.isDirectory() )
         {
             return null;
         }
@@ -540,14 +540,19 @@ public class FileSetManager
         String[] includesArray = fileSet.getIncludesArray();
         String[] excludesArray = fileSet.getExcludesArray();
         
-        if ( includesArray.length < 1 && excludesArray.length < 1 )
-        {
-            scanner.setIncludes( new String[]{ "**" } );
-        }
-        else
+        if ( includesArray.length > 0 )
         {
             scanner.setIncludes( includesArray );
+        }
+        
+        if ( excludesArray.length > 0 )
+        {
             scanner.setExcludes( excludesArray );
+        }
+        
+        if ( fileSet.isUseDefaultExcludes() )
+        {
+            scanner.addDefaultExcludes();
         }
         
         scanner.setBasedir( basedir );

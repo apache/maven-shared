@@ -20,11 +20,11 @@
   <classes>
     <class>
       <name>SetBase</name>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
       <fields>
         <field>
           <name>followSymlinks</name>
-          <version>1.0.0</version>
+          <version>1.0.0+</version>
           <type>boolean</type>
           <default>false</default>
           <description>
@@ -33,7 +33,7 @@
         </field>
         <field>
           <name>outputDirectory</name>
-          <version>1.0.0</version>
+          <version>1.0.0+</version>
           <type>String</type>
           <description>
             Specifies the output directory relative to the root
@@ -42,8 +42,15 @@
           </description>
         </field>
         <field>
+          <name>useDefaultExcludes</name>
+          <version>1.1.0</version>
+          <type>boolean</type>
+          <default>true</default>
+          <description>Whether to include exclusion patterns for common temporary and SCM control files (true by default).</description>
+        </field>
+        <field>
           <name>includes</name>
-          <version>1.0.0</version>
+          <version>1.0.0+</version>
           <association>
             <type>String</type>
             <multiplicity>*</multiplicity>
@@ -57,7 +64,7 @@
         </field>
         <field>
           <name>excludes</name>
-          <version>1.0.0</version>
+          <version>1.0.0+</version>
           <association>
             <type>String</type>
             <multiplicity>*</multiplicity>
@@ -71,7 +78,7 @@
         </field>
         <field>
           <name>fileMode</name>
-          <version>1.0.0</version>
+          <version>1.0.0+</version>
           <type>String</type>
           <defaultValue>0644</defaultValue>
           <description>
@@ -86,7 +93,7 @@
         </field>
         <field>
           <name>directoryMode</name>
-          <version>1.0.0</version>
+          <version>1.0.0+</version>
           <type>String</type>
           <defaultValue>0755</defaultValue>
           <description>
@@ -101,7 +108,7 @@
         </field>
         <field>
           <name>mapper</name>
-          <version>1.0.0</version>
+          <version>1.1.0</version>
           <association>
             <type>Mapper</type>
           </association>
@@ -113,7 +120,7 @@
       </fields>
       <codeSegments>
         <codeSegment>
-          <version>1.0.0</version>
+          <version>1.0.0+</version>
           <code><![CDATA[
     /**
      * Return the file-set inclusion rules in array form.
@@ -124,8 +131,7 @@
         java.util.Collection includes = getIncludes();
         if ( includes != null && !includes.isEmpty() )
         {
-            includesArry = new String[includes.size()];
-            includesArry = (String[]) includes.toArray( includesArry );
+            includesArry = (String[]) includes.toArray( new String[0] );
         }
         else if ( includes != null )
         {
@@ -144,8 +150,7 @@
         java.util.Collection excludes = getExcludes();
         if ( excludes != null && !excludes.isEmpty() )
         {
-            excludesArry = new String[excludes.size()];
-            excludesArry = (String[]) excludes.toArray( excludesArry );
+            excludesArry = (String[]) excludes.toArray( new String[0] );
         }
         else if ( excludes != null )
         {
@@ -161,11 +166,11 @@
     </class>
     <class>
       <name>Mapper</name>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
       <fields>
         <field>
           <name>type</name>
-          <version>1.0.0</version>
+          <version>1.1.0</version>
           <type>String</type>
           <defaultValue>identity</defaultValue>
           <description>
@@ -187,7 +192,7 @@
         </field>
         <field>
           <name>from</name>
-          <version>1.0.0</version>
+          <version>1.1.0</version>
           <type>String</type>
           <description>
           the from attribute for the given implementation. Depends on the implementation
@@ -195,7 +200,7 @@
         </field>
         <field>
           <name>to</name>
-          <version>1.0.0</version>
+          <version>1.1.0</version>
           <type>String</type>
           <description>
           the to attribute for the given implementation. Depends on the implementation
@@ -203,7 +208,7 @@
         </field>
         <field>
           <name>classname</name>
-          <version>1.0.0</version>
+          <version>1.1.0</version>
           <type>String</type>
           <description>
           Specify your own implementation of the mapper. The class has to be in the classpath of the project. 
@@ -214,7 +219,7 @@
     </class>
     <class rootElement="true" xml.tagName="fileSet">
       <name>FileSet</name>
-      <version>1.0.0</version>
+      <version>1.1.0</version>
       <superClass>SetBase</superClass>
       <description>
         Defines the rules for matching and working with files in a given base directory.
@@ -222,7 +227,7 @@
       <fields>
         <field>
           <name>directory</name>
-          <version>1.0.0</version>
+          <version>1.0.0+</version>
           <type>String</type>
           <description>
             Absolute or relative from the module's directory.  For
@@ -233,7 +238,7 @@
         </field>
         <field>
           <name>lineEnding</name>
-          <version>1.0.0</version>
+          <version>1.0.0+</version>
           <type>String</type>
           <description>
             <![CDATA[

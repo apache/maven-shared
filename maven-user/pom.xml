@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>org.apache.maven.shared</groupId>
+    <artifactId>maven-shared-components</artifactId>
+    <version>1</version>
+  </parent>
+
+  <groupId>org.apache.maven.shared.user</groupId>
+  <artifactId>maven-user</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  
+  <name>Maven User Management</name>
+  <description>User management code shared for different apps like Continuum or MRM</description>
+
+  <modules>
+    <module>maven-user-model</module>
+    <module>maven-user-controller</module>
+    <module>maven-user-webapp</module>
+  </modules>
+
+  <dependencies>
+  </dependencies>
+</project>

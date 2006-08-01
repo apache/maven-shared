@@ -22,6 +22,7 @@
     <module>maven-user-model</module>
     <module>maven-user-controller</module>
     <module>maven-user-webapp</module>
+    <module>maven-user-acegi</module>
   </modules>
 
   <dependencies>

@@ -114,4 +114,10 @@ public class DefaultUserManager
 
     }
 
+    public List getPermissions()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }

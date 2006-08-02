@@ -35,7 +35,8 @@ public interface UserManager
     // ----------------------------------------------------------------------
 
     /**
-     * Add a new user
+     * Add a new user. User password will be encoded using the {@link #getPasswordEncoder()}
+     * before storing it.
      * 
      * @param user
      * @throws EntityExistsException if the user already exists
@@ -44,7 +45,8 @@ public interface UserManager
         throws EntityExistsException;
 
     /**
-     * Update user data
+     * Update user data. User password will be encoded using the {@link #getPasswordEncoder()}
+     * before storing it.
      * 
      * @param user
      * @throws EntityNotFoundException if the user does not exist
@@ -53,14 +55,14 @@ public interface UserManager
         throws EntityNotFoundException;
 
     /**
-     * Get all users
+     * Get all users. Users password won't be returned for security reasons.
      * 
      * @return all users in the system
      */
     List getUsers();
 
     /**
-     * Get a user by id
+     * Get a user by id. User password won't be returned for security reasons.
      * 
      * @param userId
      * @return null if the user doesn't exist
@@ -71,7 +73,7 @@ public interface UserManager
      * Delete a user
      * 
      * @param userId
-     * @throws EntityNotFoundException  if the user does not exist
+     * @throws EntityNotFoundException if the user does not exist
      */
     void removeUser( int userId )
         throws EntityNotFoundException;
@@ -89,7 +91,7 @@ public interface UserManager
      * @return the encoder
      */
     PasswordEncoder getPasswordEncoder();
-    
+
     // ----------------------------------------------------------------------
     // User Group
     // ----------------------------------------------------------------------
@@ -131,5 +133,16 @@ public interface UserManager
      */
     void removeUserGroup( int userGroupId )
         throws EntityNotFoundException;
+
+    // ----------------------------------------------------------------------
+    // Permissions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Get all the available permissions
+     * 
+     * @return all permissions defined in system
+     */
+    List getPermissions();
 
 }

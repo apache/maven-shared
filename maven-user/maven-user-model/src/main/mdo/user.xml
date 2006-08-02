@@ -62,7 +62,7 @@
           <defaultValue>false</defaultValue>
         </field>
         <field>
-          <name>hashedPassword</name>
+          <name>password</name>
           <version>1.0.0+</version>
           <type>String</type>
         </field>

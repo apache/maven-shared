@@ -1,0 +1,45 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+
+<xwork>
+  <include file="webwork-default.xml"/>
+  <package name="default" extends="webwork-default">
+
+    <interceptors>
+      <interceptor-stack name="defaultContinuumStack">
+        <interceptor-ref name="prepare"/>
+        <interceptor-ref name="servlet-config"/>
+        <interceptor-ref name="chain"/>
+        <interceptor-ref name="model-driven"/>
+        <interceptor-ref name="component"/>
+        <interceptor-ref name="fileUpload"/>
+        <interceptor-ref name="static-params"/>
+        <interceptor-ref name="params"/>
+        <!-- interceptor-ref name="conversionError"/ -->
+        <interceptor-ref name="validation"/>
+        <interceptor-ref name="workflow"/>
+      </interceptor-stack>
+    </interceptors>
+
+    <default-interceptor-ref name="defaultContinuumStack"/>
+
+    <global-results>
+      <result name="error">error.jsp</result>
+    </global-results>
+
+    <action name="users" class="org.apache.maven.user.controller.action.UsersAction">
+      <result name="success">users.jsp</result>
+    </action>
+
+    <action name="editUser" class="org.apache.maven.user.controller.action.EditUserAction">
+      <result name="input">editUser.jsp</result>
+      <result name="permissions">addUserRole.jsp</result>
+      <result name="success" type="chain">users</result>
+    </action>
+
+    <action name="deleteUser" class="org.apache.maven.user.controller.action.DeleteUserAction">
+      <result name="delete">deleteUser.jsp</result>
+      <result name="success" type="chain">users</result>
+    </action>
+
+  </package>
+</xwork>

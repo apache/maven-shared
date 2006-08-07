@@ -18,6 +18,8 @@ package org.apache.maven.user.model.impl;
 
 import java.util.List;
 
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
@@ -25,6 +27,13 @@ import org.apache.maven.user.model.PasswordEncoder;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserManager;
+import org.apache.maven.user.model.Permission;
+
+import org.codehaus.plexus.jdo.JdoFactory;
+import org.codehaus.plexus.jdo.PlexusJdoUtils;
+import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
+import org.codehaus.plexus.jdo.PlexusStoreException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 /**
  * Default implementation of the {@link UserManager} interface.
@@ -35,63 +44,102 @@ import org.apache.maven.user.model.UserManager;
 public class DefaultUserManager
     implements UserManager
 {
-
+    /**
+    * @plexus.requirement
+    */
+    private JdoFactory jdoFactory;
+    
+    private PersistenceManagerFactory pmf;
+       
+    // ----------------------------------------------------------------------
+    // Component Lifecycle
+    // ----------------------------------------------------------------------
+    
+    public void initialize()
+        throws InitializationException
+    {
+        pmf = jdoFactory.getPersistenceManagerFactory();
+    }
+   
     public void addUser( User user )
         throws EntityExistsException
     {
-        // TODO Auto-generated method stub
-
+        addObject( user );
     }
 
     public void addUserGroup( UserGroup userGroup )
         throws EntityExistsException
     {
-        // TODO Auto-generated method stub
-
+        addObject( userGroup );
     }
 
     public PasswordEncoder getPasswordEncoder()
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public User getUser( int userId )
     {
-        // TODO Auto-generated method stub
-        return null;
+        User user = null;
+        
+        try
+        {
+            user = ( User ) getObjectById( User.class, userId );
+        }
+        catch ( PlexusStoreException pse )
+        {
+            //log exception
+        }
+        catch ( EntityExistsException eee )
+        {
+            return null;
+        }
+        return user;
     }
 
     public UserGroup getUserGroup( int userGroupId )
     {
-        // TODO Auto-generated method stub
-        return null;
+        UserGroup userGroup = null;
+        
+        try
+        {
+            userGroup = (UserGroup) getObjectById( UserGroup.class, userGroupId );
+        }
+        catch ( PlexusStoreException pse )
+        {
+            //log exception
+        }
+        catch ( EntityExistsException eee )
+        {
+            return null;
+        }
+        return userGroup;
     }
 
     public List getUserGroups()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return getAllObjectsDetached( UserGroup.class );
     }
 
     public List getUsers()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return getAllObjectsDetached( User.class );
     }
 
     public void removeUser( int userId )
         throws EntityNotFoundException
     {
-        // TODO Auto-generated method stub
-
+        User user = getUser( userId );
+        
+        removeObject( user );
     }
 
     public void removeUserGroup( int userGroupId )
         throws EntityNotFoundException
     {
-        // TODO Auto-generated method stub
-
+        UserGroup userGroup = getUserGroup( userGroupId );
+        
+        removeObject( userGroup );
     }
 
     public void setPasswordEncoder( PasswordEncoder passwordEncoder )
@@ -103,21 +151,95 @@ public class DefaultUserManager
     public void updateUser( User user )
         throws EntityNotFoundException
     {
-        // TODO Auto-generated method stub
-
+        try
+        {
+            updateObject( user );
+        }
+        catch ( PlexusStoreException pse )
+        {
+            //log exception
+        }
     }
 
     public void updateUserGroup( UserGroup userGroup )
         throws EntityNotFoundException
     {
-        // TODO Auto-generated method stub
-
+        try
+        {
+            updateObject( userGroup );
+        }
+        catch ( PlexusStoreException pse )
+        {
+            //log exception
+        }
     }
 
     public List getPermissions()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return getAllObjectsDetached( Permission.class );
     }
+    
+    private Object addObject( Object object )
+    {
+        return PlexusJdoUtils.addObject( getPersistenceManager(), object );
+    }
+    
+    private Object getObjectById( Class clazz, int id )
+        throws PlexusStoreException, EntityNotFoundException
+    {
+        return getObjectById( clazz, id, null );
+    }
+    
+    private Object getObjectById( Class clazz, int id, String fetchGroup )
+        throws PlexusStoreException, EntityNotFoundException
+    {
+        try
+        {
+            return PlexusJdoUtils.getObjectById( getPersistenceManager(), clazz, id, fetchGroup );
+        }
+        catch ( PlexusObjectNotFoundException e )
+        {
+            throw new EntityNotFoundException( e.getMessage() );
+        }
+        catch ( PlexusStoreException e )
+        {
+            throw new PlexusStoreException( e.getMessage(), e );
+        }
+    }
+    
+    private List getAllObjectsDetached( Class clazz )
+    {
+        return getAllObjectsDetached( clazz, null );
+    }
+
+    private List getAllObjectsDetached( Class clazz, String fetchGroup )
+    {
+        return getAllObjectsDetached( clazz, null, fetchGroup );
+    }
+
+    private List getAllObjectsDetached( Class clazz, String ordering, String fetchGroup )
+    {
+        return PlexusJdoUtils.getAllObjectsDetached( getPersistenceManager(), clazz, ordering, fetchGroup );
+    }
+    
+    private void removeObject( Object o )
+    {
+        PlexusJdoUtils.removeObject( getPersistenceManager(), o );
+    }
+    
+    private void updateObject( Object object )
+        throws PlexusStoreException
+    {
+        PlexusJdoUtils.updateObject( getPersistenceManager(), object );
+    }
+    
+    private PersistenceManager getPersistenceManager()
+    {
+        PersistenceManager pm = pmf.getPersistenceManager();
+
+        pm.getFetchPlan().setMaxFetchDepth( -1 );
+
+        return pm;
+    } 
 
 }

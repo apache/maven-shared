@@ -33,6 +33,7 @@ import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
 import org.codehaus.plexus.jdo.PlexusStoreException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 /**
@@ -42,7 +43,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
  * @version $Id$
  */
 public class DefaultUserManager
-    implements UserManager
+    implements UserManager, Initializable
 {
     /**
     * @plexus.requirement

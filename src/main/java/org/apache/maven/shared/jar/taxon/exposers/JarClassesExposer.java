@@ -16,8 +16,8 @@ package org.apache.maven.shared.jar.taxon.exposers;
  * limitations under the License.
  */
 
+import org.apache.maven.shared.jar.JarAnalyzer;
 import org.apache.maven.shared.jar.classes.JarClasses;
-import org.apache.maven.shared.jar.classes.JarClassesAnalyzer;
 import org.apache.maven.shared.jar.taxon.AbstractJarTaxonExposer;
 
 import java.util.Iterator;
@@ -31,6 +31,11 @@ import java.util.Iterator;
 public class JarClassesExposer
     extends AbstractJarTaxonExposer
 {
+    /**
+     * @plexus.requirement role-hint="classes"
+     */
+    private JarAnalyzer analyzer;
+
     public String getExposerName()
     {
         return "Jar Classes";
@@ -47,7 +52,6 @@ public class JarClassesExposer
 
         if ( jarclasses == null )
         {
-            JarClassesAnalyzer analyzer = new JarClassesAnalyzer();
             analyzer.analyze( getJar() );
             jarclasses = getJar().getClasses();
         }

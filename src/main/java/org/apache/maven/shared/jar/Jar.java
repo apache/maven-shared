@@ -41,10 +41,14 @@ import java.util.regex.Pattern;
 
 /**
  * A Jar Toolbox for working with Jar Files.
+ *
+ * @plexus.component role="org.apache.maven.shared.jar.Jar"
  */
 public class Jar
     extends AbstractLogEnabled
 {
+    public static final String ROLE = Jar.class.getName();
+
     private List entries;
 
     private JarFile jarfile;
@@ -58,35 +62,24 @@ public class Jar
     private boolean isSealed;
 
     /**
-     * Create a Jar Tool.
-     *
-     * @param file
-     * @throws JarException
+     * @plexus.requirement role-hint="classes"
      */
-    public Jar( File file )
+    private JarAnalyzer classesAnalyzer;
+
+    /**
+     * @plexus.requirement role-hint="taxon"
+     */
+    private JarAnalyzer taxonAnalyzer;
+
+    public void setFile( File file )
         throws JarException
     {
         if ( file == null )
         {
-            throw new JarException( "Null jar File." );
+            throw new JarException( "file is null." );
         }
 
         init( file );
-    }
-
-    /**
-     * @param filename
-     * @throws JarException
-     */
-    public Jar( String filename )
-        throws JarException
-    {
-        if ( StringUtils.isEmpty( filename ) )
-        {
-            throw new JarException( "Empty jar filename." );
-        }
-
-        init( new File( filename ) );
     }
 
     /**
@@ -271,6 +264,11 @@ public class Jar
 
     public JarClasses getClasses()
     {
+        if ( classes == null )
+        {
+            classesAnalyzer.analyze( this );
+        }
+
         return classes;
     }
 
@@ -281,6 +279,11 @@ public class Jar
 
     public JarTaxon getTaxon()
     {
+        if ( taxon == null )
+        {
+            taxonAnalyzer.analyze( this );
+        }
+
         return taxon;
     }
 

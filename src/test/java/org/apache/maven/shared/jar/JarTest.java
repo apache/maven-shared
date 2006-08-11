@@ -27,8 +27,17 @@ public class JarTest
     private Jar getJar( String filename )
         throws JarException
     {
-        File jarfile = new File( getSampleJarsDirectory(), filename );
-        return new Jar( jarfile );
+        try
+        {
+            File jarfile = new File( getSampleJarsDirectory(), filename );
+            Jar jar = (Jar) lookup( Jar.ROLE );
+            jar.setFile( jarfile );
+            return jar;
+        }
+        catch ( Exception e )
+        {
+            throw new JarException( "Can't load the Jar component", e );
+        }
     }
 
     public void testSealed()

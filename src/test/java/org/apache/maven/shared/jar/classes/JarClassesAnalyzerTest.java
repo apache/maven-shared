@@ -18,7 +18,6 @@ package org.apache.maven.shared.jar.classes;
 
 import org.apache.maven.shared.jar.AbstractJarTestCase;
 import org.apache.maven.shared.jar.Jar;
-import org.apache.maven.shared.jar.JarException;
 
 import java.io.File;
 
@@ -30,13 +29,11 @@ public class JarClassesAnalyzerTest
     extends AbstractJarTestCase
 {
     private JarClasses getJarClasses( String filename )
-        throws JarException
+        throws Exception
     {
         File jarfile = new File( getSampleJarsDirectory(), filename );
-        Jar jar = new Jar( jarfile );
-
-        JarClassesAnalyzer analyzer = new JarClassesAnalyzer();
-        analyzer.analyze( jar );
+        Jar jar = (Jar) lookup( Jar.ROLE );
+        jar.setFile( jarfile );
 
         JarClasses jclass = jar.getClasses();
         assertNotNull( "JarClasses", jclass );
@@ -45,7 +42,7 @@ public class JarClassesAnalyzerTest
     }
 
     public void testAnalyzeJXR()
-        throws JarException
+        throws Exception
     {
         JarClasses jclass = getJarClasses( "jxr.jar" );
 
@@ -63,7 +60,7 @@ public class JarClassesAnalyzerTest
     }
 
     public void testAnalyzeANT()
-        throws JarException
+        throws Exception
     {
         JarClasses jclass = getJarClasses( "ant.jar" );
 
@@ -80,7 +77,7 @@ public class JarClassesAnalyzerTest
     }
 
     public void testAnalyzeJarWithDebug()
-        throws JarException
+        throws Exception
     {
         JarClasses jclass = getJarClasses( "helloworld-1.4-debug.jar" );
 
@@ -88,7 +85,7 @@ public class JarClassesAnalyzerTest
     }
 
     public void testAnalyzeJarWithoutDebug()
-        throws JarException
+        throws Exception
     {
         JarClasses jclass = getJarClasses( "helloworld-1.4.jar" );
 
@@ -96,7 +93,7 @@ public class JarClassesAnalyzerTest
     }
 
     public void testAnalyzeJarVersion15()
-        throws JarException
+        throws Exception
     {
         JarClasses jclass = getJarClasses( "helloworld-1.5.jar" );
 
@@ -104,7 +101,7 @@ public class JarClassesAnalyzerTest
     }
 
     public void testAnalyzeJarVersion14()
-        throws JarException
+        throws Exception
     {
         JarClasses jclass = getJarClasses( "helloworld-1.4.jar" );
 
@@ -112,7 +109,7 @@ public class JarClassesAnalyzerTest
     }
 
     public void testAnalyzeJarVersion13()
-        throws JarException
+        throws Exception
     {
         JarClasses jclass = getJarClasses( "helloworld-1.3.jar" );
 
@@ -120,7 +117,7 @@ public class JarClassesAnalyzerTest
     }
 
     public void testAnalyzeJarVersion12()
-        throws JarException
+        throws Exception
     {
         JarClasses jclass = getJarClasses( "helloworld-1.2.jar" );
 
@@ -128,7 +125,7 @@ public class JarClassesAnalyzerTest
     }
 
     public void testAnalyzeJarVersion11()
-        throws JarException
+        throws Exception
     {
         JarClasses jclass = getJarClasses( "helloworld-1.1.jar" );
 

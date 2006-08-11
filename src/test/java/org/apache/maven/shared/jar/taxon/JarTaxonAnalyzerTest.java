@@ -18,7 +18,6 @@ package org.apache.maven.shared.jar.taxon;
 
 import org.apache.maven.shared.jar.AbstractJarTestCase;
 import org.apache.maven.shared.jar.Jar;
-import org.apache.maven.shared.jar.JarAnalyzer;
 
 import java.io.File;
 
@@ -32,11 +31,11 @@ public class JarTaxonAnalyzerTest
     private JarTaxon getJarTaxon( String filename )
         throws Exception
     {
-        File jarfile = new File( getSampleJarsDirectory(), filename );
-        Jar jar = new Jar( jarfile );
+        Jar jar;
 
-        JarAnalyzer analyzer = (JarAnalyzer) lookup( JarAnalyzer.ROLE, "taxon" );
-        analyzer.analyze( jar );
+        File jarfile = new File( getSampleJarsDirectory(), filename );
+        jar = (Jar) lookup( Jar.ROLE );
+        jar.setFile( jarfile );
 
         JarTaxon taxon = jar.getTaxon();
         assertNotNull( "JarTaxon", taxon );

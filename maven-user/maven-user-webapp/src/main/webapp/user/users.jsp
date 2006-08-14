@@ -21,13 +21,13 @@
             <ec:column property="email" title="user.email"/>
             <ec:column property="actions" title="&nbsp;">
 
-              <c:url var="editUserUrl" value="/editUser!doEdit.action">
+              <c:url var="editUserUrl" value="/user/editUser!doEdit.action">
                 <c:param name="accountId" value="${user.accountId}"/>
               </c:url>
 
               <a href="<c:out value='${editUserUrl}'/>"><ww:text name="edit"/></a>
 
-              <c:url var="deleteUserUrl" value="/deleteUser!doDelete.action">
+              <c:url var="deleteUserUrl" value="/user/deleteUser!doDelete.action">
                 <c:param name="accountId" value="${user.accountId}"/>
                 <c:param name="username" value="${user.username}"/>
               </c:url>

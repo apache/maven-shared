@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
 /**
  * A Jar Toolbox for working with Jar Files.
  *
- * @plexus.component role="org.apache.maven.shared.jar.Jar"
+ * @plexus.component role="org.apache.maven.shared.jar.Jar" instantiation-strategy="per-lookup"
  */
 public class Jar
     extends AbstractLogEnabled

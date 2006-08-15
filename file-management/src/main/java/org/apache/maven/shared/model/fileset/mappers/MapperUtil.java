@@ -17,72 +17,89 @@
 
 package org.apache.maven.shared.model.fileset.mappers;
 
-import java.util.Enumeration;
-import java.util.Properties;
-
 import org.apache.maven.shared.model.fileset.Mapper;
-import org.apache.maven.shared.model.fileset.mappers.FileNameMapper;
+import org.codehaus.plexus.util.IOUtil;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * Element to define a FileNameMapper.
  */
-public class MapperUtil
+public final class MapperUtil
 {
 
-    private Properties implementations;
+    private static final String MAPPER_PROPERTIES = "mapper.properties";
+    
+    private static Properties implementations;
 
-    protected String from = null;
-
-    protected String to = null;
-
-    protected String type = "identity";
-
-    protected String classname = null;
-
-    /**
-     * Construct a new <CODE>MapperUtil</CODE> element.
-     * 
-     * @param p
-     *            the owning Ant <CODE>Project</CODE>.
-     */
-    public MapperUtil( Mapper mapper )
+    private MapperUtil()
     {
-        initializeProperties();
-        this.type = mapper.getType();
-        this.from = mapper.getFrom();
-        this.to = mapper.getTo();
-        this.classname = mapper.getClassname();
     }
 
     /**
      * Initializes a properties object to store the built-in classnames.
      */
-    public void initializeProperties()
+    private static void initializeBuiltIns()
     {
-        implementations = new Properties();
-        implementations.setProperty( "identity", "org.apache.maven.plugin.assembly.mappers.IdentityMapper" );
-        implementations.setProperty( "flatten", "org.apache.maven.plugin.assembly.mappers.FlatFileNameMapper" );
-        implementations.setProperty( "glob", "org.apache.maven.plugin.assembly.mappers.GlobPatternMapper" );
-        implementations.setProperty( "merge", "org.apache.maven.plugin.assembly.mappers.MergingMapper" );
-        implementations.setProperty( "regexp", "org.apache.maven.plugin.assembly.mappers.RegexpPatternMapper" );
-        implementations.setProperty( "package", "org.apache.maven.plugin.assembly.mappers.PackageNameMapper" );
-        implementations.setProperty( "unpackage", "org.apache.maven.plugin.assembly.mappers.UnPackageNameMapper" );
+        if ( implementations == null )
+        {
+            Properties props = new Properties();
+            
+            ClassLoader cloader = Thread.currentThread().getContextClassLoader();
+            
+            InputStream stream = null;
+            
+            try
+            {
+                stream = cloader.getResourceAsStream( MAPPER_PROPERTIES );
+                
+                if ( stream == null )
+                {
+                    throw new IllegalStateException( "Cannot find classpath resource: " + MAPPER_PROPERTIES );
+                }
+                
+                try
+                {
+                    props.load( stream );
+                }
+                catch ( IOException e )
+                {
+                    throw new IllegalStateException( "Cannot find classpath resource: " + MAPPER_PROPERTIES );
+                }
+            }
+            finally
+            {
+                IOUtil.close( stream );
+            }
+        }
     }
 
     /**
      * Returns a fully configured FileNameMapper implementation.
      */
-    public FileNameMapper getImplementation()
-        throws Exception
+    public static FileNameMapper getFileNameMapper( Mapper mapper )
+        throws MapperException
     {
+        if ( mapper == null )
+        {
+            return null;
+        }
+        
+        initializeBuiltIns();
+        
+        String type = mapper.getType();
+        String classname = mapper.getClassname();
+        
         if ( type == null && classname == null )
         {
-            throw new Exception( "nested mapper or " + "one of the attributes type or classname is required" );
+            throw new MapperException( "nested mapper or " + "one of the attributes type or classname is required" );
         }
 
         if ( type != null && classname != null )
         {
-            throw new Exception( "must not specify both type and classname attribute" );
+            throw new MapperException( "must not specify both type and classname attribute" );
         }
         if ( type != null )
         {
@@ -93,29 +110,23 @@ public class MapperUtil
         {
             FileNameMapper m = (FileNameMapper) Class.forName( classname ).newInstance();
 
-            m.setFrom( from );
-            m.setTo( to );
+            m.setFrom( mapper.getFrom() );
+            m.setTo( mapper.getTo() );
 
             return m;
         }
-        catch ( ClassNotFoundException cnfe )
+        catch ( ClassNotFoundException e )
         {
-            throw cnfe;
+            throw new MapperException( "Cannot find mapper implementation: " + classname, e );
         }
-        catch ( Throwable t )
+        catch ( InstantiationException e )
         {
-            throw new Exception( t );
+            throw new MapperException( "Cannot load mapper implementation: " + classname, e );
         }
-    }
-
-    public Enumeration getTypes()
-    {
-        return implementations.propertyNames();
-    }
-
-    public Properties getImplementations()
-    {
-        return this.implementations;
+        catch ( IllegalAccessException e )
+        {
+            throw new MapperException( "Cannot load mapper implementation: " + classname, e );
+        }
     }
 
 }

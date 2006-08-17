@@ -17,9 +17,14 @@ package org.apache.maven.user.model.impl;
  */
 
 import java.util.List;
+import java.util.Collection;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Extent;
+import javax.jdo.Transaction;
+
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
@@ -98,6 +103,84 @@ public class DefaultUserManager
         return user;
     }
 
+    public User getUserByUsername( String username )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( User.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareImports( "import java.lang.String" );
+
+            query.declareParameters( "String username" );
+
+            query.setFilter( "this.username == username" );
+
+            Collection result = (Collection) query.execute( username );
+
+            if ( result.size() == 0 )
+            {
+                tx.commit();
+
+                return null;
+            }
+
+            Object object = pm.detachCopy( result.iterator().next() );
+
+            tx.commit();
+
+            return (User) object;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
+    public User getGuestUser()
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( User.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.setFilter( "this.guest == true" );
+
+            Collection result = (Collection) query.execute();
+
+            if ( result.size() == 0 )
+            {
+                tx.commit();
+
+                return null;
+            }
+
+            Object object = pm.detachCopy( result.iterator().next() );
+
+            tx.commit();
+
+            return (User) object;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
     public UserGroup getUserGroup( int userGroupId )
     {
         UserGroup userGroup = null;
@@ -115,6 +198,47 @@ public class DefaultUserManager
             return null;
         }
         return userGroup;
+    }
+
+    public UserGroup getUserGroup( String name )
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( UserGroup.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareImports( "import java.lang.String" );
+
+            query.declareParameters( "String name" );
+
+            query.setFilter( "this.name == name" );
+
+            Collection result = (Collection) query.execute( name );
+
+            if ( result.size() == 0 )
+            {
+                tx.commit();
+
+                return null;
+            }
+
+            Object object = pm.detachCopy( result.iterator().next() );
+
+            tx.commit();
+
+            return (UserGroup) object;
+        }
+        finally
+        {
+            rollback( tx );
+        }
     }
 
     public List getUserGroups()
@@ -179,6 +303,53 @@ public class DefaultUserManager
     {
         return getAllObjectsDetached( Permission.class );
     }
+
+    public Permission getPermission( String name )
+        throws EntityNotFoundException
+    {
+        PersistenceManager pm = getPersistenceManager();
+
+        Transaction tx = pm.currentTransaction();
+
+        try
+        {
+            tx.begin();
+
+            Extent extent = pm.getExtent( Permission.class, true );
+
+            Query query = pm.newQuery( extent );
+
+            query.declareImports( "import java.lang.String" );
+
+            query.declareParameters( "String name" );
+
+            query.setFilter( "this.name == name" );
+
+            Collection result = (Collection) query.execute( name );
+
+            if ( result.size() == 0 )
+            {
+                tx.commit();
+
+                return null;
+            }
+
+            Object object = pm.detachCopy( result.iterator().next() );
+
+            tx.commit();
+
+            return (Permission) object;
+        }
+        finally
+        {
+            rollback( tx );
+        }
+    }
+
+    public Permission addPermission( Permission perm )
+    {
+        return (Permission) addObject( perm );
+    }
     
     private Object addObject( Object object )
     {
@@ -242,5 +413,10 @@ public class DefaultUserManager
 
         return pm;
     } 
+
+    private void rollback( Transaction tx )
+    {
+        PlexusJdoUtils.rollbackIfActive( tx );
+    }
 
 }

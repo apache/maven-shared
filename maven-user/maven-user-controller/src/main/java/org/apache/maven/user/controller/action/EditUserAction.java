@@ -81,10 +81,18 @@ public class EditUserAction
         throws Exception
     {
         permissions = (List) request.getSession().getAttribute( "permissions" );
-        username = username.substring( 0, username.indexOf( "," ) );
-        password = password.substring( 0, password.indexOf( "," ) );
-        email = email.substring( 0, email.indexOf( "," ) );
-
+        if ( username.indexOf( "," ) != -1 )
+        {
+            username = username.substring( 0, username.indexOf( "," ) );
+        }
+        if ( password.indexOf( "," ) != -1 )
+        {
+            password = password.substring( 0, password.indexOf( "," ) );
+        }
+        if ( email.indexOf( "," ) != -1 )
+        {
+            email = email.substring( 0, email.indexOf( "," ) );
+        }
         if ( addMode )
         {
 //            try

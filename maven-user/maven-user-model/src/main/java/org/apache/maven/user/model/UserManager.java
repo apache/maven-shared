@@ -70,6 +70,21 @@ public interface UserManager
     User getUser( int userId );
 
     /**
+     * Get a user by name. User password won't be returned for security reasons.
+     * 
+     * @param username
+     * @return null if the user doesn't exist
+     */
+    User getUserByUsername( String username );
+
+    /**
+     * Get guest user
+     * 
+     * @return null if the user doesn't exist
+     */
+    public User getGuestUser();
+
+    /**
      * Delete a user
      * 
      * @param userId
@@ -128,6 +143,13 @@ public interface UserManager
 
     /**
      * 
+     * @param name
+     * @return null if the group doesn't exist
+     */
+    UserGroup getUserGroup( String name );
+
+    /**
+     * 
      * @param userGroupId
      * @throws EntityNotFoundException if the user does not exist
      */
@@ -144,5 +166,20 @@ public interface UserManager
      * @return all permissions defined in system
      */
     List getPermissions();
+
+    /**
+    * Get all the permission for a user
+    * 
+    * @return user's permission
+    */
+    Permission getPermission( String name )
+        throws EntityNotFoundException;
+
+    /**
+    * Add a permission
+    * 
+    * @return permission added
+    */
+    Permission addPermission( Permission perm );
 
 }

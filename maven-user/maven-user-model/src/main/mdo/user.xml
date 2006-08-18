@@ -10,7 +10,7 @@
   </defaults>
 
   <classes>
-    <class>
+    <class stash.storable="true">
       <name>UserGroup</name>
       <version>1.0.0+</version>
       <fields>
@@ -33,14 +33,14 @@
         <field>
           <name>permissions</name>
           <version>1.0.0+</version>
-          <association stash.part="true" jpox.dependent="false">
+          <association stash.part="false">
             <type>Permission</type>
             <multiplicity>*</multiplicity>
           </association>
         </field>
       </fields>
     </class>
-    <class>
+    <class stash.storable="true">
       <name>User</name>
       <version>1.0.0+</version>
       <fields>
@@ -79,14 +79,14 @@
         <field>
           <name>group</name>
           <version>1.0.0+</version>
-          <association stash.part="true" jpox.dependent="false">
+          <association stash.part="false">
             <type>UserGroup</type>
-          </association>
+          </association> 
         </field>
       </fields>
     </class>
 
-    <class>
+    <class stash.storable="true">
       <name>Permission</name>
       <version>1.0.0+</version>
       <fields>

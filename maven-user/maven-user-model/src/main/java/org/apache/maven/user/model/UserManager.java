@@ -29,7 +29,8 @@ import javax.persistence.EntityNotFoundException;
  */
 public interface UserManager
 {
-
+    public static final String ROLE = UserManager.class.getName();
+    
     // ----------------------------------------------------------------------
     // User
     // ----------------------------------------------------------------------

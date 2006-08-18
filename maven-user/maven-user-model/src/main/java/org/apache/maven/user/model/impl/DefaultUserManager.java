@@ -44,6 +44,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 /**
  * Default implementation of the {@link UserManager} interface.
  * 
+ * @plexus.component role="org.apache.maven.user.model.UserManager"
+ * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  */
@@ -94,9 +96,9 @@ public class DefaultUserManager
         }
         catch ( PlexusStoreException pse )
         {
-            //log exception
+            // TODO log exception
         }
-        catch ( EntityExistsException eee )
+        catch ( EntityNotFoundException eee )
         {
             return null;
         }
@@ -193,7 +195,7 @@ public class DefaultUserManager
         {
             //log exception
         }
-        catch ( EntityExistsException eee )
+        catch ( EntityNotFoundException eee )
         {
             return null;
         }

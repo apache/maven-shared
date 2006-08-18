@@ -43,6 +43,16 @@ public abstract class AbstractJarTaxonExposer
 
     private List vendors = null;
 
+    public void initialize()
+    {
+        jar = null;
+        groupIds = null;
+        artifactIds = null;
+        versions = null;
+        names = null;
+        vendors = null;
+    }
+
     public Jar getJar()
     {
         return jar;

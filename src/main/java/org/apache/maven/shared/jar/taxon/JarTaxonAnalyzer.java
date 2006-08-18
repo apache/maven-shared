@@ -44,6 +44,7 @@ public class JarTaxonAnalyzer
         for ( Iterator i = exposers.iterator(); i.hasNext(); )
         {
             JarTaxonExposer exposer = (JarTaxonExposer) i.next();
+            exposer.initialize();
             exposer.setJar( jar );
             addExposer( taxon, exposer );
         }

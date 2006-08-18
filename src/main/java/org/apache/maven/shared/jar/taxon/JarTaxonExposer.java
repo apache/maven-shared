@@ -30,6 +30,8 @@ public interface JarTaxonExposer
 
     void setJar( Jar jar );
 
+    void initialize();
+
     void expose();
 
     boolean isAuthoritative();

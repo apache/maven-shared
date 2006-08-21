@@ -174,7 +174,7 @@ public class MavenArchiveConfiguration
      *   otherwise
      * @see #isForced()
      */
-    void setForced( boolean forced )
+    public void setForced( boolean forced )
     {
     	this.forced = forced;
     }

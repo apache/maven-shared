@@ -44,7 +44,9 @@ public class MavenArchiveConfiguration
     private Map manifestEntries = new HashMap();
 
     private List manifestSections = new ArrayList();
-    
+
+    private boolean forced = true;
+
     public boolean isCompress()
     {
         return compress;
@@ -133,5 +135,47 @@ public class MavenArchiveConfiguration
     
     public List getManifestSections() {
     	return manifestSections;
+    }
+
+    /**
+     * <p>Returns, whether recreating the archive is forced (default). Setting
+     * this option to false means, that the archiver should compare the
+     * timestamps of included files with the timestamp of the target archive
+     * and rebuild the archive only, if the latter timestamp precedes the
+     * former timestamps. Checking for timestamps will typically offer a
+     * performance gain (in particular, if the following steps in a build
+     * can be suppressed, if an archive isn't recrated) on the cost that
+     * you get inaccurate results from time to time. In particular, removal
+     * of source files won't be detected.</p>
+     * <p>An archiver doesn't necessarily support checks for uptodate. If
+     * so, setting this option to true will simply be ignored.</p>
+     * @return True, if the target archive should always be created; false
+     *   otherwise
+     * @see #setForced(boolean)
+     */
+    public boolean isForced()
+    {
+    	return forced;
+    }
+
+    /**
+     * <p>Sets, whether recreating the archive is forced (default). Setting
+     * this option to false means, that the archiver should compare the
+     * timestamps of included files with the timestamp of the target archive
+     * and rebuild the archive only, if the latter timestamp precedes the
+     * former timestamps. Checking for timestamps will typically offer a
+     * performance gain (in particular, if the following steps in a build
+     * can be suppressed, if an archive isn't recrated) on the cost that
+     * you get inaccurate results from time to time. In particular, removal
+     * of source files won't be detected.</p>
+     * <p>An archiver doesn't necessarily support checks for uptodate. If
+     * so, setting this option to true will simply be ignored.</p>
+     * @param forced True, if the target archive should always be created; false
+     *   otherwise
+     * @see #isForced()
+     */
+    void setForced( boolean forced )
+    {
+    	this.forced = forced;
     }
 }

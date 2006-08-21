@@ -390,6 +390,14 @@ public class MavenArchiver
             }
         }
 
+        boolean forced = archiveConfiguration.isForced();
+        archiver.setForced( forced );
+        if ( !archiveConfiguration.isForced()  &&  archiver.isSupportingForced() )
+        {
+        	// Should issue a warning here, but how do we get a logger?
+        	//getLog().warn( "Forced build is disabled, but disabling the forced mode isn't supported by the archiver." );
+        }
+
         // create archive
         archiver.createArchive();
 

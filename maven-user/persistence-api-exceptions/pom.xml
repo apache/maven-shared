@@ -12,7 +12,6 @@
   </parent>
 
   <artifactId>persistence-api-exceptions</artifactId>
-  <version>1.0</version>
   <name>Enterprise JavaBeans (EJB) 3.0 exceptions</name>
   <description>
     The Enterprise JavaBeans architecture is a component architecture for the development and deployment of component-based business applications.

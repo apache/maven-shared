@@ -28,6 +28,7 @@
   </distributionManagement>
   <modules>
     <module>maven-archiver</module>
+    <module>maven-model-converter</module>
     <module>maven-shared-io</module>
     <module>maven-shared-monitor</module>
     <module>file-management</module>

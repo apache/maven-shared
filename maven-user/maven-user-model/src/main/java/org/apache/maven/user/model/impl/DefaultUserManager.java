@@ -16,30 +16,36 @@ package org.apache.maven.user.model.impl;
  * limitations under the License.
  */
 
-import java.util.List;
-import java.util.Collection;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
-import javax.jdo.Extent;
-import javax.jdo.Transaction;
-
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-
+import org.apache.maven.user.model.Messages;
 import org.apache.maven.user.model.PasswordEncoder;
+import org.apache.maven.user.model.PasswordRule;
+import org.apache.maven.user.model.PasswordRuleViolationException;
+import org.apache.maven.user.model.PasswordRuleViolations;
+import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserManager;
-import org.apache.maven.user.model.Permission;
-
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.codehaus.plexus.jdo.PlexusJdoUtils;
 import org.codehaus.plexus.jdo.PlexusObjectNotFoundException;
 import org.codehaus.plexus.jdo.PlexusStoreException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.codehaus.plexus.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 
 /**
  * Default implementation of the {@link UserManager} interface.
@@ -53,11 +59,27 @@ public class DefaultUserManager
     implements UserManager, Initializable
 {
     /**
-    * @plexus.requirement
-    */
+     * @plexus.requirement
+     */
     private JdoFactory jdoFactory;
     
+    /**
+     * @plexus.requirement role-hint="sha256"
+     */
+    private PasswordEncoder passwordEncoder;
+    
+    /**
+     * @plexus.configuration default-value="Step doog ekam Skravdraa"
+     */
+    private String salt;
+    
+    /**
+     * The List of {@link PasswordRule} objects.
+     */
+    private List rules;
+    
     private PersistenceManagerFactory pmf;
+    
        
     // ----------------------------------------------------------------------
     // Component Lifecycle
@@ -67,45 +89,117 @@ public class DefaultUserManager
         throws InitializationException
     {
         pmf = jdoFactory.getPersistenceManagerFactory();
+        rules = new ArrayList();
+        
+        // TODO: Find way to have plexus initialize this list with only 1 item.
+        addPasswordRule(new MustHavePasswordRule());
     }
-   
-    public void addUser( User user )
-        throws EntityExistsException
+    
+    public boolean login( String username, String rawPassword )
     {
-        addObject( user );
+        User user = getUser( username );
+        if ( user == null )
+        {
+            return false;
+        }
+
+        return this.passwordEncoder.isPasswordValid( user.getEncodedPassword(), rawPassword, salt );
+    }
+    
+    
+    public User addUser( User user )
+        throws EntityExistsException, PasswordRuleViolationException
+    {
+        if(user.getAccountId() > 0)
+        {
+            throw new IllegalStateException( Messages.getString("user.manager.cannot.add.user.with.accountId") ); //$NON-NLS-1$
+        }
+        
+        processPasswordChange( user );
+        
+        return (User) addObject( user );
     }
 
-    public void addUserGroup( UserGroup userGroup )
+    private void processPasswordChange( User user )
+        throws PasswordRuleViolationException
+    {
+        validatePassword( user );
+        
+        user.setEncodedPassword( this.passwordEncoder.encodePassword( user.getPassword(), salt ) );
+        user.setPassword( null );
+        
+        user.setLastPasswordChange( new Date() ); // update timestamp to now.
+    }
+
+    private void validatePassword( User user )
+        throws PasswordRuleViolationException
+    {
+        PasswordRuleViolations violations = new PasswordRuleViolations();
+
+        Iterator it = this.rules.iterator();
+        while ( it.hasNext() )
+        {
+            PasswordRule rule = (PasswordRule) it.next();
+            rule.testPassword( violations, user );
+        }
+
+        if ( violations.hasViolations() )
+        {
+            PasswordRuleViolationException exception = new PasswordRuleViolationException();
+            exception.setViolations( violations );
+            throw exception;
+        }
+    }
+
+    public UserGroup addUserGroup( UserGroup userGroup )
         throws EntityExistsException
     {
-        addObject( userGroup );
+        if(userGroup.getId() > 0)
+        {
+            throw new IllegalStateException( Messages.getString("user.manager.cannot.add.group.with.id") ); //$NON-NLS-1$
+        }
+        
+        return (UserGroup) addObject( userGroup );
     }
 
     public PasswordEncoder getPasswordEncoder()
     {
-        return null;
+        return passwordEncoder;
     }
 
-    public User getUser( int userId )
+    public User getUser( int accountId )
     {
         User user = null;
         
         try
         {
-            user = ( User ) getObjectById( User.class, userId );
+            user = (User) getObjectById( User.class, accountId );
         }
         catch ( PlexusStoreException pse )
         {
-            // TODO log exception
+            //log exception
         }
         catch ( EntityNotFoundException eee )
         {
             return null;
         }
         return user;
-    }
 
+    }
+    
+    /**
+     * Get a user by name. User password won't be returned for security reasons.
+     * 
+     * @param username
+     * @return null if the user doesn't exist
+     * @deprecated use {@link #getUser(String)} instead.
+     */
     public User getUserByUsername( String username )
+    {
+        return getUser( username );
+    }
+    
+    public User getUser( String username )
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -119,11 +213,11 @@ public class DefaultUserManager
 
             Query query = pm.newQuery( extent );
 
-            query.declareImports( "import java.lang.String" );
+            query.declareImports( "import java.lang.String" ); //$NON-NLS-1$
 
-            query.declareParameters( "String username" );
+            query.declareParameters( "String username" ); //$NON-NLS-1$
 
-            query.setFilter( "this.username == username" );
+            query.setFilter( "this.username == username" ); //$NON-NLS-1$
 
             Collection result = (Collection) query.execute( username );
 
@@ -144,7 +238,7 @@ public class DefaultUserManager
         {
             rollback( tx );
         }
-    }
+    }    
 
     public User getGuestUser()
     {
@@ -160,7 +254,7 @@ public class DefaultUserManager
 
             Query query = pm.newQuery( extent );
 
-            query.setFilter( "this.guest == true" );
+            query.setFilter( "this.guest == true" ); //$NON-NLS-1$
 
             Collection result = (Collection) query.execute();
 
@@ -216,11 +310,11 @@ public class DefaultUserManager
 
             Query query = pm.newQuery( extent );
 
-            query.declareImports( "import java.lang.String" );
+            query.declareImports( "import java.lang.String" ); //$NON-NLS-1$
 
-            query.declareParameters( "String name" );
+            query.declareParameters( "String name" ); //$NON-NLS-1$
 
-            query.setFilter( "this.name == name" );
+            query.setFilter( "this.name == name" ); //$NON-NLS-1$
 
             Collection result = (Collection) query.execute( name );
 
@@ -261,6 +355,14 @@ public class DefaultUserManager
         removeObject( user );
     }
 
+    public void removeUser( String username )
+        throws EntityNotFoundException
+    {
+        User user = getUser( username );
+        
+        removeObject( user );
+    }
+    
     public void removeUserGroup( int userGroupId )
         throws EntityNotFoundException
     {
@@ -268,18 +370,48 @@ public class DefaultUserManager
         
         removeObject( userGroup );
     }
+    
+    public void removeUserGroup( String userGroupName )
+        throws EntityNotFoundException
+    {
+        UserGroup userGroup = getUserGroup( userGroupName );
+
+        removeObject( userGroup );
+    }
 
     public void setPasswordEncoder( PasswordEncoder passwordEncoder )
     {
-        // TODO Auto-generated method stub
+        this.passwordEncoder = passwordEncoder;
+    }
+    
+    public void addPasswordRule( PasswordRule rule )
+    {
+        // TODO: check for duplicates?
+        
+        this.rules.add( rule );
+    }
 
+    public List getPasswordRules()
+    {
+        return this.rules;
+    }
+
+    public void setPasswordRules( List rules )
+    {
+        this.rules = rules;
     }
 
     public void updateUser( User user )
-        throws EntityNotFoundException
+        throws EntityNotFoundException, PasswordRuleViolationException
     {
         try
         {
+            // If password is supplied, assume changing of password.
+            if ( !StringUtils.isEmpty( user.getPassword() ) )
+            {
+                processPasswordChange( user );
+            }
+
             updateObject( user );
         }
         catch ( PlexusStoreException pse )
@@ -321,11 +453,11 @@ public class DefaultUserManager
 
             Query query = pm.newQuery( extent );
 
-            query.declareImports( "import java.lang.String" );
+            query.declareImports( "import java.lang.String" ); //$NON-NLS-1$
 
-            query.declareParameters( "String name" );
+            query.declareParameters( "String name" ); //$NON-NLS-1$
 
-            query.setFilter( "this.name == name" );
+            query.setFilter( "this.name == name" ); //$NON-NLS-1$
 
             Collection result = (Collection) query.execute( name );
 
@@ -350,6 +482,11 @@ public class DefaultUserManager
 
     public Permission addPermission( Permission perm )
     {
+        if(perm.getId() > 0)
+        {
+            throw new IllegalStateException( Messages.getString("user.manager.cannot.add.permission.with.id") ); //$NON-NLS-1$
+        }
+        
         return (Permission) addObject( perm );
     }
     

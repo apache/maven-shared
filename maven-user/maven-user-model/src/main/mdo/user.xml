@@ -19,6 +19,17 @@
           <identifier>true</identifier>
           <version>1.0.0+</version>
           <type>int</type>
+          <description>ID.
+          
+WARNING: The UserGroup.id field is managed by the underlying 
+UserManager implementation.
+
+Do not set this field, as any value you set will be 
+overridden by the UserManager implementation
+upon a call to the {@link 
+org.apache.maven.user.model.UserManager#addUserGroup(UserGroup)} 
+method.
+          </description>
         </field>
         <field>
           <name>name</name>
@@ -33,7 +44,7 @@
         <field>
           <name>permissions</name>
           <version>1.0.0+</version>
-          <association stash.part="false">
+          <association stash.part="true">
             <type>Permission</type>
             <multiplicity>*</multiplicity>
           </association>
@@ -49,6 +60,17 @@
           <version>1.0.0+</version>
           <type>int</type>
           <identifier>true</identifier>
+          <description>Account ID.
+          
+WARNING: The User.accountId field is managed by the 
+underlying UserManager implementation.
+
+Do not set this field, as any value you set will be 
+overridden by the UserManager implementation upon a 
+call to the {@link 
+org.apache.maven.user.model.UserManager#addUser(User)} 
+method.
+          </description>
         </field>
         <field>
           <name>username</name>
@@ -67,6 +89,11 @@
           <type>String</type>
         </field>
         <field>
+          <name>encodedPassword</name>
+          <version>1.0.0+</version>
+          <type>String</type>
+        </field>
+        <field>
           <name>fullName</name>
           <version>1.0.0+</version>
           <type>String</type>
@@ -77,9 +104,19 @@
           <type>String</type>
         </field>
         <field>
+          <name>lastPasswordChange</name>
+          <version>1.0.0+</version>
+          <type>Date</type>
+        </field>
+        <field>
+          <name>lastLogin</name>
+          <version>1.0.0+</version>
+          <type>Date</type>
+        </field>
+        <field>
           <name>group</name>
           <version>1.0.0+</version>
-          <association stash.part="false">
+          <association stash.part="true">
             <type>UserGroup</type>
           </association> 
         </field>
@@ -95,6 +132,17 @@
           <identifier>true</identifier>
           <version>1.0.0+</version>
           <type>int</type>
+          <description>ID.
+          
+WARNING: The Permission.id field is managed by the 
+underlying UserManager implementation.
+
+Do not set this field, as any value you set will be 
+overridden by the UserManager implementation
+upon a call to the {@link 
+org.apache.maven.user.model.UserManager#addPermission(Permission)} 
+method.
+          </description>
         </field>
         <field>
           <name>name</name>

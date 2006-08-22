@@ -37,6 +37,13 @@
       <artifactId>jpox</artifactId>
       <version>1.1.1</version>
       <scope>test</scope>
+      <exclusions>
+        <!-- targeting JDK 1.4 we don't need this -->
+        <exclusion>
+          <groupId>javax.sql</groupId>
+          <artifactId>jdbc-stdext</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>hsqldb</groupId>

@@ -26,6 +26,12 @@ package org.apache.maven.user.model;
 * @version $Id$
 */
 public interface PasswordEncoder {
+    
+    /**
+     * Provide the Plexus Component Role.
+     */
+    public static final String ROLE = PasswordEncoder.class.getName();
+    
    //~ Methods ========================================================================================================
 
    /**

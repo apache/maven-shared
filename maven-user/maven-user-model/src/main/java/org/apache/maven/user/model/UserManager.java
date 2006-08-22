@@ -26,6 +26,9 @@ import javax.persistence.EntityNotFoundException;
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
+ * 
+ * @todo policy: new user verification (no password, email verification link and/or uniq code, generate password)
+ * @todo policy: user self service password reset (request, send email, click on link and/or supply uniq code, password reset)
  */
 public interface UserManager
 {
@@ -42,8 +45,8 @@ public interface UserManager
      * @param user
      * @throws EntityExistsException if the user already exists
      */
-    void addUser( User user )
-        throws EntityExistsException;
+    User addUser( User user )
+        throws EntityExistsException, PasswordRuleViolationException;
 
     /**
      * Update user data. User password will be encoded using the {@link #getPasswordEncoder()}
@@ -53,7 +56,7 @@ public interface UserManager
      * @throws EntityNotFoundException if the user does not exist
      */
     void updateUser( User user )
-        throws EntityNotFoundException;
+        throws EntityNotFoundException, PasswordRuleViolationException;
 
     /**
      * Get all users. Users password won't be returned for security reasons.
@@ -63,37 +66,82 @@ public interface UserManager
     List getUsers();
 
     /**
+     * <p>
      * Get a user by id. User password won't be returned for security reasons.
+     * </p>
      * 
-     * @param userId
+     * <p>
+     * NOTE: The User.accountId value is set by the underlying UserManager implementation.
+     * </p>
+     * 
+     * @param accountId
      * @return null if the user doesn't exist
      */
-    User getUser( int userId );
+    User getUser( int accountId );
 
     /**
      * Get a user by name. User password won't be returned for security reasons.
      * 
      * @param username
      * @return null if the user doesn't exist
+     * @deprecated use {@link #getUser(String)} instead.
      */
     User getUserByUsername( String username );
+    
+    /**
+     * Get a user by name. User password won't be returned for security reasons.
+     * 
+     * @param username
+     * @return null if the user doesn't exist
+     */
+    User getUser( String username );
 
     /**
      * Get guest user
      * 
      * @return null if the user doesn't exist
      */
-    public User getGuestUser();
+    User getGuestUser();
 
     /**
      * Delete a user
      * 
-     * @param userId
+     * <p>
+     * NOTE: The User.accountId value is set by the underlying UserManager implementation.
+     * </p>
+     * 
+     * @param accountId
      * @throws EntityNotFoundException if the user does not exist
      */
-    void removeUser( int userId )
+    void removeUser( int accountId )
+        throws EntityNotFoundException;
+    
+    /**
+     * Delete a user
+     * 
+     * @param username
+     * @throws EntityNotFoundException if the user does not exist
+     */
+    void removeUser( String username )
         throws EntityNotFoundException;
 
+    // ----------------------------------------------------------------------
+    // Login
+    // ----------------------------------------------------------------------
+    
+    /**
+     * Perform login attempt to see if username and password are valid. 
+     * 
+     * @param username
+     * @param rawpassword
+     * @return true if user is able to log in. false if username or password is invalid.
+     */
+    boolean login(String username, String rawpassword);
+    
+    // ----------------------------------------------------------------------
+    // Passwords
+    // ----------------------------------------------------------------------
+    
     /**
      * Set the password encoder to be used for password operations 
      * 
@@ -107,6 +155,27 @@ public interface UserManager
      * @return the encoder
      */
     PasswordEncoder getPasswordEncoder();
+    
+    /**
+     * Set the Password Rules List.
+     * 
+     * @param rules the list of {@link PasswordRule} objects.
+     */
+    void setPasswordRules( List rules );
+    
+    /**
+     * Get the Password Rules List.
+     * 
+     * @return the list of {@link PasswordRule} objects.
+     */
+    List getPasswordRules();
+
+    /**
+     * Add a Specific Rule to the Password Rules List.
+     * 
+     * @param rule the rule to add. 
+     */
+    void addPasswordRule( PasswordRule rule );
 
     // ----------------------------------------------------------------------
     // User Group
@@ -118,10 +187,11 @@ public interface UserManager
      * @param userGroup
      * @throws EntityExistsException if the user group already exists
      */
-    void addUserGroup( UserGroup userGroup )
+    UserGroup addUserGroup( UserGroup userGroup )
         throws EntityExistsException;
 
     /**
+     * Update an existing UserGroup.
      * 
      * @param userGroup
      * @throws EntityNotFoundException if the user group does not exist
@@ -130,19 +200,26 @@ public interface UserManager
         throws EntityNotFoundException;
 
     /**
+     * Get all UserGroup's.
      * 
      * @return all the user groups in the system
      */
     List getUserGroups();
 
     /**
+     * Get UserGroup by id.
      * 
+     * <p>
+     * NOTE: The UserGroup.id value is set by the underlying UserManager implementation.
+     * </p>
+     *  
      * @param userGroupId
      * @return null if the group doesn't exist
      */
     UserGroup getUserGroup( int userGroupId );
 
     /**
+     * Get the {@link UserGroup} by name
      * 
      * @param name
      * @return null if the group doesn't exist
@@ -150,11 +227,27 @@ public interface UserManager
     UserGroup getUserGroup( String name );
 
     /**
+     * <p>
+     * Remove the UserGroup using the UserGroup.id value.
+     * </p>
+     * 
+     * <p>
+     * NOTE: The UserGroup.id value is set by the underlying UserManager implementation.
+     * </p> 
      * 
      * @param userGroupId
      * @throws EntityNotFoundException if the user does not exist
      */
     void removeUserGroup( int userGroupId )
+        throws EntityNotFoundException;
+    
+    /**
+     * Remove the named UserGroup
+     * 
+     * @param name the user group name to remove
+     * @throws EntityNotFoundException if the user group name does not exist.
+     */
+    void removeUserGroup( String name )
         throws EntityNotFoundException;
 
     // ----------------------------------------------------------------------

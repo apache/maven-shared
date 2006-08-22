@@ -19,6 +19,7 @@
   <description>User management code shared for different apps like Continuum or MRM</description>
 
   <modules>
+    <module>persistence-api-exceptions</module>
     <module>maven-user-model</module>
     <module>maven-user-controller</module>
     <module>maven-user-webapp</module>

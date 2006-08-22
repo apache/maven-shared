@@ -20,8 +20,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>javax.persistence</groupId>
-      <artifactId>persistence-api</artifactId>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>persistence-api-exceptions</artifactId>
       <version>1.0</version>
     </dependency>
     <dependency>

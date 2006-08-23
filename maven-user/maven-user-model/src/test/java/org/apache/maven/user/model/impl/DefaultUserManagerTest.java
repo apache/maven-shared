@@ -16,7 +16,6 @@ package org.apache.maven.user.model.impl;
  * limitations under the License.
  */
 
-import org.apache.maven.user.model.PasswordRuleViolationException;
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
@@ -35,7 +34,6 @@ import java.util.Properties;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
-import javax.persistence.EntityExistsException;
 
 /**
  * Test Cases for the Default User Manager.
@@ -142,7 +140,7 @@ public class DefaultUserManagerTest
         assertEquals( smcqueen, actual );
     }
 
-    public void testUpdateUser() throws EntityExistsException, PasswordRuleViolationException
+    public void testUpdateUser() throws Exception
     {
         assertNotNull( usermanager );
 
@@ -165,7 +163,7 @@ public class DefaultUserManagerTest
         assertEquals( "Flight Lt. Hendley", actual.getFullName() ); //$NON-NLS-1$
     }
 
-    public void testRemoveUser() throws EntityExistsException, PasswordRuleViolationException
+    public void testRemoveUser() throws Exception
     {
         assertNotNull( usermanager );
 
@@ -352,7 +350,7 @@ public class DefaultUserManagerTest
         assertEquals( "removed user should not affect existing user ids.", american, actual2 ); //$NON-NLS-1$
     }
 
-    public void testGetSetUserGroupInUserLoose() throws EntityExistsException, PasswordRuleViolationException
+    public void testGetSetUserGroupInUserLoose() throws Exception
     {
         assertNotNull( usermanager );
 
@@ -384,7 +382,7 @@ public class DefaultUserManagerTest
         assertEquals( added.getGroup(), actual.getGroup() );
     }
 
-    public void testGetSetUserGroupInUserPreloaded() throws EntityExistsException, PasswordRuleViolationException
+    public void testGetSetUserGroupInUserPreloaded() throws Exception
     {
         assertNotNull( usermanager );
 

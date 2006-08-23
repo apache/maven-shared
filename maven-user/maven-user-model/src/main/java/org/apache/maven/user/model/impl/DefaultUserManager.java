@@ -16,6 +16,18 @@ package org.apache.maven.user.model.impl;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.jdo.Extent;
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Query;
+import javax.jdo.Transaction;
+
 import org.apache.maven.user.model.Messages;
 import org.apache.maven.user.model.PasswordEncoder;
 import org.apache.maven.user.model.PasswordRule;
@@ -32,20 +44,6 @@ import org.codehaus.plexus.jdo.PlexusStoreException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.jdo.Extent;
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Query;
-import javax.jdo.Transaction;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
 
 /**
  * Default implementation of the {@link UserManager} interface.
@@ -108,7 +106,7 @@ public class DefaultUserManager
     
     
     public User addUser( User user )
-        throws EntityExistsException, PasswordRuleViolationException
+        throws PasswordRuleViolationException
     {
         if(user.getAccountId() > 0)
         {
@@ -152,7 +150,6 @@ public class DefaultUserManager
     }
 
     public UserGroup addUserGroup( UserGroup userGroup )
-        throws EntityExistsException
     {
         if(userGroup.getId() > 0)
         {
@@ -177,11 +174,7 @@ public class DefaultUserManager
         }
         catch ( PlexusStoreException pse )
         {
-            //log exception
-        }
-        catch ( EntityNotFoundException eee )
-        {
-            return null;
+            // TODO log exception
         }
         return user;
 
@@ -287,11 +280,7 @@ public class DefaultUserManager
         }
         catch ( PlexusStoreException pse )
         {
-            //log exception
-        }
-        catch ( EntityNotFoundException eee )
-        {
-            return null;
+            //TODO log exception
         }
         return userGroup;
     }
@@ -348,7 +337,6 @@ public class DefaultUserManager
     }
 
     public void removeUser( int userId )
-        throws EntityNotFoundException
     {
         User user = getUser( userId );
         
@@ -356,7 +344,6 @@ public class DefaultUserManager
     }
 
     public void removeUser( String username )
-        throws EntityNotFoundException
     {
         User user = getUser( username );
         
@@ -364,7 +351,6 @@ public class DefaultUserManager
     }
     
     public void removeUserGroup( int userGroupId )
-        throws EntityNotFoundException
     {
         UserGroup userGroup = getUserGroup( userGroupId );
         
@@ -372,7 +358,6 @@ public class DefaultUserManager
     }
     
     public void removeUserGroup( String userGroupName )
-        throws EntityNotFoundException
     {
         UserGroup userGroup = getUserGroup( userGroupName );
 
@@ -402,7 +387,7 @@ public class DefaultUserManager
     }
 
     public void updateUser( User user )
-        throws EntityNotFoundException, PasswordRuleViolationException
+        throws PasswordRuleViolationException
     {
         try
         {
@@ -421,7 +406,6 @@ public class DefaultUserManager
     }
 
     public void updateUserGroup( UserGroup userGroup )
-        throws EntityNotFoundException
     {
         try
         {
@@ -439,7 +423,6 @@ public class DefaultUserManager
     }
 
     public Permission getPermission( String name )
-        throws EntityNotFoundException
     {
         PersistenceManager pm = getPersistenceManager();
 
@@ -496,13 +479,13 @@ public class DefaultUserManager
     }
     
     private Object getObjectById( Class clazz, int id )
-        throws PlexusStoreException, EntityNotFoundException
+        throws PlexusStoreException
     {
         return getObjectById( clazz, id, null );
     }
     
     private Object getObjectById( Class clazz, int id, String fetchGroup )
-        throws PlexusStoreException, EntityNotFoundException
+        throws PlexusStoreException
     {
         try
         {
@@ -510,7 +493,8 @@ public class DefaultUserManager
         }
         catch ( PlexusObjectNotFoundException e )
         {
-            throw new EntityNotFoundException( e.getMessage() );
+            // TODO make PlexusObjectNotFoundException runtime or change plexus not to wrap jdo exceptions
+            throw new RuntimeException( e.getMessage() );
         }
         catch ( PlexusStoreException e )
         {

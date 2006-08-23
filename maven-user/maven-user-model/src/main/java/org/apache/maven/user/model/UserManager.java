@@ -18,9 +18,6 @@ package org.apache.maven.user.model;
 
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-
 /**
  * Facade for user related operations.
  * 
@@ -43,20 +40,18 @@ public interface UserManager
      * before storing it.
      * 
      * @param user
-     * @throws EntityExistsException if the user already exists
      */
     User addUser( User user )
-        throws EntityExistsException, PasswordRuleViolationException;
+        throws PasswordRuleViolationException;
 
     /**
      * Update user data. User password will be encoded using the {@link #getPasswordEncoder()}
      * before storing it.
      * 
      * @param user
-     * @throws EntityNotFoundException if the user does not exist
      */
     void updateUser( User user )
-        throws EntityNotFoundException, PasswordRuleViolationException;
+        throws PasswordRuleViolationException;
 
     /**
      * Get all users. Users password won't be returned for security reasons.
@@ -111,19 +106,15 @@ public interface UserManager
      * </p>
      * 
      * @param accountId
-     * @throws EntityNotFoundException if the user does not exist
      */
-    void removeUser( int accountId )
-        throws EntityNotFoundException;
+    void removeUser( int accountId );
     
     /**
      * Delete a user
      * 
      * @param username
-     * @throws EntityNotFoundException if the user does not exist
      */
-    void removeUser( String username )
-        throws EntityNotFoundException;
+    void removeUser( String username );
 
     // ----------------------------------------------------------------------
     // Login
@@ -185,19 +176,15 @@ public interface UserManager
      * Add a new user group
      * 
      * @param userGroup
-     * @throws EntityExistsException if the user group already exists
      */
-    UserGroup addUserGroup( UserGroup userGroup )
-        throws EntityExistsException;
+    UserGroup addUserGroup( UserGroup userGroup );
 
     /**
      * Update an existing UserGroup.
      * 
      * @param userGroup
-     * @throws EntityNotFoundException if the user group does not exist
      */
-    void updateUserGroup( UserGroup userGroup )
-        throws EntityNotFoundException;
+    void updateUserGroup( UserGroup userGroup );
 
     /**
      * Get all UserGroup's.
@@ -236,19 +223,15 @@ public interface UserManager
      * </p> 
      * 
      * @param userGroupId
-     * @throws EntityNotFoundException if the user does not exist
      */
-    void removeUserGroup( int userGroupId )
-        throws EntityNotFoundException;
+    void removeUserGroup( int userGroupId );
     
     /**
      * Remove the named UserGroup
      * 
      * @param name the user group name to remove
-     * @throws EntityNotFoundException if the user group name does not exist.
      */
-    void removeUserGroup( String name )
-        throws EntityNotFoundException;
+    void removeUserGroup( String name );
 
     // ----------------------------------------------------------------------
     // Permissions
@@ -266,8 +249,7 @@ public interface UserManager
     * 
     * @return user's permission
     */
-    Permission getPermission( String name )
-        throws EntityNotFoundException;
+    Permission getPermission( String name );
 
     /**
     * Add a permission

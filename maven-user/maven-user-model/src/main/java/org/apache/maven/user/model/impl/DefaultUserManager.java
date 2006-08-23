@@ -123,7 +123,15 @@ public class DefaultUserManager
     {
         validatePassword( user );
         
-        user.setEncodedPassword( this.passwordEncoder.encodePassword( user.getPassword(), salt ) );
+        if ( user.isGuest() )
+        {
+            //TODO we shouldn't allow password changes for guest users, throw exception before getting here
+            user.setEncodedPassword( null );
+        }
+        else
+        {
+            user.setEncodedPassword( this.passwordEncoder.encodePassword( user.getPassword(), salt ) );
+        }
         user.setPassword( null );
         
         user.setLastPasswordChange( new Date() ); // update timestamp to now.

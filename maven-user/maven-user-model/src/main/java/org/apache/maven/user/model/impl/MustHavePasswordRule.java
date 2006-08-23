@@ -22,7 +22,7 @@ import org.apache.maven.user.model.User;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
- * Basic Password Rule, Checks for non-empty Passwords.
+ * Basic Password Rule, Checks for non-empty Passwords in non guest users.
  * 
  * @plexus.component role="org.apache.maven.user.model.PasswordRule" role-hint="must-have"
  * 
@@ -33,14 +33,26 @@ public class MustHavePasswordRule
     implements PasswordRule
 {
 
+    /**
+     * 
+     * @param user
+     * @return true if the password is not null or empty string, or if the user is guest
+     */
     public boolean isValidPassword( User user )
     {
-        return !StringUtils.isEmpty( user.getPassword() );
+        if ( user.isGuest() )
+        {
+            return true;
+        }
+        else
+        {
+            return !StringUtils.isEmpty( user.getPassword() );
+        }
     }
 
     public void testPassword( PasswordRuleViolations violations, User user )
     {
-        if ( StringUtils.isEmpty( user.getPassword() ) )
+        if ( !user.isGuest() && StringUtils.isEmpty( user.getPassword() ) )
         {
             violations.addViolation( "user.password.violation.missing" ); //$NON-NLS-1$
         }

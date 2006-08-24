@@ -236,14 +236,16 @@ public class Jar
         Collections.sort( entries, new JarEntryComparator() );
 
         Manifest manifest = getManifest();
-        String sval = manifest.getMainAttributes().getValue( Attributes.Name.SEALED );
-        if ( StringUtils.isEmpty( sval ) )
+        
+        isSealed = false;
+        
+        if ( manifest != null )
         {
-            isSealed = false;
-        }
-        else
-        {
-            isSealed = sval.trim().equalsIgnoreCase( "true" );
+            String sval = manifest.getMainAttributes().getValue( Attributes.Name.SEALED );
+            if ( StringUtils.isNotEmpty( sval ) )
+            {
+                isSealed = sval.trim().equalsIgnoreCase( "true" );
+            }
         }
     }
 

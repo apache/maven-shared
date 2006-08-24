@@ -1,0 +1,22 @@
+<!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
+
+<xwork>
+  <package name="maven-user" extends="webwork-default" namespace="/user">
+
+    <action name="edit" class="editUser">
+      <result name="input">/user/edit.jsp</result>
+      <result name="permissions">/user/addRole.jsp</result>
+      <result name="success" type="chain">list</result>
+    </action>
+
+    <action name="delete" class="deleteUser">
+      <result name="delete">/user/delete.jsp</result>
+      <result name="success" type="chain">list</result>
+    </action>
+
+    <action name="list" class="listUsers">
+      <result name="success">/user/list.jsp</result>
+    </action>
+
+  </package>
+</xwork>

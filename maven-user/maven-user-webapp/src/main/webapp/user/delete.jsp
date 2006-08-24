@@ -2,22 +2,22 @@
 <html>
   <ww:i18n name="localization.Continuum">
     <head>
-      <title><ww:text name="deleteUser.page.title"/></title>
+      <title><ww:text name="user.delete.page.title"/></title>
     </head>
     <body>
       <div id="axial" class="h3">
-        <h3><ww:text name="deleteUser.section.title"/></h3>
+        <h3><ww:text name="user.delete.section.title"/></h3>
         <div class="warningmessage">
           <p>
             <strong>
-              <ww:text name="deleteUser.confirmation.message">
+              <ww:text name="user.delete.confirmation.message">
                 <ww:param><ww:property value="username"/></ww:param>
               </ww:text>
             </strong>
           </p>
         </div>
         <div class="functnbar3">
-          <ww:form action="deleteUser.action" method="post">
+          <ww:form action="delete.action" method="post">
             <ww:hidden name="accountId"/>
             <ww:submit value="%{getText('delete')}"/> <!-- todo: change to submit/cancel button -->
           </ww:form>

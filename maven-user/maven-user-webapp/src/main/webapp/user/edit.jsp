@@ -25,22 +25,22 @@
   <ww:i18n name="localization.Continuum">
     <head>
       <ww:if test="addMode == true">
-        <title><ww:text name="addUser.page.title"/></title>
+        <title><ww:text name="user.add.page.title"/></title>
       </ww:if>
       <ww:else>
-        <title><ww:text name="editUser.page.title"/></title>
+        <title><ww:text name="user.edit.page.title"/></title>
       </ww:else>
     </head>
     <body>
       <div id="axial" class="h3">
         <ww:if test="addMode == true">
-          <h3><ww:text name="addUser.section.title"/></h3>
+          <h3><ww:text name="user.add.section.title"/></h3>
         </ww:if>
         <ww:else>
-          <h3><ww:text name="editUser.section.title"/></h3>
+          <h3><ww:text name="user.edit.section.title"/></h3>
         </ww:else>
         <div class="axial">
-          <ww:form action="editUser.action" method="post">
+          <ww:form action="edit.action" method="post">
             <table>
               <tbody>
                 <ww:hidden id="addMode_field" name="addMode"/>
@@ -66,7 +66,7 @@
                 <tr>
                   <td><ww:property value="name"/></td>
                   <td>
-                    <ww:form action="editUser!doDeletePermission.action" method="post">
+                    <ww:form action="edit!doDeletePermission.action" method="post">
                       <ww:hidden id="addMode" name="addMode"/>
                       <ww:hidden id="accountId" name="accountId"/>
                       <ww:hidden id="username" name="username"/>
@@ -81,7 +81,7 @@
               </table>
             </div>
           <div id="h3">
-            <ww:form action="editUser!doGetAvailablePermissions.action" method="post">
+            <ww:form action="edit!doGetAvailablePermissions.action" method="post">
               <ww:hidden id="addMode" name="addMode"/>
               <ww:hidden id="accountId" name="accountId"/>
               <ww:hidden id="username" name="username"/>

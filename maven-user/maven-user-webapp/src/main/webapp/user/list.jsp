@@ -21,24 +21,24 @@
             <ec:column property="email" title="user.email"/>
             <ec:column property="actions" title="&nbsp;">
 
-              <c:url var="editUserUrl" value="/user/editUser!doEdit.action">
+              <c:url var="editUrl" value="/user/edit!doEdit.action">
                 <c:param name="accountId" value="${user.accountId}"/>
               </c:url>
 
-              <a href="<c:out value='${editUserUrl}'/>"><ww:text name="edit"/></a>
+              <a href="<c:out value='${editUrl}'/>"><ww:text name="edit"/></a>
 
-              <c:url var="deleteUserUrl" value="/user/deleteUser!doDelete.action">
+              <c:url var="deleteUrl" value="/user/delete!doDelete.action">
                 <c:param name="accountId" value="${user.accountId}"/>
                 <c:param name="username" value="${user.username}"/>
               </c:url>
 
-              <a href="<c:out value='${deleteUserUrl}'/>"><ww:text name="delete"/></a>
+              <a href="<c:out value='${deleteUrl}'/>"><ww:text name="delete"/></a>
             </ec:column>
           </ec:row>
         </ec:table>
       </div>
       <div class="functnbar3">
-        <ww:form action="editUser!doAdd.action" method="post">
+        <ww:form action="edit!doAdd.action" method="post">
           <ww:submit value="%{getText('add')}"/>
         </ww:form>
     </div>

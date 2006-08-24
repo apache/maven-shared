@@ -27,9 +27,9 @@ import org.codehaus.plexus.xwork.action.PlexusActionSupport;
  *
  * @plexus.component
  *   role="com.opensymphony.xwork.Action"
- *   role-hint="users"
+ *   role-hint="listUsers"
  */
-public class UsersAction
+public class ListUserAction
     extends PlexusActionSupport
 {
 

@@ -34,4 +34,29 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-maven-plugin</artifactId>
+        <configuration>
+          <roleDefaults>
+            <roleDefault>
+              <role>com.opensymphony.xwork.Action</role>
+              <instantiation-strategy>per-lookup</instantiation-strategy>
+            </roleDefault>
+          </roleDefaults>
+        </configuration>
+        <executions>
+          <execution>
+            <id>generate</id>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

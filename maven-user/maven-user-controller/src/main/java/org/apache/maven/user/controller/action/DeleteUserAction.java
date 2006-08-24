@@ -42,18 +42,7 @@ public class DeleteUserAction
     public String execute()
         throws Exception
     {
-//        try
-//        {
-            userManager.removeUser( accountId );
-//        }
-//        catch ( ContinuumException e )
-//        {
-//            addActionMessage( "Can't delete user (id=" + accountId + ") : " + e.getMessage() );
-//
-//            e.printStackTrace();
-//
-//            return ERROR;
-//        }
+        userManager.removeUser( accountId );
 
         return SUCCESS;
     }

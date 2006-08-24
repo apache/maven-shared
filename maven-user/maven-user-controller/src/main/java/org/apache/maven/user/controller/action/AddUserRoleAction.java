@@ -45,58 +45,46 @@ public class AddUserRoleAction
 
     private Permission permission;
 
-    private int accountId;
+    private String username;
 
     private String permissionName;
 
     public String execute()
         throws Exception
     {
-//        try
-//        {
-            user = userManager.getUser( accountId );
-            permissions = userManager.getPermissions();
-            int i;
-            for ( i = 0; i < permissions.size(); i++ )
+        user = userManager.getUser( username );
+        permissions = userManager.getPermissions();
+        int i;
+        for ( i = 0; i < permissions.size(); i++ )
+        {
+            permission = (Permission) permissions.get( i );
+            if ( permission.getName().equalsIgnoreCase( permissionName ) )
             {
-                permission = (Permission) permissions.get( i );
-                if ( permission.getName().equalsIgnoreCase( permissionName ) )
-                {
-                    break;
-                }
+                break;
             }
-            if ( i < permissions.size() )
-            {
-                user.getGroup().addPermission( permission );
-                userManager.updateUser( user );
-            }
-            else
-            {
-                addActionMessage( "Can't add user role (id=" + accountId + ", role=" + permissionName
-                    + ") : Role does not exist." );
-            }
-//        }
-//        catch ( ContinuumException e )
-//        {
-//            addActionMessage( "Can't add user role (id=" + accountId + ", role=" + permissionName + ") : "
-//                + e.getMessage() );
-//
-//            e.printStackTrace();
-//
-//            return ERROR;
-//        }
+        }
+        if ( i < permissions.size() )
+        {
+            user.getGroup().addPermission( permission );
+            userManager.updateUser( user );
+        }
+        else
+        {
+            addActionMessage( "Can't add user role (username=" + username + ", role=" + permissionName
+                + ") : Role does not exist." );
+        }
 
         return SUCCESS;
     }
 
-    public int getAccountId()
+    public String getUsername()
     {
-        return accountId;
+        return username;
     }
 
-    public void setAccountId( int accountId )
+    public void setUsername( String username )
     {
-        this.accountId = accountId;
+        this.username = username;
     }
 
     public String getPermissionName()
@@ -108,5 +96,4 @@ public class AddUserRoleAction
     {
         this.permissionName = permissionName;
     }
-
 }

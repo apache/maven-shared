@@ -1,6 +1,6 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <ww:i18n name="localization.MavenUser">
     <head>
       <title><ww:text name="user.delete.page.title"/></title>
     </head>

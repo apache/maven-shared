@@ -22,7 +22,7 @@
   }
 </script>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <ww:i18n name="localization.MavenUser">
     <head>
       <ww:if test="addMode == true">
         <title><ww:text name="user.add.page.title"/></title>

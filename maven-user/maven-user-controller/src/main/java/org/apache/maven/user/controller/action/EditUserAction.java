@@ -65,8 +65,6 @@ public class EditUserAction
 
     private boolean addMode = false;
 
-    private int accountId;
-
     private String username;
 
     private String password;
@@ -95,60 +93,28 @@ public class EditUserAction
         }
         if ( addMode )
         {
-//            try
-//            {
-                userGroup = new UserGroup();
-                userGroup.setName( username );
-                userGroup.setPermissions( permissions );
+            userGroup = new UserGroup();
+            userGroup.setName( username );
+            userGroup.setPermissions( permissions );
 
-                user = new User();
-                user.setUsername( username );
-                user.setPassword( password );
-                user.setEmail( email );
-                user.setGroup( userGroup );
-                userManager.addUser( user );
-//            }
-//            catch ( ContinuumException e )
-//            {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//
-//                return ERROR;
-//            }
+            user = new User();
+            user.setUsername( username );
+            user.setPassword( password );
+            user.setEmail( email );
+            user.setGroup( userGroup );
+            userManager.addUser( user );
         }
         else
         {
-//            try
-//            {
-                user = userManager.getUser( accountId );
-                user.setUsername( username );
-                user.setPassword( password );
-                user.setEmail( email );
-                user.getGroup().setPermissions( permissions );
-//            }
-//            catch ( ContinuumException e )
-//            {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//
-//                return ERROR;
-//            }
-
-//            try
-//            {
-                userManager.updateUser( user );
-//            }
-//            catch ( ContinuumException e )
-//            {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//
-//                return ERROR;
-//            }
+            user = userManager.getUser( username );
+            user.setUsername( username );
+            user.setPassword( password );
+            user.setEmail( email );
+            user.getGroup().setPermissions( permissions );
+            userManager.updateUser( user );
         }
 
         request.getSession().removeAttribute( "addMode" );
-        request.getSession().removeAttribute( "accountId" );
         request.getSession().removeAttribute( "username" );
         request.getSession().removeAttribute( "password" );
         request.getSession().removeAttribute( "email" );
@@ -167,26 +133,15 @@ public class EditUserAction
     public String doEdit()
         throws Exception
     {
-//        try
-//        {
-            addMode = false;
-            user = userManager.getUser( accountId );
-            username = user.getUsername();
-            //password = user.getPassword(); don't access the password
-            email = user.getEmail();
-            permissions = user.getGroup().getPermissions();
-            if ( permissions.size() == 1 )
-            {
-                permissionName = ( (Permission) permissions.get( 0 ) ).getName();
-            }
-//        }
-//        catch ( ContinuumException e )
-//        {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//
-//            return ERROR;
-//        }
+        addMode = false;
+        user = userManager.getUser( username );
+        // password = user.getPassword(); don't access the password
+        email = user.getEmail();
+        permissions = user.getGroup().getPermissions();
+        if ( permissions.size() == 1 )
+        {
+            permissionName = ( (Permission) permissions.get( 0 ) ).getName();
+        }
 
         return INPUT;
     }
@@ -194,46 +149,35 @@ public class EditUserAction
     public String doGetAvailablePermissions()
         throws Exception
     {
-//        try
-//        {
-            int i, j;
-            availablePermissions = new ArrayList();
-            staticPermissions = userManager.getPermissions();
-            permissions = (List) request.getSession().getAttribute( "permissions" );
-            if ( permissions == null || permissions.size() == 0 )
+        int i, j;
+        availablePermissions = new ArrayList();
+        staticPermissions = userManager.getPermissions();
+        permissions = (List) request.getSession().getAttribute( "permissions" );
+        if ( permissions == null || permissions.size() == 0 )
+        {
+            availablePermissions.addAll( staticPermissions );
+        }
+        else
+        {
+            for ( i = 0; i < staticPermissions.size(); i++ )
             {
-                availablePermissions.addAll( staticPermissions );
-            }
-            else
-            {
-                for ( i = 0; i < staticPermissions.size(); i++ )
+                staticPermission = (Permission) staticPermissions.get( i );
+                for ( j = 0; j < permissions.size(); j++ )
                 {
-                    staticPermission = (Permission) staticPermissions.get( i );
-                    for ( j = 0; j < permissions.size(); j++ )
+                    permission = (Permission) permissions.get( j );
+                    if ( permission.getName().equalsIgnoreCase( staticPermission.getName() ) )
                     {
-                        permission = (Permission) permissions.get( j );
-                        if ( permission.getName().equalsIgnoreCase( staticPermission.getName() ) )
-                        {
-                            break;
-                        }
-                    }
-                    if ( j >= permissions.size() )
-                    {
-                        availablePermissions.add( staticPermission );
+                        break;
                     }
                 }
+                if ( j >= permissions.size() )
+                {
+                    availablePermissions.add( staticPermission );
+                }
             }
-//        }
-//        catch ( ContinuumStoreException e )
-//        {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//
-//            return ERROR;
-//        }
+        }
 
         request.getSession().setAttribute( "addMode", Boolean.valueOf( addMode ) );
-        request.getSession().setAttribute( "accountId", new Integer( accountId ) );
         request.getSession().setAttribute( "username", username );
         request.getSession().setAttribute( "password", password );
         request.getSession().setAttribute( "email", email );
@@ -244,54 +188,43 @@ public class EditUserAction
     public String doAddPermission()
         throws Exception
     {
-//        try
-//        {
-            staticPermissions = userManager.getPermissions();
-            int i, j;
-            for ( i = 0; i < staticPermissions.size(); i++ )
+        staticPermissions = userManager.getPermissions();
+        int i, j;
+        for ( i = 0; i < staticPermissions.size(); i++ )
+        {
+            permission = (Permission) staticPermissions.get( i );
+            if ( permission.getName().equalsIgnoreCase( permissionName ) )
             {
-                permission = (Permission) staticPermissions.get( i );
-                if ( permission.getName().equalsIgnoreCase( permissionName ) )
+                permissions = (List) request.getSession().getAttribute( "permissions" );
+                if ( permissions == null )
                 {
-                    permissions = (List) request.getSession().getAttribute( "permissions" );
-                    if ( permissions == null )
+                    permissions = new ArrayList();
+                    permissions.add( permission );
+                }
+                else
+                {
+                    for ( j = 0; j < permissions.size(); j++ )
                     {
-                        permissions = new ArrayList();
+                        Permission permission = (Permission) permissions.get( j );
+                        if ( permission.getName().equalsIgnoreCase( permissionName ) )
+                        {
+                            break;
+                        }
+                    }
+                    if ( j >= permissions.size() )
+                    {
                         permissions.add( permission );
                     }
-                    else
-                    {
-                        for ( j = 0; j < permissions.size(); j++ )
-                        {
-                            Permission permission = (Permission) permissions.get( j );
-                            if ( permission.getName().equalsIgnoreCase( permissionName ) )
-                            {
-                                break;
-                            }
-                        }
-                        if ( j >= permissions.size() )
-                        {
-                            permissions.add( permission );
-                        }
-                    }
-                    if ( permissions.size() == 1 )
-                    {
-                        permissionName = ( (Permission) permissions.get( 0 ) ).getName();
-                    }
-                    break;
                 }
+                if ( permissions.size() == 1 )
+                {
+                    permissionName = ( (Permission) permissions.get( 0 ) ).getName();
+                }
+                break;
             }
-//        }
-//        catch ( ContinuumStoreException e )
-//        {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//
-//            return ERROR;
-//        }
+        }
 
         addMode = ( (Boolean) request.getSession().getAttribute( "addMode" ) ).booleanValue();
-        accountId = ( (Integer) request.getSession().getAttribute( "accountId" ) ).intValue();
         username = (String) request.getSession().getAttribute( "username" );
         password = (String) request.getSession().getAttribute( "password" );
         email = (String) request.getSession().getAttribute( "email" );
@@ -346,16 +279,6 @@ public class EditUserAction
         this.addMode = addMode;
     }
 
-    public int getAccountId()
-    {
-        return accountId;
-    }
-
-    public void setAccountId( int accountId )
-    {
-        this.accountId = accountId;
-    }
-
     public String getUsername()
     {
         return username;
@@ -395,5 +318,4 @@ public class EditUserAction
     {
         this.request = request;
     }
-
 }

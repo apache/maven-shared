@@ -38,6 +38,12 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <listener>
+    <listener-class>org.codehaus.plexus.xwork.PlexusLifecycleListener</listener-class>
+  </listener>
+
+  <!-- [jspc-maven-plugin:post-compiled-jsps-as-servlets] -->
+
   <welcome-file-list>
     <welcome-file>index.action</welcome-file>
   </welcome-file-list>
@@ -46,4 +52,5 @@
     <taglib-uri>/tld/extremecomponents</taglib-uri>
     <taglib-location>/WEB-INF/extremecomponents.tld</taglib-location>
   </taglib>
+  
 </web-app>

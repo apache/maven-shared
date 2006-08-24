@@ -16,7 +16,6 @@ package org.apache.maven.user.model;
  * limitations under the License.
  */
 
-
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

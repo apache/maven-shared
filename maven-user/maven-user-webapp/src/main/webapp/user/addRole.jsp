@@ -2,7 +2,7 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="/tld/extremecomponents" prefix="ec" %>
 <html>
-  <ww:i18n name="localization.Continuum">
+  <ww:i18n name="localization.MavenUser">
     <head>
       <title><ww:text name="role.page.title"/></title>
     </head>

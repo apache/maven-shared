@@ -16,79 +16,96 @@ package org.apache.maven.plugin.testing.stubs;
  * limitations under the License.
  */
 
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.model.Model;
-import org.apache.maven.project.artifact.InvalidDependencyVersionException;
-import org.apache.maven.model.DependencyManagement;
-import org.apache.maven.model.Prerequisites;
-import org.apache.maven.model.IssueManagement;
-import org.apache.maven.model.CiManagement;
-import org.apache.maven.model.DistributionManagement;
-import org.apache.maven.model.Organization;
-import org.apache.maven.model.Scm;
-import org.apache.maven.model.MailingList;
-import org.apache.maven.model.Developer;
-import org.apache.maven.model.Contributor;
-import org.apache.maven.model.Build;
-import org.apache.maven.model.Resource;
-import org.apache.maven.model.Reporting;
-import org.apache.maven.model.License;
-import org.apache.maven.model.PluginManagement;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.codehaus.plexus.PlexusTestCase;
-
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.io.Writer;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Collections;
+import java.util.Set;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.model.Build;
+import org.apache.maven.model.CiManagement;
+import org.apache.maven.model.Contributor;
+import org.apache.maven.model.DependencyManagement;
+import org.apache.maven.model.Developer;
+import org.apache.maven.model.DistributionManagement;
+import org.apache.maven.model.IssueManagement;
+import org.apache.maven.model.License;
+import org.apache.maven.model.MailingList;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.Organization;
+import org.apache.maven.model.Plugin;
+import org.apache.maven.model.PluginManagement;
+import org.apache.maven.model.Prerequisites;
+import org.apache.maven.model.Reporting;
+import org.apache.maven.model.Resource;
+import org.apache.maven.model.Scm;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.artifact.InvalidDependencyVersionException;
+import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 /**
  *  very simple stub of maven project, going to take a lot of work to make it useful as a stub though
  */
-public class MavenProjectStub extends MavenProject
+public class MavenProjectStub
+    extends MavenProject
 {
     private String groupId;
+
     private String artifactId;
+
     private String name;
 
     private Model model;
+
     private MavenProject parent;
+
     private File file;
-    private Set artifacts;
-    private Artifact parentArtifact;
-    private Set pluginArtifacts;
-    private List remoteArtifactRepositories;
+
     private List collectedProjects;
+
     private List attachedArtifacts;
-    private MavenProject executionProject;
+
     private List compileSourceRoots;
+
     private List testCompileSourceRoots;
+
     private List scriptSourceRoots;
+
     private List pluginArtifactRepositories;
+
     private ArtifactRepository releaseArtifactRepository;
+
     private ArtifactRepository snapshotArtifactRepository;
+
     private List activeProfiles;
+
     private Set dependencyArtifacts;
+
     private Artifact artifact;
+
     private Map artifactMap;
+
     private Model originalModel;
+
     private Map pluginArtifactMap;
-    private Set reportArtifacts;
+
     private Map reportArtifactMap;
-    private Set extensionArtifacts;
+
     private Map extensionArtifactMap;
+
     private Map projectReferences;
+
     private Build buildOverlay;
+
     private boolean executionRoot;
 
     private List compileArtifacts;
@@ -98,17 +115,27 @@ public class MavenProjectStub extends MavenProject
     private List systemDependencies;
 
     private List testClasspathElements;
+
     private List testDependencies;
+
     private List systemClasspathElements;
+
     private List systemArtifacts;
+
     private List testArtifacts;
+
     private List runtimeArtifacts;
+
     private List runtimeDependencies;
+
     private List runtimeClasspathElements;
 
     private String modelVersion;
+
     private String packaging;
+
     private String inceptionYear;
+
     private String url;
 
     private String description;
@@ -117,21 +144,23 @@ public class MavenProjectStub extends MavenProject
 
     private String defaultGoal;
 
-
-    public MavenProjectStub() { super( (Model) null ); }
-
-    // kinda dangerous...
-    public MavenProjectStub(Model model)
+    public MavenProjectStub()
     {
-      //  super(model);
-      super( (Model) null );
+        super( (Model) null );
     }
 
     // kinda dangerous...
-    public MavenProjectStub(MavenProject project)
+    public MavenProjectStub( Model model )
+    {
+        //  super(model);
+        super( (Model) null );
+    }
+
+    // kinda dangerous...
+    public MavenProjectStub( MavenProject project )
     {
         //super(project);
-      super( (Model) null );
+        super( (Model) null );
     }
 
     public String getModulePathAdjustment( MavenProject mavenProject )
@@ -177,7 +206,7 @@ public class MavenProjectStub extends MavenProject
 
     public boolean hasParent()
     {
-        if (parent != null)
+        if ( parent != null )
         {
             return true;
         }
@@ -199,7 +228,7 @@ public class MavenProjectStub extends MavenProject
 
     public File getBasedir()
     {
-        return new File(PlexusTestCase.getBasedir());
+        return new File( PlexusTestCase.getBasedir() );
     }
 
     public void setDependencies( List list )
@@ -479,7 +508,7 @@ public class MavenProjectStub extends MavenProject
 
     public void setName( String string )
     {
-       this.name = string;
+        this.name = string;
     }
 
     public String getName()
@@ -924,7 +953,7 @@ public class MavenProjectStub extends MavenProject
     public Set createArtifacts( ArtifactFactory artifactFactory, String string, ArtifactFilter artifactFilter )
         throws InvalidDependencyVersionException
     {
-        return Collections.singleton( "" );
+        return Collections.EMPTY_SET;
     }
 
     public void addProjectReference( MavenProject mavenProject )
@@ -971,5 +1000,4 @@ public class MavenProjectStub extends MavenProject
     {
         return null;
     }
-
 }

@@ -37,6 +37,9 @@ public class AddUserRoleAction
 
     private static final long serialVersionUID = 6977844294060864622L;
 
+    /**
+     * @plexus.requirement
+     */
     private UserManager userManager;
 
     private User user;

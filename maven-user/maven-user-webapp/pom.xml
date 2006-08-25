@@ -40,6 +40,11 @@
       <version>1.1.2</version>
     </dependency>
     <dependency>
+      <groupId>opensymphony</groupId>
+      <artifactId>sitemesh</artifactId>
+      <version>2.2.1</version>
+    </dependency>
+    <dependency>
       <groupId>org.extremecomponents</groupId>
       <artifactId>extremecomponents</artifactId>
       <version>1.0.1</version>
@@ -49,12 +54,42 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.1.1-20060724.192148-1</version>
+        <!-- This configuration is added to cleanup from war:inplace -->
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${basedir}/src/main/webapp</directory>
+              <includes>
+                <include>META-INF</include>
+                <include>WEB-INF/classes</include>
+                <include>WEB-INF/tld</include>
+                <include>WEB-INF/lib</include>
+              </includes>
+              <excludes>
+                <excludes>user/*</excludes>
+                <excludes>WEB-INF/*.tld</excludes>
+                <excludes>WEB-INF/*.xml</excludes>
+              </excludes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jspc-maven-plugin</artifactId>
         <configuration>
           <warSourceDirectory>${project.build.directory}/${project.build.finalName}/</warSourceDirectory>
           <injectString><![CDATA[<!-- [jspc-maven-plugin:post-compiled-jsps-as-servlets] -->]]></injectString>
-          <!-- <outputWebXml>${project.build.directory}/${project.build.finalName}/WEB-INF/web.xml</outputWebXml> -->
+          <!-- 
+            Uncomment outputWebXml if you want the generated web.xml to
+            be placed in the working directory that the war:war mojo uses.
+            -->
+          <!-- 
+          <outputWebXml>${project.build.directory}/${project.build.finalName}/WEB-INF/web.xml</outputWebXml> 
+          -->
         </configuration>
         <executions>
           <execution>
@@ -81,4 +116,18 @@
       </plugin>
     </plugins>
   </build>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <!-- Needed for maven-clean-plugin with fileset support -->
+      <id>snapshots.apache.org</id>
+      <url>http://people.apache.org/maven-snapshot-repository</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 </project>

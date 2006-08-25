@@ -44,18 +44,7 @@ public class ListUserAction
 
     public String execute()
     {
-//        try
-//        {
-            users = userManager.getUsers();
-//        }
-//        catch ( ContinuumException ce )
-//        {
-//            addActionError( "Can't get continuum users: " + ce.getMessage() );
-//
-//            ce.printStackTrace();
-//
-//            return ERROR;
-//        }
+        users = userManager.getUsers();
 
         return SUCCESS;
     }

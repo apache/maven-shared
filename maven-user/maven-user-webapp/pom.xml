@@ -19,6 +19,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-log4j-logging</artifactId>
+      <version>1.1-alpha-3-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>maven-user-controller</artifactId>
       <version>${project.version}</version>
@@ -64,6 +69,8 @@
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
         <configuration>
+          <scanIntervalSeconds>10</scanIntervalSeconds>
+          <contextPath>/</contextPath>
           <connectors>
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
               <port>9090</port>

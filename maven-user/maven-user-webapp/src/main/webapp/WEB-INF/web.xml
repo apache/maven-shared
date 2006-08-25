@@ -44,10 +44,6 @@
 
   <!-- [jspc-maven-plugin:post-compiled-jsps-as-servlets] -->
 
-  <welcome-file-list>
-    <welcome-file>index.action</welcome-file>
-  </welcome-file-list>
-
   <taglib>
     <taglib-uri>/tld/extremecomponents</taglib-uri>
     <taglib-location>/WEB-INF/extremecomponents.tld</taglib-location>

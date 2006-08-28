@@ -17,8 +17,8 @@ package org.apache.maven.shared.jar.taxon.exposers;
  */
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.repository.digest.Digester;
-import org.apache.maven.repository.digest.StreamingDigester;
+import org.apache.maven.archiva.digest.Digester;
+import org.apache.maven.archiva.digest.StreamingDigester;
 import org.apache.maven.shared.jar.taxon.AbstractJarTaxonExposer;
 import org.apache.maven.shared.jar.taxon.RepositoryHashSearch;
 
@@ -35,7 +35,7 @@ public class RepositorySearchExposer
     extends AbstractJarTaxonExposer
 {
     /**
-     * @plexus.requirement role="org.apache.maven.repository.digest.Digester" role-hint="sha1"
+     * @plexus.requirement role="org.apache.maven.archiva.digest.Digester" role-hint="sha1"
      */
     private Digester digester;
 

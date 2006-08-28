@@ -32,13 +32,21 @@ public class JarClassesAnalyzerTest
         throws Exception
     {
         File jarfile = new File( getSampleJarsDirectory(), filename );
+        try
+        {
         Jar jar = (Jar) lookup( Jar.ROLE );
         jar.setFile( jarfile );
 
         JarClasses jclass = jar.getClasses();
         assertNotNull( "JarClasses", jclass );
 
-        return jclass;
+            return jclass;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace( );
+            throw e;
+        }
     }
 
     public void testAnalyzeJXR()

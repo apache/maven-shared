@@ -116,7 +116,7 @@
 
     <dependency>
       <groupId>org.apache.maven.repository</groupId>
-      <artifactId>maven-repository-utils</artifactId>
+      <artifactId>archiva-utils</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
 

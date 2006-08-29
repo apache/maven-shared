@@ -44,7 +44,17 @@ import org.jpox.SchemaTool;
 public class DefaultUserManagerTest
     extends PlexusTestCase
 {
-    private DefaultUserManager usermanager = null;
+    private DefaultUserManager userManager = null;
+
+    public void setUserManager( DefaultUserManager userManager )
+    {
+        this.userManager = userManager;
+    }
+
+    public DefaultUserManager getUserManager()
+    {
+        return userManager;
+    }
 
     /**
      * Creates a new UserManager which contains no data.
@@ -92,15 +102,15 @@ public class DefaultUserManagerTest
 
         pm.close();
 
-        usermanager = (DefaultUserManager) lookup( UserManager.ROLE );
+        setUserManager( (DefaultUserManager) lookup( UserManager.ROLE ) );
     }
 
     public void testAddGetUserById()
         throws Exception
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
 
         User smcqueen = new User();
         smcqueen.setUsername( "smcqueen" ); //$NON-NLS-1$
@@ -110,31 +120,31 @@ public class DefaultUserManagerTest
         /* Keep a reference to the object that was added.
          * Since it has the actual accountId that was managed by jpox/jdo.
          */
-        User added = usermanager.addUser( smcqueen );
+        User added = getUserManager().addUser( smcqueen );
 
-        assertEquals( 1, usermanager.getUsers().size() );
+        assertEquals( 1, getUserManager().getUsers().size() );
 
-        /* Fetch user from usermanager using accountId returned earlier */
-        User actual = usermanager.getUser( added.getAccountId() );
+        /* Fetch user from userManager using accountId returned earlier */
+        User actual = getUserManager().getUser( added.getAccountId() );
         assertEquals( smcqueen, actual );
     }
 
     public void testAddGetUserByName()
         throws Exception
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
 
         User smcqueen = new User();
         smcqueen.setUsername( "smcqueen" ); //$NON-NLS-1$
         smcqueen.setFullName( "Steve McQueen" ); //$NON-NLS-1$
         smcqueen.setPassword( "the cooler king" ); //$NON-NLS-1$
-        usermanager.addUser( smcqueen );
+        getUserManager().addUser( smcqueen );
 
-        assertEquals( 1, usermanager.getUsers().size() );
+        assertEquals( 1, getUserManager().getUsers().size() );
 
-        User actual = usermanager.getUser( "smcqueen" ); //$NON-NLS-1$
+        User actual = getUserManager().getUser( "smcqueen" ); //$NON-NLS-1$
 
         assertNotNull( "Should return the smcqueen user.", actual ); //$NON-NLS-1$
         assertEquals( smcqueen, actual );
@@ -142,60 +152,60 @@ public class DefaultUserManagerTest
 
     public void testUpdateUser() throws Exception
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
 
         User jgarner = new User();
         jgarner.setUsername( "jgarner" ); //$NON-NLS-1$
         jgarner.setFullName( "James Garner" ); //$NON-NLS-1$
         jgarner.setPassword( "the scrounger" ); //$NON-NLS-1$
-        usermanager.addUser( jgarner );
+        getUserManager().addUser( jgarner );
 
-        User fetched = usermanager.getUser( "jgarner" ); //$NON-NLS-1$
+        User fetched = getUserManager().getUser( "jgarner" ); //$NON-NLS-1$
         assertNotNull( "User should not be null.", fetched ); //$NON-NLS-1$
         assertEquals( "James Garner", fetched.getFullName() ); //$NON-NLS-1$
         
         // Change the full name, and update the user.
         fetched.setFullName( "Flight Lt. Hendley" ); //$NON-NLS-1$
-        usermanager.updateUser( fetched );
+        getUserManager().updateUser( fetched );
         
         // Should not change number of users being tracked.
-        assertEquals( 1, usermanager.getUsers().size() );
+        assertEquals( 1, getUserManager().getUsers().size() );
 
         // Fetch the user and test for updated Full Name.
-        User actual = usermanager.getUser( "jgarner" ); //$NON-NLS-1$
+        User actual = getUserManager().getUser( "jgarner" ); //$NON-NLS-1$
         assertEquals( "Flight Lt. Hendley", actual.getFullName() ); //$NON-NLS-1$
     }
 
     public void testRemoveUser() throws Exception
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
 
         User rattenborough = new User();
         rattenborough.setUsername( "rattenborough" ); //$NON-NLS-1$
         rattenborough.setFullName( "Richard Attenborough" ); //$NON-NLS-1$
         rattenborough.setPassword( "the big x" ); //$NON-NLS-1$
-        usermanager.addUser( rattenborough );
+        getUserManager().addUser( rattenborough );
 
         User dpleasence = new User();
         dpleasence.setUsername( "dpleasence" ); //$NON-NLS-1$
         dpleasence.setFullName( "Donald Pleasence" ); //$NON-NLS-1$
         dpleasence.setPassword( "the forger" ); //$NON-NLS-1$
-        usermanager.addUser( dpleasence );
+        getUserManager().addUser( dpleasence );
 
-        assertEquals( 2, usermanager.getUsers().size() );
+        assertEquals( 2, getUserManager().getUsers().size() );
 
-        User actual = usermanager.getUser( "rattenborough" ); //$NON-NLS-1$
+        User actual = getUserManager().getUser( "rattenborough" ); //$NON-NLS-1$
         assertEquals( rattenborough, actual );
 
-        usermanager.removeUser( "rattenborough" ); //$NON-NLS-1$
+        getUserManager().removeUser( "rattenborough" ); //$NON-NLS-1$
 
         try
         {
-            actual = usermanager.getUser( "rattenborough" ); //$NON-NLS-1$
+            actual = getUserManager().getUser( "rattenborough" ); //$NON-NLS-1$
         }
         catch ( Exception e )
         {
@@ -204,41 +214,41 @@ public class DefaultUserManagerTest
         }
         assertNull( "removed user should no longer be returned.", actual ); //$NON-NLS-1$
 
-        User actual2 = usermanager.getUser( "dpleasence" ); //$NON-NLS-1$
+        User actual2 = getUserManager().getUser( "dpleasence" ); //$NON-NLS-1$
         assertEquals( "removed user should not affect existing user ids.", dpleasence, actual2 ); //$NON-NLS-1$
     }
 
     public void testAddGetUserGroupByName()
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, usermanager.getUserGroups().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
         british.setDescription( "Royal Air Force" ); //$NON-NLS-1$
 
-        usermanager.addUserGroup( british );
+        getUserManager().addUserGroup( british );
 
         UserGroup american = new UserGroup();
         american.setName( "usaaf" ); //$NON-NLS-1$
         american.setDescription( "United States Army Air Forces" ); //$NON-NLS-1$
 
-        usermanager.addUserGroup( american );
+        getUserManager().addUserGroup( american );
 
-        assertEquals( 2, usermanager.getUserGroups().size() );
+        assertEquals( 2, getUserManager().getUserGroups().size() );
 
-        UserGroup actual = usermanager.getUserGroup( "raf" ); //$NON-NLS-1$
+        UserGroup actual = getUserManager().getUserGroup( "raf" ); //$NON-NLS-1$
         assertEquals( british, actual );
     }
 
     public void testAddGetUserGroupById()
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, usermanager.getUserGroups().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
@@ -247,102 +257,102 @@ public class DefaultUserManagerTest
         /* Keep a reference to the object that was added.
          * Since it has the actual ID that was managed by jpox/jdo.
          */
-        UserGroup added = usermanager.addUserGroup( british );
+        UserGroup added = getUserManager().addUserGroup( british );
 
         // Add a second UserGroup to ensure that previous ID doesn't get changed.
         UserGroup american = new UserGroup();
         american.setName( "usaaf" ); //$NON-NLS-1$
         american.setDescription( "United States Army Air Forces" ); //$NON-NLS-1$
 
-        usermanager.addUserGroup( american );
+        getUserManager().addUserGroup( american );
 
-        assertEquals( 2, usermanager.getUserGroups().size() );
+        assertEquals( 2, getUserManager().getUserGroups().size() );
 
-        /* Fetch UserGroup from usermanager using ID returned earlier */
-        UserGroup actual = usermanager.getUserGroup( added.getId() );
+        /* Fetch UserGroup from userManager using ID returned earlier */
+        UserGroup actual = getUserManager().getUserGroup( added.getId() );
         assertNotNull( "UserGroup id:1918 should exist.", actual ); //$NON-NLS-1$
         assertEquals( british, actual );
     }
 
     public void testUpdateUserGroup()
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, usermanager.getUserGroups().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
         british.setDescription( "Royal Air Force" ); //$NON-NLS-1$
 
-        usermanager.addUserGroup( british );
+        getUserManager().addUserGroup( british );
 
-        assertNotNull( usermanager.getUserGroups() );
-        assertEquals( 1, usermanager.getUserGroups().size() );
+        assertNotNull( getUserManager().getUserGroups() );
+        assertEquals( 1, getUserManager().getUserGroups().size() );
 
-        UserGroup raf = usermanager.getUserGroup( "raf" ); //$NON-NLS-1$
+        UserGroup raf = getUserManager().getUserGroup( "raf" ); //$NON-NLS-1$
         assertNotNull( raf );
         raf.setDescription( "Royal Air Force, British" ); //$NON-NLS-1$
 
-        usermanager.updateUserGroup( raf );
+        getUserManager().updateUserGroup( raf );
 
-        UserGroup actual = usermanager.getUserGroup( "raf" ); //$NON-NLS-1$
+        UserGroup actual = getUserManager().getUserGroup( "raf" ); //$NON-NLS-1$
         assertEquals( raf, actual );
     }
 
     public void testGetUserGroups()
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, usermanager.getUserGroups().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
         british.setDescription( "Royal Air Force" ); //$NON-NLS-1$
 
-        usermanager.addUserGroup( british );
+        getUserManager().addUserGroup( british );
 
         UserGroup american = new UserGroup();
         american.setName( "usaaf" ); //$NON-NLS-1$
         american.setDescription( "United States Army Air Forces" ); //$NON-NLS-1$
 
-        usermanager.addUserGroup( american );
+        getUserManager().addUserGroup( american );
 
-        List groups = usermanager.getUserGroups();
+        List groups = getUserManager().getUserGroups();
         assertNotNull( groups );
         assertEquals( 2, groups.size() );
     }
 
     public void testRemoveUserGroup()
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, usermanager.getUserGroups().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
         british.setDescription( "Royal Air Force" ); //$NON-NLS-1$
 
-        usermanager.addUserGroup( british );
+        getUserManager().addUserGroup( british );
 
         UserGroup american = new UserGroup();
         american.setName( "usaaf" ); //$NON-NLS-1$
         american.setDescription( "United States Army Air Forces" ); //$NON-NLS-1$
 
-        usermanager.addUserGroup( american );
+        getUserManager().addUserGroup( american );
 
-        assertEquals( 2, usermanager.getUserGroups().size() );
+        assertEquals( 2, getUserManager().getUserGroups().size() );
 
-        UserGroup actual = usermanager.getUserGroup( "raf" ); //$NON-NLS-1$
+        UserGroup actual = getUserManager().getUserGroup( "raf" ); //$NON-NLS-1$
         assertEquals( british, actual );
 
-        usermanager.removeUserGroup( "raf" ); //$NON-NLS-1$
+        getUserManager().removeUserGroup( "raf" ); //$NON-NLS-1$
 
         try
         {
-            actual = usermanager.getUserGroup( "raf" ); //$NON-NLS-1$
+            actual = getUserManager().getUserGroup( "raf" ); //$NON-NLS-1$
         }
         catch ( Exception e )
         {
@@ -351,22 +361,22 @@ public class DefaultUserManagerTest
         }
         assertNull( "removed user group should no longer be returned.", actual ); //$NON-NLS-1$
 
-        UserGroup actual2 = usermanager.getUserGroup( "usaaf" ); //$NON-NLS-1$
+        UserGroup actual2 = getUserManager().getUserGroup( "usaaf" ); //$NON-NLS-1$
         assertEquals( "removed user should not affect existing user ids.", american, actual2 ); //$NON-NLS-1$
     }
 
     public void testGetSetUserGroupInUserLoose() throws Exception
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, usermanager.getUserGroups().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
         british.setDescription( "Royal Air Force" ); //$NON-NLS-1$
 
-        /* Forget to add UserGroup to usermanager (loose technique) */
+        /* Forget to add UserGroup to userManager (loose technique) */
 
         User rattenborough = new User();
         rattenborough.setUsername( "rattenborough" ); //$NON-NLS-1$
@@ -375,13 +385,13 @@ public class DefaultUserManagerTest
         rattenborough.setGroup( british );
 
         /* Add new user with new usergroup (Shouldn't work) */
-        User added = usermanager.addUser( rattenborough );
+        User added = getUserManager().addUser( rattenborough );
         assertNotNull( "Added UserGroup should not by null.", added.getGroup() ); //$NON-NLS-1$
 
-        assertEquals( 1, usermanager.getUsers().size() );
-        assertEquals( 1, usermanager.getUserGroups().size() );
+        assertEquals( 1, getUserManager().getUsers().size() );
+        assertEquals( 1, getUserManager().getUserGroups().size() );
 
-        User actual = usermanager.getUser( "rattenborough" ); //$NON-NLS-1$
+        User actual = getUserManager().getUser( "rattenborough" ); //$NON-NLS-1$
         assertEquals( added, actual );
         assertNotNull( "Actual UserGroup should not be null.", actual.getGroup() ); //$NON-NLS-1$
         assertEquals( added.getGroup(), actual.getGroup() );
@@ -389,17 +399,17 @@ public class DefaultUserManagerTest
 
     public void testGetSetUserGroupInUserPreloaded() throws Exception
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, usermanager.getUserGroups().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
         british.setDescription( "Royal Air Force" ); //$NON-NLS-1$
         
-        /* Add UserGroup to usermanager (preload technique) */
-        UserGroup addedGroup = usermanager.addUserGroup( british );
+        /* Add UserGroup to userManager (preload technique) */
+        UserGroup addedGroup = getUserManager().addUserGroup( british );
 
         User rattenborough = new User();
         rattenborough.setUsername( "rattenborough" ); //$NON-NLS-1$
@@ -411,13 +421,13 @@ public class DefaultUserManagerTest
          * inadvertently create 2 UserGroups with the same name, but different IDs.
          */
         rattenborough.setGroup( addedGroup ); 
-        User added = usermanager.addUser( rattenborough );
+        User added = getUserManager().addUser( rattenborough );
         assertNotNull( "Added UserGroup should not by null.", added.getGroup() ); //$NON-NLS-1$
 
-        assertEquals( 1, usermanager.getUsers().size() );
-        assertEquals( 1, usermanager.getUserGroups().size() );
+        assertEquals( 1, getUserManager().getUsers().size() );
+        assertEquals( 1, getUserManager().getUserGroups().size() );
 
-        User actual = usermanager.getUser( "rattenborough" ); //$NON-NLS-1$
+        User actual = getUserManager().getUser( "rattenborough" ); //$NON-NLS-1$
         assertEquals( added, actual );
         assertNotNull( "Actual UserGroup should not be null.", actual.getGroup() ); //$NON-NLS-1$
         assertEquals( added.getGroup(), actual.getGroup() );
@@ -425,10 +435,10 @@ public class DefaultUserManagerTest
 
     public void testGetSetPermissions()
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
 
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, usermanager.getUserGroups().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
 
         Permission canFly = new Permission();
         canFly.setName( "can_fly" ); //$NON-NLS-1$
@@ -444,18 +454,18 @@ public class DefaultUserManagerTest
         british.addPermission( canFly );
         british.addPermission( canBomb );
 
-        usermanager.addUserGroup( british );
+        getUserManager().addUserGroup( british );
 
         UserGroup american = new UserGroup();
         american.setName( "usaaf" ); //$NON-NLS-1$
         american.setDescription( "United States Army Air Forces" ); //$NON-NLS-1$
         american.addPermission( canFly );
 
-        usermanager.addUserGroup( american );
+        getUserManager().addUserGroup( american );
 
-        assertEquals( 2, usermanager.getUserGroups().size() );
+        assertEquals( 2, getUserManager().getUserGroups().size() );
 
-        UserGroup actual = usermanager.getUserGroup( "raf" ); //$NON-NLS-1$
+        UserGroup actual = getUserManager().getUserGroup( "raf" ); //$NON-NLS-1$
 
         assertNotNull( actual );
         assertNotNull( actual.getPermissions() );
@@ -464,31 +474,31 @@ public class DefaultUserManagerTest
     
     public void testPolicyLoginFailureLock() throws Exception
     {
-        assertNotNull( usermanager );
+        assertNotNull( getUserManager() );
         
-        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, usermanager.getUserGroups().size() ); //$NON-NLS-1$
-        assertNotNull( "New UserManager should have a Security Policy", usermanager.getSecurityPolicy() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
+        assertNotNull( "New UserManager should have a Security Policy", getUserManager().getSecurityPolicy() ); //$NON-NLS-1$
         
         User rattenborough = new User();
         rattenborough.setUsername( "rattenborough" ); //$NON-NLS-1$
         rattenborough.setFullName( "Richard Attenborough" ); //$NON-NLS-1$
         rattenborough.setPassword( "the big x" ); //$NON-NLS-1$
 
-        usermanager.addUser( rattenborough );
+        getUserManager().addUser( rattenborough );
         
-        assertEquals( 1, usermanager.getUsers().size() );
+        assertEquals( 1, getUserManager().getUsers().size() );
         
         // Setup the policy.
-        ( (DefaultUserSecurityPolicy) usermanager.getSecurityPolicy() ).setAllowedLoginAttempts( 3 );
+        ( (DefaultUserSecurityPolicy) getUserManager().getSecurityPolicy() ).setAllowedLoginAttempts( 3 );
         
-        assertFalse( usermanager.login( "rattenborough", "the big lebowski" ) );
-        assertFalse( usermanager.getUser( "rattenborough" ).isLocked() );
+        assertFalse( getUserManager().login( "rattenborough", "the big lebowski" ) );
+        assertFalse( getUserManager().getUser( "rattenborough" ).isLocked() );
         
-        assertFalse( usermanager.login( "rattenborough", "the big cheese" ) );
-        assertFalse( usermanager.getUser( "rattenborough" ).isLocked() );
+        assertFalse( getUserManager().login( "rattenborough", "the big cheese" ) );
+        assertFalse( getUserManager().getUser( "rattenborough" ).isLocked() );
         
-        assertFalse( usermanager.login( "rattenborough", "big x" ) );
-        assertTrue( usermanager.getUser( "rattenborough" ).isLocked() );
+        assertFalse( getUserManager().login( "rattenborough", "big x" ) );
+        assertTrue( getUserManager().getUser( "rattenborough" ).isLocked() );
     }
 }

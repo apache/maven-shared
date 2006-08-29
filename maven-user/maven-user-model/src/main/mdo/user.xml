@@ -114,6 +114,25 @@ method.
           <type>Date</type>
         </field>
         <field>
+          <name>failedLoginAttempts</name>
+          <version>1.0.0+</version>
+          <type>int</type>
+        </field>
+        <field>
+          <name>locked</name>
+          <version>1.0.0+</version>
+          <type>boolean</type>
+          <defaultValue>false</defaultValue>
+        </field>
+        <field>
+          <name>previousEncodedPasswords</name>
+          <version>1.0.0+</version>
+          <association stash.part="true">
+            <type>String</type>
+            <multiplicity>*</multiplicity>
+          </association>
+        </field>
+        <field>
           <name>group</name>
           <version>1.0.0+</version>
           <association stash.part="true">
@@ -121,6 +140,17 @@ method.
           </association> 
         </field>
       </fields>
+      <codeSegments>
+        <codeSegment>
+          <version>1.0.0+</version>
+          <code><![CDATA[
+              public int incrementFailedLoginAttempts() 
+              {
+                 return failedLoginAttempts++;
+              }
+          ]]></code>
+        </codeSegment>
+      </codeSegments>
     </class>
 
     <class stash.storable="true">

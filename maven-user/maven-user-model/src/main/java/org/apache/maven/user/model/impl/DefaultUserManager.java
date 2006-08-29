@@ -30,6 +30,8 @@ import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserManager;
+import org.apache.maven.user.model.UserSecurityPolicy;
+import org.apache.maven.user.model.rules.MustHavePasswordRule;
 import org.apache.maven.user.model.store.UserStore;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -57,10 +59,10 @@ public class DefaultUserManager
     private PasswordEncoder passwordEncoder;
 
     /**
-     * @plexus.configuration default-value="Step doog ekam Skravdraa"
+     * @plexus.requirement
      */
-    private String salt;
-
+    private UserSecurityPolicy securityPolicy;
+    
     /**
      * The List of {@link PasswordRule} objects.
      */
@@ -86,8 +88,63 @@ public class DefaultUserManager
         {
             return false;
         }
+        
+        if ( user.isLocked() )
+        {
+            return false;
+        }
 
-        return this.passwordEncoder.isPasswordValid( user.getEncodedPassword(), rawPassword, salt );
+        // Ensure that user cannot set password during login.
+        user.setPassword( null );
+        
+        boolean validPassword = this.passwordEncoder.isPasswordValid( user.getEncodedPassword(), rawPassword,
+                                                                      securityPolicy.getSalt() );
+        
+        if ( validPassword )
+        {
+            // successful login. reset any failed login attempts counter.
+            user.setFailedLoginAttempts( 0 );
+        }
+        else
+        {
+            // failed login. increment and test.
+            if ( user.incrementFailedLoginAttempts() >= securityPolicy.getAllowedLoginAttempts() )
+            {
+                user.setLocked( true );
+            }
+            
+            try
+            {
+                this.updateUser( user );
+            }
+            catch ( PasswordRuleViolationException e )
+            {
+                // not possible here.
+                throw new RuntimeException( e );
+            }
+        } 
+        
+        return validPassword;
+    }
+    
+    /**
+     * Sets the Security Policy to use.
+     * 
+     * @param policy the policy to use.
+     */
+    public void setSecurityPolicy( UserSecurityPolicy policy )
+    {
+        this.securityPolicy = policy;
+    }
+
+    /**
+     * Gets the Security Policy to use.
+     * 
+     * @return the security policy.
+     */
+    public UserSecurityPolicy getSecurityPolicy()
+    {
+        return securityPolicy;
     }
 
     public User addUser( User user )
@@ -106,17 +163,30 @@ public class DefaultUserManager
     private void processPasswordChange( User user )
         throws PasswordRuleViolationException
     {
-        validatePassword( user );
-
         if ( user.isGuest() )
         {
-            //TODO we shouldn't allow password changes for guest users, throw exception before getting here
             user.setEncodedPassword( null );
+            //TODO we shouldn't allow password changes for guest users, throw exception before getting here
+            return;
         }
-        else
+        
+        validatePassword( user );
+        
+        // remember the previous password.
+        List previousPasswords = new ArrayList();
+        previousPasswords.add( user.getEncodedPassword() );
+        
+        if ( ( user.getPreviousEncodedPasswords() != null ) && !user.getPreviousEncodedPasswords().isEmpty() )
         {
-            user.setEncodedPassword( this.passwordEncoder.encodePassword( user.getPassword(), salt ) );
+            int oldCount = Math.min( securityPolicy.getPreviousPasswordsCount() - 1, 
+                                     user.getPreviousEncodedPasswords().size() );
+            List sublist = user.getPreviousEncodedPasswords().subList( 1, oldCount );
+            previousPasswords.addAll( sublist );
         }
+        user.setPreviousEncodedPasswords( previousPasswords );
+        
+        // set the current encoded password.
+        user.setEncodedPassword( encodePassword( user.getPassword() ) );
         user.setPassword( null );
 
         user.setLastPasswordChange( new Date() ); // update timestamp to now.
@@ -125,13 +195,16 @@ public class DefaultUserManager
     private void validatePassword( User user )
         throws PasswordRuleViolationException
     {
+        // Trim password.
+        user.setPassword( StringUtils.trim( user.getPassword() ) );
+        
         PasswordRuleViolations violations = new PasswordRuleViolations();
 
         Iterator it = this.rules.iterator();
         while ( it.hasNext() )
         {
             PasswordRule rule = (PasswordRule) it.next();
-            rule.testPassword( violations, user );
+            rule.testPassword( violations, user, securityPolicy );
         }
 
         if ( violations.hasViolations() )
@@ -150,11 +223,6 @@ public class DefaultUserManager
         }
 
         return userStore.addUserGroup( userGroup );
-    }
-
-    public PasswordEncoder getPasswordEncoder()
-    {
-        return passwordEncoder;
     }
 
     public User getUser( int accountId )
@@ -224,23 +292,64 @@ public class DefaultUserManager
         userStore.removeUserGroup( userGroupName );
     }
 
+    /**
+     * Set the password encoder to be used for password operations 
+     * 
+     * @param passwordEncoder
+     */
     public void setPasswordEncoder( PasswordEncoder passwordEncoder )
     {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Get the password encoder to be used for password operations
+     * 
+     * @return the encoder
+     */
+    public PasswordEncoder getPasswordEncoder()
+    {
+        return passwordEncoder;
+    }
+
+    /**
+     * Encode arbitrary password using configured encoder and salt.
+     * 
+     * @param rawpassword the raw password to encode.
+     * @return the encoded form of the password.
+     */
+    public String encodePassword( String rawpassword )
+    {
+        return this.passwordEncoder.encodePassword( rawpassword, securityPolicy.getSalt() );
+    }
+
+    /**
+     * Add a Specific Rule to the Password Rules List.
+     * 
+     * @param rule the rule to add. 
+     */
     public void addPasswordRule( PasswordRule rule )
     {
-        // TODO: check for duplicates?
+        // TODO: check for duplicates? if so, check should only be based on Rule class name.
 
         this.rules.add( rule );
     }
 
+    /**
+     * Get the Password Rules List.
+     * 
+     * @return the list of {@link PasswordRule} objects.
+     */
     public List getPasswordRules()
     {
         return this.rules;
     }
 
+    /**
+     * Set the Password Rules List.
+     * 
+     * @param rules the list of {@link PasswordRule} objects.
+     */
     public void setPasswordRules( List rules )
     {
         this.rules = rules;

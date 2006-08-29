@@ -283,6 +283,7 @@ public class DefaultUserStore
         catch ( PlexusStoreException pse )
         {
             //TODO log exception
+            throw new RuntimeException( pse.getMessage(), pse );
         }
     }
 
@@ -295,6 +296,7 @@ public class DefaultUserStore
         catch ( PlexusStoreException pse )
         {
             //TODO log exception
+            throw new RuntimeException( pse.getMessage(), pse );
         }
     }
 

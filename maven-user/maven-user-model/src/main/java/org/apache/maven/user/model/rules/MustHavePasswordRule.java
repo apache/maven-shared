@@ -1,4 +1,4 @@
-package org.apache.maven.user.model.impl;
+package org.apache.maven.user.model.rules;
 
 /*
  * Copyright 2006 The Apache Software Foundation.
@@ -19,6 +19,7 @@ package org.apache.maven.user.model.impl;
 import org.apache.maven.user.model.PasswordRule;
 import org.apache.maven.user.model.PasswordRuleViolations;
 import org.apache.maven.user.model.User;
+import org.apache.maven.user.model.UserSecurityPolicy;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -32,27 +33,9 @@ import org.codehaus.plexus.util.StringUtils;
 public class MustHavePasswordRule
     implements PasswordRule
 {
-
-    /**
-     * 
-     * @param user
-     * @return true if the password is not null or empty string, or if the user is guest
-     */
-    public boolean isValidPassword( User user )
+    public void testPassword( PasswordRuleViolations violations, User user, UserSecurityPolicy securityPolicy )
     {
-        if ( user.isGuest() )
-        {
-            return true;
-        }
-        else
-        {
-            return !StringUtils.isEmpty( user.getPassword() );
-        }
-    }
-
-    public void testPassword( PasswordRuleViolations violations, User user )
-    {
-        if ( !user.isGuest() && StringUtils.isEmpty( user.getPassword() ) )
+        if ( StringUtils.isEmpty( user.getPassword() ) )
         {
             violations.addViolation( "user.password.violation.missing" ); //$NON-NLS-1$
         }

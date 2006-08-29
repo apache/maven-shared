@@ -36,8 +36,7 @@ public interface UserManager
     // ----------------------------------------------------------------------
 
     /**
-     * Add a new user. User password will be encoded using the {@link #getPasswordEncoder()}
-     * before storing it.
+     * Add a new user. User password may be encoded before storing it.
      * 
      * @param user
      */
@@ -45,8 +44,7 @@ public interface UserManager
         throws PasswordRuleViolationException;
 
     /**
-     * Update user data. User password will be encoded using the {@link #getPasswordEncoder()}
-     * before storing it.
+     * Update user data. User password may be encoded before storing it.
      * 
      * @param user
      */
@@ -129,45 +127,6 @@ public interface UserManager
      */
     boolean login(String username, String rawpassword);
     
-    // ----------------------------------------------------------------------
-    // Passwords
-    // ----------------------------------------------------------------------
-    
-    /**
-     * Set the password encoder to be used for password operations 
-     * 
-     * @param passwordEncoder
-     */
-    void setPasswordEncoder( PasswordEncoder passwordEncoder );
-
-    /**
-     * Get the password encoder to be used for password operations
-     * 
-     * @return the encoder
-     */
-    PasswordEncoder getPasswordEncoder();
-    
-    /**
-     * Set the Password Rules List.
-     * 
-     * @param rules the list of {@link PasswordRule} objects.
-     */
-    void setPasswordRules( List rules );
-    
-    /**
-     * Get the Password Rules List.
-     * 
-     * @return the list of {@link PasswordRule} objects.
-     */
-    List getPasswordRules();
-
-    /**
-     * Add a Specific Rule to the Password Rules List.
-     * 
-     * @param rule the rule to add. 
-     */
-    void addPasswordRule( PasswordRule rule );
-
     // ----------------------------------------------------------------------
     // User Group
     // ----------------------------------------------------------------------

@@ -16,6 +16,15 @@ package org.apache.maven.user.model.impl;
  * limitations under the License.
  */
 
+import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
@@ -26,15 +35,6 @@ import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.JdoFactory;
 import org.jpox.SchemaTool;
 
-import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
-
 /**
  * Test Cases for the Default User Manager.
  * 
@@ -44,7 +44,7 @@ import javax.jdo.PersistenceManagerFactory;
 public class DefaultUserManagerTest
     extends PlexusTestCase
 {
-    UserManager usermanager = null;
+    private DefaultUserManager usermanager = null;
 
     /**
      * Creates a new UserManager which contains no data.
@@ -92,7 +92,7 @@ public class DefaultUserManagerTest
 
         pm.close();
 
-        usermanager = (UserManager) lookup( UserManager.ROLE );
+        usermanager = (DefaultUserManager) lookup( UserManager.ROLE );
     }
 
     public void testAddGetUserById()
@@ -154,12 +154,17 @@ public class DefaultUserManagerTest
 
         User fetched = usermanager.getUser( "jgarner" ); //$NON-NLS-1$
         assertNotNull( "User should not be null.", fetched ); //$NON-NLS-1$
+        assertEquals( "James Garner", fetched.getFullName() ); //$NON-NLS-1$
+        
+        // Change the full name, and update the user.
         fetched.setFullName( "Flight Lt. Hendley" ); //$NON-NLS-1$
-
         usermanager.updateUser( fetched );
+        
+        // Should not change number of users being tracked.
+        assertEquals( 1, usermanager.getUsers().size() );
 
+        // Fetch the user and test for updated Full Name.
         User actual = usermanager.getUser( "jgarner" ); //$NON-NLS-1$
-
         assertEquals( "Flight Lt. Hendley", actual.getFullName() ); //$NON-NLS-1$
     }
 
@@ -455,5 +460,35 @@ public class DefaultUserManagerTest
         assertNotNull( actual );
         assertNotNull( actual.getPermissions() );
         assertEquals( 2, actual.getPermissions().size() );
+    }
+    
+    public void testPolicyLoginFailureLock() throws Exception
+    {
+        assertNotNull( usermanager );
+        
+        assertEquals( "New UserManager should contain no users.", 0, usermanager.getUsers().size() ); //$NON-NLS-1$
+        assertEquals( "New UserManager should contain no groups.", 0, usermanager.getUserGroups().size() ); //$NON-NLS-1$
+        assertNotNull( "New UserManager should have a Security Policy", usermanager.getSecurityPolicy() ); //$NON-NLS-1$
+        
+        User rattenborough = new User();
+        rattenborough.setUsername( "rattenborough" ); //$NON-NLS-1$
+        rattenborough.setFullName( "Richard Attenborough" ); //$NON-NLS-1$
+        rattenborough.setPassword( "the big x" ); //$NON-NLS-1$
+
+        usermanager.addUser( rattenborough );
+        
+        assertEquals( 1, usermanager.getUsers().size() );
+        
+        // Setup the policy.
+        ( (DefaultUserSecurityPolicy) usermanager.getSecurityPolicy() ).setAllowedLoginAttempts( 3 );
+        
+        assertFalse( usermanager.login( "rattenborough", "the big lebowski" ) );
+        assertFalse( usermanager.getUser( "rattenborough" ).isLocked() );
+        
+        assertFalse( usermanager.login( "rattenborough", "the big cheese" ) );
+        assertFalse( usermanager.getUser( "rattenborough" ).isLocked() );
+        
+        assertFalse( usermanager.login( "rattenborough", "big x" ) );
+        assertTrue( usermanager.getUser( "rattenborough" ).isLocked() );
     }
 }

@@ -34,7 +34,7 @@ public class PasswordRuleViolations
     {
         String key;
 
-        String args[];
+        Object args[];
     }
 
     /**
@@ -60,12 +60,23 @@ public class PasswordRuleViolations
      */
     public void addViolation( String key )
     {
+        addViolation(key, null);
+    }
+    
+    /**
+     * Add a violation to the underlying list.
+     * 
+     * @param key the bundle/localization key for the message.
+     * @param args the arguments for the message.
+     */
+    public void addViolation( String key, Object args[] )
+    {
         MessageReference mesgref = new MessageReference();
         mesgref.key = key;
-        mesgref.args = null;
+        mesgref.args = args;
         violations.add( mesgref );
     }
-
+    
     /**
      * Get the List of Violations as localized and post-processed {@link String}s.
      * 

@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>1</version>
+    <version>3</version>
   </parent>
 
   <groupId>org.apache.maven.shared.user</groupId>

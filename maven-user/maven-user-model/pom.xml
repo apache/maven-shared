@@ -27,6 +27,11 @@
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
     </dependency>
+    <!-- needed to force the version and consistency -->
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-container-default</artifactId>
+    </dependency>
     <dependency>
       <groupId>jpox</groupId>
       <artifactId>jpox</artifactId>

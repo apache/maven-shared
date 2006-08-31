@@ -66,6 +66,16 @@
         <artifactId>plexus-utils</artifactId>
         <version>1.2</version>
       </dependency>
+      <dependency>
+        <groupId>hsqldb</groupId>
+        <artifactId>hsqldb</artifactId>
+        <version>1.7.3.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-container-default</artifactId>
+        <version>1.0-alpha-10-SNAPSHOT</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.user.model.Messages;
-import org.apache.maven.user.model.PasswordEncoder;
 import org.apache.maven.user.model.PasswordRule;
 import org.apache.maven.user.model.PasswordRuleViolationException;
 import org.apache.maven.user.model.PasswordRuleViolations;
@@ -31,7 +30,6 @@ import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserManager;
 import org.apache.maven.user.model.UserSecurityPolicy;
-import org.apache.maven.user.model.rules.MustHavePasswordRule;
 import org.apache.maven.user.model.store.UserStore;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;

@@ -28,6 +28,7 @@ import org.apache.maven.user.model.PasswordEncoder;
 public class AcegiPasswordEncoder
     implements PasswordEncoder
 {
+    private Object systemSalt;
 
     private org.acegisecurity.providers.encoding.PasswordEncoder encoder;
 
@@ -55,5 +56,20 @@ public class AcegiPasswordEncoder
     public boolean isPasswordValid( String encPass, String rawPass, Object salt )
     {
         return isPasswordValid( encPass, rawPass, salt );
+    }
+
+    public String encodePassword( String rawPass )
+    {
+        return encodePassword( rawPass, systemSalt );
+    }
+
+    public boolean isPasswordValid( String encPass, String rawPass )
+    {
+        return isPasswordValid( encPass, rawPass, systemSalt );
+    }
+
+    public void setSystemSalt( Object salt )
+    {
+        this.systemSalt = salt;
     }
 }

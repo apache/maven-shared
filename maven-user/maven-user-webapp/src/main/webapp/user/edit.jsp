@@ -1,5 +1,5 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
-<%@ taglib uri="/tld/extremecomponents" prefix="ec" %>
+<%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <script>
   function getData() {
     var addMode_field = document.getElementById('addMode_field');

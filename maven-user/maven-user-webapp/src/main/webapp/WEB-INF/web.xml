@@ -44,9 +44,4 @@
 
   <!-- [jspc-maven-plugin:post-compiled-jsps-as-servlets] -->
 
-  <taglib>
-    <taglib-uri>/tld/extremecomponents</taglib-uri>
-    <taglib-location>/WEB-INF/extremecomponents.tld</taglib-location>
-  </taglib>
-  
 </web-app>

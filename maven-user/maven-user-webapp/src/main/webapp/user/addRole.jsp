@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/webwork" prefix="ww" %>
-<%@ taglib uri="/tld/extremecomponents" prefix="ec" %>
+<%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <html>
   <ww:i18n name="localization.MavenUser">
     <head>

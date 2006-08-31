@@ -33,12 +33,17 @@ import org.codehaus.plexus.util.StringUtils;
 public class MustHavePasswordRule
     implements PasswordRule
 {
-    public void testPassword( PasswordRuleViolations violations, User user, UserSecurityPolicy securityPolicy )
+    public void setUserSecurityPolicy( UserSecurityPolicy policy )
+    {
+        // Ignore, policy not needed in this rule.
+    }
+
+    public void testPassword( PasswordRuleViolations violations, User user )
     {
         if ( StringUtils.isEmpty( user.getPassword() ) )
         {
             violations.addViolation( "user.password.violation.missing" ); //$NON-NLS-1$
         }
     }
-
 }
+

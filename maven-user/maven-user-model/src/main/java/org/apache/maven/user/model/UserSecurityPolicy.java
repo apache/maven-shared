@@ -16,21 +16,80 @@ package org.apache.maven.user.model;
  * limitations under the License.
  */
 
+import java.util.List;
+
 /**
  * User Security Policy Settings.  
+ * 
+ * @version $Id$
+ * @todo roll password management into it's own object.
  */
 public interface UserSecurityPolicy
 {
     public static final String ROLE = UserSecurityPolicy.class.getName();
-
-    public int getAllowedLoginAttempts();
-
-    public int getPreviousPasswordsCount();
+    
+    // ----------------------------------------------------------------------
+    // Password Management
+    // ----------------------------------------------------------------------
 
     /**
-     * Salt to be used in addiotion to the algorithm when encoding a password
+     * Gets the password encoder to use.
      * 
-     * @return the salt
+     * @return the PasswordEncoder implementation to use.
      */
-    public String getSalt();
+    public PasswordEncoder getPasswordEncoder();
+    
+    
+    /**
+     * Add a Specific Rule to the Password Rules List.
+     * 
+     * @param rule the rule to add. 
+     */
+    void addPasswordRule( PasswordRule rule );
+    
+    /**
+     * Get the Password Rules List.
+     * 
+     * @return the list of {@link PasswordRule} objects.
+     */
+    List getPasswordRules();
+
+    /**
+     * Set the Password Rules List.
+     * 
+     * @param rules the list of {@link PasswordRule} objects.
+     */
+    void setPasswordRules( List rules );
+    
+    /**
+     * Gets the count of Previous Passwords that should be tracked.
+     * 
+     * @return the count of previous passwords to track.
+     */
+    public int getPreviousPasswordsCount();
+    
+    /**
+     * Sets the count of previous passwords that should be tracked.
+     * 
+     * @param count the count of previous passwords to track.
+     */
+    public void setPreviousPasswordsCount( int count );
+
+    // ----------------------------------------------------------------------
+    // Login Attempt Management
+    // ----------------------------------------------------------------------
+
+    /**
+     * Gets the count of login attempts to allow before locking out a user.
+     * 
+     * @return the number of login attempts to allow before lockout.
+     */
+    public int getAllowedLoginAttempts();
+
+    /**
+     * Set the count of login attempts to allow before locking out a user.
+     * 
+     * @param count the number of login attempt to allow before lockout.
+     */
+    public void setAllowedLoginAttempts( int count );
 }

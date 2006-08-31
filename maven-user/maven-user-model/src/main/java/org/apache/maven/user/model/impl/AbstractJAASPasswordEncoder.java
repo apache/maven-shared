@@ -37,12 +37,18 @@ public class AbstractJAASPasswordEncoder
     implements PasswordEncoder
 {
     private String algorithm;
+    private Object systemSalt;
 
     public AbstractJAASPasswordEncoder( String algorithm )
     {
         this.algorithm = algorithm;
     }
 
+    public void setSystemSalt( Object salt )
+    {
+        this.systemSalt = salt;
+    }
+    
     public String encodePassword( String rawPass, Object salt )
     {
         MessageDigest md = null;
@@ -87,4 +93,15 @@ public class AbstractJAASPasswordEncoder
         String testPass = encodePassword( rawPass, salt );
         return ( encPass.equals( testPass ) );
     }
+
+    public String encodePassword( String rawPass )
+    {
+        return encodePassword( rawPass, this.systemSalt );
+    }
+
+    public boolean isPasswordValid( String encPass, String rawPass )
+    {
+        return isPasswordValid( encPass, rawPass, this.systemSalt );
+    }
+
 }

@@ -32,13 +32,48 @@ import org.codehaus.plexus.util.StringUtils;
  * @version $Id$
  */
 public class NumericalPasswordRule
-    implements PasswordRule
+implements PasswordRule
 {
     private int minimumCount;
-
+    
     public NumericalPasswordRule()
     {
         this.minimumCount = 1;
+    }
+
+    private int countDigitCharacters( String password )
+    {
+        int count = 0;
+
+        if ( StringUtils.isEmpty( password ) )
+        {
+            return count;
+        }
+
+        /* TODO: Eventually upgrade to the JDK 1.5 Technique
+         * 
+         * // Doing this via iteration of code points to take in account localized numbers.
+         * for ( int i = 0; i < password.length(); i++ )
+         * {
+         *     int codepoint = password.codePointAt( i );
+         *     if ( Character.isDigit( codepoint ) )
+         *     {
+         *         count++;
+         *     }
+         * }
+         */
+        
+        // JDK 1.4 Technique - NOT LOCALIZED.
+        for ( int i = 0; i < password.length(); i++ )
+        {
+            char c = password.charAt( i );
+            if ( Character.isDigit( c ) )
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     public int getMinimumCount()
@@ -51,34 +86,16 @@ public class NumericalPasswordRule
         this.minimumCount = minimumCount;
     }
 
-    public void testPassword( PasswordRuleViolations violations, User user, UserSecurityPolicy securityPolicy )
+    public void setUserSecurityPolicy( UserSecurityPolicy policy )
+    {
+        // Ignore, policy not needed in this rule.
+    }
+    
+    public void testPassword( PasswordRuleViolations violations, User user )
     {
         if ( countDigitCharacters( user.getPassword() ) < this.minimumCount )
         {
             violations.addViolation( "user.password.violation.digit", new Object[] { new Integer( minimumCount ) } ); //$NON-NLS-1$
         }
     }
-
-    private int countDigitCharacters( String password )
-    {
-        int count = 0;
-
-        if ( StringUtils.isEmpty( password ) )
-        {
-            return count;
-        }
-
-        // Doing this via iteration of code points to take in account localized passwords.
-        for ( int i = 0; i < password.length(); i++ )
-        {
-            int codepoint = password.codePointAt( i );
-            if ( Character.isDigit( codepoint ) )
-            {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
 }

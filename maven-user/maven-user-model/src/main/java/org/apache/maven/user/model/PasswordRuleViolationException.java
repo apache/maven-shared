@@ -23,7 +23,7 @@ package org.apache.maven.user.model;
  * @version $Id$
  */
 public class PasswordRuleViolationException
-    extends Exception
+    extends RuntimeException
 {
     private static final long serialVersionUID = -4686338829234880328L;
 

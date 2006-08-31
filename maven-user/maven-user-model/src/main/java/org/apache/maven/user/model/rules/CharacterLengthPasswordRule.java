@@ -63,7 +63,12 @@ public class CharacterLengthPasswordRule
         this.minimumCharacters = minimumCharacters;
     }
 
-    public void testPassword( PasswordRuleViolations violations, User user, UserSecurityPolicy securityPolicy )
+    public void setUserSecurityPolicy( UserSecurityPolicy policy )
+    {
+        // Ignore, policy not needed in this rule.
+    }
+
+    public void testPassword( PasswordRuleViolations violations, User user )
     {
         if(minimumCharacters > maximumCharacters)
         {

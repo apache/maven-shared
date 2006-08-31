@@ -144,9 +144,15 @@ method.
         <codeSegment>
           <version>1.0.0+</version>
           <code><![CDATA[
+              public User()
+              {
+                 // Intentionally initialize List to avoid JPOX NullPointerException Issues.
+              	 previousEncodedPasswords = new java.util.ArrayList();
+              }
+          
               public int incrementFailedLoginAttempts() 
               {
-                 return failedLoginAttempts++;
+                 return ++failedLoginAttempts;
               }
           ]]></code>
         </codeSegment>

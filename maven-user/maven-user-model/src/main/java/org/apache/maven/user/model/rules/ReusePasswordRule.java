@@ -16,14 +16,13 @@ package org.apache.maven.user.model.rules;
  * limitations under the License.
  */
 
-import java.util.Iterator;
-
-import org.apache.maven.user.model.PasswordEncoder;
 import org.apache.maven.user.model.PasswordRule;
 import org.apache.maven.user.model.PasswordRuleViolations;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserSecurityPolicy;
 import org.codehaus.plexus.util.StringUtils;
+
+import java.util.Iterator;
 
 /**
  * Password Rule, Checks supplied password found at {@link User#getPassword()} against 
@@ -37,41 +36,37 @@ import org.codehaus.plexus.util.StringUtils;
 public class ReusePasswordRule
     implements PasswordRule
 {
-    /**
-     * @plexus.requirement
-     */
-    private PasswordEncoder passwordEncoder;
-    
-    private int previousPasswordCount;
+    private UserSecurityPolicy securityPolicy;
 
-    /**
-     * Create a rule that will check last 3 passwords
-     */
     public ReusePasswordRule()
     {
-        this.previousPasswordCount = 3;
+    }
+
+    public void setUserSecurityPolicy( UserSecurityPolicy policy )
+    {
+        this.securityPolicy = policy;
     }
 
     public int getPreviousPasswordCount()
     {
-        return previousPasswordCount;
+        return securityPolicy.getPreviousPasswordsCount();
     }
 
-    public void setPreviousPasswordCount( int previousPasswordCount )
+    private boolean hasReusedPassword( User user, String password )
     {
-        this.previousPasswordCount = previousPasswordCount;
-    }
+        if ( this.securityPolicy == null )
+        {
+            throw new IllegalStateException( "The security policy has not yet been set." );
+        }
 
-    private boolean hasReusedPassword( User user, String password, String salt )
-    {
         if ( StringUtils.isEmpty( password ) )
         {
             return false;
         }
 
-        String encodedPassword = passwordEncoder.encodePassword( password, salt );
+        String encodedPassword = securityPolicy.getPasswordEncoder().encodePassword( password );
 
-        int checkCount = previousPasswordCount;
+        int checkCount = getPreviousPasswordCount();
 
         Iterator it = user.getPreviousEncodedPasswords().iterator();
 
@@ -88,15 +83,19 @@ public class ReusePasswordRule
         return false;
     }
 
-    public void testPassword( PasswordRuleViolations violations, User user, UserSecurityPolicy securityPolicy )
+    public void setPreviousPasswordCount( int previousPasswordCount )
+    {
+        securityPolicy.setPreviousPasswordsCount( previousPasswordCount );
+    }
+
+    public void testPassword( PasswordRuleViolations violations, User user )
     {
         String password = user.getPassword();
 
-        if ( hasReusedPassword( user, password, securityPolicy.getSalt() ) )
+        if ( hasReusedPassword( user, password ) )
         {
-            violations
-                .addViolation( "user.password.violation.reuse", new Object[] { new Integer( previousPasswordCount ) } ); //$NON-NLS-1$
+            violations.addViolation( "user.password.violation.reuse", new Object[] { 
+                new Integer( getPreviousPasswordCount() ) } ); //$NON-NLS-1$
         }
     }
-
 }

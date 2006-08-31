@@ -3,7 +3,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
@@ -14,9 +14,20 @@
   <artifactId>maven-user</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  
+
   <name>Maven User Management</name>
   <description>User management code shared for different apps like Continuum or MRM</description>
+
+  <developers>
+    <developer>
+      <id>joakime</id>
+      <name>Joakim Erdfelt</name>
+      <email>joakime@apache.org</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+    </developer>
+  </developers>
 
   <modules>
     <module>maven-user-model</module>

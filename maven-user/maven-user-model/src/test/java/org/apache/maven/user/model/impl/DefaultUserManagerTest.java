@@ -25,10 +25,16 @@ import java.util.Properties;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
+import org.apache.maven.user.model.PasswordRuleViolationException;
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserManager;
+import org.apache.maven.user.model.rules.AlphaPasswordRule;
+import org.apache.maven.user.model.rules.CharacterLengthPasswordRule;
+import org.apache.maven.user.model.rules.MustHavePasswordRule;
+import org.apache.maven.user.model.rules.NumericalPasswordRule;
+import org.apache.maven.user.model.rules.ReusePasswordRule;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.jdo.ConfigurableJdoFactory;
 import org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory;
@@ -220,10 +226,7 @@ public class DefaultUserManagerTest
 
     public void testAddGetUserGroupByName()
     {
-        assertNotNull( getUserManager() );
-
-        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
+        assertCleanUserManager();
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
@@ -245,10 +248,7 @@ public class DefaultUserManagerTest
 
     public void testAddGetUserGroupById()
     {
-        assertNotNull( getUserManager() );
-
-        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
+        assertCleanUserManager();
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
@@ -276,10 +276,7 @@ public class DefaultUserManagerTest
 
     public void testUpdateUserGroup()
     {
-        assertNotNull( getUserManager() );
-
-        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
+        assertCleanUserManager();
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
@@ -302,10 +299,7 @@ public class DefaultUserManagerTest
 
     public void testGetUserGroups()
     {
-        assertNotNull( getUserManager() );
-
-        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
+        assertCleanUserManager();
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
@@ -326,10 +320,7 @@ public class DefaultUserManagerTest
 
     public void testRemoveUserGroup()
     {
-        assertNotNull( getUserManager() );
-
-        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
+        assertCleanUserManager();
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
@@ -367,10 +358,7 @@ public class DefaultUserManagerTest
 
     public void testGetSetUserGroupInUserLoose() throws Exception
     {
-        assertNotNull( getUserManager() );
-
-        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
+        assertCleanUserManager();
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
@@ -399,10 +387,7 @@ public class DefaultUserManagerTest
 
     public void testGetSetUserGroupInUserPreloaded() throws Exception
     {
-        assertNotNull( getUserManager() );
-
-        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
+        assertCleanUserManager();
 
         UserGroup british = new UserGroup();
         british.setName( "raf" ); //$NON-NLS-1$
@@ -435,10 +420,7 @@ public class DefaultUserManagerTest
 
     public void testGetSetPermissions()
     {
-        assertNotNull( getUserManager() );
-
-        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
+        assertCleanUserManager();
 
         Permission canFly = new Permission();
         canFly.setName( "can_fly" ); //$NON-NLS-1$
@@ -475,11 +457,7 @@ public class DefaultUserManagerTest
     public void testPolicyLoginFailureLock()
         throws Exception
     {
-        assertNotNull( getUserManager() );
-
-        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() ); //$NON-NLS-1$
-        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() ); //$NON-NLS-1$
-        assertNotNull( "New UserManager should have a Security Policy", getUserManager().getSecurityPolicy() ); //$NON-NLS-1$
+        assertCleanUserManager();
 
         User rattenborough = new User();
         rattenborough.setUsername( "rattenborough" ); //$NON-NLS-1$
@@ -505,5 +483,241 @@ public class DefaultUserManagerTest
 
         assertFalse( getUserManager().login( "rattenborough", "big x" ) );
         assertTrue( getUserManager().getUser( "rattenborough" ).isLocked() );
+    }
+    
+    public void testAlphaPasswordRuleValidation()
+    {
+        assertCleanUserManager();
+
+        AlphaPasswordRule alphaRule = new AlphaPasswordRule();
+        alphaRule.setMinimumCount( 3 );
+        getUserManager().getSecurityPolicy().addPasswordRule( alphaRule );
+        try
+        {
+            User validPwd = new User();
+            validPwd.setUsername( "validPwd" );
+            validPwd.setPassword( "a1a2a34567890~!@#$%^&*()_+-=[]{|\\/?<>,.:;\"'" );
+            getUserManager().addUser( validPwd );
+            assertEquals( 1, getUserManager().getUsers().size() );
+            
+            getUserManager().removeUser( "validPwd" );
+            assertEquals( 0, getUserManager().getUsers().size() );
+        }
+        catch( PasswordRuleViolationException e )
+        {
+            fail("Should NOT throw a PasswordRuleViolationException! " + e.getMessage());
+        }
+        
+        try
+        {
+            User notEnoughAlpha1 = new User();
+            notEnoughAlpha1.setUsername( "notEnoughAlpha" );
+            notEnoughAlpha1.setPassword( "1a2a34567890~!@#$%^&*()_+-=[]{|\\/?<>,.:;\"'" );
+            getUserManager().addUser( notEnoughAlpha1 );
+            fail("Password with less than minimum alpha-numeric chars. Should throw a PasswordRuleViolationException!");
+        }
+        catch( PasswordRuleViolationException e )
+        {
+        }
+    }
+        
+    public void testCharacterLengthPasswordRuleValidation()
+    {
+        assertCleanUserManager();
+
+        CharacterLengthPasswordRule charLengthRule = new CharacterLengthPasswordRule();
+        charLengthRule.setMinimumCharacters( 3 );
+        charLengthRule.setMaximumCharacters( 9 );
+        getUserManager().getSecurityPolicy().getPasswordRules().clear();
+        getUserManager().getSecurityPolicy().addPasswordRule( charLengthRule );
+        try
+        {
+            User minLengthPwd = new User();
+            minLengthPwd.setUsername( "minLengthPwd" );
+            minLengthPwd.setPassword( "123" );
+            getUserManager().addUser( minLengthPwd );
+            assertEquals( 1, getUserManager().getUsers().size() );
+            
+            User midLengthPwd = new User();
+            midLengthPwd.setUsername( "midLengthPwd" );
+            midLengthPwd.setPassword( "12345" );
+            getUserManager().addUser( midLengthPwd );
+            assertEquals( 2, getUserManager().getUsers().size() );
+            
+            User maxLengthPwd = new User();
+            maxLengthPwd.setUsername( "maxLengthPwd" );
+            maxLengthPwd.setPassword( "123456789" );
+            getUserManager().addUser( maxLengthPwd );
+            assertEquals( 3, getUserManager().getUsers().size() );
+
+            getUserManager().removeUser( "minLengthPwd" );
+            getUserManager().removeUser( "midLengthPwd" );
+            getUserManager().removeUser( "maxLengthPwd" );
+            assertEquals( 0, getUserManager().getUsers().size() );
+        }
+        catch( PasswordRuleViolationException e )
+        {
+            fail("Should NOT throw a PasswordRuleViolationException! " + e.getMessage());
+        }
+
+        try
+        {
+            User tooShortPwd = new User();
+            tooShortPwd.setUsername( "tooShortPwd" );
+            tooShortPwd.setPassword( "12" );
+            getUserManager().addUser( tooShortPwd );
+            fail("Password less than minimum length. Should throw a PasswordRuleViolationException!");
+        }
+        catch( PasswordRuleViolationException e )
+        {
+        }
+        
+        try
+        {
+            User tooLongPwd = new User();
+            tooLongPwd.setPassword( "passwordTooLong" );
+            getUserManager().addUser( tooLongPwd );
+            fail("Password exceeds maximum length. Should throw a PasswordRuleViolationException!");
+        }
+        catch( PasswordRuleViolationException e )
+        {
+        }
+    }
+        
+    public void testMustHavePasswordRuleValidation()
+    {
+        assertCleanUserManager();
+
+        MustHavePasswordRule mustHaveRule = new MustHavePasswordRule();
+        getUserManager().getSecurityPolicy().addPasswordRule( mustHaveRule );
+        try
+        {
+            User nonEmptyPwd = new User();
+            nonEmptyPwd.setUsername( "nonEmptyPwd" );
+            nonEmptyPwd.setPassword( "1" );
+            getUserManager().addUser( nonEmptyPwd );
+            assertEquals( 1, getUserManager().getUsers().size() );
+
+            getUserManager().removeUser( "nonEmptyPwd" );
+            assertEquals( 0, getUserManager().getUsers().size() );
+        }
+        catch( PasswordRuleViolationException e )
+        {
+            fail("Should NOT throw a PasswordRuleViolationException! " + e.getMessage());
+        }
+
+        try
+        {
+            User emptyPwd = new User();
+            emptyPwd.setUsername( "emptyPwd" );
+            emptyPwd.setPassword( "" );
+            getUserManager().addUser( emptyPwd );
+            fail("Password is empty. Should throw a PasswordRuleViolationException!");
+        }
+        catch( PasswordRuleViolationException e )
+        {
+        }
+
+        try
+        {
+            User nullPwd = new User();
+            nullPwd.setUsername( "nullPwd" );
+            nullPwd.setPassword( null );
+            getUserManager().addUser( nullPwd );
+            fail("Password is null. Should throw a PasswordRuleViolationException!");
+        }
+        catch( PasswordRuleViolationException e )
+        {
+        }
+    }
+
+    public void testNumericalPasswordRuleValidation()
+    {
+        assertCleanUserManager();
+        
+        NumericalPasswordRule numRule = new NumericalPasswordRule();
+        numRule.setMinimumCount( 3 );
+        getUserManager().getSecurityPolicy().addPasswordRule( numRule );
+        try
+        {
+            User validPwd = new User();
+            validPwd.setUsername( "validPwd" );
+            validPwd.setPassword( "a1b23cdefghijklmnopqrstuvwxyz~!@#$%^&*()_+-=[]{|\\/?<>,.:;\"'" );
+            getUserManager().addUser( validPwd );
+            assertEquals( 1, getUserManager().getUsers().size() );
+
+            getUserManager().removeUser( "validPwd" );
+            assertEquals( 0, getUserManager().getUsers().size() );
+        }
+        catch( PasswordRuleViolationException e )
+        {
+            fail("Should NOT throw a PasswordRuleViolationException! " + e.getMessage());
+        }
+        
+        try
+        {
+            User notEnoughNum = new User();
+            notEnoughNum.setUsername( "notEnoughNum" );
+            notEnoughNum.setPassword( "12abcdefghijklmnopqrstuvwxyz~!@#$%^&*()_+-=[]{|\\/?<>,.:;\"'" );
+            getUserManager().addUser( notEnoughNum );
+            fail("Password with less than minimum numeric chars. Should throw a PasswordRuleViolationException!");
+        }
+        catch( PasswordRuleViolationException e )
+        {
+        }
+    }
+    
+    //TODO Someone please check if this test satifies the use case.
+    public void testReusePasswordRuleValidation()
+    {
+        assertCleanUserManager();
+        
+        ReusePasswordRule reuseRule = new ReusePasswordRule();
+        getUserManager().getSecurityPolicy().addPasswordRule( reuseRule );
+        
+        try
+        {
+            User user = new User();
+            user.setUsername( "user" );
+            user.setPassword( "oldPassword" );
+            getUserManager().addUser( user );
+            assertEquals( 1, getUserManager().getUsers().size() );
+            
+            User fetch1 = getUserManager().getUser( "user" ); 
+            fetch1.setPassword( "newPassword1" );
+            getUserManager().updateUser( fetch1 );
+            
+            User fetch2 = getUserManager().getUser( "user" ); 
+            fetch2.setPassword( "newPassword2" );
+            getUserManager().updateUser( fetch2 );
+        }
+        catch( PasswordRuleViolationException e )
+        {
+            fail("Should NOT throw a PasswordRuleViolationException! " + e.getMessage());
+        }
+        
+        try
+        {
+            User fetch3 = getUserManager().getUser( "user" );
+            //reuse old password
+            fetch3.setPassword( "oldPassword" );
+            getUserManager().updateUser( fetch3 );
+            fail("Password is being reused. Should throw a PasswordRuleViolationException!");
+        }
+        catch( PasswordRuleViolationException e )
+        {
+        }
+        
+        getUserManager().removeUser( "user" );
+        assertEquals( 0, getUserManager().getUsers().size() );
+    }
+        
+    private void assertCleanUserManager()
+    {
+        assertNotNull( getUserManager() );
+        
+        assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() );
+        assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() );
+        assertNotNull( "New UserManager should have a Security Policy", getUserManager().getSecurityPolicy() );
     }
 }

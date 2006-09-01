@@ -23,6 +23,7 @@
 
               <c:url var="editUrl" value="/user/edit!doEdit.action">
                 <c:param name="accountId" value="${user.accountId}"/>
+                <c:param name="username" value="${user.username}"/>
               </c:url>
 
               <a href="<c:out value='${editUrl}'/>"><ww:text name="edit"/></a>

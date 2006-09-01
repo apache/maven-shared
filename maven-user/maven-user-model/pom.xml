@@ -108,17 +108,4 @@
     </plugins>
   </build>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <!-- Needed for maven-clean-plugin with fileset support -->
-      <id>snapshots.codehaus.org</id>
-      <url>http://snapshots.repository.codehaus.org</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
 </project>

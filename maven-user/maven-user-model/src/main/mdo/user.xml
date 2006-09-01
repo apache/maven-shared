@@ -51,7 +51,7 @@ method.
         </field>
       </fields>
     </class>
-    <class stash.storable="true">
+    <class stash.storable="true" jpox.table="MavenUser">
       <name>User</name>
       <version>1.0.0+</version>
       <fields>

@@ -159,7 +159,9 @@ public class DefaultUserManager
         {
             int oldCount = Math.min( securityPolicy.getPreviousPasswordsCount() - 1, 
                                      user.getPreviousEncodedPasswords().size() );
-            List sublist = user.getPreviousEncodedPasswords().subList( 1, oldCount );
+            //modified sublist start index as the previous value results to nothing being added to the list. 
+            //TODO Please check and verify if it satisfies the objective.
+            List sublist = user.getPreviousEncodedPasswords().subList( 0, oldCount );
             previousPasswords.addAll( sublist );
         }
         user.setPreviousEncodedPasswords( previousPasswords );

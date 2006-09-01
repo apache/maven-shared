@@ -108,6 +108,18 @@
         <version>1.1-alpha-2</version>
         <scope>runtime</scope>
       </dependency>
+      <dependency>
+        <groupId>jpox</groupId>
+        <artifactId>jpox</artifactId>
+        <version>1.1.1</version>
+        <exclusions>
+          <!-- targeting JDK 1.4 we don't need this -->
+          <exclusion>
+            <groupId>javax.sql</groupId>
+            <artifactId>jdbc-stdext</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -168,6 +180,12 @@
             <outputWebXml>${project.build.directory}/${project.build.finalName}/WEB-INF/web.xml</outputWebXml> 
             -->
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jspc-maven-plugin</artifactId>
+          <!-- later versions cause problems -->
+          <version>1.4.4</version>
         </plugin>
       </plugins>
     </pluginManagement>

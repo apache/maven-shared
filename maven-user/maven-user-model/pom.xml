@@ -36,7 +36,7 @@
       <groupId>jpox</groupId>
       <artifactId>jpox</artifactId>
       <version>1.1.1</version>
-      <scope>runtime</scope>
+      <scope>compile</scope>
       <exclusions>
         <!-- targeting JDK 1.4 we don't need this -->
         <exclusion>
@@ -58,20 +58,29 @@
       <plugin>
         <groupId>org.codehaus.modello</groupId>
         <artifactId>modello-maven-plugin</artifactId>
-        <version>1.0-alpha-9</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>java</goal>
-              <goal>jpox-jdo-mapping</goal>
-            </goals>
-          </execution>
-        </executions>
+        <version>1.0-alpha-11-SNAPSHOT</version>
         <configuration>
           <version>1.0.0</version>
           <packageWithVersion>false</packageWithVersion>
           <model>src/main/mdo/user.xml</model>
         </configuration>
+        <executions>
+          <execution>
+            <id>modello-java</id>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>jpox-jdo-mapping</id>
+            <goals>
+              <goal>jpox-jdo-mapping</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/classes/org/apache/maven/user/model</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -99,4 +108,17 @@
     </plugins>
   </build>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <!-- Needed for maven-clean-plugin with fileset support -->
+      <id>snapshots.codehaus.org</id>
+      <url>http://snapshots.repository.codehaus.org</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 </project>

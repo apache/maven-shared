@@ -92,7 +92,7 @@ public class DefaultUserManagerTest
             System.setProperty( (String) entry.getKey(), (String) entry.getValue() );
         }
 
-        SchemaTool.createSchemaTables( new URL[] { getClass().getResource( "/META-INF/package.jdo" ) }, null, false ); //$NON-NLS-1$
+        SchemaTool.createSchemaTables( new URL[] { getClass().getResource( "/org/apache/maven/user/model/package.jdo" ) }, null, false ); //$NON-NLS-1$
 
         PersistenceManagerFactory pmf = jdoFactory.getPersistenceManagerFactory();
 

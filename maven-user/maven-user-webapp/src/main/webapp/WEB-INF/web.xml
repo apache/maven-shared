@@ -41,7 +41,11 @@
   <listener>
     <listener-class>org.codehaus.plexus.xwork.PlexusLifecycleListener</listener-class>
   </listener>
-
+  
+  <listener>
+    <listener-class>org.apache.maven.user.webapp.MavenUserInitializationListener</listener-class>
+  </listener>
+  
   <!-- [jspc-maven-plugin:post-compiled-jsps-as-servlets] -->
 
 </web-app>

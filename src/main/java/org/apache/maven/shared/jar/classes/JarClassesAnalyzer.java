@@ -16,6 +16,7 @@ package org.apache.maven.shared.jar.classes;
  * limitations under the License.
  */
 
+import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.DescendingVisitor;
 import org.apache.bcel.classfile.JavaClass;
@@ -62,7 +63,17 @@ public class JarClassesAnalyzer
                 String classname = entry.getName();
 
                 ClassParser classParser = new ClassParser( jarfilename, classname );
-                JavaClass javaClass = classParser.parse();
+
+                JavaClass javaClass;
+                try
+                {
+                    javaClass = classParser.parse();
+                }
+                catch ( ClassFormatException e )
+                {
+                    getLogger().warn( "Unable to process class " + classname + " in Jar File " + jar.getFile(), e );
+                    continue;
+                }
 
                 if ( !classes.isDebugPresent() )
                 {

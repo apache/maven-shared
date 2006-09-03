@@ -18,7 +18,9 @@ package org.apache.maven.user.controller.action;
 
 import javax.naming.OperationNotSupportedException;
 
+import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserManager;
+import org.apache.maven.user.model.UserSecurityPolicy;
 import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 /**
@@ -37,6 +39,11 @@ public class ChangeUserPasswordAction
      * @plexus.requirement
      */
     private UserManager userManager;
+    
+    /**
+     * @plexus.requirement
+     */
+    private UserSecurityPolicy securityPolicy;
 
     private int accountId;
 
@@ -49,12 +56,36 @@ public class ChangeUserPasswordAction
     public String execute()
         throws Exception
     {
-        // TODO validate that newPassword and confirmPassword are the same
-        // TODO check currentPassword is old password
-        // TODO calls userManager.updateUser( user );
+        // validate that newPassword and confirmPassword are the same
+        if ( !newPassword.equals( confirmPassword ) )
+        {
+            addActionError( "user.password.mismatch.error" );
+        }
+        
+        // TODO check currentPassword is old password should be done in UserManager
+        User user = userManager.getUser( accountId );
+        String encodedCurrentPassword = securityPolicy.getPasswordEncoder().encodePassword( currentPassword );
+        if ( !user.getEncodedPassword().equals( encodedCurrentPassword ) )
+        {
+            addActionError( "user.invalid.current.password.error" );
+        }
+        
+        if ( getActionErrors().size() > 0 )
+        {
+            return INPUT;
+        }
 
-        // not implemented yet
-        throw new OperationNotSupportedException( "changePassword is not yet implemented" );
+        // calls userManager.updateUser( user );
+        user.setPassword( newPassword );
+        userManager.updateUser( user );
+        
+        return SUCCESS;
+    }
+    
+    public String doChange()
+        throws Exception
+    {
+        return INPUT;
     }
 
     public void setCurrentPassword( String currentPassword )

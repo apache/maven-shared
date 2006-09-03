@@ -1,3 +1,5 @@
+<%@ taglib uri="/webwork" prefix="ww" %>
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <html>
   <ww:i18n name="localization.MavenUser">
     <head>
@@ -8,6 +10,13 @@
         <h3><ww:text name="user.change.password.section.title"/></h3>
         <div class="axial">
           <ww:form action="changeUserPassword.action" method="post">
+            <c:if test="${!empty actionErrors}">
+              <div class="errormessage">
+                <c:forEach items="${actionErrors}" var="actionError">
+                  <p><ww:text name="${actionError}"/></p>
+                </c:forEach>
+              </div>
+            </c:if>
             <table>
               <tbody>
                 <ww:hidden id="accountId_field" name="accountId"/>

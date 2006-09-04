@@ -54,11 +54,6 @@ public class DefaultUserSecurityPolicy
     private PasswordEncoder passwordEncoder;
 
     /**
-     * @plexus.configuration default-value="Step doog ekam Skravdraa"
-     */
-    private String systemSalt;
-    
-    /**
      * The List of {@link PasswordRule} objects.
      */
     private List rules;
@@ -158,7 +153,5 @@ public class DefaultUserSecurityPolicy
 
         // TODO: Find way to have plexus initialize this list with only 1 item.
         addPasswordRule( new MustHavePasswordRule() );
-        
-        getPasswordEncoder().setSystemSalt( systemSalt );
     }
 }

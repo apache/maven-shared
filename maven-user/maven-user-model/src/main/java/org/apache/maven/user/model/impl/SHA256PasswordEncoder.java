@@ -21,6 +21,8 @@ import org.apache.maven.user.model.PasswordEncoder;
 /**
  * SHA-256 Password Encoder.
  * 
+ * @deprecated use AcegiPasswordEncoder from maven-user-acegi
+ * 
  * @plexus.component role="org.apache.maven.user.model.PasswordEncoder" role-hint="sha256"
  * 
  * @author <a href="mailto:joakim@erdfelt.com">Joakim Erdfelt</a>

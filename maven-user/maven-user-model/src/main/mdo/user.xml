@@ -44,7 +44,7 @@ method.
         <field>
           <name>permissions</name>
           <version>1.0.0+</version>
-          <association stash.part="true">
+          <association stash.part="true" jpox.dependent="false">
             <type>Permission</type>
             <multiplicity>*</multiplicity>
           </association>

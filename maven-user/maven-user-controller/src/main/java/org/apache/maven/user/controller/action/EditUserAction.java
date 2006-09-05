@@ -21,6 +21,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.maven.user.model.PasswordRuleViolationException;
+import org.apache.maven.user.model.PasswordRuleViolations;
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
@@ -36,6 +38,7 @@ import com.opensymphony.webwork.interceptor.ServletRequestAware;
  * @plexus.component
  *   role="com.opensymphony.xwork.Action"
  *   role-hint="editUser"
+ *   instantiation-strategy="per-lookup"
  */
 public class EditUserAction
     extends PlexusActionSupport
@@ -102,7 +105,19 @@ public class EditUserAction
             user.setPassword( password );
             user.setEmail( email );
             user.setGroup( userGroup );
-            userManager.addUser( user );
+            try
+            {
+            	userManager.addUser( user );
+            }
+            catch ( PasswordRuleViolationException e )
+            {
+            	PasswordRuleViolations violationsContainer = e.getViolations();
+            	if( violationsContainer != null && violationsContainer.hasViolations() )
+            	{
+            		setActionErrors( violationsContainer.getLocalizedViolations() );
+            		return INPUT;
+            	}
+            }
         }
         else
         {
@@ -111,7 +126,19 @@ public class EditUserAction
             user.setPassword( password );
             user.setEmail( email );
             user.getGroup().setPermissions( permissions );
-            userManager.updateUser( user );
+            try
+            {
+                userManager.updateUser( user );
+            }
+            catch ( PasswordRuleViolationException e )
+            {
+            	PasswordRuleViolations violationsContainer = e.getViolations();
+            	if( violationsContainer != null && violationsContainer.hasViolations() )
+            	{
+            		setActionErrors( violationsContainer.getLocalizedViolations() );
+            		return INPUT;
+            	}
+            }
         }
 
         request.getSession().removeAttribute( "addMode" );

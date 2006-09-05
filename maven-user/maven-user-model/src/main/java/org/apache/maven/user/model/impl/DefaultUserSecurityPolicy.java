@@ -55,6 +55,8 @@ public class DefaultUserSecurityPolicy
 
     /**
      * The List of {@link PasswordRule} objects.
+     * 
+     * @plexus.requirement role="org.apache.maven.user.model.rules.MustHavePasswordRule"
      */
     private List rules;
 
@@ -149,9 +151,18 @@ public class DefaultUserSecurityPolicy
     public void initialize()
         throws InitializationException
     {
-        rules = new ArrayList();
-
-        // TODO: Find way to have plexus initialize this list with only 1 item.
-        addPasswordRule( new MustHavePasswordRule() );
+    	if( rules != null )
+        {
+            Iterator it = rules.iterator();
+            while ( it.hasNext() )
+            {
+                PasswordRule rule = (PasswordRule) it.next();
+                rule.setUserSecurityPolicy( this );
+            }
+        }
+    	else{
+        	rules = new ArrayList();
+        	addPasswordRule( new MustHavePasswordRule() );
+    	}
     }
 }

@@ -1,3 +1,4 @@
+<%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <script>
@@ -41,6 +42,13 @@
         </ww:else>
         <div class="axial">
           <ww:form action="edit.action" method="post">
+            <c:if test="${!empty actionErrors}">
+              <div class="errormessage">
+              <c:forEach items="${actionErrors}" var="actionError">
+                <p>${actionError}</p>
+              </c:forEach>
+              </div>
+            </c:if>
             <table>
               <tbody>
                 <ww:hidden id="addMode_field" name="addMode"/>

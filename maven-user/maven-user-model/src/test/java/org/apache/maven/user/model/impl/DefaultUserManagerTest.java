@@ -25,7 +25,9 @@ import java.util.Properties;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
+import org.apache.maven.user.model.PasswordRule;
 import org.apache.maven.user.model.PasswordRuleViolationException;
+import org.apache.maven.user.model.PasswordRuleViolations;
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
@@ -491,7 +493,7 @@ public class DefaultUserManagerTest
 
         AlphaPasswordRule alphaRule = new AlphaPasswordRule();
         alphaRule.setMinimumCount( 3 );
-        getUserManager().getSecurityPolicy().addPasswordRule( alphaRule );
+        setSinglePasswordRule( alphaRule );
         try
         {
             User validPwd = new User();
@@ -528,8 +530,7 @@ public class DefaultUserManagerTest
         CharacterLengthPasswordRule charLengthRule = new CharacterLengthPasswordRule();
         charLengthRule.setMinimumCharacters( 3 );
         charLengthRule.setMaximumCharacters( 9 );
-        getUserManager().getSecurityPolicy().getPasswordRules().clear();
-        getUserManager().getSecurityPolicy().addPasswordRule( charLengthRule );
+        setSinglePasswordRule( charLengthRule );
         try
         {
             User minLengthPwd = new User();
@@ -588,8 +589,7 @@ public class DefaultUserManagerTest
     {
         assertCleanUserManager();
 
-        MustHavePasswordRule mustHaveRule = new MustHavePasswordRule();
-        getUserManager().getSecurityPolicy().addPasswordRule( mustHaveRule );
+        setSinglePasswordRule( new MustHavePasswordRule() );
         try
         {
             User nonEmptyPwd = new User();
@@ -637,7 +637,7 @@ public class DefaultUserManagerTest
         
         NumericalPasswordRule numRule = new NumericalPasswordRule();
         numRule.setMinimumCount( 3 );
-        getUserManager().getSecurityPolicy().addPasswordRule( numRule );
+        setSinglePasswordRule( numRule );
         try
         {
             User validPwd = new User();
@@ -672,9 +672,8 @@ public class DefaultUserManagerTest
     {
         assertCleanUserManager();
         
-        ReusePasswordRule reuseRule = new ReusePasswordRule();
-        getUserManager().getSecurityPolicy().addPasswordRule( reuseRule );
-        
+        setSinglePasswordRule( new ReusePasswordRule() );
+        getUserManager().getSecurityPolicy().setPreviousPasswordsCount( 3 );
         try
         {
             User user = new User();
@@ -711,7 +710,7 @@ public class DefaultUserManagerTest
         getUserManager().removeUser( "user" );
         assertEquals( 0, getUserManager().getUsers().size() );
     }
-        
+
     private void assertCleanUserManager()
     {
         assertNotNull( getUserManager() );
@@ -719,5 +718,11 @@ public class DefaultUserManagerTest
         assertEquals( "New UserManager should contain no users.", 0, getUserManager().getUsers().size() );
         assertEquals( "New UserManager should contain no groups.", 0, getUserManager().getUserGroups().size() );
         assertNotNull( "New UserManager should have a Security Policy", getUserManager().getSecurityPolicy() );
+    }
+    
+    private void setSinglePasswordRule( PasswordRule rule )
+    {
+        getUserManager().getSecurityPolicy().getPasswordRules().clear();
+        getUserManager().getSecurityPolicy().addPasswordRule( rule );
     }
 }

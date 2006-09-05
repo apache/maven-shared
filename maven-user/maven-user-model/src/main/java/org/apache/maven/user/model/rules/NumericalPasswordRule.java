@@ -95,7 +95,7 @@ implements PasswordRule
     {
         if ( countDigitCharacters( user.getPassword() ) < this.minimumCount )
         {
-            violations.addViolation( "user.password.violation.digit", new Object[] { new Integer( minimumCount ) } ); //$NON-NLS-1$
+            violations.addViolation( "user.password.violation.numeric", new Object[] { new Integer( minimumCount ) } ); //$NON-NLS-1$
         }
     }
 }

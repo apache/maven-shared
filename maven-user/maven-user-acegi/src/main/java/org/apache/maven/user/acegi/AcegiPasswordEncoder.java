@@ -22,6 +22,8 @@ import org.apache.maven.user.model.PasswordEncoder;
  * Bridge between Maven User {@link PasswordEncoder} and Acegi
  * {@link org.acegisecurity.providers.encoding.PasswordEncoder}
  * 
+ * @plexus.component role="org.apache.maven.user.model.PasswordEncoder" role-hint="acegi"
+ * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  */

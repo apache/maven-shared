@@ -4,5 +4,13 @@
       <role>org.codehaus.plexus.jdo.JdoFactory</role>
       <implementation>org.codehaus.plexus.jdo.DefaultConfigurableJdoFactory</implementation>
     </component>
+    <component>
+      <role>org.apache.maven.user.model.UserHolder</role>
+      <role-hint>mock</role-hint>
+      <implementation>org.apache.maven.user.model.impl.UserHolderMock</implementation>
+      <configuration>
+        <userName>myUserName</userName>
+      </configuration>
+    </component>
   </components>
 </component-set>

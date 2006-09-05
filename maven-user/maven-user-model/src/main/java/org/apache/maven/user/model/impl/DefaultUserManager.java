@@ -28,6 +28,7 @@ import org.apache.maven.user.model.PasswordRuleViolations;
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
+import org.apache.maven.user.model.UserHolder;
 import org.apache.maven.user.model.UserManager;
 import org.apache.maven.user.model.UserSecurityPolicy;
 import org.apache.maven.user.model.store.UserStore;
@@ -55,6 +56,11 @@ public class DefaultUserManager
      * @plexus.requirement
      */
     private UserSecurityPolicy securityPolicy;
+
+    /**
+     * @plexus.requirement
+     */
+    private UserHolder userHolder;
 
     // ----------------------------------------------------------------------
     // Component Lifecycle

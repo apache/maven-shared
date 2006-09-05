@@ -39,13 +39,12 @@ import org.jpox.SchemaTool;
 public class ChangeUserPasswordActionTest
     extends PlexusTestCase
 {
-    
+
     private DefaultUserManager userManager = null;
-    
+
     private User user = null;
-    
+
     private ChangeUserPasswordAction action = null;
-    
 
     protected void setUp()
         throws Exception
@@ -91,16 +90,16 @@ public class ChangeUserPasswordActionTest
         pm.close();
 
         userManager = (DefaultUserManager) lookup( UserManager.ROLE );
-        
+
         user = new User();
         user.setUsername( "nramirez" );
         user.setPassword( "abc123" );
         user.setEmail( "nramirez@exist.com" );
         user = userManager.addUser( user );
-        
+
         action = (ChangeUserPasswordAction) lookup( "com.opensymphony.xwork.Action", "changeUserPassword" );
     }
-    
+
     public void testInvalidCurrentPasswordFail()
         throws Exception
     {
@@ -108,13 +107,13 @@ public class ChangeUserPasswordActionTest
         action.setCurrentPassword( "123abc" );
         action.setNewPassword( "" );
         action.setConfirmPassword( "" );
-        
+
         action.execute();
-        
+
         assertEquals( action.getActionErrors().size(), 1 );
         assertTrue( action.getActionErrors().contains( "user.invalid.current.password.error" ) );
     }
-    
+
     public void testInvalidCurrentPasswordSuccess()
         throws Exception
     {
@@ -122,13 +121,13 @@ public class ChangeUserPasswordActionTest
         action.setCurrentPassword( "abc123" );
         action.setNewPassword( "" );
         action.setConfirmPassword( "" );
-        
+
         action.execute();
-        
+
         assertEquals( action.getActionErrors().size(), 0 );
         assertFalse( action.getActionErrors().contains( "user.invalid.current.password.error" ) );
     }
-    
+
     public void testPasswordMismatchFail()
         throws Exception
     {
@@ -136,13 +135,13 @@ public class ChangeUserPasswordActionTest
         action.setCurrentPassword( "abc123" );
         action.setNewPassword( "welcome!" );
         action.setConfirmPassword( "!welcome" );
-        
+
         action.execute();
-        
+
         assertEquals( action.getActionErrors().size(), 1 );
         assertTrue( action.getActionErrors().contains( "user.password.mismatch.error" ) );
     }
-    
+
     public void testPasswordMismatchSuccess()
         throws Exception
     {
@@ -150,13 +149,13 @@ public class ChangeUserPasswordActionTest
         action.setCurrentPassword( "abc123" );
         action.setNewPassword( "welcome!" );
         action.setConfirmPassword( "welcome!" );
-        
+
         action.execute();
-        
+
         assertEquals( action.getActionErrors().size(), 0 );
         assertFalse( action.getActionErrors().contains( "user.password.mismatch.error" ) );
     }
-    
+
     public void testInvalidCurrentPasswordAndPasswordMismatchFail()
         throws Exception
     {
@@ -164,14 +163,14 @@ public class ChangeUserPasswordActionTest
         action.setCurrentPassword( "123abc" );
         action.setNewPassword( "welcome!" );
         action.setConfirmPassword( "!welcome" );
-        
+
         action.execute();
-        
+
         assertEquals( action.getActionErrors().size(), 2 );
         assertTrue( action.getActionErrors().contains( "user.invalid.current.password.error" ) );
         assertTrue( action.getActionErrors().contains( "user.password.mismatch.error" ) );
     }
-    
+
     public void testInvalidCurrentPasswordAndPasswordMismatchSuccess()
         throws Exception
     {
@@ -179,9 +178,9 @@ public class ChangeUserPasswordActionTest
         action.setCurrentPassword( "abc123" );
         action.setNewPassword( "welcome!" );
         action.setConfirmPassword( "welcome!" );
-        
+
         action.execute();
-        
+
         assertEquals( action.getActionErrors().size(), 0 );
         assertFalse( action.getActionErrors().contains( "user.invalid.current.password.error" ) );
         assertFalse( action.getActionErrors().contains( "user.password.mismatch.error" ) );

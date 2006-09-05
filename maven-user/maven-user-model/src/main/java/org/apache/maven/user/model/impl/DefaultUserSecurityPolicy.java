@@ -56,7 +56,7 @@ public class DefaultUserSecurityPolicy
     /**
      * The List of {@link PasswordRule} objects.
      * 
-     * @plexus.requirement role="org.apache.maven.user.model.rules.MustHavePasswordRule"
+     * @plexus.requirement role="org.apache.maven.user.model.PasswordRule" role-hint="must-have"
      */
     private List rules;
 

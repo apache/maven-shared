@@ -1,0 +1,13 @@
+/* $Id$
+	
+   This file defines Continuum formatting */
+
+.tabMenuEnabled {
+  border: 1px solid #DFDEDE;
+  padding-left: 1em;
+  padding-right: 1em;
+  text-decoration: none;
+}
+
+.tabMenuDisabled {
+}

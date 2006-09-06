@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="<ww:url value="/css/tigris.css"/>" media="screen" />
     <link rel="stylesheet" type="text/css" href="<ww:url value="/css/print.css"/>" media="print" />
     <link rel="stylesheet" type="text/css" href="<ww:url value="/css/extremecomponents.css"/>" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<ww:url value="/css/maven.css"/>" media="screen" />
 
     <script src="<ww:url value="/scripts/tigris.js"/>" type="text/javascript"></script>
     <decorator:head/>

@@ -27,6 +27,7 @@ import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserManager;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 import com.opensymphony.webwork.interceptor.ServletRequestAware;
@@ -72,6 +73,8 @@ public class EditUserAction
 
     private String password;
 
+    private String confirmPassword;
+
     private String email;
 
     private List permissions;
@@ -93,6 +96,11 @@ public class EditUserAction
         if ( email.indexOf( "," ) != -1 )
         {
             email = email.substring( 0, email.indexOf( "," ) );
+        }
+        if( !StringUtils.isEmpty( password ) && !password.equals( confirmPassword ) )
+        {
+        	addActionError( "user.password.mismatch.error" );
+        	return INPUT;
         }
         if ( addMode )
         {
@@ -325,6 +333,14 @@ public class EditUserAction
     {
         this.password = password;
     }
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
 
     public String getEmail()
     {

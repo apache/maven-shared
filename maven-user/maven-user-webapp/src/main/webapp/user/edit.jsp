@@ -7,18 +7,21 @@
     var accountId_field = document.getElementById('accountId_field');
     var username_field = document.getElementById('username_field');
     var password_field = document.getElementById('password_field');
+    var confirm_password_field = document.getElementById('confirm_password_field');
     var email_field = document.getElementById('email_field');
 
     var addMode = document.getElementById('addMode');
     var accountId = document.getElementById('accountId');
     var username = document.getElementById('username');
     var password = document.getElementById('password');
+    var confirmPassword = document.getElementById('confirmPassword');
     var email = document.getElementById('email');
 
     addMode.value = addMode_field.value;
     accountId.value = accountId_field.value;
     username.value = username_field.value;
     password.value = password_field.value;
+    confirmPassword.value = confirm_password_field.value;
     email.value = email_field.value;
   }
 </script>
@@ -45,7 +48,7 @@
             <c:if test="${!empty actionErrors}">
               <div class="errormessage">
               <c:forEach items="${actionErrors}" var="actionError">
-                <p>${actionError}</p>
+                <p><ww:text name="${actionError}"/></p>
               </c:forEach>
               </div>
             </c:if>
@@ -53,8 +56,15 @@
               <tbody>
                 <ww:hidden id="addMode_field" name="addMode"/>
                 <ww:hidden id="accountId_field" name="accountId"/>
-                <ww:textfield id="username_field" label="%{getText('user.username')}" name="username" required="true"/>
+                <ww:if test="addMode == true">
+                  <ww:textfield id="username_field" label="%{getText('user.username')}" name="username" required="true"/>
+                </ww:if>
+                <ww:else>
+                  <ww:hidden id="username_field" name="username"/>
+                  <ww:textfield id="username_field" label="%{getText('user.username')}" name="username" required="true" disabled="true"/>
+                </ww:else>
                 <ww:password id="password_field" label="%{getText('user.password')}" name="password" required="true"/>
+                <ww:password id="confirm_password_field" label="%{getText('user.confirm.password')}" name="confirmPassword" required="true"/>
                 <ww:textfield id="email_field" label="%{getText('user.email')}" name="email" required="true"/>
               </tbody>
             </table>
@@ -62,6 +72,7 @@
               <ww:submit value="%{getText('save')}"/> <!-- todo: change to submit/cancel button -->
             </div>
           </ww:form>
+        <ww:if test="addMode == false">
           <div id="h3">
             <h3><ww:text name="role.section.title"/></h3>
             <ww:set name="permissions" value="permissions" scope="session"/>
@@ -98,6 +109,7 @@
               <ww:submit onclick="getData()" value="%{getText('add')}"/>
             </ww:form>
           </div>
+        </ww:if>
         </div>
       </div>
     </body>

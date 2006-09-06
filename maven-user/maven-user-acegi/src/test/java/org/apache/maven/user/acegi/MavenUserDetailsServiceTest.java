@@ -1,4 +1,4 @@
-package org.apache.maven.continuum.security.acegi;
+package org.apache.maven.user.acegi;
 
 /*
  * Copyright 2006 The Apache Software Foundation.
@@ -18,41 +18,41 @@ package org.apache.maven.continuum.security.acegi;
 
 import java.util.Date;
 
+import junit.framework.TestCase;
+
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.providers.encoding.ShaPasswordEncoder;
 import org.acegisecurity.userdetails.UserDetails;
-import org.apache.maven.continuum.model.system.ContinuumUser;
-import org.apache.maven.continuum.model.system.Permission;
-import org.apache.maven.continuum.model.system.UserGroup;
-
-import junit.framework.TestCase;
+import org.apache.maven.user.model.Permission;
+import org.apache.maven.user.model.User;
+import org.apache.maven.user.model.UserGroup;
 
 /**
- * Test for {@link ContinuumUserDetailsService}
+ * Test for {@link MavenUserDetailsService}
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  */
-public class ContinuumUserDetailsServiceTest
+public class MavenUserDetailsServiceTest
     extends TestCase
 {
 
-    private ContinuumUserDetailsService userDetailsService;
+    private MavenUserDetailsService userDetailsService;
 
     protected void setUp()
         throws Exception
     {
         super.setUp();
-        userDetailsService = new ContinuumUserDetailsService();
+        userDetailsService = new MavenUserDetailsService();
     }
 
     public void testGetUserDetails()
     {
-        ContinuumUser continuumUser = createMockedUser();
-       
-        UserDetails userDetails = userDetailsService.getUserDetails( continuumUser );
+        User mavenUser = createMockedUser();
 
-        assertEquals( userDetails.getUsername(), continuumUser.getUsername() );
+        UserDetails userDetails = userDetailsService.getUserDetails( mavenUser );
+
+        assertEquals( userDetails.getUsername(), mavenUser.getUsername() );
 
         GrantedAuthority[] authorities = userDetails.getAuthorities();
         for ( int i = 0; i < authorities.length; i++ )
@@ -61,40 +61,29 @@ public class ContinuumUserDetailsServiceTest
         }
     }
 
-    public void testPasswordEncoding()
-    {
-        ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
-        String shaPassword = passwordEncoder.encodePassword( "admin", null );
-
-        ContinuumUser continuumUser = new ContinuumUser();
-        continuumUser.setEncodedPassword( shaPassword );
-
-        assertTrue( continuumUser.equalsPassword( "admin" ) );
-    }
-    
     public void testAccountExpiration()
     {
-        ContinuumUser continuumUser = createMockedUser();
-       
+        User mavenUser = createMockedUser();
+
         userDetailsService.setDaysBeforeExpiration( 0 );
-        UserDetails userDetails = userDetailsService.getUserDetails( continuumUser );
-        assertTrue(userDetails.isAccountNonExpired());
-        
+        UserDetails userDetails = userDetailsService.getUserDetails( mavenUser );
+        assertTrue( userDetails.isAccountNonExpired() );
+
         userDetailsService.setDaysBeforeExpiration( -1 );
-        userDetails = userDetailsService.getUserDetails( continuumUser );
-        assertTrue(userDetails.isAccountNonExpired());
-        
+        userDetails = userDetailsService.getUserDetails( mavenUser );
+        assertTrue( userDetails.isAccountNonExpired() );
+
         userDetailsService.setDaysBeforeExpiration( 1 );
-        userDetails = userDetailsService.getUserDetails( continuumUser );
-        assertTrue(userDetails.isAccountNonExpired());
-        
-        Date twoDaysAgo = new Date( System.currentTimeMillis() - 2 * ContinuumUserDetailsService.MILLISECONDS_PER_DAY );
-        continuumUser.setLastPasswordChange( twoDaysAgo );
-        userDetails = userDetailsService.getUserDetails( continuumUser );
-        assertFalse(userDetails.isAccountNonExpired());
+        userDetails = userDetailsService.getUserDetails( mavenUser );
+        assertTrue( userDetails.isAccountNonExpired() );
+
+        Date twoDaysAgo = new Date( System.currentTimeMillis() - 2 * MavenUserDetailsService.MILLISECONDS_PER_DAY );
+        mavenUser.setLastPasswordChange( twoDaysAgo );
+        userDetails = userDetailsService.getUserDetails( mavenUser );
+        assertFalse( userDetails.isAccountNonExpired() );
     }
 
-    private ContinuumUser createMockedUser()
+    private User createMockedUser()
     {
         Permission p0 = new Permission();
         p0.setName( "p0" );
@@ -111,13 +100,13 @@ public class ContinuumUserDetailsServiceTest
         ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
         String shaPassword = passwordEncoder.encodePassword( "password", null );
 
-        ContinuumUser continuumUser = new ContinuumUser();
-        continuumUser.setUsername( "username" );
-        continuumUser.setEncodedPassword( shaPassword );
-        continuumUser.setGroup( group );
+        User mavenUser = new User();
+        mavenUser.setUsername( "username" );
+        mavenUser.setEncodedPassword( shaPassword );
+        mavenUser.setGroup( group );
 
-        continuumUser.setLastPasswordChange( new Date() );
+        mavenUser.setLastPasswordChange( new Date() );
 
-        return continuumUser;
+        return mavenUser;
     }
 }

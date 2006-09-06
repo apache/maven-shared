@@ -1,9 +1,8 @@
 <%@ taglib uri="/webwork" prefix="ww" %>
-<%@ taglib uri="continuum" prefix="c1" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
-  <ww:i18n name="localization.Continuum">
+  <ww:i18n name="localization.MavenUser">
     <head>
         <title><ww:text name="login.page.title"/></title>
     </head>
@@ -19,7 +18,7 @@
         </c:if>
 
         <div class="axial">
-        <ww:form action="j_acegi_security_check" method="post">
+        <ww:form action="<c:url value='/j_acegi_security_check'/>" method="post">
           <table>
             <tbody>
               <ww:textfield label="%{getText('login.username')}" name="j_username" required="true"/>
@@ -30,7 +29,7 @@
             </tbody>
           </table>
           <div class="functnbar3">
-            <c1:submitcancel value="%{getText('login.submit')}" cancel="%{getText('cancel')}"/>
+            <input name="submit" type="submit">
           </div>
         </ww:form>
       </div>

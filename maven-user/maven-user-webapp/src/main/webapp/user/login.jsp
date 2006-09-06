@@ -18,18 +18,18 @@
         </c:if>
 
         <div class="axial">
-        <ww:form action="<c:url value='/j_acegi_security_check'/>" method="post">
+        <ww:form action="/j_acegi_security_check" method="post">
           <table>
             <tbody>
               <ww:textfield label="%{getText('login.username')}" name="j_username" required="true"/>
               <ww:password label="%{getText('login.password')}" name="j_password" required="true"/>
               <%-- TODO integrate remember me with Acegi 
-              <ww:checkbox label="%{getText('login.rememberMe')}" name="rememberMe" value="rememberMe" fieldValue="true"/>
+              <ww:checkbox label="%{getText('login.rememberMe')}" name="_acegi_security_remember_me" value="rememberMe" fieldValue="true"/>
               --%>
             </tbody>
           </table>
           <div class="functnbar3">
-            <input name="submit" type="submit">
+            <ww:submit value="%{getText('login.submit')}"/>
           </div>
         </ww:form>
       </div>

@@ -17,6 +17,7 @@ package org.apache.maven.user.model;
  */
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Facade for user related operations.
@@ -216,5 +217,12 @@ public interface UserManager
     * @return permission added
     */
     Permission addPermission( Permission perm );
+    
+    /**
+     * Get the instance permissions for each user
+     * 
+     * @return map of instance permissions for each user
+     */
+    Map getUsersInstancePermissions();
 
 }

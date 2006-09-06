@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.maven.user.model.Messages;
 import org.apache.maven.user.model.PasswordRule;
@@ -31,6 +33,7 @@ import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserHolder;
 import org.apache.maven.user.model.UserManager;
 import org.apache.maven.user.model.UserSecurityPolicy;
+import org.apache.maven.user.model.InstancePermissions; 
 import org.apache.maven.user.model.store.UserStore;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -311,5 +314,29 @@ public class DefaultUserManager
         }
 
         return (Permission) userStore.addPermission( perm );
+    }
+    
+    /**
+     * Get the instance permissions for each user
+     * 
+     * @return map of instance permissions for each user
+     */
+    public Map getUsersInstancePermissions()
+    {
+        List users = getUsers();
+        
+        Map usersInstancePermissions = new HashMap();
+        
+        Iterator i = users.iterator();
+        while ( i.hasNext() )
+        {
+            User user = (User) i.next();
+            
+            if ( user != null )
+            {
+                usersInstancePermissions.put( user, new InstancePermissions() );
+            }
+        }
+        return usersInstancePermissions;
     }
 }

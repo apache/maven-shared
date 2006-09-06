@@ -84,7 +84,6 @@ public class EditUserAction
     public String execute()
         throws Exception
     {
-        permissions = (List) request.getSession().getAttribute( "permissions" );
         if ( username.indexOf( "," ) != -1 )
         {
             username = username.substring( 0, username.indexOf( "," ) );
@@ -99,14 +98,13 @@ public class EditUserAction
         }
         if( !StringUtils.isEmpty( password ) && !password.equals( confirmPassword ) )
         {
-        	addActionError( "user.password.mismatch.error" );
-        	return INPUT;
+            addActionError( "user.password.mismatch.error" );
+            return INPUT;
         }
         if ( addMode )
         {
             userGroup = new UserGroup();
             userGroup.setName( username );
-            userGroup.setPermissions( permissions );
 
             user = new User();
             user.setUsername( username );
@@ -115,16 +113,16 @@ public class EditUserAction
             user.setGroup( userGroup );
             try
             {
-            	userManager.addUser( user );
+                userManager.addUser( user );
             }
             catch ( PasswordRuleViolationException e )
             {
-            	PasswordRuleViolations violationsContainer = e.getViolations();
-            	if( violationsContainer != null && violationsContainer.hasViolations() )
-            	{
-            		setActionErrors( violationsContainer.getLocalizedViolations() );
-            		return INPUT;
-            	}
+                PasswordRuleViolations violationsContainer = e.getViolations();
+                if( violationsContainer != null && violationsContainer.hasViolations() )
+                {
+                    setActionErrors( violationsContainer.getLocalizedViolations() );
+                    return INPUT;
+                }
             }
         }
         else
@@ -133,6 +131,7 @@ public class EditUserAction
             user.setUsername( username );
             user.setPassword( password );
             user.setEmail( email );
+            permissions = (List) request.getSession().getAttribute( "permissions" );
             user.getGroup().setPermissions( permissions );
             try
             {
@@ -140,12 +139,12 @@ public class EditUserAction
             }
             catch ( PasswordRuleViolationException e )
             {
-            	PasswordRuleViolations violationsContainer = e.getViolations();
-            	if( violationsContainer != null && violationsContainer.hasViolations() )
-            	{
-            		setActionErrors( violationsContainer.getLocalizedViolations() );
-            		return INPUT;
-            	}
+                PasswordRuleViolations violationsContainer = e.getViolations();
+                if( violationsContainer != null && violationsContainer.hasViolations() )
+                {
+                    setActionErrors( violationsContainer.getLocalizedViolations() );
+                    return INPUT;
+                }
             }
         }
 
@@ -334,13 +333,13 @@ public class EditUserAction
         this.password = password;
     }
 
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
 
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
-	}
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
 
     public String getEmail()
     {

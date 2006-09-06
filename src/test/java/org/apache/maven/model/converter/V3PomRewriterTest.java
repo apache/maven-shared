@@ -40,7 +40,7 @@ public class V3PomRewriterTest
     {
         super.setUp();
 
-        rewriter = (V3PomRewriter) lookup( V3PomRewriter.ROLE );
+        rewriter = (V3PomRewriter) lookup( ArtifactPomRewriter.ROLE, "v3" );
     }
 
     public void testCurrentVersionExpressionConversion()

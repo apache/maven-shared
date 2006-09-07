@@ -10,4 +10,7 @@
 }
 
 .tabMenuDisabled {
+  border: 1px solid rgb(223, 222, 222);
+  padding-left: 1em;
+  padding-right: 1em;
 }

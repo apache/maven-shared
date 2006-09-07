@@ -16,7 +16,6 @@ package org.apache.maven.user.model;
  * limitations under the License.
  */
 
-
 /**
  * User instance permissions
  * 
@@ -24,7 +23,8 @@ package org.apache.maven.user.model;
  */
 public class InstancePermissions
 {
-
+    private User user;
+    
     private boolean view;
     
     private boolean edit;
@@ -33,8 +33,9 @@ public class InstancePermissions
     
     private boolean build;
 
-    public InstancePermissions()
-    {
+    public InstancePermissions( User user )
+    {   
+        this.user = user;
         this.view = false;
         this.edit = false;
         this.delete = false;
@@ -79,5 +80,15 @@ public class InstancePermissions
     public void setView( boolean view )
     {
         this.view = view;
+    }
+
+    public User getUser()
+    {
+        return user;
+    }
+
+    public void setUser( User user )
+    {
+        this.user = user;
     }
 }

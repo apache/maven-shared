@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 import org.apache.maven.user.model.Messages;
 import org.apache.maven.user.model.PasswordRule;
@@ -319,23 +317,23 @@ public class DefaultUserManager
     /**
      * Get the instance permissions for each user
      * 
-     * @return map of instance permissions for each user
+     * @return list of instance permissions for each user
      */
-    public Map getUsersInstancePermissions()
+    public List getUsersInstancePermissions()
     {
         List users = getUsers();
         
-        Map usersInstancePermissions = new HashMap();
+        List usersInstancePermissions = new ArrayList();
         
         Iterator i = users.iterator();
         while ( i.hasNext() )
         {
             User user = (User) i.next();
             
-            if ( user != null )
-            {
-                usersInstancePermissions.put( user, new InstancePermissions() );
-            }
+            InstancePermissions userPermissions = new InstancePermissions ( user );  
+            
+            usersInstancePermissions.add( userPermissions );
+
         }
         return usersInstancePermissions;
     }

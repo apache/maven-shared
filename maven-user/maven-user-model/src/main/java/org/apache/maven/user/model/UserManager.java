@@ -30,7 +30,7 @@ import java.util.List;
 public interface UserManager
 {
     public static final String ROLE = UserManager.class.getName();
-    
+
     // ----------------------------------------------------------------------
     // User
     // ----------------------------------------------------------------------
@@ -80,7 +80,7 @@ public interface UserManager
      * @deprecated use {@link #getUser(String)} instead.
      */
     User getUserByUsername( String username );
-    
+
     /**
      * Get a user by name. User password won't be returned for security reasons.
      * 
@@ -106,7 +106,7 @@ public interface UserManager
      * @param accountId
      */
     void removeUser( int accountId );
-    
+
     /**
      * Delete a user
      * 
@@ -117,7 +117,7 @@ public interface UserManager
     // ----------------------------------------------------------------------
     // Login
     // ----------------------------------------------------------------------
-    
+
     /**
      * Perform login attempt to see if username and password are valid. 
      * 
@@ -125,8 +125,8 @@ public interface UserManager
      * @param rawpassword
      * @return true if user is able to log in. false if username or password is invalid.
      */
-    boolean login(String username, String rawpassword);
-    
+    boolean login( String username, String rawpassword );
+
     // ----------------------------------------------------------------------
     // User Group
     // ----------------------------------------------------------------------
@@ -184,7 +184,7 @@ public interface UserManager
      * @param userGroupId
      */
     void removeUserGroup( int userGroupId );
-    
+
     /**
      * Remove the named UserGroup
      * 
@@ -204,23 +204,23 @@ public interface UserManager
     List getPermissions();
 
     /**
-    * Get all the permission for a user
-    * 
-    * @return user's permission
-    */
+     * Get the permission for a user
+     * 
+     * @return user's permission
+     */
     Permission getPermission( String name );
 
     /**
-    * Add a permission
-    * 
-    * @return permission added
-    */
+     * Add a permission
+     * 
+     * @return permission added
+     */
     Permission addPermission( Permission perm );
-    
+
     /**
      * Get the instance permissions for each user
      * 
-     * @return list of instance permissions for each user
+     * @return {@link List} &lt; {@link InstancePermissions} >
      */
     List getUsersInstancePermissions();
 

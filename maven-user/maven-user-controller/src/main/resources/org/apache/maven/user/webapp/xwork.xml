@@ -18,10 +18,5 @@
       <result name="success">/user/list.jsp</result>
     </action>
 
-    <action name="changeUserPassword" class="changeUserPassword">
-      <result name="input">/user/changePassword.jsp</result>
-      <result name="success">/user/changePassword.jsp</result>
-    </action>
-
   </package>
 </xwork>

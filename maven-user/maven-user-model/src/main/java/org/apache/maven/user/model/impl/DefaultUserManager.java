@@ -40,7 +40,7 @@ import org.codehaus.plexus.util.StringUtils;
 /**
  * Default implementation of the {@link UserManager} interface.
  * 
- * @plexus.component role="org.apache.maven.user.model.UserManager"
+ * @plexus.component role="org.apache.maven.user.model.UserManager" role-hint="default"
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$

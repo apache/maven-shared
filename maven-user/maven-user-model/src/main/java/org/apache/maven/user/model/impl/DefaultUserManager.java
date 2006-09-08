@@ -31,7 +31,6 @@ import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserHolder;
 import org.apache.maven.user.model.UserManager;
 import org.apache.maven.user.model.UserSecurityPolicy;
-import org.apache.maven.user.model.InstancePermissions; 
 import org.apache.maven.user.model.store.UserStore;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -70,7 +69,7 @@ public class DefaultUserManager
     public void initialize()
         throws InitializationException
     {
-        
+
     }
 
     public boolean login( String username, String rawPassword )
@@ -80,7 +79,7 @@ public class DefaultUserManager
         {
             return false;
         }
-        
+
         if ( user.isLocked() )
         {
             return false;
@@ -88,9 +87,10 @@ public class DefaultUserManager
 
         // Ensure that user cannot set password during login.
         user.setPassword( null );
-        
-        boolean validPassword = securityPolicy.getPasswordEncoder().isPasswordValid( user.getEncodedPassword(), rawPassword );
-        
+
+        boolean validPassword = securityPolicy.getPasswordEncoder().isPasswordValid( user.getEncodedPassword(),
+                                                                                     rawPassword );
+
         if ( validPassword )
         {
             // successful login. reset any failed login attempts counter.
@@ -103,13 +103,13 @@ public class DefaultUserManager
             {
                 user.setLocked( true );
             }
-            
+
             this.updateUser( user );
-        } 
-        
+        }
+
         return validPassword;
     }
-    
+
     /**
      * Sets the Security Policy to use.
      * 
@@ -146,26 +146,26 @@ public class DefaultUserManager
     private void processPasswordChange( User user )
         throws PasswordRuleViolationException
     {
-        if(user.isGuest())
+        if ( user.isGuest() )
         {
             user.setEncodedPassword( null );
             return;
         }
-        
+
         validatePassword( user );
-        
+
         // set the current encoded password.
         user.setEncodedPassword( securityPolicy.getPasswordEncoder().encodePassword( user.getPassword() ) );
         user.setPassword( null );
-        
+
         // push new password onto list of previous password.
         List previousPasswords = new ArrayList();
         previousPasswords.add( user.getEncodedPassword() );
-        
+
         if ( !user.getPreviousEncodedPasswords().isEmpty() )
         {
-            int oldCount = Math.min( securityPolicy.getPreviousPasswordsCount() - 1, 
-                                     user.getPreviousEncodedPasswords().size() );
+            int oldCount = Math.min( securityPolicy.getPreviousPasswordsCount() - 1, user.getPreviousEncodedPasswords()
+                .size() );
             //modified sublist start index as the previous value results to nothing being added to the list. 
             //TODO Please check and verify if it satisfies the objective.
             List sublist = user.getPreviousEncodedPasswords().subList( 0, oldCount );
@@ -182,7 +182,7 @@ public class DefaultUserManager
     {
         // Trim password.
         user.setPassword( StringUtils.trim( user.getPassword() ) );
-        
+
         PasswordRuleViolations violations = new PasswordRuleViolations();
 
         Iterator it = securityPolicy.getPasswordRules().iterator();

@@ -224,4 +224,11 @@ public interface UserManager
      */
     List getUsersInstancePermissions();
 
+    /**
+     * Get current user
+     * 
+     * @return null if the user doesn't exist
+     */
+    User getMyUser();
+
 }

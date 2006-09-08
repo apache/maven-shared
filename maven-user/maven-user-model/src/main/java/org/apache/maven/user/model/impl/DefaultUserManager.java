@@ -337,4 +337,9 @@ public class DefaultUserManager
         }
         return usersInstancePermissions;
     }
+
+    public User getMyUser()
+    {
+        return getUser( userHolder.getCurrentUserName() );
+    }
 }

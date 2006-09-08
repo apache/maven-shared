@@ -1,6 +1,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
+<%@ taglib uri="http://acegisecurity.org/authz" prefix="authz" %>
 <script>
   function getData() {
     var addMode_field = document.getElementById('addMode_field');
@@ -44,34 +45,10 @@
           <h3><ww:text name="user.edit.section.title"/></h3>
         </ww:else>
         <div class="axial">
-          <ww:form action="edit.action" method="post">
-            <c:if test="${!empty actionErrors}">
-              <div class="errormessage">
-              <c:forEach items="${actionErrors}" var="actionError">
-                <p><ww:text name="${actionError}"/></p>
-              </c:forEach>
-              </div>
-            </c:if>
-            <table>
-              <tbody>
-                <ww:hidden id="addMode_field" name="addMode"/>
-                <ww:hidden id="accountId_field" name="accountId"/>
-                <ww:if test="addMode == true">
-                  <ww:textfield id="username_field" label="%{getText('user.username')}" name="username" required="true"/>
-                </ww:if>
-                <ww:else>
-                  <ww:hidden id="username_field" name="username"/>
-                  <ww:textfield id="username_field" label="%{getText('user.username')}" name="username" required="true" disabled="true"/>
-                </ww:else>
-                <ww:password id="password_field" label="%{getText('user.password')}" name="password" required="true"/>
-                <ww:password id="confirm_password_field" label="%{getText('user.confirm.password')}" name="confirmPassword" required="true"/>
-                <ww:textfield id="email_field" label="%{getText('user.email')}" name="email" required="true"/>
-              </tbody>
-            </table>
-            <div class="functnbar3">
-              <ww:submit value="%{getText('save')}"/> <!-- todo: change to submit/cancel button -->
-            </div>
-          </ww:form>
+          <ww:include value="userForm.jsp">
+            <ww:param name="addMode" value="${addMode}"/>
+          </ww:include>
+        <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageUsers">
         <ww:if test="addMode == false">
           <div id="h3">
             <h3><ww:text name="role.section.title"/></h3>
@@ -110,6 +87,7 @@
             </ww:form>
           </div>
         </ww:if>
+        </authz:authorize>
         </div>
       </div>
     </body>

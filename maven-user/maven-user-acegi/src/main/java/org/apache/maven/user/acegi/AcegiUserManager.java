@@ -162,4 +162,9 @@ public class AcegiUserManager
     {
         getUserManager().updateUserGroup( userGroup );
     }
+    
+    public User getMyUser()
+    {
+        return getUserManager().getMyUser();
+    }
 }

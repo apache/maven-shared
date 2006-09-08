@@ -179,6 +179,17 @@ public class EditUserAction
 
         return INPUT;
     }
+    
+    public String editMe()
+        throws Exception
+    {
+        addMode = false;
+        user = userManager.getMyUser();
+        username = user.getUsername();
+        email = user.getEmail();
+    
+        return INPUT;
+    }
 
     public String doGetAvailablePermissions()
         throws Exception

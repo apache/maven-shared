@@ -17,6 +17,16 @@
     <action name="list" class="listUsers">
       <result name="success">/user/list.jsp</result>
     </action>
+    
+    <action name="myAccount" class="editUser" method="editMe">
+      <result name="input">/user/edit.jsp</result>
+      <result name="success" type="chain">list</result>
+    </action>
+    
+    <action name="saveAccount" class="editUser">
+      <result name="input">/user/edit.jsp</result>
+      <result name="success">/user/edit.jsp</result>
+    </action>
 
   </package>
 </xwork>

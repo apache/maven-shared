@@ -24,24 +24,32 @@ package org.apache.maven.user.model;
 public class InstancePermissions
 {
     private User user;
-    
+
     private boolean view;
-    
+
     private boolean edit;
-    
+
     private boolean delete;
-    
+
     private boolean build;
 
+    public InstancePermissions()
+    {
+        this.view = false;
+        this.edit = false;
+        this.delete = false;
+        this.build = false;
+    }
+
     public InstancePermissions( User user )
-    {   
+    {
         this.user = user;
         this.view = false;
         this.edit = false;
         this.delete = false;
         this.build = false;
     }
-    
+
     public boolean isBuild()
     {
         return build;

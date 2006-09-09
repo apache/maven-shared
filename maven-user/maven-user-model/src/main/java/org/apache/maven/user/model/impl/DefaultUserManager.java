@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.maven.user.model.InstancePermissions;
 import org.apache.maven.user.model.Messages;
 import org.apache.maven.user.model.PasswordRule;
 import org.apache.maven.user.model.PasswordRuleViolationException;
@@ -315,27 +316,19 @@ public class DefaultUserManager
     }
     
     /**
-     * Get the instance permissions for each user
-     * 
-     * @return list of instance permissions for each user
+     * This implementation return empty permissions for each user. 
      */
-    public List getUsersInstancePermissions()
+    public List getUsersInstancePermissions( Class clazz, Object id )
     {
         List users = getUsers();
-        
-        List usersInstancePermissions = new ArrayList();
-        
-        Iterator i = users.iterator();
-        while ( i.hasNext() )
+        List permissions = new ArrayList( users.size() );
+        Iterator it = users.iterator();
+        while ( it.hasNext() )
         {
-            User user = (User) i.next();
-            
-            InstancePermissions userPermissions = new InstancePermissions ( user );  
-            
-            usersInstancePermissions.add( userPermissions );
-
+            User user = (User) it.next();
+            permissions.add( new InstancePermissions( user ) );
         }
-        return usersInstancePermissions;
+        return permissions;
     }
 
     public User getMyUser()

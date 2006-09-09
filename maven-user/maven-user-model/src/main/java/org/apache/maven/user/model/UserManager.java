@@ -218,11 +218,13 @@ public interface UserManager
     Permission addPermission( Permission perm );
 
     /**
-     * Get the instance permissions for each user
+     * Get the instance permissions for each user and object ( identified by its class and id )
+     * @param clazz {@link Class} of the object
+     * @param id identifier of the object
      * 
      * @return {@link List} &lt; {@link InstancePermissions} >
      */
-    List getUsersInstancePermissions();
+    List getUsersInstancePermissions( Class clazz, Object id );
 
     /**
      * Get current user

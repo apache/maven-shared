@@ -55,24 +55,24 @@ public class AclManager
         getAclDao().create( aclEntry );
     }
 
-    protected void delete( Class clazz, int id )
+    protected void delete( Class clazz, Object id )
     {
         getAclDao().delete( createObjectIdentity( clazz, id ) );
     }
 
-    protected NamedEntityObjectIdentity createObjectIdentity( Class clazz, int id )
+    protected NamedEntityObjectIdentity createObjectIdentity( Class clazz, Object id )
     {
-        return new NamedEntityObjectIdentity( clazz.getName(), Integer.toString( id ) );
+        return new NamedEntityObjectIdentity( clazz.getName(), id.toString() );
     }
 
-    public BasicAclEntry[] getAcls( Class clazz, int id )
+    public BasicAclEntry[] getAcls( Class clazz, Object id )
     {
         NamedEntityObjectIdentity objectIdentity = createObjectIdentity( clazz, id );
         BasicAclEntry[] acls = getAclDao().getAcls( objectIdentity );
         return acls;
     }
 
-    public BasicAclEntry getAcl( Class clazz, int id, String userName )
+    public BasicAclEntry getAcl( Class clazz, Object id, String userName )
     {
         BasicAclEntry[] acls = getAcls( clazz, id );
         for ( int i = 0; i < acls.length; i++ )
@@ -85,7 +85,7 @@ public class AclManager
         return null;
     }
 
-    public void setPermissions( Class clazz, int id, String userName, int permissions, AclObjectIdentity parentAclId )
+    public void setPermissions( Class clazz, Object id, String userName, int permissions, AclObjectIdentity parentAclId )
     {
         BasicAclEntry acl = getAcl( clazz, id, userName );
         NamedEntityObjectIdentity objectIdentity = createObjectIdentity( clazz, id );

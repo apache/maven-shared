@@ -16,8 +16,14 @@ package org.apache.maven.user.acegi;
  * limitations under the License.
  */
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+import org.acegisecurity.acl.basic.BasicAclEntry;
+import org.acegisecurity.acl.basic.SimpleAclEntry;
+import org.apache.maven.user.model.InstancePermissions;
 import org.apache.maven.user.model.PasswordRuleViolationException;
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
@@ -44,7 +50,7 @@ public class AcegiUserManager
     /**
      * @plexus.requirement
      */
-    private AclManager aclEventHandler;
+    private AclManager aclManager;
 
     public void setUserManager( UserManager userManager )
     {
@@ -55,6 +61,78 @@ public class AcegiUserManager
     {
         return userManager;
     }
+
+    public void setAclManager( AclManager aclManager )
+    {
+        this.aclManager = aclManager;
+    }
+
+    public AclManager getAclManager()
+    {
+        return aclManager;
+    }
+
+    public List getUsersInstancePermissions( Class clazz, Object id )
+    {
+        List userPermissions = getUserManager().getUsersInstancePermissions( clazz, id );
+
+        BasicAclEntry[] acls = getAclManager().getAcls( clazz, id );
+
+        /* put ACLs in a map indexed by username, transforming from BasicAclEntry to InstancePermissions */
+        Map aclsByUserName = new HashMap();
+        for ( int i = 0; i < acls.length; i++ )
+        {
+            BasicAclEntry acl = acls[i];
+            String recipient = (String) acl.getRecipient();
+
+            BasicAclEntry p = (BasicAclEntry) aclsByUserName.get( recipient );
+            if ( p != null )
+            {
+                throw new IllegalStateException( "There is more than one ACL for user '" + recipient + "': " + p
+                    + " and " + acl );
+            }
+
+            aclsByUserName.put( recipient, p );
+        }
+
+        /* add permissions to each user, and then return a List with permissions */
+        Iterator it = userPermissions.iterator();
+        while ( it.hasNext() )
+        {
+            InstancePermissions p = (InstancePermissions) it.next();
+            BasicAclEntry acl = (BasicAclEntry) aclsByUserName.get( p.getUser().getUsername() );
+            if ( acl != null )
+            {
+                aclToPermission( acl, p );
+            }
+        }
+        return userPermissions;
+    }
+
+    private InstancePermissions aclToPermission( BasicAclEntry acl, InstancePermissions p )
+    {
+        if ( acl.isPermitted( SimpleAclEntry.CREATE ) )
+        {
+            p.setBuild( true );
+        }
+        if ( acl.isPermitted( SimpleAclEntry.DELETE ) )
+        {
+            p.setDelete( true );
+        }
+        if ( acl.isPermitted( SimpleAclEntry.READ ) )
+        {
+            p.setView( true );
+        }
+        if ( acl.isPermitted( SimpleAclEntry.WRITE ) )
+        {
+            p.setEdit( true );
+        }
+        return p;
+    }
+
+    //-----------------------------------------------------------------------
+    // delegation methods
+    //-----------------------------------------------------------------------
 
     public Permission addPermission( Permission perm )
     {
@@ -122,11 +200,6 @@ public class AcegiUserManager
         return getUserManager().getUsers();
     }
 
-    public List getUsersInstancePermissions()
-    {
-        return getUserManager().getUsersInstancePermissions();
-    }
-
     public boolean login( String username, String rawpassword )
     {
         return getUserManager().login( username, rawpassword );
@@ -162,7 +235,7 @@ public class AcegiUserManager
     {
         getUserManager().updateUserGroup( userGroup );
     }
-    
+
     public User getMyUser()
     {
         return getUserManager().getMyUser();

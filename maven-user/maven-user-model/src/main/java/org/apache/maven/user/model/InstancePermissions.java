@@ -99,4 +99,32 @@ public class InstancePermissions
     {
         this.user = user;
     }
+
+    public String toString()
+    {
+        StringBuffer sb = new StringBuffer();
+        sb.append( getUser().getUsername() );
+        sb.append( ": " );
+
+        char[] permissions = "----".toCharArray();
+        if ( isView() )
+        {
+            permissions[0] = 'v';
+        }
+        if ( isEdit() )
+        {
+            permissions[1] = 'e';
+        }
+        if ( isDelete() )
+        {
+            permissions[2] = 'd';
+        }
+        if ( isBuild() )
+        {
+            permissions[3] = 'b';
+        }
+
+        sb.append( permissions );
+        return sb.toString();
+    }
 }

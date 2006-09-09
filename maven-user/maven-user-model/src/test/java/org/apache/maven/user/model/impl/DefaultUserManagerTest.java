@@ -52,6 +52,8 @@ import org.jpox.SchemaTool;
 public class DefaultUserManagerTest
     extends PlexusTestCase
 {
+    private static final String METADATA_LOCATION = "/org/apache/maven/user/model/package.jdo";
+    
     private DefaultUserManager userManager = null;
 
     public void setUserManager( DefaultUserManager userManager )
@@ -100,7 +102,11 @@ public class DefaultUserManagerTest
             System.setProperty( (String) entry.getKey(), (String) entry.getValue() );
         }
 
-        SchemaTool.createSchemaTables( new URL[] { getClass().getResource( "/org/apache/maven/user/model/package.jdo" ) }, null, false ); //$NON-NLS-1$
+        URL jdoMetadata = getClass().getResource( METADATA_LOCATION );
+
+        assertNotNull( "Unable to find JDO metadata: " + METADATA_LOCATION, jdoMetadata );
+
+        SchemaTool.createSchemaTables( new URL[] { jdoMetadata }, null, false ); //$NON-NLS-1$
 
         PersistenceManagerFactory pmf = jdoFactory.getPersistenceManagerFactory();
 

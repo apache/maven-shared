@@ -132,7 +132,7 @@ method.
             <multiplicity>*</multiplicity>
           </association>
         </field>
-        <field>
+        <field jpox.column="userGroup">
           <name>group</name>
           <version>1.0.0+</version>
           <association stash.part="true">

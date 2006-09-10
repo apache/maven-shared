@@ -16,6 +16,7 @@ package org.apache.maven.user.model;
  * limitations under the License.
  */
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -218,13 +219,23 @@ public interface UserManager
     Permission addPermission( Permission perm );
 
     /**
-     * Get the instance permissions for each user and object ( identified by its class and id )
+     * Get all users instance permissions for an object ( identified by its class and id )
+     * 
      * @param clazz {@link Class} of the object
      * @param id identifier of the object
-     * 
      * @return {@link List} &lt; {@link InstancePermissions} >
      */
     List getUsersInstancePermissions( Class clazz, Object id );
+
+    /**
+     * Set all users instance permissions for an object
+     * 
+     * @param clazz {@link Class} of the object
+     * @param id identifier of the object
+     * @param permissions {@link Collection} &lt;{@link InstancePermissions}> .
+     * Each {@link InstancePermissions}.user only needs to have username, no other properties are required.
+     */
+    void setUsersInstancePermissions( Class clazz, Object id, Collection permissions );
 
     /**
      * Get current user
@@ -232,5 +243,4 @@ public interface UserManager
      * @return null if the user doesn't exist
      */
     User getMyUser();
-
 }

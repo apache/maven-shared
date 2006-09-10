@@ -39,7 +39,11 @@ public class AcegiUserManagerTest
 {
     private AcegiUserManager manager;
 
+    AclManager aclManager;
+
     private Mock delegate, dao;
+
+    private User user;
 
     protected void setUp()
         throws Exception
@@ -50,16 +54,18 @@ public class AcegiUserManagerTest
         manager.setUserManager( (UserManager) delegate.proxy() );
 
         dao = mock( BasicAclExtendedDao.class );
-        AclManager aclManager = new AclManager();
+        aclManager = new AclManager();
         aclManager.setAclDao( (BasicAclExtendedDao) dao.proxy() );
         manager.setAclManager( aclManager );
+
+        user = new User();
+        user.setUsername( "myuser" );
     }
 
     public void testGetUsersInstancePermissions()
     {
         List users = new ArrayList();
-        User u = new User();
-        InstancePermissions p = new InstancePermissions( u );
+        InstancePermissions p = new InstancePermissions( user );
         users.add( p );
         delegate.expects( once() ).method( "getUsersInstancePermissions" ).will( returnValue( users ) );
 
@@ -74,11 +80,61 @@ public class AcegiUserManagerTest
 
         p = (InstancePermissions) usersInstancePermissions.iterator().next();
 
-        assertEquals( u, p.getUser() );
-        assertFalse( p.isBuild() );
+        assertEquals( user, p.getUser() );
+        assertFalse( p.isExecute() );
         assertFalse( p.isDelete() );
-        assertFalse( p.isEdit() );
-        assertFalse( p.isView() );
+        assertFalse( p.isWrite() );
+        assertFalse( p.isRead() );
+        assertFalse( p.isAdminister() );
     }
 
+    public void testSetUsersInstancePermissions()
+    {
+        List users = new ArrayList();
+        InstancePermissions p = new InstancePermissions( user );
+        users.add( p );
+
+        BasicAclEntry[] acls = new BasicAclEntry[1];
+        BasicAclEntry acl = new SimpleAclEntry();
+        acl.setRecipient( user.getUsername() );
+        acl.setAclObjectIdentity( aclManager.createObjectIdentity( User.class, new Integer( 1 ) ) );
+        acls[0] = acl;
+
+        /* *************************************** old ACL *************************************** */
+
+        dao.expects( atLeastOnce() ).method( "getAcls" ).will( returnValue( acls ) );
+
+        /* no permissions */
+        dao.expects( once() ).method( "delete" ).with( ANYTHING, eq( user.getUsername() ) );
+
+        manager.setUsersInstancePermissions( User.class, new Integer( 1 ), users );
+        dao.verify();
+
+        /* read permission */
+        p.setRead( true );
+        dao.expects( once() ).method( "changeMask" )
+            .with( ANYTHING, eq( user.getUsername() ), eq( SimpleAclEntry.READ ) );
+
+        manager.setUsersInstancePermissions( User.class, new Integer( 1 ), users );
+        dao.verify();
+
+        /* *************************************** new ACL *************************************** */
+
+        dao.expects( atLeastOnce() ).method( "getAcls" ).will( returnValue( new BasicAclEntry[0] ) );
+
+        /* no permissions */
+        p.setRead( false );
+
+        manager.setUsersInstancePermissions( User.class, new Integer( 1 ), users );
+        dao.verify();
+
+        /* read permission */
+        p.setRead( true );
+        acl.setMask( SimpleAclEntry.READ );
+        dao.expects( once() ).method( "create" ).with( hasProperty( "mask", eq( SimpleAclEntry.READ ) ) );
+
+        manager.setUsersInstancePermissions( User.class, new Integer( 1 ), users );
+        dao.verify();
+
+    }
 }

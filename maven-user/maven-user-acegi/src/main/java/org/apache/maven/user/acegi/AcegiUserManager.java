@@ -16,6 +16,7 @@ package org.apache.maven.user.acegi;
  * limitations under the License.
  */
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -75,59 +76,12 @@ public class AcegiUserManager
     public List getUsersInstancePermissions( Class clazz, Object id )
     {
         List userPermissions = getUserManager().getUsersInstancePermissions( clazz, id );
-
-        BasicAclEntry[] acls = getAclManager().getAcls( clazz, id );
-
-        /* put ACLs in a map indexed by username, transforming from BasicAclEntry to InstancePermissions */
-        Map aclsByUserName = new HashMap();
-        for ( int i = 0; i < acls.length; i++ )
-        {
-            BasicAclEntry acl = acls[i];
-            String recipient = (String) acl.getRecipient();
-
-            BasicAclEntry p = (BasicAclEntry) aclsByUserName.get( recipient );
-            if ( p != null )
-            {
-                throw new IllegalStateException( "There is more than one ACL for user '" + recipient + "': " + p
-                    + " and " + acl );
-            }
-
-            aclsByUserName.put( recipient, p );
-        }
-
-        /* add permissions to each user, and then return a List with permissions */
-        Iterator it = userPermissions.iterator();
-        while ( it.hasNext() )
-        {
-            InstancePermissions p = (InstancePermissions) it.next();
-            BasicAclEntry acl = (BasicAclEntry) aclsByUserName.get( p.getUser().getUsername() );
-            if ( acl != null )
-            {
-                aclToPermission( acl, p );
-            }
-        }
-        return userPermissions;
+        return getAclManager().getUsersInstancePermissions( clazz, id, userPermissions );
     }
 
-    private InstancePermissions aclToPermission( BasicAclEntry acl, InstancePermissions p )
+    public void setUsersInstancePermissions( Class clazz, Object id, Collection permissions )
     {
-        if ( acl.isPermitted( SimpleAclEntry.CREATE ) )
-        {
-            p.setBuild( true );
-        }
-        if ( acl.isPermitted( SimpleAclEntry.DELETE ) )
-        {
-            p.setDelete( true );
-        }
-        if ( acl.isPermitted( SimpleAclEntry.READ ) )
-        {
-            p.setView( true );
-        }
-        if ( acl.isPermitted( SimpleAclEntry.WRITE ) )
-        {
-            p.setEdit( true );
-        }
-        return p;
+        getAclManager().setUsersInstancePermissions( clazz, id, permissions );
     }
 
     //-----------------------------------------------------------------------

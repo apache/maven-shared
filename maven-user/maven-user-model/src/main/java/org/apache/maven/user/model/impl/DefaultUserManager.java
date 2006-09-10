@@ -17,6 +17,7 @@ package org.apache.maven.user.model.impl;
  */
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -329,6 +330,13 @@ public class DefaultUserManager
             permissions.add( new InstancePermissions( user ) );
         }
         return permissions;
+    }
+
+    /**
+     * Do nothing
+     */
+    public void setUsersInstancePermissions( Class clazz, Object id, Collection permissions )
+    {
     }
 
     public User getMyUser()

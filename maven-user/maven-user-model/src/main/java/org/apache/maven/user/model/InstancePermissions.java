@@ -25,39 +25,25 @@ public class InstancePermissions
 {
     private User user;
 
-    private boolean view;
-
-    private boolean edit;
-
-    private boolean delete;
-
-    private boolean build;
+    private boolean read, write, delete, execute, administer;
 
     public InstancePermissions()
     {
-        this.view = false;
-        this.edit = false;
-        this.delete = false;
-        this.build = false;
     }
 
     public InstancePermissions( User user )
     {
         this.user = user;
-        this.view = false;
-        this.edit = false;
-        this.delete = false;
-        this.build = false;
     }
 
-    public boolean isBuild()
+    public boolean isExecute()
     {
-        return build;
+        return execute;
     }
 
-    public void setBuild( boolean build )
+    public void setExecute( boolean execute )
     {
-        this.build = build;
+        this.execute = execute;
     }
 
     public boolean isDelete()
@@ -70,24 +56,34 @@ public class InstancePermissions
         this.delete = delete;
     }
 
-    public boolean isEdit()
+    public boolean isWrite()
     {
-        return edit;
+        return write;
     }
 
-    public void setEdit( boolean edit )
+    public void setWrite( boolean write )
     {
-        this.edit = edit;
+        this.write = write;
     }
 
-    public boolean isView()
+    public boolean isRead()
     {
-        return view;
+        return read;
     }
 
-    public void setView( boolean view )
+    public void setRead( boolean read )
     {
-        this.view = view;
+        this.read = read;
+    }
+
+    public boolean isAdminister()
+    {
+        return administer;
+    }
+
+    public void setAdminister( boolean administer )
+    {
+        this.administer = administer;
     }
 
     public User getUser()
@@ -106,25 +102,49 @@ public class InstancePermissions
         sb.append( getUser().getUsername() );
         sb.append( ": " );
 
-        char[] permissions = "----".toCharArray();
-        if ( isView() )
+        char[] permissions = "-----".toCharArray();
+        if ( isRead() )
         {
-            permissions[0] = 'v';
+            permissions[0] = 'r';
         }
-        if ( isEdit() )
+        if ( isWrite() )
         {
-            permissions[1] = 'e';
+            permissions[1] = 'w';
         }
         if ( isDelete() )
         {
             permissions[2] = 'd';
         }
-        if ( isBuild() )
+        if ( isExecute() )
         {
-            permissions[3] = 'b';
+            permissions[3] = 'x';
+        }
+        if ( isAdminister() )
+        {
+            permissions[4] = 'a';
         }
 
         sb.append( permissions );
         return sb.toString();
+    }
+
+    public boolean equals( Object other )
+    {
+        if ( this == other )
+        {
+            return true;
+        }
+        if ( !( other instanceof InstancePermissions ) )
+        {
+            return false;
+        }
+        InstancePermissions that = (InstancePermissions) other;
+        boolean result = getUser().equals( that.getUser() );
+        result &= isRead() == that.isRead();
+        result &= isWrite() == that.isWrite();
+        result &= isDelete() == that.isDelete();
+        result &= isExecute() == that.isExecute();
+        result &= isAdminister() == that.isAdminister();
+        return result;
     }
 }

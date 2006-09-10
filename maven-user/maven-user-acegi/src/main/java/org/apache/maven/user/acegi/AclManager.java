@@ -25,7 +25,7 @@ import java.util.Map;
 import org.acegisecurity.acl.basic.BasicAclEntry;
 import org.acegisecurity.acl.basic.BasicAclExtendedDao;
 import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
-import org.acegisecurity.acl.basic.SimpleAclEntry;
+import org.apache.maven.user.acegi.acl.basic.ExtendedSimpleAclEntry;
 import org.apache.maven.user.model.InstancePermissions;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -111,7 +111,7 @@ public class AclManager
                     + " and " + acl );
             }
 
-            aclsByUserName.put( recipient, p );
+            aclsByUserName.put( recipient, acl );
         }
 
         /* add permissions to each user, and then return a List with permissions */
@@ -149,13 +149,13 @@ public class AclManager
             if ( acl == null )
             {
                 NamedEntityObjectIdentity objectIdentity = createObjectIdentity( clazz, id );
-                acl = new SimpleAclEntry();
+                acl = new ExtendedSimpleAclEntry();
                 acl.setAclObjectIdentity( objectIdentity );
                 //acl.setAclObjectParentIdentity( parentAclId );
                 permissionToAcl( p, acl );
 
                 /* create the ACL only if it has any permission */
-                if ( acl.getMask() != SimpleAclEntry.NOTHING )
+                if ( acl.getMask() != ExtendedSimpleAclEntry.NOTHING )
                 {
                     getAclDao().create( acl );
                 }
@@ -165,7 +165,7 @@ public class AclManager
                 permissionToAcl( p, acl );
 
                 /* delete the ACL if it has no permissions */
-                if ( acl.getMask() != SimpleAclEntry.NOTHING )
+                if ( acl.getMask() != ExtendedSimpleAclEntry.NOTHING )
                 {
                     getAclDao().changeMask( acl.getAclObjectIdentity(), userName, new Integer( acl.getMask() ) );
                 }
@@ -179,35 +179,35 @@ public class AclManager
 
     private void permissionToAcl( InstancePermissions p, BasicAclEntry basicAcl )
     {
-        if ( !( basicAcl instanceof SimpleAclEntry ) )
+        if ( !( basicAcl instanceof ExtendedSimpleAclEntry ) )
         {
-            throw new IllegalArgumentException( "Can't create ACLs other than " + SimpleAclEntry.class );
+            throw new IllegalArgumentException( "Can't create ACLs other than " + ExtendedSimpleAclEntry.class );
         }
 
-        SimpleAclEntry acl = (SimpleAclEntry) basicAcl;
+        ExtendedSimpleAclEntry acl = (ExtendedSimpleAclEntry) basicAcl;
 
         acl.setRecipient( p.getUser().getUsername() );
-        acl.setMask( SimpleAclEntry.NOTHING );
+        acl.setMask( ExtendedSimpleAclEntry.NOTHING );
 
         if ( p.isExecute() )
         {
-            acl.addPermission( SimpleAclEntry.CREATE );
+            acl.addPermission( ExtendedSimpleAclEntry.CREATE );
         }
         if ( p.isDelete() )
         {
-            acl.addPermission( SimpleAclEntry.DELETE );
+            acl.addPermission( ExtendedSimpleAclEntry.DELETE );
         }
         if ( p.isRead() )
         {
-            acl.addPermission( SimpleAclEntry.READ );
+            acl.addPermission( ExtendedSimpleAclEntry.READ );
         }
         if ( p.isWrite() )
         {
-            acl.addPermission( SimpleAclEntry.WRITE );
+            acl.addPermission( ExtendedSimpleAclEntry.WRITE );
         }
         if ( p.isAdminister() )
         {
-            acl.addPermission( SimpleAclEntry.ADMINISTRATION );
+            acl.addPermission( ExtendedSimpleAclEntry.ADMINISTRATION );
         }
     }
 
@@ -219,23 +219,23 @@ public class AclManager
      */
     private void aclToPermission( BasicAclEntry acl, InstancePermissions p )
     {
-        if ( acl.isPermitted( SimpleAclEntry.CREATE ) )
+        if ( acl.isPermitted( ExtendedSimpleAclEntry.CREATE ) )
         {
             p.setExecute( true );
         }
-        if ( acl.isPermitted( SimpleAclEntry.DELETE ) )
+        if ( acl.isPermitted( ExtendedSimpleAclEntry.DELETE ) )
         {
             p.setDelete( true );
         }
-        if ( acl.isPermitted( SimpleAclEntry.READ ) )
+        if ( acl.isPermitted( ExtendedSimpleAclEntry.READ ) )
         {
             p.setRead( true );
         }
-        if ( acl.isPermitted( SimpleAclEntry.WRITE ) )
+        if ( acl.isPermitted( ExtendedSimpleAclEntry.WRITE ) )
         {
             p.setWrite( true );
         }
-        if ( acl.isPermitted( SimpleAclEntry.ADMINISTRATION ) )
+        if ( acl.isPermitted( ExtendedSimpleAclEntry.ADMINISTRATION ) )
         {
             p.setAdminister( true );
         }

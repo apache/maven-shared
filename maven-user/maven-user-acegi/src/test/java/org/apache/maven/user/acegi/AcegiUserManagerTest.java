@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.acegisecurity.acl.basic.BasicAclEntry;
 import org.acegisecurity.acl.basic.BasicAclExtendedDao;
-import org.acegisecurity.acl.basic.SimpleAclEntry;
+import org.apache.maven.user.acegi.acl.basic.ExtendedSimpleAclEntry;
 import org.apache.maven.user.model.InstancePermissions;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserManager;
@@ -70,7 +70,7 @@ public class AcegiUserManagerTest
         delegate.expects( once() ).method( "getUsersInstancePermissions" ).will( returnValue( users ) );
 
         BasicAclEntry[] acls = new BasicAclEntry[1];
-        acls[0] = new SimpleAclEntry();
+        acls[0] = new ExtendedSimpleAclEntry();
         dao.expects( once() ).method( "getAcls" ).will( returnValue( acls ) );
 
         List usersInstancePermissions = manager.getUsersInstancePermissions( User.class, new Integer( 1 ) );
@@ -95,7 +95,7 @@ public class AcegiUserManagerTest
         users.add( p );
 
         BasicAclEntry[] acls = new BasicAclEntry[1];
-        BasicAclEntry acl = new SimpleAclEntry();
+        BasicAclEntry acl = new ExtendedSimpleAclEntry();
         acl.setRecipient( user.getUsername() );
         acl.setAclObjectIdentity( aclManager.createObjectIdentity( User.class, new Integer( 1 ) ) );
         acls[0] = acl;
@@ -112,8 +112,8 @@ public class AcegiUserManagerTest
 
         /* read permission */
         p.setRead( true );
-        dao.expects( once() ).method( "changeMask" )
-            .with( ANYTHING, eq( user.getUsername() ), eq( SimpleAclEntry.READ ) );
+        dao.expects( once() ).method( "changeMask" ).with( ANYTHING, eq( user.getUsername() ),
+                                                           eq( ExtendedSimpleAclEntry.READ ) );
 
         manager.setUsersInstancePermissions( User.class, new Integer( 1 ), users );
         dao.verify();
@@ -130,8 +130,8 @@ public class AcegiUserManagerTest
 
         /* read permission */
         p.setRead( true );
-        acl.setMask( SimpleAclEntry.READ );
-        dao.expects( once() ).method( "create" ).with( hasProperty( "mask", eq( SimpleAclEntry.READ ) ) );
+        acl.setMask( ExtendedSimpleAclEntry.READ );
+        dao.expects( once() ).method( "create" ).with( hasProperty( "mask", eq( ExtendedSimpleAclEntry.READ ) ) );
 
         manager.setUsersInstancePermissions( User.class, new Integer( 1 ), users );
         dao.verify();

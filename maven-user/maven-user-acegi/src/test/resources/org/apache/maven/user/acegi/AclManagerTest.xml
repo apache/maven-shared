@@ -23,7 +23,11 @@
         </requirement>
       </requirements>
       <configuration>
+      <!-- hsqldb -->
         <sqlClasspathResource>org/apache/maven/user/acegi/acl/acegi-acl-hsql.sql</sqlClasspathResource>
+      <!-- mysql
+        <sqlClasspathResource>org/apache/maven/user/acegi/acl/acegi-acl-mysql.sql</sqlClasspathResource>
+      -->
       </configuration>
     </component>
     
@@ -32,10 +36,19 @@
       <role>org.codehaus.mojo.sql.SqlExecMojo</role>
       <implementation>org.codehaus.mojo.sql.SqlExecMojo</implementation>
       <configuration>
-        <username>sa</username>
-        <password></password>
+
+      <!-- hsqldb -->
         <driver>org.hsqldb.jdbcDriver</driver>
         <url>jdbc:hsqldb:mem:test</url>
+        <username>sa</username>
+        <password></password>
+      <!-- mysql
+        <driver>com.mysql.jdbc.Driver</driver>
+        <url>jdbc:mysql://localhost/test</url>
+        <username></username>
+        <password></password>
+      -->
+
         <onError>continue</onError>
       </configuration>
     </component>
@@ -55,9 +68,16 @@
       <role>javax.sql.DataSource</role>
       <implementation>org.apache.commons.dbcp.BasicDataSource</implementation>
       <configuration>
+
+      <!-- hsqldb -->
         <driverClassName>org.hsqldb.jdbcDriver</driverClassName>
         <url>jdbc:hsqldb:mem:test</url>
         <username>sa</username>
+      <!-- mysql
+        <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+        <url>jdbc:mysql://localhost/test</url>
+      -->
+
       </configuration>
     </component>
 

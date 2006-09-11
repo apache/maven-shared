@@ -17,19 +17,14 @@ package org.apache.maven.user.acegi;
  */
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import org.acegisecurity.acl.basic.BasicAclEntry;
-import org.acegisecurity.acl.basic.SimpleAclEntry;
-import org.apache.maven.user.model.InstancePermissions;
 import org.apache.maven.user.model.PasswordRuleViolationException;
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserManager;
+import org.apache.maven.user.model.UserSecurityPolicy;
 
 /**
  * {@link UserManager} that will add Acegi required functionality and delegate to another implementation of {@link UserManager}. 
@@ -193,5 +188,10 @@ public class AcegiUserManager
     public User getMyUser()
     {
         return getUserManager().getMyUser();
+    }
+
+    public UserSecurityPolicy getSecurityPolicy()
+    {
+        return getUserManager().getSecurityPolicy();
     }
 }

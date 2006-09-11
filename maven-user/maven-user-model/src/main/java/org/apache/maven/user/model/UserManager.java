@@ -241,4 +241,11 @@ public interface UserManager
      * @return null if the user doesn't exist
      */
     User getMyUser();
+
+    /**
+     * Gets the Security Policy to use.
+     * 
+     * @return the security policy.
+     */
+    public UserSecurityPolicy getSecurityPolicy();
 }

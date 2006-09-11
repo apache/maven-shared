@@ -122,11 +122,6 @@ public class DefaultUserManager
         this.securityPolicy = policy;
     }
 
-    /**
-     * Gets the Security Policy to use.
-     * 
-     * @return the security policy.
-     */
     public UserSecurityPolicy getSecurityPolicy()
     {
         return securityPolicy;

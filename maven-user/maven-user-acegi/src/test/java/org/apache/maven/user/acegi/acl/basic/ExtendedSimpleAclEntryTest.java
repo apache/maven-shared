@@ -40,7 +40,7 @@ public class ExtendedSimpleAclEntryTest
     public void testGetValidPermissions()
     {
         int[] validPermissions = entry.getValidPermissions();
-        assertEquals( 16, validPermissions.length );
+        assertEquals( 32, validPermissions.length );
     }
 
 }

@@ -16,10 +16,6 @@ package org.apache.maven.user.acegi.acl.basic;
  * limitations under the License.
  */
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
-
 import org.acegisecurity.acl.basic.SimpleAclEntry;
 
 /**
@@ -42,28 +38,14 @@ public class ExtendedSimpleAclEntry
 
     public static final int WRITE_EXECUTE = WRITE | EXECUTE;
 
-    private static final int[] BASIC_PERMISSIONS = { NOTHING, ADMINISTRATION, READ, WRITE, EXECUTE, DELETE };
-
-    private static final int[] VALID_PERMISSIONS;
+    private static final int[] VALID_PERMISSIONS = new int[DELETE * 2];
 
     static
     {
-        Set l = new TreeSet();
-        for ( int i = 0; i < BASIC_PERMISSIONS.length; i++ )
+        /* DELETE is the highest number 16, so we have 16 multiplied by 2 permissions */
+        for ( int i = 0; i < VALID_PERMISSIONS.length; i++ )
         {
-            for ( int j = i; j < BASIC_PERMISSIONS.length; j++ )
-            {
-                l.add( new Integer( BASIC_PERMISSIONS[i] | BASIC_PERMISSIONS[j] ) );
-            }
-        }
-
-        int k = 0;
-        VALID_PERMISSIONS = new int[l.size()];
-        Iterator it = l.iterator();
-        while ( it.hasNext() )
-        {
-            Integer i = (Integer) it.next();
-            VALID_PERMISSIONS[k++] = i.intValue();
+            VALID_PERMISSIONS[i] = i;
         }
     }
 

@@ -79,9 +79,9 @@ public class AcegiUserManager
         return getAclManager().getUsersInstancePermissions( clazz, id, userPermissions );
     }
 
-    public void setUsersInstancePermissions( Class clazz, Object id, Collection permissions )
+    public void setUsersInstancePermissions( Collection permissions )
     {
-        getAclManager().setUsersInstancePermissions( clazz, id, permissions );
+        getAclManager().setUsersInstancePermissions( permissions );
     }
 
     //-----------------------------------------------------------------------

@@ -1,0 +1,78 @@
+<plexus>
+
+  <load-on-start>
+    <component>
+      <role>org.apache.maven.user.acegi.acl.AclInitializer</role>
+    </component>
+  </load-on-start>
+
+  <components>
+
+    <!-- ACL database initialization -->
+    <component>
+      <role>org.apache.maven.user.acegi.acl.AclInitializer</role>
+      <implementation>org.apache.maven.user.acegi.acl.AclInitializer</implementation>
+      <requirements>
+        <requirement>
+          <role>org.codehaus.mojo.sql.SqlExecMojo</role>
+          <field-name>sqlMojo</field-name>
+        </requirement>
+        <requirement>
+          <role>org.acegisecurity.acl.basic.BasicAclExtendedDao</role>
+          <field-name>dao</field-name>
+        </requirement>
+      </requirements>
+      <configuration>
+        <sqlClasspathResource>org/apache/maven/user/acegi/acl/acegi-acl-hsql.sql</sqlClasspathResource>
+      </configuration>
+    </component>
+    
+    <!-- TODO share db configuration between components -->
+    <component>
+      <role>org.codehaus.mojo.sql.SqlExecMojo</role>
+      <implementation>org.codehaus.mojo.sql.SqlExecMojo</implementation>
+      <configuration>
+        <username>sa</username>
+        <password></password>
+        <driver>org.hsqldb.jdbcDriver</driver>
+        <url>jdbc:hsqldb:mem:test</url>
+        <onError>continue</onError>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.apache.maven.user.acegi.AclManager</role>
+      <implementation>org.apache.maven.user.acegi.AclManager</implementation>
+      <requirements>
+        <requirement>
+          <role>org.acegisecurity.acl.basic.BasicAclExtendedDao</role>
+          <field-name>aclDao</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+    <component>
+      <role>javax.sql.DataSource</role>
+      <implementation>org.apache.commons.dbcp.BasicDataSource</implementation>
+      <configuration>
+        <driverClassName>org.hsqldb.jdbcDriver</driverClassName>
+        <url>jdbc:hsqldb:mem:test</url>
+        <username>sa</username>
+      </configuration>
+    </component>
+
+    <component>
+      <role>org.acegisecurity.acl.basic.BasicAclExtendedDao</role>
+      <implementation>org.acegisecurity.acl.basic.jdbc.JdbcExtendedDaoImpl</implementation>
+      <component-composer>setter</component-composer>
+      <requirements>
+        <requirement>
+          <role>javax.sql.DataSource</role>
+          <field-name>dataSource</field-name>
+        </requirement>
+      </requirements>
+    </component>
+
+  </components>
+
+</plexus>

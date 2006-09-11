@@ -22,11 +22,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.acegisecurity.acl.basic.AclObjectIdentity;
 import org.acegisecurity.acl.basic.BasicAclEntry;
 import org.acegisecurity.acl.basic.BasicAclExtendedDao;
 import org.acegisecurity.acl.basic.NamedEntityObjectIdentity;
+import org.acegisecurity.context.SecurityContextHolder;
 import org.apache.maven.user.acegi.acl.basic.ExtendedSimpleAclEntry;
 import org.apache.maven.user.model.InstancePermissions;
+import org.apache.maven.user.model.User;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.springframework.beans.factory.InitializingBean;
@@ -56,8 +59,23 @@ public class AclManager
         return aclDao;
     }
 
+    protected String getCurrentUserName()
+    {
+        return ( (org.acegisecurity.userdetails.User) SecurityContextHolder.getContext().getAuthentication()
+            .getPrincipal() ).getUsername();
+    }
+
+    protected void delete( Class clazz, Object id )
+    {
+        getAclDao().delete( createObjectIdentity( clazz, id ) );
+    }
+
     protected NamedEntityObjectIdentity createObjectIdentity( Class clazz, Object id )
     {
+        if ( ( clazz == null ) || ( id == null ) )
+        {
+            return null;
+        }
         return new NamedEntityObjectIdentity( clazz.getName(), id.toString() );
     }
 
@@ -90,7 +108,8 @@ public class AclManager
      * 
      * @param clazz {@link Class} of the object
      * @param id identifier of the object
-     * @param userPermissions {@link List} &lt; {@link InstancePermissions} >
+     * @param userPermissions {@link List} &lt; {@link InstancePermissions} > with one permission object
+     * for each user we want to retrieve permissions. Permissions in that object will be overwritten.  
      * @return {@link List} &lt; {@link InstancePermissions} >
      */
     public List getUsersInstancePermissions( Class clazz, Object id, List userPermissions )
@@ -131,48 +150,61 @@ public class AclManager
     /**
      * Updates a list of permissions at the same time. If the permission didn't exist it's created.
      * 
-     * @param clazz
-     * @param id
      * @param permissions {@link Collection} &lt;{@link InstancePermissions}> .
      * Each {@link InstancePermissions}.user only needs to have username, no other properties are required.
      */
-    public void setUsersInstancePermissions( Class clazz, Object id, Collection permissions )
+    public void setUsersInstancePermissions( Collection permissions )
     {
         Iterator it = permissions.iterator();
         while ( it.hasNext() )
         {
-            InstancePermissions p = (InstancePermissions) it.next();
-            String userName = p.getUser().getUsername();
+            InstancePermissions permission = (InstancePermissions) it.next();
+            setUsersInstancePermission( permission );
+        }
+    }
 
-            BasicAclEntry acl = getAcl( clazz, id, userName );
+    /**
+     * Updates a permission. If the permission didn't exist it's created.
+     * 
+     * @param permission {@link InstancePermissions} .
+     * Each {@link InstancePermissions}.user only needs to have username, no other properties are required.
+     */
+    public void setUsersInstancePermission( InstancePermissions permission )
+    {
 
-            if ( acl == null )
+        User user = permission.getUser();
+
+        String userName = null;
+        if ( user != null )
+        {
+            userName = user.getUsername();
+        }
+
+        BasicAclEntry acl = getAcl( permission.getInstanceClass(), permission.getId(), userName );
+
+        if ( acl == null )
+        {
+            acl = new ExtendedSimpleAclEntry();
+            permissionToAcl( permission, acl );
+
+            /* create the ACL only if it has any permission */
+            if ( ( userName == null ) || ( acl.getMask() != ExtendedSimpleAclEntry.NOTHING ) )
             {
-                NamedEntityObjectIdentity objectIdentity = createObjectIdentity( clazz, id );
-                acl = new ExtendedSimpleAclEntry();
-                acl.setAclObjectIdentity( objectIdentity );
-                //acl.setAclObjectParentIdentity( parentAclId );
-                permissionToAcl( p, acl );
+                getAclDao().create( acl );
+            }
+        }
+        else
+        {
+            permissionToAcl( permission, acl );
 
-                /* create the ACL only if it has any permission */
-                if ( acl.getMask() != ExtendedSimpleAclEntry.NOTHING )
-                {
-                    getAclDao().create( acl );
-                }
+            /* delete the ACL if it has no permissions */
+            if ( acl.getMask() != ExtendedSimpleAclEntry.NOTHING )
+            {
+                getAclDao().changeMask( acl.getAclObjectIdentity(), userName, new Integer( acl.getMask() ) );
             }
             else
             {
-                permissionToAcl( p, acl );
-
-                /* delete the ACL if it has no permissions */
-                if ( acl.getMask() != ExtendedSimpleAclEntry.NOTHING )
-                {
-                    getAclDao().changeMask( acl.getAclObjectIdentity(), userName, new Integer( acl.getMask() ) );
-                }
-                else
-                {
-                    getAclDao().delete( acl.getAclObjectIdentity(), userName );
-                }
+                getAclDao().delete( acl.getAclObjectIdentity(), userName );
             }
         }
     }
@@ -186,7 +218,15 @@ public class AclManager
 
         ExtendedSimpleAclEntry acl = (ExtendedSimpleAclEntry) basicAcl;
 
-        acl.setRecipient( p.getUser().getUsername() );
+        User user = p.getUser();
+
+        if ( user != null )
+        {
+            acl.setRecipient( user.getUsername() );
+        }
+
+        acl.setAclObjectIdentity( createObjectIdentity( p.getInstanceClass(), p.getId() ) );
+        acl.setAclObjectParentIdentity( createObjectIdentity( p.getParentClass(), p.getParentId() ) );
         acl.setMask( ExtendedSimpleAclEntry.NOTHING );
 
         if ( p.isExecute() )
@@ -219,6 +259,40 @@ public class AclManager
      */
     private void aclToPermission( BasicAclEntry acl, InstancePermissions p )
     {
+        AclObjectIdentity aclObjectIdentity = acl.getAclObjectIdentity();
+        AclObjectIdentity aclObjectParentIdentity = acl.getAclObjectParentIdentity();
+
+        if ( !( aclObjectIdentity instanceof NamedEntityObjectIdentity ) )
+        {
+            throw new IllegalArgumentException( "aclObjectIdentity is instance of "
+                + aclObjectIdentity.getClass().getName() + " and only " + NamedEntityObjectIdentity.class.getName()
+                + " is allowed." );
+        }
+        if ( !( aclObjectParentIdentity instanceof NamedEntityObjectIdentity ) )
+        {
+            throw new IllegalArgumentException( "aclObjectParentIdentity is instance of "
+                + aclObjectParentIdentity.getClass().getName() + " and only "
+                + NamedEntityObjectIdentity.class.getName() + " is allowed." );
+        }
+
+        try
+        {
+            NamedEntityObjectIdentity aclId = (NamedEntityObjectIdentity) aclObjectIdentity;
+            p.setInstanceClass( Class.forName( aclId.getClassname() ) );
+            p.setId( aclId.getId() );
+
+            if ( aclObjectParentIdentity != null )
+            {
+                NamedEntityObjectIdentity aclParentId = (NamedEntityObjectIdentity) aclObjectParentIdentity;
+                p.setParentClass( Class.forName( aclParentId.getClassname() ) );
+                p.setParentId( aclParentId.getId() );
+            }
+        }
+        catch ( ClassNotFoundException e )
+        {
+            throw new RuntimeException( e );
+        }
+
         if ( acl.isPermitted( ExtendedSimpleAclEntry.CREATE ) )
         {
             p.setExecute( true );
@@ -241,6 +315,9 @@ public class AclManager
         }
     }
 
+    /**
+     * Initializes DAO using Spring {@link InitializingBean#afterPropertiesSet()}.
+     */
     public void initialize()
         throws InitializationException
     {

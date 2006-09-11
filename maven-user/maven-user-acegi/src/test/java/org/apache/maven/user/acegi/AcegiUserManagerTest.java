@@ -92,6 +92,8 @@ public class AcegiUserManagerTest
     {
         List users = new ArrayList();
         InstancePermissions p = new InstancePermissions( user );
+        p.setInstanceClass( User.class );
+        p.setId( new Integer( 1 ) );
         users.add( p );
 
         BasicAclEntry[] acls = new BasicAclEntry[1];
@@ -107,7 +109,7 @@ public class AcegiUserManagerTest
         /* no permissions */
         dao.expects( once() ).method( "delete" ).with( ANYTHING, eq( user.getUsername() ) );
 
-        manager.setUsersInstancePermissions( User.class, new Integer( 1 ), users );
+        manager.setUsersInstancePermissions( users );
         dao.verify();
 
         /* read permission */
@@ -115,7 +117,7 @@ public class AcegiUserManagerTest
         dao.expects( once() ).method( "changeMask" ).with( ANYTHING, eq( user.getUsername() ),
                                                            eq( ExtendedSimpleAclEntry.READ ) );
 
-        manager.setUsersInstancePermissions( User.class, new Integer( 1 ), users );
+        manager.setUsersInstancePermissions( users );
         dao.verify();
 
         /* *************************************** new ACL *************************************** */
@@ -125,7 +127,7 @@ public class AcegiUserManagerTest
         /* no permissions */
         p.setRead( false );
 
-        manager.setUsersInstancePermissions( User.class, new Integer( 1 ), users );
+        manager.setUsersInstancePermissions( users );
         dao.verify();
 
         /* read permission */
@@ -133,7 +135,7 @@ public class AcegiUserManagerTest
         acl.setMask( ExtendedSimpleAclEntry.READ );
         dao.expects( once() ).method( "create" ).with( hasProperty( "mask", eq( ExtendedSimpleAclEntry.READ ) ) );
 
-        manager.setUsersInstancePermissions( User.class, new Integer( 1 ), users );
+        manager.setUsersInstancePermissions( users );
         dao.verify();
 
     }

@@ -27,6 +27,21 @@
       <result name="input">/user/edit.jsp</result>
       <result name="success" type="chain">list</result>
     </action>
+    
+    <action name="editGroup" class="editUsergroup">
+      <result name="input">/user/groups/edit.jsp</result>
+      <result name="permissions">/user/addRole.jsp</result>
+      <result name="success" type="chain">list</result>
+    </action>
+    
+    <action name="deleteGroup" class="deleteUsergroup">
+      <result name="delete">/user/groups/delete.jsp</result>
+      <result name="success" type="chain">list</result>
+    </action>
+    
+    <action name="listGroups" class="listUsergroups">
+      <result name="success">/user/groups/list.jsp</result>
+    </action>
 
   </package>
 </xwork>

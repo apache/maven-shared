@@ -38,10 +38,10 @@ import com.opensymphony.webwork.interceptor.ServletRequestAware;
  *
  * @plexus.component
  *   role="com.opensymphony.xwork.Action"
- *   role-hint="editUser"
+ *   role-hint="editUsergroup"
  *   instantiation-strategy="per-lookup"
  */
-public class EditUserAction
+public class EditUserGroupAction
     extends PlexusActionSupport
     implements ServletRequestAware
 {
@@ -52,8 +52,6 @@ public class EditUserAction
      * @plexus.requirement
      */
     private UserManager userManager;
-
-    private User user;
 
     private UserGroup userGroup;
 
@@ -68,14 +66,12 @@ public class EditUserAction
     private String permissionName;
 
     private boolean addMode = false;
+    
+    private int id;
 
-    private String username;
+    private String name;
 
-    private String password;
-
-    private String confirmPassword;
-
-    private String email;
+    private String description;
 
     private List permissions;
 
@@ -84,74 +80,38 @@ public class EditUserAction
     public String execute()
         throws Exception
     {
-        if ( username.indexOf( "," ) != -1 )
+        if ( name.indexOf( "," ) != -1 )
         {
-            username = username.substring( 0, username.indexOf( "," ) );
+            name = name.substring( 0, name.indexOf( "," ) );
         }
-        if ( password.indexOf( "," ) != -1 )
+        if ( description.indexOf( "," ) != -1 )
         {
-            password = password.substring( 0, password.indexOf( "," ) );
+            description = description.substring( 0, description.indexOf( "," ) );
         }
-        if ( email.indexOf( "," ) != -1 )
-        {
-            email = email.substring( 0, email.indexOf( "," ) );
-        }
-        if( !StringUtils.isEmpty( password ) && !password.equals( confirmPassword ) )
-        {
-            addActionError( "user.password.mismatch.error" );
-            return INPUT;
-        }
+        
         if ( addMode )
         {
             userGroup = new UserGroup();
-            userGroup.setName( username );
+            
+            userGroup.setName( name );
+            userGroup.setDescription( description );
 
-            user = new User();
-            user.setUsername( username );
-            user.setPassword( password );
-            user.setEmail( email );
-            user.setGroup( userGroup );
-            try
-            {
-                userManager.addUser( user );
-            }
-            catch ( PasswordRuleViolationException e )
-            {
-                PasswordRuleViolations violationsContainer = e.getViolations();
-                if( violationsContainer != null && violationsContainer.hasViolations() )
-                {
-                    setActionErrors( violationsContainer.getLocalizedViolations() );
-                    return INPUT;
-                }
-            }
+            userManager.addUserGroup( userGroup );    
         }
         else
         {
-            user = userManager.getUser( username );
-            user.setUsername( username );
-            user.setPassword( password );
-            user.setEmail( email );
+            userGroup = userManager.getUserGroup( id );
+            userGroup.setName( name );
+            userGroup.setDescription( description );
             permissions = (List) request.getSession().getAttribute( "permissions" );
-            user.getGroup().setPermissions( permissions );
-            try
-            {
-                userManager.updateUser( user );
-            }
-            catch ( PasswordRuleViolationException e )
-            {
-                PasswordRuleViolations violationsContainer = e.getViolations();
-                if( violationsContainer != null && violationsContainer.hasViolations() )
-                {
-                    setActionErrors( violationsContainer.getLocalizedViolations() );
-                    return INPUT;
-                }
-            }
+            userGroup.setPermissions( permissions );
+            userManager.updateUserGroup( userGroup );
         }
 
         request.getSession().removeAttribute( "addMode" );
-        request.getSession().removeAttribute( "username" );
-        request.getSession().removeAttribute( "password" );
-        request.getSession().removeAttribute( "email" );
+        request.getSession().removeAttribute( "id" );
+        request.getSession().removeAttribute( "name" );
+        request.getSession().removeAttribute( "description" );
         request.getSession().removeAttribute( "permissions" );
 
         return SUCCESS;
@@ -168,27 +128,16 @@ public class EditUserAction
         throws Exception
     {
         addMode = false;
-        user = userManager.getUser( username );
+        userGroup = userManager.getUserGroup( id );
         // password = user.getPassword(); don't access the password
-        email = user.getEmail();
-        permissions = user.getGroup().getPermissions();
+        name = userGroup.getName();
+        description = userGroup.getDescription();
+        permissions = userGroup.getPermissions();
         if ( permissions.size() == 1 )
         {
             permissionName = ( (Permission) permissions.get( 0 ) ).getName();
         }
 
-        return INPUT;
-    }
-    
-    public String editMe()
-        throws Exception
-    {
-        addMode = false;
-        user = userManager.getMyUser();
-        username = user.getUsername();
-        email = user.getEmail();
-        permissions = user.getGroup().getPermissions();
-    
         return INPUT;
     }
 
@@ -224,9 +173,10 @@ public class EditUserAction
         }
 
         request.getSession().setAttribute( "addMode", Boolean.valueOf( addMode ) );
-        request.getSession().setAttribute( "username", username );
-        request.getSession().setAttribute( "password", password );
-        request.getSession().setAttribute( "email", email );
+        request.getSession().setAttribute( "id", Integer.toString( id ) );
+        request.getSession().setAttribute( "name", name );
+        request.getSession().setAttribute( "description", description );
+        
 
         return "permissions";
     }
@@ -271,9 +221,9 @@ public class EditUserAction
         }
 
         addMode = ( (Boolean) request.getSession().getAttribute( "addMode" ) ).booleanValue();
-        username = (String) request.getSession().getAttribute( "username" );
-        password = (String) request.getSession().getAttribute( "password" );
-        email = (String) request.getSession().getAttribute( "email" );
+        id = Integer.parseInt( (String) request.getSession().getAttribute( "id" ) );
+        name = (String) request.getSession().getAttribute( "name" );
+        description = (String) request.getSession().getAttribute( "description" );
 
         return INPUT;
     }
@@ -325,42 +275,24 @@ public class EditUserAction
         this.addMode = addMode;
     }
 
-    public String getUsername()
+    public String getName()
     {
-        return username;
+        return name;
     }
 
-    public void setUsername( String username )
+    public void setName( String name )
     {
-        this.username = username;
+        this.name = name;
     }
 
-    public String getPassword()
+    public String getDescription()
     {
-        return password;
+        return description;
     }
 
-    public void setPassword( String password )
+    public void setDescription( String description )
     {
-        this.password = password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
-
-    public String getEmail()
-    {
-        return email;
-    }
-
-    public void setEmail( String email )
-    {
-        this.email = email;
+        this.description = description;
     }
 
     public List getPermissions()
@@ -371,5 +303,15 @@ public class EditUserAction
     public void setServletRequest( HttpServletRequest request )
     {
         this.request = request;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId( int id )
+    {
+        this.id = id;
     }
 }

@@ -103,7 +103,7 @@
         <groupId>hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <version>1.8.0.4</version>
-        <scope>runtime</scope>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.codehaus.plexus</groupId>

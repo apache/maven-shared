@@ -335,7 +335,7 @@ public class DefaultUserManager
     /**
      * Do nothing
      */
-    public void setUsersInstancePermissions( Class clazz, Object id, Collection permissions )
+    public void setUsersInstancePermissions( Collection permissions )
     {
     }
 

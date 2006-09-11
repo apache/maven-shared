@@ -228,14 +228,12 @@ public interface UserManager
     List getUsersInstancePermissions( Class clazz, Object id );
 
     /**
-     * Set all users instance permissions for an object
+     * Set users instance permissions for a bunch of objects.
      * 
-     * @param clazz {@link Class} of the object
-     * @param id identifier of the object
      * @param permissions {@link Collection} &lt;{@link InstancePermissions}> .
      * Each {@link InstancePermissions}.user only needs to have username, no other properties are required.
      */
-    void setUsersInstancePermissions( Class clazz, Object id, Collection permissions );
+    void setUsersInstancePermissions( Collection permissions );
 
     /**
      * Get current user

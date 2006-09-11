@@ -23,9 +23,17 @@ package org.apache.maven.user.model;
  */
 public class InstancePermissions
 {
+    private Class clazz;
+
+    private Object id;
+
     private User user;
 
     private boolean read, write, delete, execute, administer;
+
+    private Class parentClass;
+
+    private Object parentId;
 
     public InstancePermissions()
     {
@@ -34,6 +42,34 @@ public class InstancePermissions
     public InstancePermissions( User user )
     {
         this.user = user;
+    }
+
+    public void setInstanceClass( Class clazz )
+    {
+        this.clazz = clazz;
+    }
+
+    /**
+     * Class of the object this permission applies to
+     * @return
+     */
+    public Class getInstanceClass()
+    {
+        return clazz;
+    }
+
+    public void setId( Object id )
+    {
+        this.id = id;
+    }
+
+    /**
+     * identifier of the object this permission applies to
+     * @return
+     */
+    public Object getId()
+    {
+        return id;
     }
 
     public boolean isExecute()
@@ -94,6 +130,26 @@ public class InstancePermissions
     public void setUser( User user )
     {
         this.user = user;
+    }
+
+    public void setParentClass( Class parentClass )
+    {
+        this.parentClass = parentClass;
+    }
+
+    public Class getParentClass()
+    {
+        return parentClass;
+    }
+
+    public void setParentId( Object parentId )
+    {
+        this.parentId = parentId;
+    }
+
+    public Object getParentId()
+    {
+        return parentId;
     }
 
     public String toString()

@@ -99,16 +99,15 @@ public class MavenUserDetailsService
         String password = user.getEncodedPassword();
         boolean enabled = true;
         boolean accountNonExpired = true;
+        boolean accountNonLocked = !user.isLocked();
+        boolean credentialsNonExpired = true;
 
         if ( user.getLastPasswordChange() != null && daysBeforeExpiration > 0 )
         {
             long lastPasswordChange = user.getLastPasswordChange().getTime();
             long currentTime = new Date().getTime();
-            accountNonExpired = lastPasswordChange + daysBeforeExpiration * MILLISECONDS_PER_DAY > currentTime;
+            credentialsNonExpired = lastPasswordChange + daysBeforeExpiration * MILLISECONDS_PER_DAY > currentTime;
         }
-
-        boolean credentialsNonExpired = true;
-        boolean accountNonLocked = true;
 
         UserDetails userDetails = new org.acegisecurity.userdetails.User( username, password, enabled,
                                                                           accountNonExpired, credentialsNonExpired,

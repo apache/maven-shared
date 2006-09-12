@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS acl_object_identity (
+CREATE TABLE acl_object_identity (
      id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
      object_identity VARCHAR(250) NOT NULL,
      parent_object INTEGER,
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS acl_object_identity (
      FOREIGN KEY (parent_object) REFERENCES acl_object_identity(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS acl_permission (
+CREATE TABLE acl_permission (
      id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
      acl_object_identity INTEGER NOT NULL,
      recipient VARCHAR(100) NOT NULL,

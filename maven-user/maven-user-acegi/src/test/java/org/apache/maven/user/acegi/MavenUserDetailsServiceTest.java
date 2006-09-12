@@ -80,7 +80,7 @@ public class MavenUserDetailsServiceTest
         Date twoDaysAgo = new Date( System.currentTimeMillis() - 2 * MavenUserDetailsService.MILLISECONDS_PER_DAY );
         mavenUser.setLastPasswordChange( twoDaysAgo );
         userDetails = userDetailsService.getUserDetails( mavenUser );
-        assertFalse( userDetails.isAccountNonExpired() );
+        assertFalse( userDetails.isCredentialsNonExpired() );
     }
 
     private User createMockedUser()

@@ -18,7 +18,6 @@ package org.apache.maven.user.acegi.event.authentication;
 
 import org.acegisecurity.event.authentication.AuthenticationFailureBadCredentialsEvent;
 import org.acegisecurity.event.authentication.AuthenticationSuccessEvent;
-import org.acegisecurity.userdetails.User;
 import org.apache.maven.user.model.UserManager;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -64,13 +63,13 @@ public class UserEventPublisher
 
     private void success( AuthenticationSuccessEvent event )
     {
-        User user = (User) event.getAuthentication().getPrincipal();
-        getUserManager().loginSuccessful( user.getUsername() );
+        String username = (String) event.getAuthentication().getPrincipal();
+        getUserManager().loginSuccessful( username );
     }
 
     private void badCredentials( AuthenticationFailureBadCredentialsEvent event )
     {
-        User user = (User) event.getAuthentication().getPrincipal();
-        getUserManager().loginFailed( user.getUsername() );
+        String username = (String) event.getAuthentication().getPrincipal();
+        getUserManager().loginFailed( username );
     }
 }

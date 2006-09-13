@@ -44,7 +44,7 @@
       <result name="success" type="chain">list</result>
     </action>
     
-    <action name="list" class="listUserGroups">
+    <action name="list" class="listUserGroup">
       <result name="success">/user/group/list.jsp</result>
     </action>
 

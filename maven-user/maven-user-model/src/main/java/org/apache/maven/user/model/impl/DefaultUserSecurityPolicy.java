@@ -44,10 +44,15 @@ public class DefaultUserSecurityPolicy
     private int allowedLoginAttempts;
 
     /**
+     * @plexus.configuration default-value="60"
+     */
+    private int daysBeforeExpiration;
+
+    /**
      * @plexus.configuration default-value="6"
      */
     private int previousPasswordsCount;
-    
+
     /**
      * @plexus.requirement role-hint="sha256"
      */
@@ -63,6 +68,16 @@ public class DefaultUserSecurityPolicy
     public int getAllowedLoginAttempts()
     {
         return allowedLoginAttempts;
+    }
+
+    public int getDaysBeforeExpiration()
+    {
+        return daysBeforeExpiration;
+    }
+
+    public void setDaysBeforeExpiration( int count )
+    {
+        daysBeforeExpiration = count;
     }
 
     public int getPreviousPasswordsCount()
@@ -108,7 +123,7 @@ public class DefaultUserSecurityPolicy
     public void addPasswordRule( PasswordRule rule )
     {
         // TODO: check for duplicates? if so, check should only be based on Rule class name.
-        
+
         rule.setUserSecurityPolicy( this );
         this.rules.add( rule );
     }
@@ -131,14 +146,14 @@ public class DefaultUserSecurityPolicy
     public void setPasswordRules( List newRules )
     {
         this.rules.clear();
-        
+
         if ( newRules == null )
         {
             return;
         }
-        
+
         // Intentionally iterating to ensure policy settings in provided rules.
-        
+
         Iterator it = newRules.iterator();
         while ( it.hasNext() )
         {
@@ -151,7 +166,7 @@ public class DefaultUserSecurityPolicy
     public void initialize()
         throws InitializationException
     {
-    	if( rules != null )
+        if ( rules != null )
         {
             Iterator it = rules.iterator();
             while ( it.hasNext() )
@@ -160,9 +175,10 @@ public class DefaultUserSecurityPolicy
                 rule.setUserSecurityPolicy( this );
             }
         }
-    	else{
-        	rules = new ArrayList();
-        	addPasswordRule( new MustHavePasswordRule() );
-    	}
+        else
+        {
+            rules = new ArrayList();
+            addPasswordRule( new MustHavePasswordRule() );
+        }
     }
 }

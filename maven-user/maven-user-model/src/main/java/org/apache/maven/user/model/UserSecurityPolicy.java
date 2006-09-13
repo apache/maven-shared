@@ -92,4 +92,19 @@ public interface UserSecurityPolicy
      * @param count the number of login attempt to allow before lockout.
      */
     public void setAllowedLoginAttempts( int count );
+
+
+    /**
+     * Number of days before a password expires. 0 means no expiration of passwords.
+     * 
+     * @return the number of days
+     */
+    public int getDaysBeforeExpiration();
+
+    /**
+     * @see #getDaysBeforeExpiration()
+     * 
+     * @param count the number of days
+     */
+    public void setDaysBeforeExpiration( int count );
 }

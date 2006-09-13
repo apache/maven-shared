@@ -21,13 +21,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.maven.user.model.PasswordRuleViolationException;
-import org.apache.maven.user.model.PasswordRuleViolations;
 import org.apache.maven.user.model.Permission;
-import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserManager;
-import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 import com.opensymphony.webwork.interceptor.ServletRequestAware;
@@ -38,8 +34,7 @@ import com.opensymphony.webwork.interceptor.ServletRequestAware;
  *
  * @plexus.component
  *   role="com.opensymphony.xwork.Action"
- *   role-hint="editUsergroup"
- *   instantiation-strategy="per-lookup"
+ *   role-hint="editUserGroup"
  */
 public class EditUserGroupAction
     extends PlexusActionSupport

@@ -1,6 +1,7 @@
 <!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
 
 <xwork>
+
   <package name="maven-user" extends="webwork-default" namespace="/user">
 
     <action name="edit" class="editUser">
@@ -14,7 +15,7 @@
       <result name="success" type="chain">list</result>
     </action>
 
-    <action name="list" class="listUsers">
+    <action name="list" class="listUser">
       <result name="success">/user/list.jsp</result>
     </action>
     
@@ -27,21 +28,26 @@
       <result name="input">/user/edit.jsp</result>
       <result name="success" type="chain">list</result>
     </action>
-    
-    <action name="editGroup" class="editUsergroup">
-      <result name="input">/user/groups/edit.jsp</result>
+
+  </package>
+
+  <package name="maven-user-group" extends="webwork-default" namespace="/user/group">
+
+    <action name="editGroup" class="editUserGroup">
+      <result name="input">/user/group/edit.jsp</result>
       <result name="permissions">/user/addRole.jsp</result>
       <result name="success" type="chain">list</result>
     </action>
     
-    <action name="deleteGroup" class="deleteUsergroup">
-      <result name="delete">/user/groups/delete.jsp</result>
+    <action name="deleteGroup" class="deleteUserGroup">
+      <result name="delete">/user/group/delete.jsp</result>
       <result name="success" type="chain">list</result>
     </action>
     
-    <action name="listGroups" class="listUsergroups">
-      <result name="success">/user/groups/list.jsp</result>
+    <action name="listGroups" class="listUserGroups">
+      <result name="success">/user/group/list.jsp</result>
     </action>
 
   </package>
+
 </xwork>

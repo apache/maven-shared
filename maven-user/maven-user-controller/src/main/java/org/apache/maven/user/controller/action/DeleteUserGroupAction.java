@@ -25,7 +25,7 @@ import org.codehaus.plexus.xwork.action.PlexusActionSupport;
  *
  * @plexus.component
  *   role="com.opensymphony.xwork.Action"
- *   role-hint="deleteUsergroup" 
+ *   role-hint="deleteUserGroup" 
  */
 public class DeleteUserGroupAction
     extends PlexusActionSupport

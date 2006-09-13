@@ -26,6 +26,8 @@ import org.acegisecurity.userdetails.UserDetails;
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
+import org.apache.maven.user.model.UserSecurityPolicy;
+import org.apache.maven.user.model.impl.DefaultUserSecurityPolicy;
 
 /**
  * Test for {@link MavenUserDetailsService}
@@ -39,11 +41,15 @@ public class MavenUserDetailsServiceTest
 
     private MavenUserDetailsService userDetailsService;
 
+    private UserSecurityPolicy securityPolicy;
+
     protected void setUp()
         throws Exception
     {
         super.setUp();
         userDetailsService = new MavenUserDetailsService();
+        securityPolicy = new DefaultUserSecurityPolicy();
+        userDetailsService.setSecurityPolicy( securityPolicy );
     }
 
     public void testGetUserDetails()
@@ -65,15 +71,15 @@ public class MavenUserDetailsServiceTest
     {
         User mavenUser = createMockedUser();
 
-        userDetailsService.setDaysBeforeExpiration( 0 );
+        securityPolicy.setDaysBeforeExpiration( 0 );
         UserDetails userDetails = userDetailsService.getUserDetails( mavenUser );
         assertTrue( userDetails.isAccountNonExpired() );
 
-        userDetailsService.setDaysBeforeExpiration( -1 );
+        securityPolicy.setDaysBeforeExpiration( -1 );
         userDetails = userDetailsService.getUserDetails( mavenUser );
         assertTrue( userDetails.isAccountNonExpired() );
 
-        userDetailsService.setDaysBeforeExpiration( 1 );
+        securityPolicy.setDaysBeforeExpiration( 1 );
         userDetails = userDetailsService.getUserDetails( mavenUser );
         assertTrue( userDetails.isAccountNonExpired() );
 

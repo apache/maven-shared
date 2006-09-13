@@ -115,8 +115,11 @@ public class DefaultUserManager
     public void loginFailed( String username )
     {
         User user = getUser( username );
-        user.incrementFailedLoginAttempts();
-        updateUser( user );
+        if ( user != null )
+        {
+            user.incrementFailedLoginAttempts();
+            updateUser( user );
+        }
     }
 
     public void loginSuccessful( String username )

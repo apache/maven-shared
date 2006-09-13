@@ -18,6 +18,7 @@ package org.apache.maven.user.acegi;
 
 import org.acegisecurity.providers.encoding.MessageDigestPasswordEncoder;
 import org.apache.maven.user.model.PasswordEncoder;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 /**
@@ -29,7 +30,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
  * @version $Id$
  */
 public class AcegiPasswordEncoder
-    implements PasswordEncoder, org.acegisecurity.providers.encoding.PasswordEncoder
+    implements PasswordEncoder, org.acegisecurity.providers.encoding.PasswordEncoder, Initializable
 {
     private Object systemSalt;
 

@@ -120,13 +120,29 @@ public interface UserManager
     // ----------------------------------------------------------------------
 
     /**
-     * Perform login attempt to see if username and password are valid. 
+     * Perform login attempt to see if username and password are valid.
+     * 
+     * @deprecated use other services like maven-user-acegi to log in 
      * 
      * @param username
      * @param rawpassword
      * @return true if user is able to log in. false if username or password is invalid.
      */
     boolean login( String username, String rawpassword );
+
+    /**
+     * Do required operations on a failed login, like increase the number of login attemps.
+     * 
+     * @param username user name of the user that attempted to log in
+     */
+    void loginFailed( String username );
+
+    /**
+     * Do required operations on a successful login, like reset the number of login attemps.
+     * 
+     * @param username user name of the user that logged in
+     */
+    void loginSuccessful( String username );
 
     // ----------------------------------------------------------------------
     // User Group
@@ -247,5 +263,5 @@ public interface UserManager
      * 
      * @return the security policy.
      */
-    public UserSecurityPolicy getSecurityPolicy();
+    UserSecurityPolicy getSecurityPolicy();
 }

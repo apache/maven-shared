@@ -100,13 +100,7 @@ public class DefaultUserManager
         }
         else
         {
-            // failed login. increment and test.
-            if ( user.incrementFailedLoginAttempts() >= securityPolicy.getAllowedLoginAttempts() )
-            {
-                user.setLocked( true );
-            }
-
-            this.updateUser( user );
+            loginFailed( user.getUsername() );
         }
 
         return validPassword;
@@ -117,7 +111,10 @@ public class DefaultUserManager
         User user = getUser( username );
         if ( user != null )
         {
-            user.incrementFailedLoginAttempts();
+            if ( user.incrementFailedLoginAttempts() >= securityPolicy.getAllowedLoginAttempts() )
+            {
+                user.setLocked( true );
+            }
             updateUser( user );
         }
     }
@@ -328,7 +325,7 @@ public class DefaultUserManager
 
         return (Permission) userStore.addPermission( perm );
     }
-    
+
     /**
      * This implementation return empty permissions for each user. 
      */

@@ -17,12 +17,16 @@ package org.apache.maven.user.acegi.event.authentication;
  */
 
 import org.acegisecurity.event.authentication.AuthenticationFailureBadCredentialsEvent;
-import org.acegisecurity.event.authentication.AuthenticationFailureCredentialsExpiredEvent;
+import org.acegisecurity.event.authentication.AuthenticationSuccessEvent;
+import org.acegisecurity.userdetails.User;
+import org.apache.maven.user.model.UserManager;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 
 /**
- * Hook in Acegi event system to check for login failures and password expired.
+ * Hook in Acegi event system to delegate successful and failed login events to {@link UserManager}.
+ * 
+ * @plexus.component role="org.springframework.context.ApplicationEventPublisher"
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
@@ -31,16 +35,42 @@ public class UserEventPublisher
     implements ApplicationEventPublisher
 {
 
+    /**
+     * @plexus.requirement role-hint="acegi"
+     */
+    private UserManager userManager;
+
+    public void setUserManager( UserManager userManager )
+    {
+        this.userManager = userManager;
+    }
+
+    public UserManager getUserManager()
+    {
+        return userManager;
+    }
+
     public void publishEvent( ApplicationEvent event )
     {
-        if ( event instanceof AuthenticationFailureCredentialsExpiredEvent )
+        if ( event instanceof AuthenticationSuccessEvent )
         {
-            // TODO expired password, force to change it
+            success( (AuthenticationSuccessEvent) event );
         }
         if ( event instanceof AuthenticationFailureBadCredentialsEvent )
         {
-            // TODO bad password, increase count
+            badCredentials( (AuthenticationFailureBadCredentialsEvent) event );
         }
     }
 
+    private void success( AuthenticationSuccessEvent event )
+    {
+        User user = (User) event.getAuthentication().getPrincipal();
+        getUserManager().loginSuccessful( user.getUsername() );
+    }
+
+    private void badCredentials( AuthenticationFailureBadCredentialsEvent event )
+    {
+        User user = (User) event.getAuthentication().getPrincipal();
+        getUserManager().loginFailed( user.getUsername() );
+    }
 }

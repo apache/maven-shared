@@ -154,6 +154,16 @@ public class AcegiUserManager
         return getUserManager().login( username, rawpassword );
     }
 
+    public void loginFailed( String username )
+    {
+        getUserManager().loginFailed( username );
+    }
+
+    public void loginSuccessful( String username )
+    {
+        getUserManager().loginSuccessful( username );
+    }
+
     public void removeUser( int accountId )
     {
         getUserManager().removeUser( accountId );

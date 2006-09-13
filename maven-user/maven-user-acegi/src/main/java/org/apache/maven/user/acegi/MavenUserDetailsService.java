@@ -30,12 +30,13 @@ import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserManager;
+import org.apache.maven.user.model.UserSecurityPolicy;
 import org.springframework.dao.DataAccessException;
 
 /**
  * Acegi {@link UserDetailsService} that loads user info from Maven {@link UserManager}.
  *
- * @plexus.component role="org.acegisecurity.userdetails.UserDetailsService" role-hint="maven"
+ * @plexus.component role="org.acegisecurity.userdetails.UserDetailsService"
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @author Henry Isidro
@@ -52,9 +53,19 @@ public class MavenUserDetailsService
     private UserManager userManager;
 
     /**
-     * @plexus.configuration default-value="60"
+     * @plexus.requirement
      */
-    private int daysBeforeExpiration;
+    private UserSecurityPolicy securityPolicy;
+
+    public void setSecurityPolicy( UserSecurityPolicy securityPolicy )
+    {
+        this.securityPolicy = securityPolicy;
+    }
+
+    public UserSecurityPolicy getSecurityPolicy()
+    {
+        return securityPolicy;
+    }
 
     public UserDetails loadUserByUsername( String username )
         throws UsernameNotFoundException, DataAccessException
@@ -102,11 +113,12 @@ public class MavenUserDetailsService
         boolean accountNonLocked = !user.isLocked();
         boolean credentialsNonExpired = true;
 
-        if ( user.getLastPasswordChange() != null && daysBeforeExpiration > 0 )
+        if ( user.getLastPasswordChange() != null && getSecurityPolicy().getDaysBeforeExpiration() > 0 )
         {
             long lastPasswordChange = user.getLastPasswordChange().getTime();
             long currentTime = new Date().getTime();
-            credentialsNonExpired = lastPasswordChange + daysBeforeExpiration * MILLISECONDS_PER_DAY > currentTime;
+            credentialsNonExpired = lastPasswordChange + getSecurityPolicy().getDaysBeforeExpiration()
+                * MILLISECONDS_PER_DAY > currentTime;
         }
 
         UserDetails userDetails = new org.acegisecurity.userdetails.User( username, password, enabled,
@@ -114,10 +126,5 @@ public class MavenUserDetailsService
                                                                           accountNonLocked, grantedAuthoritiesAsArray );
 
         return userDetails;
-    }
-
-    protected void setDaysBeforeExpiration( int daysBeforeExpiration )
-    {
-        this.daysBeforeExpiration = daysBeforeExpiration;
     }
 }

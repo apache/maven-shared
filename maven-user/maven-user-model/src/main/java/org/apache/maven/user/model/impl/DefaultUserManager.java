@@ -112,6 +112,21 @@ public class DefaultUserManager
         return validPassword;
     }
 
+    public void loginFailed( String username )
+    {
+        User user = getUser( username );
+        user.incrementFailedLoginAttempts();
+        updateUser( user );
+    }
+
+    public void loginSuccessful( String username )
+    {
+        User user = getUser( username );
+        user.setLastLogin( new Date() );
+        user.setFailedLoginAttempts( 0 );
+        updateUser( user );
+    }
+
     /**
      * Sets the Security Policy to use.
      * 

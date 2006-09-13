@@ -16,11 +16,12 @@ package org.apache.maven.user.acegi;
  * limitations under the License.
  */
 
+import org.acegisecurity.providers.encoding.MessageDigestPasswordEncoder;
 import org.apache.maven.user.model.PasswordEncoder;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 /**
- * Bridge between Maven User {@link PasswordEncoder} and Acegi
- * {@link org.acegisecurity.providers.encoding.PasswordEncoder}
+ * Bridge between Maven User {@link PasswordEncoder} and Acegi {@link MessageDigestPasswordEncoder}
  * 
  * @plexus.component role="org.apache.maven.user.model.PasswordEncoder" role-hint="acegi"
  * 
@@ -28,20 +29,21 @@ import org.apache.maven.user.model.PasswordEncoder;
  * @version $Id$
  */
 public class AcegiPasswordEncoder
-    implements PasswordEncoder
+    implements PasswordEncoder, org.acegisecurity.providers.encoding.PasswordEncoder
 {
     private Object systemSalt;
 
     private org.acegisecurity.providers.encoding.PasswordEncoder encoder;
 
-    public void setEncoder( org.acegisecurity.providers.encoding.PasswordEncoder encoder )
-    {
-        this.encoder = encoder;
-    }
+    /**
+     * @plexus.configuration default-value="SHA-256"
+     */
+    private String algorithm;
 
-    public org.acegisecurity.providers.encoding.PasswordEncoder getEncoder()
+    public void initialize()
+        throws InitializationException
     {
-        return encoder;
+        encoder = new MessageDigestPasswordEncoder( algorithm );
     }
 
     /**
@@ -57,7 +59,7 @@ public class AcegiPasswordEncoder
      */
     public boolean isPasswordValid( String encPass, String rawPass, Object salt )
     {
-        return isPasswordValid( encPass, rawPass, salt );
+        return encoder.isPasswordValid( encPass, rawPass, salt );
     }
 
     public String encodePassword( String rawPass )

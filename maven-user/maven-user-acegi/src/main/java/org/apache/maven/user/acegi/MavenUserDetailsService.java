@@ -29,6 +29,7 @@ import org.acegisecurity.userdetails.UserDetailsService;
 import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
+import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserManager;
 import org.apache.maven.user.model.UserSecurityPolicy;
 import org.springframework.dao.DataAccessException;
@@ -87,7 +88,14 @@ public class MavenUserDetailsService
      */
     public UserDetails getUserDetails( User user )
     {
-        List permissions = user.getGroup().getPermissions();
+        List groups = user.getGroups();
+        List permissions = new ArrayList();
+        Iterator groupsIt = groups.iterator();
+        while ( groupsIt.hasNext() )
+        {
+            UserGroup group = (UserGroup) groupsIt.next();
+            permissions.addAll( group.getPermissions() );
+        }
 
         List grantedAuthorities = new ArrayList( permissions.size() + 1 );
         Iterator it = permissions.iterator();
@@ -127,4 +135,4 @@ public class MavenUserDetailsService
 
         return userDetails;
     }
-}
+    }

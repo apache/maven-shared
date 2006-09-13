@@ -109,7 +109,7 @@ public class MavenUserDetailsServiceTest
         User mavenUser = new User();
         mavenUser.setUsername( "username" );
         mavenUser.setEncodedPassword( shaPassword );
-        mavenUser.setGroup( group );
+        mavenUser.addGroup( group );
 
         mavenUser.setLastPasswordChange( new Date() );
 

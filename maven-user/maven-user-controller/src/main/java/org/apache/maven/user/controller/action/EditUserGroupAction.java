@@ -124,7 +124,6 @@ public class EditUserGroupAction
     {
         addMode = false;
         userGroup = userManager.getUserGroup( id );
-        // password = user.getPassword(); don't access the password
         name = userGroup.getName();
         description = userGroup.getDescription();
         permissions = userGroup.getPermissions();
@@ -172,7 +171,6 @@ public class EditUserGroupAction
         request.getSession().setAttribute( "name", name );
         request.getSession().setAttribute( "description", description );
         
-
         return "permissions";
     }
 
@@ -241,6 +239,11 @@ public class EditUserGroupAction
                 permissionName = ( (Permission) permissions.get( 0 ) ).getName();
             }
         }
+
+        addMode = ( (Boolean) request.getSession().getAttribute( "addMode" ) ).booleanValue();
+        id = Integer.parseInt( (String) request.getSession().getAttribute( "id" ) );
+        name = (String) request.getSession().getAttribute( "name" );
+        description = (String) request.getSession().getAttribute( "description" );
 
         return INPUT;
     }

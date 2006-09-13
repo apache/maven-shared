@@ -120,7 +120,7 @@ public interface UserManager
     // ----------------------------------------------------------------------
 
     /**
-     * Perform login attempt to see if username and password are valid.
+     * Perform login attempt to see if username and password are valid. 
      * 
      * @deprecated use other services like maven-user-acegi to log in 
      * 
@@ -264,4 +264,11 @@ public interface UserManager
      * @return the security policy.
      */
     UserSecurityPolicy getSecurityPolicy();
+
+    /**
+     * Gets the default user group.
+     * 
+     * @return the default user group.
+     */
+    UserGroup getDefaultUserGroup();
 }

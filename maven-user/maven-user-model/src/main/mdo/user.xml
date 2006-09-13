@@ -132,11 +132,12 @@ method.
             <multiplicity>*</multiplicity>
           </association>
         </field>
-        <field jpox.column="userGroup" jpox.dependent="false">
-          <name>group</name>
+        <field jpox.dependent="false">
+          <name>groups</name>
           <version>1.0.0+</version>
-          <association stash.part="true">
+          <association stash.part="true" jpox.dependent="false">
             <type>UserGroup</type>
+            <multiplicity>*</multiplicity>
           </association> 
         </field>
       </fields>

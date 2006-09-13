@@ -48,46 +48,6 @@
           <ww:include value="userForm.jsp">
             <ww:param name="addMode" value="${addMode}"/>
           </ww:include>
-        <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageUsers">
-        <ww:if test="addMode == false">
-          <div id="h3">
-            <h3><ww:text name="role.section.title"/></h3>
-            <ww:set name="permissions" value="permissions" scope="session"/>
-              <table>
-                <tr>
-                  <td><ww:text name="role.rolename"/></td>
-                  <td>&nbsp;</td>
-                </tr>
-                <ww:iterator value="permissions">
-                <tr>
-                  <td><ww:property value="name"/></td>
-                  <td>
-                    <ww:form action="edit!doDeletePermission.action" method="post">
-                      <ww:hidden id="addMode" name="addMode"/>
-                      <ww:hidden id="accountId" name="accountId"/>
-                      <ww:hidden id="username" name="username"/>
-                      <ww:hidden id="password" name="password"/>
-                      <ww:hidden id="email" name="email"/>
-                      <input type="hidden" name="permissionName" value="<ww:property value="name"/>">
-                      <ww:submit onclick="getData()" value="%{getText('delete')}"/>
-                    </ww:form>
-                  </td>
-                </tr>
-                </ww:iterator>
-              </table>
-            </div>
-          <div id="h3">
-            <ww:form action="edit!doGetAvailablePermissions.action" method="post">
-              <ww:hidden id="addMode" name="addMode"/>
-              <ww:hidden id="accountId" name="accountId"/>
-              <ww:hidden id="username" name="username"/>
-              <ww:hidden id="password" name="password"/>
-              <ww:hidden id="email" name="email"/>
-              <ww:submit onclick="getData()" value="%{getText('add')}"/>
-            </ww:form>
-          </div>
-        </ww:if>
-        </authz:authorize>
         </div>
       </div>
     </body>

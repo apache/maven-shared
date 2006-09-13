@@ -27,7 +27,6 @@ import javax.jdo.PersistenceManagerFactory;
 
 import org.apache.maven.user.model.PasswordRule;
 import org.apache.maven.user.model.PasswordRuleViolationException;
-import org.apache.maven.user.model.PasswordRuleViolations;
 import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
@@ -378,19 +377,19 @@ public class DefaultUserManagerTest
         rattenborough.setUsername( "rattenborough" ); //$NON-NLS-1$
         rattenborough.setFullName( "Richard Attenborough" ); //$NON-NLS-1$
         rattenborough.setPassword( "the big x" ); //$NON-NLS-1$
-        rattenborough.setGroup( british );
+        rattenborough.addGroup( british );
 
         /* Add new user with new usergroup (Shouldn't work) */
         User added = getUserManager().addUser( rattenborough );
-        assertNotNull( "Added UserGroup should not by null.", added.getGroup() ); //$NON-NLS-1$
+        assertNotNull( "Added UserGroup should not by null.", added.getGroups() ); //$NON-NLS-1$
 
         assertEquals( 1, getUserManager().getUsers().size() );
         assertEquals( 1, getUserManager().getUserGroups().size() );
 
         User actual = getUserManager().getUser( "rattenborough" ); //$NON-NLS-1$
         assertEquals( added, actual );
-        assertNotNull( "Actual UserGroup should not be null.", actual.getGroup() ); //$NON-NLS-1$
-        assertEquals( added.getGroup(), actual.getGroup() );
+        assertNotNull( "Actual UserGroups should not be null.", actual.getGroups() ); //$NON-NLS-1$
+        assertEquals( added.getGroups(), actual.getGroups() );
     }
 
     public void testGetSetUserGroupInUserPreloaded() throws Exception
@@ -413,17 +412,17 @@ public class DefaultUserManagerTest
          * If you use the (unresolved) british UserGroup here, you will
          * inadvertently create 2 UserGroups with the same name, but different IDs.
          */
-        rattenborough.setGroup( addedGroup ); 
+        rattenborough.addGroup( addedGroup ); 
         User added = getUserManager().addUser( rattenborough );
-        assertNotNull( "Added UserGroup should not by null.", added.getGroup() ); //$NON-NLS-1$
+        assertNotNull( "Added UserGroup should not by null.", added.getGroups() ); //$NON-NLS-1$
 
         assertEquals( 1, getUserManager().getUsers().size() );
         assertEquals( 1, getUserManager().getUserGroups().size() );
 
         User actual = getUserManager().getUser( "rattenborough" ); //$NON-NLS-1$
         assertEquals( added, actual );
-        assertNotNull( "Actual UserGroup should not be null.", actual.getGroup() ); //$NON-NLS-1$
-        assertEquals( added.getGroup(), actual.getGroup() );
+        assertNotNull( "Actual UserGroup should not be null.", actual.getGroups() ); //$NON-NLS-1$
+        assertEquals( added.getGroups(), actual.getGroups() );
     }
 
     public void testGetSetPermissions()

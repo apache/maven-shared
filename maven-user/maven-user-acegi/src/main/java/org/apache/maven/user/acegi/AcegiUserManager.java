@@ -204,4 +204,9 @@ public class AcegiUserManager
     {
         return getUserManager().getSecurityPolicy();
     }
+
+    public UserGroup getDefaultUserGroup()
+    {
+        return getUserManager().getDefaultUserGroup();
+    }
 }

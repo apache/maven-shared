@@ -64,6 +64,12 @@ public class DefaultUserManager
      */
     private UserHolder userHolder;
 
+    /**
+     * @plexus.configuration default-value="user"
+     */
+    private String defaultGroupName = "user"; 
+    //TODO get this !#$#!@$#!@$ plexus injection to work!!!
+
     // ----------------------------------------------------------------------
     // Component Lifecycle
     // ----------------------------------------------------------------------
@@ -325,7 +331,7 @@ public class DefaultUserManager
 
         return (Permission) userStore.addPermission( perm );
     }
-
+    
     /**
      * This implementation return empty permissions for each user. 
      */
@@ -352,5 +358,27 @@ public class DefaultUserManager
     public User getMyUser()
     {
         return getUser( userHolder.getCurrentUserName() );
+    }
+    
+    public UserGroup getDefaultUserGroup()
+    {
+        UserGroup defaultGroup = getUserGroup( defaultGroupName );
+        
+        if( defaultGroup == null )
+        {
+            defaultGroup = new UserGroup();
+            
+            defaultGroup.setName( defaultGroupName );
+
+            List defaultPermissions = new ArrayList();
+
+            defaultPermissions.add( getPermission( "buildProject" ) );
+
+            defaultPermissions.add( getPermission( "showProject" ) );
+
+            defaultGroup.setPermissions( defaultPermissions );
+        }
+        
+        return defaultGroup;
     }
 }

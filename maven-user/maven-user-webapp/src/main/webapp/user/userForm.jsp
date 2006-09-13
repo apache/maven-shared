@@ -1,6 +1,8 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c'%>
 <%@ taglib uri="/webwork" prefix="ww" %>
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
+<%@ taglib uri="http://acegisecurity.org/authz" prefix="authz" %>
+
 <ww:form action="saveAccount.action" method="post">
   <c:if test="${!empty actionErrors}">
     <div class="errormessage">
@@ -11,6 +13,7 @@
   </c:if>
   <table>
     <tbody>
+      <ww:hidden id="addMode" name="addMode"/>
       <ww:hidden id="addMode_field" name="addMode"/>
       <ww:hidden id="accountId_field" name="accountId"/>
       <ww:if test="addMode == true">
@@ -23,9 +26,23 @@
       <ww:password id="password_field" label="%{getText('user.password')}" name="password" required="true"/>
       <ww:password id="confirm_password_field" label="%{getText('user.confirm.password')}" name="confirmPassword" required="true"/>
       <ww:textfield id="email_field" label="%{getText('user.email')}" name="email" required="true"/>
+      <ww:if test="addMode == false">
+        <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageUsers">
+          <ww:select label="%{getText('user.group.header')}"
+                         list="allGroups"
+                         name="groups"
+                         value="selectedGroups"
+                         listKey="id"
+                         listValue="name"
+                         multiple="true"
+                         size="6"
+                         required="true"/>
+        </authz:authorize>
+      </ww:if>
     </tbody>
   </table>
   <div class="functnbar3">
     <ww:submit value="%{getText('save')}"/> <!-- todo: change to submit/cancel button -->
   </div>
 </ww:form>
+

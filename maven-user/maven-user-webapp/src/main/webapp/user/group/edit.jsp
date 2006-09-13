@@ -39,47 +39,63 @@
           <h3><ww:text name="usergroup.edit.section.title"/></h3>
         </ww:else>
         <div class="axial">
-          <ww:include value="userForm.jsp">
-            <ww:param name="addMode" value="${addMode}"/>
-          </ww:include>
-        <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageUsers">
-        <ww:if test="addMode == false">
-          <div id="h3">
-            <h3><ww:text name="role.section.title"/></h3>
-            <ww:set name="permissions" value="permissions" scope="session"/>
-              <table>
-                <tr>
-                  <td><ww:text name="role.rolename"/></td>
-                  <td>&nbsp;</td>
-                </tr>
-                <ww:iterator value="permissions">
-                <tr>
-                  <td><ww:property value="name"/></td>
-                  <td>
-                    <ww:form action="editGroup!doDeletePermission.action" method="post">
-                      <ww:hidden id="addMode" name="addMode"/>
-                      <ww:hidden id="id" name="id"/>
-                      <ww:hidden id="name" name="name"/>
-                      <ww:hidden id="description" name="description"/>
-                      <input type="hidden" name="permissionName" value="<ww:property value="name"/>">
-                      <ww:submit onclick="getData()" value="%{getText('delete')}"/>
-                    </ww:form>
-                  </td>
-                </tr>
-                </ww:iterator>
-              </table>
+          <ww:form action="edit.action" method="post">
+            <table>
+              <tbody>
+                <ww:hidden id="addMode_field" name="addMode"/>
+                <ww:hidden id="id_field" name="id"/>
+                <ww:textfield id="name_field" label="%{getText('usergroup.name')}" name="name" required="false"/>
+                <ww:textfield id="description_field" label="%{getText('usergroup.description')}" name="description" required="false"/>
+              </tbody>
+            </table>
+            <div class="functnbar3">
+              <ww:submit value="%{getText('save')}"/> <!-- todo: change to submit/cancel button -->
             </div>
-          <div id="h3">
-            <ww:form action="editGroup!doGetAvailablePermissions.action" method="post">
-              <ww:hidden id="addMode" name="addMode"/>
-              <ww:hidden id="id" name="id"/>
-              <ww:hidden id="name" name="name"/>
-              <ww:hidden id="description" name="description"/>
-              <ww:submit onclick="getData()" value="%{getText('add')}"/>
-            </ww:form>
-          </div>
-        </ww:if>
-        </authz:authorize>
+          </ww:form>
+          <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageUsers">
+            <ww:if test="addMode == false">
+              <div id="h3">
+                <h3><ww:text name="role.section.title"/></h3>
+                <div class="eXtremeTable">
+                  <ww:set name="permissions" value="permissions" scope="session"/>
+                  <table id="ec_table" border="1" cellspacing="2" cellpadding="3" class="tableRegion" width="100%">
+                    <thead>
+                      <tr>
+                        <td class="tableHeader"><ww:text name="role.rolename"/></td>
+                        <td class="tableHeader">&nbsp;</td>
+                      </tr>
+                    </thead>
+                    <tbody class="tableBody">
+                      <ww:iterator value="permissions" status="rowCounter">
+                        <tr class="<ww:if test="#rowCounter.odd == true">odd</ww:if><ww:else>even</ww:else>">
+                          <td><ww:property value="name"/></td>
+                          <td>
+                            <ww:form action="edit!doDeletePermission.action" method="post">
+                              <ww:hidden id="addMode" name="addMode"/>
+                              <ww:hidden id="id" name="id"/>
+                              <ww:hidden id="name" name="name"/>
+                              <ww:hidden id="description" name="description"/>
+                              <input type="hidden" name="permissionName" value="<ww:property value="name"/>">
+                              <ww:submit onclick="getData()" value="%{getText('delete')}"/>
+                            </ww:form>
+                          </td>
+                        </tr>
+                      </ww:iterator>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div id="h3">
+                <ww:form action="edit!doGetAvailablePermissions.action" method="post">
+                  <ww:hidden id="addMode" name="addMode"/>
+                  <ww:hidden id="id" name="id"/>
+                  <ww:hidden id="name" name="name"/>
+                  <ww:hidden id="description" name="description"/>
+                  <ww:submit onclick="getData()" value="%{getText('add')}"/>
+                </ww:form>
+              </div>
+            </ww:if>
+          </authz:authorize>
         </div>
       </div>
     </body>

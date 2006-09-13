@@ -1,12 +1,9 @@
 <!DOCTYPE xwork PUBLIC "-//OpenSymphony Group//XWork 1.0//EN" "http://www.opensymphony.com/xwork/xwork-1.0.dtd">
 
 <xwork>
-
   <package name="maven-user" extends="webwork-default" namespace="/user">
-
     <action name="edit" class="editUser">
       <result name="input">/user/edit.jsp</result>
-      <result name="permissions">/user/addRole.jsp</result>
       <result name="success" type="chain">list</result>
     </action>
 
@@ -28,14 +25,12 @@
       <result name="input">/user/edit.jsp</result>
       <result name="success" type="chain">list</result>
     </action>
-
   </package>
-
+  
   <package name="maven-user-group" extends="webwork-default" namespace="/user/group">
-
     <action name="edit" class="editUserGroup">
       <result name="input">/user/group/edit.jsp</result>
-      <result name="permissions">/user/addRole.jsp</result>
+      <result name="permissions">/user/group/addRole.jsp</result>
       <result name="success" type="chain">list</result>
     </action>
     
@@ -47,7 +42,5 @@
     <action name="list" class="listUserGroup">
       <result name="success">/user/group/list.jsp</result>
     </action>
-
   </package>
-
 </xwork>

@@ -21,7 +21,7 @@
           <ec:row>
             <ec:column property="name" title="role.rolename"/>
             <ec:column property="actions" title="&nbsp;">
-              <c:url var="editUrl" value="/user/edit!doAddPermission.action">
+              <c:url var="editUrl" value="/user/group/edit!doAddPermission.action">
                 <c:param name="permissionName" value="${availablePermission.name}"/>
               </c:url>
               <input type="button" onclick="window.location.href='<c:out value='${editUrl}'/>'" value=<ww:text name="add"/>>

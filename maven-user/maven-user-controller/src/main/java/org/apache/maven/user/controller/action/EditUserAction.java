@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.maven.user.model.PasswordRuleViolationException;
 import org.apache.maven.user.model.PasswordRuleViolations;
-import org.apache.maven.user.model.Permission;
 import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserManager;
@@ -57,16 +56,6 @@ public class EditUserAction
 
     private UserGroup userGroup;
 
-    private List staticPermissions;
-
-    private List availablePermissions;
-
-    private Permission staticPermission;
-
-    private Permission permission;
-
-    private String permissionName;
-
     private boolean addMode = false;
 
     private String username;
@@ -77,10 +66,12 @@ public class EditUserAction
 
     private String email;
 
-    private List permissions;
-
     private HttpServletRequest request;
 
+    private List groups;
+
+    private List allGroups;
+    
     public String execute()
         throws Exception
     {
@@ -103,14 +94,13 @@ public class EditUserAction
         }
         if ( addMode )
         {
-            userGroup = new UserGroup();
-            userGroup.setName( username );
+            userGroup = userManager.getDefaultUserGroup();
 
             user = new User();
             user.setUsername( username );
             user.setPassword( password );
             user.setEmail( email );
-            user.setGroup( userGroup );
+            user.addGroup( userGroup );
             try
             {
                 userManager.addUser( user );
@@ -131,8 +121,8 @@ public class EditUserAction
             user.setUsername( username );
             user.setPassword( password );
             user.setEmail( email );
-            permissions = (List) request.getSession().getAttribute( "permissions" );
-            user.getGroup().setPermissions( permissions );
+            user.setGroups( groups );
+            
             try
             {
                 userManager.updateUser( user );
@@ -152,7 +142,6 @@ public class EditUserAction
         request.getSession().removeAttribute( "username" );
         request.getSession().removeAttribute( "password" );
         request.getSession().removeAttribute( "email" );
-        request.getSession().removeAttribute( "permissions" );
 
         return SUCCESS;
     }
@@ -169,13 +158,9 @@ public class EditUserAction
     {
         addMode = false;
         user = userManager.getUser( username );
-        // password = user.getPassword(); don't access the password
         email = user.getEmail();
-        permissions = user.getGroup().getPermissions();
-        if ( permissions.size() == 1 )
-        {
-            permissionName = ( (Permission) permissions.get( 0 ) ).getName();
-        }
+        groups = user.getGroups();
+        allGroups = userManager.getUserGroups();
 
         return INPUT;
     }
@@ -187,134 +172,12 @@ public class EditUserAction
         user = userManager.getMyUser();
         username = user.getUsername();
         email = user.getEmail();
-        permissions = user.getGroup().getPermissions();
+        groups = user.getGroups();
+        allGroups = userManager.getUserGroups();
     
         return INPUT;
     }
-
-    public String doGetAvailablePermissions()
-        throws Exception
-    {
-        int i, j;
-        availablePermissions = new ArrayList();
-        staticPermissions = userManager.getPermissions();
-        permissions = (List) request.getSession().getAttribute( "permissions" );
-        if ( permissions == null || permissions.size() == 0 )
-        {
-            availablePermissions.addAll( staticPermissions );
-        }
-        else
-        {
-            for ( i = 0; i < staticPermissions.size(); i++ )
-            {
-                staticPermission = (Permission) staticPermissions.get( i );
-                for ( j = 0; j < permissions.size(); j++ )
-                {
-                    permission = (Permission) permissions.get( j );
-                    if ( permission.getName().equalsIgnoreCase( staticPermission.getName() ) )
-                    {
-                        break;
-                    }
-                }
-                if ( j >= permissions.size() )
-                {
-                    availablePermissions.add( staticPermission );
-                }
-            }
-        }
-
-        request.getSession().setAttribute( "addMode", Boolean.valueOf( addMode ) );
-        request.getSession().setAttribute( "username", username );
-        request.getSession().setAttribute( "password", password );
-        request.getSession().setAttribute( "email", email );
-
-        return "permissions";
-    }
-
-    public String doAddPermission()
-        throws Exception
-    {
-        staticPermissions = userManager.getPermissions();
-        int i, j;
-        for ( i = 0; i < staticPermissions.size(); i++ )
-        {
-            permission = (Permission) staticPermissions.get( i );
-            if ( permission.getName().equalsIgnoreCase( permissionName ) )
-            {
-                permissions = (List) request.getSession().getAttribute( "permissions" );
-                if ( permissions == null )
-                {
-                    permissions = new ArrayList();
-                    permissions.add( permission );
-                }
-                else
-                {
-                    for ( j = 0; j < permissions.size(); j++ )
-                    {
-                        Permission permission = (Permission) permissions.get( j );
-                        if ( permission.getName().equalsIgnoreCase( permissionName ) )
-                        {
-                            break;
-                        }
-                    }
-                    if ( j >= permissions.size() )
-                    {
-                        permissions.add( permission );
-                    }
-                }
-                if ( permissions.size() == 1 )
-                {
-                    permissionName = ( (Permission) permissions.get( 0 ) ).getName();
-                }
-                break;
-            }
-        }
-
-        addMode = ( (Boolean) request.getSession().getAttribute( "addMode" ) ).booleanValue();
-        username = (String) request.getSession().getAttribute( "username" );
-        password = (String) request.getSession().getAttribute( "password" );
-        email = (String) request.getSession().getAttribute( "email" );
-
-        return INPUT;
-    }
-
-    public String doDeletePermission()
-        throws Exception
-    {
-        int i = 0;
-        permissions = (List) request.getSession().getAttribute( "permissions" );
-        for ( ; i < permissions.size(); i++ )
-        {
-            permission = (Permission) permissions.get( i );
-            if ( permission.getName().equalsIgnoreCase( permissionName ) )
-            {
-                permissions.remove( i );
-                break;
-            }
-            if ( permissions.size() == 1 )
-            {
-                permissionName = ( (Permission) permissions.get( 0 ) ).getName();
-            }
-        }
-
-        return INPUT;
-    }
-
-    public List getAvailablePermissions()
-    {
-        return availablePermissions;
-    }
-
-    public String getPermissionName()
-    {
-        return permissionName;
-    }
-
-    public void setPermissionName( String permissionName )
-    {
-        this.permissionName = permissionName;
-    }
-
+    
     public boolean isAddMode()
     {
         return addMode;
@@ -363,13 +226,42 @@ public class EditUserAction
         this.email = email;
     }
 
-    public List getPermissions()
-    {
-        return this.permissions;
-    }
-
     public void setServletRequest( HttpServletRequest request )
     {
         this.request = request;
+    }
+
+    public List getGroups()
+    {
+        return groups;
+    }
+
+    public void setGroups( List sgroups )
+    {
+        groups = new ArrayList();
+        
+        for( int i = 0; i < sgroups.size(); i++)
+        {
+            UserGroup dgroup = userManager.getUserGroup( Integer.parseInt(sgroups.get(i).toString()) );
+            
+            groups.add( dgroup );
+        }
+    }
+    
+    public List getAllGroups()
+    {
+        return allGroups;
+    }
+
+    public int[] getSelectedGroups()
+    {
+        int[] selectedGroups = new int[groups.size()];
+        
+        for( int i = 0; i < groups.size(); i++)
+        {
+            selectedGroups[i] = ( (UserGroup) groups.get( i ) ).getId();
+        }
+        
+        return selectedGroups;
     }
 }

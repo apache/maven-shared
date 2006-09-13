@@ -21,14 +21,14 @@
             <ec:column property="description" title="usergroup.description"/>
             <ec:column property="actions" title="&nbsp;">
 
-              <c:url var="editUrl" value="/user/groups/editGroup!doEdit.action">
+              <c:url var="editUrl" value="/user/group/edit!doEdit.action">
                 <c:param name="id" value="${usergroup.id}"/>
                 <c:param name="name" value="${usergroup.name}"/>
               </c:url>
 
               <a href="<c:out value='${editUrl}'/>"><ww:text name="edit"/></a>
 
-              <c:url var="deleteUrl" value="/user/groups/deleteGroup!doDelete.action">
+              <c:url var="deleteUrl" value="/user/group/delete!doDelete.action">
                 <c:param name="id" value="${usergroup.id}"/>
                 <c:param name="name" value="${usergroup.name}"/>
               </c:url>
@@ -39,7 +39,7 @@
         </ec:table>
       </div>
       <div class="functnbar3">
-        <ww:form action="editGroup!doAdd.action" method="post">
+        <ww:form action="edit!doAdd.action" method="post">
           <ww:submit value="%{getText('add')}"/>
         </ww:form>
     </div>

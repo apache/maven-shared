@@ -33,18 +33,18 @@
 
   <package name="maven-user-group" extends="webwork-default" namespace="/user/group">
 
-    <action name="editGroup" class="editUserGroup">
+    <action name="edit" class="editUserGroup">
       <result name="input">/user/group/edit.jsp</result>
       <result name="permissions">/user/addRole.jsp</result>
       <result name="success" type="chain">list</result>
     </action>
     
-    <action name="deleteGroup" class="deleteUserGroup">
+    <action name="delete" class="deleteUserGroup">
       <result name="delete">/user/group/delete.jsp</result>
       <result name="success" type="chain">list</result>
     </action>
     
-    <action name="listGroups" class="listUserGroups">
+    <action name="list" class="listUserGroups">
       <result name="success">/user/group/list.jsp</result>
     </action>
 

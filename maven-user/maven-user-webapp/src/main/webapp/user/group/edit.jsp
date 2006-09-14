@@ -72,9 +72,9 @@
                           <td>
                             <ww:form action="edit!doDeletePermission.action" method="post">
                               <ww:hidden id="addMode" name="addMode"/>
-                              <ww:hidden id="id" name="id"/>
-                              <ww:hidden id="name" name="name"/>
-                              <ww:hidden id="description" name="description"/>
+                              <ww:hidden id="id" name="${pageScope.usergroup.id}"/>
+                              <ww:hidden id="name" name="${pageScope.usergroup.name}"/>
+                              <ww:hidden id="description" name="${pageScope.usergroup.description}"/>
                               <input type="hidden" name="permissionName" value="<ww:property value="name"/>">
                               <ww:submit onclick="getData()" value="%{getText('delete')}"/>
                             </ww:form>
@@ -101,3 +101,4 @@
     </body>
   </ww:i18n>
 </html>
+

@@ -16,6 +16,10 @@ package org.apache.maven.user.controller.action;
  * limitations under the License.
  */
 
+import java.util.List;
+
+import org.apache.maven.user.model.User;
+import org.apache.maven.user.model.UserGroup;
 import org.apache.maven.user.model.UserManager;
 import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
@@ -42,6 +46,29 @@ public class DeleteUserGroupAction
     public String execute()
         throws Exception
     {
+
+        // TODO this must be done in the user manager
+        User user;
+        UserGroup group;
+        List users, groups;
+        users = userManager.getUsers();
+
+        int i, j;
+        for ( i = 0; i < users.size(); i++ )
+        {
+            user = (User) users.get( i );
+            groups = user.getGroups();
+            for ( j = 0; j < groups.size(); j++ )
+            {
+                group = (UserGroup) groups.get( j );
+                if ( group.getId() == id )
+                {
+                    user.removeGroup( group );
+                    userManager.updateUser( user );
+                }
+            }
+        }
+
         userManager.removeUserGroup( id );
 
         return SUCCESS;

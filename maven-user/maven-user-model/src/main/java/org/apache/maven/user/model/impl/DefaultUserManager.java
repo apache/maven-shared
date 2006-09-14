@@ -51,6 +51,8 @@ public class DefaultUserManager
 {
     private static final String DEFAULT_USER_GROUP = "user"; 
 
+    private static final String ANONYMOUS_USER_GROUP = "guest"; 
+
     private static final String DEFAULT_USER_PERMISSION = "user"; 
 
     /**
@@ -370,16 +372,16 @@ public class DefaultUserManager
     {
         return getUser( userHolder.getCurrentUserName() );
     }
-    
+
     public UserGroup getDefaultUserGroup()
     {
-        UserGroup defaultGroup = getUserGroup( DEFAULT_USER_GROUP );
-        
-        if( defaultGroup == null )
-        {
-            defaultGroup = new UserGroup();
+        UserGroup group = getUserGroup( DEFAULT_USER_GROUP );
 
-            defaultGroup.setName( DEFAULT_USER_GROUP );
+        if ( group == null )
+        {
+            group = new UserGroup();
+
+            group.setName( DEFAULT_USER_GROUP );
 
             List defaultPermissions = new ArrayList();
 
@@ -395,9 +397,25 @@ public class DefaultUserManager
 
             defaultPermissions.add( permission );
 
-            defaultGroup.setPermissions( defaultPermissions );
+            group.setPermissions( defaultPermissions );
         }
-        
-        return defaultGroup;
+
+        return group;
+    }
+
+    public UserGroup getGuestUserGroup()
+    {
+        UserGroup group = getUserGroup( ANONYMOUS_USER_GROUP );
+
+        if ( group == null )
+        {
+            group = new UserGroup();
+
+            group.setName( ANONYMOUS_USER_GROUP );
+
+            group.setPermissions( new ArrayList() );
+        }
+
+        return group;
     }
 }

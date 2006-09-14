@@ -282,4 +282,11 @@ public interface UserManager
      * @return the default user group.
      */
     UserGroup getDefaultUserGroup();
+
+    /**
+     * Gets the group for the anonymous user.
+     * 
+     * @return the group.
+     */
+    UserGroup getGuestUserGroup();
 }

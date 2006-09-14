@@ -49,6 +49,10 @@ import org.codehaus.plexus.util.StringUtils;
 public class DefaultUserManager
     implements UserManager, Initializable
 {
+    private static final String DEFAULT_USER_GROUP = "user"; 
+
+    private static final String DEFAULT_USER_PERMISSION = "user"; 
+
     /**
      * @plexus.requirement
      */
@@ -63,12 +67,6 @@ public class DefaultUserManager
      * @plexus.requirement
      */
     private UserHolder userHolder;
-
-    /**
-     * @plexus.configuration default-value="user"
-     */
-    private String defaultGroupName = "user"; 
-    //TODO get this !#$#!@$#!@$ plexus injection to work!!!
 
     // ----------------------------------------------------------------------
     // Component Lifecycle
@@ -375,19 +373,27 @@ public class DefaultUserManager
     
     public UserGroup getDefaultUserGroup()
     {
-        UserGroup defaultGroup = getUserGroup( defaultGroupName );
+        UserGroup defaultGroup = getUserGroup( DEFAULT_USER_GROUP );
         
         if( defaultGroup == null )
         {
             defaultGroup = new UserGroup();
-            
-            defaultGroup.setName( defaultGroupName );
+
+            defaultGroup.setName( DEFAULT_USER_GROUP );
 
             List defaultPermissions = new ArrayList();
 
-            defaultPermissions.add( getPermission( "buildProject" ) );
+            Permission permission = getPermission( DEFAULT_USER_PERMISSION );
 
-            defaultPermissions.add( getPermission( "showProject" ) );
+            if ( permission == null )
+            {
+                permission = new Permission();
+                permission.setName( DEFAULT_USER_PERMISSION );
+                permission.setDescription( "Users" );
+                addPermission( permission );
+            }
+
+            defaultPermissions.add( permission );
 
             defaultGroup.setPermissions( defaultPermissions );
         }

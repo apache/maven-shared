@@ -214,4 +214,9 @@ public class AcegiUserManager
     {
         return getUserManager().getDefaultUserGroup();
     }
+
+    public UserGroup getGuestUserGroup()
+    {
+        return getUserManager().getGuestUserGroup();
+    }
 }

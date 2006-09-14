@@ -116,6 +116,8 @@ public class EditUserGroupAction
         throws Exception
     {
         addMode = true;
+        name = "";
+        description = "";
         return INPUT;
     }
 
@@ -239,11 +241,6 @@ public class EditUserGroupAction
                 permissionName = ( (Permission) permissions.get( 0 ) ).getName();
             }
         }
-
-        addMode = ( (Boolean) request.getSession().getAttribute( "addMode" ) ).booleanValue();
-        id = Integer.parseInt( (String) request.getSession().getAttribute( "id" ) );
-        name = (String) request.getSession().getAttribute( "name" );
-        description = (String) request.getSession().getAttribute( "description" );
 
         return INPUT;
     }

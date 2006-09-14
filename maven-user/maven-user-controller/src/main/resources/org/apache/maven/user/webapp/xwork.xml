@@ -25,6 +25,11 @@
       <result name="input">/user/edit.jsp</result>
       <result name="success" type="chain">list</result>
     </action>
+    
+    <action name="expiredPassword" class="expiredPassword">
+      <result name="input">expiredPassword.jsp</result>
+      <result name="success">login.jsp</result>
+    </action>
   </package>
   
   <package name="maven-user-group" extends="webwork-default" namespace="/user/group">

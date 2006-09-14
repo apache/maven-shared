@@ -175,6 +175,7 @@ public class EditUserAction
     {
         addMode = false;
         user = userManager.getMyUser();
+        id = user.getAccountId();
         username = user.getUsername();
         fullName = user.getFullName();
         locked = user.isLocked();

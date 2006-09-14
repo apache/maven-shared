@@ -161,6 +161,19 @@ public class DefaultUserManager
         return userStore.addUser( user );
     }
 
+    public boolean changePassword( String userName, String oldPassword, String newPassword )
+    {
+        User user = getUser( userName );
+        String encodedOldPassword = securityPolicy.getPasswordEncoder().encodePassword( oldPassword );
+        if ( !encodedOldPassword.equals( user.getEncodedPassword() ) )
+        {
+            return false;
+        }
+        user.setPassword( newPassword );
+        processPasswordChange( user );
+        return true;
+    }
+
     private void processPasswordChange( User user )
         throws PasswordRuleViolationException
     {

@@ -45,6 +45,17 @@ public interface UserManager
         throws PasswordRuleViolationException;
 
     /**
+     * Change user password.
+     * 
+     * @param userName
+     * @param oldPassword current password of the user
+     * @param newPassword new password of the user
+     * @return <code>true</code> if the old password matches the oldPassword parameter,
+     * <code>false</code> otherwise.
+     */
+    boolean changePassword( String userName, String oldPassword, String newPassword );
+
+    /**
      * Update user data. User password may be encoded before storing it.
      * 
      * @param user

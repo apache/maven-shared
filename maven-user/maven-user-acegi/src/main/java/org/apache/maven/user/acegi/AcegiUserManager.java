@@ -94,6 +94,11 @@ public class AcegiUserManager
         return getUserManager().addUser( user );
     }
 
+    public boolean changePassword( String userName, String oldPassword, String newPassword )
+    {
+        return getUserManager().changePassword( userName, oldPassword, newPassword );
+    }
+
     public UserGroup addUserGroup( UserGroup userGroup )
     {
         return getUserManager().addUserGroup( userGroup );

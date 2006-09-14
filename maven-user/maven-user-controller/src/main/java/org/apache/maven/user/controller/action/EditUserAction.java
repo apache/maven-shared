@@ -19,8 +19,6 @@ package org.apache.maven.user.controller.action;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.maven.user.model.PasswordRuleViolationException;
 import org.apache.maven.user.model.PasswordRuleViolations;
 import org.apache.maven.user.model.User;
@@ -42,7 +40,6 @@ import com.opensymphony.webwork.interceptor.ServletRequestAware;
  */
 public class EditUserAction
     extends PlexusActionSupport
-    implements ServletRequestAware
 {
 
     private static final long serialVersionUID = 8143169847676423348L;
@@ -51,6 +48,8 @@ public class EditUserAction
      * @plexus.requirement
      */
     private UserManager userManager;
+    
+    private int id;
 
     private User user;
 
@@ -59,14 +58,16 @@ public class EditUserAction
     private boolean addMode = false;
 
     private String username;
+    
+    private String fullName;
 
     private String password;
 
     private String confirmPassword;
 
     private String email;
-
-    private HttpServletRequest request;
+    
+    private boolean locked;
 
     private List groups;
 
@@ -89,6 +90,7 @@ public class EditUserAction
         }
         if( !StringUtils.isEmpty( password ) && !password.equals( confirmPassword ) )
         {
+            allGroups = userManager.getUserGroups();
             addActionError( "user.password.mismatch.error" );
             return INPUT;
         }
@@ -98,7 +100,9 @@ public class EditUserAction
 
             user = new User();
             user.setUsername( username );
+            user.setFullName( fullName );
             user.setPassword( password );
+            user.setLocked( locked );
             user.setEmail( email );
             user.addGroup( userGroup );
             try
@@ -117,10 +121,12 @@ public class EditUserAction
         }
         else
         {
-            user = userManager.getUser( username );
+            user = userManager.getUser( id );
             user.setUsername( username );
+            user.setFullName( fullName );
             user.setPassword( password );
             user.setEmail( email );
+            user.setLocked( locked );
             user.setGroups( groups );
             
             try
@@ -132,16 +138,12 @@ public class EditUserAction
                 PasswordRuleViolations violationsContainer = e.getViolations();
                 if( violationsContainer != null && violationsContainer.hasViolations() )
                 {
+                    allGroups = userManager.getUserGroups();
                     setActionErrors( violationsContainer.getLocalizedViolations() );
                     return INPUT;
                 }
             }
         }
-
-        request.getSession().removeAttribute( "addMode" );
-        request.getSession().removeAttribute( "username" );
-        request.getSession().removeAttribute( "password" );
-        request.getSession().removeAttribute( "email" );
 
         return SUCCESS;
     }
@@ -157,8 +159,11 @@ public class EditUserAction
         throws Exception
     {
         addMode = false;
-        user = userManager.getUser( username );
+        user = userManager.getUser( id );
+        username = user.getUsername();
+        fullName = user.getFullName();
         email = user.getEmail();
+        locked = user.isLocked();
         groups = user.getGroups();
         allGroups = userManager.getUserGroups();
 
@@ -171,6 +176,8 @@ public class EditUserAction
         addMode = false;
         user = userManager.getMyUser();
         username = user.getUsername();
+        fullName = user.getFullName();
+        locked = user.isLocked();
         email = user.getEmail();
         groups = user.getGroups();
         allGroups = userManager.getUserGroups();
@@ -208,11 +215,13 @@ public class EditUserAction
         this.password = password;
     }
 
-    public String getConfirmPassword() {
+    public String getConfirmPassword() 
+    {
         return confirmPassword;
     }
 
-    public void setConfirmPassword(String confirmPassword) {
+    public void setConfirmPassword(String confirmPassword) 
+    {
         this.confirmPassword = confirmPassword;
     }
 
@@ -224,16 +233,6 @@ public class EditUserAction
     public void setEmail( String email )
     {
         this.email = email;
-    }
-
-    public void setServletRequest( HttpServletRequest request )
-    {
-        this.request = request;
-    }
-
-    public List getGroups()
-    {
-        return groups;
     }
 
     public void setGroups( List sgroups )
@@ -264,4 +263,35 @@ public class EditUserAction
         
         return selectedGroups;
     }
+
+    public boolean isLocked()
+    {
+        return locked;
+    }
+
+    public void setLocked( boolean isLocked )
+    {
+        this.locked = isLocked;
+    }
+
+    public String getFullName()
+    {
+        return fullName;
+    }
+
+    public void setFullName( String fullName )
+    {
+        this.fullName = fullName;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId( int id )
+    {
+        this.id = id;
+    }
+
 }

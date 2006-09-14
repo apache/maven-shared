@@ -15,7 +15,7 @@
     <tbody>
       <ww:hidden id="addMode" name="addMode"/>
       <ww:hidden id="addMode_field" name="addMode"/>
-      <ww:hidden id="accountId_field" name="accountId"/>
+      <ww:hidden id="id_field" name="id"/>
       <ww:if test="addMode == true">
         <ww:textfield id="username_field" label="%{getText('user.username')}" name="username" required="true"/>
       </ww:if>
@@ -23,6 +23,7 @@
         <ww:hidden id="username_field" name="username"/>
         <ww:label label="%{getText('user.username')}" name="username" required="true"/>
       </ww:else>
+      <ww:textfield id="fullName_field" label="%{getText('user.fullname')}" name="fullName"/>
       <ww:password id="password_field" label="%{getText('user.password')}" name="password" required="true"/>
       <ww:password id="confirm_password_field" label="%{getText('user.confirm.password')}" name="confirmPassword" required="true"/>
       <ww:textfield id="email_field" label="%{getText('user.email')}" name="email" required="true"/>
@@ -39,6 +40,9 @@
                          required="true"/>
         </authz:authorize>
       </ww:if>
+      <authz:authorize ifAnyGranted="ROLE_admin,ROLE_manageUsers">
+        <ww:checkbox id="locked_field" label="Locked" name="locked"/>
+      </authz:authorize>
     </tbody>
   </table>
   <div class="functnbar3">

@@ -5,24 +5,27 @@
 <script>
   function getData() {
     var addMode_field = document.getElementById('addMode_field');
-    var accountId_field = document.getElementById('accountId_field');
+    var id_field = document.getElementById('id_field');
     var username_field = document.getElementById('username_field');
     var password_field = document.getElementById('password_field');
     var confirm_password_field = document.getElementById('confirm_password_field');
+    var locked_field = document.getElementById('locked_field');
     var email_field = document.getElementById('email_field');
 
     var addMode = document.getElementById('addMode');
-    var accountId = document.getElementById('accountId');
+    var id = document.getElementById('id');
     var username = document.getElementById('username');
     var password = document.getElementById('password');
     var confirmPassword = document.getElementById('confirmPassword');
+    var locked = document.getElementById('locked');
     var email = document.getElementById('email');
 
     addMode.value = addMode_field.value;
-    accountId.value = accountId_field.value;
+    id.value = id_field.value;
     username.value = username_field.value;
     password.value = password_field.value;
     confirmPassword.value = confirm_password_field.value;
+    locked.value = locked_field.value;
     email.value = email_field.value;
   }
 </script>

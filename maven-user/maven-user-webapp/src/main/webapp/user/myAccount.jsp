@@ -13,15 +13,10 @@
     </head>
     <body>
       <div id="axial" class="h3">
-        <ww:if test="addMode == true">
-          <h3><ww:text name="user.add.section.title"/></h3>
-        </ww:if>
-        <ww:else>
           <h3><ww:text name="user.edit.section.title"/></h3>
-        </ww:else>
-        <ww:include value="userForm.jsp">
-          <ww:param name="addMode" value="${addMode}"/>
-        </ww:include>
+          <ww:form action="myAccount.action" method="post">
+            <ww:include value="userForm.jsp"/>
+          </ww:form>
       </div>
     </body>
   </ww:i18n>

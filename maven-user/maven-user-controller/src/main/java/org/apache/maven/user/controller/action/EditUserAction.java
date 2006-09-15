@@ -27,8 +27,6 @@ import org.apache.maven.user.model.UserManager;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
-import com.opensymphony.webwork.interceptor.ServletRequestAware;
-
 /**
  * @author Henry Isidro
  * @version $Id$
@@ -76,18 +74,6 @@ public class EditUserAction
     public String execute()
         throws Exception
     {
-        if ( username.indexOf( "," ) != -1 )
-        {
-            username = username.substring( 0, username.indexOf( "," ) );
-        }
-        if ( password.indexOf( "," ) != -1 )
-        {
-            password = password.substring( 0, password.indexOf( "," ) );
-        }
-        if ( email.indexOf( "," ) != -1 )
-        {
-            email = email.substring( 0, email.indexOf( "," ) );
-        }
         if( !StringUtils.isEmpty( password ) && !password.equals( confirmPassword ) )
         {
             allGroups = userManager.getUserGroups();
@@ -96,6 +82,12 @@ public class EditUserAction
         }
         if ( addMode )
         {
+            if( StringUtils.isNotEmpty( username ) && userManager.getUser( username ) != null )
+            {
+                addActionError( "user.add.duplicate.username.error" );
+                return INPUT;
+            }
+            
             userGroup = userManager.getDefaultUserGroup();
 
             user = new User();
@@ -122,12 +114,14 @@ public class EditUserAction
         else
         {
             user = userManager.getUser( id );
-            user.setUsername( username );
             user.setFullName( fullName );
             user.setPassword( password );
             user.setEmail( email );
             user.setLocked( locked );
-            user.setGroups( groups );
+            if( groups != null )
+            {
+                user.setGroups( groups );
+            }
             
             try
             {

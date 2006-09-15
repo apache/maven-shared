@@ -3,11 +3,14 @@
 <%@ taglib uri="http://www.extremecomponents.org" prefix="ec" %>
 <%@ taglib uri="http://acegisecurity.org/authz" prefix="authz" %>
 
-<ww:form action="saveAccount.action" method="post">
   <c:if test="${!empty actionErrors}">
     <div class="errormessage">
     <c:forEach items="${actionErrors}" var="actionError">
-      <p><ww:text name="${actionError}"/></p>
+      <p>
+        <ww:text name="${actionError}">
+          <ww:param><ww:property value="username"/></ww:param>
+        </ww:text>
+      </p>
     </c:forEach>
     </div>
   </c:if>
@@ -48,5 +51,4 @@
   <div class="functnbar3">
     <ww:submit value="%{getText('save')}"/> <!-- todo: change to submit/cancel button -->
   </div>
-</ww:form>
 

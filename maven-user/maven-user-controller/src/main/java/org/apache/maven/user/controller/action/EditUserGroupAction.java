@@ -27,6 +27,7 @@ import org.apache.maven.user.model.UserManager;
 import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
 import com.opensymphony.webwork.interceptor.ServletRequestAware;
+import com.opensymphony.xwork.Validateable;
 
 /**
  * @author Henry Isidro
@@ -38,7 +39,7 @@ import com.opensymphony.webwork.interceptor.ServletRequestAware;
  */
 public class EditUserGroupAction
     extends PlexusActionSupport
-    implements ServletRequestAware
+    implements ServletRequestAware, Validateable
 {
 
     private static final long serialVersionUID = 8143169847676423348L;
@@ -61,7 +62,7 @@ public class EditUserGroupAction
     private String permissionName;
 
     private boolean addMode = false;
-    
+
     private int id;
 
     private String name;
@@ -71,6 +72,15 @@ public class EditUserGroupAction
     private List permissions;
 
     private HttpServletRequest request;
+
+    public void validate()
+    {
+        clearErrorsAndMessages();
+        if ( addMode == true && name != null && name != "" && userManager.getUserGroup( name ) != null )
+        {
+            addActionError( "usergroup.name.already.exist" );
+        }
+    }
 
     public String execute()
         throws Exception
@@ -83,15 +93,15 @@ public class EditUserGroupAction
         {
             description = description.substring( 0, description.indexOf( "," ) );
         }
-        
+
         if ( addMode )
         {
             userGroup = new UserGroup();
-            
+
             userGroup.setName( name );
             userGroup.setDescription( description );
 
-            userManager.addUserGroup( userGroup );    
+            userManager.addUserGroup( userGroup );
         }
         else
         {
@@ -172,7 +182,7 @@ public class EditUserGroupAction
         request.getSession().setAttribute( "id", Integer.toString( id ) );
         request.getSession().setAttribute( "name", name );
         request.getSession().setAttribute( "description", description );
-        
+
         return "permissions";
     }
 

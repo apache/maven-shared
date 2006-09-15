@@ -40,11 +40,24 @@
         </ww:else>
         <div class="axial">
           <ww:form action="edit.action" method="post">
+            <c:if test="${!empty actionErrors}">
+              <div class="errormessage">
+                <c:forEach items="${actionErrors}" var="actionError">
+                  <p><ww:text name="${actionError}"/></p>
+                </c:forEach>
+              </div>
+            </c:if>
             <table>
               <tbody>
                 <ww:hidden id="addMode_field" name="addMode"/>
                 <ww:hidden id="id_field" name="id"/>
-                <ww:textfield id="name_field" label="%{getText('usergroup.name')}" name="name" required="false"/>
+                <ww:if test="addMode == true">
+                  <ww:textfield id="name_field" label="%{getText('usergroup.name')}" name="name" required="true"/>
+                </ww:if>
+                <ww:else>
+                  <ww:hidden id="name_field" name="name"/>
+                  <ww:label label="%{getText('usergroup.name')}" name="name" required="true"/>
+                </ww:else>
                 <ww:textfield id="description_field" label="%{getText('usergroup.description')}" name="description" required="false"/>
               </tbody>
             </table>

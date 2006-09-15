@@ -48,9 +48,9 @@
           <h3><ww:text name="user.edit.section.title"/></h3>
         </ww:else>
         <div class="axial">
-          <ww:include value="userForm.jsp">
-            <ww:param name="addMode" value="${addMode}"/>
-          </ww:include>
+          <ww:form action="edit.action" method="post">
+            <ww:include value="userForm.jsp"/>
+          </ww:form>
         </div>
       </div>
     </body>

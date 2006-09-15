@@ -22,6 +22,7 @@
             <ec:column property="actions" title="&nbsp;">
 
               <c:url var="editUrl" value="/user/group/edit!doEdit.action">
+                <c:param name="addMode" value="false"/>
                 <c:param name="id" value="${usergroup.id}"/>
                 <c:param name="name" value="${usergroup.name}"/>
               </c:url>
@@ -40,6 +41,8 @@
       </div>
       <div class="functnbar3">
         <ww:form action="edit!doAdd.action" method="post">
+          <ww:hidden name="addMode" value="true"/>
+          <ww:hidden name="name" value=""/>
           <ww:submit value="%{getText('add')}"/>
         </ww:form>
     </div>

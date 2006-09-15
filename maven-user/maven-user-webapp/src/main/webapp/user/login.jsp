@@ -13,7 +13,7 @@
         <%-- if login_error parameter is present authentication didn't succeed --%>
         <c:if test="${not empty param.login_error}">
           <div class="errormessage">
-            <ww:text name="login.bad_login_password"/>
+            <ww:text name="${param.login_error}"/>
           </div>
         </c:if>
 

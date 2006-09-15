@@ -16,6 +16,7 @@ package org.apache.maven.user.controller.action;
  * limitations under the License.
  */
 
+import org.apache.maven.user.model.User;
 import org.apache.maven.user.model.UserManager;
 import org.codehaus.plexus.xwork.action.PlexusActionSupport;
 
@@ -35,40 +36,38 @@ public class DeleteUserAction
      */
     private UserManager userManager;
 
-    private int accountId;
-
+    private int id;
+    
     private String username;
 
     public String execute()
         throws Exception
     {
-        userManager.removeUser( accountId );
+        userManager.removeUser( id );
 
         return SUCCESS;
     }
 
     public String doDelete()
     {
+        User user = userManager.getUser( id );
+        username = user.getUsername();
+        
         return "delete";
     }
 
-    public int getAccountId()
+    public int getId()
     {
-        return accountId;
+        return id;
     }
 
-    public void setAccountId( int accountId )
+    public void setId( int id )
     {
-        this.accountId = accountId;
+        this.id = id;
     }
 
     public String getUsername()
     {
         return username;
     }
-    public void setUsername( String username )
-    {
-        this.username = username;
-    }
-
 }

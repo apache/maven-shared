@@ -18,7 +18,7 @@
         </div>
         <div class="functnbar3">
           <ww:form action="delete.action" method="post">
-            <ww:hidden name="accountId"/>
+            <ww:hidden name="id"/>
             <ww:submit value="%{getText('delete')}"/> <!-- todo: change to submit/cancel button -->
           </ww:form>
         </div>

@@ -15,6 +15,7 @@
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"
+                  sortable="false"
                   filterable="false">
           <ec:row>
             <ec:column property="name" title="usergroup.name"/>
@@ -41,6 +42,8 @@
       </div>
       <div class="functnbar3">
         <ww:form action="edit!doAdd.action" method="post">
+          <ww:hidden name="addMode" value="true"/>
+          <ww:hidden name="name" value=""/>
           <ww:hidden name="addMode" value="true"/>
           <ww:hidden name="name" value=""/>
           <ww:submit value="%{getText('add')}"/>

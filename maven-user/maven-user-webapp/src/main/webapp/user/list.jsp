@@ -15,6 +15,7 @@
                   showExports="false"
                   showPagination="false"
                   showStatusBar="false"
+                  sortable="false"
                   filterable="false">
           <ec:row>
             <ec:column property="username" title="user.username"/>

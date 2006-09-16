@@ -20,6 +20,7 @@
           <ww:form action="delete.action" method="post">
             <ww:hidden name="id"/>
             <ww:submit value="%{getText('delete')}"/> <!-- todo: change to submit/cancel button -->
+            <input type="button" value="<ww:text name="cancel"/>" onclick="history.go(-1)">
           </ww:form>
         </div>
       </div>

@@ -311,12 +311,19 @@ public class DefaultUserManager
     public void updateUser( User user )
         throws PasswordRuleViolationException
     {
+        User oldUser = getUser( user.getUsername() );
+
         // If password is supplied, assume changing of password.
         if ( !StringUtils.isEmpty( user.getPassword() ) )
         {
             processPasswordChange( user );
         }
 
+        /* reset bad login attempts */
+        if ( oldUser.isLocked() && !user.isLocked() )
+        {
+            user.setFailedLoginAttempts( 0 );
+        }
         userStore.updateUser( user );
     }
 

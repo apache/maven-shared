@@ -148,6 +148,21 @@ public class AclManager
     }
 
     /**
+     * Get the instance permissions for a user and object ( identified by its class and id )
+     * 
+     * @param clazz {@link Class} of the object
+     * @param id identifier of the object
+     * @param userName name of the user
+     * @return the permissions for that user and object
+     */
+    public InstancePermissions getUserInstancePermissions( Class clazz, Object id, String userName )
+    {
+        InstancePermissions permission = new InstancePermissions();
+        aclToPermission( getAcl( clazz, id, userName ), permission );
+        return permission;
+    }
+
+    /**
      * Updates a list of permissions at the same time. If the permission didn't exist it's created.
      * 
      * @param permissions {@link Collection} &lt;{@link InstancePermissions}> .

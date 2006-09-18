@@ -62,7 +62,7 @@ public class AclManager
     protected String getCurrentUserName()
     {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        
+
         /* seems that anonymous user sets principal as String */
         if ( principal instanceof String )
         {
@@ -171,7 +171,11 @@ public class AclManager
     public InstancePermissions getUserInstancePermissions( Class clazz, Object id )
     {
         InstancePermissions permission = new InstancePermissions();
-        aclToPermission( getAcl( clazz, id, getCurrentUserName() ), permission );
+        BasicAclEntry acl = getAcl( clazz, id, getCurrentUserName() );
+        if ( acl != null )
+        {
+            aclToPermission( acl, permission );
+        }
         return permission;
     }
 

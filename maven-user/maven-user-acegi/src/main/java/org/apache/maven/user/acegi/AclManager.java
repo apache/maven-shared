@@ -61,8 +61,22 @@ public class AclManager
 
     protected String getCurrentUserName()
     {
-        return ( (org.acegisecurity.userdetails.User) SecurityContextHolder.getContext().getAuthentication()
-            .getPrincipal() ).getUsername();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        /* seems that anonymous user sets principal as String */
+        if ( principal instanceof String )
+        {
+            return (String) principal;
+        }
+        else if ( principal instanceof org.acegisecurity.userdetails.User )
+        {
+            return ( (org.acegisecurity.userdetails.User) principal ).getUsername();
+        }
+        else
+        {
+            throw new RuntimeException( "Unable to handle class " + principal.getClass().getName()
+                + " as authentication principal" );
+        }
     }
 
     protected void delete( Class clazz, Object id )
@@ -148,17 +162,16 @@ public class AclManager
     }
 
     /**
-     * Get the instance permissions for a user and object ( identified by its class and id )
+     * Get the instance permissions for current user and an object
      * 
      * @param clazz {@link Class} of the object
      * @param id identifier of the object
-     * @param userName name of the user
      * @return the permissions for that user and object
      */
-    public InstancePermissions getUserInstancePermissions( Class clazz, Object id, String userName )
+    public InstancePermissions getUserInstancePermissions( Class clazz, Object id )
     {
         InstancePermissions permission = new InstancePermissions();
-        aclToPermission( getAcl( clazz, id, userName ), permission );
+        aclToPermission( getAcl( clazz, id, getCurrentUserName() ), permission );
         return permission;
     }
 

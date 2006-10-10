@@ -30,7 +30,7 @@
     <component>
       <role>org.codehaus.plexus.component.configurator.converters.ConfigurationConverter</role>
       <role-hint>AntTarget</role-hint>
-      <implementation>org.apache.maven.plugin.antrun.components.AntTargetConverter</implementation>
+      <implementation>org.apache.maven.shared.ant.components.AntTargetConverter</implementation>
     </component>
   </components>
 

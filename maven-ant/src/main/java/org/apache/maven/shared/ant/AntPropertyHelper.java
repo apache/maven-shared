@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.antrun;
+package org.apache.maven.shared.ant;
 
 /*
  * Copyright 2004-2005 The Apache Software Foundation.

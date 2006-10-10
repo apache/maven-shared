@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.antrun;
+package org.apache.maven.shared.ant;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.PropertyHelper;
@@ -7,7 +7,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugin.antrun.components.AntTargetConverter;
+import org.apache.maven.shared.ant.components.AntTargetConverter;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.Artifact;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;

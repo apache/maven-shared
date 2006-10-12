@@ -1,6 +1,12 @@
 <?xml version="1.0"?><project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.apache.maven.shared</groupId>
+
+  <parent>
+    <groupId>org.apache.maven.shared</groupId>
+    <artifactId>maven-shared-components</artifactId>
+    <version>3</version>
+  </parent>
+
   <artifactId>maven-test-tools</artifactId>
   <name>Maven Testing Tools</name>
   <version>1.0-SNAPSHOT</version>

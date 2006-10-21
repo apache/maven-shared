@@ -210,6 +210,17 @@ public class JavaMojoDescriptorExtractor
         }
 
         // ----------------------------------------------------------------------
+        // What version it was introduced in
+        // ----------------------------------------------------------------------
+
+        DocletTag since = findInClassHierarchy( javaClass, SINCE );
+
+        if ( since != null )
+        {
+            mojoDescriptor.setSince( since.getValue() );
+        }
+
+        // ----------------------------------------------------------------------
         // Phase name
         // ----------------------------------------------------------------------
 

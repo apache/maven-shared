@@ -169,6 +169,14 @@ public class PluginXdocGenerator
             w.endElement(); //li
         }
 
+        value = mojoDescriptor.getSince();
+        if ( StringUtils.isNotEmpty( value ) )
+        {
+            w.startElement( "li" );
+            w.writeMarkup( "Since version: <code>" + value + "</code>" );
+            w.endElement(); //li
+        }
+
         value = mojoDescriptor.getPhase();
         if ( StringUtils.isNotEmpty( value ) )
         {

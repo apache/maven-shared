@@ -284,8 +284,6 @@ public class PluginXdocGenerator
 
             writeDetail( "Type", parameter.getType(), w );
 
-            writeDetail( "Since", parameter.getSince(), w );
-
             if ( parameter.isRequired() )
             {
                 writeDetail( "Required", "Yes", w );

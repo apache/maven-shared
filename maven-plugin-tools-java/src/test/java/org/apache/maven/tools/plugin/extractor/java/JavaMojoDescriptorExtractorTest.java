@@ -19,8 +19,6 @@ package org.apache.maven.tools.plugin.extractor.java;
 import junit.framework.TestCase;
 import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.plugin.descriptor.MojoDescriptor;
-import org.apache.maven.plugin.descriptor.Parameter;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 
 import java.io.File;
@@ -56,40 +54,6 @@ public class JavaMojoDescriptorExtractorTest
         pluginDescriptor.setGoalPrefix( "test" );
         List results = extractor.execute( project, pluginDescriptor );
         assertEquals( "Extracted mojos", 2, results.size() );
-    }
-
-    public void testShouldPropagateImplementationParameter()
-        throws Exception
-    {
-        JavaMojoDescriptorExtractor extractor = new JavaMojoDescriptorExtractor();
-
-        File sourceFile = fileOf( "dir-flag.txt" );
-        System.out.println( "found source file: " + sourceFile );
-
-        File dir = sourceFile.getParentFile();
-
-        Model model = new Model();
-        model.setArtifactId( "maven-unitTesting-plugin" );
-
-        MavenProject project = new MavenProject( model );
-
-        project.setFile( new File( dir, "pom.xml" ) );
-        project.addCompileSourceRoot( new File( dir, "source2" ).getPath() );
-
-        PluginDescriptor pluginDescriptor = new PluginDescriptor();
-        pluginDescriptor.setGoalPrefix( "test" );
-        List results = extractor.execute( project, pluginDescriptor );
-        assertEquals( 1, results.size() );
-
-        MojoDescriptor mojoDescriptor = (MojoDescriptor) results.get( 0 );
-
-        List parameters = mojoDescriptor.getParameters();
-
-        assertEquals( 1, parameters.size() );
-
-        Parameter parameter = (Parameter) parameters.get( 0 );
-
-        assertEquals( "Implementation parameter", "source2.sub.MyBla", parameter.getImplementation() );
     }
 
     private File fileOf( String classpathResource )

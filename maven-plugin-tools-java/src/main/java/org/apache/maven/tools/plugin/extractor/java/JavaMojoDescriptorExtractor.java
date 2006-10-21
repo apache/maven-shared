@@ -64,11 +64,6 @@ public class JavaMojoDescriptorExtractor
     public static final String SINCE = "since";
 
     /**
-     * This defines the default implementation in the case the parameter type is an interface.
-     */
-    public static final String PARAMETER_IMPLEMENTATION = "implementation";
-
-    /**
      * This indicates the base name of the bean properties used to read/write this parameter's value.
      * So:
      *
@@ -426,12 +421,6 @@ public class JavaMojoDescriptorExtractor
                     pd.setDeprecated( deprecationTag.getValue() );
                 }
 
-                DocletTag sinceTag = field.getTagByName( SINCE );
-                if ( sinceTag != null )
-                {
-                    pd.setSince( sinceTag.getValue() );
-                }
-
                 String alias = parameter.getNamedParameter( PARAMETER_ALIAS );
 
                 if ( !StringUtils.isEmpty( alias ) )
@@ -447,8 +436,6 @@ public class JavaMojoDescriptorExtractor
                 }
 
                 pd.setDefaultValue( parameter.getNamedParameter( PARAMETER_DEFAULT_VALUE ) );
-
-                pd.setImplementation( parameter.getNamedParameter( PARAMETER_IMPLEMENTATION ) );
             }
 
             mojoDescriptor.addParameter( pd );

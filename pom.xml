@@ -24,6 +24,7 @@
     <version>4-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.maven.reporting</groupId>
   <artifactId>maven-reporting-impl</artifactId>
   <name>Maven Reporting Implementation</name>
   <version>2.1-SNAPSHOT</version>

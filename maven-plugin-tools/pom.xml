@@ -33,7 +33,6 @@
     <module>maven-plugin-tools-api</module>
     <module>maven-plugin-tools-java</module>
     <module>maven-plugin-tools-beanshell</module>
-    <module>maven-plugin-tools-pluggy</module>
     <module>maven-plugin-tools-model</module>
     <module>maven-plugin-tools-ant</module>
   </modules>

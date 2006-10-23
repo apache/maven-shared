@@ -13,12 +13,26 @@ import java.util.zip.*;
 /* @todo this can be replaced with plexus-archiver */
 public class ResourceExtractor {
     
-    public static void extractResourcePath(String resourcePath, File dest) throws IOException {
-        extractResourcePath(ResourceExtractor.class, resourcePath, dest);
+    public static File simpleExtractResources(Class cl, String resourcePath) throws IOException {
+        String tempDirPath = System.getProperty( "maven.test.tmpdir", System.getProperty( "java.io.tmpdir" ) );
+        File tempDir = new File(tempDirPath);
+        File testDir = new File( tempDir, resourcePath );
+        FileUtils.deleteDirectory( testDir );
+        testDir = ResourceExtractor.extractResourcePath(cl, resourcePath, tempDir, false);
+        return testDir;
     }
-        
-    public static void extractResourcePath(Class cl, String resourcePath, File dest)
+    
+    public static File extractResourcePath(String resourcePath, File dest) throws IOException {
+        return extractResourcePath(ResourceExtractor.class, resourcePath, dest);
+    }
+    
+    public static File extractResourcePath(Class cl, String resourcePath, File dest) throws IOException {
+        return extractResourcePath(cl, resourcePath, dest, false);
+    }
+    
+    public static File extractResourcePath(Class cl, String resourcePath, File tempDir, boolean alwaysExtract)
             throws IOException {
+        File dest = new File(tempDir, resourcePath);
         URL url = cl.getResource(resourcePath);
         if (url == null) throw new IllegalArgumentException("Resource not found: " + resourcePath);
         if ("jar".equalsIgnoreCase(url.getProtocol())) {
@@ -27,6 +41,7 @@ public class ResourceExtractor {
         } else {
             try {
                 File resourceFile = new File(new URI(url.toExternalForm()));
+                if (!alwaysExtract) return resourceFile;
                 if (resourceFile.isDirectory()) {
                     FileUtils.copyDirectoryStructure(resourceFile, dest);
                 } else {
@@ -36,12 +51,14 @@ public class ResourceExtractor {
                 throw new RuntimeException("Couldn't convert URL to File:" + url, e);
             }
         }
+        return dest;
     }
     
     private static void extractResourcePathFromJar(Class cl, File jarFile, String resourcePath, File dest) throws IOException {
         ZipFile z = new ZipFile(jarFile, ZipFile.OPEN_READ);
         String zipStyleResourcePath = resourcePath.substring(1) + "/"; 
         ZipEntry ze = z.getEntry(zipStyleResourcePath);
+        System.out.println( "Extracting "+resourcePath+" to " + dest.getAbsolutePath() );
         if (ze != null) {
             // DGF If it's a directory, then we need to look at all the entries
             for (Enumeration entries = z.entries(); entries.hasMoreElements();) {

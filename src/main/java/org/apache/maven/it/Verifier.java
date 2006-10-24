@@ -718,13 +718,26 @@ public class Verifier
             cli.setWorkingDirectory( basedir );
 
             String executable;
+
+            // Use a strategy for finding the maven executable, John has a simple method like this
+            // but a little strategy + chain of command would be nicer.
+
             if ( mavenHome != null )
             {
                 executable = mavenHome + "/bin/mvn";
             }
             else
             {
-                executable = "mvn";
+                File f = new File( System.getProperty( "user.home" ), "m2/bin/mvn" );
+
+                if ( f.exists() )
+                {
+                    executable = f.getAbsolutePath();
+                }
+                else
+                {
+                    executable = "mvn";
+                }
             }
 
             cli.setExecutable( executable );

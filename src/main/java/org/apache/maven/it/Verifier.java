@@ -753,10 +753,22 @@ public class Verifier
     public void executeGoal( String goal )
         throws VerificationException
     {
+        executeGoal( goal, Collections.EMPTY_MAP );
+    }
+
+    public void executeGoal( String goal, Map envVars )
+        throws VerificationException
+    {
         executeGoals( Arrays.asList( new String[]{goal} ) );
     }
 
-    public void executeGoals( List goals )
+    public void executeGoals( List goals  )
+        throws VerificationException
+    {
+        executeGoals( goals, Collections.EMPTY_MAP );
+    }
+
+    public void executeGoals( List goals, Map envVars )
         throws VerificationException
     {
         String mavenHome = System.getProperty( "maven.home" );
@@ -777,6 +789,13 @@ public class Verifier
         try
         {
             Commandline cli = new Commandline();
+
+            for ( Iterator i = envVars.keySet().iterator(); i.hasNext(); )
+            {
+                String key = (String) i.next();
+
+                cli.addEnvironment( key, (String) envVars.get( key ) );
+            }
 
             cli.setWorkingDirectory( basedir );
 

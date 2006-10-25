@@ -9,8 +9,9 @@ import javax.xml.parsers.*;
 
 import junit.framework.*;
 
-import org.apache.maven.it.util.*;
 import org.apache.maven.it.util.cli.*;
+import org.apache.maven.it.util.FileUtils;
+import org.apache.maven.it.util.StringUtils;
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 
@@ -465,8 +466,7 @@ public class Verifier
     {
         try
         {
-
-            Commandline cli = new Commandline( line );
+            Commandline cli = new Commandline( line );                                   
 
             cli.setWorkingDirectory( basedir );
 
@@ -544,7 +544,7 @@ public class Verifier
         for ( Iterator i = files.iterator(); i.hasNext(); )
         {
             String fileName = (String) i.next();
-            FileUtils.deleteFile( new File( fileName ) );
+            FileUtils.forceDelete( new File( fileName ) );
         }
     }
 

@@ -29,7 +29,7 @@ package org.apache.maven.it.util.cli;
  * @version $Id$
  */
 public class CommandLineException
-	extends Exception
+    extends Exception
 {
     public CommandLineException( String message )
     {

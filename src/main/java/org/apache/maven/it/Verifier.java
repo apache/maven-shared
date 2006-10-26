@@ -33,9 +33,9 @@ public class Verifier
 
     private final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
 
-    private final PrintStream originalOut;
+    private PrintStream originalOut;
 
-    private final PrintStream originalErr;
+    private PrintStream originalErr;
 
     private List cliOptions = new ArrayList();
 
@@ -46,19 +46,34 @@ public class Verifier
     // TODO: needs to be configurable
     private static String localRepoLayout = "default";
 
+    private boolean debug;
+
     public Verifier( String basedir,
                      String settingsFile )
         throws VerificationException
     {
+        this( basedir, settingsFile, false );
+    }
+
+    public Verifier( String basedir,
+                     String settingsFile,
+                     boolean debug )
+        throws VerificationException
+    {
         this.basedir = basedir;
 
-        originalOut = System.out;
+        this.debug = debug;
 
-        System.setOut( new PrintStream( outStream ) );
+        if ( !debug )
+        {
+            originalOut = System.out;
 
-        originalErr = System.err;
+            System.setOut( new PrintStream( outStream ) );
 
-        System.setErr( new PrintStream( errStream ) );
+            originalErr = System.err;
+
+            System.setErr( new PrintStream( errStream ) );
+        }
 
         findLocalRepo( settingsFile );
     }
@@ -69,11 +84,20 @@ public class Verifier
         this( basedir, null );
     }
 
+    public Verifier( String basedir, boolean debug )
+        throws VerificationException
+    {
+        this( basedir, null, debug );
+    }
+
     public void resetStreams()
     {
-        System.setOut( originalOut );
+        if ( !debug )
+        {
+            System.setOut( originalOut );
 
-        System.setErr( originalErr );
+            System.setErr( originalErr );
+        }
     }
 
     public void displayStreamBuffers()
@@ -466,7 +490,7 @@ public class Verifier
     {
         try
         {
-            Commandline cli = new Commandline( line );                                   
+            Commandline cli = new Commandline( line );
 
             cli.setWorkingDirectory( basedir );
 
@@ -756,19 +780,21 @@ public class Verifier
         executeGoal( goal, Collections.EMPTY_MAP );
     }
 
-    public void executeGoal( String goal, Map envVars )
+    public void executeGoal( String goal,
+                             Map envVars )
         throws VerificationException
     {
-        executeGoals( Arrays.asList( new String[]{goal} ) );
+        executeGoals( Arrays.asList( new String[]{goal} ), envVars );
     }
 
-    public void executeGoals( List goals  )
+    public void executeGoals( List goals )
         throws VerificationException
     {
         executeGoals( goals, Collections.EMPTY_MAP );
     }
 
-    public void executeGoals( List goals, Map envVars )
+    public void executeGoals( List goals,
+                              Map envVars )
         throws VerificationException
     {
         String mavenHome = System.getProperty( "maven.home" );
@@ -795,6 +821,17 @@ public class Verifier
                 String key = (String) i.next();
 
                 cli.addEnvironment( key, (String) envVars.get( key ) );
+
+                try
+                {
+                    FileUtils.fileWrite( "/tmp/foo.txt", "setting envar[ " + key + " = " + envVars.get( key ) );
+                }
+                catch ( IOException e )
+                {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+
+                System.out.println(  );
             }
 
             cli.setWorkingDirectory( basedir );

@@ -49,6 +49,6 @@ public class PCCChanges
                                        Properties projectProperties )
         throws ProjectConverterException
     {
-        addConfigurationChild( configuration, projectProperties, "maven.changes.issue.template", "link_template" );
+        addConfigurationChild( configuration, projectProperties, "maven.changes.issue.template", "issueLinkTemplate" );
     }
 }

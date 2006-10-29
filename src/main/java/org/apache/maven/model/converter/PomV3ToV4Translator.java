@@ -559,9 +559,9 @@ public class PomV3ToV4Translator
 
                             config.addChild( child );
                         }
-                    }
 
-                    plugin.setConfiguration( config );
+                        plugin.setConfiguration( config );
+                    }
 
                     this.discoveredPlugins.add( plugin );
                 }

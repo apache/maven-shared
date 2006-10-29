@@ -44,7 +44,7 @@ public class PCCChangesTest
 
             pluginConfigurationConverter.buildConfiguration( configuration, v3Model, projectProperties );
 
-            String value = configuration.getChild( "link_template" ).getValue();
+            String value = configuration.getChild( "issueLinkTemplate" ).getValue();
             Assert.assertEquals( "check link_template value", "%URL%/browse/%ISSUE%", value );
         }
         catch ( ProjectConverterException e )

@@ -17,10 +17,10 @@ package org.apache.maven.shared.jar.taxon.exposers;
  */
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.archiva.digest.Digester;
-import org.apache.maven.archiva.digest.StreamingDigester;
 import org.apache.maven.shared.jar.taxon.AbstractJarTaxonExposer;
 import org.apache.maven.shared.jar.taxon.RepositoryHashSearch;
+import org.codehaus.plexus.digest.Digester;
+import org.codehaus.plexus.digest.StreamingDigester;
 
 import java.util.ArrayList;
 import java.util.Iterator;

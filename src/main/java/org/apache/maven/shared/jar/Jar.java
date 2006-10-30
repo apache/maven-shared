@@ -16,11 +16,11 @@ package org.apache.maven.shared.jar;
  * limitations under the License.
  */
 
-import org.apache.maven.archiva.digest.Digester;
-import org.apache.maven.archiva.digest.DigesterException;
-import org.apache.maven.archiva.digest.StreamingDigester;
 import org.apache.maven.shared.jar.classes.JarClasses;
 import org.apache.maven.shared.jar.taxon.JarTaxon;
+import org.codehaus.plexus.digest.Digester;
+import org.codehaus.plexus.digest.DigesterException;
+import org.codehaus.plexus.digest.StreamingDigester;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.StringUtils;
 

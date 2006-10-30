@@ -35,7 +35,7 @@ public class RepositorySearchExposer
     extends AbstractJarTaxonExposer
 {
     /**
-     * @plexus.requirement role="org.apache.maven.archiva.digest.Digester" role-hint="sha1"
+     * @plexus.requirement role-hint="sha1"
      */
     private Digester digester;
 

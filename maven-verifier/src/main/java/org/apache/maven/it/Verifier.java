@@ -1,19 +1,45 @@
 package org.apache.maven.it;
 
-import java.io.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
-
-import javax.xml.parsers.*;
-
-import junit.framework.*;
-
-import org.apache.maven.it.util.cli.*;
+import junit.framework.Assert;
 import org.apache.maven.it.util.FileUtils;
 import org.apache.maven.it.util.StringUtils;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+import org.apache.maven.it.util.cli.CommandLineException;
+import org.apache.maven.it.util.cli.CommandLineUtils;
+import org.apache.maven.it.util.cli.Commandline;
+import org.apache.maven.it.util.cli.StreamConsumer;
+import org.apache.maven.it.util.cli.WriterStreamConsumer;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.StringTokenizer;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl </a>
@@ -48,16 +74,13 @@ public class Verifier
 
     private boolean debug;
 
-    public Verifier( String basedir,
-                     String settingsFile )
+    public Verifier( String basedir, String settingsFile )
         throws VerificationException
     {
         this( basedir, settingsFile, false );
     }
 
-    public Verifier( String basedir,
-                     String settingsFile,
-                     boolean debug )
+    public Verifier( String basedir, String settingsFile, boolean debug )
         throws VerificationException
     {
         this.basedir = basedir;
@@ -188,16 +211,13 @@ public class Verifier
         return properties;
     }
 
-    public List loadFile( String basedir,
-                          String filename,
-                          boolean hasCommand )
+    public List loadFile( String basedir, String filename, boolean hasCommand )
         throws VerificationException
     {
         return loadFile( new File( basedir, filename ), hasCommand );
     }
 
-    public List loadFile( File file,
-                          boolean hasCommand )
+    public List loadFile( File file, boolean hasCommand )
         throws VerificationException
     {
         List lines = new ArrayList();
@@ -236,8 +256,7 @@ public class Verifier
         return lines;
     }
 
-    private List replaceArtifacts( String line,
-                                   boolean hasCommand )
+    private List replaceArtifacts( String line, boolean hasCommand )
     {
         String MARKER = "${artifact:";
         int index = line.indexOf( MARKER );
@@ -286,17 +305,13 @@ public class Verifier
         }
     }
 
-    private static void addMetadataToList( File dir,
-                                           boolean hasCommand,
-                                           List l,
-                                           String command )
+    private static void addMetadataToList( File dir, boolean hasCommand, List l, String command )
     {
         if ( dir.exists() && dir.isDirectory() )
         {
             String[] files = dir.list( new FilenameFilter()
             {
-                public boolean accept( File dir,
-                                       String name )
+                public boolean accept( File dir, String name )
                 {
                     return name.startsWith( "maven-metadata" ) && name.endsWith( ".xml" );
 
@@ -338,10 +353,7 @@ public class Verifier
         return getArtifactPath( org, name, version, ext );
     }
 
-    private String getArtifactPath( String org,
-                                    String name,
-                                    String version,
-                                    String ext )
+    public String getArtifactPath( String org, String name, String version, String ext )
     {
         if ( "maven-plugin".equals( ext ) )
         {
@@ -383,10 +395,7 @@ public class Verifier
         return localRepo + "/" + repositoryPath;
     }
 
-    public List getArtifactFileNameList( String org,
-                                         String name,
-                                         String version,
-                                         String ext )
+    public List getArtifactFileNameList( String org, String name, String version, String ext )
     {
         List files = new ArrayList();
         String artifactPath = getArtifactPath( org, name, version, ext );
@@ -484,8 +493,7 @@ public class Verifier
         }
     }
 
-    public static void launchSubversion( String line,
-                                         String basedir )
+    public static void launchSubversion( String line, String basedir )
         throws VerificationException
     {
         try
@@ -558,10 +566,7 @@ public class Verifier
         return repo;
     }
 
-    public void deleteArtifact( String org,
-                                String name,
-                                String version,
-                                String ext )
+    public void deleteArtifact( String org, String name, String version, String ext )
         throws IOException
     {
         List files = getArtifactFileNameList( org, name, version, ext );
@@ -596,11 +601,7 @@ public class Verifier
         }
     }
 
-    private void verifyArtifactPresence( boolean wanted,
-                                         String org,
-                                         String name,
-                                         String version,
-                                         String ext )
+    private void verifyArtifactPresence( boolean wanted, String org, String name, String version, String ext )
     {
         List files = getArtifactFileNameList( org, name, version, ext );
         for ( Iterator i = files.iterator(); i.hasNext(); )
@@ -617,18 +618,12 @@ public class Verifier
         }
     }
 
-    public void assertArtifactPresent( String org,
-                                       String name,
-                                       String version,
-                                       String ext )
+    public void assertArtifactPresent( String org, String name, String version, String ext )
     {
         verifyArtifactPresence( true, org, name, version, ext );
     }
 
-    public void assertArtifactNotPresent( String org,
-                                          String name,
-                                          String version,
-                                          String ext )
+    public void assertArtifactNotPresent( String org, String name, String version, String ext )
     {
         verifyArtifactPresence( false, org, name, version, ext );
     }
@@ -646,8 +641,7 @@ public class Verifier
         verifyExpectedResult( line, wanted );
     }
 
-    private void verifyExpectedResult( String line,
-                                       boolean wanted )
+    private void verifyExpectedResult( String line, boolean wanted )
         throws VerificationException
     {
         if ( line.indexOf( "!/" ) > 0 )
@@ -780,8 +774,7 @@ public class Verifier
         executeGoal( goal, Collections.EMPTY_MAP );
     }
 
-    public void executeGoal( String goal,
-                             Map envVars )
+    public void executeGoal( String goal, Map envVars )
         throws VerificationException
     {
         executeGoals( Arrays.asList( new String[]{goal} ), envVars );
@@ -793,8 +786,7 @@ public class Verifier
         executeGoals( goals, Collections.EMPTY_MAP );
     }
 
-    public void executeGoals( List goals,
-                              Map envVars )
+    public void executeGoals( List goals, Map envVars )
         throws VerificationException
     {
         String mavenHome = System.getProperty( "maven.home" );
@@ -812,6 +804,7 @@ public class Verifier
 
         int ret;
 
+        File logFile = new File( basedir, LOG_FILENAME );
         try
         {
             Commandline cli = new Commandline();
@@ -831,7 +824,7 @@ public class Verifier
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
 
-                System.out.println(  );
+                System.out.println();
             }
 
             cli.setWorkingDirectory( basedir );
@@ -897,7 +890,7 @@ public class Verifier
                 cli.createArgument().setValue( (String) i.next() );
             }
 
-            Writer logWriter = new FileWriter( new File( basedir, LOG_FILENAME ) );
+            Writer logWriter = new FileWriter( logFile );
 
             StreamConsumer out = new WriterStreamConsumer( logWriter );
 
@@ -922,7 +915,21 @@ public class Verifier
         {
             System.err.println( "Exit code: " + ret );
 
-            throw new VerificationException( "Exit code was non-zero: " + ret );
+            throw new VerificationException(
+                "Exit code was non-zero: " + ret + "; log = \n" + getLogContents( logFile ) );
+        }
+    }
+
+    private static String getLogContents( File logFile )
+    {
+        try
+        {
+            return FileUtils.fileRead( logFile );
+        }
+        catch ( IOException e )
+        {
+            // ignore
+            return "(Error reading log contents: " + e.getMessage() + ")";
         }
     }
 
@@ -1125,7 +1132,6 @@ public class Verifier
 
             System.out.println( "Using default local repository: " + verifier.localRepo );
 
-
             try
             {
                 runIntegrationTest( verifier );
@@ -1219,6 +1225,13 @@ public class Verifier
         System.out.println( "OK" );
     }
 
+    public void assertArtifactContents( String org, String artifact, String version, String type, String contents )
+        throws IOException
+    {
+        String fileName = getArtifactPath( org, artifact, version, type );
+        Assert.assertEquals( contents, FileUtils.fileRead( fileName ) );
+    }
+
     static class UserModelReader
         extends DefaultHandler
     {
@@ -1272,8 +1285,7 @@ public class Verifier
             printParseError( "Fatal Error", spe );
         }
 
-        private final void printParseError( String type,
-                                            SAXParseException spe )
+        private final void printParseError( String type, SAXParseException spe )
         {
             System.err.println(
                 type + " [line " + spe.getLineNumber() + ", row " + spe.getColumnNumber() + "]: " + spe.getMessage() );
@@ -1284,17 +1296,13 @@ public class Verifier
             return localRepository;
         }
 
-        public void characters( char[] ch,
-                                int start,
-                                int length )
+        public void characters( char[] ch, int start, int length )
             throws SAXException
         {
             currentBody.append( ch, start, length );
         }
 
-        public void endElement( String uri,
-                                String localName,
-                                String rawName )
+        public void endElement( String uri, String localName, String rawName )
             throws SAXException
         {
             if ( "localRepository".equals( rawName ) )

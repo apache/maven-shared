@@ -36,6 +36,7 @@
     <module>file-management</module>
     <module>maven-plugin-testing-harness</module>
     <module>maven-verifier</module>
+    <module>maven-release-manager</module>
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>

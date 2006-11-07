@@ -137,7 +137,6 @@ public abstract class AbstractSeleniumTestCase
 
     public void assertPage( String title )
     {
-        System.out.println( title + "=>" + getTitle() );
         assertEquals( title, getTitle() );
         assertHeader();
         assertFooter();

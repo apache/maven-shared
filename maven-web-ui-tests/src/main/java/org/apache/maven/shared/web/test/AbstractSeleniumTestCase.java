@@ -164,7 +164,14 @@ public abstract class AbstractSeleniumTestCase
 
     public void clickButtonWithValue( String text, boolean wait )
     {
-        clickLinkWithXPath( "//input[@value='" + text + "']", wait );
+        if ( sel.isElementPresent( "//button[@value='" + text + "']" ) )
+        {
+            clickLinkWithXPath( "//button[@value='" + text + "']", wait );
+        }
+        else
+        {
+            clickLinkWithXPath( "//input[@value='" + text + "']", wait );
+        }
     }
 
     public void clickLinkWithText( String text )

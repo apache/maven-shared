@@ -22,6 +22,7 @@ import junit.framework.TestCase;
 import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.server.SeleniumServer;
 
+import java.io.File;
 import java.util.Calendar;
 
 /**
@@ -296,5 +297,17 @@ public abstract class AbstractSeleniumTestCase
         assertTrue( "User wasn't authenticated.", isAuthenticated() );
         clickLinkWithText( "Logout" );
         assertFalse( "The user is always authenticated after a logout.", isAuthenticated() );
+    }
+
+    public String getBasedir()
+    {
+       String basedir = System.getProperty( "basedir" );
+
+        if ( basedir == null )
+        {
+            basedir = new File( "" ).getAbsolutePath();
+        }
+        
+        return basedir;
     }
 }

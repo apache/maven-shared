@@ -24,6 +24,8 @@ import org.openqa.selenium.server.SeleniumServer;
 
 import java.io.File;
 import java.util.Calendar;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
@@ -32,9 +34,9 @@ import java.util.Calendar;
 public abstract class AbstractSeleniumTestCase
     extends TestCase
 {
-    final public static String CHECKBOX_CHECK =  "on";
+    final public static String CHECKBOX_CHECK = "on";
 
-    final public static String CHECKBOX_UNCHECK =  "off";
+    final public static String CHECKBOX_UNCHECK = "off";
 
     private Selenium sel;
 
@@ -75,7 +77,7 @@ public abstract class AbstractSeleniumTestCase
     {
         sel.open( url );
     }
-    
+
     public String getTitle()
     {
         return sel.getTitle();
@@ -147,10 +149,16 @@ public abstract class AbstractSeleniumTestCase
 
     public void assertFooter()
     {
-        assertTrue( sel.getText( "xpath=//div[@id='footer']/table/tbody/tr/td" ).startsWith( getApplicationName() + " " ) );
+        assertTrue(
+            sel.getText( "xpath=//div[@id='footer']/table/tbody/tr/td" ).startsWith( getApplicationName() + " " ) );
         int currentYear = Calendar.getInstance().get( Calendar.YEAR );
         assertTrue( sel.getText( "xpath=//div[@id='footer']/table/tbody/tr/td" ).endsWith(
             " " + getInceptionYear() + "-" + currentYear + " Apache Software Foundation" ) );
+    }
+
+    public String getFieldValue( String fieldName )
+    {
+        return sel.getValue( fieldName );
     }
 
     public void submit()
@@ -209,17 +217,29 @@ public abstract class AbstractSeleniumTestCase
         }
     }
 
+    public void setFieldValues( Map fieldMap )
+    {
+        Map.Entry entry;
+
+        for ( Iterator entries = fieldMap.entrySet().iterator(); entries.hasNext(); )
+        {
+            entry = (Map.Entry) entries.next();
+
+            sel.type( (String) entry.getKey(), (String) entry.getValue() );
+        }
+    }
+
     public void setFieldValue( String fieldName, String value )
     {
         sel.type( fieldName, value );
     }
 
-    public void check( String locator )
+    public void checkField( String locator )
     {
         sel.check( locator );
     }
 
-    public void uncheck( String locator )
+    public void uncheckField( String locator )
     {
         sel.uncheck( locator );
     }
@@ -238,7 +258,7 @@ public abstract class AbstractSeleniumTestCase
 
         assertLoginPage();
 
-        submitLoginPage( username, password );    
+        submitLoginPage( username, password );
     }
 
     public void assertLoginPage()
@@ -268,7 +288,7 @@ public abstract class AbstractSeleniumTestCase
         setFieldValue( "password", password );
         if ( rememberMe )
         {
-            check( "rememberMe" );
+            checkField( "rememberMe" );
         }
         clickButtonWithValue( "Login" );
         waitPage();
@@ -301,13 +321,13 @@ public abstract class AbstractSeleniumTestCase
 
     public String getBasedir()
     {
-       String basedir = System.getProperty( "basedir" );
+        String basedir = System.getProperty( "basedir" );
 
         if ( basedir == null )
         {
             basedir = new File( "" ).getAbsolutePath();
         }
-        
+
         return basedir;
     }
 }

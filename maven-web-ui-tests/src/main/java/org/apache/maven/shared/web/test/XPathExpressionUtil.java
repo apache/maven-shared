@@ -17,7 +17,7 @@ package org.apache.maven.shared.web.test;
  */
 
 /**
- * Utility class for creating xpath expressions 
+ * Utility class for creating xpath expressions
  */
 public class XPathExpressionUtil
 {
@@ -45,9 +45,9 @@ public class XPathExpressionUtil
 
     /**
      * expression for acquiring an element in one of the table columns
-     * 
-     * @param element the node element
-     * @param elementIndex  column index of the element, used for skipping
+     *
+     * @param element      the node element
+     * @param elementIndex column index of the element, used for skipping
      * @param columnValues the values to be matched in each column, element column is included
      * @return
      */
@@ -58,14 +58,15 @@ public class XPathExpressionUtil
 
     /**
      * expression for acquiring an element in one of the table columns
-     * 
-     * @param element the node element
-     * @param elementIndex  column index of the element, used for skipping
-     * @param elementValue the matched element value     
+     *
+     * @param element      the node element
+     * @param elementIndex column index of the element, used for skipping
+     * @param elementValue the matched element value
      * @param columnValues the values to be matched in each column, element column is included
      * @return
      */
-    public static String columnElementWithSiblingColumnValues( String element, int elementIndex, String elementValue, String[] columnValues )
+    public static String columnElementWithSiblingColumnValues( String element, int elementIndex, String elementValue,
+                                                               String[] columnValues )
     {
         String xpathExpression = null;
 
@@ -74,10 +75,10 @@ public class XPathExpressionUtil
             xpathExpression = ELEMENT_ANY_LEVEL + element;
             xpathExpression += START_NODE_TEST;
 
-            if ( elementValue != null)
+            if ( elementValue != null )
             {
                 xpathExpression += contains( elementValue );
-                xpathExpression += (columnValues.length > 0 ) ? AND : "";
+                xpathExpression += ( columnValues.length > 0 ) ? AND : "";
             }
 
             // we are two levels below the table row element ( tr/td/<element> )
@@ -92,13 +93,13 @@ public class XPathExpressionUtil
     /**
      * expression for acquiring the table row that matches all column values with the same order
      * as the list
-     * 
+     *
      * @param columnValues the matched list of columnValues
      * @return
      */
     public static String matchTableRowOrderedValues( String[] columnValues )
     {
-        String xpathExpression = null; 
+        String xpathExpression = null;
 
         if ( ( columnValues != null ) && ( columnValues.length > 0 ) )
         {
@@ -124,13 +125,13 @@ public class XPathExpressionUtil
     {
         String xpathExpression = "";
 
-        for (int nIndex = 0; nIndex < columnValues.length; nIndex++ )
+        for ( int nIndex = 0; nIndex < columnValues.length; nIndex++ )
         {
-            if ( ( skipIndex != nIndex ) || (skipIndex == -1 ) )
+            if ( ( skipIndex != nIndex ) || ( skipIndex == -1 ) )
             {
                 // prepend "and" if index > 0
                 xpathExpression += ( ( nIndex > 0 ) ? AND : "" );
-                xpathExpression += contains( parent, columnPosition( nIndex + 1 ), columnValues[ nIndex ] );
+                xpathExpression += contains( parent, columnPosition( nIndex + 1 ), columnValues[nIndex] );
             }
         }
 

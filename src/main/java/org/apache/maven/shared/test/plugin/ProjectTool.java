@@ -28,9 +28,12 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ * Testing tool used to read MavenProject instances from pom.xml files, and to create plugin jar
+ * files (package phase of the normal build process) for distribution to a test local repository
+ * directory.
+ * 
  * @plexus.component role="org.apache.maven.shared.test.plugin.ProjectTool" role-hint="default"
  * @author jdcasey
- *
  */
 public class ProjectTool
 {
@@ -61,12 +64,19 @@ public class ProjectTool
      */
     private ArtifactFactory artifactFactory;
 
+    /**
+     * Construct a MavenProject instance from the specified POM file.
+     */
     public MavenProject readProject( File pomFile )
         throws TestToolsException
     {
         return readProject( pomFile, repositoryTool.findLocalRepositoryDirectory() );
     }
 
+    /**
+     * Construct a MavenProject instance from the specified POM file, using the specified local
+     * repository directory to resolve ancestor POMs as needed.
+     */
     public MavenProject readProject( File pomFile, File localRepositoryBasedir )
         throws TestToolsException
     {
@@ -83,12 +93,50 @@ public class ProjectTool
         }
     }
 
+    /**
+     * Run the plugin's Maven build up to the package phase, in order to produce a jar file for 
+     * distribution to a test-time local repository. The testVersion parameter specifies the version
+     * to be used in the &lt;version/&gt; element of the plugin configuration, and also in fully
+     * qualified, unambiguous goal invocations (as in 
+     * org.apache.maven.plugins:maven-eclipse-plugin:test:eclipse).
+     * 
+     * @param pomFile The plugin's POM
+     * @param testVersion The version to use for testing this plugin. To promote test resiliency, 
+     *   this version should remain unchanged, regardless of what plugin version is under 
+     *   development.
+     * @param skipUnitTests In cases where test builds occur during the unit-testing phase (usually
+     *   a bad testing smell), the plugin jar must be produced <b>without</b> running unit tests.
+     *   Otherwise, the testing process will result in a recursive loop of building a plugin jar and
+     *   trying to unit test it during the build. In these cases, set this flag to <code>true</code>.
+     * @return The resulting MavenProject, after the test version and skip flag (for unit tests) 
+     *   have been appropriately configured.
+     */
     public MavenProject packageProjectArtifact( File pomFile, String testVersion, boolean skipUnitTests )
         throws TestToolsException
     {
         return packageProjectArtifact( pomFile, testVersion, skipUnitTests, null );
     }
 
+    /**
+     * Run the plugin's Maven build up to the package phase, in order to produce a jar file for 
+     * distribution to a test-time local repository. The testVersion parameter specifies the version
+     * to be used in the &lt;version/&gt; element of the plugin configuration, and also in fully
+     * qualified, unambiguous goal invocations (as in 
+     * org.apache.maven.plugins:maven-eclipse-plugin:test:eclipse).
+     * 
+     * @param pomFile The plugin's POM
+     * @param testVersion The version to use for testing this plugin. To promote test resiliency, 
+     *   this version should remain unchanged, regardless of what plugin version is under 
+     *   development.
+     * @param skipUnitTests In cases where test builds occur during the unit-testing phase (usually
+     *   a bad testing smell), the plugin jar must be produced <b>without</b> running unit tests.
+     *   Otherwise, the testing process will result in a recursive loop of building a plugin jar and
+     *   trying to unit test it during the build. In these cases, set this flag to <code>true</code>.
+     * @param logFile The file to which build output should be logged, in order to allow later 
+     *   inspection in case this build fails.
+     * @return The resulting MavenProject, after the test version and skip flag (for unit tests) 
+     *   have been appropriately configured.
+     */
     public MavenProject packageProjectArtifact( File pomFile, String testVersion, boolean skipUnitTests, File logFile )
         throws TestToolsException
     {
@@ -127,6 +175,17 @@ public class ProjectTool
         }
     }
 
+    /**
+     * Inject a special version for testing, to allow tests to unambiguously reference the plugin
+     * currently under test. If test builds will be executed from the unit-testing phase, also inject
+     * &lt;skip&gt;true&lt;/skip&gt; into the configuration of the <code>maven-surefire-plugin</code>
+     * to allow production of a test-only version of the plugin jar without running unit tests.
+     * 
+     * @param pomFile The plugin POM
+     * @param testVersion The version that allows test builds to reference the plugin under test
+     * @param skipUnitTests If true, configure the surefire plugin to skip unit tests
+     * @return Information about mangled POM, including the temporary file to which it was written.
+     */
     protected PomInfo manglePomForTesting( File pomFile, String testVersion, boolean skipUnitTests )
         throws TestToolsException
     {
@@ -256,22 +315,22 @@ public class ProjectTool
             this.finalName = finalName;
         }
 
-        public File getPomFile()
+        File getPomFile()
         {
             return pomFile;
         }
 
-        public String getBuildOutputDirectory()
+        String getBuildOutputDirectory()
         {
             return buildOutputDirectory;
         }
 
-        public String getFinalName()
+        String getFinalName()
         {
             return finalName;
         }
 
-        public File getBuildLogFile()
+        File getBuildLogFile()
         {
             return new File( buildOutputDirectory + "/test-build-logs/" + groupId + "_" + artifactId + "_" + version
                 + ".build.log" );

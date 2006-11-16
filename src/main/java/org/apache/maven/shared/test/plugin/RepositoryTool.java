@@ -14,10 +14,6 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Settings;
-import org.apache.maven.shared.repository.RepositoryAssembler;
-import org.apache.maven.shared.repository.RepositoryAssemblyException;
-import org.apache.maven.shared.repository.RepositoryBuilderConfigSource;
-import org.apache.maven.shared.repository.model.RepositoryInfo;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -33,9 +29,18 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 /**
+ * Tools to access and manage Maven repositories for test builds, including construction of a local 
+ * repository directory structure.
+ * 
+ * <p>
+ * <b>WARNING:</b> Currently, the <code>createLocalRepositoryFromPlugin</code> method will not 
+ * resolve parent POMs that exist <b>only</b> in your normal local repository, and are not reachable 
+ * using the relativePath element. This may result in failed test builds, as one or more of the 
+ * plugin's ancestor POMs cannot be resolved.
+ * </p>
+ * 
  * @plexus.component role="org.apache.maven.shared.test.plugin.RepositoryTool" role-hint="default"
  * @author jdcasey
- *
  */
 public class RepositoryTool
     implements Contextualizable
@@ -46,11 +51,6 @@ public class RepositoryTool
      * @plexus.requirement
      */
     private ArtifactRepositoryFactory repositoryFactory;
-
-    /**
-     * @plexus.requirement
-     */
-    private RepositoryAssembler repositoryAssembler;
 
     /**
      * @plexus.requirement
@@ -70,6 +70,9 @@ public class RepositoryTool
     // contextualized.
     private PlexusContainer container;
 
+    /**
+     * Lookup and return the location of the normal Maven local repository.
+     */
     public File findLocalRepositoryDirectory() throws TestToolsException
     {
         Settings settings;
@@ -89,6 +92,9 @@ public class RepositoryTool
         return new File( settings.getLocalRepository() );
     }
 
+    /**
+     * Construct an ArtifactRepository instance that refers to the normal Maven local repository.
+     */
     public ArtifactRepository createLocalArtifactRepositoryInstance()
         throws TestToolsException
     {
@@ -97,6 +103,10 @@ public class RepositoryTool
         return createLocalArtifactRepositoryInstance( localRepoDir );
     }
 
+    /**
+     * Construct an ArtifactRepository instance that refers to the test-time Maven local repository.
+     * @param localRepositoryDirectory The location of the local repository to be used for test builds.
+     */
     public ArtifactRepository createLocalArtifactRepositoryInstance( File localRepositoryDirectory )
         throws TestToolsException
     {
@@ -122,13 +132,21 @@ public class RepositoryTool
 
     }
 
-    public void buildRepository( File targetDirectory, RepositoryInfo repositoryInfo,
-                                 RepositoryBuilderConfigSource configSource )
-        throws RepositoryAssemblyException
-    {
-        repositoryAssembler.buildRemoteRepository( targetDirectory, repositoryInfo, configSource );
-    }
-
+    /**
+     * Install a test version of a plugin - along with its POM, and as many ancestor POMs as can be
+     * reached using the &lt;relativePath/&gt; element - to a clean local repository directory for
+     * use in test builds.
+     * 
+     * <p>
+     * <b>WARNING:</b> Currently, this method will not resolve parent POMs that exist <b>only</b> in
+     * your normal local repository, and are not reachable using the relativePath element. This may
+     * result in failed test builds, as one or more of the plugin's ancestor POMs cannot be resolved.
+     * </p>
+     * 
+     * @param pluginProject
+     * @param targetLocalRepoBasedir
+     * @throws TestToolsException
+     */
     public void createLocalRepositoryFromPlugin( MavenProject pluginProject, File targetLocalRepoBasedir )
         throws TestToolsException
     {
@@ -156,6 +174,13 @@ public class RepositoryTool
         installLocallyReachableAncestorPoms( pluginProject.getFile(), localRepository );
     }
 
+    /**
+     * Traverse &lt;relativePath/&gt; links for successive POMs in the plugin's ancestry, installing
+     * each one into the test-time local repository.
+     * 
+     * @param pomFile The plugin POM; a starting point.
+     * @param localRepo The test-time local repository instance
+     */
     private void installLocallyReachableAncestorPoms( File pomFile, ArtifactRepository localRepo )
         throws TestToolsException
     {
@@ -236,6 +261,11 @@ public class RepositoryTool
         }
     }
 
+    /**
+     * Retrieve the PlexusContainer instance used to instantiate this component. The container is
+     * used to retrieve the default ArtifactRepositoryLayout component, for use in constructing
+     * instances of ArtifactRepository that can be used to access local repositories.
+     */
     public void contextualize( Context context )
         throws ContextException
     {

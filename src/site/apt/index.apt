@@ -41,7 +41,8 @@ Maven Plugin-Testing Tools
   plugin integration tests require a custom local repository, to which the integration-testing builds
   can be directed. Further complicating this testing scenario is the fact that the plugin's parent
   POM or one of its ancestor POMs could be a snapshot which has been installed in the main local
-  repository, but which is not reachable using the plugin-POM's <<<\<relativePath/\>>>> parent-element.+
+  repository, but which is not reachable using the plugin-POM's <<<\<relativePath/\>>>>
+  parent-element.<+>
   
   <+ All of this seems to indicate that the best approach for ensuring the presence of all required
   POMs and plugins is to use the normal local repository to construct a new local repository for
@@ -77,9 +78,48 @@ Maven Plugin-Testing Tools
   
 * Integration-Testing Requirements
 
-  To summarize, this library strives to meet the following requirements for integration testing:
+  To summarize, this library strives to satisfy the following requirements for integration testing 
+  of Maven plugins:
   
   * Trigger Maven builds using test projects, without incurring any sort of conflict with plugins
     already in use within the current (this plugin's) build.
     
-  * 
+  * Construct a local repository into which the test version of the plugin can be installed, 
+    allowing the main local repository to remain untouched by the tests. Integration tests can be 
+    directed to use this test-time local repository instead of the normal location.
+    
+  * Support tracking and analysis of results from Maven builds spawned during integration testing. 
+    As far as is reasonable, test builds should be configured in the same way as normal project 
+    builds, to make the most of test cases submitted by users along with the issues they file.
+    
+  []
+    
+* Utilities Included in this Library
+
+  For more information on the APIs described below, see the {{{apidocs/index.html}JavaDocs}}.
+
+  * <<PluginTestTool>> - The main entry point for setting up the plugin-testing environment, this
+    utility orchestrates the ProjectTool, RepositoryTool, and BuildTool in order to produce a local
+    repository containing the plugin jar, plus any ancestor POM files that are reachable using the
+    <<<\<relativePath/\>>>> element of the parent specification.
+    
+    In order to make test projects more resilient to changes in the plugin's version, this tool
+    allows the developer to specify a testing version for the plugin, so any reference to the plugin
+    can be unambiguous and avoid accidentally referring to a plugin version resolved from outside.
+    
+  * <<ProjectTool>> - This testing tool provides APIs for creating a testable plugin jar file,
+    optionally skipping the unit tests for the plugin (after all, it's conceivable that the unit 
+    tests themselves may be using these tools).
+    
+  * <<RepositoryTool>> - The RepositoryTool provides methods for assembling artifact repositories to
+    support testing. This tool is responsible for assembling the local repository that is used 
+    during integration testing - complete with the test version of the plugin itself, along with all
+    of the ancestor POMs that are reachable via <<<\<relativePath/\>>>>.
+    
+  * <<BuildTool>> - This tool's purpose is fairly self-explanatory; it is used to execute Maven
+    builds. It provides a fairly generic API for running builds, for the simple reason that a single
+    test may need to run multiple builds. For normal use cases, it's a good idea to wrap the
+    BuildTool API using a standard project-testing method that will standardize the options used to
+    run a similar set of test builds.
+    
+  []

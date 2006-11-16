@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ * Test-tool used to execute Maven builds in order to test plugin functionality.
+ * 
  * @plexus.component role="org.apache.maven.shared.test.plugin.BuildTool" role-hint="default"
  * @author jdcasey
  *
@@ -31,7 +33,20 @@ public class BuildTool
     
     private Invoker mavenInvoker;
 
-    protected InvocationResult executeMaven( File pom, Properties properties, List goals, File buildLogFile )
+    /**
+     * Build a standard InvocationRequest using the specified test-build POM, command-line properties,
+     * goals, and output logfile. Then, execute Maven using this standard request. Return the result
+     * of the invocation.
+     * 
+     * @param pom The test-build POM
+     * @param properties command-line properties to fine-tune the test build, or test parameter 
+     *   extraction from CLI properties 
+     * @param goals The list of goals and/or lifecycle phases to execute during this build
+     * @param buildLogFile The logfile used to capture build output
+     * @return The result of the Maven invocation, including exit value and any execution exceptions
+     *   resulting from the Maven invocation.
+     */
+    public InvocationResult executeMaven( File pom, Properties properties, List goals, File buildLogFile )
         throws TestToolsException
     {
         InvocationRequest request = createBasicInvocationRequest( pom, properties, goals, buildLogFile );
@@ -39,6 +54,15 @@ public class BuildTool
         return executeMaven( request );
     }
     
+    /**
+     * Execute a test build using a customized InvocationRequest. Normally, this request would be 
+     * created using the <code>createBasicInvocationRequest</code> method in this class.
+     * 
+     * @param request The customized InvocationRequest containing the configuration used to execute
+     *   the current test build
+     * @return The result of the Maven invocation, containing exit value, along with any execution
+     *   exceptions resulting from the [attempted] Maven invocation.
+     */
     public InvocationResult executeMaven( InvocationRequest request )
     throws TestToolsException
     {
@@ -56,6 +80,13 @@ public class BuildTool
         }
     }
 
+    /**
+     * Detect the location of the local Maven installation, and start up the MavenInvoker using that
+     * path. Detection uses the system property <code>maven.home</code>, and falls back to the shell
+     * environment variable <code>M2_HOME</code>.
+     * 
+     * @throws IOException in case the shell environment variables cannot be read
+     */
     private void startInvoker()
         throws IOException
     {
@@ -77,6 +108,12 @@ public class BuildTool
         }
     }
 
+    /**
+     * If we're logging output to a logfile using standard output handlers, make sure these are
+     * closed.
+     * 
+     * @param request
+     */
     private void closeHandlers( InvocationRequest request )
     {
         InvocationOutputHandler outHandler = request.getOutputHandler( null );
@@ -95,6 +132,20 @@ public class BuildTool
         }
     }
 
+    /**
+     * Construct a standardized InvocationRequest given the test-build POM, a set of CLI properties,
+     * a list of goals to execute, and the location of a log file to which build output should be
+     * directed. The resulting InvocationRequest can then be customized by the test class before
+     * being used to execute a test build. Both standard-out and standard-error will be directed
+     * to the specified log file.
+     * 
+     * @param pom The POM for the test build
+     * @param properties The command-line properties for use in this test build
+     * @param goals The goals and/or lifecycle phases to execute during the test build
+     * @param buildLogFile Location to which build output should be logged
+     * @return The standardized InvocationRequest for the test build, ready for any necessary 
+     *   customizations.
+     */
     public InvocationRequest createBasicInvocationRequest( File pom, Properties properties, List goals,
                                                             File buildLogFile )
     {
@@ -162,6 +213,10 @@ public class BuildTool
 
     }
 
+    /**
+     * Initialize this tool once it's been instantiated and composed, in order to start up the
+     * MavenInvoker instance.
+     */
     public void initialize()
         throws InitializationException
     {
@@ -176,6 +231,10 @@ public class BuildTool
         
     }
 
+    /**
+     * Not currently used; when this API switches to use the Maven Embedder, it will be used to 
+     * shutdown the embedder and its associated container, to free up JVM memory.
+     */
     public void dispose()
     {
         // TODO: When we switch to the embedder, use this to deallocate the MavenEmbedder, along 

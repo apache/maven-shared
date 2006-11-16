@@ -17,8 +17,14 @@ import java.io.File;
 public class DefaultDownloader
     implements Downloader
 {
+    /**
+     * @plexus.requirement
+     */
     private ArtifactResolver artifactResolver;
 
+    /**
+     * @plexus.requirement
+     */
     private ArtifactFactory artifactFactory;
 
     public File download( String groupId,

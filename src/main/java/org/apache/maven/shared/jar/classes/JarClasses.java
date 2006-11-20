@@ -32,7 +32,7 @@ public class JarClasses
 
     private List classNames;
     
-    private List methodNames;
+    private List methods;
 
     private boolean isDebugPresent;
 
@@ -47,6 +47,7 @@ public class JarClasses
         imports = SetUniqueList.decorate( new ArrayList() );
         packages = SetUniqueList.decorate( new ArrayList() );
         classNames = SetUniqueList.decorate( new ArrayList() );
+        methods = SetUniqueList.decorate( new ArrayList() );
     }
 
     public void addClassName( String name )
@@ -135,14 +136,19 @@ public class JarClasses
     {
         this.jdkRevision = jdkRevision;
     }
-
-    public List getMethodNames()
+    
+    public void addMethod( String method )
     {
-        return methodNames;
+        this.methods.add( method );
     }
 
-    public void setMethodNames( List methodNames )
+    public List getMethods()
     {
-        this.methodNames = methodNames;
+        return methods;
+    }
+
+    public void setMethods( List methods )
+    {
+        this.methods = methods;
     }
 }

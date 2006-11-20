@@ -61,7 +61,7 @@ public class JarClassesAnalysis
                 String classname = entry.getName();
 
                 ClassParser classParser = new ClassParser( jarfilename, classname );
-
+                
                 JavaClass javaClass;
                 try
                 {
@@ -73,6 +73,8 @@ public class JarClassesAnalysis
                     continue;
                 }
 
+                String classSignature = javaClass.getClassName();
+                
                 if ( !classes.isDebugPresent() )
                 {
                     if ( hasDebugSymbols( javaClass ) )
@@ -91,10 +93,16 @@ public class JarClassesAnalysis
                 {
                     maxVersion = classVersion;
                 }
+                
+                Method methods[] = javaClass.getMethods();
+                for ( int i = 0; i < methods.length; i++ )
+                {
+                    classes.addMethod( classSignature + "." + methods[i].getName() + methods[i].getSignature() );
+                }
 
                 String classPackageName = javaClass.getPackageName();
 
-                classes.addClassName( javaClass.getClassName() );
+                classes.addClassName( classSignature );
                 classes.addPackage( classPackageName );
 
                 ImportVisitor importVisitor = new ImportVisitor( javaClass );

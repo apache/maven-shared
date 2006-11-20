@@ -33,9 +33,9 @@ import java.util.jar.JarEntry;
 /**
  * JarAnalyzer Classes Analyzer
  *
- * @plexus.component role="org.apache.maven.shared.jar.JarAnalyzer" role-hint="classes"
+ * @plexus.component role="org.apache.maven.shared.jar.classes.JarClassesAnalysis"
  */
-public class JarClassesAnalyzer
+public class JarClassesAnalysis
     extends AbstractLogEnabled
 {
     /**

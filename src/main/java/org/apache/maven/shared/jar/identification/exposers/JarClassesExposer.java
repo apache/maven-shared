@@ -17,7 +17,7 @@ package org.apache.maven.shared.jar.identification.exposers;
  */
 
 import org.apache.maven.shared.jar.classes.JarClasses;
-import org.apache.maven.shared.jar.classes.JarClassesAnalyzer;
+import org.apache.maven.shared.jar.classes.JarClassesAnalysis;
 import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
 
 import java.util.Iterator;
@@ -32,9 +32,9 @@ public class JarClassesExposer
     extends AbstractJarIdentificationExposer
 {
     /**
-     * @plexus.requirement role-hint="classes"
+     * @plexus.requirement
      */
-    private JarClassesAnalyzer analyzer;
+    private JarClassesAnalysis analyzer;
 
     public String getExposerName()
     {

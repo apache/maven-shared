@@ -17,9 +17,10 @@ package org.apache.maven.shared.jar;
  */
 
 import org.apache.maven.shared.jar.classes.JarClasses;
-import org.apache.maven.shared.jar.classes.JarClassesAnalyzer;
+import org.apache.maven.shared.jar.classes.JarClassesAnalysis;
 import org.apache.maven.shared.jar.identification.JarIdentification;
 import org.apache.maven.shared.jar.identification.JarIdentificationAnalysis;
+import org.apache.maven.shared.jar.util.JarEntryComparator;
 import org.codehaus.plexus.digest.Digester;
 import org.codehaus.plexus.digest.DigesterException;
 import org.codehaus.plexus.digest.StreamingDigester;
@@ -68,18 +69,18 @@ public class JarAnalyzer
     /**
      * @plexus.requirement
      */
-    private JarClassesAnalyzer classesAnalyzer;
+    private JarClassesAnalysis classesAnalyzer;
 
     /**
      * @plexus.requirement
      */
     private JarIdentificationAnalysis taxonAnalyzer;
     
-    protected void setFile( File file ) throws JarException
+    protected void setFile( File file ) throws JarAnalyzerException
     {
         if ( file == null )
         {
-            throw new JarException( "file is null." );
+            throw new JarAnalyzerException( "file is null." );
         }
 
         init( file );
@@ -203,16 +204,16 @@ public class JarAnalyzer
     }
 
     private void init( File jfile )
-        throws JarException
+        throws JarAnalyzerException
     {
         if ( !jfile.exists() )
         {
-            throw new JarException( "File " + jfile.getAbsolutePath() + " does not exist." );
+            throw new JarAnalyzerException( "File " + jfile.getAbsolutePath() + " does not exist." );
         }
 
         if ( !jfile.canRead() )
         {
-            throw new JarException( "No read access to file " + jfile.getAbsolutePath() + "." );
+            throw new JarAnalyzerException( "No read access to file " + jfile.getAbsolutePath() + "." );
         }
 
         try
@@ -222,7 +223,7 @@ public class JarAnalyzer
         }
         catch ( IOException e )
         {
-            throw new JarException( "Unable to open artifact " + jfile.getAbsolutePath(), e );
+            throw new JarAnalyzerException( "Unable to open artifact " + jfile.getAbsolutePath(), e );
         }
 
         // Obtain entries list.

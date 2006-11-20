@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * JarAnalyzer Taxon Analyzer
  *
- * @plexus.component role="org.apache.maven.shared.jar.JarAnalyzer" role-hint="taxon"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationAnalysis"
  */
 public class JarIdentificationAnalysis
 {

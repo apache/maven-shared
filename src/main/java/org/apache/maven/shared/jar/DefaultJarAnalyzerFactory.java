@@ -41,11 +41,12 @@ public class DefaultJarAnalyzerFactory
     private PlexusContainer container;
 
     public JarAnalyzer getJarAnalyzer( File file )
-        throws JarException
+        throws JarAnalyzerException
     {
         try
         {
-            JarAnalyzer jaranalyzer = (JarAnalyzer) container.lookup( JarAnalyzer.ROLE );
+            Object o = container.lookup( JarAnalyzer.ROLE );
+            JarAnalyzer jaranalyzer = (JarAnalyzer) o;
             jaranalyzer.setFile( file );
             return jaranalyzer;
         }
@@ -53,7 +54,7 @@ public class DefaultJarAnalyzerFactory
         {
             String emsg = "Unable to load Jar Analyzer for file " + file.getAbsolutePath();
             getLogger().warn( emsg, e );
-            throw new JarException( emsg );
+            throw new JarAnalyzerException( emsg );
         }
     }
 

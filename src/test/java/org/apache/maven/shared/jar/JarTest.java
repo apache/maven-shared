@@ -25,30 +25,29 @@ public class JarTest
     extends AbstractJarTestCase
 {
     private JarAnalyzer getJar( String filename )
-        throws JarException
+        throws JarAnalyzerException
     {
         try
         {
             File jarfile = new File( getSampleJarsDirectory(), filename );
-            JarAnalyzer jar = (JarAnalyzer) lookup( JarAnalyzer.ROLE );
-            jar.setFile( jarfile );
+            JarAnalyzer jar = getJarAnalyzerFactory().getJarAnalyzer( jarfile );
             return jar;
         }
         catch ( Exception e )
         {
-            throw new JarException( "Can't load the JarAnalyzer component", e );
+            throw new JarAnalyzerException( "Can't load the JarAnalyzer component", e );
         }
     }
 
     public void testSealed()
-        throws JarException
+        throws JarAnalyzerException
     {
         JarAnalyzer evil = getJar( "evil-sealed-regex-1.0.jar" );
         assertTrue( evil.isSealed() );
     }
 
     public void testNotSealed()
-        throws JarException
+        throws JarAnalyzerException
     {
         JarAnalyzer codec = getJar( "codec.jar" );
         assertFalse( codec.isSealed() );

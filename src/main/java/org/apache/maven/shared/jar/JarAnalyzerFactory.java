@@ -26,7 +26,7 @@ import java.io.File;
  */
 public interface JarAnalyzerFactory
 {
-    public static final String ROLE = JarAnalyzer.class.getName();
+    public static final String ROLE = JarAnalyzerFactory.class.getName();
     
-    public JarAnalyzer getJarAnalyzer(File file) throws JarException;
+    public JarAnalyzer getJarAnalyzer(File file) throws JarAnalyzerException;
 }

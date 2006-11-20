@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar;
+package org.apache.maven.shared.jar.util;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -25,7 +25,7 @@ import java.util.jar.JarEntry;
  * @author <a href="mailto:joakim@erdfelt.com">Joakim Erdfelt</a>
  * @version $Id$
  */
-class JarEntryComparator
+public class JarEntryComparator
     implements Comparator
 {
 

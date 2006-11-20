@@ -19,25 +19,25 @@ package org.apache.maven.shared.jar;
 /**
  * Exceptions that occur during JarAnalyzer utility methods.
  */
-public class JarException
+public class JarAnalyzerException
     extends Exception
 {
-    public JarException()
+    public JarAnalyzerException()
     {
         super();
     }
 
-    public JarException( String message, Throwable cause )
+    public JarAnalyzerException( String message, Throwable cause )
     {
         super( message, cause );
     }
 
-    public JarException( String message )
+    public JarAnalyzerException( String message )
     {
         super( message );
     }
 
-    public JarException( Throwable cause )
+    public JarAnalyzerException( Throwable cause )
     {
         super( cause );
     }

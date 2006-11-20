@@ -17,7 +17,7 @@ package org.apache.maven.shared.jar;
  */
 
 /**
- * Exceptions that occur during Jar utility methods.
+ * Exceptions that occur during JarAnalyzer utility methods.
  */
 public class JarException
     extends Exception

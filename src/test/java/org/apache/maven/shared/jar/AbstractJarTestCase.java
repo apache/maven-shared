@@ -28,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Abstract Jar TestCase
+ * Abstract JarAnalyzer TestCase
  */
 public class AbstractJarTestCase
     extends PlexusTestCase
@@ -53,6 +53,11 @@ public class AbstractJarTestCase
     public File getTestLocalRepoDirectory()
     {
         return new File( testdir, "localrepo" );
+    }
+    
+    public JarAnalyzerFactory getJarAnalyzerFactory() throws Exception
+    {
+        return (JarAnalyzerFactory) lookup( JarAnalyzerFactory.ROLE, "default" );
     }
 
     public void assertContains( String msg, Object expected, Collection coll )

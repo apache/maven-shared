@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.taxon.exposers;
+package org.apache.maven.shared.jar.identification.exposers;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -16,29 +16,29 @@ package org.apache.maven.shared.jar.taxon.exposers;
  * limitations under the License.
  */
 
-import org.apache.maven.shared.jar.JarAnalyzer;
 import org.apache.maven.shared.jar.classes.JarClasses;
-import org.apache.maven.shared.jar.taxon.AbstractJarTaxonExposer;
+import org.apache.maven.shared.jar.classes.JarClassesAnalyzer;
+import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
 
 import java.util.Iterator;
 
 
 /**
- * Jar Taxon Exposer for the information from JarClasses.
+ * JarAnalyzer Taxon Exposer for the information from JarClasses.
  *
- * @plexus.component role="org.apache.maven.shared.jar.taxon.JarTaxonExposer" role-hint="jarClasses"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="jarClasses"
  */
 public class JarClassesExposer
-    extends AbstractJarTaxonExposer
+    extends AbstractJarIdentificationExposer
 {
     /**
      * @plexus.requirement role-hint="classes"
      */
-    private JarAnalyzer analyzer;
+    private JarClassesAnalyzer analyzer;
 
     public String getExposerName()
     {
-        return "Jar Classes";
+        return "JarAnalyzer Classes";
     }
 
     public boolean isAuthoritative()

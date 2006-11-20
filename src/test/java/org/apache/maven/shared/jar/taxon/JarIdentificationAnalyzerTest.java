@@ -17,28 +17,28 @@ package org.apache.maven.shared.jar.taxon;
  */
 
 import org.apache.maven.shared.jar.AbstractJarTestCase;
-import org.apache.maven.shared.jar.Jar;
+import org.apache.maven.shared.jar.JarAnalyzer;
+import org.apache.maven.shared.jar.identification.JarIdentification;
 
 import java.io.File;
 
 
 /**
- * Jar Taxon Analyzer Test Case
+ * JarAnalyzer Taxon Analyzer Test Case
  */
-public class JarTaxonAnalyzerTest
+public class JarIdentificationAnalyzerTest
     extends AbstractJarTestCase
 {
-    private JarTaxon getJarTaxon( String filename )
-        throws Exception
+    private JarIdentification getJarTaxon( String filename ) throws Exception
     {
-        Jar jar;
+        JarAnalyzer jar;
 
         File jarfile = new File( getSampleJarsDirectory(), filename );
-        jar = (Jar) lookup( Jar.ROLE );
-        jar.setFile( jarfile );
+        
+        jar = getJarAnalyzerFactory().getJarAnalyzer( jarfile );
 
-        JarTaxon taxon = jar.getTaxon();
-        assertNotNull( "JarTaxon", taxon );
+        JarIdentification taxon = jar.getIdentification();
+        assertNotNull( "JarIdentification", taxon );
 
         return taxon;
     }
@@ -46,7 +46,7 @@ public class JarTaxonAnalyzerTest
     public void testTaxonAnalyzerWithJXR()
         throws Exception
     {
-        JarTaxon taxon = getJarTaxon( "jxr.jar" );
+        JarIdentification taxon = getJarTaxon( "jxr.jar" );
 
         assertTrue( "taxon.potentials > 0", ( taxon.getPotentials().size() > 0 ) );
 
@@ -58,12 +58,12 @@ public class JarTaxonAnalyzerTest
     }
 
     /**
-     * Tests Jar with No embedded pom, and no useful manifest.mf information.
+     * Tests JarAnalyzer with No embedded pom, and no useful manifest.mf information.
      */
     public void testTaxonAnalyzerWithCODEC()
         throws Exception
     {
-        JarTaxon taxon = getJarTaxon( "codec.jar" );
+        JarIdentification taxon = getJarTaxon( "codec.jar" );
 
         assertTrue( "taxon.potentials > 0", ( taxon.getPotentials().size() > 0 ) );
 
@@ -78,7 +78,7 @@ public class JarTaxonAnalyzerTest
     public void testTaxonAnalyzerWithANT()
         throws Exception
     {
-        JarTaxon taxon = getJarTaxon( "ant.jar" );
+        JarIdentification taxon = getJarTaxon( "ant.jar" );
 
         assertTrue( "taxon.potentials > 0", ( taxon.getPotentials().size() > 0 ) );
 

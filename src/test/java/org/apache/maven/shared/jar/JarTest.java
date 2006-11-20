@@ -19,38 +19,38 @@ package org.apache.maven.shared.jar;
 import java.io.File;
 
 /**
- * Jar Test Case
+ * JarAnalyzer Test Case
  */
 public class JarTest
     extends AbstractJarTestCase
 {
-    private Jar getJar( String filename )
+    private JarAnalyzer getJar( String filename )
         throws JarException
     {
         try
         {
             File jarfile = new File( getSampleJarsDirectory(), filename );
-            Jar jar = (Jar) lookup( Jar.ROLE );
+            JarAnalyzer jar = (JarAnalyzer) lookup( JarAnalyzer.ROLE );
             jar.setFile( jarfile );
             return jar;
         }
         catch ( Exception e )
         {
-            throw new JarException( "Can't load the Jar component", e );
+            throw new JarException( "Can't load the JarAnalyzer component", e );
         }
     }
 
     public void testSealed()
         throws JarException
     {
-        Jar evil = getJar( "evil-sealed-regex-1.0.jar" );
+        JarAnalyzer evil = getJar( "evil-sealed-regex-1.0.jar" );
         assertTrue( evil.isSealed() );
     }
 
     public void testNotSealed()
         throws JarException
     {
-        Jar codec = getJar( "codec.jar" );
+        JarAnalyzer codec = getJar( "codec.jar" );
         assertFalse( codec.isSealed() );
     }
 }

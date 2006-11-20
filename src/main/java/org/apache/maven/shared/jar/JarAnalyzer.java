@@ -17,7 +17,9 @@ package org.apache.maven.shared.jar;
  */
 
 import org.apache.maven.shared.jar.classes.JarClasses;
-import org.apache.maven.shared.jar.taxon.JarTaxon;
+import org.apache.maven.shared.jar.classes.JarClassesAnalyzer;
+import org.apache.maven.shared.jar.identification.JarIdentification;
+import org.apache.maven.shared.jar.identification.JarIdentificationAnalysis;
 import org.codehaus.plexus.digest.Digester;
 import org.codehaus.plexus.digest.DigesterException;
 import org.codehaus.plexus.digest.StreamingDigester;
@@ -40,14 +42,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A Jar Toolbox for working with Jar Files.
+ * A JarAnalyzer Toolbox for working with Jar Files.
+ * 
+ * Use the {@link JarAnalyzerFactory#getJarAnalyzer(File)} to obtain a valid JarAnalyzer object.
  *
- * @plexus.component role="org.apache.maven.shared.jar.Jar" instantiation-strategy="per-lookup"
+ * @plexus.component role="org.apache.maven.shared.jar.JarAnalyzer" instantiation-strategy="per-lookup"
  */
-public class Jar
+public class JarAnalyzer
     extends AbstractLogEnabled
 {
-    public static final String ROLE = Jar.class.getName();
+    public static final String ROLE = JarAnalyzer.class.getName();
 
     private List entries;
 
@@ -57,22 +61,21 @@ public class Jar
 
     private JarClasses classes;
 
-    private JarTaxon taxon;
+    private JarIdentification identification;
 
     private boolean isSealed;
 
     /**
-     * @plexus.requirement role-hint="classes"
+     * @plexus.requirement
      */
-    private JarAnalyzer classesAnalyzer;
+    private JarClassesAnalyzer classesAnalyzer;
 
     /**
-     * @plexus.requirement role-hint="taxon"
+     * @plexus.requirement
      */
-    private JarAnalyzer taxonAnalyzer;
-
-    public void setFile( File file )
-        throws JarException
+    private JarIdentificationAnalysis taxonAnalyzer;
+    
+    protected void setFile( File file ) throws JarException
     {
         if ( file == null )
         {
@@ -83,7 +86,7 @@ public class Jar
     }
 
     /**
-     * Compute the HashCode for this Jar File.
+     * Compute the HashCode for this JarAnalyzer File.
      *
      * @return the hashcode, or null if not able to be computed.
      */
@@ -101,7 +104,7 @@ public class Jar
     }
 
     /**
-     * Compute the HashCode for the Bytecode within this Jar File.
+     * Compute the HashCode for the Bytecode within this JarAnalyzer File.
      * <p/>
      * Useful to see thru a recompile, recompression, or timestamp change.
      *
@@ -251,7 +254,7 @@ public class Jar
 
     public String toString()
     {
-        return "<Jar:" + jarfile.getName() + ">";
+        return "<JarAnalyzer:" + jarfile.getName() + ">";
     }
 
     public boolean isSealed()
@@ -279,19 +282,19 @@ public class Jar
         this.classes = classes;
     }
 
-    public JarTaxon getTaxon()
+    public JarIdentification getIdentification()
     {
-        if ( taxon == null )
+        if ( identification == null )
         {
             taxonAnalyzer.analyze( this );
         }
 
-        return taxon;
+        return identification;
     }
 
-    public void setTaxon( JarTaxon taxon )
+    public void setIdentification( JarIdentification taxon )
     {
-        this.taxon = taxon;
+        this.identification = taxon;
     }
 
     public List getEntries()

@@ -22,7 +22,6 @@ import org.apache.bcel.classfile.DescendingVisitor;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.LineNumberTable;
 import org.apache.bcel.classfile.Method;
-import org.apache.maven.shared.jar.Jar;
 import org.apache.maven.shared.jar.JarAnalyzer;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
@@ -32,18 +31,17 @@ import java.util.List;
 import java.util.jar.JarEntry;
 
 /**
- * Jar Classes Analyzer
+ * JarAnalyzer Classes Analyzer
  *
  * @plexus.component role="org.apache.maven.shared.jar.JarAnalyzer" role-hint="classes"
  */
 public class JarClassesAnalyzer
     extends AbstractLogEnabled
-    implements JarAnalyzer
 {
     /**
      * Analyze and populate the <code>jar.information.classes</code> object.
      */
-    public void analyze( Jar jar )
+    public void analyze( JarAnalyzer jar )
     {
         try
         {
@@ -71,7 +69,7 @@ public class JarClassesAnalyzer
                 }
                 catch ( ClassFormatException e )
                 {
-                    getLogger().warn( "Unable to process class " + classname + " in Jar File " + jar.getFile(), e );
+                    getLogger().warn( "Unable to process class " + classname + " in JarAnalyzer File " + jar.getFile(), e );
                     continue;
                 }
 
@@ -139,7 +137,7 @@ public class JarClassesAnalyzer
         }
         catch ( IOException e )
         {
-            getLogger().warn( "Unable to process Jar File " + jar.getFile(), e );
+            getLogger().warn( "Unable to process JarAnalyzer File " + jar.getFile(), e );
         }
     }
 

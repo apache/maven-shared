@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.taxon;
+package org.apache.maven.shared.jar.identification;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -16,7 +16,7 @@ package org.apache.maven.shared.jar.taxon;
  * limitations under the License.
  */
 
-import org.apache.maven.shared.jar.Jar;
+import org.apache.maven.shared.jar.JarAnalyzer;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
@@ -25,13 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abstract Jar Taxon Exposer.
+ * Abstract JarAnalyzer Taxon Exposer.
  */
-public abstract class AbstractJarTaxonExposer
+public abstract class AbstractJarIdentificationExposer
     extends AbstractLogEnabled
-    implements JarTaxonExposer
+    implements JarIdentificationExposer
 {
-    private Jar jar;
+    private JarAnalyzer jar;
 
     private List groupIds = null;
 
@@ -53,12 +53,12 @@ public abstract class AbstractJarTaxonExposer
         vendors = null;
     }
 
-    public Jar getJar()
+    public JarAnalyzer getJar()
     {
         return jar;
     }
 
-    public void setJar( Jar jar )
+    public void setJar( JarAnalyzer jar )
     {
         this.jar = jar;
     }
@@ -142,7 +142,7 @@ public abstract class AbstractJarTaxonExposer
             log = super.getLogger();
             if ( log == null )
             {
-                log = new ConsoleLogger( Logger.LEVEL_DEBUG, AbstractJarTaxonExposer.class.getName() );
+                log = new ConsoleLogger( Logger.LEVEL_DEBUG, AbstractJarIdentificationExposer.class.getName() );
             }
         }
 

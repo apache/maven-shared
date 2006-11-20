@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.taxon;
+package org.apache.maven.shared.jar.identification;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -25,7 +25,7 @@ import java.util.List;
  * It is expected for the users of this library to provide an implementation
  * of a RepositoryHashSearch against a real repository.
  *
- * @plexus.component role="org.apache.maven.shared.jar.taxon.RepositoryHashSearch"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.RepositoryHashSearch"
  */
 public class EmptyRepositoryHashSearch
     implements RepositoryHashSearch

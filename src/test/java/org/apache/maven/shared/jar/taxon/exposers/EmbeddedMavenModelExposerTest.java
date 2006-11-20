@@ -17,7 +17,8 @@ package org.apache.maven.shared.jar.taxon.exposers;
  */
 
 import org.apache.maven.shared.jar.AbstractJarTestCase;
-import org.apache.maven.shared.jar.Jar;
+import org.apache.maven.shared.jar.JarAnalyzer;
+import org.apache.maven.shared.jar.identification.exposers.EmbeddedMavenModelExposer;
 
 import java.io.File;
 
@@ -32,8 +33,7 @@ public class EmbeddedMavenModelExposerTest
         throws Exception
     {
         File jxrfile = new File( getSampleJarsDirectory(), "jxr.jar" );
-        Jar jxrjar = (Jar) lookup( Jar.ROLE );
-        jxrjar.setFile( jxrfile );
+        JarAnalyzer jxrjar = getJarAnalyzerFactory().getJarAnalyzer( jxrfile );
 
         EmbeddedMavenModelExposer exposer = new EmbeddedMavenModelExposer();
         exposer.setJar( jxrjar );
@@ -55,8 +55,7 @@ public class EmbeddedMavenModelExposerTest
         throws Exception
     {
         File antfile = new File( getSampleJarsDirectory(), "ant.jar" );
-        Jar antjar = (Jar) lookup( Jar.ROLE );
-        antjar.setFile( antfile );
+        JarAnalyzer antjar = getJarAnalyzerFactory().getJarAnalyzer( antfile );
 
         EmbeddedMavenModelExposer exposer = new EmbeddedMavenModelExposer();
         exposer.setJar( antjar );

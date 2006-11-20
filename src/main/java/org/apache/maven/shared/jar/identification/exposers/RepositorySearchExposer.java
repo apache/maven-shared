@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.taxon.exposers;
+package org.apache.maven.shared.jar.identification.exposers;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -17,8 +17,8 @@ package org.apache.maven.shared.jar.taxon.exposers;
  */
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.shared.jar.taxon.AbstractJarTaxonExposer;
-import org.apache.maven.shared.jar.taxon.RepositoryHashSearch;
+import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
+import org.apache.maven.shared.jar.identification.RepositoryHashSearch;
 import org.codehaus.plexus.digest.Digester;
 import org.codehaus.plexus.digest.StreamingDigester;
 
@@ -27,12 +27,12 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Jar Taxon Exposer for the hashcode hits within a repository.
+ * JarAnalyzer Taxon Exposer for the hashcode hits within a repository.
  *
- * @plexus.component role="org.apache.maven.shared.jar.taxon.JarTaxonExposer" role-hint="repositorySearch"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="repositorySearch"
  */
 public class RepositorySearchExposer
-    extends AbstractJarTaxonExposer
+    extends AbstractJarIdentificationExposer
 {
     /**
      * @plexus.requirement role-hint="sha1"

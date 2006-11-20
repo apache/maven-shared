@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Facts about the classes within a Jar File.
+ * Facts about the classes within a JarAnalyzer File.
  */
 public class JarClasses
 {
@@ -31,6 +31,8 @@ public class JarClasses
     private List packages;
 
     private List classNames;
+    
+    private List methodNames;
 
     private boolean isDebugPresent;
 
@@ -132,5 +134,15 @@ public class JarClasses
     public void setJdkRevision( String jdkRevision )
     {
         this.jdkRevision = jdkRevision;
+    }
+
+    public List getMethodNames()
+    {
+        return methodNames;
+    }
+
+    public void setMethodNames( List methodNames )
+    {
+        this.methodNames = methodNames;
     }
 }

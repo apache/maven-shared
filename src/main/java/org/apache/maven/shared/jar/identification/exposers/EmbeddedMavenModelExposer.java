@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.taxon.exposers;
+package org.apache.maven.shared.jar.identification.exposers;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -19,7 +19,7 @@ package org.apache.maven.shared.jar.taxon.exposers;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Organization;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.shared.jar.taxon.AbstractJarTaxonExposer;
+import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.IOException;
@@ -30,12 +30,12 @@ import java.util.jar.JarEntry;
 
 
 /**
- * Jar Taxon Exposer for the Embedded Maven Model.
+ * JarAnalyzer Taxon Exposer for the Embedded Maven Model.
  *
- * @plexus.component role="org.apache.maven.shared.jar.taxon.JarTaxonExposer" role-hint="embeddedMavenModel"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="embeddedMavenModel"
  */
 public class EmbeddedMavenModelExposer
-    extends AbstractJarTaxonExposer
+    extends AbstractJarIdentificationExposer
 {
     public void expose()
     {

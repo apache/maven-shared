@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.taxon.exposers;
+package org.apache.maven.shared.jar.identification.exposers;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -18,7 +18,7 @@ package org.apache.maven.shared.jar.taxon.exposers;
 
 import org.apache.commons.collections.Bag;
 import org.apache.commons.collections.bag.HashBag;
-import org.apache.maven.shared.jar.taxon.AbstractJarTaxonExposer;
+import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -29,12 +29,12 @@ import java.util.jar.JarEntry;
 
 
 /**
- * Jar Taxon Exposer - using Majority Timestamp of classes.
+ * JarAnalyzer Taxon Exposer - using Majority Timestamp of classes.
  *
- * @plexus.component role="org.apache.maven.shared.jar.taxon.JarTaxonExposer" role-hint="timestamp"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="timestamp"
  */
 public class TimestampExposer
-    extends AbstractJarTaxonExposer
+    extends AbstractJarIdentificationExposer
 {
     public String getExposerName()
     {

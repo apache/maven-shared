@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.taxon.exposers;
+package org.apache.maven.shared.jar.identification.exposers;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -16,7 +16,7 @@ package org.apache.maven.shared.jar.taxon.exposers;
  * limitations under the License.
  */
 
-import org.apache.maven.shared.jar.taxon.AbstractJarTaxonExposer;
+import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -24,12 +24,12 @@ import java.util.List;
 
 
 /**
- * Jar Taxon Exposer - Static Main Class Output
+ * JarAnalyzer Taxon Exposer - Static Main Class Output
  *
- * @plexus.component role="org.apache.maven.shared.jar.taxon.JarTaxonExposer" role-hint="staticMainOutput"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="staticMainOutput"
  */
 public class StaticMainOutputExposer
-    extends AbstractJarTaxonExposer
+    extends AbstractJarIdentificationExposer
 {
     public String getExposerName()
     {

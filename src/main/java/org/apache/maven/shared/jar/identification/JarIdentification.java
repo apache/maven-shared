@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.taxon;
+package org.apache.maven.shared.jar.identification;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -21,9 +21,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Jar Taxon, the set of Maven dependency information both found and potential.
+ * JarAnalyzer Taxon, the set of Maven dependency information both found and potential.
  */
-public class JarTaxon
+public class JarIdentification
 {
     private boolean wellKnown = false;
 
@@ -39,7 +39,7 @@ public class JarTaxon
 
     private List potentials;
 
-    public JarTaxon()
+    public JarIdentification()
     {
         potentials = new ArrayList();
     }
@@ -120,7 +120,7 @@ public class JarTaxon
         Iterator it = potentials.iterator();
         while ( it.hasNext() )
         {
-            AbstractJarTaxonExposer exposer = (AbstractJarTaxonExposer) it.next();
+            AbstractJarIdentificationExposer exposer = (AbstractJarIdentificationExposer) it.next();
             if ( exposer.getGroupIds() != null )
             {
                 ret.addAll( exposer.getGroupIds() );
@@ -135,7 +135,7 @@ public class JarTaxon
         Iterator it = potentials.iterator();
         while ( it.hasNext() )
         {
-            AbstractJarTaxonExposer exposer = (AbstractJarTaxonExposer) it.next();
+            AbstractJarIdentificationExposer exposer = (AbstractJarIdentificationExposer) it.next();
             if ( exposer.getArtifactIds() != null )
             {
                 ret.addAll( exposer.getArtifactIds() );
@@ -150,7 +150,7 @@ public class JarTaxon
         Iterator it = potentials.iterator();
         while ( it.hasNext() )
         {
-            AbstractJarTaxonExposer exposer = (AbstractJarTaxonExposer) it.next();
+            AbstractJarIdentificationExposer exposer = (AbstractJarIdentificationExposer) it.next();
             if ( exposer.getVersions() != null )
             {
                 ret.addAll( exposer.getVersions() );
@@ -165,7 +165,7 @@ public class JarTaxon
         Iterator it = potentials.iterator();
         while ( it.hasNext() )
         {
-            AbstractJarTaxonExposer exposer = (AbstractJarTaxonExposer) it.next();
+            AbstractJarIdentificationExposer exposer = (AbstractJarIdentificationExposer) it.next();
             if ( exposer.getNames() != null )
             {
                 ret.addAll( exposer.getNames() );
@@ -180,7 +180,7 @@ public class JarTaxon
         Iterator it = potentials.iterator();
         while ( it.hasNext() )
         {
-            AbstractJarTaxonExposer exposer = (AbstractJarTaxonExposer) it.next();
+            AbstractJarIdentificationExposer exposer = (AbstractJarIdentificationExposer) it.next();
             if ( exposer.getVendors() != null )
             {
                 ret.addAll( exposer.getVendors() );

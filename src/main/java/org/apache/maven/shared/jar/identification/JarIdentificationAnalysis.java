@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.taxon;
+package org.apache.maven.shared.jar.identification;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -16,7 +16,6 @@ package org.apache.maven.shared.jar.taxon;
  * limitations under the License.
  */
 
-import org.apache.maven.shared.jar.Jar;
 import org.apache.maven.shared.jar.JarAnalyzer;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -25,25 +24,24 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Jar Taxon Analyzer
+ * JarAnalyzer Taxon Analyzer
  *
  * @plexus.component role="org.apache.maven.shared.jar.JarAnalyzer" role-hint="taxon"
  */
-public class JarTaxonAnalyzer
-    implements JarAnalyzer
+public class JarIdentificationAnalysis
 {
     /**
-     * @plexus.requirement role="org.apache.maven.shared.jar.taxon.JarTaxonExposer"
+     * @plexus.requirement role="org.apache.maven.shared.jar.identification.JarIdentificationExposer"
      */
     private List exposers;
 
-    public void analyze( Jar jar )
+    public void analyze( JarAnalyzer jar )
     {
-        JarTaxon taxon = new JarTaxon();
+        JarIdentification taxon = new JarIdentification();
 
         for ( Iterator i = exposers.iterator(); i.hasNext(); )
         {
-            JarTaxonExposer exposer = (JarTaxonExposer) i.next();
+            JarIdentificationExposer exposer = (JarIdentificationExposer) i.next();
             exposer.initialize();
             exposer.setJar( jar );
             addExposer( taxon, exposer );
@@ -51,10 +49,10 @@ public class JarTaxonAnalyzer
 
         normalize( taxon );
 
-        jar.setTaxon( taxon );
+        jar.setIdentification( taxon );
     }
 
-    private void addExposer( JarTaxon taxon, JarTaxonExposer exposer )
+    private void addExposer( JarIdentification taxon, JarIdentificationExposer exposer )
     {
         taxon.getPotentials().add( exposer );
         exposer.expose();
@@ -88,7 +86,7 @@ public class JarTaxonAnalyzer
         }
     }
 
-    private void normalize( JarTaxon taxon )
+    private void normalize( JarIdentification taxon )
     {
         if ( StringUtils.isEmpty( taxon.getGroupId() ) )
         {

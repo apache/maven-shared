@@ -17,13 +17,13 @@ package org.apache.maven.shared.jar.classes;
  */
 
 import org.apache.maven.shared.jar.AbstractJarTestCase;
-import org.apache.maven.shared.jar.Jar;
+import org.apache.maven.shared.jar.JarAnalyzer;
 
 import java.io.File;
 
 
 /**
- * Jar Classes Test Case
+ * JarAnalyzer Classes Test Case
  */
 public class JarClassesAnalyzerTest
     extends AbstractJarTestCase
@@ -34,8 +34,7 @@ public class JarClassesAnalyzerTest
         File jarfile = new File( getSampleJarsDirectory(), filename );
         try
         {
-        Jar jar = (Jar) lookup( Jar.ROLE );
-        jar.setFile( jarfile );
+        JarAnalyzer jar = getJarAnalyzerFactory().getJarAnalyzer( jarfile );
 
         JarClasses jclass = jar.getClasses();
         assertNotNull( "JarClasses", jclass );

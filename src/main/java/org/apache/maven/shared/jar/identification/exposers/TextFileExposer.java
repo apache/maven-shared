@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.taxon.exposers;
+package org.apache.maven.shared.jar.identification.exposers;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -16,7 +16,7 @@ package org.apache.maven.shared.jar.taxon.exposers;
  * limitations under the License.
  */
 
-import org.apache.maven.shared.jar.taxon.AbstractJarTaxonExposer;
+import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.BufferedReader;
@@ -30,12 +30,12 @@ import java.util.jar.JarEntry;
 
 
 /**
- * Jar Taxon Exposer based on Text File contents.
+ * JarAnalyzer Taxon Exposer based on Text File contents.
  *
- * @plexus.component role="org.apache.maven.shared.jar.taxon.JarTaxonExposer" role-hint="textFile"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="textFile"
  */
 public class TextFileExposer
-    extends AbstractJarTaxonExposer
+    extends AbstractJarIdentificationExposer
 {
     public String getExposerName()
     {

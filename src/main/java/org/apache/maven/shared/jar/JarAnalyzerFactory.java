@@ -16,35 +16,17 @@ package org.apache.maven.shared.jar;
  * limitations under the License.
  */
 
-import java.util.Comparator;
-import java.util.jar.JarEntry;
+import java.io.File;
 
 /**
- * JarEntryComparator 
+ * JarAnalyzerFactory 
  *
  * @author <a href="mailto:joakim@erdfelt.com">Joakim Erdfelt</a>
  * @version $Id$
  */
-class JarEntryComparator
-    implements Comparator
+public interface JarAnalyzerFactory
 {
-
-    public int compare( Object o1, Object o2 )
-    {
-        if ( !( o1 instanceof JarEntry ) )
-        {
-            return 0;
-        }
-        
-        if ( !( o2 instanceof JarEntry ) )
-        {
-            return 0;
-        }
-        
-        JarEntry j1 = (JarEntry) o1;
-        JarEntry j2 = (JarEntry) o2;
-
-        return j1.getName().compareTo( j2.getName() );
-    }
-
+    public static final String ROLE = JarAnalyzer.class.getName();
+    
+    public JarAnalyzer getJarAnalyzer(File file) throws JarException;
 }

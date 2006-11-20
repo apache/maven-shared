@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.taxon;
+package org.apache.maven.shared.jar.identification;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -16,35 +16,18 @@ package org.apache.maven.shared.jar.taxon;
  * limitations under the License.
  */
 
-import org.apache.maven.shared.jar.Jar;
-
 import java.util.List;
 
 /**
- * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
+ * Interface for Repository Hash Searches.
  */
-public interface JarTaxonExposer
+public interface RepositoryHashSearch
 {
-    static final String ROLE = JarTaxonExposer.class.getName();
+    public static final String ROLE = RepositoryHashSearch.class.getName();
 
-    void setJar( Jar jar );
+    public boolean isValid();
 
-    void initialize();
+    public List searchFileHash( String hash );
 
-    void expose();
-
-    boolean isAuthoritative();
-
-    String getExposerName();
-
-    List getGroupIds();
-
-    List getArtifactIds();
-
-    List getVersions();
-
-    List getNames();
-
-    List getVendors();
+    public List searchBytecodeHash( String hash );
 }

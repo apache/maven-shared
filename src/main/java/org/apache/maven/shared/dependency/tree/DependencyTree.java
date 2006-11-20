@@ -1,0 +1,71 @@
+package org.apache.maven.shared.dependency.tree;
+
+/*
+ * Copyright 2006 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * Represents a Maven project's dependency tree.
+ * 
+ * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @version $Id$
+ */
+public class DependencyTree
+{
+    // fields -----------------------------------------------------------------
+
+    private final DependencyNode rootNode;
+
+    private final Collection nodes;
+
+    // constructors -----------------------------------------------------------
+
+    public DependencyTree( DependencyNode rootNode, Collection nodes )
+    {
+        this.rootNode = rootNode;
+        this.nodes = nodes;
+    }
+
+    // public methods ---------------------------------------------------------
+
+    public DependencyNode getRootNode()
+    {
+        return rootNode;
+    }
+
+    public Collection getNodes()
+    {
+        return nodes;
+    }
+
+    public List getArtifacts()
+    {
+        List artifacts = new ArrayList();
+
+        Iterator it = nodes.iterator();
+        while ( it.hasNext() )
+        {
+            DependencyNode node = (DependencyNode) it.next();
+            artifacts.add( node.getArtifact() );
+        }
+
+        return artifacts;
+    }
+}

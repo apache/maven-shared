@@ -254,11 +254,16 @@ public abstract class AbstractSeleniumTestCase
     //////////////////////////////////////
     public void login( String username, String password )
     {
+        login( username, password, true, "Login Page" );
+    }
+    
+    public void login( String username, String password, boolean valid, String assertReturnPage )
+    {
         clickLinkWithText( "Login" );
 
         assertLoginPage();
 
-        submitLoginPage( username, password );
+        submitLoginPage( username, password, false, valid, assertReturnPage );
     }
 
     public void assertLoginPage()
@@ -273,15 +278,15 @@ public abstract class AbstractSeleniumTestCase
 
     public void submitLoginPage( String username, String password )
     {
-        submitLoginPage( username, password, false, true );
+        submitLoginPage( username, password, false, true, "Login Page" );
     }
 
     public void submitLoginPage( String username, String password, boolean validUsernamePassword )
     {
-        submitLoginPage( username, password, false, validUsernamePassword );
+        submitLoginPage( username, password, false, validUsernamePassword, "Login Page" );
     }
 
-    public void submitLoginPage( String username, String password, boolean rememberMe, boolean validUsernamePassword )
+    public void submitLoginPage( String username, String password, boolean rememberMe, boolean validUsernamePassword, String assertReturnPage )
     {
         assertLoginPage();
         setFieldValue( "username", username );
@@ -291,16 +296,23 @@ public abstract class AbstractSeleniumTestCase
             checkField( "rememberMe" );
         }
         clickButtonWithValue( "Login" );
-        waitPage();
+
         if ( validUsernamePassword )
         {
-            assertTextPresent( "Welcome, " + username + " - Logout" );
+            assertTextPresent( "Welcome, ");
             assertLinkPresent( username );
             assertLinkPresent( "Logout" );
         }
         else
         {
-            assertLoginPage();
+            if ( "Login Page".equals( assertReturnPage ) )
+            {    
+                assertLoginPage();
+            }
+            else
+            {
+                assertPage( assertReturnPage );
+            }
         }
     }
 

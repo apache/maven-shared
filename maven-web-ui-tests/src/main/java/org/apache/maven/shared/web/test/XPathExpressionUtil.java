@@ -51,9 +51,9 @@ public class XPathExpressionUtil
      * @param columnValues the values to be matched in each column, element column is included
      * @return
      */
-    public static String columnElementWithSiblingColumnValues( String element, int elementIndex, String[] columnValues )
+    public static String getColumnElement( String element, int elementIndex, String[] columnValues )
     {
-        return columnElementWithSiblingColumnValues( element, elementIndex, null, columnValues );
+        return getColumnElement( element, elementIndex, null, columnValues );
     }
 
     /**
@@ -65,7 +65,7 @@ public class XPathExpressionUtil
      * @param columnValues the values to be matched in each column, element column is included
      * @return
      */
-    public static String columnElementWithSiblingColumnValues( String element, int elementIndex, String elementValue,
+    public static String getColumnElement( String element, int elementIndex, String elementValue,
                                                                String[] columnValues )
     {
         String xpathExpression = null;
@@ -97,7 +97,7 @@ public class XPathExpressionUtil
      * @param columnValues the matched list of columnValues
      * @return
      */
-    public static String matchTableRowOrderedValues( String[] columnValues )
+    public static String getTableRow( String[] columnValues )
     {
         String xpathExpression = null;
 

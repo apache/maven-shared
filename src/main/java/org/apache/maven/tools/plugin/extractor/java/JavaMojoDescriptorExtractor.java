@@ -417,6 +417,12 @@ public class JavaMojoDescriptorExtractor
 
                 String roleHint = componentTag.getNamedParameter( COMPONENT_ROLEHINT );
 
+                if ( roleHint == null )
+                {
+                    // support alternate syntax for better compatibility with the Plexus CDC.
+                    roleHint = componentTag.getNamedParameter( "role-hint" );
+                }
+
                 pd.setRequirement( new Requirement( role, roleHint ) );
 
                 pd.setName( (String) entry.getKey() );

@@ -118,6 +118,25 @@ public abstract class AbstractSeleniumTestCase
         assertFalse( "The link '" + text + "' is present.", sel.isElementPresent( "link=" + text ) );
     }
 
+    public void assertImgWithAlt( String alt )
+    {
+        assertElementPresent( "//img[@alt='" + alt + "']" );
+    }
+
+    public void assertImgWithAltAtRowCol( boolean isALink, String alt, int row, int column )
+    {
+        String locator = "//tr[" + row + "]/td[" + column + "]/";
+        locator += isALink ? "a/" : "";
+        locator += "img[@alt='" + alt + "']";
+
+        assertElementPresent( locator );
+    }
+
+    public void assertCellValueFromTable( String expected, String tableElement, int row, int column )
+    {
+        assertEquals( expected, getCellValueFromTable( tableElement, row, column ) );
+    }
+
     public boolean isTextPresent( String text )
     {
         return sel.isTextPresent( text );
@@ -161,6 +180,16 @@ public abstract class AbstractSeleniumTestCase
         return sel.getValue( fieldName );
     }
 
+    public String getCellValueFromTable( String tableElement, int row, int column )
+    {
+        return getSelenium().getTable( tableElement + "." + row + "." + column );
+    }
+
+    public void selectValue( String locator, String value )
+    {
+        getSelenium().select( locator, "label=" + value );
+    }
+
     public void submit()
     {
         clickLinkWithXPath( "//input[@type='submit']" );
@@ -181,6 +210,21 @@ public abstract class AbstractSeleniumTestCase
         {
             clickLinkWithXPath( "//input[@value='" + text + "']", wait );
         }
+    }
+
+    public void clickSubmitWithLocator( String locator )
+    {
+        clickLinkWithLocator( locator );
+    }
+
+    public void clickSubmitWithLocator( String locator, boolean wait )
+    {
+        clickLinkWithLocator( locator, wait );
+    }
+
+    public void clickImgWithAlt( String alt )
+    {
+        clickLinkWithLocator( "//img[@alt='" + alt + "']" );
     }
 
     public void clickLinkWithText( String text )
@@ -256,7 +300,7 @@ public abstract class AbstractSeleniumTestCase
     {
         login( username, password, true, "Login Page" );
     }
-    
+
     public void login( String username, String password, boolean valid, String assertReturnPage )
     {
         clickLinkWithText( "Login" );
@@ -286,7 +330,8 @@ public abstract class AbstractSeleniumTestCase
         submitLoginPage( username, password, false, validUsernamePassword, "Login Page" );
     }
 
-    public void submitLoginPage( String username, String password, boolean rememberMe, boolean validUsernamePassword, String assertReturnPage )
+    public void submitLoginPage( String username, String password, boolean rememberMe, boolean validUsernamePassword,
+                                 String assertReturnPage )
     {
         assertLoginPage();
         setFieldValue( "username", username );
@@ -299,14 +344,14 @@ public abstract class AbstractSeleniumTestCase
 
         if ( validUsernamePassword )
         {
-            assertTextPresent( "Welcome, ");
+            assertTextPresent( "Welcome, " );
             assertLinkPresent( username );
             assertLinkPresent( "Logout" );
         }
         else
         {
             if ( "Login Page".equals( assertReturnPage ) )
-            {    
+            {
                 assertLoginPage();
             }
             else

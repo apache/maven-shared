@@ -42,7 +42,33 @@ public class XPathExpressionUtil
     public static final String END_NODE_TEST = "]";
 
     public static final String ANCHOR = "a";
+    
+    public static final String LIST = "ul";
+    
+    public static final String LINE = "li";
 
+    public static String getList( String[] values )
+    {
+        String xpathExpression = "";
+        
+        if ( values.length > 0 )
+        {        
+            xpathExpression += ELEMENT_ANY_LEVEL; 
+            xpathExpression += LIST;
+            xpathExpression += START_NODE_TEST;
+            
+            for (int nIndex = 0; nIndex < values.length; nIndex++ )
+            {
+                xpathExpression += ( ( nIndex > 0 ) ? AND : "" );                
+                xpathExpression += contains( LINE + position( nIndex + 1 ), values[nIndex] );
+            }
+            
+            xpathExpression += END_NODE_TEST;
+        }    
+        
+        return xpathExpression;
+    }
+    
     /**
      * expression for acquiring an element in one of the table columns
      *
@@ -131,16 +157,16 @@ public class XPathExpressionUtil
             {
                 // prepend "and" if index > 0
                 xpathExpression += ( ( nIndex > 0 ) ? AND : "" );
-                xpathExpression += contains( parent, columnPosition( nIndex + 1 ), columnValues[nIndex] );
+                xpathExpression += contains( parent, TABLE_COLUMN + position( nIndex + 1 ), columnValues[nIndex] );
             }
         }
 
         return xpathExpression;
     }
 
-    private static String columnPosition( int nIndex )
+    private static String position( int nIndex )
     {
-        return new String( TABLE_COLUMN + "[" + nIndex + "]" );
+        return new String( "[" + nIndex + "]" );
     }
 
     private static String contains( String parent, String element, String matchedString )

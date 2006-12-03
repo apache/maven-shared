@@ -9,7 +9,7 @@
   <artifactId>maven-downloader</artifactId>
   <name>Maven Downloader</name>
   <description>Provide a super simple interface for downloading a single artifact.</description>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -44,11 +44,5 @@
         </executions>                                                                                                                                
       </plugin>                                                                                                                                      
     </plugins>                                                                                                                                       
-  </build>       
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-downloader-1.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-downloader-1.0</developerConnection>
-    <url>https://svn.apache.org/repos/asf/maven/shared/tags/maven-downloader-1.0</url>
-  </scm>
+  </build>
 </project>

@@ -78,8 +78,6 @@ public class DefaultCompanyPomHandler
      */
     private ArtifactInstaller installer;
 
-    private static final String ORGANIZATION_LOGO_PROPERTY = "organization.logo";
-
     /**
      * @plexus.requirement
      */

@@ -19,28 +19,31 @@ package org.apache.maven.shared.app.company;
  * under the License.
  */
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.deployer.ArtifactDeployer;
+import org.apache.maven.artifact.deployer.ArtifactDeploymentException;
+import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.installer.ArtifactInstallationException;
+import org.apache.maven.artifact.installer.ArtifactInstaller;
+import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
+import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.installer.ArtifactInstaller;
-import org.apache.maven.artifact.installer.ArtifactInstallationException;
-import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
-import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.app.configuration.CompanyPom;
-import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.StringUtils;
 
-import java.util.Collections;
-import java.util.List;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Holds a company POM from the repository, and is able to find the latest one in a repository.
@@ -77,8 +80,20 @@ public class DefaultCompanyPomHandler
 
     private static final String ORGANIZATION_LOGO_PROPERTY = "organization.logo";
 
+    /**
+     * @plexus.requirement
+     */
+    private ArtifactDeployer deployer;
+
 
     public Model getCompanyPomModel( CompanyPom companyPom, ArtifactRepository localRepository )
+        throws ProjectBuildingException, ArtifactMetadataRetrievalException
+    {
+        return getCompanyPomModel( companyPom, localRepository, Collections.EMPTY_LIST );
+    }
+
+    public Model getCompanyPomModel( CompanyPom companyPom, ArtifactRepository localRepository,
+                                     List remoteRepositories )
         throws ProjectBuildingException, ArtifactMetadataRetrievalException
     {
         if ( companyPom != null )
@@ -101,8 +116,9 @@ public class DefaultCompanyPomHandler
                                                                                companyPom.getArtifactId(),
                                                                                Artifact.RELEASE_VERSION );
 
-                    List repositories =
-                        projectBuilder.buildStandaloneSuperProject( localRepository ).getRemoteArtifactRepositories();
+                    List repositories = new ArrayList( remoteRepositories );
+                    repositories.addAll(
+                        projectBuilder.buildStandaloneSuperProject( localRepository ).getRemoteArtifactRepositories() );
                     List versions =
                         artifactMetadataSource.retrieveAvailableVersions( artifact, localRepository, repositories );
 
@@ -153,6 +169,17 @@ public class DefaultCompanyPomHandler
     public void save( Model companyModel, ArtifactRepository localRepository )
         throws IOException, ArtifactInstallationException
     {
+        Artifact artifact = getNewArtifact( companyModel );
+
+        File f = writeTempFile( companyModel );
+
+        installer.install( f, artifact, localRepository );
+
+        this.companyModel = companyModel;
+    }
+
+    private Artifact getNewArtifact( Model companyModel )
+    {
         String v = companyModel.getVersion();
         String newVersion;
         if ( v != null )
@@ -167,9 +194,13 @@ public class DefaultCompanyPomHandler
         }
         companyModel.setVersion( newVersion );
 
-        Artifact artifact = artifactFactory.createProjectArtifact( companyModel.getGroupId(),
-                                                                   companyModel.getArtifactId(), newVersion );
+        return artifactFactory.createProjectArtifact( companyModel.getGroupId(), companyModel.getArtifactId(),
+                                                      newVersion );
+    }
 
+    private static File writeTempFile( Model companyModel )
+        throws IOException
+    {
         File f = File.createTempFile( "maven", "pom" );
         f.deleteOnExit();
 
@@ -183,9 +214,23 @@ public class DefaultCompanyPomHandler
         {
             IOUtil.close( fileWriter );
         }
+        return f;
+    }
+
+    public void save( Model companyModel, ArtifactRepository localRepository, ArtifactRepository deploymentRepository )
+        throws IOException, ArtifactInstallationException, ArtifactDeploymentException
+    {
+        Artifact artifact = getNewArtifact( companyModel );
+
+        File f = writeTempFile( companyModel );
 
         installer.install( f, artifact, localRepository );
 
         this.companyModel = companyModel;
+
+        if ( deploymentRepository != null )
+        {
+            deployer.deploy( f, artifact, deploymentRepository, localRepository );
+        }
     }
 }

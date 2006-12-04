@@ -1,5 +1,11 @@
 package org.apache.maven.shared.invoker;
 
+import junit.framework.TestCase;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.Os;
+import org.codehaus.plexus.util.cli.Commandline;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,13 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
-import junit.framework.TestCase;
-
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.Os;
-import org.codehaus.plexus.util.cli.Commandline;
 
 public class MavenCommandLineBuilderTest
     extends TestCase
@@ -72,11 +71,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldSetLocalRepoLocationGlobally()
-        throws IOException
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
 
         File lrd = new File( tmpDir, "workdir" ).getCanonicalFile();
 
@@ -94,11 +93,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldSetLocalRepoLocationFromRequest()
-        throws IOException
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
 
         File lrd = new File( tmpDir, "workdir" ).getCanonicalFile();
 
@@ -115,11 +114,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testRequestProvidedLocalRepoLocationShouldOverrideGlobal()
-        throws IOException
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
 
         File lrd = new File( tmpDir, "workdir" ).getCanonicalFile();
         File glrd = new File( tmpDir, "global/workdir" ).getCanonicalFile();
@@ -141,10 +140,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldSetWorkingDirectoryGlobally()
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
 
         File wd = new File( tmpDir, "workdir" );
 
@@ -163,10 +163,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldSetWorkingDirectoryFromRequest()
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
 
         File wd = new File( tmpDir, "workdir" );
 
@@ -186,10 +187,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testRequestProvidedWorkingDirectoryShouldOverrideGlobal()
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
 
         File wd = new File( tmpDir, "workdir" );
         File gwd = new File( tmpDir, "global/workdir" );
@@ -214,7 +216,7 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldUseSystemOutLoggerWhenNoneSpecified()
-        throws IOException
+        throws Exception
     {
         logTestStart();
         setupTempMavenHomeIfMissing();
@@ -224,7 +226,7 @@ public class MavenCommandLineBuilderTest
     }
 
     private File setupTempMavenHomeIfMissing()
-        throws IOException
+        throws Exception
     {
         String mavenHome = System.getProperty( "maven.home" );
         
@@ -232,7 +234,7 @@ public class MavenCommandLineBuilderTest
 
         if ( mavenHome == null || !new File( mavenHome ).exists() )
         {
-            String tmpDir = System.getProperty( "java.io.tmpdir" );
+            File tmpDir = getTempDir();
             appDir = new File( tmpDir, "invoker-tests/maven-home" );
 
             File binDir = new File( appDir, "bin" );
@@ -280,11 +282,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldFindDummyMavenExecutable()
-        throws IOException, CommandLineConfigurationException
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
 
         File base = new File( tmpDir, "invoker-tests" );
 
@@ -456,11 +458,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldSpecifyFileOptionUsingNonStandardPomFileLocation()
-        throws IOException
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
         File base = new File( tmpDir, "invoker-tests" );
 
         toDelete.add( base );
@@ -489,11 +491,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldSpecifyFileOptionUsingNonStandardPomInBasedir()
-        throws IOException
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
         File base = new File( tmpDir, "invoker-tests" );
 
         toDelete.add( base );
@@ -522,11 +524,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldNotSpecifyFileOptionUsingStandardPomFileLocation()
-        throws IOException
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
         File base = new File( tmpDir, "invoker-tests" );
 
         toDelete.add( base );
@@ -555,11 +557,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldNotSpecifyFileOptionUsingStandardPomInBasedir()
-        throws IOException
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
         File base = new File( tmpDir, "invoker-tests" );
 
         toDelete.add( base );
@@ -588,11 +590,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldUseDefaultPomFileWhenBasedirSpecifiedWithoutPomFileName()
-        throws IOException
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
         File base = new File( tmpDir, "invoker-tests" );
 
         toDelete.add( base );
@@ -619,11 +621,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldSpecifyPomFileWhenBasedirSpecifiedWithPomFileName()
-        throws IOException
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
         File base = new File( tmpDir, "invoker-tests" );
 
         toDelete.add( base );
@@ -651,11 +653,11 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldSpecifyCustomSettingsLocationFromRequest()
-        throws IOException
+        throws Exception
     {
         logTestStart();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
         File base = new File( tmpDir, "invoker-tests" );
 
         toDelete.add( base );
@@ -729,14 +731,14 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testBuildTypicalMavenInvocationEndToEnd()
-        throws IOException, CommandLineConfigurationException
+        throws Exception
     {
         logTestStart();
         File mavenDir = setupTempMavenHomeIfMissing();
 
         InvocationRequest request = new DefaultInvocationRequest();
 
-        String tmpDir = System.getProperty( "java.io.tmpdir" );
+        File tmpDir = getTempDir();
         File projectDir = new File( tmpDir, "invoker-tests/typical-end-to-end-cli-build" );
 
         projectDir.mkdirs();
@@ -953,4 +955,9 @@ public class MavenCommandLineBuilderTest
 
     }
 
+    private File getTempDir()
+        throws Exception
+    {
+        return new File( System.getProperty( "java.io.tmpdir" ) ).getCanonicalFile();
+    }
 }

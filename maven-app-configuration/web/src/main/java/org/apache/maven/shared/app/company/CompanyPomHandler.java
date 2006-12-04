@@ -39,6 +39,8 @@ public interface CompanyPomHandler
 {
     String ROLE = CompanyPomHandler.class.getName();
 
+    String ORGANIZATION_LOGO_PROPERTY = "organization.logo";
+
     /**
      * Retrieve the company model (may be cached).
      *

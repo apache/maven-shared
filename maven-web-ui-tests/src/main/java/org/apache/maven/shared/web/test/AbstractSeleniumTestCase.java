@@ -296,6 +296,13 @@ public abstract class AbstractSeleniumTestCase
     //////////////////////////////////////
     // Login
     //////////////////////////////////////
+    public void goToLoginPage()
+    {
+        clickLinkWithText( "Login" );
+
+        assertLoginPage();
+    }
+
     public void login( String username, String password )
     {
         login( username, password, true, "Login Page" );
@@ -303,9 +310,7 @@ public abstract class AbstractSeleniumTestCase
 
     public void login( String username, String password, boolean valid, String assertReturnPage )
     {
-        clickLinkWithText( "Login" );
-
-        assertLoginPage();
+        goToLoginPage();
 
         submitLoginPage( username, password, false, valid, assertReturnPage );
     }

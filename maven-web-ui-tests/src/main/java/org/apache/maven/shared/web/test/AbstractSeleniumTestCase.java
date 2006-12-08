@@ -100,22 +100,22 @@ public abstract class AbstractSeleniumTestCase
 
     public void assertElementPresent( String elementLocator )
     {
-        assertTrue( "'" + elementLocator + "' isn't present.", sel.isElementPresent( elementLocator ) );
+        assertTrue( "'" + elementLocator + "' isn't present.", isElementPresent( elementLocator ) );
     }
 
     public void assertElementNotPresent( String elementLocator )
     {
-        assertFalse( "'" + elementLocator + "' is present.", sel.isElementPresent( elementLocator ) );
+        assertFalse( "'" + elementLocator + "' is present.", isElementPresent( elementLocator ) );
     }
 
     public void assertLinkPresent( String text )
     {
-        assertTrue( "The link '" + text + "' isn't present.", sel.isElementPresent( "link=" + text ) );
+        assertTrue( "The link '" + text + "' isn't present.", isElementPresent( "link=" + text ) );
     }
 
     public void assertLinkNotPresent( String text )
     {
-        assertFalse( "The link '" + text + "' is present.", sel.isElementPresent( "link=" + text ) );
+        assertFalse( "The link '" + text + "' is present.", isElementPresent( "link=" + text ) );
     }
 
     public void assertImgWithAlt( String alt )
@@ -144,7 +144,12 @@ public abstract class AbstractSeleniumTestCase
 
     public boolean isLinkPresent( String text )
     {
-        return sel.isElementPresent( "link=" + text );
+        return isElementPresent( "link=" + text );
+    }
+
+    public boolean isElementPresent( String locator )
+    {
+        return sel.isElementPresent( locator );
     }
 
     public void waitPage()
@@ -202,7 +207,7 @@ public abstract class AbstractSeleniumTestCase
 
     public void clickButtonWithValue( String text, boolean wait )
     {
-        if ( sel.isElementPresent( "//button[@value='" + text + "']" ) )
+        if ( isElementPresent( "//button[@value='" + text + "']" ) )
         {
             clickLinkWithXPath( "//button[@value='" + text + "']", wait );
         }
@@ -349,8 +354,9 @@ public abstract class AbstractSeleniumTestCase
 
         if ( validUsernamePassword )
         {
-            assertTextPresent( "Welcome, " );
-            assertLinkPresent( username );
+            assertTextPresent( "Current User:" );
+            assertTextPresent( username );
+            assertLinkPresent( "Edit Details" );
             assertLinkPresent( "Logout" );
         }
         else

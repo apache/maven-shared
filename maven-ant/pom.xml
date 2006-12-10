@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><project>
-  <parent>                                                                                                                                                                                                                                  
-    <artifactId>maven-shared-components</artifactId>                                                                                                                                                                                        
-    <groupId>org.apache.maven.shared</groupId>                                                                                                                                                                                              
-    <version>3</version>                                                                                                                                                                                                                    
+  <parent>
+    <artifactId>maven-shared-components</artifactId>
+    <groupId>org.apache.maven.shared</groupId>    
+    <version>3</version>
   </parent>            
   <modelVersion>4.0.0</modelVersion>
   <artifactId>maven-ant</artifactId>
@@ -22,6 +22,11 @@
     </developer>    
   </developers>
   <dependencies>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-container-default</artifactId>
+      <version>1.0-alpha-13</version>
+    </dependency>  
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>

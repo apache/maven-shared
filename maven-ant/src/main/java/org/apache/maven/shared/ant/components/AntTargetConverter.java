@@ -30,6 +30,7 @@ import org.codehaus.plexus.component.configurator.converters.lookup.ConverterLoo
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 import org.codehaus.plexus.configuration.PlexusConfigurationException;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 
 /**
  * Plexus ConfigurationConverter to set up Ant Target component fields.
@@ -48,6 +49,7 @@ public class AntTargetConverter
         return Target.class.isAssignableFrom( type );
     }
 
+    // This is needed so that this will work in Maven 2.0.x
     public Object fromConfiguration( ConverterLookup converterLookup, PlexusConfiguration configuration, Class type,
                                      Class baseType, ClassLoader classLoader, ExpressionEvaluator expressionEvaluator,
                                      ConfigurationListener listener )
@@ -60,6 +62,26 @@ public class AntTargetConverter
         }
 
         Class implementation = getClassForImplementationHint( type, configuration, classLoader );
+
+        retValue = instantiateObject( implementation );
+
+        processConfiguration( (Target) retValue, configuration, expressionEvaluator );
+
+        return retValue;
+    }
+
+    public Object fromConfiguration( ConverterLookup converterLookup, PlexusConfiguration configuration, Class type,
+                                     Class baseType, ClassRealm realm, ExpressionEvaluator expressionEvaluator,
+                                     ConfigurationListener listener )
+        throws ComponentConfigurationException
+    {
+        Object retValue = fromExpression( configuration, expressionEvaluator, type );
+        if ( retValue != null )
+        {
+            return retValue;
+        }
+
+        Class implementation = getClassForImplementationHint( type, configuration, realm );
 
         retValue = instantiateObject( implementation );
 

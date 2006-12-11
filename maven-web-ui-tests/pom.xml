@@ -19,7 +19,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>4-SNAPSHOT</version>
+    <version>4</version>
   </parent>
   <artifactId>maven-web-ui-tests</artifactId>
   <name>Maven Shared Web UI tests</name>

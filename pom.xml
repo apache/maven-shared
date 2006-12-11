@@ -36,7 +36,6 @@
     <module>maven-plugin-testing-harness</module>
     <module>maven-invoker</module>
     <module>maven-verifier</module>
-    <module>maven-release-manager</module>
     <module>maven-web-ui-tests</module>
     <module>maven-app-configuration</module>
   </modules>

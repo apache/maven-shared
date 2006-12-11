@@ -55,8 +55,9 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-  <build>
+  <build>  
     <plugins>
+      <!--
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>
         <configuration>
@@ -70,6 +71,7 @@
           </filesets>
         </configuration>
       </plugin>
+      -->
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>

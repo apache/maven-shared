@@ -16,15 +16,14 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <artifactId>maven-shared-components</artifactId>
     <groupId>org.apache.maven.shared</groupId>
     <version>4</version>
   </parent>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <artifactId>maven-verifier</artifactId>
   <name>Maven Verifier Component</name>
   <dependencies>
@@ -34,4 +33,10 @@
       <version>3.8.1</version>
     </dependency>
   </dependencies>
+
+  <scm>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-verifier-1.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-verifier-1.0</developerConnection>
+    <url>https://svn.apache.org/repos/asf/maven/shared/tags/maven-verifier-1.0</url>
+  </scm>
 </project>

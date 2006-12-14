@@ -34,6 +34,12 @@
 
   <name>Maven Shared Jar Utils</name>
 
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/sandbox/maven-shared-jar</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/sandbox/maven-shared-jar</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/sandbox/maven-shared-jar</url>
+  </scm>
+
   <build>
     <plugins>
       <plugin>
@@ -115,7 +121,7 @@
       </plugin>
     </plugins>
   </reporting>
-  
+
   <repositories>
     <repository>
       <id>snapshots.codehaus</id>

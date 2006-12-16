@@ -1,4 +1,31 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.maven.shared.test.plugin;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -17,15 +44,6 @@ import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * Testing tool used to read MavenProject instances from pom.xml files, and to create plugin jar
@@ -53,7 +71,7 @@ public class ProjectTool
      * @plexus.requirement
      */
     private MavenProjectBuilder projectBuilder;
-    
+
     /**
      * @plexus.requirement
      */
@@ -158,11 +176,12 @@ public class ProjectTool
             MavenProject project = projectBuilder.build( pomInfo.getPomFile(), repositoryTool
                 .createLocalArtifactRepositoryInstance(), null );
 
-            Artifact artifact = artifactFactory.createArtifact( project.getGroupId(), project.getArtifactId(), project.getVersion(), null, project.getPackaging() );
-            
+            Artifact artifact = artifactFactory.createArtifact( project.getGroupId(), project.getArtifactId(), project
+                .getVersion(), null, project.getPackaging() );
+
             artifact.setFile( artifactFile );
             artifact.addMetadata( new ProjectArtifactMetadata( artifact, project.getFile() ) );
-            
+
             project.setArtifact( artifact );
 
             return project;
@@ -218,18 +237,18 @@ public class ProjectTool
             }
 
             finalName = build.getFinalName();
-            
+
             if ( finalName == null )
             {
                 ArtifactHandler handler = artifactHandlerManager.getArtifactHandler( model.getPackaging() );
-                
+
                 String ext = handler.getExtension();
-                
+
                 finalName = model.getArtifactId() + "-" + model.getVersion() + "." + ext;
             }
-            
+
             buildOutputDirectory = build.getOutputDirectory();
-            
+
             if ( buildOutputDirectory == null )
             {
                 buildOutputDirectory = "target";

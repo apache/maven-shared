@@ -1,4 +1,28 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.maven.shared.test.plugin;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
+import java.util.Properties;
 
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
@@ -13,12 +37,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
-
 /**
  * Test-tool used to execute Maven builds in order to test plugin functionality.
  * 
@@ -30,7 +48,7 @@ public class BuildTool
     implements Initializable, Disposable
 {
     public static final String ROLE = BuildTool.class.getName();
-    
+
     private Invoker mavenInvoker;
 
     /**
@@ -50,10 +68,10 @@ public class BuildTool
         throws TestToolsException
     {
         InvocationRequest request = createBasicInvocationRequest( pom, properties, goals, buildLogFile );
-        
+
         return executeMaven( request );
     }
-    
+
     /**
      * Execute a test build using a customized InvocationRequest. Normally, this request would be 
      * created using the <code>createBasicInvocationRequest</code> method in this class.
@@ -64,7 +82,7 @@ public class BuildTool
      *   exceptions resulting from the [attempted] Maven invocation.
      */
     public InvocationResult executeMaven( InvocationRequest request )
-    throws TestToolsException
+        throws TestToolsException
     {
         try
         {
@@ -93,13 +111,13 @@ public class BuildTool
         if ( mavenInvoker == null )
         {
             mavenInvoker = new DefaultInvoker();
-            
+
             if ( System.getProperty( "maven.home" ) == null )
             {
                 Properties envars = CommandLineUtils.getSystemEnvVars();
-                
+
                 String mavenHome = envars.getProperty( "M2_HOME" );
-                
+
                 if ( mavenHome != null )
                 {
                     mavenInvoker.setMavenHome( new File( mavenHome ) );
@@ -147,7 +165,7 @@ public class BuildTool
      *   customizations.
      */
     public InvocationRequest createBasicInvocationRequest( File pom, Properties properties, List goals,
-                                                            File buildLogFile )
+                                                           File buildLogFile )
     {
         InvocationRequest request = new DefaultInvocationRequest();
 
@@ -228,7 +246,7 @@ public class BuildTool
         {
             throw new InitializationException( "Error detecting maven home.", e );
         }
-        
+
     }
 
     /**

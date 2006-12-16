@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xsi:noNamespaceSchemaLocation="http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+  xsi:noNamespaceSchemaLocation="http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.apache.maven</groupId>
@@ -11,7 +12,7 @@
   <groupId>org.apache.maven.shared</groupId>
   <artifactId>maven-shared-components</artifactId>
   <packaging>pom</packaging>
-  <version>5</version>
+  <version>6</version>
   <name>Maven Shared Components</name>
   <description>Maven shared components</description>
   <url>http://maven.apache.org/shared/</url>
@@ -59,40 +60,24 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-remote-resources-plugin</artifactId>
+        <version>1.0-alpha-1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>process</goal>
+            </goals>
+            <configuration>
+              <resourceBundles>
+                <resourceBundle>org.apache:apache-jar-resource-bundle:1.0</resourceBundle>
+              </resourceBundles>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
-  <profiles>
-    <profile>
-      <id>sharedResources</id>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>people.apache.org</id>
-          <url>http://people.apache.org/repo/m2-snapshot-repository</url>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-remote-resources-plugin</artifactId>
-            <version>1.0-alpha-1</version>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>process</goal>
-                </goals>
-                <configuration>
-                  <resourceBundles>
-                    <resourceBundle>org.apache:apache-jar-resource-bundle:1.0</resourceBundle>
-                  </resourceBundles>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>

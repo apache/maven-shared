@@ -1,20 +1,39 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.maven.shared.repository;
 
-/*
- * Copyright 2001-2005 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.lang.reflect.Field;
+import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -37,33 +56,16 @@ import org.apache.maven.project.DefaultMavenProjectBuilder;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.shared.repository.model.GroupVersionAlignment;
-import org.apache.maven.shared.repository.model.RepositoryInfo;
-import org.apache.maven.shared.repository.utils.DigestUtils;
 import org.apache.maven.shared.artifact.filter.PatternExcludesArtifactFilter;
 import org.apache.maven.shared.artifact.filter.PatternIncludesArtifactFilter;
 import org.apache.maven.shared.artifact.filter.ScopeArtifactFilter;
+import org.apache.maven.shared.repository.model.GroupVersionAlignment;
+import org.apache.maven.shared.repository.model.RepositoryInfo;
+import org.apache.maven.shared.repository.utils.DigestUtils;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.lang.reflect.Field;
-import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
 
 /**
  * @author Jason van Zyl
@@ -109,7 +111,8 @@ public class DefaultRepositoryAssembler
      */
     protected MavenProjectBuilder projectBuilder;
 
-    public void buildRemoteRepository( File repositoryDirectory, RepositoryInfo repository, RepositoryBuilderConfigSource configSource )
+    public void buildRemoteRepository( File repositoryDirectory, RepositoryInfo repository,
+                                       RepositoryBuilderConfigSource configSource )
         throws RepositoryAssemblyException
     {
         MavenProject project = configSource.getProject();
@@ -120,21 +123,22 @@ public class DefaultRepositoryAssembler
         ArtifactRepository targetRepository = createLocalRepository( repositoryDirectory );
 
         ArtifactResolutionResult result = null;
-        
+
         Set dependencyArtifacts = project.getDependencyArtifacts();
-        
+
         if ( dependencyArtifacts == null )
         {
             Logger logger = getLogger();
-            
+
             if ( logger.isDebugEnabled() )
             {
-                logger.debug( "dependency-artifact set for project: " + project.getId() + " is null. Skipping repository processing." );
+                logger.debug( "dependency-artifact set for project: " + project.getId()
+                    + " is null. Skipping repository processing." );
             }
-            
+
             return;
         }
-        
+
         try
         {
             // i have to get everything first as a filter or transformation here
@@ -145,8 +149,8 @@ public class DefaultRepositoryAssembler
             // JARs.
 
             // FIXME I'm not getting runtime dependencies here
-            result = artifactResolver.resolveTransitively( dependencyArtifacts, project.getArtifact(),
-                project.getRemoteArtifactRepositories(), localRepository, metadataSource );
+            result = artifactResolver.resolveTransitively( dependencyArtifacts, project.getArtifact(), project
+                .getRemoteArtifactRepositories(), localRepository, metadataSource );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -167,11 +171,12 @@ public class DefaultRepositoryAssembler
         {
             throw new RepositoryAssemblyException( "Error invalidating the processed project cache.", e );
         }
-        
-        ArtifactFilter filter = buildRepositoryFilter( repository, project);
 
-        assembleRepositoryArtifacts( result, filter, project, localRepository, targetRepository, repositoryDirectory, groupVersionAlignments );
-        
+        ArtifactFilter filter = buildRepositoryFilter( repository, project );
+
+        assembleRepositoryArtifacts( result, filter, project, localRepository, targetRepository, repositoryDirectory,
+                                     groupVersionAlignments );
+
         ArtifactRepository centralRepository = findCentralRepository( project );
 
         if ( repository.isIncludeMetadata() )
@@ -180,7 +185,7 @@ public class DefaultRepositoryAssembler
         }
     }
 
-    private ArtifactFilter buildRepositoryFilter(RepositoryInfo repository, MavenProject project)
+    private ArtifactFilter buildRepositoryFilter( RepositoryInfo repository, MavenProject project )
     {
         AndArtifactFilter filter = new AndArtifactFilter();
 
@@ -239,7 +244,8 @@ public class DefaultRepositoryAssembler
 
     private void assembleRepositoryArtifacts( ArtifactResolutionResult result, ArtifactFilter filter,
                                               MavenProject project, ArtifactRepository localRepository,
-                                              ArtifactRepository targetRepository, File repositoryDirectory, Map groupVersionAlignments )
+                                              ArtifactRepository targetRepository, File repositoryDirectory,
+                                              Map groupVersionAlignments )
         throws RepositoryAssemblyException
     {
         try
@@ -275,7 +281,8 @@ public class DefaultRepositoryAssembler
                         a = artifactFactory.createProjectArtifact( a.getGroupId(), a.getArtifactId(), a.getVersion() );
 
                         MavenProject p = projectBuilder.buildFromRepository( a,
-                            project.getRemoteArtifactRepositories(), localRepository );
+                                                                             project.getRemoteArtifactRepositories(),
+                                                                             localRepository );
 
                         do
                         {
@@ -298,7 +305,8 @@ public class DefaultRepositoryAssembler
                             writeChecksums( targetFile );
 
                             p = p.getParent();
-                        } while ( p != null );
+                        }
+                        while ( p != null );
                     }
                 }
             }
@@ -388,10 +396,12 @@ public class DefaultRepositoryAssembler
                     FileUtils.copyFile( metadataFile, metadataFileRemote );
 
                     FileUtils.copyFile( new File( metadataFile.getParentFile(), metadataFile.getName() + ".sha1" ),
-                        new File( metadataFileRemote.getParentFile(), metadataFileRemote.getName() + ".sha1" ) );
+                                        new File( metadataFileRemote.getParentFile(), metadataFileRemote.getName()
+                                            + ".sha1" ) );
 
                     FileUtils.copyFile( new File( metadataFile.getParentFile(), metadataFile.getName() + ".md5" ),
-                        new File( metadataFileRemote.getParentFile(), metadataFileRemote.getName() + ".md5" ) );
+                                        new File( metadataFileRemote.getParentFile(), metadataFileRemote.getName()
+                                            + ".md5" ) );
                 }
                 catch ( IOException e )
                 {
@@ -430,7 +440,7 @@ public class DefaultRepositoryAssembler
 
             groupVersionAlignments.put( alignment.getId(), alignment );
         }
-        
+
         return groupVersionAlignments;
     }
 
@@ -451,14 +461,14 @@ public class DefaultRepositoryAssembler
         }
 
         return createRepository( "local", localRepositoryUrl, false, true,
-            ArtifactRepositoryPolicy.CHECKSUM_POLICY_WARN );
+                                 ArtifactRepositoryPolicy.CHECKSUM_POLICY_WARN );
     }
 
     public ArtifactRepository createRepository( String repositoryId, String repositoryUrl, boolean offline,
                                                 boolean updateSnapshots, String globalChecksumPolicy )
     {
         ArtifactRepository localRepository = new DefaultArtifactRepository( repositoryId, repositoryUrl,
-            repositoryLayout );
+                                                                            repositoryLayout );
 
         boolean snapshotPolicySet = false;
 

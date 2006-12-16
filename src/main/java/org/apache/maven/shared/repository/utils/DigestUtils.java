@@ -1,22 +1,22 @@
-package org.apache.maven.shared.repository.utils;
-
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-
-import org.codehaus.plexus.util.IOUtil;
+package org.apache.maven.shared.repository.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,6 +26,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.codehaus.plexus.util.IOUtil;
 
 /**
  * Create a digest for a file. Stolen from repository-utils - once released, use that instead.
@@ -38,7 +40,7 @@ public final class DigestUtils
     private static final int CHECKSUM_BUFFER_SIZE = 16384;
 
     private static final int BYTE_MASK = 0xFF;
-    
+
     private DigestUtils()
     {
     }
@@ -78,9 +80,8 @@ public final class DigestUtils
 
         String trimmedChecksum = checksum.replace( '\n', ' ' ).trim();
         // Free-BSD / openssl
-        Matcher m =
-            Pattern.compile( algorithm.replaceAll( "-", "" ) + "\\s*\\((.*?)\\)\\s*=\\s*([a-zA-Z0-9]+)" ).matcher(
-                trimmedChecksum );
+        Matcher m = Pattern.compile( algorithm.replaceAll( "-", "" ) + "\\s*\\((.*?)\\)\\s*=\\s*([a-zA-Z0-9]+)" )
+            .matcher( trimmedChecksum );
         if ( m.matches() )
         {
             String filename = m.group( 1 );

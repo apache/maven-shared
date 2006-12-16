@@ -1,32 +1,34 @@
-package org.apache.maven.shared.artifact.filter;
-
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
-
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.ArtifactUtils;
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.util.StringUtils;
+package org.apache.maven.shared.artifact.filter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.ArtifactUtils;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * TODO: include in maven-artifact in future
@@ -37,10 +39,13 @@ public class PatternIncludesArtifactFilter
     implements ArtifactFilter, StatisticsReportingArtifactFilter
 {
     private final List positivePatterns;
+
     private final List negativePatterns;
+
     private final boolean actTransitively;
 
     private Set patternsTriggered = new HashSet();
+
     private List filteredArtifactIds = new ArrayList();
 
     public PatternIncludesArtifactFilter( List patterns )
@@ -58,7 +63,7 @@ public class PatternIncludesArtifactFilter
             for ( Iterator it = patterns.iterator(); it.hasNext(); )
             {
                 String pattern = (String) it.next();
-                
+
                 if ( pattern.startsWith( "!" ) )
                 {
                     neg.add( pattern.substring( 1 ) );
@@ -69,7 +74,7 @@ public class PatternIncludesArtifactFilter
                 }
             }
         }
-        
+
         this.positivePatterns = pos;
         this.negativePatterns = neg;
     }
@@ -125,17 +130,17 @@ public class PatternIncludesArtifactFilter
         String shortId = ArtifactUtils.versionlessKey( artifact );
         String id = artifact.getDependencyConflictId();
         String wholeId = artifact.getId();
-        
+
         if ( matchAgainst( wholeId, patterns, false ) )
         {
             return true;
         }
-        
+
         if ( matchAgainst( id, patterns, false ) )
         {
             return true;
         }
-        
+
         if ( matchAgainst( shortId, patterns, false ) )
         {
             return true;
@@ -162,7 +167,7 @@ public class PatternIncludesArtifactFilter
         {
             // TODO: what about wildcards? Just specifying groups? versions?
             String pattern = (String) i.next();
-            
+
             // don't allow wildcards in region-matched searches...i.e. in transitive dependencies.
             if ( regionMatch && pattern.indexOf( '*' ) > -1 )
             {
@@ -185,38 +190,38 @@ public class PatternIncludesArtifactFilter
                     return true;
                 }
             }
-            
+
             if ( pattern.indexOf( '*' ) > -1 )
             {
                 String[] subPatterns = pattern.split( "\\*" );
                 int[] idxes = new int[subPatterns.length];
-                
+
                 for ( int j = 0; j < subPatterns.length; j++ )
                 {
                     String subPattern = subPatterns[j];
-                    
+
                     if ( subPattern == null || subPattern.length() < 1 )
                     {
-                        idxes[j] = j == 0 ? 0 : idxes[j-1];
-                        
+                        idxes[j] = j == 0 ? 0 : idxes[j - 1];
+
                         continue;
                     }
-                    
-                    int lastIdx = j == 0 ? 0 : idxes[j-1];
-                    
+
+                    int lastIdx = j == 0 ? 0 : idxes[j - 1];
+
                     idxes[j] = value.indexOf( subPattern, lastIdx );
-                    
+
                     if ( idxes[j] < 0 )
                     {
                         return false;
                     }
                 }
-                
+
                 patternsTriggered.add( pattern );
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -228,7 +233,7 @@ public class PatternIncludesArtifactFilter
             List missed = new ArrayList();
             missed.addAll( positivePatterns );
             missed.addAll( negativePatterns );
-            
+
             missed.removeAll( patternsTriggered );
 
             if ( !missed.isEmpty() && logger.isWarnEnabled() )
@@ -263,7 +268,7 @@ public class PatternIncludesArtifactFilter
         StringBuffer buffer = new StringBuffer();
         for ( Iterator it = positivePatterns.iterator(); it.hasNext(); )
         {
-            String pattern = ( String ) it.next();
+            String pattern = (String) it.next();
 
             buffer.append( "\no \'" ).append( pattern ).append( "\'" );
         }
@@ -280,11 +285,12 @@ public class PatternIncludesArtifactFilter
     {
         if ( !filteredArtifactIds.isEmpty() && logger.isDebugEnabled() )
         {
-            StringBuffer buffer = new StringBuffer( "The following artifacts were removed by this " + getFilterDescription() + ": " );
+            StringBuffer buffer = new StringBuffer( "The following artifacts were removed by this "
+                + getFilterDescription() + ": " );
 
             for ( Iterator it = filteredArtifactIds.iterator(); it.hasNext(); )
             {
-                String artifactId = ( String ) it.next();
+                String artifactId = (String) it.next();
 
                 buffer.append( '\n' ).append( artifactId );
             }
@@ -301,12 +307,12 @@ public class PatternIncludesArtifactFilter
             List missed = new ArrayList();
             missed.addAll( positivePatterns );
             missed.addAll( negativePatterns );
-            
+
             missed.removeAll( patternsTriggered );
 
             return !missed.isEmpty();
         }
-        
+
         return false;
     }
 

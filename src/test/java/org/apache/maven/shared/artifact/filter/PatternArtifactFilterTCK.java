@@ -1,9 +1,22 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.apache.maven.shared.artifact.filter;
-
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.shared.tools.easymock.MockManager;
-import org.easymock.MockControl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +24,10 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.shared.tools.easymock.MockManager;
+import org.easymock.MockControl;
 
 public abstract class PatternArtifactFilterTCK
     extends TestCase
@@ -22,7 +39,7 @@ public abstract class PatternArtifactFilterTCK
 
     protected abstract ArtifactFilter createFilter( List patterns, boolean actTransitively );
 
-    public void testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId(boolean reverse)
+    public void testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId( boolean reverse )
     {
         String groupId = "group";
         String artifactId = "artifact";
@@ -45,7 +62,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId(boolean reverse)
+    public void testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId( boolean reverse )
     {
         String groupId = "group";
         String artifactId = "artifact";
@@ -68,7 +85,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldNotIncludeWhenGroupIdDiffers(boolean reverse)
+    public void testShouldNotIncludeWhenGroupIdDiffers( boolean reverse )
     {
         String groupId = "group";
         String artifactId = "artifact";
@@ -77,7 +94,6 @@ public abstract class PatternArtifactFilterTCK
 
         mockManager.replayAll();
         List patterns = new ArrayList();
-
 
         patterns.add( "otherGroup:" + artifactId + ":jar" );
         patterns.add( "otherGroup:" + artifactId );
@@ -96,7 +112,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldNotIncludeWhenArtifactIdDiffers(boolean reverse)
+    public void testShouldNotIncludeWhenArtifactIdDiffers( boolean reverse )
     {
         String groupId = "group";
         String artifactId = "artifact";
@@ -124,7 +140,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldNotIncludeWhenBothIdElementsDiffer(boolean reverse)
+    public void testShouldNotIncludeWhenBothIdElementsDiffer( boolean reverse )
     {
         String groupId = "group";
         String artifactId = "artifact";
@@ -152,7 +168,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled(boolean reverse)
+    public void testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled( boolean reverse )
     {
         String groupId = "group";
         String artifactId = "artifact";
@@ -260,7 +276,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent(boolean reverse)
+    public void testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent( boolean reverse )
     {
         String groupId = "group";
         String artifactId = "artifact";
@@ -268,13 +284,14 @@ public abstract class PatternArtifactFilterTCK
         String otherGroup = "otherGroup";
         String otherArtifact = "otherArtifact";
         String otherType = "ejb";
-        
+
         String depTrailItem = otherGroup + ":" + otherArtifact + ":" + otherType + ":version";
         List depTrail = Collections.singletonList( depTrailItem );
         List patterns = Collections.singletonList( "*:jar:*" );
 
         ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId, "jar", depTrail );
-        ArtifactMockAndControl otherMac = new ArtifactMockAndControl( otherGroup, otherArtifact, otherType, Collections.EMPTY_LIST );
+        ArtifactMockAndControl otherMac = new ArtifactMockAndControl( otherGroup, otherArtifact, otherType,
+                                                                      Collections.EMPTY_LIST );
 
         mockManager.replayAll();
 
@@ -294,7 +311,8 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild(boolean reverse)
+    public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild(
+                                                                                                           boolean reverse )
     {
         String groupId = "group";
         String artifactId = "artifact";
@@ -302,7 +320,7 @@ public abstract class PatternArtifactFilterTCK
         String otherGroup = "otherGroup";
         String otherArtifact = "otherArtifact";
         String otherType = "ejb";
-        
+
         String depTrailItem = otherGroup + ":" + otherArtifact + ":" + otherType + ":version";
         List depTrail = Collections.singletonList( depTrailItem );
         List patterns = Collections.singletonList( "!*:ejb:*" );
@@ -331,10 +349,15 @@ public abstract class PatternArtifactFilterTCK
     private final class ArtifactMockAndControl
     {
         MockControl control;
+
         Artifact artifact;
+
         String groupId;
+
         String artifactId;
+
         List dependencyTrail;
+
         String type;
 
         ArtifactMockAndControl( String groupId, String artifactId, List depTrail )

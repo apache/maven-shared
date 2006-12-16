@@ -38,6 +38,10 @@
     <module>maven-verifier</module>
     <module>maven-web-ui-tests</module>
     <module>maven-app-configuration</module>
+    <module>maven-plugin-testing-tools</module>
+    <module>maven-test-tools</module>
+    <module>maven-repository-builder</module>
+    <module>maven-common-artifact-filters</module>
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>

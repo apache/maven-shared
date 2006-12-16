@@ -6,7 +6,7 @@
     <version>6</version>
   </parent>
   <artifactId>maven-common-artifact-filters</artifactId>
-  <version>1.0-alpha-1</version>
+  <version>1.0-alpha-2-SNAPSHOT</version>
   <name>Maven Common Artifact Filters</name>
   <prerequisites>
     <maven>2.0.2</maven>
@@ -41,10 +41,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-common-artifact-filters-1.0-alpha-1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-common-artifact-filters-1.0-alpha-1</developerConnection>
-    <url>https://svn.apache.org/repos/asf/maven/shared/tags/maven-common-artifact-filters-1.0-alpha-1</url>
-  </scm>
 </project>

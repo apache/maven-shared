@@ -240,6 +240,16 @@ public class RepositoryTool
                 if ( parent != null )
                 {
                     pom = new File( pom.getParentFile(), parent.getRelativePath() );
+                    
+                    if ( pomGroupId == null )
+                    {
+                        pomGroupId = parent.getGroupId();
+                    }
+                    
+                    if ( pomVersion == null )
+                    {
+                        pomVersion = parent.getVersion();
+                    }
                 }
                 else
                 {

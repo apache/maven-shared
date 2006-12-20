@@ -33,14 +33,18 @@ import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Build;
+import org.apache.maven.model.DeploymentRepository;
+import org.apache.maven.model.DistributionManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.Site;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -56,6 +60,8 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 public class ProjectTool
 {
     public static final String ROLE = ProjectTool.class.getName();
+
+    public static final String INTEGRATION_TEST_DEPLOYMENT_REPO_URL = "integration-test.deployment.repo.url";
 
     /**
      * @plexus.requirement role-hint="default"
@@ -246,6 +252,31 @@ public class ProjectTool
 
                 finalName = model.getArtifactId() + "-" + model.getVersion() + "." + ext;
             }
+            
+            DistributionManagement distMgmt = new DistributionManagement();
+            
+            DeploymentRepository deployRepo = new DeploymentRepository();
+            
+            deployRepo.setId( "integration-test.output" );
+            
+            File tmpDir = FileUtils.createTempFile( "integration-test-repo", "", null );
+            String tmpUrl = tmpDir.toURL().toExternalForm();
+            
+            deployRepo.setUrl( tmpUrl );
+            
+            distMgmt.setRepository( deployRepo );
+            distMgmt.setSnapshotRepository( deployRepo );
+            
+            Site site = new Site();
+            
+            site.setId( "integration-test.output" );
+            site.setUrl( tmpUrl );
+            
+            distMgmt.setSite( site );
+            
+            model.setDistributionManagement( distMgmt );
+            
+            model.addProperty( INTEGRATION_TEST_DEPLOYMENT_REPO_URL, tmpUrl );
 
             buildOutputDirectory = build.getOutputDirectory();
 

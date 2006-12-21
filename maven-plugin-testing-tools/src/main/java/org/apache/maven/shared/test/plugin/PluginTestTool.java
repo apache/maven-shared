@@ -18,13 +18,11 @@
  */
 package org.apache.maven.shared.test.plugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Properties;
-
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Test tool that provides a single point of access for staging a plugin artifact - along with its
@@ -57,11 +55,6 @@ public class PluginTestTool
      * @plexus.requirement role-hint="default"
      */
     private RepositoryTool repositoryTool;
-    
-    /**
-     * @plexus.requirement role-hint="default"
-     */
-    private BuildTool buildTool;
 
     /**
      * Stage the plugin, using a stable version, into a temporary local-repository directory that is
@@ -131,13 +124,56 @@ public class PluginTestTool
     private File prepareForTesting( String testVersion, boolean skipUnitTests, File localRepositoryDir )
         throws TestToolsException
     {
-        File pomFile = new File( "pom.xml" );
+        File realProjectDir;
+        try
+        {
+            realProjectDir = new File( "." ).getCanonicalFile();
+        }
+        catch ( IOException e )
+        {
+            throw new TestToolsException( "Failed to stage plugin for testing.", e );
+        }
+        
+        File pomFile;
+        try
+        {
+            final File tmpDir = File.createTempFile( "plugin-IT-staging-project", "" );
+
+            tmpDir.delete();
+
+            tmpDir.mkdirs();
+
+            Runtime.getRuntime().addShutdownHook( new Thread( new Runnable()
+            {
+
+                public void run()
+                {
+                    try
+                    {
+                        FileUtils.deleteDirectory( tmpDir );
+                    }
+                    catch ( IOException e )
+                    {
+                        // it'll get cleaned up when the temp dir is purged next...
+                    }
+                }
+
+            } ) );
+
+            FileUtils.copyDirectoryStructure( realProjectDir, tmpDir );
+
+            pomFile = new File( tmpDir, "pom.xml" );
+        }
+        catch ( IOException e )
+        {
+            throw new TestToolsException( "Failed to create temporary staging directory for plugin project.", e );
+        }
+
         File buildLog = new File( "target/test-build-logs/setup.build.log" );
-        File cleanLog = new File( "target/test-build-logs/setup.clean.log" );
         
+        buildLog.getParentFile().mkdirs();
+
         File localRepoDir = localRepositoryDir;
-        
-        File tmpLocalRepoDir = new File( "test-local-repository" );
 
         if ( localRepoDir == null )
         {
@@ -145,29 +181,8 @@ public class PluginTestTool
         }
 
         MavenProject project = projectTool.packageProjectArtifact( pomFile, testVersion, skipUnitTests, buildLog );
-        repositoryTool.createLocalRepositoryFromPlugin( project, localRepoDir );
         
-        try
-        {
-            FileUtils.copyDirectory( localRepoDir, tmpLocalRepoDir );
-        }
-        catch ( IOException e )
-        {
-            throw new TestToolsException( "Failed to move testing local repository out of the way before cleaning the target dir." );
-        }
-        
-        buildTool.executeMaven( pomFile, new Properties(), Collections.singletonList( "clean" ), cleanLog );
-        
-        localRepoDir.mkdirs();
-        try
-        {
-            FileUtils.copyDirectory( tmpLocalRepoDir, localRepoDir );
-            FileUtils.deleteDirectory( tmpLocalRepoDir );
-        }
-        catch ( IOException e )
-        {
-            throw new TestToolsException( "Failed to move testing local repository back to it's specified location after cleaning the target dir." );
-        }
+        repositoryTool.createLocalRepositoryFromPlugin( project, new File( realProjectDir, "pom.xml" ), localRepoDir );
 
         return localRepoDir;
     }

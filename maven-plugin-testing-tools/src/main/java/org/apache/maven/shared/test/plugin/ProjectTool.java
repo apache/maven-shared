@@ -172,10 +172,12 @@ public class ProjectTool
         goals.add( "package" );
 
         File buildLog = logFile == null ? pomInfo.getBuildLogFile() : logFile;
+        
+        System.out.println( "Using staged plugin-pom: " + pomInfo.getPomFile().getAbsolutePath() );
 
         buildTool.executeMaven( pomInfo.getPomFile(), properties, goals, buildLog );
 
-        File artifactFile = new File( pomInfo.getBuildOutputDirectory() + "/" + pomInfo.getFinalName() );
+        File artifactFile = new File( pomInfo.getPomFile().getParentFile(), pomInfo.getBuildOutputDirectory() + "/" + pomInfo.getFinalName() );
 
         try
         {
@@ -214,9 +216,9 @@ public class ProjectTool
     protected PomInfo manglePomForTesting( File pomFile, String testVersion, boolean skipUnitTests )
         throws TestToolsException
     {
-        File input = new File( "pom.xml" );
+        File input = pomFile;
 
-        File output = new File( "pom-test.xml" );
+        File output = new File( pomFile.getParentFile(), "pom-" + testVersion + ".xml" );
         output.deleteOnExit();
 
         FileReader reader = null;
@@ -225,14 +227,28 @@ public class ProjectTool
         Model model = null;
         String finalName = null;
         String buildOutputDirectory = null;
-
+        
         try
         {
             reader = new FileReader( input );
-            writer = new FileWriter( output );
-
+            
             model = new MavenXpp3Reader().read( reader );
+        }
+        catch ( IOException e )
+        {
+            throw new TestToolsException( "Error creating test-time version of POM for: " + input, e );
+        }
+        catch ( XmlPullParserException e )
+        {
+            throw new TestToolsException( "Error creating test-time version of POM for: " + input, e );
+        }
+        finally
+        {
+            IOUtil.close( reader );
+        }
 
+        try
+        {
             model.setVersion( testVersion );
 
             Build build = model.getBuild();
@@ -320,19 +336,16 @@ public class ProjectTool
                 configDom.addChild( skipDom );
             }
 
+            writer = new FileWriter( output );
+
             new MavenXpp3Writer().write( writer, model );
         }
         catch ( IOException e )
         {
             throw new TestToolsException( "Error creating test-time version of POM for: " + input, e );
         }
-        catch ( XmlPullParserException e )
-        {
-            throw new TestToolsException( "Error creating test-time version of POM for: " + input, e );
-        }
         finally
         {
-            IOUtil.close( reader );
             IOUtil.close( writer );
         }
 

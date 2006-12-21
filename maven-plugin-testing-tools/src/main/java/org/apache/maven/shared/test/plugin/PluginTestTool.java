@@ -19,6 +19,8 @@
 package org.apache.maven.shared.test.plugin;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.Properties;
 
 import org.apache.maven.project.MavenProject;
 
@@ -53,6 +55,11 @@ public class PluginTestTool
      * @plexus.requirement role-hint="default"
      */
     private RepositoryTool repositoryTool;
+    
+    /**
+     * @plexus.requirement role-hint="default"
+     */
+    private BuildTool buildTool;
 
     /**
      * Stage the plugin, using a stable version, into a temporary local-repository directory that is
@@ -124,6 +131,7 @@ public class PluginTestTool
     {
         File pomFile = new File( "pom.xml" );
         File buildLog = new File( "target/test-build-logs/setup.build.log" );
+        File cleanLog = new File( "target/test-build-logs/setup.clean.log" );
         File localRepoDir = localRepositoryDir;
 
         if ( localRepoDir == null )
@@ -134,7 +142,7 @@ public class PluginTestTool
         MavenProject project = projectTool.packageProjectArtifact( pomFile, testVersion, skipUnitTests, buildLog );
         repositoryTool.createLocalRepositoryFromPlugin( project, localRepoDir );
         
-        project.getArtifact().getFile().delete();
+        buildTool.executeMaven( pomFile, new Properties(), Collections.singletonList( "clean" ), cleanLog );
 
         return localRepoDir;
     }

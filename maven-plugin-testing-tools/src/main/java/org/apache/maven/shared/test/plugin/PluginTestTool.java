@@ -19,10 +19,12 @@
 package org.apache.maven.shared.test.plugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Properties;
 
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.FileUtils;
 
 /**
  * Test tool that provides a single point of access for staging a plugin artifact - along with its
@@ -132,7 +134,10 @@ public class PluginTestTool
         File pomFile = new File( "pom.xml" );
         File buildLog = new File( "target/test-build-logs/setup.build.log" );
         File cleanLog = new File( "target/test-build-logs/setup.clean.log" );
+        
         File localRepoDir = localRepositoryDir;
+        
+        File tmpLocalRepoDir = new File( "test-local-repository" );
 
         if ( localRepoDir == null )
         {
@@ -142,7 +147,27 @@ public class PluginTestTool
         MavenProject project = projectTool.packageProjectArtifact( pomFile, testVersion, skipUnitTests, buildLog );
         repositoryTool.createLocalRepositoryFromPlugin( project, localRepoDir );
         
+        try
+        {
+            FileUtils.copyDirectory( localRepoDir, tmpLocalRepoDir );
+        }
+        catch ( IOException e )
+        {
+            throw new TestToolsException( "Failed to move testing local repository out of the way before cleaning the target dir." );
+        }
+        
         buildTool.executeMaven( pomFile, new Properties(), Collections.singletonList( "clean" ), cleanLog );
+        
+        localRepoDir.mkdirs();
+        try
+        {
+            FileUtils.copyDirectory( tmpLocalRepoDir, localRepoDir );
+            FileUtils.deleteDirectory( tmpLocalRepoDir );
+        }
+        catch ( IOException e )
+        {
+            throw new TestToolsException( "Failed to move testing local repository back to it's specified location after cleaning the target dir." );
+        }
 
         return localRepoDir;
     }

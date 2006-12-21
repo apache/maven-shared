@@ -166,7 +166,7 @@ public class RepositoryTool
      * @param targetLocalRepoBasedir
      * @throws TestToolsException
      */
-    public void createLocalRepositoryFromPlugin( MavenProject pluginProject, File targetLocalRepoBasedir )
+    public void createLocalRepositoryFromPlugin( MavenProject pluginProject, File realPomFile, File targetLocalRepoBasedir )
         throws TestToolsException
     {
         Artifact artifact = pluginProject.getArtifact();
@@ -190,22 +190,23 @@ public class RepositoryTool
                 + targetLocalRepoBasedir, e );
         }
 
-        installLocallyReachableAncestorPoms( pluginProject.getFile(), localRepository );
+        installLocallyReachableAncestorPoms( realPomFile, localRepository );
     }
 
     /**
      * Traverse &lt;relativePath/&gt; links for successive POMs in the plugin's ancestry, installing
      * each one into the test-time local repository.
      * 
-     * @param pomFile The plugin POM; a starting point.
+     * @param realPomFile The real plugin POM; a starting point, but the POM is already installed, 
+     *   so we won't actually install this file, only use it to locate parents.
      * @param localRepo The test-time local repository instance
      */
-    private void installLocallyReachableAncestorPoms( File pomFile, ArtifactRepository localRepo )
+    private void installLocallyReachableAncestorPoms( File realPomFile, ArtifactRepository localRepo )
         throws TestToolsException
     {
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
 
-        File pom = pomFile;
+        File pom = realPomFile;
 
         boolean firstPass = true;
 

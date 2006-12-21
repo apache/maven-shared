@@ -133,6 +133,8 @@ public class PluginTestTool
 
         MavenProject project = projectTool.packageProjectArtifact( pomFile, testVersion, skipUnitTests, buildLog );
         repositoryTool.createLocalRepositoryFromPlugin( project, localRepoDir );
+        
+        project.getArtifact().getFile().delete();
 
         return localRepoDir;
     }

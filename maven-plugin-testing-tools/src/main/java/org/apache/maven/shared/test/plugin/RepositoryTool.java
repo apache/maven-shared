@@ -47,16 +47,16 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 /**
- * Tools to access and manage Maven repositories for test builds, including construction of a local 
+ * Tools to access and manage Maven repositories for test builds, including construction of a local
  * repository directory structure.
- * 
+ *
  * <p>
- * <b>WARNING:</b> Currently, the <code>createLocalRepositoryFromPlugin</code> method will not 
- * resolve parent POMs that exist <b>only</b> in your normal local repository, and are not reachable 
- * using the relativePath element. This may result in failed test builds, as one or more of the 
+ * <b>WARNING:</b> Currently, the <code>createLocalRepositoryFromPlugin</code> method will not
+ * resolve parent POMs that exist <b>only</b> in your normal local repository, and are not reachable
+ * using the relativePath element. This may result in failed test builds, as one or more of the
  * plugin's ancestor POMs cannot be resolved.
  * </p>
- * 
+ *
  * @plexus.component role="org.apache.maven.shared.test.plugin.RepositoryTool" role-hint="default"
  * @author jdcasey
  */
@@ -108,7 +108,9 @@ public class RepositoryTool
             throw new TestToolsException( "Error building Maven settings.", e );
         }
 
-        return new File( settings.getLocalRepository() );
+        return settings == null || settings.getLocalRepository() == null
+            ? new File( new File( System.getProperty( "user.home" ) ), ".m2/repository" )
+            : new File( settings.getLocalRepository() );
     }
 
     /**
@@ -155,13 +157,13 @@ public class RepositoryTool
      * Install a test version of a plugin - along with its POM, and as many ancestor POMs as can be
      * reached using the &lt;relativePath/&gt; element - to a clean local repository directory for
      * use in test builds.
-     * 
+     *
      * <p>
      * <b>WARNING:</b> Currently, this method will not resolve parent POMs that exist <b>only</b> in
      * your normal local repository, and are not reachable using the relativePath element. This may
      * result in failed test builds, as one or more of the plugin's ancestor POMs cannot be resolved.
      * </p>
-     * 
+     *
      * @param pluginProject
      * @param targetLocalRepoBasedir
      * @throws TestToolsException
@@ -196,8 +198,8 @@ public class RepositoryTool
     /**
      * Traverse &lt;relativePath/&gt; links for successive POMs in the plugin's ancestry, installing
      * each one into the test-time local repository.
-     * 
-     * @param realPomFile The real plugin POM; a starting point, but the POM is already installed, 
+     *
+     * @param realPomFile The real plugin POM; a starting point, but the POM is already installed,
      *   so we won't actually install this file, only use it to locate parents.
      * @param localRepo The test-time local repository instance
      */
@@ -241,12 +243,12 @@ public class RepositoryTool
                 if ( parent != null )
                 {
                     pom = new File( pom.getParentFile(), parent.getRelativePath() );
-                    
+
                     if ( pomGroupId == null )
                     {
                         pomGroupId = parent.getGroupId();
                     }
-                    
+
                     if ( pomVersion == null )
                     {
                         pomVersion = parent.getVersion();

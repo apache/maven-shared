@@ -138,8 +138,8 @@ public class XPathExpressionUtil
                 if ( "TEXT".equals( elementValueType ) )
                 {
                     xpathExpression += contains( elementValue );
+                    xpathExpression += ( columnValues.length > 0 ) ? AND : "";
                 }
-                xpathExpression += ( columnValues.length > 0 ) ? AND : "";
             }
 
             // we are two levels below the table row element ( tr/td/<element> )

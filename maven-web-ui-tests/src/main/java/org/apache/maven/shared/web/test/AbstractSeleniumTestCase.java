@@ -276,6 +276,7 @@ public abstract class AbstractSeleniumTestCase
 
     public void clickLinkWithLocator( String locator, boolean wait )
     {
+        assertElementPresent( locator );
         sel.click( locator );
         if ( wait )
         {

@@ -200,6 +200,21 @@ public abstract class AbstractSeleniumTestCase
         clickLinkWithXPath( "//input[@type='submit']" );
     }
 
+    public void assertButtonWithValuePresent( String text )
+    {
+        assertTrue( "'" + text + "' button isn't present", isButtonWithValuePresent( text ) );
+    }
+
+    public void assertButtonWithValueNotPresent( String text )
+    {
+        assertFalse( "'" + text + "' button is present", isButtonWithValuePresent( text ) );
+    }
+
+    public boolean isButtonWithValuePresent( String text )
+    {
+        return isElementPresent( "//button[@value='" + text + "']" ) || isElementPresent( "//input[@value='" + text + "']" );
+    }
+
     public void clickButtonWithValue( String text )
     {
         clickButtonWithValue( text, true );
@@ -207,6 +222,8 @@ public abstract class AbstractSeleniumTestCase
 
     public void clickButtonWithValue( String text, boolean wait )
     {
+        assertButtonWithValuePresent( text );
+
         if ( isElementPresent( "//button[@value='" + text + "']" ) )
         {
             clickLinkWithXPath( "//button[@value='" + text + "']", wait );

@@ -1,19 +1,22 @@
 package org.apache.maven.tools.plugin.extractor.java;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import com.thoughtworks.qdox.JavaDocBuilder;
@@ -75,7 +78,7 @@ public class JavaMojoDescriptorExtractor
      * So:
      *
      * @parameter property="project"
-     *
+     * <p/>
      * Would say there is a getProject() method and a setProject(Project) method. Here the field
      * name would not be the basis for the parameter's name. This mode of operation will allow the
      * mojos to be usable as beans and will be the promoted form of use.
@@ -309,8 +312,8 @@ public class JavaMojoDescriptorExtractor
         // requiresDirectInvocation flag
         // ----------------------------------------------------------------------
 
-        value = getBooleanTagValue( javaClass, GOAL_REQUIRES_DIRECT_INVOCATION,
-                                    mojoDescriptor.isDirectInvocationOnly() );
+        value =
+            getBooleanTagValue( javaClass, GOAL_REQUIRES_DIRECT_INVOCATION, mojoDescriptor.isDirectInvocationOnly() );
         mojoDescriptor.setDirectInvocationOnly( value );
 
         // ----------------------------------------------------------------------

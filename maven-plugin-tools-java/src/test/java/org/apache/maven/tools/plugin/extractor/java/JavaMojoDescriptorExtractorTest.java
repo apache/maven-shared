@@ -57,6 +57,15 @@ public class JavaMojoDescriptorExtractorTest
         pluginDescriptor.setGoalPrefix( "test" );
         List results = extractor.execute( project, pluginDescriptor );
         assertEquals( "Extracted mojos", 2, results.size() );
+
+        for ( int i = 0; i < 2; i++ )
+        {
+            MojoDescriptor mojoDescriptor = (MojoDescriptor) results.get( i );
+            assertEquals( 1, mojoDescriptor.getParameters().size() );
+            Parameter parameter = (Parameter) mojoDescriptor.getParameters().get( 0 );
+            assertEquals( "project", parameter.getName() );
+            assertEquals( "java.lang.String[]", parameter.getType() );
+        }
     }
 
     private File fileOf( String classpathResource )

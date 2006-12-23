@@ -24,6 +24,8 @@ import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
 import com.thoughtworks.qdox.model.JavaSource;
+import com.thoughtworks.qdox.model.Type;
+
 import org.apache.maven.plugin.descriptor.InvalidParameterException;
 import org.apache.maven.plugin.descriptor.InvalidPluginDescriptorException;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
@@ -365,9 +367,27 @@ public class JavaMojoDescriptorExtractor
 
             JavaField field = (JavaField) entry.getValue();
 
+            Type type = field.getType();
+
             Parameter pd = new Parameter();
 
-            pd.setType( field.getType().getValue() );
+            if ( !type.isArray() )
+            {
+                pd.setType( type.getValue() );
+            }
+            else
+            {
+                StringBuffer value = new StringBuffer( type.getValue() );
+
+                int remaining = type.getDimensions();
+
+                while ( remaining-- > 0 )
+                {
+                    value.append( "[]" );
+                }
+
+                pd.setType( value.toString() );
+            }
 
             pd.setDescription( field.getComment() );
 

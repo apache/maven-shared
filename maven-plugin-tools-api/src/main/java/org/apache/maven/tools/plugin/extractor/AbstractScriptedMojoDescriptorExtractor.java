@@ -1,5 +1,24 @@
 package org.apache.maven.tools.plugin.extractor;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import org.apache.maven.plugin.descriptor.InvalidPluginDescriptorException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
@@ -29,16 +48,16 @@ public abstract class AbstractScriptedMojoDescriptorExtractor
     {
         String metadataExtension = getMetadataFileExtension();
         String scriptExtension = getScriptFileExtension();
-        
+
         Map scriptFilesKeyedByBasedir =
             gatherFilesByBasedir( project.getBasedir(), project.getScriptSourceRoots(), scriptExtension );
-        
+
         List mojoDescriptors;
         if ( !StringUtils.isEmpty( metadataExtension ) )
         {
             Map metadataFilesKeyedByBasedir =
                 gatherFilesByBasedir( project.getBasedir(), project.getScriptSourceRoots(), metadataExtension );
-            
+
             mojoDescriptors = extractMojoDescriptorsFromMetadata( metadataFilesKeyedByBasedir, pluginDescriptor );
         }
         else
@@ -109,7 +128,7 @@ public abstract class AbstractScriptedMojoDescriptorExtractor
             Set sources = new HashSet();
 
             String resourceDir = (String) it.next();
-            
+
             File dir = new File( basedir, resourceDir ).getAbsoluteFile();
 
             resourceDir = dir.getPath();
@@ -120,7 +139,7 @@ public abstract class AbstractScriptedMojoDescriptorExtractor
 
                 scanner.setBasedir( dir );
                 scanner.addDefaultExcludes();
-                scanner.setIncludes( new String[] { "**/*" + scriptFileExtension } );
+                scanner.setIncludes( new String[]{"**/*" + scriptFileExtension} );
                 scanner.scan();
 
                 String[] relativePaths = scanner.getIncludedFiles();
@@ -143,7 +162,8 @@ public abstract class AbstractScriptedMojoDescriptorExtractor
         return sourcesByBasedir;
     }
 
-    protected List extractMojoDescriptorsFromMetadata( Map metadataFilesKeyedByBasedir, PluginDescriptor pluginDescriptor )
+    protected List extractMojoDescriptorsFromMetadata( Map metadataFilesKeyedByBasedir,
+                                                       PluginDescriptor pluginDescriptor )
         throws ExtractionException, InvalidPluginDescriptorException
     {
         return null;

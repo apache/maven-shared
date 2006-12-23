@@ -25,11 +25,18 @@ import org.apache.maven.model.Model;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.tools.plugin.extractor.ExtractionException;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author jdcasey
@@ -37,38 +44,145 @@ import java.util.Map;
 public class DefaultMojoScannerTest
     extends TestCase
 {
+    private Map extractors;
 
-    public void testShouldFindOneDescriptorFromTestExtractor()
+    private Build build;
+
+    private Model model;
+
+    private MojoScanner scanner;
+
+    private MavenProject project;
+
+    protected void setUp()
         throws Exception
     {
-        Map extractors = Collections.singletonMap( "test", new TestExtractor() );
+        extractors = new HashMap();
+        extractors.put( "one", new ScannerTestExtractor( "one" ) );
+        extractors.put( "two", new ScannerTestExtractor( "two" ) );
+        extractors.put( "three", new ScannerTestExtractor( "three" ) );
 
-        MojoScanner scanner = new DefaultMojoScanner( extractors );
+        scanner = new DefaultMojoScanner( extractors );
 
-        Build build = new Build();
+        build = new Build();
         build.setSourceDirectory( "testdir" );
 
-        Model model = new Model();
+        model = new Model();
         model.setBuild( build );
 
-        MavenProject project = new MavenProject( model );
+        project = new MavenProject( model );
         project.setFile( new File( "." ) );
+    }
 
+    public void testUnspecifiedExtractors()
+        throws Exception
+    {
+        PluginDescriptor pluginDescriptor = createPluginDescriptor();
+
+        scanner.populatePluginDescriptor( project, pluginDescriptor );
+
+        checkResult( pluginDescriptor, extractors.keySet() );
+    }
+
+    public void testSpecifiedExtractors()
+        throws Exception
+    {
+        Set activeExtractors = new HashSet();
+        activeExtractors.add( "one" );
+        activeExtractors.add( "" );
+        activeExtractors.add( null );
+        activeExtractors.add( "three" );
+
+        PluginDescriptor pluginDescriptor = createPluginDescriptor();
+
+        scanner.setActiveExtractors( activeExtractors );
+        scanner.populatePluginDescriptor( project, pluginDescriptor );
+
+        checkResult( pluginDescriptor, Arrays.asList( new String[]{"one", "three"} ) );
+    }
+
+    public void testAllExtractorsThroughNull()
+        throws Exception
+    {
+        PluginDescriptor pluginDescriptor = createPluginDescriptor();
+
+        scanner.setActiveExtractors( null );
+        scanner.populatePluginDescriptor( project, pluginDescriptor );
+
+        checkResult( pluginDescriptor, extractors.keySet() );
+    }
+
+    public void testNoExtractorsThroughEmptySet()
+        throws Exception
+    {
+        PluginDescriptor pluginDescriptor = createPluginDescriptor();
+
+        scanner.setActiveExtractors( Collections.EMPTY_SET );
+        scanner.populatePluginDescriptor( project, pluginDescriptor );
+
+        checkResult( pluginDescriptor, Collections.EMPTY_SET );
+    }
+
+    public void testUnknownExtractor()
+        throws Exception
+    {
+        Set activeExtractors = new HashSet();
+        activeExtractors.add( "four" );
+
+        PluginDescriptor pluginDescriptor = createPluginDescriptor();
+
+        scanner.setActiveExtractors( activeExtractors );
+
+        try
+        {
+            scanner.populatePluginDescriptor( project, pluginDescriptor );
+            fail( "No error for unknown extractor" );
+        }
+        catch ( ExtractionException e )
+        {
+            // Ok
+        }
+
+        checkResult( pluginDescriptor, Collections.EMPTY_SET );
+    }
+
+    private PluginDescriptor createPluginDescriptor()
+    {
         PluginDescriptor pluginDescriptor = new PluginDescriptor();
         pluginDescriptor.setGroupId( "groupId" );
         pluginDescriptor.setArtifactId( "artifactId" );
         pluginDescriptor.setVersion( "version" );
         pluginDescriptor.setGoalPrefix( "testId" );
+        return pluginDescriptor;
+    }
 
-        scanner.populatePluginDescriptor( project, pluginDescriptor );
-
+    /**
+     * Checks if the {@link PluginDescriptor} contains exactly the {@link MojoDescriptor}s with the
+     * supplied goal names.
+     *
+     * @param pluginDescriptor The {@link PluginDescriptor} to check.
+     * @param expectedGoals    The goal names of the {@link MojoDescriptor}s.
+     */
+    protected void checkResult( PluginDescriptor pluginDescriptor, Collection expectedGoals )
+    {
+        Set remainingGoals = new HashSet( expectedGoals );
         List descriptors = pluginDescriptor.getMojos();
 
-        assertEquals( 1, descriptors.size() );
+        if ( descriptors == null )
+        {
+            // TODO Maybe getMojos should be more user frendly and not return null
+            descriptors = Collections.EMPTY_LIST;
+        }
 
-        MojoDescriptor desc = (MojoDescriptor) descriptors.iterator().next();
-        assertEquals( pluginDescriptor, desc.getPluginDescriptor() );
-        assertEquals( "testGoal", desc.getGoal() );
+        for ( Iterator i = descriptors.iterator(); i.hasNext(); )
+        {
+            MojoDescriptor desc = (MojoDescriptor) i.next();
+            assertEquals( pluginDescriptor, desc.getPluginDescriptor() );
+            assertTrue( "Unexpected goal in PluginDescriptor: " + desc.getGoal(),
+                        remainingGoals.remove( desc.getGoal() ) );
+        }
+
+        assertTrue( "Extpected goals missing from PluginDescriptor: " + remainingGoals, remainingGoals.size() == 0 );
     }
 
 }

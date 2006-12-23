@@ -1,5 +1,24 @@
 package org.apache.maven.tools.plugin.extractor.ant;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import org.apache.maven.plugin.descriptor.InvalidPluginDescriptorException;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.plugin.descriptor.Parameter;
@@ -25,7 +44,8 @@ public class AntMojoDescriptorExtractor
 
     private static final String SCRIPT_FILE_EXTENSION = ".build.xml";
 
-    protected List extractMojoDescriptorsFromMetadata( Map metadataFilesKeyedByBasedir, PluginDescriptor pluginDescriptor )
+    protected List extractMojoDescriptorsFromMetadata( Map metadataFilesKeyedByBasedir,
+                                                       PluginDescriptor pluginDescriptor )
         throws ExtractionException, InvalidPluginDescriptorException
     {
         List descriptors = new ArrayList();
@@ -50,8 +70,8 @@ public class AntMojoDescriptorExtractor
 
                 if ( !scriptFile.exists() )
                 {
-                    throw new InvalidPluginDescriptorException( "Found orphaned plugin metadata file: "
-                        + metadataFile );
+                    throw new InvalidPluginDescriptorException(
+                        "Found orphaned plugin metadata file: " + metadataFile );
                 }
 
                 String relativePath = null;
@@ -111,9 +131,10 @@ public class AntMojoDescriptorExtractor
                         String dImpl = descriptor.getImplementation();
                         if ( StringUtils.isNotEmpty( dImpl ) )
                         {
-                            implementation = relativePath + dImpl.substring( PluginMetadataParser.IMPL_BASE_PLACEHOLDER.length() );
+                            implementation =
+                                relativePath + dImpl.substring( PluginMetadataParser.IMPL_BASE_PLACEHOLDER.length() );
                         }
-                        
+
                         descriptor.setImplementation( implementation );
 
                         descriptor.setLanguage( "ant-mojo" );
@@ -127,8 +148,7 @@ public class AntMojoDescriptorExtractor
                 }
                 catch ( PluginMetadataParseException e )
                 {
-                    throw new ExtractionException( "Error extracting mojo descriptor from script: "
-                        + metadataFile, e );
+                    throw new ExtractionException( "Error extracting mojo descriptor from script: " + metadataFile, e );
                 }
             }
         }
@@ -140,7 +160,7 @@ public class AntMojoDescriptorExtractor
     {
         return SCRIPT_FILE_EXTENSION;
     }
-    
+
     protected String getMetadataFileExtension()
     {
         return METADATA_FILE_EXTENSION;

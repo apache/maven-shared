@@ -1,5 +1,24 @@
 package org.apache.maven.plugin.tools.model;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import org.apache.maven.plugin.descriptor.DuplicateParameterException;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.plugin.descriptor.Parameter;
@@ -21,32 +40,32 @@ import java.util.Set;
 public class PluginMetadataParser
 {
     public static final String IMPL_BASE_PLACEHOLDER = "<REPLACE-WITH-MOJO-PATH>";
-    
+
     public Set parseMojoDescriptors( File metadataFile )
         throws PluginMetadataParseException
     {
         Set descriptors = new HashSet();
-        
+
         Reader reader = null;
-        
+
         try
         {
             reader = new FileReader( metadataFile );
-            
+
             PluginMetadataXpp3Reader metadataReader = new PluginMetadataXpp3Reader();
-            
+
             PluginMetadata pluginMetadata = metadataReader.read( reader );
-            
+
             List mojos = pluginMetadata.getMojos();
-            
+
             if ( mojos != null && !mojos.isEmpty() )
             {
                 for ( Iterator it = mojos.iterator(); it.hasNext(); )
                 {
                     Mojo mojo = (Mojo) it.next();
-                    
+
                     MojoDescriptor descriptor = asDescriptor( metadataFile, mojo );
-                    
+
                     descriptors.add( descriptor );
                 }
             }
@@ -63,7 +82,7 @@ public class PluginMetadataParser
         {
             IOUtil.close( reader );
         }
-        
+
         return descriptors;
     }
 
@@ -71,9 +90,9 @@ public class PluginMetadataParser
         throws PluginMetadataParseException
     {
         MojoDescriptor descriptor = new MojoDescriptor();
-        
+
         descriptor.setImplementation( IMPL_BASE_PLACEHOLDER + ":" + mojo.getCall() );
-        
+
         descriptor.setGoal( mojo.getGoal() );
         descriptor.setPhase( mojo.getPhase() );
         descriptor.setDependencyResolutionRequired( mojo.getRequiresDependencyResolution() );
@@ -85,22 +104,23 @@ public class PluginMetadataParser
         descriptor.setRequiresReports( mojo.isRequiresReports() );
         descriptor.setDescription( mojo.getDescription() );
         descriptor.setDeprecated( mojo.getDeprecation() );
-        
+
         LifecycleExecution le = mojo.getExecution();
         if ( le != null )
         {
             descriptor.setExecuteLifecycle( le.getLifecycle() );
             descriptor.setExecutePhase( le.getPhase() );
         }
-        
+
         List parameters = mojo.getParameters();
-        
+
         if ( parameters != null && !parameters.isEmpty() )
         {
             for ( Iterator it = parameters.iterator(); it.hasNext(); )
             {
-                org.apache.maven.plugin.tools.model.Parameter param = (org.apache.maven.plugin.tools.model.Parameter) it.next();
-                
+                org.apache.maven.plugin.tools.model.Parameter param =
+                    (org.apache.maven.plugin.tools.model.Parameter) it.next();
+
                 Parameter dParam = new Parameter();
                 dParam.setAlias( param.getAlias() );
                 dParam.setDeprecated( param.getDeprecation() );
@@ -108,7 +128,7 @@ public class PluginMetadataParser
                 dParam.setEditable( !param.isReadonly() );
                 dParam.setExpression( param.getExpression() );
                 dParam.setDefaultValue( param.getDefaultValue() );
-                
+
                 String property = param.getProperty();
                 if ( StringUtils.isNotEmpty( property ) )
                 {
@@ -118,42 +138,45 @@ public class PluginMetadataParser
                 {
                     dParam.setName( param.getName() );
                 }
-                
+
                 if ( StringUtils.isEmpty( dParam.getName() ) )
                 {
-                    throw new PluginMetadataParseException( metadataFile, "Mojo: \'" + mojo.getGoal() + "\' has a parameter without either property or name attributes. Please specify one." );
+                    throw new PluginMetadataParseException( metadataFile, "Mojo: \'" + mojo.getGoal() +
+                        "\' has a parameter without either property or name attributes. Please specify one." );
                 }
 
                 dParam.setRequired( param.isRequired() );
                 dParam.setType( param.getType() );
-                
+
                 try
                 {
                     descriptor.addParameter( dParam );
                 }
                 catch ( DuplicateParameterException e )
                 {
-                    throw new PluginMetadataParseException( metadataFile, "Duplicate parameters detected for mojo: " + mojo.getGoal(), e );
+                    throw new PluginMetadataParseException( metadataFile,
+                                                            "Duplicate parameters detected for mojo: " + mojo.getGoal(),
+                                                            e );
                 }
             }
         }
-        
+
         List components = mojo.getComponents();
-        
+
         if ( components != null && !components.isEmpty() )
         {
             for ( Iterator it = components.iterator(); it.hasNext(); )
             {
                 Component component = (Component) it.next();
-                
+
                 ComponentRequirement cr = new ComponentRequirement();
                 cr.setRole( component.getRole() );
                 cr.setRoleHint( component.getHint() );
-                
+
                 descriptor.addRequirement( cr );
             }
         }
-        
+
         return descriptor;
     }
 

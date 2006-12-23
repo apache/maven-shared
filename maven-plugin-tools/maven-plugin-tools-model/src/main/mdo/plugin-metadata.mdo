@@ -1,52 +1,71 @@
 <!--
-<pluginMetadata>
-  <mojos>
-    <mojo>
-      <goal>myGoal</goal>
-      <phase>compile</phase>
-      <requiresDependencyResolution>compile</requiresDependencyResolution>
-      <requiresProject>true</requiresProject>
-      <requiresReports>true</requiresReports>
-      <requiresOnline>true</requiresOnline>
-      <inheritByDefault>true</inheritByDefault>
-      <requiresDirectInvocation>true</requiresDirectInvocation>
-      <aggregator>true</aggregator>
-  
-      <execute>
-        <phase>initialize</phase>
-        <lifecycle>mine</lifecycle>
-        <goal>goal</goal>
-      </execute>
-
-      <components>
-        <component>
-          <role>stuff</role>
-          <hint>more</hint>
-        </component>
-      </components>
-
-      <parameters>
-        <parameter>
-          <name>nom</name> 
-          <property>prop</property> 
-          <required>true</required>
-          <readonly>true</readonly> 
-          <expression>${my.property}</expression> 
-          <defaultValue>${project.artifactId}</defaultValue>
-          <type>org.apache.maven.project.MavenProject</type>
-          <alias>otherProp</alias>
-          <description>Test parameter</description>
-          <deprecated>Use something else</deprecated>
-        </parameter>
-      </parameters>
-      <description>
-        This is a test.
-      </description>
-      <deprecated>Use another mojo</deprecated>
-    </mojo>
-  </mojos>
-</pluginMetadata>
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
   -->
+
+    <!--
+  <pluginMetadata>
+    <mojos>
+      <mojo>
+        <goal>myGoal</goal>
+        <phase>compile</phase>
+        <requiresDependencyResolution>compile</requiresDependencyResolution>
+        <requiresProject>true</requiresProject>
+        <requiresReports>true</requiresReports>
+        <requiresOnline>true</requiresOnline>
+        <inheritByDefault>true</inheritByDefault>
+        <requiresDirectInvocation>true</requiresDirectInvocation>
+        <aggregator>true</aggregator>
+
+        <execute>
+          <phase>initialize</phase>
+          <lifecycle>mine</lifecycle>
+          <goal>goal</goal>
+        </execute>
+
+        <components>
+          <component>
+            <role>stuff</role>
+            <hint>more</hint>
+          </component>
+        </components>
+
+        <parameters>
+          <parameter>
+            <name>nom</name>
+            <property>prop</property>
+            <required>true</required>
+            <readonly>true</readonly>
+            <expression>${my.property}</expression>
+            <defaultValue>${project.artifactId}</defaultValue>
+            <type>org.apache.maven.project.MavenProject</type>
+            <alias>otherProp</alias>
+            <description>Test parameter</description>
+            <deprecated>Use something else</deprecated>
+          </parameter>
+        </parameters>
+        <description>
+          This is a test.
+        </description>
+        <deprecated>Use another mojo</deprecated>
+      </mojo>
+    </mojos>
+  </pluginMetadata>
+    -->
 <model>
   <id>plugin-metadata</id>
   <name>PluginMetadata</name>
@@ -99,7 +118,8 @@
           <version>1.0.0</version>
           <name>aggregator</name>
           <type>boolean</type>
-          <description>Whether this mojo operates as an aggregator when the reactor is run. That is, only runs once.</description>
+          <description>Whether this mojo operates as an aggregator when the reactor is run. That is, only runs once.
+          </description>
         </field>
         <field>
           <version>1.0.0</version>
@@ -129,13 +149,15 @@
           <version>1.0.0</version>
           <name>inheritByDefault</name>
           <type>boolean</type>
-          <description>Whether this mojo's configuration should propagate down the POM inheritance chain by default.</description>
+          <description>Whether this mojo's configuration should propagate down the POM inheritance chain by default.
+          </description>
         </field>
         <field>
           <version>1.0.0</version>
           <name>requiresDirectInvocation</name>
           <type>boolean</type>
-          <description>If true, this mojo can only be directly invoked (eg. specified directly on the command line).</description>
+          <description>If true, this mojo can only be directly invoked (eg. specified directly on the command line).
+          </description>
         </field>
         <field>
           <version>1.0.0</version>
@@ -194,7 +216,9 @@
           <name>lifecycle</name>
           <version>1.0.0</version>
           <type>String</type>
-          <description>The name of the overlay to apply to the sub-lifecycle before executing it. If specified, this lifecycle overlay definition will be bundled with the plugin.</description>
+          <description>The name of the overlay to apply to the sub-lifecycle before executing it. If specified, this
+            lifecycle overlay definition will be bundled with the plugin.
+          </description>
         </field>
         <field>
           <name>phase</name>
@@ -205,7 +229,8 @@
         <field>
           <name>goal</name>
           <version>1.0.0</version>
-          <description>A goal, not attached to a lifecycle phase, which should be executed ahead of this mojo.</description>
+          <description>A goal, not attached to a lifecycle phase, which should be executed ahead of this mojo.
+          </description>
           <type>String</type>
         </field>
       </fields>

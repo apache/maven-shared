@@ -29,6 +29,7 @@
     <component>
       <role>org.apache.maven.tools.plugin.scanner.MojoScanner</role>
       <implementation>org.apache.maven.tools.plugin.scanner.DefaultMojoScanner</implementation>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
       <requirements>
         <requirement>
           <role>org.apache.maven.tools.plugin.extractor.MojoDescriptorExtractor</role>

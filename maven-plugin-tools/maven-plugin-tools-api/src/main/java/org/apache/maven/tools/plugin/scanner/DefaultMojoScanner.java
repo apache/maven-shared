@@ -29,9 +29,11 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author jdcasey
@@ -42,6 +44,11 @@ public class DefaultMojoScanner
 {
 
     private Map mojoDescriptorExtractors;
+
+    /**
+     * The names of the active extractors
+     */
+    private Set/* <String> */activeExtractors;
 
     public DefaultMojoScanner( Map extractors )
     {
@@ -58,14 +65,19 @@ public class DefaultMojoScanner
         throws ExtractionException, InvalidPluginDescriptorException
     {
         Logger logger = getLogger();
+        Set activeExtractors = getActiveExtractors();
 
-        logger.info( "Using " + mojoDescriptorExtractors.size() + " extractors." );
+        logger.info( "Using " + activeExtractors.size() + " extractors." );
 
-        for ( Iterator it = mojoDescriptorExtractors.entrySet().iterator(); it.hasNext(); )
+        for ( Iterator it = activeExtractors.iterator(); it.hasNext(); )
         {
-            Map.Entry entry = (Map.Entry) it.next();
-            String language = (String) entry.getKey();
-            MojoDescriptorExtractor extractor = (MojoDescriptorExtractor) entry.getValue();
+            String language = (String) it.next();
+            MojoDescriptorExtractor extractor = (MojoDescriptorExtractor) mojoDescriptorExtractors.get( language );
+
+            if ( extractor == null )
+            {
+                throw new ExtractionException( "No extractor for language: " + language );
+            }
 
             logger.info( "Applying extractor for language: " + language );
 
@@ -87,4 +99,45 @@ public class DefaultMojoScanner
         }
     }
 
+    /**
+     * Gets the name of the active extractors.
+     *
+     * @return A Set containing the names of the active extractors.
+     */
+    protected Set/* <String> */getActiveExtractors()
+    {
+        Set/* <String> */result = activeExtractors;
+
+        if ( result == null )
+        {
+            result = new HashSet/* <String> */( mojoDescriptorExtractors.keySet() );
+        }
+
+        return result;
+    }
+
+    /**
+     * @see org.apache.maven.tools.plugin.scanner.ExtendedMojoScanner#setActiveExtractors(java.util.Set)
+     */
+    public void setActiveExtractors( Set/* <String> */extractors )
+    {
+        if ( extractors == null )
+        {
+            this.activeExtractors = null;
+        }
+        else
+        {
+            this.activeExtractors = new HashSet/* <String> */();
+
+            for ( Iterator i = extractors.iterator(); i.hasNext(); )
+            {
+                String extractor = (String) i.next();
+
+                if ( extractor != null && extractor.length() > 0 )
+                {
+                    this.activeExtractors.add( extractor );
+                }
+            }
+        }
+    }
 }

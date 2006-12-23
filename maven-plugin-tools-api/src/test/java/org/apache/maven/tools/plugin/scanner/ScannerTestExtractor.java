@@ -19,33 +19,34 @@ package org.apache.maven.tools.plugin.scanner;
  * under the License.
  */
 
-import org.apache.maven.plugin.descriptor.InvalidPluginDescriptorException;
+import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.tools.plugin.extractor.ExtractionException;
+import org.apache.maven.tools.plugin.extractor.MojoDescriptorExtractor;
 
-import java.util.Set;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author jdcasey
  */
-public interface MojoScanner
+public class ScannerTestExtractor
+    implements MojoDescriptorExtractor
 {
-    String ROLE = MojoScanner.class.getName();
+    private final String goal;
 
-    void populatePluginDescriptor( MavenProject project, PluginDescriptor pluginDescriptor )
-        throws ExtractionException, InvalidPluginDescriptorException;
+    public ScannerTestExtractor( String goal )
+    {
+        this.goal = goal;
+    }
 
+    public List execute( MavenProject project, PluginDescriptor pluginDescriptor )
+    {
+        MojoDescriptor desc = new MojoDescriptor();
+        desc.setPluginDescriptor( pluginDescriptor );
+        desc.setGoal( goal );
 
-    /**
-     * Sets the active extractors.
-     * <p/>
-     * Only the specified extractors will be used, all others will be skipped.
-     *
-     * @param extractors The names of the sctive extractors. If this parameter is <code>null</code>,
-     *                   all the scanner's extractors are considered active. Set entries that are
-     *                   <code>null</code> or empty ("") will be ignored.
-     */
-    void setActiveExtractors( Set/* <String> */extractors );
+        return Collections.singletonList( desc );
+    }
 
 }

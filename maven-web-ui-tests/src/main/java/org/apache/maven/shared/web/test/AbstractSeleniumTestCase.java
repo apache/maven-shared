@@ -34,11 +34,25 @@ import java.util.Map;
 public abstract class AbstractSeleniumTestCase
     extends TestCase
 {
-    final public static String CHECKBOX_CHECK = "on";
+    private static final int ONE_SECOND = 1000;
 
-    final public static String CHECKBOX_UNCHECK = "off";
+    private static final int ONE_MINUTE = 60 * ONE_SECOND;
+
+    private static final int LONG_WAIT = 5 * ONE_MINUTE;
+
+    public static final String CHECKBOX_CHECK = "on";
+
+    public static final String CHECKBOX_UNCHECK = "off";
 
     private Selenium sel;
+
+    protected String adminUsername = "admin";
+
+    protected String adminPassword = "admin1";
+
+    protected String adminFullName = "Continuum Admin";
+
+    protected String adminEmail = "admin@localhost.localdomain.com";
 
     public void setUp()
         throws Exception
@@ -67,7 +81,28 @@ public abstract class AbstractSeleniumTestCase
 
     public abstract String getBaseUrl();
 
-    protected abstract void initialize();
+    /**
+     * We create an admin user if it doesn't exist
+     */
+    protected void initialize()
+    {
+        getSelenium().setTimeout( String.valueOf( 5 * ONE_MINUTE ) );
+        open( "/continuum" );
+
+        if ( "Create Admin User".equals( getTitle() ) )
+        {
+            assertCreateAdminUserPage();
+            submitCreateAdminUserPage( adminFullName, adminEmail, adminPassword, adminPassword );
+            assertLoginPage();
+            submitLoginPage( adminUsername, adminPassword );
+            postAdminUserCreation();
+            logout();
+        }
+    }
+
+    protected void postAdminUserCreation()
+    {
+    }
 
     protected abstract String getApplicationName();
 
@@ -173,10 +208,8 @@ public abstract class AbstractSeleniumTestCase
 
     public void assertFooter()
     {
-        assertTrue(
-            sel.getText( "xpath=//div[@id='footer']/table/tbody/tr/td" ).startsWith( getApplicationName() + " " ) );
         int currentYear = Calendar.getInstance().get( Calendar.YEAR );
-        assertTrue( sel.getText( "xpath=//div[@id='footer']/table/tbody/tr/td" ).endsWith(
+        assertTrue( getSelenium().getText( "xpath=//div[@id='footer']/div" ).endsWith(
             " " + getInceptionYear() + "-" + currentYear + " Apache Software Foundation" ) );
     }
 
@@ -477,6 +510,35 @@ public abstract class AbstractSeleniumTestCase
         assertTextPresent( "[Admin] User Delete" );
         assertTextPresent( "The following user will be deleted: " + username );
         assertButtonWithValuePresent( "Delete User" );
+    }
+
+    //////////////////////////////////////
+    // Create Admin User
+    //////////////////////////////////////
+    public void assertCreateAdminUserPage()
+    {
+        assertPage( "Create Admin User" );
+        assertTextPresent( "Create Admin User" );
+        assertTextPresent( "Username" );
+        assertElementPresent( "user.username" );
+        assertTextPresent( "Full Name" );
+        assertElementPresent( "user.fullName" );
+        assertTextPresent( "Email Address" );
+        assertElementPresent( "user.email" );
+        assertTextPresent( "Password" );
+        assertElementPresent( "user.password" );
+        assertTextPresent( "Confirm Password" );
+        assertElementPresent( "user.confirmPassword" );
+    }
+
+    public void submitCreateAdminUserPage( String fullName, String email, String password, String confirmPassword )
+    {
+        setFieldValue( "user.fullName", fullName );
+        setFieldValue( "user.email", email );
+        setFieldValue( "user.password", password );
+        setFieldValue( "user.confirmPassword", confirmPassword );
+        submit();
+        waitPage();
     }
 
     public String getBasedir()

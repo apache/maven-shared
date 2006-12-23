@@ -405,6 +405,80 @@ public abstract class AbstractSeleniumTestCase
         assertFalse( "The user is always authenticated after a logout.", isAuthenticated() );
     }
 
+    //////////////////////////////////////
+    // My Account
+    //////////////////////////////////////
+    public void goToMyAccount()
+    {
+        clickLinkWithText( "Edit Details" );
+    }
+
+    public void assertMyAccountDetails( String username, String newFullName, String newEmailAddress )
+        throws Exception
+    {
+        assertPage( "Account Details" );
+
+        isTextPresent( "Username" );
+        assertTextPresent( "Username" );
+        assertElementPresent( "registerForm_user_username" );
+        assertCellValueFromTable( username, "//form/table", 0, 1 );
+
+        assertTextPresent( "Full Name" );
+        assertElementPresent( "user.fullName" );
+        assertEquals( newFullName, getFieldValue( "user.fullName" ) );
+
+        assertTextPresent( "Email Address" );
+        assertElementPresent( "user.email" );
+        assertEquals( newEmailAddress, getFieldValue( "user.email" ) );
+
+        assertTextPresent( "Password" );
+        assertElementPresent( "user.password" );
+
+        assertTextPresent( "Confirm Password" );
+        assertElementPresent( "user.confirmPassword" );
+
+        assertTextPresent( "Last Password Change" );
+        assertElementPresent( "registerForm_user_timestampLastPasswordChange" );
+
+    }
+
+    public void editMyUserInfo( String newFullName, String newEmailAddress, String newPassword,
+                                String confirmNewPassword )
+    {
+        goToMyAccount();
+
+        setFieldValue( "user.fullName", newFullName );
+        setFieldValue( "user.email", newEmailAddress );
+        setFieldValue( "user.password", newPassword );
+        setFieldValue( "user.confirmPassword", confirmNewPassword );
+    }
+
+    //////////////////////////////////////
+    // Users
+    //////////////////////////////////////
+    public void assertUsersListPage()
+    {
+        assertPage( "[Admin] User List" );
+    }
+
+    public void assertCreateUserPage()
+    {
+        assertPage( "[Admin] User Create" );
+        assertTextPresent( "Username" );
+        assertTextPresent( "Full Name" );
+        assertTextPresent( "Email Address" );
+        assertTextPresent( "Password" );
+        assertTextPresent( "Confirm Password" );
+    }
+
+    public void assertDeleteUserPage( String username )
+    {
+        assertPage( "[Admin] User Delete" );
+        assertTextPresent( "[Admin] User Delete" );
+        assertTextPresent( "The following user will be deleted: " + username );
+        assertButtonWithValuePresent( "Delete User" );
+    }
+
     public String getBasedir()
     {
         String basedir = System.getProperty( "basedir" );

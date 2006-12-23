@@ -21,6 +21,8 @@ package org.apache.maven.tools.plugin.extractor.java;
 
 import junit.framework.TestCase;
 import org.apache.maven.model.Model;
+import org.apache.maven.plugin.descriptor.MojoDescriptor;
+import org.apache.maven.plugin.descriptor.Parameter;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
 

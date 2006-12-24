@@ -1,19 +1,22 @@
 package org.apache.maven.shared.web.test;
 
 /*
- * Copyright 2005-2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import com.thoughtworks.selenium.DefaultSelenium;
@@ -34,12 +37,6 @@ import java.util.Map;
 public abstract class AbstractSeleniumTestCase
     extends TestCase
 {
-    private static final int ONE_SECOND = 1000;
-
-    private static final int ONE_MINUTE = 60 * ONE_SECOND;
-
-    private static final int LONG_WAIT = 5 * ONE_MINUTE;
-
     public static final String CHECKBOX_CHECK = "on";
 
     public static final String CHECKBOX_UNCHECK = "off";
@@ -50,9 +47,9 @@ public abstract class AbstractSeleniumTestCase
 
     protected String adminPassword = "admin1";
 
-    protected String adminFullName = "Continuum Admin";
+    protected String adminFullName = getApplicationName() + " Admin";
 
-    protected String adminEmail = "admin@localhost.localdomain.com";
+    protected String adminEmail = "admin@localhost.localdomain";
 
     public void setUp()
         throws Exception
@@ -86,10 +83,9 @@ public abstract class AbstractSeleniumTestCase
      */
     protected void initialize()
     {
-        getSelenium().setTimeout( String.valueOf( 5 * ONE_MINUTE ) );
-        open( "/continuum" );
+        open( getWebContext() );
 
-        if ( "Create Admin User".equals( getTitle() ) )
+        if ( getTitle().endsWith( "Create Admin User" ) )
         {
             assertCreateAdminUserPage();
             submitCreateAdminUserPage( adminFullName, adminEmail, adminPassword, adminPassword );
@@ -100,13 +96,31 @@ public abstract class AbstractSeleniumTestCase
         }
     }
 
+    /**
+     * where webapp initial configurations can be done
+     */
     protected void postAdminUserCreation()
     {
     }
 
     protected abstract String getApplicationName();
 
+    /**
+     * some webapps have
+     *
+     * @return the page prefix set by the webapp
+     */
+    protected String getTitlePrefix()
+    {
+        return "";
+    }
+
     protected abstract String getInceptionYear();
+
+    protected String getWebContext()
+    {
+        return "/";
+    }
 
     public void open( String url )
     {
@@ -199,7 +213,7 @@ public abstract class AbstractSeleniumTestCase
 
     public void assertPage( String title )
     {
-        assertEquals( title, getTitle() );
+        assertEquals( getTitlePrefix() + title, getTitle() );
         assertHeader();
         assertFooter();
     }

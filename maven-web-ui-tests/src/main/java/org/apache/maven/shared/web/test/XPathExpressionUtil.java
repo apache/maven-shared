@@ -229,4 +229,17 @@ public class XPathExpressionUtil
     {
         return new String( CONTAINS + "(" + axis + "," + "'" + matchedString + "')" );
     }
+
+    private static String equals( String parent, String element, String matchedString )
+    {
+        String finalElement = ( parent != null ) ? parent : "";
+        finalElement += element;
+
+        return equals( finalElement, matchedString );
+    }
+
+    private static String equals( String axis, String matchedString )
+    {
+        return new String( axis + "==" + "'" + matchedString + "'" );
+    }
 }

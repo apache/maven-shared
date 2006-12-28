@@ -67,6 +67,7 @@ public abstract class AbstractSeleniumTestCase
     }
 
     public void tearDown()
+        throws Exception
     {
         sel.stop();
     }
@@ -380,9 +381,12 @@ public abstract class AbstractSeleniumTestCase
 
     public void login( String username, String password, boolean valid, String assertReturnPage )
     {
-        goToLoginPage();
+        if ( isLinkPresent( "Login" ) )
+        {
+            goToLoginPage();
 
-        submitLoginPage( username, password, false, valid, assertReturnPage );
+            submitLoginPage( username, password, false, valid, assertReturnPage );
+        }
     }
 
     public void assertLoginPage()

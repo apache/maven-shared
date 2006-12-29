@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>4-SNAPSHOT</version>
+    <version>6</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.maven</groupId>
@@ -73,4 +73,50 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+  <profiles>
+    <profile>
+      <id>release-profile</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.0-alpha-1</version>
+            <configuration>
+              <passphrase>${gpg.passphrase}</passphrase>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- We want to package up license resources in the JARs produced -->
+          <plugin>
+            <artifactId>maven-remote-resources-plugin</artifactId>
+            <version>1.0-alpha-1</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>process</goal>
+                </goals>
+                <configuration>
+                  <resourceBundles>
+                    <resourceBundle>org.apache:apache-jar-resource-bundle:1.0</resourceBundle>
+                  </resourceBundles>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

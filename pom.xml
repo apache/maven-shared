@@ -27,6 +27,7 @@
     </site>
   </distributionManagement>
   <modules>
+    <module>maven-ant</module>
     <module>maven-archiver</module>
     <module>maven-plugin-tools</module>
     <module>maven-reporting-impl</module>

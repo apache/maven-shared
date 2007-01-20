@@ -33,8 +33,6 @@ import java.io.PrintStream;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -51,9 +49,7 @@ import javax.xml.parsers.SAXParserFactory;
 import junit.framework.Assert;
 
 import org.apache.maven.it.VerificationException;
-import org.apache.maven.it.Verifier;
 import org.apache.maven.it.util.FileUtils;
-import org.apache.maven.it.util.StringUtils;
 import org.apache.maven.it.util.cli.CommandLineException;
 import org.apache.maven.it.util.cli.CommandLineUtils;
 import org.apache.maven.it.util.cli.Commandline;
@@ -65,16 +61,20 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
+ * Common {@link Verifier} functionality
+ * 
  * @author <a href="mailto:jason@maven.org">Jason van Zyl </a>
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
+ * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  * @noinspection UseOfSystemOutOrSystemErr,RefusedBequest
  */
 public abstract class AbstractVerifier
+    implements Verifier
 {
-    private static final String LOG_FILENAME = "log.txt";
+    static final String LOG_FILENAME = "log.txt";
 
-    public String localRepo;
+    private String localRepo;
 
     private final String basedir;
 
@@ -415,7 +415,7 @@ public abstract class AbstractVerifier
             throw new IllegalStateException( "Unknown layout: " + localRepoLayout );
         }
 
-        return localRepo + "/" + repositoryPath;
+        return getLocalRepo() + "/" + repositoryPath;
     }
 
     public List getArtifactFileNameList( String org, String name, String version, String ext )
@@ -554,7 +554,7 @@ public abstract class AbstractVerifier
         }
     }
 
-    private static String retrieveLocalRepo( String settingsXmlPath )
+    static String retrieveLocalRepo( String settingsXmlPath )
         throws VerificationException
     {
         UserModelReader userModelReader = new UserModelReader();
@@ -905,7 +905,7 @@ public abstract class AbstractVerifier
             {
                 // Note: Make sure that the repo is surrounded by quotes as it can possibly have
                 // spaces in its path.
-                cli.createArgument().setLine( "-Dmaven.repo.local=" + "\"" + localRepo + "\"" );
+                cli.createArgument().setLine( "-Dmaven.repo.local=" + "\"" + getLocalRepo() + "\"" );
             }
 
             for ( Iterator i = allGoals.iterator(); i.hasNext(); )
@@ -968,30 +968,7 @@ public abstract class AbstractVerifier
         return result;
     }
 
-    private static List discoverIntegrationTests( String directory )
-        throws VerificationException
-    {
-        try
-        {
-            ArrayList tests = new ArrayList();
-
-            List subTests = FileUtils.getFiles( new File( directory ), "**/goals.txt", null );
-
-            for ( Iterator i = subTests.iterator(); i.hasNext(); )
-            {
-                File testCase = (File) i.next();
-                tests.add( testCase.getParent() );
-            }
-
-            return tests;
-        }
-        catch ( IOException e )
-        {
-            throw new VerificationException( directory + " is not a valid test case container", e );
-        }
-    }
-
-    private void displayLogFile()
+    public void displayLogFile()
     {
         System.out.println( "Log file contents:" );
         try
@@ -1019,233 +996,29 @@ public abstract class AbstractVerifier
     //
     // ----------------------------------------------------------------------
 
-    public static void main( String args[] )
+    public void findLocalRepo( String settingsFile )
         throws VerificationException
     {
-        String basedir = System.getProperty( "user.dir" );
-
-        List tests = null;
-
-        List argsList = new ArrayList();
-
-        String settingsFile = null;
-
-        // skip options
-        for ( int i = 0; i < args.length; i++ )
+        if ( getLocalRepo() == null )
         {
-            if ( args[i].startsWith( "-D" ) )
-            {
-                int index = args[i].indexOf( "=" );
-                if ( index >= 0 )
-                {
-                    System.setProperty( args[i].substring( 2, index ), args[i].substring( index + 1 ) );
-                }
-                else
-                {
-                    System.setProperty( args[i].substring( 2 ), "true" );
-                }
-            }
-            else if ( "-s".equals( args[i] ) || "--settings".equals( args[i] ) )
-            {
-                if ( i == args.length - 1 )
-                {
-                    // should have been detected before
-                    throw new IllegalStateException( "missing argument to -s" );
-                }
-                i += 1;
-
-                settingsFile = args[i];
-            }
-            else if ( args[i].startsWith( "-" ) )
-            {
-                System.out.println( "skipping unrecognised argument: " + args[i] );
-            }
-            else
-            {
-                argsList.add( args[i] );
-            }
+            setLocalRepo( System.getProperty( "maven.repo.local" ) );
         }
 
-        if ( argsList.size() == 0 )
+        if ( getLocalRepo() == null )
         {
-            if ( FileUtils.fileExists( basedir + File.separator + "integration-tests.txt" ) )
-            {
-                try
-                {
-                    tests = FileUtils.loadFile( new File( basedir, "integration-tests.txt" ) );
-                }
-                catch ( IOException e )
-                {
-                    System.err.println( "Unable to load integration tests file" );
-
-                    System.err.println( e.getMessage() );
-
-                    System.exit( 2 );
-                }
-            }
-            else
-            {
-                tests = discoverIntegrationTests( "." );
-            }
-        }
-        else
-        {
-            tests = new ArrayList( argsList.size() );
-            NumberFormat fmt = new DecimalFormat( "0000" );
-            for ( int i = 0; i < argsList.size(); i++ )
-            {
-                String test = (String) argsList.get( i );
-                if ( test.endsWith( "," ) )
-                {
-                    test = test.substring( 0, test.length() - 1 );
-                }
-
-                if ( StringUtils.isNumeric( test ) )
-                {
-
-                    test = "it" + fmt.format( Integer.valueOf( test ) );
-                    test.trim();
-                    tests.add( test );
-                }
-                else if ( "it".startsWith( test ) )
-                {
-                    test = test.trim();
-                    if ( test.length() > 0 )
-                    {
-                        tests.add( test );
-                    }
-                }
-                else if ( FileUtils.fileExists( test ) && new File( test ).isDirectory() )
-                {
-                    tests.addAll( discoverIntegrationTests( test ) );
-                }
-                else
-                {
-                    System.err.println(
-                        "[WARNING] rejecting " + test + " as an invalid test or test source directory" );
-                }
-            }
+            setLocalRepo( retrieveLocalRepo( settingsFile ) );
         }
 
-        if ( tests.size() == 0 )
+        if ( getLocalRepo() == null )
         {
-            System.out.println( "No tests to run" );
+            setLocalRepo( System.getProperty( "user.home" ) + "/.m2/repository" );
         }
 
-        int exitCode = 0;
-
-        List failed = new ArrayList();
-        for ( Iterator i = tests.iterator(); i.hasNext(); )
-        {
-            String test = (String) i.next();
-
-            System.out.print( test + "... " );
-
-            String dir = basedir + "/" + test;
-
-            if ( !new File( dir, "goals.txt" ).exists() )
-            {
-                System.err.println( "Test " + test + " in " + dir + " does not exist" );
-
-                System.exit( 2 );
-            }
-
-            Verifier verifier = new Verifier( dir );
-            verifier.findLocalRepo( settingsFile );
-
-            System.out.println( "Using default local repository: " + verifier.localRepo );
-
-            try
-            {
-                runIntegrationTest( verifier );
-            }
-            catch ( Throwable e )
-            {
-                verifier.resetStreams();
-
-                System.out.println( "FAILED" );
-
-                verifier.displayStreamBuffers();
-
-                System.out.println( ">>>>>> Error Stacktrace:" );
-                e.printStackTrace( System.out );
-                System.out.println( "<<<<<< Error Stacktrace" );
-
-                verifier.displayLogFile();
-
-                exitCode = 1;
-
-                failed.add( test );
-            }
-        }
-
-        System.out.println( tests.size() - failed.size() + "/" + tests.size() + " passed" );
-        if ( !failed.isEmpty() )
-        {
-            System.out.println( "Failed tests: " + failed );
-        }
-
-        System.exit( exitCode );
-    }
-
-    private void findLocalRepo( String settingsFile )
-        throws VerificationException
-    {
-        if ( localRepo == null )
-        {
-            localRepo = System.getProperty( "maven.repo.local" );
-        }
-
-        if ( localRepo == null )
-        {
-            localRepo = retrieveLocalRepo( settingsFile );
-        }
-
-        if ( localRepo == null )
-        {
-            localRepo = System.getProperty( "user.home" ) + "/.m2/repository";
-        }
-
-        File repoDir = new File( localRepo );
+        File repoDir = new File( getLocalRepo() );
         if ( !repoDir.exists() )
         {
             repoDir.mkdirs();
         }
-    }
-
-    private static void runIntegrationTest( Verifier verifier )
-        throws VerificationException
-    {
-        verifier.executeHook( "prebuild-hook.txt" );
-
-        Properties properties = verifier.loadProperties( "system.properties" );
-
-        Properties controlProperties = verifier.loadProperties( "verifier.properties" );
-
-        boolean chokeOnErrorOutput =
-            Boolean.valueOf( controlProperties.getProperty( "failOnErrorOutput", "true" ) ).booleanValue();
-
-        List goals = verifier.loadFile( verifier.getBasedir(), "goals.txt", false );
-
-        List cliOptions = verifier.loadFile( verifier.getBasedir(), "cli-options.txt", false );
-
-        verifier.setCliOptions( cliOptions );
-
-        verifier.setSystemProperties( properties );
-
-        verifier.setVerifierProperties( controlProperties );
-
-        verifier.executeGoals( goals );
-
-        verifier.executeHook( "postbuild-hook.txt" );
-
-        System.out.println( "*** Verifying: fail when [ERROR] detected? " + chokeOnErrorOutput + " ***" );
-
-        verifier.verify( chokeOnErrorOutput );
-
-        verifier.resetStreams();
-
-        System.out.println( "OK" );
     }
 
     public void assertArtifactContents( String org, String artifact, String version, String type, String contents )
@@ -1389,6 +1162,16 @@ public abstract class AbstractVerifier
     public String getBasedir()
     {
         return basedir;
+    }
+
+    public void setLocalRepo( String localRepo )
+    {
+        this.localRepo = localRepo;
+    }
+
+    public String getLocalRepo()
+    {
+        return localRepo;
     }
 
 }

@@ -1,21 +1,24 @@
 package org.apache.maven.it.verifier;
 
-import junit.framework.Assert;
-import org.apache.maven.it.util.FileUtils;
-import org.apache.maven.it.util.StringUtils;
-import org.apache.maven.it.util.cli.CommandLineException;
-import org.apache.maven.it.util.cli.CommandLineUtils;
-import org.apache.maven.it.util.cli.Commandline;
-import org.apache.maven.it.util.cli.StreamConsumer;
-import org.apache.maven.it.util.cli.WriterStreamConsumer;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.DefaultHandler;
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -41,13 +44,33 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import junit.framework.Assert;
+
+import org.apache.maven.it.VerificationException;
+import org.apache.maven.it.Verifier;
+import org.apache.maven.it.util.FileUtils;
+import org.apache.maven.it.util.StringUtils;
+import org.apache.maven.it.util.cli.CommandLineException;
+import org.apache.maven.it.util.cli.CommandLineUtils;
+import org.apache.maven.it.util.cli.Commandline;
+import org.apache.maven.it.util.cli.StreamConsumer;
+import org.apache.maven.it.util.cli.WriterStreamConsumer;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
+
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl </a>
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id$
  * @noinspection UseOfSystemOutOrSystemErr,RefusedBequest
  */
-public class Verifier
+public abstract class AbstractVerifier
 {
     private static final String LOG_FILENAME = "log.txt";
 
@@ -74,13 +97,13 @@ public class Verifier
 
     private boolean debug;
 
-    public Verifier( String basedir, String settingsFile )
+    public AbstractVerifier( String basedir, String settingsFile )
         throws VerificationException
     {
         this( basedir, settingsFile, false );
     }
 
-    public Verifier( String basedir, String settingsFile, boolean debug )
+    public AbstractVerifier( String basedir, String settingsFile, boolean debug )
         throws VerificationException
     {
         this.basedir = basedir;
@@ -101,13 +124,13 @@ public class Verifier
         findLocalRepo( settingsFile );
     }
 
-    public Verifier( String basedir )
+    public AbstractVerifier( String basedir )
         throws VerificationException
     {
         this( basedir, null );
     }
 
-    public Verifier( String basedir, boolean debug )
+    public AbstractVerifier( String basedir, boolean debug )
         throws VerificationException
     {
         this( basedir, null, debug );

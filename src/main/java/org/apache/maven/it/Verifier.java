@@ -151,7 +151,7 @@ public class Verifier
     public void verify( boolean chokeOnErrorOutput )
         throws VerificationException
     {
-        List lines = loadFile( basedir, "expected-results.txt", false );
+        List lines = loadFile( getBasedir(), "expected-results.txt", false );
 
         for ( Iterator i = lines.iterator(); i.hasNext(); )
         {
@@ -170,7 +170,7 @@ public class Verifier
         throws VerificationException
     {
         List lines;
-        lines = loadFile( basedir, LOG_FILENAME, false );
+        lines = loadFile( getBasedir(), LOG_FILENAME, false );
 
         for ( Iterator i = lines.iterator(); i.hasNext(); )
         {
@@ -192,7 +192,7 @@ public class Verifier
         FileInputStream fis;
         try
         {
-            File propertiesFile = new File( basedir, filename );
+            File propertiesFile = new File( getBasedir(), filename );
             if ( propertiesFile.exists() )
             {
                 fis = new FileInputStream( propertiesFile );
@@ -411,7 +411,7 @@ public class Verifier
     {
         try
         {
-            File f = new File( basedir, filename );
+            File f = new File( getBasedir(), filename );
 
             if ( !f.exists() )
             {
@@ -485,7 +485,7 @@ public class Verifier
         }
         else if ( "svn".equals( cmd ) )
         {
-            launchSubversion( line, basedir );
+            launchSubversion( line, getBasedir() );
         }
         else
         {
@@ -646,7 +646,7 @@ public class Verifier
     {
         if ( line.indexOf( "!/" ) > 0 )
         {
-            String urlString = "jar:file:" + basedir + "/" + line;
+            String urlString = "jar:file:" + getBasedir() + "/" + line;
 
             InputStream is = null;
             try
@@ -699,7 +699,7 @@ public class Verifier
 
             if ( !expectedFile.isAbsolute() && !line.startsWith( "/" ) )
             {
-                expectedFile = new File( basedir, line );
+                expectedFile = new File( getBasedir(), line );
             }
 
             if ( line.indexOf( '*' ) > -1 )
@@ -804,7 +804,7 @@ public class Verifier
 
         int ret;
 
-        File logFile = new File( basedir, LOG_FILENAME );
+        File logFile = new File( getBasedir(), LOG_FILENAME );
         try
         {
             Commandline cli = new Commandline();
@@ -827,7 +827,7 @@ public class Verifier
                 System.out.println();
             }
 
-            cli.setWorkingDirectory( basedir );
+            cli.setWorkingDirectory( getBasedir() );
 
             String executable;
 
@@ -935,7 +935,7 @@ public class Verifier
 
     private String resolveCommandLineArg( String key )
     {
-        String result = key.replaceAll( "\\$\\{basedir\\}", basedir );
+        String result = key.replaceAll( "\\$\\{basedir\\}", getBasedir() );
         if ( result.indexOf( "\\\\" ) >= 0 )
         {
             result = result.replaceAll( "\\\\", "\\" );
@@ -973,7 +973,7 @@ public class Verifier
         System.out.println( "Log file contents:" );
         try
         {
-            BufferedReader reader = new BufferedReader( new FileReader( new File( basedir, LOG_FILENAME ) ) );
+            BufferedReader reader = new BufferedReader( new FileReader( new File( getBasedir(), LOG_FILENAME ) ) );
             String line = reader.readLine();
             while ( line != null )
             {
@@ -1202,9 +1202,9 @@ public class Verifier
         boolean chokeOnErrorOutput =
             Boolean.valueOf( controlProperties.getProperty( "failOnErrorOutput", "true" ) ).booleanValue();
 
-        List goals = verifier.loadFile( verifier.basedir, "goals.txt", false );
+        List goals = verifier.loadFile( verifier.getBasedir(), "goals.txt", false );
 
-        List cliOptions = verifier.loadFile( verifier.basedir, "cli-options.txt", false );
+        List cliOptions = verifier.loadFile( verifier.getBasedir(), "cli-options.txt", false );
 
         verifier.setCliOptions( cliOptions );
 
@@ -1361,6 +1361,11 @@ public class Verifier
     public void setVerifierProperties( Properties verifierProperties )
     {
         this.verifierProperties = verifierProperties;
+    }
+
+    public String getBasedir()
+    {
+        return basedir;
     }
 
 }

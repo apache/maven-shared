@@ -204,7 +204,7 @@ public abstract class AbstractSeleniumTestCase
 
     public void waitPage()
     {
-        waitPage( 30000 );
+        waitPage( 180000 );
     }
 
     public void waitPage( int nbMillisecond )

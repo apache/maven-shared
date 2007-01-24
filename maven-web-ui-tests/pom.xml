@@ -37,7 +37,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>1.3</version>
+      <version>1.4</version>
     </dependency>
     <dependency>
       <groupId>org.openqa.selenium.client-drivers</groupId>

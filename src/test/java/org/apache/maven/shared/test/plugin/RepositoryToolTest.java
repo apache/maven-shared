@@ -75,7 +75,7 @@ public class RepositoryToolTest
 
         File targetLocalRepoBasedir = fileManager.createTempDir();
 
-        repoTool.createLocalRepositoryFromPlugin( pluginProject, pom, targetLocalRepoBasedir );
+        repoTool.createLocalRepositoryFromComponentProject( pluginProject, pom, targetLocalRepoBasedir );
 
         fileManager.assertFileExistence( targetLocalRepoBasedir, "group/artifact/test/artifact-test.pom", true );
         fileManager.assertFileContents( targetLocalRepoBasedir, "group/artifact/test/artifact-test.jar", jarContent );

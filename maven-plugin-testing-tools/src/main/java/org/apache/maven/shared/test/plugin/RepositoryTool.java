@@ -107,10 +107,16 @@ public class RepositoryTool
         {
             throw new TestToolsException( "Error building Maven settings.", e );
         }
-
-        return settings == null || settings.getLocalRepository() == null
-            ? new File( new File( System.getProperty( "user.home" ) ), ".m2/repository" )
-            : new File( settings.getLocalRepository() );
+        
+        if ( settings == null || settings.getLocalRepository() == null
+            || settings.getLocalRepository().trim().length() < 1 )
+        {
+            return new File( System.getProperty( "user.home" ), ".m2/repository" );
+        }
+        else
+        {
+            return new File( settings.getLocalRepository() );
+        }
     }
 
     /**
@@ -164,14 +170,15 @@ public class RepositoryTool
      * result in failed test builds, as one or more of the plugin's ancestor POMs cannot be resolved.
      * </p>
      *
-     * @param pluginProject
+     * @param project
      * @param targetLocalRepoBasedir
      * @throws TestToolsException
      */
-    public void createLocalRepositoryFromPlugin( MavenProject pluginProject, File realPomFile, File targetLocalRepoBasedir )
+    public void createLocalRepositoryFromComponentProject( MavenProject project, File realPomFile, File targetLocalRepoBasedir )
         throws TestToolsException
     {
-        Artifact artifact = pluginProject.getArtifact();
+        Artifact artifact = project.getArtifact();
+        
         ArtifactRepository localRepository = createLocalArtifactRepositoryInstance( targetLocalRepoBasedir );
 
         String localPath = localRepository.pathOf( artifact );

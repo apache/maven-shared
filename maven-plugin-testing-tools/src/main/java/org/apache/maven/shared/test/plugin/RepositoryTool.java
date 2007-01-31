@@ -179,6 +179,11 @@ public class RepositoryTool
     {
         Artifact artifact = project.getArtifact();
         
+        if ( "pom".equals( project.getPackaging() ) )
+        {
+            artifact.setFile( project.getFile() );
+        }
+        
         ArtifactRepository localRepository = createLocalArtifactRepositoryInstance( targetLocalRepoBasedir );
 
         String localPath = localRepository.pathOf( artifact );

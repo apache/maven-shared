@@ -53,7 +53,10 @@ import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 /**
- *  very simple stub of maven project, going to take a lot of work to make it useful as a stub though
+ * very simple stub of maven project, going to take a lot of work to make it useful as a stub though
+ * 
+ * @author jesse
+ * @version $Id$
  */
 public class MavenProjectStub
     extends MavenProject

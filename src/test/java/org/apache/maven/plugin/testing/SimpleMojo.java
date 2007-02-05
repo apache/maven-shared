@@ -5,7 +5,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  * @author Jason van Zyl
- * @version $Revision:$
+ * @version $Id$
  */
 public class SimpleMojo
     extends AbstractMojo

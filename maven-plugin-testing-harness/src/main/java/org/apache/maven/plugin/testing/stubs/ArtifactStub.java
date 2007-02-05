@@ -30,11 +30,10 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * StubArtifact:
+ * Stub class for {@link Artifact} testing.
  *
- * @author: jesse
- * @date: Feb 24, 2006
- * @version: $ID:$
+ * @author jesse
+ * @version $Id$
  */
 public class ArtifactStub implements Artifact
 {
@@ -251,4 +250,5 @@ public class ArtifactStub implements Artifact
     {
         return false;
     }
+
 }

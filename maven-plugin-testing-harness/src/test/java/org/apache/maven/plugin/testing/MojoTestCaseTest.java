@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * @author Jason van Zyl
- * @version $Revision:$
+ * @version $Id$
  */
 public class MojoTestCaseTest
     extends AbstractMojoTestCase

@@ -36,14 +36,19 @@ import java.util.HashMap;
 import java.lang.reflect.Field;
 import java.lang.reflect.AccessibleObject;
 
-// todo: add a way to use the plugin POM for the lookup so that the user doesn't have to provide the a:g:v:goal
-// as the role hint for the mojo lookup.
-// todo: standarize the execution of the mojo and looking at the results, but could simply have a template method
-// for verifying the state of the mojo post execution
-// todo: need a way to look at the state of the mojo without adding getters, this could be where we finally specify
-// the expressions which extract values from the mojo.
-// todo: create a standard directory structure for picking up POMs to make this even easier, we really just need a testing
-// descriptor and make this entirely declarative!
+/**
+ * TODO: add a way to use the plugin POM for the lookup so that the user doesn't have to provide the a:g:v:goal
+ * as the role hint for the mojo lookup.
+ * TODO: standarize the execution of the mojo and looking at the results, but could simply have a template method
+ * for verifying the state of the mojo post execution
+ * TODO: need a way to look at the state of the mojo without adding getters, this could be where we finally specify
+ * the expressions which extract values from the mojo.
+ * TODO: create a standard directory structure for picking up POMs to make this even easier, we really just need a testing
+ * descriptor and make this entirely declarative!
+ * 
+ * @author jesse
+ * @version $Id$
+ */
 public abstract class AbstractMojoTestCase
     extends PlexusTestCase
 {

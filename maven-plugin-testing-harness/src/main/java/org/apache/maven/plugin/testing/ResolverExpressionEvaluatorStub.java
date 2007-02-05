@@ -25,11 +25,10 @@ import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
 
 /**
- * StubResolverExpressionEvaluator:
+ * Stub for {@link ExpressionEvaluator}
  *
- * @author: jesse
- * @date: Feb 24, 2006
- * @version: $Id$
+ * @author jesse
+ * @version $Id$
  */
 public class ResolverExpressionEvaluatorStub
     implements ExpressionEvaluator

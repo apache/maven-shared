@@ -34,12 +34,27 @@ import java.util.List;
 
 /**
  * Stub class for {@link Artifact} testing.
- *
+ * 
  * @author jesse
  * @version $Id$
  */
-public class ArtifactStub implements Artifact
+public class ArtifactStub
+    implements Artifact
 {
+
+    private String groupId;
+
+    private String artifactId;
+
+    private String version;
+
+    private String scope;
+
+    private String type;
+
+    private String classifier;
+
+    private File file;
 
     public int compareTo( Object object )
     {
@@ -48,51 +63,57 @@ public class ArtifactStub implements Artifact
 
     public String getGroupId()
     {
-        return null;
+        return groupId;
     }
 
     public String getArtifactId()
     {
-        return null;
+        return artifactId;
     }
 
     public String getVersion()
     {
-        return null;
+        return version;
     }
 
-    public void setVersion( String string )
+    public void setVersion( String version )
     {
+        this.version = version;
     }
 
     public String getScope()
     {
-        return null;
+        return scope;
     }
 
     public String getType()
     {
-        return null;
+        return type;
+    }
+
+    public void setType( String type )
+    {
+        this.type = type;
     }
 
     public String getClassifier()
     {
-        return null;
+        return classifier;
     }
 
     public boolean hasClassifier()
     {
-        return false;
+        return classifier != null;
     }
 
     public File getFile()
     {
-        return null;
+        return file;
     }
 
     public void setFile( File file )
     {
-
+        this.file = file;
     }
 
     public String getBaseVersion()
@@ -168,8 +189,9 @@ public class ArtifactStub implements Artifact
     {
     }
 
-    public void setScope( String string )
+    public void setScope( String scope )
     {
+        this.scope = scope;
     }
 
     public VersionRange getVersionRange()
@@ -185,12 +207,14 @@ public class ArtifactStub implements Artifact
     {
     }
 
-    public void setGroupId( String string )
+    public void setGroupId( String groupId )
     {
+        this.groupId = groupId;
     }
 
-    public void setArtifactId( String string )
+    public void setArtifactId( String artifactId )
     {
+        this.artifactId = artifactId;
     }
 
     public boolean isSnapshot()
@@ -252,6 +276,40 @@ public class ArtifactStub implements Artifact
         throws OverConstrainedVersionException
     {
         return false;
+    }
+
+    public String toString()
+    {
+        StringBuffer sb = new StringBuffer();
+        if ( getGroupId() != null )
+        {
+            sb.append( getGroupId() );
+            sb.append( ":" );
+        }
+        appendArtifactTypeClassifierString( sb );
+        if ( version != null )
+        {
+            sb.append( ":" );
+            sb.append( getVersion() );
+        }
+        if ( scope != null )
+        {
+            sb.append( ":" );
+            sb.append( scope );
+        }
+        return sb.toString();
+    }
+
+    private void appendArtifactTypeClassifierString( StringBuffer sb )
+    {
+        sb.append( getArtifactId() );
+        sb.append( ":" );
+        sb.append( getType() );
+        if ( hasClassifier() )
+        {
+            sb.append( ":" );
+            sb.append( getClassifier() );
+        }
     }
 
 }

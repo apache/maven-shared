@@ -20,6 +20,7 @@ package org.apache.maven.shared.dependency.tree;
  */
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
@@ -71,5 +72,34 @@ public class DependencyNode
     public List getChildren()
     {
         return children;
+    }
+
+    public String toString()
+    {
+        return toString( 0 );
+    }
+
+    public String toString( int indentDepth )
+    {
+        StringBuffer sb = new StringBuffer();
+
+        for ( int i = 0; i < indentDepth; i++ )
+        {
+            sb.append( " " );
+        }
+
+        sb.append( artifact == null ? null : artifact.toString() );
+        sb.append( "\n" );
+
+        if ( getChildren() != null )
+        {
+            for ( Iterator it = getChildren().iterator(); it.hasNext(); )
+            {
+                DependencyNode dependencyNode = (DependencyNode) it.next();
+                sb.append( dependencyNode.toString( indentDepth + 2 ) );
+            }
+        }
+
+        return sb.toString();
     }
 }

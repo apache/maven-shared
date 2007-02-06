@@ -71,4 +71,33 @@ public class DependencyTree
 
         return artifacts;
     }
+
+    public String toString()
+    {
+        return getRootNode().toString();
+    }
+
+    /**
+     * @see #preorderIterator()
+     */
+    public Iterator iterator()
+    {
+        return preorderIterator();
+    }
+
+    /**
+     * @see DependencyTreePreorderIterator
+     */
+    public Iterator preorderIterator()
+    {
+        return new DependencyTreePreorderIterator( getRootNode() );
+    }
+
+    /**
+     * @see DependencyTreeInverseIterator
+     */
+    public Iterator inverseIterator()
+    {
+        return new DependencyTreeInverseIterator( getRootNode() );
+    }
 }

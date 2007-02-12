@@ -24,5 +24,11 @@
       <version>1.0-beta-2</version>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-container-default</artifactId>
+      <version>1.0-alpha-17</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

@@ -1,5 +1,8 @@
 package org.apache.maven.shared.app.configuration;
 
+import org.codehaus.plexus.registry.RegistryListener;
+import org.codehaus.plexus.registry.RegistryException;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,15 +23,31 @@ package org.apache.maven.shared.app.configuration;
  */
 
 /**
- * An error changing the configuration
+ * A component for loading the configuration into the model.
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  */
-public class ConfigurationChangeException
-    extends Exception
+public interface MavenAppConfiguration
 {
-    public ConfigurationChangeException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
+    /**
+     * Get the configuration from the store. A cached version may be used.
+     *
+     * @return the configuration
+     */
+    Configuration getConfiguration();
+
+    /**
+     * Save the configuration to the registry.
+     *
+     * @param configuration the configuration to store
+     */
+    void save( Configuration configuration )
+        throws RegistryException;
+
+    /**
+     * Add a configuration change listener.
+     *
+     * @param listener the listener
+     */
+    void addChangeListener( RegistryListener listener );
 }

@@ -522,6 +522,14 @@ public abstract class AbstractSeleniumTestCase
         assertTextPresent( "Confirm Password" );
     }
 
+    public void assertUserRolesPage()
+    {
+        assertPage( "[Admin] User Edit" );
+        assertTextPresent( "[Admin] User Roles" );
+        assertTextPresent( "Assigned Roles" );
+        assertTextPresent( "Available Roles" );
+    }
+
     public void assertDeleteUserPage( String username )
     {
         assertPage( "[Admin] User Delete" );

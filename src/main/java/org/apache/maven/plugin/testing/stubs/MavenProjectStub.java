@@ -150,9 +150,11 @@ public class MavenProjectStub
 
     private String defaultGoal;
 
+    private List licenses;
+
     public MavenProjectStub()
     {
-        super( (Model) null );
+        this( (Model) new Model() );
     }
 
     // kinda dangerous...
@@ -160,6 +162,7 @@ public class MavenProjectStub
     {
         //  super(model);
         super( (Model) null );
+        this.model = model;
     }
 
     // kinda dangerous...
@@ -712,14 +715,14 @@ public class MavenProjectStub
         return null;
     }
 
-    public void setLicenses( List list )
+    public void setLicenses( List licenses )
     {
-
+        this.licenses = licenses;
     }
 
     public List getLicenses()
     {
-        return Collections.singletonList( "" );
+        return licenses;
     }
 
     public void addLicense( License license )

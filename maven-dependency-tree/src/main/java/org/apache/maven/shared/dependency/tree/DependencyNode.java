@@ -102,4 +102,29 @@ public class DependencyNode
 
         return sb.toString();
     }
+
+    /**
+     * @see #preorderIterator()
+     */
+    public Iterator iterator()
+    {
+        return preorderIterator();
+    }
+
+    /**
+     * @see DependencyTreePreorderIterator
+     */
+    public Iterator preorderIterator()
+    {
+        return new DependencyTreePreorderIterator( this );
+    }
+
+    /**
+     * @see DependencyTreeInverseIterator
+     */
+    public Iterator inverseIterator()
+    {
+        return new DependencyTreeInverseIterator( this );
+    }
+
 }

@@ -40,6 +40,12 @@ public class DependencyTree
 
     // constructors -----------------------------------------------------------
 
+    /**
+     * Create a tree initialized to the arguments
+     * 
+     * @param rootNode
+     * @param nodes
+     */
     public DependencyTree( DependencyNode rootNode, Collection nodes )
     {
         this.rootNode = rootNode;
@@ -62,7 +68,7 @@ public class DependencyTree
     {
         List artifacts = new ArrayList();
 
-        Iterator it = nodes.iterator();
+        Iterator it = getNodes().iterator();
         while ( it.hasNext() )
         {
             DependencyNode node = (DependencyNode) it.next();
@@ -78,26 +84,26 @@ public class DependencyTree
     }
 
     /**
-     * @see #preorderIterator()
+     * @see DependencyNode#iterator()
      */
     public Iterator iterator()
     {
-        return preorderIterator();
+        return getRootNode().iterator();
     }
 
     /**
-     * @see DependencyTreePreorderIterator
+     * @see DependencyNode#preorderIterator()
      */
     public Iterator preorderIterator()
     {
-        return new DependencyTreePreorderIterator( getRootNode() );
+        return getRootNode().preorderIterator();
     }
 
     /**
-     * @see DependencyTreeInverseIterator
+     * @see DependencyNode#inverseIterator()
      */
     public Iterator inverseIterator()
     {
-        return new DependencyTreeInverseIterator( getRootNode() );
+        return getRootNode().inverseIterator();
     }
 }

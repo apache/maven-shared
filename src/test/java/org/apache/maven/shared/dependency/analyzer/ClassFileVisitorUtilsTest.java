@@ -22,17 +22,11 @@ package org.apache.maven.shared.dependency.analyzer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.jar.JarOutputStream;
-import java.util.zip.ZipEntry;
 
-import org.apache.maven.shared.dependency.analyzer.ClassFileVisitor;
-import org.apache.maven.shared.dependency.analyzer.ClassFileVisitorUtils;
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
 import org.jmock.Mock;
-import org.jmock.MockObjectTestCase;
 
 /**
  * Tests <code>ClassFileVisitorUtils</code>.
@@ -42,7 +36,7 @@ import org.jmock.MockObjectTestCase;
  * @see ClassFileVisitorUtils
  */
 public class ClassFileVisitorUtilsTest
-    extends MockObjectTestCase
+    extends AbstractFileTest
 {
     // tests ------------------------------------------------------------------
 
@@ -156,59 +150,6 @@ public class ClassFileVisitorUtilsTest
     }
 
     // private methods --------------------------------------------------------
-
-    private File createJar()
-        throws IOException
-    {
-        File file = File.createTempFile( "test", ".jar" );
-        file.deleteOnExit();
-
-        return file;
-    }
-
-    private File createDir()
-        throws IOException
-    {
-        File file = File.createTempFile( "test", null );
-        file.delete();
-
-        if ( !file.mkdir() )
-            throw new IOException( "Cannot create temporary directory: " + file );
-
-        return file;
-    }
-
-    private File createFile( File parent, String child, String data )
-        throws IOException
-    {
-        File file = new File( parent, child );
-
-        OutputStream out = new FileOutputStream( file );
-        IOUtil.copy( data, out );
-        out.close();
-
-        return file;
-    }
-
-    private File mkdirs( File parent, String child )
-        throws IOException
-    {
-        File dir = new File( parent, child );
-
-        FileUtils.forceMkdir( dir );
-
-        return dir;
-    }
-
-    private void writeEntry( JarOutputStream out, String path, String data )
-        throws IOException
-    {
-        out.putNextEntry( new ZipEntry( path ) );
-
-        byte[] bytes = data.getBytes( "UTF-8" );
-
-        out.write( bytes, 0, bytes.length );
-    }
 
     private void expectVisitClass( Mock mock, String className, String data )
     {

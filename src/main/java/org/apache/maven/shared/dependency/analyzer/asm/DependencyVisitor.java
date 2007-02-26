@@ -95,6 +95,7 @@ public class DependencyVisitor
     public AnnotationVisitor visitAnnotation( final String desc, final boolean visible )
     {
         addDesc( desc );
+        
         return this;
     }
 
@@ -315,7 +316,14 @@ public class DependencyVisitor
     public void visitLocalVariable( final String name, final String desc, final String signature, final Label start,
                                     final Label end, final int index )
     {
-        addTypeSignature( signature );
+        if ( signature == null )
+        {
+            addDesc( desc );
+        }
+        else
+        {
+            addTypeSignature( signature );
+        }
     }
 
     /*
@@ -527,7 +535,10 @@ public class DependencyVisitor
 
     private void addNames( final String[] names )
     {
-        for ( int i = 0; names != null && i < names.length; i++ )
+        if ( names == null )
+            return;
+        
+        for ( int i = 0; i < names.length; i++ )
             addName( names[i] );
     }
 
@@ -539,6 +550,7 @@ public class DependencyVisitor
     private void addMethodDesc( final String desc )
     {
         addType( Type.getReturnType( desc ) );
+        
         Type[] types = Type.getArgumentTypes( desc );
 
         for ( int i = 0; i < types.length; i++ )

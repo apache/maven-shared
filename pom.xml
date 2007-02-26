@@ -31,6 +31,7 @@
     <module>maven-archiver</module>
     <module>maven-plugin-tools</module>
     <module>maven-reporting-impl</module>
+    <module>maven-artifact-converter</module>
     <module>maven-model-converter</module>
     <module>maven-shared-io</module>
     <module>maven-shared-monitor</module>

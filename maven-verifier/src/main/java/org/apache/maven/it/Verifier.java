@@ -1,6 +1,5 @@
 package org.apache.maven.it;
 
-import junit.framework.Assert;
 import org.apache.maven.it.util.FileUtils;
 import org.apache.maven.it.util.StringUtils;
 import org.apache.maven.it.util.cli.CommandLineException;
@@ -16,11 +15,13 @@ import org.xml.sax.helpers.DefaultHandler;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
@@ -28,8 +29,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.AccessControlException;
+import java.security.Permission;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -40,6 +46,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
+
+import junit.framework.Assert;
 
 /**
  * @author <a href="mailto:jason@maven.org">Jason van Zyl </a>
@@ -74,6 +82,8 @@ public class Verifier
 
     private boolean debug;
 
+    private boolean forkJvm = true;
+
     public Verifier( String basedir, String settingsFile )
         throws VerificationException
     {
@@ -83,9 +93,17 @@ public class Verifier
     public Verifier( String basedir, String settingsFile, boolean debug )
         throws VerificationException
     {
+        this( basedir, settingsFile, debug, true );
+    }
+
+    public Verifier( String basedir, String settingsFile, boolean debug, boolean forkJvm )
+        throws VerificationException
+    {
         this.basedir = basedir;
 
         this.debug = debug;
+
+        this.forkJvm = forkJvm;
 
         if ( !debug )
         {
@@ -786,11 +804,35 @@ public class Verifier
         executeGoals( goals, Collections.EMPTY_MAP );
     }
 
+    private String getExecutable()
+    {
+        // Use a strategy for finding the maven executable, John has a simple method like this
+        // but a little strategy + chain of command would be nicer.
+
+        String mavenHome = System.getProperty( "maven.home" );
+
+        if ( mavenHome != null )
+        {
+            return mavenHome + "/bin/mvn";
+        }
+        else
+        {
+            File f = new File( System.getProperty( "user.home" ), "m2/bin/mvn" );
+
+            if ( f.exists() )
+            {
+                return f.getAbsolutePath();
+            }
+            else
+            {
+                return "mvn";
+            }
+        }
+    }
+
     public void executeGoals( List goals, Map envVars )
         throws VerificationException
     {
-        String mavenHome = System.getProperty( "maven.home" );
-
         if ( goals.size() == 0 )
         {
             throw new VerificationException( "No goals specified" );
@@ -827,32 +869,14 @@ public class Verifier
                 System.out.println();
             }
 
+            if ( System.getenv( "JAVA_HOME" ) == null && envVars.get( "JAVA_HOME" ) == null )
+            {
+                cli.addEnvironment( "JAVA_HOME", System.getProperty( "java.home" ));
+            }
+
             cli.setWorkingDirectory( getBasedir() );
 
-            String executable;
-
-            // Use a strategy for finding the maven executable, John has a simple method like this
-            // but a little strategy + chain of command would be nicer.
-
-            if ( mavenHome != null )
-            {
-                executable = mavenHome + "/bin/mvn";
-            }
-            else
-            {
-                File f = new File( System.getProperty( "user.home" ), "m2/bin/mvn" );
-
-                if ( f.exists() )
-                {
-                    executable = f.getAbsolutePath();
-                }
-                else
-                {
-                    executable = "mvn";
-                }
-            }
-
-            cli.setExecutable( executable );
+            cli.setExecutable( getExecutable() );
 
             for ( Iterator it = cliOptions.iterator(); it.hasNext(); )
             {
@@ -890,17 +914,9 @@ public class Verifier
                 cli.createArgument().setValue( (String) i.next() );
             }
 
-            Writer logWriter = new FileWriter( logFile );
-
-            StreamConsumer out = new WriterStreamConsumer( logWriter );
-
-            StreamConsumer err = new WriterStreamConsumer( logWriter );
-
             System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
 
-            ret = CommandLineUtils.executeCommandLine( cli, out, err );
-
-            logWriter.close();
+            ret = runCommandLine( System.getProperty( "maven.home" ), cli, logFile );
         }
         catch ( CommandLineException e )
         {
@@ -917,6 +933,223 @@ public class Verifier
 
             throw new VerificationException(
                 "Exit code was non-zero: " + ret + "; log = \n" + getLogContents( logFile ) );
+        }
+    }
+
+    public String getMavenVersion()
+        throws VerificationException
+    {
+        Commandline cmd = new Commandline();
+        cmd.setExecutable( getExecutable() );
+        cmd.addArguments( new String[] { "--version" } );
+
+        File log;
+        try
+        {
+            log = File.createTempFile( "maven", "log" );
+        }
+        catch ( IOException e )
+        {
+            throw new VerificationException( "Error creating temp file", e );
+        }
+
+        try
+        {
+            runCommandLine( System.getProperty( "maven.home" ), cmd, log );
+        }
+        catch ( CommandLineException e )
+        {
+            throw new VerificationException( "Error running commandline " + cmd.toString(), e );
+        }
+        catch ( IOException e )
+        {
+            throw new VerificationException( "IO Error communicating with commandline " + cmd.toString(), e );
+        }
+
+        List l = loadFile( log, false );
+
+        String first = (String) l.get( 0 );
+        if ( !first.startsWith( "Maven version: " ) )
+        {
+            throw new VerificationException( "Illegal maven output: expecting 'Maven version: ' but got " + first );
+        }
+
+        return first.substring( "Maven version: ".length() ).trim();
+    }
+
+
+    private int runCommandLine( String mavenHome, Commandline cli, File logFile )
+        throws CommandLineException, IOException
+    {
+        if ( forkJvm )
+        {
+            Writer logWriter = new FileWriter( logFile );
+
+            StreamConsumer out = new WriterStreamConsumer( logWriter );
+
+            StreamConsumer err = new WriterStreamConsumer( logWriter );
+
+            try
+            {
+                return CommandLineUtils.executeCommandLine( cli, out, err );
+            }
+            finally
+            {
+                logWriter.close();
+            }
+        }
+
+        if ( mavenHome == null )
+        {
+            mavenHome = System.getenv( "M2_HOME" );
+        }
+
+        if ( mavenHome == null )
+        {
+            mavenHome = System.getProperty( "user.home" ) + "/local/maven-2.1-SNAPSHOT";
+        }
+
+        File coreDir = new File( mavenHome, "core/boot" );
+        File[] files = coreDir.listFiles();
+        File classWorldFile = null;
+        for ( int i = 0; files != null && i < files.length; i++ )
+        {
+            if ( files[i].getName().indexOf( "plexus-classworlds" ) >= 0 )
+            {
+                classWorldFile = files[i];
+                break;
+            }
+        }
+
+        if ( classWorldFile == null )
+        {
+            throw new CommandLineException( "Cannot find plexus-classworlds in " + coreDir );
+        }
+
+        URLClassLoader cl;
+
+        try
+        {
+            cl = new URLClassLoader( new URL[] { classWorldFile.toURI().toURL() }, null );
+        }
+        catch ( MalformedURLException e )
+        {
+            throw new CommandLineException( "Cannot conver to url: " + classWorldFile, e );
+        }
+
+        class ExitSecurityException
+            extends SecurityException
+        {
+
+            private int status;
+
+            public ExitSecurityException( int status )
+            {
+                this.status = status;
+            }
+
+            public int getStatus()
+            {
+                return status;
+            }
+        }
+        ;
+
+        try
+        {
+            Class c = cl.loadClass( "org.codehaus.plexus.classworlds.launcher.Launcher" );
+
+            Method m = c.getMethod( "mainWithExitCode", new Class[] { String[].class } );
+
+            SecurityManager oldSm = System.getSecurityManager();
+
+            try
+            {
+                System.setSecurityManager( new SecurityManager()
+                {
+                    public void checkPermission( Permission perm )
+                    {
+                        // ok
+                    }
+
+                    public void checkExit( int status )
+                    {
+                        throw new ExitSecurityException( status );
+                    }
+                } );
+            }
+            catch ( AccessControlException e )
+            {
+                throw new CommandLineException( "Error isntalling securitymanager", e );
+            }
+
+            cli.createArgument().setValue( "-f" );
+            cli.createArgument().setValue( cli.getWorkingDirectory().getAbsolutePath() + "/pom.xml" );
+
+            PrintStream oldOut = System.out;
+            PrintStream oldErr = System.err;
+
+            String oldCwConf = System.getProperty( "classworlds.conf" );
+            String oldMavenHome = System.getProperty( "maven.home" );
+
+            ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+
+            try
+            {
+                Thread.currentThread().setContextClassLoader( cl );// ClassLoader.getSystemClassLoader() );
+                FileOutputStream logWriter = new FileOutputStream( logFile );
+                System.setOut( new PrintStream( logWriter ) );
+                System.setErr( new PrintStream( logWriter ) );
+
+                System.setProperty( "classworlds.conf", new File( mavenHome, "bin/m2.conf" ).getAbsolutePath() );
+                System.setProperty( "maven.home", mavenHome );
+
+                return ( (Integer) m.invoke( null, new Object[] { cli.getArguments() } ) ).intValue();
+            }
+            catch ( ExitSecurityException e )
+            {
+                oldOut.println( "exit security exception caught: status=" + e.getStatus() );
+                return e.getStatus();
+            }
+            finally
+            {
+                System.setOut( oldOut );
+                System.setErr( oldErr );
+                if ( oldCwConf == null )
+                    System.getProperties().remove( "classworlds.conf" );
+                else
+                    System.setProperty( "classworlds.conf", oldCwConf );
+                if ( oldMavenHome == null )
+                    System.getProperties().remove( "maven.home" );
+                else
+                    System.setProperty( "maven.home", oldMavenHome );
+                Thread.currentThread().setContextClassLoader( oldCl );
+                System.setSecurityManager( oldSm );
+            }
+        }
+        catch ( ClassNotFoundException e )
+        {
+            throw new CommandLineException( "Cannot load classworlds launcher", e );
+        }
+        catch ( NoSuchMethodException e )
+        {
+            throw new CommandLineException( "Cannot find classworlds launcher's main method", e );
+        }
+        catch ( IllegalArgumentException e )
+        {
+            throw new CommandLineException( "Error executing classworlds launcher's main method", e );
+        }
+        catch ( InvocationTargetException e )
+        {
+            if ( e.getCause() instanceof ExitSecurityException )
+            {
+                return ( (ExitSecurityException) e.getCause() ).getStatus();
+            }
+            throw new CommandLineException( "Error executing classworlds launcher's main method", e );
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new CommandLineException( "Error executing classworlds launcher's main method", e );
         }
     }
 

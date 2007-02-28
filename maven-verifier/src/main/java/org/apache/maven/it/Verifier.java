@@ -131,6 +131,11 @@ public class Verifier
         this( basedir, null, debug );
     }
 
+    public void setLocalRepo( String localRepo )
+    {
+        this.localRepo = localRepo;
+    }
+
     public void resetStreams()
     {
         if ( !debug )
@@ -1417,6 +1422,7 @@ public class Verifier
         }
 
         File repoDir = new File( localRepo );
+
         if ( !repoDir.exists() )
         {
             repoDir.mkdirs();

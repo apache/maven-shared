@@ -12,6 +12,7 @@
       <plugin>
         <groupId>org.codehaus.modello</groupId>
         <artifactId>modello-maven-plugin</artifactId>
+        <version>1.0-alpha-15-SNAPSHOT</version>
         <executions>
           <execution>
             <goals>
@@ -32,12 +33,12 @@
     <dependency>
       <groupId>org.codehaus.plexus.registry</groupId>
       <artifactId>plexus-registry-api</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0-alpha-2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-api</artifactId>
-      <version>1.0-alpha-17</version>
+      <version>1.0-alpha-18</version>
     </dependency>
   </dependencies>
 </project>

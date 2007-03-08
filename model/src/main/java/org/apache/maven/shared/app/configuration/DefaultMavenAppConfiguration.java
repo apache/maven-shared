@@ -65,7 +65,11 @@ public class DefaultMavenAppConfiguration
     public void save( Configuration configuration )
         throws RegistryException
     {
-        Registry section = registry.getSection( KEY );
+        Registry section = registry.getSection( KEY + ".user" );
+        if ( section == null )
+        {
+            section = registry.getSection( KEY + ".base" );
+        }
         new ConfigurationRegistryWriter().write( configuration, section );
         section.save();
 
@@ -74,8 +78,16 @@ public class DefaultMavenAppConfiguration
 
     public void addChangeListener( RegistryListener listener )
     {
-        Registry section = registry.getSection( KEY );
-        section.addChangeListener( listener );
+        Registry section = registry.getSection( KEY + ".user" );
+        if ( section != null )
+        {
+            section.addChangeListener( listener );
+        }
+        section = registry.getSection( KEY + ".base" );
+        if ( section != null )
+        {
+            section.addChangeListener( listener );
+        }
     }
 
     public void initialize()

@@ -9,7 +9,7 @@
   <groupId>org.apache.maven.shared</groupId>
   <artifactId>maven-shared-components</artifactId>
   <packaging>pom</packaging>
-  <version>7</version>
+  <version>8-SNAPSHOT</version>
   <name>Maven Shared Components</name>
   <description>Maven shared components</description>
   <url>http://maven.apache.org/shared/</url>
@@ -44,9 +44,9 @@
     <module>maven-common-artifact-filters</module>
   </modules>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-7</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-7</developerConnection>
-    <url>https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-7</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/</url>
   </scm>
   <build>
     <pluginManagement>

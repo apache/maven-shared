@@ -117,7 +117,7 @@ public class DefaultMojoScanner
     }
 
     /**
-     * @see org.apache.maven.tools.plugin.scanner.ExtendedMojoScanner#setActiveExtractors(java.util.Set)
+     * @see org.apache.maven.tools.plugin.scanner.MojoScanner#setActiveExtractors(java.util.Set)
      */
     public void setActiveExtractors( Set/* <String> */extractors )
     {

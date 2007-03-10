@@ -1,7 +1,5 @@
 package org.apache.maven.model.converter.relocators;
 
-import java.util.Collection;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,6 +18,8 @@ import java.util.Collection;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.util.Collection;
 
 /**
  * A manager for plugin relocators.

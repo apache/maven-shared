@@ -973,13 +973,23 @@ public class Verifier
 
         List l = loadFile( log, false );
 
-        String first = (String) l.get( 0 );
-        if ( !first.startsWith( "Maven version: " ) )
+        Iterator lines = l.iterator();
+        String version = (String) lines.next();
+        boolean matched = false;
+
+        while ( !version.startsWith( "Maven version: " ) && lines.hasNext() )
         {
-            throw new VerificationException( "Illegal maven output: expecting 'Maven version: ' but got " + first );
+            version = (String) lines.next();
+            matched = true;
+            break;
         }
 
-        return first.substring( "Maven version: ".length() ).trim();
+        if ( !matched )
+        {
+            throw new VerificationException( "Illegal maven output: expecting 'Maven version: ' but got " + l.get( 0 ) );
+        }
+
+        return version.substring( "Maven version: ".length() ).trim();
     }
 
 

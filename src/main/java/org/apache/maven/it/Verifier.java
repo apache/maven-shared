@@ -971,25 +971,30 @@ public class Verifier
             throw new VerificationException( "IO Error communicating with commandline " + cmd.toString(), e );
         }
 
-        List l = loadFile( log, false );
+        String version = null;
 
-        Iterator lines = l.iterator();
-        String version = (String) lines.next();
-        boolean matched = false;
+        List logLines = loadFile( log, false );
 
-        while ( !version.startsWith( "Maven version: " ) && lines.hasNext() )
+        for ( Iterator it = logLines.iterator(); version == null && it.hasNext(); )
         {
-            version = (String) lines.next();
-            matched = true;
-            break;
+            String line = (String) it.next();
+
+            if ( line.startsWith( "Maven version: " ) )
+            {
+                version = line.substring( "Maven version: ".length() );
+            }
         }
 
-        if ( !matched )
+        if ( version == null )
         {
-            throw new VerificationException( "Illegal maven output: expecting 'Maven version: ' but got " + l.get( 0 ) );
+            throw new VerificationException( "Illegal maven output: String 'Maven version: ' not found in the following output:\n"
+                + StringUtils.join( logLines.iterator(), "\n" )
+            );
         }
-
-        return version.substring( "Maven version: ".length() ).trim();
+        else
+        {
+            return version;
+        }
     }
 
 

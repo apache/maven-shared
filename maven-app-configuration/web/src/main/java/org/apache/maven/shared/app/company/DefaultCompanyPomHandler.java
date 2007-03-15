@@ -69,7 +69,7 @@ public class DefaultCompanyPomHandler
     private ArtifactFactory artifactFactory;
 
     /**
-     * @plexus.requirement
+     * @plexus.requirement role-hint="maven"
      */
     private ArtifactMetadataSource artifactMetadataSource;
 

@@ -57,16 +57,6 @@
       </plugin>
     </plugins>
 		<resources>
-			<!-- Include the apache process LICENSE and NOTICE files.-->
-			<resource>
-				<targetPath>META-INF</targetPath>
-				<filtering>false</filtering>
-				<directory>${basedir}</directory>
-				<includes>
-					<include>LICENSE</include>
-					<include>NOTICE</include>
-				</includes>
-			</resource>
 			<!-- Include super-pom defined main/resources
 			Removing this section will break the build.
 			Since we have defined a new build/resources

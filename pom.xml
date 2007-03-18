@@ -42,6 +42,7 @@
     <module>maven-test-tools</module>
     <module>maven-repository-builder</module>
     <module>maven-common-artifact-filters</module>
+	<module>maven-dependency-analyzer</module>
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>

@@ -28,6 +28,8 @@ Writing a custom rule
   Custom rules are easy to make with the <<<maven-enforcer-rule-api>>>. These rules can then be invoked with the 
   {{{http://maven.apache.org/plugins/maven-enforcer-plugin}maven-enforcer-plugin}}. 
   
+  Note: The files shown below may be downloaded here: {{{custom-rule.zip}custom-rule.zip}}
+  
   [[1]] First make a new jar project starting with the sample pom below:
   
 +---+
@@ -121,14 +123,18 @@ public class myCustomRule
 
         try
         {
-            // get the various components out of the helper.
-            MavenProject project = helper.getProject();
-            RuntimeInformation rti = helper.getRuntimeInformation();
-            MavenSession session = helper.getSession();
+             // get the various expressions out of the helper.
+            MavenProject project = (MavenProject) helper.evaluate( "${project}" );
+            MavenSession session = (MavenSession) helper.evaluate( "${session}" );
+            String target = (String) helper.evaluate( "${project.build.directory}" );
+            String artifactId = (String) helper.evaluate( "${project.artifactId}" );
 
             // retreive any component out of the session directly
             ArtifactResolver resolver = (ArtifactResolver) helper.getComponent( ArtifactResolver.class );
+            RuntimeInformation rti = (RuntimeInformation) helper.getComponent( RuntimeInformation.class );
 
+            log.info( "Retrieved Target Folder: " + target );
+            log.info( "Retrieved ArtifactId: " +artifactId );
             log.info( "Retrieved Project: " + project );
             log.info( "Retrieved RuntimeInfo: " + rti );
             log.info( "Retrieved Session: " + session );

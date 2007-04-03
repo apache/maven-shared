@@ -19,10 +19,8 @@ package org.apache.maven.shared.enforcer.rule.api;
  * under the License.
  */
 
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.execution.RuntimeInformation;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 
 /**
@@ -33,17 +31,15 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
  * @version $Id$
  */
 public interface EnforcerRuleHelper
+    extends ExpressionEvaluator
 {
     public Log getLog();
 
-    public MavenSession getSession();
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.maven.shared.enforcer.rule.api.EnforcerRuleHelper#getRuntimeInformation()
+     */
     public Object getComponent( Class clazz )
-        throws ComponentLookupException;
-
-    public MavenProject getProject()
-        throws ComponentLookupException;
-
-    public RuntimeInformation getRuntimeInformation()
         throws ComponentLookupException;
 }

@@ -1,5 +1,7 @@
 package org.apache.maven.shared.enforcer.rule.api;
 
+import org.apache.maven.plugin.MojoExecutionException;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file

@@ -1,6 +1,5 @@
 package org.apache.maven.shared.enforcer.rule.api;
 
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,16 +20,17 @@ package org.apache.maven.shared.enforcer.rule.api;
  */
 
 /**
- * An exception occuring during the execution of a rule. Based off of EnforcerRuleException,
- * but separated to keep the rule dependencies to a minimum.
- *
+ * An exception occuring during the execution of a rule. Based off of
+ * EnforcerRuleException, but separated to keep the rule dependencies to a
+ * minimum.
+ * 
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
  * @version $Id$
  */
 public class EnforcerRuleException
     extends Exception
 {
-    
+
     /**
      * serialVersionUID
      */
@@ -39,7 +39,6 @@ public class EnforcerRuleException
     protected Object source;
 
     protected String longMessage;
-
 
     public String getLongMessage()
     {
@@ -50,10 +49,11 @@ public class EnforcerRuleException
     {
         return source;
     }
-    
+
     /**
-     * Construct a new <code>EnforcerRuleException</code> exception providing the source and a short and long message.
-     *
+     * Construct a new <code>EnforcerRuleException</code> exception providing
+     * the source and a short and long message.
+     * 
      * @param source
      * @param shortMessage
      * @param longMessage
@@ -66,9 +66,10 @@ public class EnforcerRuleException
     }
 
     /**
-     * Construct a new <code>EnforcerRuleException</code> exception wrapping an underlying <code>Exception</code>
-     * and providing a <code>message</code>.
-     *
+     * Construct a new <code>EnforcerRuleException</code> exception wrapping
+     * an underlying <code>Exception</code> and providing a
+     * <code>message</code>.
+     * 
      * @param message
      * @param cause
      */
@@ -78,9 +79,10 @@ public class EnforcerRuleException
     }
 
     /**
-     * Construct a new <code>EnforcerRuleException</code> exception wrapping an underlying <code>Throwable</code>
-     * and providing a <code>message</code>.
-     *
+     * Construct a new <code>EnforcerRuleException</code> exception wrapping
+     * an underlying <code>Throwable</code> and providing a
+     * <code>message</code>.
+     * 
      * @param message
      * @param cause
      */
@@ -90,8 +92,9 @@ public class EnforcerRuleException
     }
 
     /**
-     * Construct a new <code>EnforcerRuleException</code> exception providing a <code>message</code>.
-     *
+     * Construct a new <code>EnforcerRuleException</code> exception providing
+     * a <code>message</code>.
+     * 
      * @param message
      */
     public EnforcerRuleException( String message )

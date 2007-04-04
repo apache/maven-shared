@@ -108,7 +108,7 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 /**
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a> 
  */
-public class myCustomRule
+public class MyCustomRule
     implements EnforcerRule
 {
     /**

@@ -126,6 +126,22 @@ public class DefaultDependencyTreeBuilder implements DependencyTreeBuilder
                                     + "': " + exception.getMessage(), exception );
                 }
             }
+
+            /*
+             * TODO work around bug MNG-2931, remove after upgrading to fixed version  
+             * remove the originating artifact if it is also in managed versions to avoid being modified during resolution
+             */
+            Artifact managedOriginatingArtifact = (Artifact) managedVersionMap.get( project.getArtifact()
+                .getDependencyConflictId() );
+            if ( managedOriginatingArtifact != null )
+            {
+                String managedVersion = managedOriginatingArtifact.getVersion();
+                String version = project.getArtifact().getVersion();
+                if ( !managedVersion.equals( version ) )
+                {
+                    managedVersionMap.remove( project.getArtifact().getDependencyConflictId() );
+                }
+            }
         }
         else
         {

@@ -792,7 +792,10 @@ public class MavenCommandLineBuilderTest
             mavenFile = new File( mavenDir, "bin/mvn" );
         }
         
-        assertEquals( mavenFile.getCanonicalPath(), commandline.getExecutable() );
+        String executable = commandline.getExecutable();
+        System.out.println( "Executable is: " + executable );
+        
+        assertTrue( executable.indexOf( mavenFile.getCanonicalPath() ) > -1 );
         assertEquals( projectDir.getCanonicalPath(), commandline.getWorkingDirectory().getCanonicalPath() );
     }
 

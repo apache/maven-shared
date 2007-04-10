@@ -30,13 +30,23 @@
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-container-default</artifactId>
+      <version>1.0-alpha-9-stable-1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>1.4.1</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-artifact</artifactId>
+      <artifactId>maven-settings</artifactId>
       <version>2.0.4</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-artifact-manager</artifactId>
+      <artifactId>maven-artifact</artifactId>
       <version>2.0.4</version>
     </dependency>
     <dependency>
@@ -51,13 +61,8 @@
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
-      <artifactId>maven-repository-builder</artifactId>
-      <version>1.0-alpha-1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-invoker</artifactId>
-      <version>2.0.5</version>
+      <version>2.0.7-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.shared</groupId>

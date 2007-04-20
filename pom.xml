@@ -25,7 +25,7 @@
     <version>7</version>
   </parent>
   <artifactId>maven-plugin-testing-harness</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <name>Maven Plugin Testing Mechanism</name>
   <mailingLists>
     <!-- duplication from parent pom - temporary until they inherit properly -->
@@ -111,10 +111,4 @@
       </plugin>
     </plugins>
   </reporting>
-
-  <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-plugin-testing-harness-1.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-plugin-testing-harness-1.0</developerConnection>
-    <url>https://svn.apache.org/repos/asf/maven/shared/tags/maven-plugin-testing-harness-1.0</url>
-  </scm>
 </project>

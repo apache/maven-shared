@@ -21,8 +21,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
-
 /**
  * @todo handle forced-reactor executions using -r/includes/excludes
  */
@@ -82,9 +80,9 @@ public interface InvocationRequest
     // Artifactr repository policies
     // ----------------------------------------------------------------------
     
-    static final String CHECKSUM_POLICY_FAIL = ArtifactRepositoryPolicy.CHECKSUM_POLICY_FAIL;
+    static final String CHECKSUM_POLICY_FAIL = "fail";
     
-    static final String CHECKSUM_POLICY_WARN = ArtifactRepositoryPolicy.CHECKSUM_POLICY_WARN;
+    static final String CHECKSUM_POLICY_WARN = "warn";
 
     // ----------------------------------------------------------------------
     //

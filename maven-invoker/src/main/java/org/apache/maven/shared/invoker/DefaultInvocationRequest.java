@@ -18,6 +18,7 @@ public class DefaultInvocationRequest
     private boolean interactive;
     private File localRepository;
     private boolean offline;
+    private boolean recursive = true;
     private InvocationOutputHandler outputHandler;
     private File pomFile;
     private Properties properties;
@@ -106,6 +107,17 @@ public class DefaultInvocationRequest
     public boolean isUpdateSnapshots()
     {
         return updateSnapshots;
+    }
+
+    public boolean isRecursive()
+    {
+        return recursive;
+    }
+
+    public InvocationRequest setRecursive( boolean recursive )
+    {
+        this.recursive = recursive;
+        return this;
     }
 
     public InvocationRequest setBaseDirectory( File basedir )

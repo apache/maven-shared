@@ -323,6 +323,11 @@ public class MavenCommandLineBuilder
             cli.createArgument().setLine( "-U" );
         }
 
+        if ( !request.isRecursive() )
+        {
+            cli.createArgument().setLine( "-N" );
+        }
+
         if ( request.isDebug() )
         {
             cli.createArgument().setLine( "-X" );

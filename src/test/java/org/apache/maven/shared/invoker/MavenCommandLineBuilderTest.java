@@ -23,6 +23,8 @@ public class MavenCommandLineBuilderTest
 {
     private List toDelete = new ArrayList();
 
+    private Properties sysProps;
+
     public void testShouldFailToSetLocalRepoLocationGloballyWhenItIsAFile()
         throws IOException
     {
@@ -799,9 +801,21 @@ public class MavenCommandLineBuilderTest
         assertEquals( projectDir.getCanonicalPath(), commandline.getWorkingDirectory().getCanonicalPath() );
     }
 
+
+    public void setUp()
+    {
+        sysProps = System.getProperties();        
+
+        Properties p = new Properties( sysProps );
+
+        System.setProperties( p );
+    }
+
     public void tearDown()
         throws IOException
     {
+        System.setProperties( sysProps );
+
         for ( Iterator it = toDelete.iterator(); it.hasNext(); )
         {
             File file = (File) it.next();

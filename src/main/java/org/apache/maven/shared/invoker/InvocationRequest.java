@@ -34,6 +34,8 @@ public interface InvocationRequest
 
     boolean isUpdateSnapshots();
 
+    boolean isRecursive();
+
     boolean isDebug();
 
     boolean isShowErrors();

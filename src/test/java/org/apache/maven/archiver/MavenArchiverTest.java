@@ -22,9 +22,12 @@ package org.apache.maven.archiver;
 import junit.framework.TestCase;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.Manifest;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.util.Collections;
@@ -177,4 +180,59 @@ public class MavenArchiverTest
 
     }
 
+    public void testRecreation()
+            throws Exception
+    {
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = new JarArchiver();
+        jarArchiver.setDestFile( jarFile );
+
+        MavenArchiver archiver = new MavenArchiver();
+        archiver.setArchiver( jarArchiver );
+        archiver.setOutputFile( jarArchiver.getDestFile() );
+
+        Model model = new Model();
+        model.setGroupId( "org.apache.dummy" );
+        model.setArtifactId( "dummy" );
+        model.setVersion( "0.1" );
+        MavenProject project = new MavenProject( model );
+ 
+        project.setArtifacts( Collections.EMPTY_SET );
+        project.setPluginArtifacts( Collections.EMPTY_SET );
+        project.setReportArtifacts( Collections.EMPTY_SET );
+        project.setExtensionArtifacts( Collections.EMPTY_SET );
+        project.setRemoteArtifactRepositories( Collections.EMPTY_LIST );
+        project.setPluginArtifactRepositories( Collections.EMPTY_LIST );
+        project.setFile( new File( "pom.xml" ) );
+        Build build = new Build();
+        build.setDirectory( "target" );
+        project.setBuild( build );
+
+        MockArtifact artifact = new MockArtifact();
+        artifact.setGroupId( "org.apache.dummy" );
+        artifact.setArtifactId( "dummy" );
+        artifact.setVersion( "0.1" );
+        artifact.setType( "jar" );
+        project.setArtifact( artifact );
+
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( false );
+        
+        FileUtils.deleteDirectory( "target/maven-archiver" );
+        long timeStamp0 = System.currentTimeMillis();
+        Thread.sleep( 1 ); // Make sure, that System.currentTimeMillis() is different from timeStamp
+        archiver.createArchive( project, config );
+        long timeStamp1 = jarFile.lastModified();
+        assertTrue( timeStamp1 > timeStamp0 );
+
+        Thread.sleep( 1 ); // Make sure, that System.currentTimeMillis() is different from timeStamp
+        archiver.createArchive( project,config );
+        long timeStamp2 = jarFile.lastModified();
+        assertEquals( timeStamp2, timeStamp1 );
+
+        Thread.sleep( 1 ); // Make sure, that System.currentTimeMillis() is different from timeStamp
+        config.setForced( true );
+        archiver.createArchive( project, config );
+        assertTrue( jarFile.lastModified() > timeStamp2 );
+    }
 }

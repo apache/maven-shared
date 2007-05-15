@@ -50,6 +50,8 @@ public class MavenArchiveConfiguration
 
     private boolean forced = true;
 
+    private File pomPropertiesFile;
+
     public boolean isCompress()
     {
         return compress;
@@ -180,5 +182,25 @@ public class MavenArchiveConfiguration
     public void setForced( boolean forced )
     {
     	this.forced = forced;
+    }
+
+    /**
+     * Returns the location of the "pom.properties" file. 
+     * May be null, in which case a default value is choosen.
+     * @return "pom.properties" location or null.
+     */
+    public File getPomPropertiesFile()
+    {
+        return pomPropertiesFile;
+    }
+
+    /**
+     * Sets the location of the "pom.properties" file. 
+     * May be null, in which case a default value is choosen.
+     * @param pomPropertiesFile "pom.properties" location or null.
+     */
+    public void setPomPropertiesFile( File pomPropertiesFile )
+    {
+        this.pomPropertiesFile = pomPropertiesFile;
     }
 }

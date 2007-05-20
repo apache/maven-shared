@@ -92,8 +92,8 @@ public class MavenCommandLineBuilder
                     + ". Using as-is.", e );
             }
 
-            // FIXME: Handle quotes in localRepo directory path...
-            cli.createArgument().setLine( "-s " + userSettingsFile.getPath() );
+            cli.createArg().setValue( "-s" );
+            cli.createArg().setValue( userSettingsFile.getPath() );
         }
     }
 
@@ -105,6 +105,7 @@ public class MavenCommandLineBuilder
             try
             {
                 cli.addSystemEnvironment();
+                cli.addEnvironment( "MAVEN_TERMINATE_CMD", "on" );
             }
             catch ( IOException e )
             {
@@ -153,8 +154,7 @@ public class MavenCommandLineBuilder
                 String key = (String) entry.getKey();
                 String value = (String) entry.getValue();
 
-                // FIXME: Handle funky key/value pairs that have spaces, newlines, etc.
-                cli.createArgument().setLine( "-D" + key + "=" + value );
+                cli.createArg().setValue( "-D" + key + "=" + value );
             }
         }
     }
@@ -281,8 +281,7 @@ public class MavenCommandLineBuilder
                     + "\' is NOT a directory." );
             }
 
-            // FIXME: Handle quotes in localRepo directory path...
-            cli.createArgument().setLine( "-Dmaven.repo.local=" + localRepositoryDirectory.getPath() );
+            cli.createArg().setValue( "-Dmaven.repo.local=" + localRepositoryDirectory.getPath() );
         }
     }
 

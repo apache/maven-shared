@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import junit.framework.TestCase;
 
@@ -22,10 +23,14 @@ public class DefaultInvokerTest
 
         Invoker invoker = new DefaultInvoker();
         invoker.setMavenHome( findMavenHome() );
-        
+
+        Properties props = new Properties();
+        props.put( "key with spaces", "value with spaces" );
+
         InvocationRequest request = new DefaultInvocationRequest();
         request.setBaseDirectory( basedir );
-        
+        request.setProperties( props );
+
         List goals = new ArrayList();
         goals.add( "clean" );
         goals.add( "package" );

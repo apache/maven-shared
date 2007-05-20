@@ -698,6 +698,38 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( Collections.singleton( "-Dkey=value" ), cli );
     }
 
+    public void testShouldSpecifyCustomPropertyWithSpacesInValueFromRequest()
+    throws IOException
+    {
+        logTestStart();
+
+        Commandline cli = new Commandline();
+
+        Properties properties = new Properties();
+        properties.setProperty( "key", "value with spaces" );
+
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        tcb.setProperties( new DefaultInvocationRequest().setProperties( properties ), cli );
+
+        assertArgumentsPresent( Collections.singleton( "-Dkey=value with spaces" ), cli );
+    }
+
+    public void testShouldSpecifyCustomPropertyWithSpacesInKeyFromRequest()
+    throws IOException
+    {
+        logTestStart();
+
+        Commandline cli = new Commandline();
+
+        Properties properties = new Properties();
+        properties.setProperty( "key with spaces", "value with spaces" );
+
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        tcb.setProperties( new DefaultInvocationRequest().setProperties( properties ), cli );
+
+        assertArgumentsPresent( Collections.singleton( "-Dkey with spaces=value with spaces" ), cli );
+    }
+
     public void testShouldSpecifySingleGoalFromRequest()
         throws IOException
     {
@@ -801,6 +833,44 @@ public class MavenCommandLineBuilderTest
         assertEquals( projectDir.getCanonicalPath(), commandline.getWorkingDirectory().getCanonicalPath() );
     }
 
+    public void testShouldSetEnvVar_MAVEN_TERMINATE_CMD() throws Exception {
+        logTestStart();
+        File mavenDir = setupTempMavenHomeIfMissing();
+
+        InvocationRequest request = new DefaultInvocationRequest();
+
+        File tmpDir = getTempDir();
+        File projectDir = new File( tmpDir, "invoker-tests/maven-terminate-cmd-options-set" );
+
+        projectDir.mkdirs();
+        toDelete.add( projectDir.getParentFile() );
+
+        request.setBaseDirectory( projectDir );
+
+        createDummyFile( projectDir, "pom.xml" );
+
+        List goals = new ArrayList();
+
+        goals.add( "clean" );
+        request.setGoals( goals );
+
+        MavenCommandLineBuilder commandLineBuilder = new MavenCommandLineBuilder();
+
+        Commandline commandline = commandLineBuilder.build( request );
+
+        String[] environmentVariables = commandline.getEnvironmentVariables();
+        String envVarMavenTerminateCmd = null;
+        for ( int i = 0; i < environmentVariables.length; i++ )
+        {
+            String envVar = environmentVariables[i];
+            if (envVar.startsWith( "MAVEN_TERMINATE_CMD=" )) {
+                envVarMavenTerminateCmd = envVar;
+                break;
+            }
+        }
+        assertEquals( "MAVEN_TERMINATE_CMD=on", envVarMavenTerminateCmd);
+
+    }
 
     public void setUp()
     {

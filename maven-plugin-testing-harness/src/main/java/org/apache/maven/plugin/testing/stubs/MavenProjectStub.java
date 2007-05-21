@@ -57,7 +57,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 /**
  * very simple stub of maven project, going to take a lot of work to make it useful as a stub though
- * 
+ *
  * @author jesse
  * @version $Id$
  */
@@ -208,9 +208,14 @@ public class MavenProjectStub
 
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getRemoteArtifactRepositories()
+     */
     public List getRemoteArtifactRepositories()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
     public boolean hasParent()
@@ -245,9 +250,14 @@ public class MavenProjectStub
 
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getDependencies()
+     */
     public List getDependencies()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
     public DependencyManagement getDependencyManagement()
@@ -635,9 +645,14 @@ public class MavenProjectStub
 
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getMailingLists()
+     */
     public List getMailingLists()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
     public void addMailingList( MailingList mailingList )
@@ -650,9 +665,14 @@ public class MavenProjectStub
 
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getDevelopers()
+     */
     public List getDevelopers()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
     public void addDeveloper( Developer developer )
@@ -665,9 +685,14 @@ public class MavenProjectStub
 
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getContributors()
+     */
     public List getContributors()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
     public void addContributor( Contributor contributor )
@@ -685,14 +710,24 @@ public class MavenProjectStub
         return null;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getResources()
+     */
     public List getResources()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getTestResources()
+     */
     public List getTestResources()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
     public void addResource( Resource resource )
@@ -735,14 +770,24 @@ public class MavenProjectStub
 
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_SET</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getArtifacts()
+     */
     public Set getArtifacts()
     {
-        return Collections.singleton( "" );
+        return Collections.EMPTY_SET;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_MAP</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getArtifactMap()
+     */
     public Map getArtifactMap()
     {
-        return Collections.singletonMap( "", "" );
+        return Collections.EMPTY_MAP;
     }
 
     public void setPluginArtifacts( Set set )
@@ -750,14 +795,24 @@ public class MavenProjectStub
 
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_SET</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getPluginArtifacts()
+     */
     public Set getPluginArtifacts()
     {
-        return Collections.singleton( "" );
+        return Collections.EMPTY_SET;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_MAP</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getPluginArtifactMap()
+     */
     public Map getPluginArtifactMap()
     {
-        return Collections.singletonMap( "", "" );
+        return Collections.EMPTY_MAP;
     }
 
     public void setReportArtifacts( Set set )
@@ -765,14 +820,24 @@ public class MavenProjectStub
 
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_SET</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getReportArtifacts()
+     */
     public Set getReportArtifacts()
     {
-        return Collections.singleton( "" );
+        return Collections.EMPTY_SET;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_MAP</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getReportArtifactMap()
+     */
     public Map getReportArtifactMap()
     {
-        return Collections.singletonMap( "", "" );
+        return Collections.EMPTY_MAP;
     }
 
     public void setExtensionArtifacts( Set set )
@@ -780,14 +845,24 @@ public class MavenProjectStub
 
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_SET</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getExtensionArtifacts()
+     */
     public Set getExtensionArtifacts()
     {
-        return Collections.singleton( "" );
+        return Collections.EMPTY_SET;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_MAP</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getExtensionArtifactMap()
+     */
     public Map getExtensionArtifactMap()
     {
-        return Collections.singletonMap( "", "" );
+        return Collections.EMPTY_MAP;
     }
 
     public void setParentArtifact( Artifact artifact )
@@ -800,24 +875,44 @@ public class MavenProjectStub
         return null;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getRepositories()
+     */
     public List getRepositories()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getReportPlugins()
+     */
     public List getReportPlugins()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getBuildPlugins()
+     */
     public List getBuildPlugins()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getModules()
+     */
     public List getModules()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
     public PluginManagement getPluginManagement()
@@ -860,9 +955,14 @@ public class MavenProjectStub
         return null;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getPluginRepositories()
+     */
     public List getPluginRepositories()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
     public void setActiveProfiles( List list )
@@ -954,11 +1054,21 @@ public class MavenProjectStub
         return originalModel;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getBuildExtensions()
+     */
     public List getBuildExtensions()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_SET</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#createArtifacts(org.apache.maven.artifact.factory.ArtifactFactory, java.lang.String, org.apache.maven.artifact.resolver.filter.ArtifactFilter)
+     */
     public Set createArtifacts( ArtifactFactory artifactFactory, String string, ArtifactFilter artifactFilter )
         throws InvalidDependencyVersionException
     {
@@ -980,14 +1090,24 @@ public class MavenProjectStub
         return new Properties();
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_LIST</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getFilters()
+     */
     public List getFilters()
     {
-        return Collections.singletonList( "" );
+        return Collections.EMPTY_LIST;
     }
 
+    /**
+     * By default, return <code>Collections.EMPTY_MAP</code>.
+     *
+     * @see org.apache.maven.project.MavenProject#getProjectReferences()
+     */
     public Map getProjectReferences()
     {
-        return Collections.singletonMap( "", "" );
+        return Collections.EMPTY_MAP;
     }
 
     public boolean isExecutionRoot()

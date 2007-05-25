@@ -250,17 +250,20 @@ public class PluginXdocGenerator
     {
         List filtered = new ArrayList();
 
-        for ( Iterator parameters = parameterList.iterator(); parameters.hasNext(); )
+        if ( parameterList != null )
         {
-            Parameter parameter = (Parameter) parameters.next();
-
-            if ( parameter.isEditable() )
+            for ( Iterator parameters = parameterList.iterator(); parameters.hasNext(); )
             {
-                String expression = parameter.getExpression();
+                Parameter parameter = (Parameter) parameters.next();
 
-                if ( expression == null || !expression.startsWith( "${component." ) )
+                if ( parameter.isEditable() )
                 {
-                    filtered.add( parameter );
+                    String expression = parameter.getExpression();
+
+                    if ( expression == null || !expression.startsWith( "${component." ) )
+                    {
+                        filtered.add( parameter );
+                    }
                 }
             }
         }
@@ -417,4 +420,5 @@ public class PluginXdocGenerator
         return list;
     }
 }
+
 

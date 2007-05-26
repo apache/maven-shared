@@ -44,9 +44,9 @@ import java.util.Set;
 /**
  * Provides operations for use with FileSet instances, such as retrieving the included/excluded files, deleting all
  * matching entries, etc.
- * 
+ *
  * @author jdcasey
- * 
+ *
  */
 public class FileSetManager
 {
@@ -61,7 +61,7 @@ public class FileSetManager
 
     /**
      * Create a new manager instance with the supplied log instance and flag for whether to output verbose messages.
-     * 
+     *
      * @param log
      *            The mojo log instance
      * @param verbose
@@ -85,7 +85,7 @@ public class FileSetManager
 
     /**
      * Create a new manager instance with the supplied log instance. Verbose flag is set to false.
-     * 
+     *
      * @param log
      *            The mojo log instance
      */
@@ -98,7 +98,7 @@ public class FileSetManager
 
     /**
      * Create a new manager instance with the supplied log instance and flag for whether to output verbose messages.
-     * 
+     *
      * @param log
      *            The mojo log instance
      * @param verbose
@@ -124,7 +124,7 @@ public class FileSetManager
 
     /**
      * Create a new manager instance with the supplied log instance. Verbose flag is set to false.
-     * 
+     *
      * @param log
      *            The mojo log instance
      */
@@ -137,7 +137,7 @@ public class FileSetManager
 
     /**
      * Create a new manager instance with an empty messages. Verbose flag is set to false.
-     * 
+     *
      * @param log
      *            The mojo log instance
      */
@@ -157,7 +157,7 @@ public class FileSetManager
         for ( int i = 0; i < sourcePaths.length; i++ )
         {
             String sourcePath = sourcePaths[i];
-            
+
             String destPath;
             if( fileMapper != null )
             {
@@ -167,7 +167,7 @@ public class FileSetManager
             {
                 destPath = sourcePath;
             }
-            
+
             mappedPaths.put( sourcePath, destPath );
         }
 
@@ -176,7 +176,7 @@ public class FileSetManager
 
     /**
      * Get all the filenames which have been included by the rules in this fileset.
-     * 
+     *
      * @param fileSet
      *            The fileset defining rules for inclusion/exclusion, and base directory.
      * @return the array of matching filenames, relative to the basedir of the file-set.
@@ -197,7 +197,7 @@ public class FileSetManager
 
     /**
      * Get all the directory names which have been included by the rules in this fileset.
-     * 
+     *
      * @param fileSet
      *            The fileset defining rules for inclusion/exclusion, and base directory.
      * @return the array of matching dirnames, relative to the basedir of the file-set.
@@ -218,7 +218,7 @@ public class FileSetManager
 
     /**
      * Get all the filenames which have been excluded by the rules in this fileset.
-     * 
+     *
      * @param fileSet
      *            The fileset defining rules for inclusion/exclusion, and base directory.
      * @return the array of non-matching filenames, relative to the basedir of the file-set.
@@ -239,7 +239,7 @@ public class FileSetManager
 
     /**
      * Get all the directory names which have been excluded by the rules in this fileset.
-     * 
+     *
      * @param fileSet
      *            The fileset defining rules for inclusion/exclusion, and base directory.
      * @return the array of non-matching dirnames, relative to the basedir of the file-set.
@@ -260,7 +260,7 @@ public class FileSetManager
 
     /**
      * Delete the matching files and directories for the given file-set definition.
-     * 
+     *
      * @param fileSet
      *            The file-set matching rules, along with search base directory
      * @throws IOException
@@ -500,7 +500,7 @@ public class FileSetManager
         // for ( Iterator it = includes.iterator(); it.hasNext(); )
         // {
         // String path = (String) it.next();
-        //            
+        //
         // if ( includes.contains( new File( path ).getParent() ) )
         // {
         // it.remove();
@@ -512,7 +512,7 @@ public class FileSetManager
 
     /**
      * Delete a directory
-     * 
+     *
      * @param dir
      *            the directory to delete
      * @param followSymlinks
@@ -570,13 +570,20 @@ public class FileSetManager
     /**
      * Accommodate Windows bug encountered in both Sun and IBM JDKs. Others possible. If the delete does not work, call
      * System.gc(), wait a little and try again.
+     *
+     * @todo Use org.codehaus.plexus.util.FileUtils#forceDelete(File)
+     *
+     * @param f
+     * @throws IOException if any
      */
     private boolean delete( File f )
+        throws IOException
     {
         if ( !f.delete() )
         {
             if ( System.getProperty( "os.name" ).toLowerCase().indexOf( "windows" ) > -1 )
             {
+                f = f.getCanonicalFile();
                 System.gc();
             }
             try

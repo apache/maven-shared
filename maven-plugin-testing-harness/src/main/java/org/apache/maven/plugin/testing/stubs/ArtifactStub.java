@@ -34,14 +34,13 @@ import java.util.List;
 
 /**
  * Stub class for {@link Artifact} testing.
- * 
+ *
  * @author jesse
  * @version $Id$
  */
 public class ArtifactStub
     implements Artifact
 {
-
     private String groupId;
 
     private String artifactId;
@@ -56,228 +55,455 @@ public class ArtifactStub
 
     private File file;
 
+    /**
+     * By default, return <code>0</code>
+     *
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
     public int compareTo( Object object )
     {
         return 0;
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#getGroupId()
+     */
     public String getGroupId()
     {
         return groupId;
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#getArtifactId()
+     */
     public String getArtifactId()
     {
         return artifactId;
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#getVersion()
+     */
     public String getVersion()
     {
         return version;
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#setVersion(java.lang.String)
+     */
     public void setVersion( String version )
     {
         this.version = version;
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#getScope()
+     */
     public String getScope()
     {
         return scope;
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#getType()
+     */
     public String getType()
     {
         return type;
     }
 
+    /**
+     * Set a new type
+     *
+     * @param type
+     */
     public void setType( String type )
     {
         this.type = type;
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#getClassifier()
+     */
     public String getClassifier()
     {
         return classifier;
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#hasClassifier()
+     */
     public boolean hasClassifier()
     {
         return classifier != null;
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#getFile()
+     */
     public File getFile()
     {
         return file;
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#setFile(java.io.File)
+     */
     public void setFile( File file )
     {
         this.file = file;
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getBaseVersion()
+     */
     public String getBaseVersion()
     {
         return null;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#setBaseVersion(java.lang.String)
+     */
     public void setBaseVersion( String string )
     {
+        // nop
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getId()
+     */
     public String getId()
     {
         return null;
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getDependencyConflictId()
+     */
     public String getDependencyConflictId()
     {
         return null;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#addMetadata(org.apache.maven.artifact.metadata.ArtifactMetadata)
+     */
     public void addMetadata( ArtifactMetadata artifactMetadata )
     {
+        // nop
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getMetadataList()
+     */
     public Collection getMetadataList()
     {
         return null;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#setRepository(org.apache.maven.artifact.repository.ArtifactRepository)
+     */
     public void setRepository( ArtifactRepository artifactRepository )
     {
+        // nop
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getRepository()
+     */
     public ArtifactRepository getRepository()
     {
         return null;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#updateVersion(java.lang.String, org.apache.maven.artifact.repository.ArtifactRepository)
+     */
     public void updateVersion( String string, ArtifactRepository artifactRepository )
     {
+        // nop
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getDownloadUrl()
+     */
     public String getDownloadUrl()
     {
         return null;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#setDownloadUrl(java.lang.String)
+     */
     public void setDownloadUrl( String string )
     {
+        // nop
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getDependencyFilter()
+     */
     public ArtifactFilter getDependencyFilter()
     {
         return null;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#setDependencyFilter(org.apache.maven.artifact.resolver.filter.ArtifactFilter)
+     */
     public void setDependencyFilter( ArtifactFilter artifactFilter )
     {
+        // nop
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getArtifactHandler()
+     */
     public ArtifactHandler getArtifactHandler()
     {
         return null;
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getDependencyTrail()
+     */
     public List getDependencyTrail()
     {
         return null;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#setDependencyTrail(java.util.List)
+     */
     public void setDependencyTrail( List list )
     {
+        // nop
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#setScope(java.lang.String)
+     */
     public void setScope( String scope )
     {
         this.scope = scope;
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getVersionRange()
+     */
     public VersionRange getVersionRange()
     {
         return null;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#setVersionRange(org.apache.maven.artifact.versioning.VersionRange)
+     */
     public void setVersionRange( VersionRange versionRange )
     {
+        // nop
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#selectVersion(java.lang.String)
+     */
     public void selectVersion( String string )
     {
+        // nop
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#setGroupId(java.lang.String)
+     */
     public void setGroupId( String groupId )
     {
         this.groupId = groupId;
     }
 
+    /**
+     * @see org.apache.maven.artifact.Artifact#setArtifactId(java.lang.String)
+     */
     public void setArtifactId( String artifactId )
     {
         this.artifactId = artifactId;
     }
 
+    /**
+     * By default, return <code>false</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#isSnapshot()
+     */
     public boolean isSnapshot()
     {
         return false;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#setResolved(boolean)
+     */
     public void setResolved( boolean b )
     {
+        // nop
     }
 
+    /**
+     * By default, return <code>false</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#isResolved()
+     */
     public boolean isResolved()
     {
         return false;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#setResolvedVersion(java.lang.String)
+     */
     public void setResolvedVersion( String string )
     {
+        // nop
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#setArtifactHandler(org.apache.maven.artifact.handler.ArtifactHandler)
+     */
     public void setArtifactHandler( ArtifactHandler artifactHandler )
     {
+        // nop
     }
 
+    /**
+     * By default, return <code>false</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#isRelease()
+     */
     public boolean isRelease()
     {
         return false;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#setRelease(boolean)
+     */
     public void setRelease( boolean b )
     {
+        // nop
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getAvailableVersions()
+     */
     public List getAvailableVersions()
     {
         return null;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @see org.apache.maven.artifact.Artifact#setAvailableVersions(java.util.List)
+     */
     public void setAvailableVersions( List list )
     {
+        // nop
     }
 
+    /**
+     * By default, return <code>false</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#isOptional()
+     */
     public boolean isOptional()
     {
         return false;
     }
 
+    /**
+     * By default, do nothing.
+     *
+     * @param b
+     */
     public void setOptional( boolean b )
     {
+        // nop
     }
 
+    /**
+     * By default, return <code>null</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#getSelectedVersion()
+     */
     public ArtifactVersion getSelectedVersion()
         throws OverConstrainedVersionException
     {
         return null;
     }
 
+    /**
+     * By default, return <code>false</code>.
+     *
+     * @see org.apache.maven.artifact.Artifact#isSelectedVersionKnown()
+     */
     public boolean isSelectedVersionKnown()
         throws OverConstrainedVersionException
     {
         return false;
     }
 
+    /**
+     * @see java.lang.Object#toString()
+     */
     public String toString()
     {
         StringBuffer sb = new StringBuffer();

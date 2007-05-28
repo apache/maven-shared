@@ -48,7 +48,7 @@ import java.lang.reflect.AccessibleObject;
  * the expressions which extract values from the mojo.
  * TODO: create a standard directory structure for picking up POMs to make this even easier, we really just need a testing
  * descriptor and make this entirely declarative!
- * 
+ *
  * @author jesse
  * @version $Id$
  */
@@ -63,7 +63,6 @@ public abstract class AbstractMojoTestCase
      * to either the project stub or into the mojo directly with injection...not sure yet though.
      */
     //private MavenProjectBuilder projectBuilder;
-
     protected void setUp()
         throws Exception
     {
@@ -75,29 +74,39 @@ public abstract class AbstractMojoTestCase
     }
 
     /**
-     * lookup the mojo leveraging the subproject pom
+     * Lookup the mojo leveraging the subproject pom
      *
+     * @param goal
+     * @param pluginPom
+     * @return a Mojo instance
+     * @throws Exception
      */
-    protected Mojo lookupMojo( String goal, String pluginPom ) throws Exception
+    protected Mojo lookupMojo( String goal, String pluginPom )
+        throws Exception
     {
         return lookupMojo( goal, new File( pluginPom ) );
     }
 
     /**
-     * lookup an empty mojo
+     * Lookup an empty mojo
+     *
+     * @param goal
+     * @param pluginPom
+     * @return a Mojo instance
+     * @throws Exception
      */
-    protected Mojo lookupEmptyMojo( String goal, String pluginPom ) throws Exception
+    protected Mojo lookupEmptyMojo( String goal, String pluginPom )
+        throws Exception
     {
-       return lookupEmptyMojo( goal, new File( pluginPom ) );
+        return lookupEmptyMojo( goal, new File( pluginPom ) );
     }
 
-
     /**
-     * lookup the mojo leveraging the actual subprojects pom
+     * Lookup the mojo leveraging the actual subprojects pom
      *
      * @param goal
      * @param pom
-     * @return
+     * @return a Mojo instance
      * @throws Exception
      */
     protected Mojo lookupMojo( String goal, File pom )
@@ -119,11 +128,11 @@ public abstract class AbstractMojoTestCase
     }
 
     /**
-     * lookup the mojo leveraging the actual subprojects pom
+     * Lookup the mojo leveraging the actual subprojects pom
      *
      * @param goal
      * @param pom
-     * @return
+     * @return a Mojo instance
      * @throws Exception
      */
     protected Mojo lookupEmptyMojo( String goal, File pom )
@@ -142,15 +151,15 @@ public abstract class AbstractMojoTestCase
         return lookupMojo( groupId, artifactId, version, goal, null );
     }
 
- /*
-    protected Mojo lookupMojo( String groupId, String artifactId, String version, String goal, File pom )
-        throws Exception
-    {
-        PlexusConfiguration pluginConfiguration = extractPluginConfiguration( artifactId, pom );
+    /*
+     protected Mojo lookupMojo( String groupId, String artifactId, String version, String goal, File pom )
+     throws Exception
+     {
+     PlexusConfiguration pluginConfiguration = extractPluginConfiguration( artifactId, pom );
 
-        return lookupMojo( groupId, artifactId, version, goal, pluginConfiguration );
-    }
-    */
+     return lookupMojo( groupId, artifactId, version, goal, pluginConfiguration );
+     }
+     */
     /**
      * lookup the mojo while we have all of the relavent information
      *
@@ -159,10 +168,11 @@ public abstract class AbstractMojoTestCase
      * @param version
      * @param goal
      * @param pluginConfiguration
-     * @return
+     * @return a Mojo instance
      * @throws Exception
      */
-    protected Mojo lookupMojo( String groupId, String artifactId, String version, String goal, PlexusConfiguration pluginConfiguration )
+    protected Mojo lookupMojo( String groupId, String artifactId, String version, String goal,
+                               PlexusConfiguration pluginConfiguration )
         throws Exception
     {
         validateContainerStatus();
@@ -172,14 +182,14 @@ public abstract class AbstractMojoTestCase
         Mojo mojo = (Mojo) lookup( Mojo.ROLE, groupId + ":" + artifactId + ":" + version + ":" + goal );
 
         Log mojoLogger = new DefaultLog( container.getLoggerManager().getLoggerForComponent( Mojo.ROLE ) );
-        
+
         mojo.setLog( mojoLogger );
 
         if ( pluginConfiguration != null )
         {
             /* requires v10 of plexus container for lookup on expression evaluator
-            ExpressionEvaluator evaluator = (ExpressionEvaluator) getContainer().lookup( ExpressionEvaluator.ROLE, "stub-evaluator" );
-            */
+             ExpressionEvaluator evaluator = (ExpressionEvaluator) getContainer().lookup( ExpressionEvaluator.ROLE, "stub-evaluator" );
+             */
             ExpressionEvaluator evaluator = new ResolverExpressionEvaluatorStub();
 
             configurator.configureComponent( mojo, pluginConfiguration, evaluator, getContainer().getContainerRealm() );
@@ -188,7 +198,12 @@ public abstract class AbstractMojoTestCase
         return mojo;
     }
 
-
+    /**
+     * @param artifactId
+     * @param pom
+     * @return the plexus configuration
+     * @throws Exception
+     */
     protected PlexusConfiguration extractPluginConfiguration( String artifactId, File pom )
         throws Exception
     {
@@ -199,6 +214,12 @@ public abstract class AbstractMojoTestCase
         return extractPluginConfiguration( artifactId, pomDom );
     }
 
+    /**
+     * @param artifactId
+     * @param pomDom
+     * @return the plexus configuration
+     * @throws Exception
+     */
     protected PlexusConfiguration extractPluginConfiguration( String artifactId, Xpp3Dom pomDom )
         throws Exception
     {
@@ -238,6 +259,15 @@ public abstract class AbstractMojoTestCase
         return new XmlPlexusConfiguration( pluginConfigurationElement );
     }
 
+    /**
+     * Configure the mojo
+     *
+     * @param mojo
+     * @param artifactId
+     * @param pom
+     * @return a Mojo instance
+     * @throws Exception
+     */
     protected Mojo configureMojo( Mojo mojo, String artifactId, File pom )
         throws Exception
     {
@@ -247,18 +277,17 @@ public abstract class AbstractMojoTestCase
 
         ExpressionEvaluator evaluator = new ResolverExpressionEvaluatorStub();
 
-
         configurator.configureComponent( mojo, pluginConfiguration, evaluator, getContainer().getContainerRealm() );
 
         return mojo;
     }
 
     /**
-     * configure the mojo with the given plexus configuration
+     * Configure the mojo with the given plexus configuration
      *
      * @param mojo
      * @param pluginConfiguration
-     * @return
+     * @return a Mojo instance
      * @throws Exception
      */
     protected Mojo configureMojo( Mojo mojo, PlexusConfiguration pluginConfiguration )
@@ -272,7 +301,6 @@ public abstract class AbstractMojoTestCase
 
         return mojo;
     }
-
 
     /**
      * convience method to obtain the value of a variable on a mojo that might not have a getter.
@@ -293,7 +321,6 @@ public abstract class AbstractMojoTestCase
 
         return field.get( object );
     }
-
 
     /**
      * convience method to obtain all variables and values from the mojo (including its superclasses)
@@ -325,9 +352,9 @@ public abstract class AbstractMojoTestCase
 
         Field[] fields = clazz.getDeclaredFields();
 
-        AccessibleObject.setAccessible( fields, true);
+        AccessibleObject.setAccessible( fields, true );
 
-        for (int i = 0; i < fields.length; ++i)
+        for ( int i = 0; i < fields.length; ++i )
         {
             Field field = fields[i];
 
@@ -337,14 +364,13 @@ public abstract class AbstractMojoTestCase
 
         Class superclass = clazz.getSuperclass();
 
-        if ( !Object.class.equals(  superclass ) )
+        if ( !Object.class.equals( superclass ) )
         {
             map.putAll( getVariablesAndValuesFromObject( superclass, object ) );
         }
 
         return map;
     }
-
 
     /**
      * convience method to set values to variables in objects that don't have setters
@@ -360,8 +386,9 @@ public abstract class AbstractMojoTestCase
 
         field.setAccessible( true );
 
-        field.set(object, value );
+        field.set( object, value );
     }
+
     /**
      * sometimes the parent element might contain the correct value so generalize that access
      *
@@ -372,23 +399,23 @@ public abstract class AbstractMojoTestCase
      * @return
      * @throws Exception
      */
-
-    private String resolveFromRootThenParent( Xpp3Dom pluginPomDom, String element ) throws Exception
+    private String resolveFromRootThenParent( Xpp3Dom pluginPomDom, String element )
+        throws Exception
     {
         Xpp3Dom elementDom = pluginPomDom.getChild( element );
 
         // parent might have the group Id so resolve it
         if ( elementDom == null )
         {
-            Xpp3Dom pluginParentDom = pluginPomDom.getChild("parent");
+            Xpp3Dom pluginParentDom = pluginPomDom.getChild( "parent" );
 
-            if (pluginParentDom != null )
+            if ( pluginParentDom != null )
             {
                 elementDom = pluginParentDom.getChild( element );
 
                 if ( elementDom == null )
                 {
-                    throw new Exception ( "unable to determine " + element );
+                    throw new Exception( "unable to determine " + element );
                 }
                 else
                 {
@@ -397,7 +424,7 @@ public abstract class AbstractMojoTestCase
             }
             else
             {
-                throw new Exception ( "unable to determine " + element );
+                throw new Exception( "unable to determine " + element );
             }
         }
         else
@@ -406,8 +433,7 @@ public abstract class AbstractMojoTestCase
         }
     }
 
-
-    /*
+    /**
      * We should make sure this is called in each method that makes use of the container,
      * otherwise we throw ugly NPE's
      *
@@ -415,14 +441,16 @@ public abstract class AbstractMojoTestCase
      *
      * @throws Exception
      */
-    private void validateContainerStatus() throws Exception {
-        if (container != null)
+    private void validateContainerStatus()
+        throws Exception
+    {
+        if ( container != null )
         {
             return;
         }
         else
         {
-            throw new Exception("container is null, make sure super.setUp() is called");
+            throw new Exception( "container is null, make sure super.setUp() is called" );
         }
     }
 }

@@ -23,7 +23,6 @@ import com.thoughtworks.qdox.JavaDocBuilder;
 import com.thoughtworks.qdox.model.DocletTag;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
-import com.thoughtworks.qdox.model.JavaSource;
 import com.thoughtworks.qdox.model.Type;
 
 import org.apache.maven.plugin.descriptor.InvalidParameterException;
@@ -34,6 +33,8 @@ import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugin.descriptor.Requirement;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.tools.plugin.extractor.MojoDescriptorExtractor;
+import org.apache.maven.tools.plugin.extractor.ExtractionException;
+
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -44,8 +45,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-
 /**
+ * Extracts Mojo descriptors from Java sources.
+ *
  * @todo add example usage tag that can be shown in the doco
  * @todo need to add validation directives so that systems embedding maven2 can
  * get validation directives to help users in IDEs.
@@ -121,11 +123,11 @@ public class JavaMojoDescriptorExtractor
 
     public static final String GOAL_REQUIRES_DIRECT_INVOCATION = "requiresDirectInvocation";
 
-    private static final String COMPONENT = "component";
+    public static final String COMPONENT = "component";
 
-    private static final String COMPONENT_ROLE = "role";
+    public static final String COMPONENT_ROLE = "role";
 
-    private static final String COMPONENT_ROLEHINT = "roleHint";
+    public static final String COMPONENT_ROLEHINT = "roleHint";
 
     protected void validateParameter( Parameter parameter, int i )
         throws InvalidParameterException
@@ -159,14 +161,10 @@ public class JavaMojoDescriptorExtractor
     // Mojo descriptor creation from @tags
     // ----------------------------------------------------------------------
 
-    private MojoDescriptor createMojoDescriptor( JavaSource javaSource, PluginDescriptor pluginDescriptor )
+    protected MojoDescriptor createMojoDescriptor( JavaClass javaClass )
         throws InvalidPluginDescriptorException
     {
         MojoDescriptor mojoDescriptor = new MojoDescriptor();
-
-        mojoDescriptor.setPluginDescriptor( pluginDescriptor );
-
-        JavaClass javaClass = getJavaClass( javaSource );
 
         mojoDescriptor.setLanguage( "java" );
 
@@ -529,71 +527,24 @@ public class JavaMojoDescriptorExtractor
         return rawParams;
     }
 
-    private JavaClass getJavaClass( JavaSource javaSource )
-    {
-        return javaSource.getClasses()[0];
-    }
-
     public List execute( MavenProject project, PluginDescriptor pluginDescriptor )
-        throws InvalidPluginDescriptorException
+        throws ExtractionException, InvalidPluginDescriptorException
     {
-        JavaDocBuilder builder = new JavaDocBuilder();
-
-        for ( Iterator i = project.getCompileSourceRoots().iterator(); i.hasNext(); )
-        {
-            builder.addSourceTree( new File( (String) i.next() ) );
-        }
-
-        JavaSource[] javaSources = builder.getSources();
+        JavaClass[] javaClasses = discoverClasses( project );
 
         List descriptors = new ArrayList();
 
-        for ( int i = 0; i < javaSources.length; i++ )
+        for ( int i = 0; i < javaClasses.length; i++ )
         {
-            JavaClass javaClass = getJavaClass( javaSources[i] );
-
-            DocletTag tag = javaClass.getTagByName( GOAL );
+            DocletTag tag = javaClasses[i].getTagByName( GOAL );
 
             if ( tag != null )
             {
-                MojoDescriptor mojoDescriptor = createMojoDescriptor( javaSources[i], pluginDescriptor );
+                MojoDescriptor mojoDescriptor = createMojoDescriptor( javaClasses[i] );
+                mojoDescriptor.setPluginDescriptor( pluginDescriptor );
 
-                // ----------------------------------------------------------------------
-                // Validate the descriptor as best we can before allowing it
-                // to be processed.
-                // ----------------------------------------------------------------------
-
-                List parameters = mojoDescriptor.getParameters();
-
-                if ( parameters != null )
-                {
-                    for ( int j = 0; j < parameters.size(); j++ )
-                    {
-                        validateParameter( (Parameter) parameters.get( j ), j );
-                    }
-                }
-
-                //                Commented because it causes a VerifyError:
-                //                java.lang.VerifyError:
-                //                (class:
-                // org/apache/maven/tools/plugin/extractor/java/JavaMojoDescriptorExtractor,
-                //                method: execute signature:
-                // (Ljava/lang/String;Lorg/apache/maven/project/MavenProject;)Ljava/util/Set;)
-                //                Incompatible object argument for function call
-                //
-                //                Refactored to allow MavenMojoDescriptor.getComponentFactory()
-                //                return MavenMojoDescriptor.getMojoDescriptor().getLanguage(),
-                //                and removed all usage of MavenMojoDescriptor from extractors.
-                //
-                //
-                //                MavenMojoDescriptor mmDescriptor = new
-                // MavenMojoDescriptor(mojoDescriptor);
-                //
-                //                JavaClass javaClass = getJavaClass(javaSources[i]);
-                //
-                //                mmDescriptor.setImplementation(javaClass.getFullyQualifiedName());
-                //
-                //                descriptors.add( mmDescriptor );
+                // Validate the descriptor as best we can before allowing it to be processed.
+                validate( mojoDescriptor );
 
                 descriptors.add( mojoDescriptor );
             }
@@ -602,4 +553,30 @@ public class JavaMojoDescriptorExtractor
         return descriptors;
     }
 
+    protected JavaClass[] discoverClasses( final MavenProject project )
+        throws ExtractionException
+    {
+        JavaDocBuilder builder = new JavaDocBuilder();
+
+        for ( Iterator i = project.getCompileSourceRoots().iterator(); i.hasNext(); )
+        {
+            builder.addSourceTree( new File( (String) i.next() ) );
+        }
+
+        return builder.getClasses();
+    }
+
+    protected void validate( MojoDescriptor mojoDescriptor )
+        throws InvalidParameterException
+    {
+        List parameters = mojoDescriptor.getParameters();
+
+        if ( parameters != null )
+        {
+            for ( int j = 0; j < parameters.size(); j++ )
+            {
+                validateParameter( (Parameter) parameters.get( j ), j );
+            }
+        }
+    }
 }

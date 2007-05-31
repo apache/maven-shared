@@ -183,6 +183,9 @@ public class DefaultRepositoryAssembler
         {
             assembleRepositoryMetadata( result, filter, centralRepository, targetRepository );
         }
+
+        addPomWithAncestry( project.getArtifact(), project.getRemoteArtifactRepositories(), localRepository,
+                            targetRepository, groupVersionAlignments );
     }
 
     private ArtifactFilter buildRepositoryFilter( RepositoryInfo repository, MavenProject project )
@@ -276,38 +279,7 @@ public class DefaultRepositoryAssembler
 
                     writeChecksums( targetFile );
 
-                    if ( !"pom".equals( a.getType() ) )
-                    {
-                        a = artifactFactory.createProjectArtifact( a.getGroupId(), a.getArtifactId(), a.getVersion() );
-
-                        MavenProject p = projectBuilder.buildFromRepository( a,
-                                                                             project.getRemoteArtifactRepositories(),
-                                                                             localRepository );
-
-                        do
-                        {
-                            a = artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p
-                                .getVersion() );
-
-                            setAlignment( a, groupVersionAlignments );
-
-                            File sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( a ) );
-
-                            if ( !sourceFile.exists() )
-                            {
-                                break;
-                            }
-
-                            targetFile = new File( targetRepository.getBasedir(), targetRepository.pathOf( a ) );
-
-                            FileUtils.copyFile( sourceFile, targetFile );
-
-                            writeChecksums( targetFile );
-
-                            p = p.getParent();
-                        }
-                        while ( p != null );
-                    }
+                    addPomWithAncestry( a, project.getRemoteArtifactRepositories(), localRepository, targetRepository, groupVersionAlignments );
                 }
             }
         }
@@ -323,9 +295,66 @@ public class DefaultRepositoryAssembler
         {
             throw new RepositoryAssemblyException( "Error writing artifact metdata.", e );
         }
-        catch ( ProjectBuildingException e )
+    }
+
+    private void addPomWithAncestry( Artifact artifact, List remoteArtifactRepositories,
+                                     ArtifactRepository localRepository, ArtifactRepository targetRepository,
+                                     Map groupVersionAlignments )
+        throws RepositoryAssemblyException
+    {
+        if ( !"pom".equals( artifact.getType() ) )
         {
-            throw new RepositoryAssemblyException( "Error reading POM.", e );
+            artifact = artifactFactory.createProjectArtifact( artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion() );
+
+            MavenProject p;
+            try
+            {
+                p = projectBuilder.buildFromRepository( artifact,
+                                                                     remoteArtifactRepositories,
+                                                                     localRepository );
+            }
+            catch ( ProjectBuildingException e )
+            {
+                throw new RepositoryAssemblyException( "Error reading POM: " + artifact.getId(), e );
+            }
+
+            do
+            {
+                artifact = artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p
+                    .getVersion() );
+
+                setAlignment( artifact, groupVersionAlignments );
+
+                File sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
+
+                if ( !sourceFile.exists() )
+                {
+                    break;
+                }
+
+                File targetFile = new File( targetRepository.getBasedir(), targetRepository.pathOf( artifact ) );
+
+                try
+                {
+                    FileUtils.copyFile( sourceFile, targetFile );
+                }
+                catch ( IOException e )
+                {
+                    throw new RepositoryAssemblyException( "Error writing POM metdata: " + artifact.getId(), e );
+                }
+
+                try
+                {
+                    writeChecksums( targetFile );
+                }
+                catch ( IOException e )
+                {
+                    throw new RepositoryAssemblyException( "Error writing checksums for POM: " + artifact.getId(), e );
+                }
+
+                p = p.getParent();
+            }
+            while ( p != null );
         }
     }
 

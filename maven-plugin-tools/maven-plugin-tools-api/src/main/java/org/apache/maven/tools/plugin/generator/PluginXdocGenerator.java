@@ -294,6 +294,8 @@ public class PluginXdocGenerator
             w.endElement(); //p
 
             w.startElement( "ul" );
+            
+            writeDetail( "Deprecated", parameter.getDeprecated(), w );
 
             writeDetail( "Type", parameter.getType(), w );
 
@@ -386,6 +388,10 @@ public class PluginXdocGenerator
             if ( StringUtils.isEmpty( description ) )
             {
                 description = "No description.";
+            }
+            if ( StringUtils.isNotEmpty( parameter.getDeprecated() ) )
+            {
+                description = "<b>Deprecated</b>. " + description;
             }
             w.writeMarkup( description );
 

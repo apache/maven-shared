@@ -24,10 +24,15 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.ReportPlugin;
 import org.apache.maven.model.Reporting;
+import org.apache.maven.model.converter.ConverterListener;
 import org.apache.maven.model.converter.ModelUtils;
 import org.apache.maven.model.converter.ProjectConverterException;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -35,10 +40,15 @@ import java.util.Properties;
  * @author Dennis Lundberg
  * @version $Id$
  */
-public abstract class AbstractPluginConfigurationConverter implements PluginConfigurationConverter
+public abstract class AbstractPluginConfigurationConverter
+    extends AbstractLogEnabled
+    implements PluginConfigurationConverter
 {
     public static final String TYPE_BUILD_PLUGIN = "build plugin";
+
     public static final String TYPE_REPORT_PLUGIN = "report plugin";
+
+    private List listeners = new ArrayList();
 
     public abstract String getArtifactId();
 
@@ -48,6 +58,23 @@ public abstract class AbstractPluginConfigurationConverter implements PluginConf
     }
 
     public abstract String getType();
+
+    public void addListeners( List listeners )
+    {
+        for ( Iterator i = listeners.iterator(); i.hasNext(); )
+        {
+            ConverterListener listener = (ConverterListener) i.next();
+            addListener( listener );
+        }
+    }
+
+    public void addListener( ConverterListener listener )
+    {
+        if ( !listeners.contains( listener ) )
+        {
+            listeners.add( listener );
+        }
+    }
 
     /**
      * Add a child element to the configuration.
@@ -113,6 +140,8 @@ public abstract class AbstractPluginConfigurationConverter implements PluginConf
                         v4Model.setBuild( new Build() );
                     }
                     v4Model.getBuild().addPlugin( plugin );
+                    sendInfoMessage( "Adding plugin " + plugin.getGroupId() + ":" + plugin.getArtifactId() );
+                    fireAddPluginEvent( plugin );
                 }
             }
             else if ( TYPE_REPORT_PLUGIN.equals( getType() ) )
@@ -135,6 +164,8 @@ public abstract class AbstractPluginConfigurationConverter implements PluginConf
                         v4Model.setReporting( new Reporting() );
                     }
                     v4Model.getReporting().addPlugin( plugin );
+                    sendInfoMessage( "Adding report " + plugin.getGroupId() + ":" + plugin.getArtifactId() );
+                    fireAddReportEvent( plugin );
                 }
             }
         }
@@ -143,4 +174,33 @@ public abstract class AbstractPluginConfigurationConverter implements PluginConf
     protected abstract void buildConfiguration( Xpp3Dom configuration, org.apache.maven.model.v3_0_0.Model v3Model,
                                                 Properties projectProperties )
         throws ProjectConverterException;
+
+    private void sendInfoMessage( String message )
+    {
+        getLogger().info( message );
+
+        for ( Iterator i = listeners.iterator(); i.hasNext(); )
+        {
+            ConverterListener listener = (ConverterListener) i.next();
+            listener.info( message );
+        }
+    }
+
+    private void fireAddPluginEvent( Plugin plugin )
+    {
+        for ( Iterator i = listeners.iterator(); i.hasNext(); )
+        {
+            ConverterListener listener = (ConverterListener) i.next();
+            listener.addPluginEvent( plugin.getGroupId(), plugin.getArtifactId() );
+        }
+    }
+
+    private void fireAddReportEvent( ReportPlugin plugin )
+    {
+        for ( Iterator i = listeners.iterator(); i.hasNext(); )
+        {
+            ConverterListener listener = (ConverterListener) i.next();
+            listener.addReportEvent( plugin.getGroupId(), plugin.getArtifactId() );
+        }
+    }
 }

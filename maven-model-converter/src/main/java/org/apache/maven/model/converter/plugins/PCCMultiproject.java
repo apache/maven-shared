@@ -20,22 +20,43 @@ package org.apache.maven.model.converter.plugins;
  */
 
 import org.apache.maven.model.Model;
+import org.apache.maven.model.converter.ConverterListener;
 import org.apache.maven.model.converter.ProjectConverterException;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 /**
- * @plexus.component role="org.apache.maven.model.converter.plugins.PluginConfigurationConverter" role-hint="multiproject"
- *
  * @author Fabrizio Giustina
  * @version $Id$
+ * @plexus.component role="org.apache.maven.model.converter.plugins.PluginConfigurationConverter" role-hint="multiproject"
  */
 public class PCCMultiproject
     implements PluginConfigurationConverter
 {
+    private List listeners = new ArrayList();
+
+    public void addListeners( List listeners )
+    {
+        for ( Iterator i = listeners.iterator(); i.hasNext(); )
+        {
+            ConverterListener listener = (ConverterListener) i.next();
+            addListener( listener );
+        }
+    }
+
+    public void addListener( ConverterListener listener )
+    {
+        if ( !listeners.contains( listener ) )
+        {
+            listeners.add( listener );
+        }
+    }
 
     /**
-     * @see org.apache.maven.model.converter.plugins.PluginConfigurationConverter#convertConfiguration(org.apache.maven.model.Model, org.apache.maven.model.v3_0_0.Model, java.util.Properties)
+     * @see org.apache.maven.model.converter.plugins.PluginConfigurationConverter#convertConfiguration(org.apache.maven.model.Model,org.apache.maven.model.v3_0_0.Model,java.util.Properties)
      */
     public void convertConfiguration( Model v4Model, org.apache.maven.model.v3_0_0.Model v3Model,
                                       Properties projectProperties )

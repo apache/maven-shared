@@ -41,7 +41,6 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -97,7 +96,8 @@ public class Maven1Converter
         }
         catch ( Exception e )
         {
-            throw new ProjectConverterException( "Exception caught while loading " + fileName + ". " + e.getMessage(), e );
+            throw new ProjectConverterException( "Exception caught while loading " + fileName + ". " + e.getMessage(),
+                                                 e );
         }
 
         Model v4Model;
@@ -108,8 +108,8 @@ public class Maven1Converter
         }
         catch ( Exception e )
         {
-            throw new ProjectConverterException( "Exception caught while converting " + fileName + ". " + e.getMessage(),
-                                                 e );
+            throw new ProjectConverterException(
+                "Exception caught while converting " + fileName + ". " + e.getMessage(), e );
         }
 
         Properties properties = new Properties();
@@ -125,6 +125,7 @@ public class Maven1Converter
         for ( Iterator i = converters.iterator(); i.hasNext(); )
         {
             PluginConfigurationConverter converter = (PluginConfigurationConverter) i.next();
+            converter.addListeners( listeners );
             converter.convertConfiguration( v4Model, v3Model, properties );
         }
 
@@ -136,6 +137,7 @@ public class Maven1Converter
         while ( iterator.hasNext() )
         {
             pluginRelocator = (PluginRelocator) iterator.next();
+            pluginRelocator.addListeners( listeners );
             pluginRelocator.relocate( v4Model );
         }
 
@@ -283,10 +285,12 @@ public class Maven1Converter
         }
 
         File pomxml = new File( outputdir, "pom.xml" );
+        boolean alreadyExist = false;
 
         if ( pomxml.exists() )
         {
             sendWarnMessage( "pom.xml in " + outputdir.getAbsolutePath() + " already exists, overwriting" );
+            alreadyExist = true;
         }
 
         MavenXpp3Writer v4Writer = new MavenXpp3Writer();
@@ -300,6 +304,7 @@ public class Maven1Converter
             output = new FileWriter( pomxml );
             v4Writer.write( output, v4Model );
             output.close();
+            fireSavePomEvent( pomxml, alreadyExist );
         }
         catch ( IOException e )
         {
@@ -361,7 +366,7 @@ public class Maven1Converter
     private void sendInfoMessage( String message )
     {
         getLogger().info( message );
-        
+
         for ( Iterator i = listeners.iterator(); i.hasNext(); )
         {
             ConverterListener listener = (ConverterListener) i.next();
@@ -372,11 +377,20 @@ public class Maven1Converter
     private void sendWarnMessage( String message )
     {
         getLogger().warn( message );
-        
+
         for ( Iterator i = listeners.iterator(); i.hasNext(); )
         {
             ConverterListener listener = (ConverterListener) i.next();
             listener.warn( message );
+        }
+    }
+
+    private void fireSavePomEvent( File pomFile, boolean alreadyExist )
+    {
+        for ( Iterator i = listeners.iterator(); i.hasNext(); )
+        {
+            ConverterListener listener = (ConverterListener) i.next();
+            listener.savePomEvent( pomFile, alreadyExist );
         }
     }
 }

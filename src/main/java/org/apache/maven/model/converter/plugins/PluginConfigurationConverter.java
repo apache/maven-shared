@@ -19,18 +19,36 @@ package org.apache.maven.model.converter.plugins;
  * under the License.
  */
 
-import java.util.Properties;
-
 import org.apache.maven.model.Model;
+import org.apache.maven.model.converter.ConverterListener;
 import org.apache.maven.model.converter.ProjectConverterException;
+
+import java.util.List;
+import java.util.Properties;
 
 /**
  * A plugin configuration converter reads properties from a v3 pom or project.properties and add them to the v4 pom.
+ *
  * @author Fabrizio Giustina
  * @version $Id$
  */
 public interface PluginConfigurationConverter
 {
-    void convertConfiguration( Model v4Model, org.apache.maven.model.v3_0_0.Model v3Model, Properties projectProperties )
+    void convertConfiguration( Model v4Model, org.apache.maven.model.v3_0_0.Model v3Model,
+                               Properties projectProperties )
         throws ProjectConverterException;
+
+    /**
+     * Add a listeners list for all messages sended by the relocator.
+     *
+     * @param listeners The listeners list that will receive messages
+     */
+    void addListeners( List listeners );
+
+    /**
+     * Add a listener for all messages sended by the relocator.
+     *
+     * @param listener The listener that will receive messages
+     */
+    void addListener( ConverterListener listener );
 }

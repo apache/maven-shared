@@ -66,7 +66,7 @@ public abstract class AbstractPluginRelocator
      * model, after the model has been converted.
      *
      * @return The artifactId of the Maven 1 plugin.
-     * @see org.apache.maven.model.converter.PomV3ToV4Translator#translateDependencies( java.util.List )
+     * @see org.apache.maven.model.converter.PomV3ToV4Translator#translateDependencies(java.util.List)
      */
     public abstract String getOldArtifactId();
 
@@ -79,7 +79,7 @@ public abstract class AbstractPluginRelocator
      * </p>
      *
      * @return The groupId of the Maven 1 plugin.
-     * @see org.apache.maven.model.converter.PomV3ToV4Translator#translateDependencies( java.util.List )
+     * @see org.apache.maven.model.converter.PomV3ToV4Translator#translateDependencies(java.util.List)
      */
     public String getOldGroupId()
     {
@@ -100,6 +100,7 @@ public abstract class AbstractPluginRelocator
                 // Remove the old plugin
                 v4Model.getBuild().getPlugins().remove( oldBuildPlugin );
                 sendInfoMessage( "Removing build plugin " + getOldGroupId() + ":" + getOldArtifactId() );
+                fireRemovePluginEvent( getOldGroupId(), getOldArtifactId() );
             }
             else
             {
@@ -110,6 +111,7 @@ public abstract class AbstractPluginRelocator
                     oldBuildPlugin.setArtifactId( getNewArtifactId() );
                     oldBuildPlugin.setGroupId( getNewGroupId() );
                     sendInfoMessage( "Relocating build plugin " + getOldGroupId() + ":" + getOldArtifactId() );
+                    fireRelocatePluginEvent( getOldGroupId(), getOldArtifactId(), getNewGroupId(), getNewArtifactId() );
                 }
                 else
                 {
@@ -117,6 +119,7 @@ public abstract class AbstractPluginRelocator
                     v4Model.getBuild().getPlugins().remove( oldBuildPlugin );
                     sendInfoMessage( "Removing old build plugin " + getOldGroupId() + ":" + getOldArtifactId() +
                         " because the new one already exist" );
+                    fireRemovePluginEvent( getOldGroupId(), getOldArtifactId() );
                 }
             }
         }
@@ -130,6 +133,7 @@ public abstract class AbstractPluginRelocator
                 // Remove the old plugin
                 v4Model.getReporting().getPlugins().remove( oldReportPlugin );
                 sendInfoMessage( "Removing report plugin " + getOldGroupId() + ":" + getOldArtifactId() );
+                fireRemovePluginEvent( getOldGroupId(), getOldArtifactId() );
             }
             else
             {
@@ -140,6 +144,7 @@ public abstract class AbstractPluginRelocator
                     oldReportPlugin.setArtifactId( getNewArtifactId() );
                     oldReportPlugin.setGroupId( getNewGroupId() );
                     sendInfoMessage( "Relocating report plugin " + getOldGroupId() + ":" + getOldArtifactId() );
+                    fireRelocateReportEvent( getOldGroupId(), getOldArtifactId(), getNewGroupId(), getNewArtifactId() );
                 }
                 else
                 {
@@ -147,6 +152,7 @@ public abstract class AbstractPluginRelocator
                     v4Model.getReporting().getPlugins().remove( oldReportPlugin );
                     sendInfoMessage( "Removing old report plugin " + getOldGroupId() + ":" + getOldArtifactId() +
                         " because the new one already exist" );
+                    fireRemovePluginEvent( getOldGroupId(), getOldArtifactId() );
                 }
             }
         }
@@ -172,11 +178,49 @@ public abstract class AbstractPluginRelocator
     private void sendInfoMessage( String message )
     {
         getLogger().info( message );
-        
+
         for ( Iterator i = listeners.iterator(); i.hasNext(); )
         {
             ConverterListener listener = (ConverterListener) i.next();
             listener.info( message );
+        }
+    }
+
+    private void fireRelocatePluginEvent( String oldGroupId, String oldArtifactId, String newGroupId,
+                                          String newArtifactId )
+    {
+        for ( Iterator i = listeners.iterator(); i.hasNext(); )
+        {
+            ConverterListener listener = (ConverterListener) i.next();
+            listener.relocatePluginEvent( oldGroupId, oldArtifactId, newGroupId, newArtifactId );
+        }
+    }
+
+    private void fireRelocateReportEvent( String oldGroupId, String oldArtifactId, String newGroupId,
+                                          String newArtifactId )
+    {
+        for ( Iterator i = listeners.iterator(); i.hasNext(); )
+        {
+            ConverterListener listener = (ConverterListener) i.next();
+            listener.relocateReportEvent( oldGroupId, oldArtifactId, newGroupId, newArtifactId );
+        }
+    }
+
+    private void fireRemovePluginEvent( String groupId, String artifactId )
+    {
+        for ( Iterator i = listeners.iterator(); i.hasNext(); )
+        {
+            ConverterListener listener = (ConverterListener) i.next();
+            listener.removePluginEvent( groupId, artifactId );
+        }
+    }
+
+    private void fireRemoveReportEvent( String groupId, String artifactId )
+    {
+        for ( Iterator i = listeners.iterator(); i.hasNext(); )
+        {
+            ConverterListener listener = (ConverterListener) i.next();
+            listener.removeReportEvent( groupId, artifactId );
         }
     }
 }

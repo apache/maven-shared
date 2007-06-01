@@ -19,6 +19,8 @@ package org.apache.maven.model.converter;
  * under the License.
  */
 
+import java.io.File;
+
 public interface ConverterListener
 {
     void debug( String message );
@@ -33,7 +35,23 @@ public interface ConverterListener
 
     void warn( String message, Throwable throwable );
 
-    void error( String message);
+    void error( String message );
 
     void error( String message, Throwable throwable );
+
+    void addDependencyEvent( String groupId, String artifactId, String version );
+
+    void addPluginEvent( String groupId, String artifactId );
+
+    void relocatePluginEvent( String oldGroupId, String oldArtifactId, String newGroupId, String newArtifactId );
+
+    void removePluginEvent( String groupId, String artifactId );
+
+    void addReportEvent( String groupId, String artifactId );
+
+    void relocateReportEvent( String oldGroupId, String oldArtifactId, String newGroupId, String newArtifactId );
+
+    void removeReportEvent( String groupId, String artifactId );
+
+    void savePomEvent( File pomFileFile, boolean alreadyExist );
 }

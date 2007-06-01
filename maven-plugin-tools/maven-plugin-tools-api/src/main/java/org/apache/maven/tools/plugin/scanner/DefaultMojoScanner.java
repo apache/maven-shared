@@ -69,6 +69,8 @@ public class DefaultMojoScanner
 
         logger.info( "Using " + activeExtractors.size() + " extractors." );
 
+        int numMojoDescriptors = 0;
+
         for ( Iterator it = activeExtractors.iterator(); it.hasNext(); )
         {
             String language = (String) it.next();
@@ -85,6 +87,7 @@ public class DefaultMojoScanner
 
             logger.info( "Extractor for language: " + language + " found " + extractorDescriptors.size() +
                 " mojo descriptors." );
+            numMojoDescriptors += extractorDescriptors.size();
 
             for ( Iterator descriptorIt = extractorDescriptors.iterator(); descriptorIt.hasNext(); )
             {
@@ -96,6 +99,11 @@ public class DefaultMojoScanner
 
                 pluginDescriptor.addMojo( descriptor );
             }
+        }
+
+        if ( numMojoDescriptors == 0 )
+        {
+            throw new InvalidPluginDescriptorException( "No mojo descriptors found in plugin." );
         }
     }
 

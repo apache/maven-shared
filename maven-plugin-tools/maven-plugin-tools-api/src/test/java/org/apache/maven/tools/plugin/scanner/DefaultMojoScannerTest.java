@@ -22,6 +22,7 @@ package org.apache.maven.tools.plugin.scanner;
 import junit.framework.TestCase;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
+import org.apache.maven.plugin.descriptor.InvalidPluginDescriptorException;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
@@ -118,7 +119,15 @@ public class DefaultMojoScannerTest
         PluginDescriptor pluginDescriptor = createPluginDescriptor();
 
         scanner.setActiveExtractors( Collections.EMPTY_SET );
-        scanner.populatePluginDescriptor( project, pluginDescriptor );
+        try
+        {
+            scanner.populatePluginDescriptor( project, pluginDescriptor );
+            fail( "Expected exception" );
+        }
+        catch (InvalidPluginDescriptorException e)
+        {
+            // Ok
+        }
 
         checkResult( pluginDescriptor, Collections.EMPTY_SET );
     }

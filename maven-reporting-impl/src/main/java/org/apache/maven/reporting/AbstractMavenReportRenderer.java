@@ -21,10 +21,10 @@ import org.apache.commons.validator.UrlValidator;
 import org.apache.maven.doxia.sink.Sink;
 import org.codehaus.plexus.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -350,7 +350,7 @@ public abstract class AbstractMavenReportRenderer
         }
         else
         {
-            Map segments = applyPattern( text );
+            List segments = applyPattern( text );
 
             if ( segments == null )
             {
@@ -358,12 +358,10 @@ public abstract class AbstractMavenReportRenderer
             }
             else
             {
-                for ( Iterator it = segments.entrySet().iterator(); it.hasNext(); )
+                for ( Iterator it = segments.iterator(); it.hasNext(); )
                 {
-                    Map.Entry entry = (Map.Entry) it.next();
-
-                    String name = (String) entry.getKey();
-                    String href = (String) entry.getValue();
+                    String name = (String) it.next();
+                    String href = (String) it.next();
 
                     if ( href == null )
                     {
@@ -512,7 +510,7 @@ public abstract class AbstractMavenReportRenderer
      * @param text a text with or without the pattern <code>{text, url}</code>
      * @return a map of text/href
      */
-    private static Map applyPattern( String text )
+    private static List applyPattern( String text )
     {
         if ( StringUtils.isEmpty( text ) )
         {
@@ -521,7 +519,7 @@ public abstract class AbstractMavenReportRenderer
 
         // Map defined by key/value name/href
         // If href == null, it means
-        Map segments = new LinkedHashMap();
+        List segments = new ArrayList();
 
         // TODO Special case http://jira.codehaus.org/browse/MEV-40
         if ( text.indexOf( "${" ) != -1 )
@@ -530,11 +528,13 @@ public abstract class AbstractMavenReportRenderer
             int lastSemi = text.lastIndexOf( "}" );
             if ( lastComma != -1 && lastSemi != -1 )
             {
-                segments.put( text.substring( lastComma + 1, lastSemi ).trim(), null );
+                segments.add( text.substring( lastComma + 1, lastSemi ).trim() );
+                segments.add( null );
             }
             else
             {
-                segments.put( text, null );
+                segments.add( text );
+                segments.add( null );
             }
 
             return segments;
@@ -554,6 +554,9 @@ public abstract class AbstractMavenReportRenderer
                 if ( i + 1 < text.length() && text.charAt( i + 1 ) == '\'' )
                 {
                     i++;
+                    segments.add( text.substring( lastOffset, i ) );
+                    segments.add( null );
+                    lastOffset = i + 1;
                 }
                 else
                 {
@@ -571,11 +574,12 @@ public abstract class AbstractMavenReportRenderer
                             {
                                 if ( i != 0 ) // handle { at first character
                                 {
-                                    segments.put( text.substring( lastOffset, i ), null );
+                                    segments.add( text.substring( lastOffset, i ) );
+                                    segments.add( null );
                                 }
                                 lastOffset = i + 1;
-                                braceStack++;
                             }
+                            braceStack++;
                         }
                         break;
                     case '}':
@@ -590,12 +594,13 @@ public abstract class AbstractMavenReportRenderer
                                 int lastComma = subString.lastIndexOf( "," );
                                 if ( lastComma != -1 )
                                 {
-                                    segments.put( subString.substring( 0, lastComma ).trim(),
-                                                  subString.substring( lastComma + 1 ).trim() );
+                                    segments.add( subString.substring( 0, lastComma ).trim() );
+                                    segments.add( subString.substring( lastComma + 1 ).trim() );
                                 }
                                 else
                                 {
-                                    segments.put( subString.substring( 0, lastComma ).trim(), null );
+                                    segments.add( subString.substring( 0, lastComma ).trim() );
+                                    segments.add( null );
                                 }
                             }
                         }
@@ -611,7 +616,8 @@ public abstract class AbstractMavenReportRenderer
 
         if ( !StringUtils.isEmpty( text.substring( lastOffset, text.length() ) ) )
         {
-            segments.put( text.substring( lastOffset, text.length() ), null );
+            segments.add( text.substring( lastOffset, text.length() ) );
+            segments.add( null );
         }
 
         if ( braceStack != 0 )
@@ -619,7 +625,13 @@ public abstract class AbstractMavenReportRenderer
             throw new IllegalArgumentException( "Unmatched braces in the pattern." );
         }
 
-        return Collections.unmodifiableMap( segments );
+        if ( inQuote )
+        {
+            //throw new IllegalArgumentException( "Unmatched quote in the pattern." );
+            //TODO: warning...
+        }
+
+        return Collections.unmodifiableList( segments );
     }
 
     public abstract String getTitle();

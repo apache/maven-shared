@@ -19,14 +19,11 @@ package org.apache.maven.reporting;
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.sink.SinkFactory;
 import org.apache.maven.doxia.siterenderer.Renderer;
-import org.apache.maven.doxia.siterenderer.RendererException;
-import org.apache.maven.doxia.siterenderer.sink.SiteRendererSink;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -42,8 +39,6 @@ public abstract class AbstractMavenReport
     private Sink sink;
 
     private SinkFactory sinkFactory;
-
-    private Locale locale = Locale.ENGLISH;
 
     protected abstract Renderer getSiteRenderer();
 

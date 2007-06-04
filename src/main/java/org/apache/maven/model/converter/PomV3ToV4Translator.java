@@ -98,6 +98,8 @@ public class PomV3ToV4Translator
 
             PomKey pomKey = new PomKey( groupId, artifactId, version );
 
+            Properties properties = v3Model.getProperties();
+
             warnOfUnsupportedMainModelElements( v3Model );
 
             Model model = new Model();
@@ -131,6 +133,8 @@ public class PomV3ToV4Translator
 //                model.setReporting( translateReports( v3Model.getReports(), reporter ) );
             model.setScm( translateScm( v3Model ) );
             model.setUrl( v3Model.getUrl() );
+
+            model.setProperties( properties );
 
             model.setVersion( version );
 
@@ -194,11 +198,6 @@ public class PomV3ToV4Translator
         }
 
         Properties v3ModelProperties = v3Model.getProperties();
-
-        if ( v3ModelProperties != null && !v3ModelProperties.isEmpty() )
-        {
-            warnings.add( "Ignoring <properties/> section. It is not supported in v4 POMs." );
-        }
 
         if ( StringUtils.isNotEmpty( v3Model.getPackage() ) )
         {

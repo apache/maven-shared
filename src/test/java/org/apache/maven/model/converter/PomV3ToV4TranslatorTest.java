@@ -28,6 +28,7 @@ import org.apache.maven.model.Resource;
 import org.codehaus.plexus.PlexusTestCase;
 
 import java.util.Arrays;
+import java.util.Properties;
 
 public class PomV3ToV4TranslatorTest
     extends PlexusTestCase
@@ -52,6 +53,20 @@ public class PomV3ToV4TranslatorTest
 
         v3Model = new org.apache.maven.model.v3_0_0.Model();
         v3Model.setBuild( new org.apache.maven.model.v3_0_0.Build() );
+    }
+
+    public void testShouldConvertPropertiesSection()
+        throws Exception
+    {
+        Properties properties = new Properties();
+        properties.setProperty( "Name", "Value" );
+
+        v3Model.setProperties( properties );
+
+        Model result = translator.translate( v3Model );
+
+        assertNotNull( result.getProperties() );
+        assertEquals( "check properties if converted properly", properties, result.getProperties() );
     }
 
     public void testConvertedEmptyResourceDirectory()

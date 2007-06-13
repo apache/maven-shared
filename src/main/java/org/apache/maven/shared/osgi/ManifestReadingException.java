@@ -1,7 +1,7 @@
 package org.apache.maven.shared.osgi;
 
 /**
- * Encapsulates an IOException to make it runtime
+ * Exception while reading the manifest. Encapsulates an IOException to make it runtime
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$

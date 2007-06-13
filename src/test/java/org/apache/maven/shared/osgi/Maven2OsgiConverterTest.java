@@ -20,21 +20,20 @@ package org.apache.maven.shared.osgi;
 
 import java.io.File;
 
-import junit.framework.TestCase;
-
 import org.apache.maven.plugin.testing.stubs.ArtifactStub;
+import org.codehaus.plexus.PlexusTestCase;
 
 /**
- * Test for {@link Maven2OsgiConverter}
+ * Test for {@link DefaultMaven2OsgiConverter}
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$
  */
-public class Maven2OsgiTest
-    extends TestCase
+public class Maven2OsgiConverterTest
+    extends PlexusTestCase
 {
 
-    private Maven2OsgiConverter maven2Osgi = new Maven2OsgiConverter();
+    private Maven2OsgiConverter maven2Osgi = new DefaultMaven2OsgiConverter();
 
     public void testGetBundleSymbolicName()
     {
@@ -49,6 +48,23 @@ public class Maven2OsgiTest
         artifact.setGroupId( "org.apache.commons.commons-logging" );
         s = maven2Osgi.getBundleSymbolicName( artifact );
         assertEquals( "org.apache.commons.commons-logging", s );
+
+        artifact.setFile( getTestFile( "junit-3.8.2.jar" ) );
+        artifact.setGroupId( "junit" );
+        s = maven2Osgi.getBundleSymbolicName( artifact );
+        assertEquals( "junit", s );
+
+        artifact.setFile( getTestFile( "xml-apis-1.0.b2.jar" ) );
+        artifact.setGroupId( "xml-apis" );
+        artifact.setArtifactId( "a" );
+        s = maven2Osgi.getBundleSymbolicName( artifact );
+        assertEquals( "xml-apis.a", s );
+
+        artifact.setFile( getTestFile( "test-1.jar" ) );
+        artifact.setGroupId( "test" );
+        artifact.setArtifactId( "test" );
+        s = maven2Osgi.getBundleSymbolicName( artifact );
+        assertEquals( "test", s );
     }
 
     public void testGetBundleFileName()
@@ -115,7 +131,12 @@ public class Maven2OsgiTest
         a.setGroupId( "commons-logging" );
         a.setArtifactId( "commons-logging" );
         a.setVersion( "1.1" );
-        a.setFile( new File( "src/test/resources", "commons-logging-1.1.jar" ) );
+        a.setFile( getTestFile( "commons-logging-1.1.jar" ) );
         return a;
+    }
+
+    public static File getTestFile( String fileName )
+    {
+        return PlexusTestCase.getTestFile( "src/test/resources/" + fileName );
     }
 }

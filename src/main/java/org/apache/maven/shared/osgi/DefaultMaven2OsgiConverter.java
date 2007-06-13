@@ -150,7 +150,10 @@ public class DefaultMaven2OsgiConverter
                 {
                     File f = new File( entry.getName() );
                     String packageName = f.getParent();
-                    packageNames.add( packageName );
+                    if ( packageName != null )
+                    {
+                        packageNames.add( packageName );
+                    }
                 }
             }
 

@@ -18,4 +18,9 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-toolchain</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-toolchain</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-toolchain</url>
+  </scm>
 </project>

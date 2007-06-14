@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>6</version>
+    <version>7</version>
   </parent>
   <artifactId>maven-web-ui-tests</artifactId>
   <name>Maven Shared Web UI tests</name>
@@ -64,4 +64,9 @@
       </releases>
     </repository>
   </repositories>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-web-ui-tests</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-web-ui-tests</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-web-ui-tests</url>
+  </scm>
 </project>

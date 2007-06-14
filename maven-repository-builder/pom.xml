@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>6</version>
+    <version>7</version>
   </parent>
   <artifactId>maven-repository-builder</artifactId>
   <version>1.0-alpha-2-SNAPSHOT</version>
@@ -66,4 +66,9 @@
       </plugin>
     </plugins>
   </build>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-repository-builder</url>
+  </scm>
 </project>

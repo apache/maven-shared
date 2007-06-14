@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>6</version>
+    <version>7</version>
   </parent>
   <artifactId>file-management</artifactId>
   <name>Maven Shared File Management API</name>
@@ -93,4 +93,9 @@
       <version>2.0</version>
     </dependency>
   </dependencies>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/file-management</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/file-management</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/file-management</url>
+  </scm>
 </project>

@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>6</version>
+    <version>7</version>
   </parent>
   <artifactId>maven-common-artifact-filters</artifactId>
   <version>1.0-alpha-2-SNAPSHOT</version>
@@ -41,4 +41,9 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-common-artifact-filters</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-common-artifact-filters</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-common-artifact-filters</url>
+  </scm>
 </project>

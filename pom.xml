@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>org.apache.maven.shared</groupId>
 		<artifactId>maven-shared-components</artifactId>
-		<version>8-SNAPSHOT</version>
+		<version>7</version>
 	</parent>
 	<groupId>org.apache.maven.shared</groupId>
 	<artifactId>maven-enforcer-rule-api</artifactId>
@@ -98,4 +98,9 @@
 			<scope>test</scope>
 		</dependency>	
 	</dependencies>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-enforcer-rule-api</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-enforcer-rule-api</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-enforcer-rule-api</url>
+  </scm>
 </project>

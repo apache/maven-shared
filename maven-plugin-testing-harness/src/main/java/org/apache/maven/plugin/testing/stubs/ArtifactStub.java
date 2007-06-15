@@ -186,13 +186,20 @@ public class ArtifactStub
     }
 
     /**
-     * By default, return <code>null</code>.
+     * By default, return <code>groupId:artifactId:type:classifier</code>.
      *
      * @see org.apache.maven.artifact.Artifact#getDependencyConflictId()
      */
     public String getDependencyConflictId()
     {
-        return null;
+        StringBuffer buffer = new StringBuffer();
+        
+        buffer.append( getGroupId() );
+        buffer.append( ":" ).append( getArtifactId() );
+        buffer.append( ":" ).append( getType() );
+        buffer.append( ":" ).append( getClassifier() );
+        
+        return buffer.toString();
     }
 
     /**

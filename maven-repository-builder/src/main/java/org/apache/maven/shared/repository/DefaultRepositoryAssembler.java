@@ -332,13 +332,16 @@ public class DefaultRepositoryAssembler
 
             setAlignment( artifact, groupVersionAlignments );
 
-//            File sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
-//
-//            if ( !sourceFile.exists() )
-//            {
-//                break;
-//            }
-//
+            if ( ( sourceFile == null ) || !sourceFile.exists() )
+            {
+                sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
+            }
+
+            if ( !sourceFile.exists() )
+            {
+                break;
+            }
+
             File targetFile = new File( targetRepository.getBasedir(), targetRepository.pathOf( artifact ) );
 
             try

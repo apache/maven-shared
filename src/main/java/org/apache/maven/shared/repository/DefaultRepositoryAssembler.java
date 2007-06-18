@@ -271,6 +271,7 @@ public class DefaultRepositoryAssembler
                     // We need to flip it back to not being resolved so we can
                     // look for it again!
                     a.setResolved( false );
+                    a.setVersion( a.getBaseVersion() );
 
                     artifactResolver.resolve( a, project.getRemoteArtifactRepositories(), localRepository );
 
@@ -302,59 +303,63 @@ public class DefaultRepositoryAssembler
                                      Map groupVersionAlignments )
         throws RepositoryAssemblyException
     {
-        if ( !"pom".equals( artifact.getType() ) )
-        {
-            artifact = artifactFactory.createProjectArtifact( artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion() );
+        artifact = artifactFactory.createProjectArtifact( artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion() );
 
-            MavenProject p;
+        MavenProject p;
+        try
+        {
+            p = projectBuilder.buildFromRepository( artifact,
+                                                                 remoteArtifactRepositories,
+                                                                 localRepository );
+        }
+        catch ( ProjectBuildingException e )
+        {
+            throw new RepositoryAssemblyException( "Error reading POM: " + artifact.getId(), e );
+        }
+
+        // if we're dealing with a POM artifact, then we've already copied the POM itself; only process ancestry.
+        if ( "pom".equals( artifact.getType() ) )
+        {
+            p = p.getParent();
+        }
+
+        while( p != null )
+        {
+            File sourceFile = p.getFile();
+
+            artifact = artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p
+                .getVersion() );
+
+            setAlignment( artifact, groupVersionAlignments );
+
+//            File sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
+//
+//            if ( !sourceFile.exists() )
+//            {
+//                break;
+//            }
+//
+            File targetFile = new File( targetRepository.getBasedir(), targetRepository.pathOf( artifact ) );
+
             try
             {
-                p = projectBuilder.buildFromRepository( artifact,
-                                                                     remoteArtifactRepositories,
-                                                                     localRepository );
+                FileUtils.copyFile( sourceFile, targetFile );
             }
-            catch ( ProjectBuildingException e )
+            catch ( IOException e )
             {
-                throw new RepositoryAssemblyException( "Error reading POM: " + artifact.getId(), e );
+                throw new RepositoryAssemblyException( "Error writing POM metdata: " + artifact.getId(), e );
             }
 
-            do
+            try
             {
-                artifact = artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p
-                    .getVersion() );
-
-                setAlignment( artifact, groupVersionAlignments );
-
-                File sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
-
-                if ( !sourceFile.exists() )
-                {
-                    break;
-                }
-
-                File targetFile = new File( targetRepository.getBasedir(), targetRepository.pathOf( artifact ) );
-
-                try
-                {
-                    FileUtils.copyFile( sourceFile, targetFile );
-                }
-                catch ( IOException e )
-                {
-                    throw new RepositoryAssemblyException( "Error writing POM metdata: " + artifact.getId(), e );
-                }
-
-                try
-                {
-                    writeChecksums( targetFile );
-                }
-                catch ( IOException e )
-                {
-                    throw new RepositoryAssemblyException( "Error writing checksums for POM: " + artifact.getId(), e );
-                }
-
-                p = p.getParent();
+                writeChecksums( targetFile );
             }
-            while ( p != null );
+            catch ( IOException e )
+            {
+                throw new RepositoryAssemblyException( "Error writing checksums for POM: " + artifact.getId(), e );
+            }
+
+            p = p.getParent();
         }
     }
 

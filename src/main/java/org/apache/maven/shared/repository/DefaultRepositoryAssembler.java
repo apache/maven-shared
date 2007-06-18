@@ -271,9 +271,10 @@ public class DefaultRepositoryAssembler
                     // We need to flip it back to not being resolved so we can
                     // look for it again!
                     a.setResolved( false );
-                    a.setVersion( a.getBaseVersion() );
 
                     artifactResolver.resolve( a, project.getRemoteArtifactRepositories(), localRepository );
+
+                    a.setVersion( a.getBaseVersion() );
 
                     File targetFile = new File( targetRepository.getBasedir(), targetRepository.pathOf( a ) );
                     FileUtils.copyFile( a.getFile(), targetFile );
@@ -325,17 +326,12 @@ public class DefaultRepositoryAssembler
 
         while( p != null )
         {
-            File sourceFile = p.getFile();
-
             artifact = artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p
                 .getVersion() );
 
             setAlignment( artifact, groupVersionAlignments );
 
-            if ( ( sourceFile == null ) || !sourceFile.exists() )
-            {
-                sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
-            }
+            File sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
 
             if ( !sourceFile.exists() )
             {

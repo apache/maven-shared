@@ -111,6 +111,24 @@ public class DefaultRepositoryAssembler
      */
     protected MavenProjectBuilder projectBuilder;
 
+    public DefaultRepositoryAssembler()
+    {
+        // used for plexus init.
+    }
+
+    public DefaultRepositoryAssembler( ArtifactFactory artifactFactory, ArtifactResolver artifactResolver,
+                                       ArtifactRepositoryLayout repositoryLayout,
+                                       ArtifactRepositoryFactory artifactRepositoryFactory,
+                                       ArtifactMetadataSource metadataSource, MavenProjectBuilder projectBuilder )
+    {
+        this.artifactFactory = artifactFactory;
+        this.artifactResolver = artifactResolver;
+        this.repositoryLayout = repositoryLayout;
+        this.artifactRepositoryFactory = artifactRepositoryFactory;
+        this.metadataSource = metadataSource;
+        this.projectBuilder = projectBuilder;
+    }
+
     public void buildRemoteRepository( File repositoryDirectory, RepositoryInfo repository,
                                        RepositoryBuilderConfigSource configSource )
         throws RepositoryAssemblyException

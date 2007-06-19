@@ -34,6 +34,7 @@ import org.codehaus.plexus.util.StringUtils;
  * TODO: include in maven-artifact in future
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
+ * @see StrictPatternIncludesArtifactFilter
  */
 public class PatternIncludesArtifactFilter
     implements ArtifactFilter, StatisticsReportingArtifactFilter

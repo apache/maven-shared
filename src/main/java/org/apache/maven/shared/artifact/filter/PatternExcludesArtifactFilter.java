@@ -26,6 +26,7 @@ import org.apache.maven.artifact.Artifact;
  * TODO: include in maven-artifact in future
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
+ * @see StrictPatternExcludesArtifactFilter
  */
 public class PatternExcludesArtifactFilter
     extends PatternIncludesArtifactFilter

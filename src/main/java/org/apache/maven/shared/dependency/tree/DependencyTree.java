@@ -29,6 +29,7 @@ import java.util.List;
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
+ * @deprecated As of 1.1, replaced by the dependency tree root {@link DependencyNode}
  */
 public class DependencyTree
 {

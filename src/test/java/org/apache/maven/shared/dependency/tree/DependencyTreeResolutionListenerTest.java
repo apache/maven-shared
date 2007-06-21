@@ -19,17 +19,10 @@ package org.apache.maven.shared.dependency.tree;
  * under the License.
  */
 
-import junit.framework.TestCase;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.artifact.versioning.VersionRange;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Tests <code>DependencyTreeResolutionListener</code>.
@@ -39,12 +32,8 @@ import java.util.List;
  * @version $Id$
  * @see DependencyTreeResolutionListener
  */
-public class DependencyTreeResolutionListenerTest extends TestCase
+public class DependencyTreeResolutionListenerTest extends AbstractDependencyNodeTest
 {
-    // constants --------------------------------------------------------------
-
-    private static final Artifact[] EMPTY_ARTIFACTS = new Artifact[0];
-
     // fields -----------------------------------------------------------------
 
     private DependencyTreeResolutionListener listener;
@@ -81,15 +70,12 @@ public class DependencyTreeResolutionListenerTest extends TestCase
 
         listener.endProcessChildren( projectArtifact );
 
-        Collection artifacts = listener.getNodes();
-        assertTrue( "Check artifact lists match", compareNodeListToArtifacts( artifacts, new Artifact[] {
-            depArtifact01, depArtifact02, depArtifact03, projectArtifact } ) );
+        DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact01 ) );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact02 ) );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact03 ) );
 
-        assertEquals( "Test dependency map key", projectArtifact, listener.getRootNode().getArtifact() );
-
-        assertTrue( "Check artifact lists match", compareNodeListToArtifacts( listener.getRootNode().getChildren(),
-                                                                              new Artifact[] { depArtifact01,
-                                                                                  depArtifact02, depArtifact03 } ) );
+        assertEquals( projectArtifactNode, listener.getRootNode() );
     }
 
     public void testSimpleDepTreeWithTransitiveDeps()
@@ -120,16 +106,15 @@ public class DependencyTreeResolutionListenerTest extends TestCase
 
         listener.endProcessChildren( projectArtifact );
 
-        Collection artifacts = listener.getNodes();
-        assertTrue( compareNodeListToArtifacts( artifacts, new Artifact[] { depArtifact1, depArtifact2, depArtifact3,
-            depArtifact01, depArtifact02, projectArtifact } ) );
+        DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
+        DependencyNode depArtifact1Node = new DependencyNode( depArtifact1 );
+        projectArtifactNode.addChild( depArtifact1Node );
+        depArtifact1Node.addChild( new DependencyNode( depArtifact01 ) );
+        depArtifact1Node.addChild( new DependencyNode( depArtifact02 ) );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact2 ) );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact3 ) );
 
-        assertEquals( "Check root", projectArtifact, listener.getRootNode().getArtifact() );
-        assertTrue( compareNodeListToArtifacts( listener.getRootNode().getChildren(), new Artifact[] { depArtifact1,
-            depArtifact2, depArtifact3 } ) );
-
-        DependencyNode depNode1 = getChild( listener.getRootNode(), depArtifact1 );
-        assertTrue( compareNodeListToArtifacts( depNode1.getChildren(), new Artifact[] { depArtifact01, depArtifact02 } ) );
+        assertEquals( projectArtifactNode, listener.getRootNode() );
     }
 
     public void testComplexDependencyTree()
@@ -139,7 +124,7 @@ public class DependencyTreeResolutionListenerTest extends TestCase
 
         listener.startProcessChildren( projectArtifact );
 
-        Artifact depArtifact1 = createArtifact( "test-dep", "dependency-one", "1.0", Artifact.SCOPE_COMPILE );
+        Artifact depArtifact1 = createArtifact( "test-dep", "dependency-one", "jar", "1.0", Artifact.SCOPE_COMPILE );
         listener.includeArtifact( depArtifact1 );
 
         listener.startProcessChildren( depArtifact1 );
@@ -159,80 +144,254 @@ public class DependencyTreeResolutionListenerTest extends TestCase
 
         listener.endProcessChildren( depArtifact1 );
 
-        Artifact depArtifact2 = createArtifact( "test-dep", "dependency-two", "1.0", Artifact.SCOPE_TEST );
+        Artifact depArtifact2 = createArtifact( "test-dep", "dependency-two", "jar", "1.0", Artifact.SCOPE_TEST );
         listener.includeArtifact( depArtifact2 );
 
         listener.startProcessChildren( depArtifact2 );
 
         Artifact depArtifact21 = createArtifact( "test-dep", "dep-zero-two-1", "1.0" );
-        listener.includeArtifact( depArtifact21 );
         listener.omitForNearer( depArtifact121, depArtifact21 );
+        listener.includeArtifact( depArtifact21 );
 
         listener.endProcessChildren( depArtifact2 );
 
-        Artifact depArtifact3 = createArtifact( "test-dep", "dependency-three", "1.0", Artifact.SCOPE_COMPILE );
+        Artifact depArtifact3 = createArtifact( "test-dep", "dependency-three", "jar", "1.0", Artifact.SCOPE_COMPILE );
         listener.includeArtifact( depArtifact3 );
 
         listener.endProcessChildren( projectArtifact );
 
-        Collection artifacts = listener.getNodes();
-        assertTrue( compareNodeListToArtifacts( artifacts, new Artifact[] { depArtifact1, depArtifact2, depArtifact3,
-            depArtifact11, depArtifact12, depArtifact21, projectArtifact } ) );
+        DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
+        DependencyNode depArtifact1Node = new DependencyNode( depArtifact1 );
+        projectArtifactNode.addChild( depArtifact1Node );
+        depArtifact1Node.addChild( new DependencyNode( depArtifact11 ) );
+        DependencyNode depArtifact12Node = new DependencyNode( depArtifact12 );
+        depArtifact1Node.addChild( depArtifact12Node );
+        depArtifact12Node.addChild( new DependencyNode( depArtifact121, DependencyNode.OMITTED_FOR_DUPLICATE,
+                                                        depArtifact21 ) );
+        DependencyNode depArtifact2Node = new DependencyNode( depArtifact2 );
+        projectArtifactNode.addChild( depArtifact2Node );
+        depArtifact2Node.addChild( new DependencyNode( depArtifact21 ) );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact3 ) );
 
-        assertEquals( projectArtifact, listener.getRootNode().getArtifact() );
-
-        assertTrue( compareNodeListToArtifacts( listener.getRootNode().getChildren(), new Artifact[] { depArtifact1,
-            depArtifact2, depArtifact3 } ) );
-
-        DependencyNode node = getChild( listener.getRootNode(), depArtifact1 );
-        assertTrue( compareNodeListToArtifacts( node.getChildren(), new Artifact[] { depArtifact11, depArtifact12 } ) );
-
-        node = getChild( node, depArtifact12 );
-        assertTrue( compareNodeListToArtifacts( node.getChildren(), EMPTY_ARTIFACTS ) );
-
-        node = getChild( listener.getRootNode(), depArtifact2 );
-        assertTrue( compareNodeListToArtifacts( node.getChildren(), new Artifact[] { depArtifact21 } ) );
+        assertEquals( projectArtifactNode, listener.getRootNode() );
     }
 
-    // private methods --------------------------------------------------------
-
-    private boolean compareNodeListToArtifacts( Collection nodes, Artifact[] artifacts )
+    public void testIncludeArtifactDuplicate()
     {
-        List artifactsRemaining = new ArrayList( Arrays.asList( artifacts ) );
+        Artifact projectArtifact = createArtifact( "test-project", "project-artifact", "1.0" );
+        listener.includeArtifact( projectArtifact );
 
-        for ( Iterator i = nodes.iterator(); i.hasNext(); )
-        {
-            DependencyNode node = (DependencyNode) i.next();
+        listener.startProcessChildren( projectArtifact );
 
-            if ( !artifactsRemaining.remove( node.getArtifact() ) )
-            {
-                return false;
-            }
-        }
-        return artifactsRemaining.isEmpty();
+        Artifact depArtifact1 = createArtifact( "test-dep", "dependency", "1.0" );
+        listener.includeArtifact( depArtifact1 );
+
+        Artifact depArtifact2 = createArtifact( "test-dep", "dependency", "1.0" );
+        listener.omitForNearer( depArtifact1, depArtifact2 );
+        listener.includeArtifact( depArtifact2 );
+
+        listener.endProcessChildren( projectArtifact );
+
+        DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact1, DependencyNode.OMITTED_FOR_DUPLICATE, depArtifact2 ) );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact2 ) );
+
+        assertEquals( projectArtifactNode, listener.getRootNode() );
     }
 
-    private DependencyNode getChild( DependencyNode node, Artifact artifact )
+    public void testIncludeArtifactDuplicateWithChildren()
     {
-        DependencyNode result = null;
-        for ( Iterator i = node.getChildren().iterator(); i.hasNext() && result == null; )
-        {
-            DependencyNode child = (DependencyNode) i.next();
-            if ( child.getArtifact().equals( artifact ) )
-            {
-                result = child;
-            }
-        }
-        return result;
+        Artifact projectArtifact = createArtifact( "test-project", "project-artifact", "1.0" );
+        listener.includeArtifact( projectArtifact );
+
+        listener.startProcessChildren( projectArtifact );
+
+        Artifact depArtifact1 = createArtifact( "test-dep", "dependency", "1.0" );
+        listener.includeArtifact( depArtifact1 );
+
+        listener.startProcessChildren( depArtifact1 );
+
+        Artifact depArtifact11 = createArtifact( "test-dep", "child", "1.0" );
+        listener.includeArtifact( depArtifact11 );
+
+        listener.endProcessChildren( depArtifact1 );
+
+        Artifact depArtifact2 = createArtifact( "test-dep", "dependency", "1.0" );
+        listener.omitForNearer( depArtifact1, depArtifact2 );
+        listener.includeArtifact( depArtifact2 );
+
+        listener.startProcessChildren( depArtifact2 );
+
+        Artifact depArtifact21 = createArtifact( "test-dep", "child", "1.0" );
+        listener.includeArtifact( depArtifact21 );
+
+        listener.endProcessChildren( depArtifact2 );
+
+        listener.endProcessChildren( projectArtifact );
+
+        DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
+        DependencyNode depArtifact1Node = new DependencyNode( depArtifact1, DependencyNode.OMITTED_FOR_DUPLICATE, depArtifact2 );
+        projectArtifactNode.addChild( depArtifact1Node );
+        DependencyNode depArtifact2Node = new DependencyNode( depArtifact2 );
+        projectArtifactNode.addChild( depArtifact2Node );
+        depArtifact2Node.addChild( new DependencyNode( depArtifact21 ) );
+
+        assertEquals( projectArtifactNode, listener.getRootNode() );
     }
 
-    private Artifact createArtifact( String groupId, String artifactId, String version )
+    public void testOmitForConflictKept()
     {
-        return createArtifact( groupId, artifactId, version, null );
+        Artifact projectArtifact = createArtifact( "test-project", "project-artifact", "1.0" );
+        listener.includeArtifact( projectArtifact );
+
+        listener.startProcessChildren( projectArtifact );
+
+        Artifact depArtifact1 = createArtifact( "test-dep", "dependency", "1.0" );
+        listener.includeArtifact( depArtifact1 );
+
+        Artifact depArtifact2 = createArtifact( "test-dep", "dependency", "2.0" );
+        listener.omitForNearer( depArtifact1, depArtifact2 );
+        listener.includeArtifact( depArtifact2 );
+
+        listener.endProcessChildren( projectArtifact );
+
+        DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact1, DependencyNode.OMITTED_FOR_CONFLICT,
+                                                          depArtifact2 ) );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact2 ) );
+
+        assertEquals( projectArtifactNode, listener.getRootNode() );
     }
 
-    private Artifact createArtifact( String groupId, String artifactId, String version, String scope )
+    public void testOmitForConflictKeptWithChildren()
     {
+        Artifact projectArtifact = createArtifact( "test-project", "project-artifact", "1.0" );
+        listener.includeArtifact( projectArtifact );
+
+        listener.startProcessChildren( projectArtifact );
+
+        Artifact depArtifact1 = createArtifact( "test-dep", "dependency", "1.0" );
+        listener.includeArtifact( depArtifact1 );
+
+        listener.startProcessChildren( depArtifact1 );
+
+        Artifact depArtifact11 = createArtifact( "test-dep", "child", "1.0" );
+        listener.includeArtifact( depArtifact11 );
+
+        listener.endProcessChildren( depArtifact1 );
+
+        Artifact depArtifact2 = createArtifact( "test-dep", "dependency", "2.0" );
+        listener.omitForNearer( depArtifact1, depArtifact2 );
+        listener.includeArtifact( depArtifact2 );
+
+        listener.startProcessChildren( depArtifact2 );
+
+        Artifact depArtifact21 = createArtifact( "test-dep", "child", "2.0" );
+        listener.includeArtifact( depArtifact21 );
+
+        listener.endProcessChildren( depArtifact2 );
+
+        listener.endProcessChildren( projectArtifact );
+
+        DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact1, DependencyNode.OMITTED_FOR_CONFLICT,
+                                                          depArtifact2 ) );
+        DependencyNode depArtifact2Node = new DependencyNode( depArtifact2 );
+        projectArtifactNode.addChild( depArtifact2Node );
+        depArtifact2Node.addChild( new DependencyNode( depArtifact21 ) );
+
+        assertEquals( projectArtifactNode, listener.getRootNode() );
+    }
+
+    public void testOmitForConflictOmitted()
+    {
+        Artifact projectArtifact = createArtifact( "test-project", "project-artifact", "1.0" );
+        listener.includeArtifact( projectArtifact );
+
+        listener.startProcessChildren( projectArtifact );
+
+        Artifact depArtifact2 = createArtifact( "test-dep", "dependency", "2.0" );
+        listener.includeArtifact( depArtifact2 );
+
+        Artifact depArtifact1 = createArtifact( "test-dep", "dependency", "1.0" );
+        listener.omitForNearer( depArtifact1, depArtifact2 );
+
+        listener.endProcessChildren( projectArtifact );
+
+        DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact2 ) );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact1, DependencyNode.OMITTED_FOR_CONFLICT,
+                                                          depArtifact2 ) );
+
+        assertEquals( projectArtifactNode, listener.getRootNode() );
+    }
+
+    public void testOmitForConflictOmittedWithChildren()
+    {
+        Artifact projectArtifact = createArtifact( "test-project", "project-artifact", "1.0" );
+        listener.includeArtifact( projectArtifact );
+
+        listener.startProcessChildren( projectArtifact );
+
+        Artifact depArtifact2 = createArtifact( "test-dep", "dependency", "2.0" );
+        listener.includeArtifact( depArtifact2 );
+
+        listener.startProcessChildren( depArtifact2 );
+
+        Artifact depArtifact21 = createArtifact( "test-dep", "child", "2.0" );
+        listener.includeArtifact( depArtifact21 );
+
+        listener.endProcessChildren( depArtifact2 );
+
+        Artifact depArtifact1 = createArtifact( "test-dep", "dependency", "1.0" );
+        listener.omitForNearer( depArtifact1, depArtifact2 );
+
+        listener.startProcessChildren( depArtifact1 );
+
+        Artifact depArtifact11 = createArtifact( "test-dep", "child", "1.0" );
+        listener.includeArtifact( depArtifact11 );
+
+        listener.endProcessChildren( depArtifact1 );
+
+        listener.endProcessChildren( projectArtifact );
+
+        DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
+        DependencyNode depArtifact2Node = new DependencyNode( depArtifact2 );
+        projectArtifactNode.addChild( depArtifact2Node );
+        depArtifact2Node.addChild( new DependencyNode( depArtifact21 ) );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact1, DependencyNode.OMITTED_FOR_CONFLICT,
+                                                          depArtifact2 ) );
+
+        assertEquals( projectArtifactNode, listener.getRootNode() );
+    }
+
+    public void testOmitForCycle()
+    {
+        Artifact projectArtifact = createArtifact( "test-project", "project-artifact", "1.0" );
+        listener.includeArtifact( projectArtifact );
+
+        listener.startProcessChildren( projectArtifact );
+
+        listener.omitForCycle( projectArtifact );
+
+        listener.endProcessChildren( projectArtifact );
+
+        DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
+        projectArtifactNode.addChild( new DependencyNode( projectArtifact, DependencyNode.OMITTED_FOR_CYCLE ) );
+
+        assertEquals( projectArtifactNode, listener.getRootNode() );
+    }
+
+    // protected methods ------------------------------------------------------
+
+    /*
+     * @see org.apache.maven.shared.dependency.tree.AbstractDependencyNodeTest#createArtifact(java.lang.String,
+     *      java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+     */
+    protected Artifact createArtifact( String groupId, String artifactId, String type, String version, String scope )
+    {
+        // TODO: use super.createArtifact when possible
+
         VersionRange versionRange = VersionRange.createFromVersion( version );
 
         return new DefaultArtifact( groupId, artifactId, versionRange, scope, "jar", null,

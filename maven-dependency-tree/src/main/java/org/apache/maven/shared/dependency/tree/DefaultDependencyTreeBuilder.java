@@ -20,23 +20,16 @@ package org.apache.maven.shared.dependency.tree;
  */
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactCollector;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
-import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.DependencyManagement;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.artifact.InvalidDependencyVersionException;
+import org.apache.maven.shared.dependency.tree.traversal.CollectingDependencyNodeVisitor;
 
 /**
  * Default implementation of <code>DependencyTreeBuilder</code>.
@@ -49,7 +42,7 @@ import org.apache.maven.project.artifact.InvalidDependencyVersionException;
  */
 public class DefaultDependencyTreeBuilder implements DependencyTreeBuilder
 {
-    // DependencyTreeAssembler methods ----------------------------------------
+    // DependencyTreeBuilder methods ------------------------------------------
 
     /*
      * @see org.apache.maven.shared.dependency.tree.DependencyTreeBuilder#buildDependencyTree(org.apache.maven.project.MavenProject,
@@ -61,93 +54,41 @@ public class DefaultDependencyTreeBuilder implements DependencyTreeBuilder
                                                ArtifactFactory factory, ArtifactMetadataSource metadataSource,
                                                ArtifactCollector collector ) throws DependencyTreeBuilderException
     {
+        DependencyNode rootNode = buildDependencyTree( project, repository, factory, metadataSource, null, collector );
+        
+        CollectingDependencyNodeVisitor collectingVisitor = new CollectingDependencyNodeVisitor();
+        rootNode.accept( collectingVisitor );
+        
+        return new DependencyTree( rootNode, collectingVisitor.getNodes() );
+    }
+    
+    /*
+     * @see org.apache.maven.shared.dependency.tree.DependencyTreeBuilder#buildDependencyTree(org.apache.maven.project.MavenProject,
+     *      org.apache.maven.artifact.repository.ArtifactRepository, org.apache.maven.artifact.factory.ArtifactFactory,
+     *      org.apache.maven.artifact.metadata.ArtifactMetadataSource,
+     *      org.apache.maven.artifact.resolver.filter.ArtifactFilter,
+     *      org.apache.maven.artifact.resolver.ArtifactCollector)
+     */
+    public DependencyNode buildDependencyTree( MavenProject project, ArtifactRepository repository,
+                                               ArtifactFactory factory, ArtifactMetadataSource metadataSource,
+                                               ArtifactFilter filter, ArtifactCollector collector )
+        throws DependencyTreeBuilderException
+    {
         DependencyTreeResolutionListener listener = new DependencyTreeResolutionListener();
 
         try
         {
-            Map managedVersions = getManagedVersionMap( project, factory );
-
-            // TODO site:run Why do we need to resolve this...
-            if ( project.getDependencyArtifacts() == null )
-            {
-                project.setDependencyArtifacts( project.createArtifacts( factory, null, null ) );
-            }
+            Map managedVersions = project.getManagedVersionMap();
 
             collector.collect( project.getDependencyArtifacts(), project.getArtifact(), managedVersions, repository,
-                               project.getRemoteArtifactRepositories(), metadataSource, null,
+                               project.getRemoteArtifactRepositories(), metadataSource, filter,
                                Collections.singletonList( listener ) );
 
-            return new DependencyTree( listener.getRootNode(), listener.getNodes() );
-        }
-        catch ( ProjectBuildingException exception )
-        {
-            throw new DependencyTreeBuilderException( "Cannot build project dependency tree", exception );
-        }
-        catch ( InvalidDependencyVersionException exception )
-        {
-            throw new DependencyTreeBuilderException( "Cannot build project dependency tree", exception );
+            return listener.getRootNode();
         }
         catch ( ArtifactResolutionException exception )
         {
             throw new DependencyTreeBuilderException( "Cannot build project dependency tree", exception );
         }
-    }
-
-    // private methods --------------------------------------------------------
-
-    private Map getManagedVersionMap( MavenProject project, ArtifactFactory factory ) throws ProjectBuildingException
-    {
-        DependencyManagement dependencyManagement = project.getDependencyManagement();
-        Map managedVersionMap;
-
-        if ( dependencyManagement != null && dependencyManagement.getDependencies() != null )
-        {
-            managedVersionMap = new HashMap();
-
-            for ( Iterator iterator = dependencyManagement.getDependencies().iterator(); iterator.hasNext(); )
-            {
-                Dependency dependency = (Dependency) iterator.next();
-
-                try
-                {
-                    VersionRange versionRange = VersionRange.createFromVersionSpec( dependency.getVersion() );
-
-                    Artifact artifact =
-                        factory.createDependencyArtifact( dependency.getGroupId(), dependency.getArtifactId(),
-                                                          versionRange, dependency.getType(),
-                                                          dependency.getClassifier(), dependency.getScope() );
-
-                    managedVersionMap.put( dependency.getManagementKey(), artifact );
-                }
-                catch ( InvalidVersionSpecificationException exception )
-                {
-                    throw new ProjectBuildingException( project.getId(), "Unable to parse version '"
-                                    + dependency.getVersion() + "' for dependency '" + dependency.getManagementKey()
-                                    + "': " + exception.getMessage(), exception );
-                }
-            }
-
-            /*
-             * TODO work around bug MNG-2931, remove after upgrading to fixed version  
-             * remove the originating artifact if it is also in managed versions to avoid being modified during resolution
-             */
-            Artifact managedOriginatingArtifact = (Artifact) managedVersionMap.get( project.getArtifact()
-                .getDependencyConflictId() );
-            if ( managedOriginatingArtifact != null )
-            {
-                String managedVersion = managedOriginatingArtifact.getVersion();
-                String version = project.getArtifact().getVersion();
-                if ( !managedVersion.equals( version ) )
-                {
-                    managedVersionMap.remove( project.getArtifact().getDependencyConflictId() );
-                }
-            }
-        }
-        else
-        {
-            managedVersionMap = Collections.EMPTY_MAP;
-        }
-
-        return managedVersionMap;
     }
 }

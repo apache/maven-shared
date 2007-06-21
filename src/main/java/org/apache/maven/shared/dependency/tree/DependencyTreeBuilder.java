@@ -23,6 +23,7 @@ import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactCollector;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -58,8 +59,34 @@ public interface DependencyTreeBuilder
      * @return the dependency tree of the specified Maven project
      * @throws DependencyTreeBuilderException
      *             if the dependency tree cannot be resolved
+     * @deprecated As of 1.1, replaced by
+     *             {@link #buildDependencyTree(MavenProject, ArtifactRepository, ArtifactFactory, ArtifactMetadataSource, ArtifactFilter, ArtifactCollector)}
      */
     DependencyTree buildDependencyTree( MavenProject project, ArtifactRepository repository, ArtifactFactory factory,
                                         ArtifactMetadataSource metadataSource, ArtifactCollector collector )
+        throws DependencyTreeBuilderException;
+
+    /**
+     * Builds a tree of dependencies for the specified Maven project.
+     * 
+     * @param project
+     *            the Maven project
+     * @param repository
+     *            the artifact repository to resolve against
+     * @param factory
+     *            the artifact factory to use
+     * @param metadataSource
+     *            the artifact metadata source to use
+     * @param filter
+     *            the artifact filter to use
+     * @param collector
+     *            the artifact collector to use
+     * @return the dependency tree root node of the specified Maven project
+     * @throws DependencyTreeBuilderException
+     *             if the dependency tree cannot be resolved
+     * @since 1.1
+     */
+    DependencyNode buildDependencyTree( MavenProject project, ArtifactRepository repository, ArtifactFactory factory,
+                                        ArtifactMetadataSource metadataSource, ArtifactFilter filter, ArtifactCollector collector )
         throws DependencyTreeBuilderException;
 }

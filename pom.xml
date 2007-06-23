@@ -54,10 +54,9 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.3</version>
-        
         <configuration>
           <excludes>
-            <exclude>**/DefaultRepositoryAssemblerTest.java</exclude>
+            <exclude>**/DefaultRepositoryBuilderTest.java</exclude>
           </excludes>
         </configuration>
       </plugin>

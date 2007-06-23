@@ -16,10 +16,13 @@ import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.shared.repository.model.DefaultRepositoryInfo;
 import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.logging.console.ConsoleLogger;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class DefaultRepositoryBuilderTest
     extends PlexusTestCase
@@ -104,6 +107,8 @@ public class DefaultRepositoryBuilderTest
         throws ProjectBuildingException, RepositoryAssemblyException, IOException
     {
         MavenProject project = getProject( "projects/massembly-210-direct-parent/pom.xml" );
+        // TODO: jdcasey, the project loaded that way as no initialized Artifact objects
+        // TODO: with this non resolved content the repository assembler does not run!
 
         TestRepositoryBuilderConfigSource cs = new TestRepositoryBuilderConfigSource();
         cs.setProject( project );
@@ -112,10 +117,14 @@ public class DefaultRepositoryBuilderTest
         DefaultRepositoryAssembler assembler = new DefaultRepositoryAssembler( artifactFactory, artifactResolver,
                                                                                defaultLayout, repoFactory,
                                                                                metadataSource, projectBuilder );
+        // TODO: NPE thrown if logger not set
+        assembler.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "console"));
 
         File repositoryDirectory = new File( getBasedir(), "target/test-repositories/massembly-210-direct-parent" );
 
         DefaultRepositoryInfo repoInfo = new DefaultRepositoryInfo();
+        // TODO: NPE if we don't call this - no clue what it's supposed to represent
+        repoInfo.setGroupVersionAlignments( new ArrayList());
 
         assembler.buildRemoteRepository( repositoryDirectory, repoInfo, cs );
 

@@ -1,19 +1,22 @@
 package org.apache.maven.shared.jar.identification.exposers;
 
 /*
- * Copyright 2001-2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
@@ -66,41 +69,35 @@ public class TextFileExposer
         List textVersions = new ArrayList();
         List hits = getJar().getNameRegexEntryList( "[Vv][Ee][Rr][Ss][Ii][Oo][Nn]" ); //$NON-NLS-1$
 
-        int hitcount = 0;
-
         Iterator it = hits.iterator();
         while ( it.hasNext() )
         {
             JarEntry entry = (JarEntry) it.next();
 
-            if ( entry.getName().endsWith( ".class" ) ) //$NON-NLS-1$
+            // skip this entry if it's a class file.
+            if ( !entry.getName().endsWith( ".class" ) ) //$NON-NLS-1$
             {
-                // skip this entry. as it's a class file.
-                continue;
-            }
-
-            getLogger().debug( "Version Hit: " + entry.getName() );
-            InputStream is = getJar().getEntryInputStream( entry );
-            BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
-            try
-            {
-                String line = br.readLine();
-                // TODO: check for key=value pair.
-                // TODO: maybe even for groupId entries.
-
-                getLogger().debug( line );
-                if ( StringUtils.isNotEmpty( line ) )
+                getLogger().debug( "Version Hit: " + entry.getName() );
+                InputStream is = getJar().getEntryInputStream( entry );
+                BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
+                try
                 {
-                    textVersions.add( line );
+                    String line = br.readLine();
+                    // TODO: check for key=value pair.
+                    // TODO: maybe even for groupId entries.
+
+                    getLogger().debug( line );
+                    if ( StringUtils.isNotEmpty( line ) )
+                    {
+                        textVersions.add( line );
+                    }
                 }
-                hitcount++;
-            }
-            catch ( IOException e )
-            {
-                getLogger().warn( "Unable to read line from " + entry.getName(), e );
+                catch ( IOException e )
+                {
+                    getLogger().warn( "Unable to read line from " + entry.getName(), e );
+                }
             }
         }
-
         return textVersions;
     }
 }

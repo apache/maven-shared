@@ -1,19 +1,22 @@
 package org.apache.maven.shared.jar;
 
 /*
- * Copyright 2001-2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import junit.framework.AssertionFailedError;
@@ -30,19 +33,17 @@ import java.util.regex.Pattern;
 /**
  * Abstract JarAnalyzer TestCase
  */
-public class AbstractJarTestCase
+public abstract class AbstractJarTestCase
     extends PlexusTestCase
 {
-    protected File basedir;
-
     protected File testdir;
 
-    public AbstractJarTestCase()
+    public void setUp()
+        throws Exception
     {
-        super();
-        String userdir = System.getProperty( "user.dir" );
-        this.basedir = new File( System.getProperty( "basedir", userdir ) );
-        this.testdir = new File( basedir, "src/test" );
+        super.setUp();
+
+        this.testdir = new File( getBasedir(), "src/test" );
     }
 
     public File getSampleJarsDirectory()
@@ -54,8 +55,9 @@ public class AbstractJarTestCase
     {
         return new File( testdir, "localrepo" );
     }
-    
-    public JarAnalyzerFactory getJarAnalyzerFactory() throws Exception
+
+    public JarAnalyzerFactory getJarAnalyzerFactory()
+        throws Exception
     {
         return (JarAnalyzerFactory) lookup( JarAnalyzerFactory.ROLE, "default" );
     }
@@ -72,12 +74,11 @@ public class AbstractJarTestCase
     {
         List failures = new ArrayList();
         Pattern pat = Pattern.compile( regex );
-        Matcher mat;
         Iterator it = coll.iterator();
         while ( it.hasNext() )
         {
             String value = (String) it.next();
-            mat = pat.matcher( value );
+            Matcher mat = pat.matcher( value );
             if ( mat.find() )
             {
                 failures.add( value );

@@ -1,19 +1,22 @@
 package org.apache.maven.shared.jar;
 
 /*
- * Copyright 2001-2006 The Apache Software Foundation.
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 import org.apache.maven.shared.jar.classes.JarClasses;
@@ -44,7 +47,7 @@ import java.util.regex.Pattern;
 
 /**
  * A JarAnalyzer Toolbox for working with Jar Files.
- * 
+ * <p/>
  * Use the {@link JarAnalyzerFactory#getJarAnalyzer(File)} to obtain a valid JarAnalyzer object.
  *
  * @plexus.component role="org.apache.maven.shared.jar.JarAnalyzer" instantiation-strategy="per-lookup"
@@ -68,15 +71,18 @@ public class JarAnalyzer
 
     /**
      * @plexus.requirement
+     * @noinspection UnusedDeclaration
      */
     private JarClassesAnalysis classesAnalyzer;
 
     /**
      * @plexus.requirement
+     * @noinspection UnusedDeclaration
      */
     private JarIdentificationAnalysis taxonAnalyzer;
-    
-    protected void setFile( File file ) throws JarAnalyzerException
+
+    protected void setFile( File file )
+        throws JarAnalyzerException
     {
         if ( file == null )
         {
@@ -89,6 +95,7 @@ public class JarAnalyzer
     /**
      * Compute the HashCode for this JarAnalyzer File.
      *
+     * @param digester the digester to use to calculate the hash
      * @return the hashcode, or null if not able to be computed.
      */
     public String computeFileHash( Digester digester )
@@ -109,12 +116,12 @@ public class JarAnalyzer
      * <p/>
      * Useful to see thru a recompile, recompression, or timestamp change.
      *
+     * @param digester the digester to use to calculate the hash
      * @return the hashcode, or null if not able to be computed.
      */
     public String computeBytecodeHash( StreamingDigester digester )
     {
         Iterator it = entries.iterator();
-        InputStream is;
 
         try
         {
@@ -125,7 +132,8 @@ public class JarAnalyzer
 
                 if ( entry.getName().endsWith( ".class" ) )
                 {
-                    is = jarfile.getInputStream( entry );
+                    // TODO: check if it needs to be closed!
+                    InputStream is = jarfile.getInputStream( entry );
 
                     digester.update( is );
                 }
@@ -186,14 +194,13 @@ public class JarAnalyzer
         List ret = new ArrayList();
 
         Pattern pat = Pattern.compile( regex );
-        Matcher mat;
 
         Iterator it = entries.iterator();
         while ( it.hasNext() )
         {
             JarEntry entry = (JarEntry) it.next();
 
-            mat = pat.matcher( entry.getName() );
+            Matcher mat = pat.matcher( entry.getName() );
             if ( mat.find() )
             {
                 ret.add( entry );
@@ -240,15 +247,15 @@ public class JarAnalyzer
         Collections.sort( entries, new JarEntryComparator() );
 
         Manifest manifest = getManifest();
-        
+
         isSealed = false;
-        
+
         if ( manifest != null )
         {
             String sval = manifest.getMainAttributes().getValue( Attributes.Name.SEALED );
             if ( StringUtils.isNotEmpty( sval ) )
             {
-                isSealed = sval.trim().equalsIgnoreCase( "true" );
+                isSealed = "true".equalsIgnoreCase( sval.trim() );
             }
         }
     }

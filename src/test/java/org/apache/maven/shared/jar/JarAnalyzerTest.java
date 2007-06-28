@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.util;
+package org.apache.maven.shared.jar;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,35 +19,32 @@ package org.apache.maven.shared.jar.util;
  * under the License.
  */
 
-import java.util.Comparator;
-import java.util.jar.JarEntry;
+import java.io.File;
 
 /**
- * JarEntryComparator
- *
- * @author <a href="mailto:joakim@erdfelt.com">Joakim Erdfelt</a>
- * @version $Id$
+ * JarAnalyzer Test Case
  */
-public class JarEntryComparator
-    implements Comparator
+public class JarAnalyzerTest
+    extends AbstractJarTestCase
 {
-
-    public int compare( Object o1, Object o2 )
+    private JarAnalyzer getJar( String filename )
+        throws Exception
     {
-        if ( !( o1 instanceof JarEntry ) )
-        {
-            return 0;
-        }
-
-        if ( !( o2 instanceof JarEntry ) )
-        {
-            return 0;
-        }
-
-        JarEntry j1 = (JarEntry) o1;
-        JarEntry j2 = (JarEntry) o2;
-
-        return j1.getName().compareTo( j2.getName() );
+        File jarfile = new File( getSampleJarsDirectory(), filename );
+        return getJarAnalyzerFactory().getJarAnalyzer( jarfile );
     }
 
+    public void testSealed()
+        throws Exception
+    {
+        JarAnalyzer evil = getJar( "evil-sealed-regex-1.0.jar" );
+        assertTrue( evil.isSealed() );
+    }
+
+    public void testNotSealed()
+        throws Exception
+    {
+        JarAnalyzer codec = getJar( "codec.jar" );
+        assertFalse( codec.isSealed() );
+    }
 }

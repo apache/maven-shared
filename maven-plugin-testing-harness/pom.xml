@@ -98,6 +98,11 @@
       <artifactId>plexus-utils</artifactId>
       <version>1.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-archiver</artifactId>
+      <version>1.0-alpha-8</version>
+    </dependency>
   </dependencies>
   <reporting>
     <plugins>

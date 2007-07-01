@@ -405,7 +405,13 @@ public class PomV3ToV4Translator
 
             site.setName( "Default Site" );
 
-            site.setUrl( "scp://" + siteAddress + "/" + siteDirectory );
+            StringBuffer url = new StringBuffer("scp://");
+            url.append(siteAddress);
+            if(!siteAddress.endsWith( "/" ) && !siteDirectory.startsWith( "/" )) {
+                url.append("/");
+            }
+            url.append(siteDirectory );
+            site.setUrl( url.toString() );
         }
 
         distributionManagement.setSite( site );

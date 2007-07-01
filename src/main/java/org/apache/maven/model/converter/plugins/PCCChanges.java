@@ -53,5 +53,6 @@ public class PCCChanges
         throws ProjectConverterException
     {
         addConfigurationChild( configuration, projectProperties, "maven.changes.issue.template", "issueLinkTemplate" );
+        addConfigurationChild( configuration, "xmlPath", "${basedir}/xdocs/changes.xml" );
     }
 }

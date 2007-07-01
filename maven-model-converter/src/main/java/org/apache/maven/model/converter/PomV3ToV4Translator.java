@@ -33,6 +33,8 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.Notifier;
 import org.apache.maven.model.Organization;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.ReportPlugin;
+import org.apache.maven.model.Reporting;
 import org.apache.maven.model.Resource;
 import org.apache.maven.model.Scm;
 import org.apache.maven.model.Site;
@@ -44,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author jdcasey
@@ -129,8 +133,8 @@ public class PomV3ToV4Translator
             model.setName( v3Model.getName() );
             model.setOrganization( translateOrganization( v3Model.getOrganization() ) );
             model.setPackaging( "jar" );
-            // TODO: not very good conversion - just omit for now
-//                model.setReporting( translateReports( v3Model.getReports(), reporter ) );
+            // TODO: Not a very good conversion - but it's better than nothing
+            model.setReporting( translateReports( v3Model.getReports() ) );
             model.setScm( translateScm( v3Model ) );
             model.setUrl( v3Model.getUrl() );
 
@@ -236,9 +240,7 @@ public class PomV3ToV4Translator
         return scm;
     }
 
-/*
-    private Reporting translateReports( List v3Reports, Reporter reporter )
-        throws ReportWriteException
+    private Reporting translateReports( List v3Reports )
     {
         Reporting reports = null;
         if ( v3Reports != null && !v3Reports.isEmpty() )
@@ -251,42 +253,37 @@ public class PomV3ToV4Translator
                 Pattern pluginNamePattern = Pattern.compile( "maven-(.+)-plugin" );
                 Matcher matcher = pluginNamePattern.matcher( reportName );
 
-                String reportPluginName;
                 if ( !matcher.matches() )
                 {
                     warnings.add(
-                        "Non-standard report name: \'" + reportName + "\'. Using entire name for plugin artifactId." );
-
-                    reportPluginName = reportName;
+                        "Non-standard report: \'" + reportName + "\'. Skipping this one." );
                 }
                 else
                 {
-                    reportPluginName = matcher.group( 1 );
+                    ReportPlugin reportPlugin = new ReportPlugin();
+
+                    reportPlugin.setGroupId( "org.apache.maven.plugins" );
+
+                    reportPlugin.setArtifactId( reportName );
+
+                    StringBuffer info = new StringBuffer();
+
+                    info.append( "Using some derived information for report: \'" ).append( reportName ).append( "\'.\n" )
+                        .append( "\to groupId: \'" ).append(reportPlugin.getGroupId()).append("\'\n" )
+                        .append( "\to artifactId: \'" ).append( reportName ).append( "\'\n" )
+                        .append( "\to goal: \'report\'\n" )
+                        .append( "\n" )
+                        .append( "These values were extracted using the v3 report naming convention, but may be wrong." );
+
+                    warnings.add( info.toString() );
+
+                    reports.addPlugin( reportPlugin );
                 }
-
-                ReportPlugin reportPlugin = new ReportPlugin();
-
-                reportPlugin.setGroupId( "maven" );
-
-                reportPlugin.setArtifactId( reportPluginName );
-
-                StringBuffer info = new StringBuffer();
-
-                info.append( "Using some derived information for report: \'" ).append( reportName ).append( "\'.\n" )
-                    .append( "\to groupId: \'maven\'\n" ).append( "\to artifactId: \'" ).append( reportPluginName )
-                    .append( "\'\n" ).append( "\to goal: \'report\'\n" )
-                    .append( "\n" )
-                    .append( "These values were extracted using the v3 report naming convention, but may be wrong." );
-
-                warnings.add( info.toString() );
-
-                reports.addPlugin( reportPlugin );
             }
         }
 
         return reports;
     }
-*/
 
     private Organization translateOrganization( org.apache.maven.model.v3_0_0.Organization v3Organization )
     {

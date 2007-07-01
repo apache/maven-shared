@@ -342,6 +342,7 @@ public class PomV3ToV4Translator
                 org.apache.maven.model.v3_0_0.License v3License = (org.apache.maven.model.v3_0_0.License) it.next();
                 License license = new License();
                 license.setComments( v3License.getComments() );
+                license.setDistribution( v3License.getDistribution() );
                 license.setName( v3License.getName() );
                 license.setUrl( v3License.getUrl() );
 

@@ -42,8 +42,7 @@ public class StubArtifactRepository
 
     public String pathOf( Artifact artifact )
     {
-        // TODO Auto-generated method stub
-        return null;
+        return artifact.getId();
     }
 
     public String pathOfRemoteRepositoryMetadata( ArtifactMetadata artifactMetadata )
@@ -54,8 +53,7 @@ public class StubArtifactRepository
 
     public String pathOfLocalRepositoryMetadata( ArtifactMetadata metadata, ArtifactRepository repository )
     {
-        // TODO Auto-generated method stub
-        return null;
+        return metadata.getLocalFilename( repository );
     }
 
     public String getUrl()

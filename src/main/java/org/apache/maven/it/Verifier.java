@@ -822,6 +822,13 @@ public class Verifier
         }
         else
         {
+            mavenHome = System.getenv( "M2_HOME" );
+
+            if ( mavenHome != null )
+            {
+                return mavenHome + "/bin/mvn";
+            }
+
             File f = new File( System.getProperty( "user.home" ), "m2/bin/mvn" );
 
             if ( f.exists() )

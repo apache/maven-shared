@@ -2,6 +2,8 @@ package org.apache.maven.shared.invoker;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ public class DefaultInvokerTest
 {
 
     public void testBuildShouldSucceed()
-        throws IOException, MavenInvocationException
+        throws IOException, MavenInvocationException, URISyntaxException
     {
         File basedir = getBasedirForBuild();
 
@@ -43,7 +45,7 @@ public class DefaultInvokerTest
     }
 
     public void testBuildShouldFail()
-        throws IOException, MavenInvocationException
+        throws IOException, MavenInvocationException, URISyntaxException
     {
         File basedir = getBasedirForBuild();
 
@@ -84,6 +86,7 @@ public class DefaultInvokerTest
     }
 
     private File getBasedirForBuild()
+        throws URISyntaxException
     {
         StackTraceElement element = new NullPointerException().getStackTrace()[1];
         String methodName = element.getMethodName();
@@ -98,7 +101,7 @@ public class DefaultInvokerTest
             throw new IllegalStateException( "Project: " + dirName + " for test method: " + methodName + " is missing." );
         }
 
-        return new File( dirResource.getPath() );
+        return new File( new URI( dirResource.toString() ).getPath() );
     }
 
 }

@@ -127,7 +127,7 @@ public final class ResolutionNodeUtils
         buffer.append( node );
         buffer.append( System.getProperty( "line.separator" ) );
         
-        if ( node.isResolved() )
+        if ( node != null && node.isResolved() )
         {
             append( buffer, node.getChildrenIterator(), depth + 1 );
         }

@@ -21,33 +21,19 @@ package org.apache.maven.shared.jar.identification;
 
 import org.apache.maven.shared.jar.JarAnalyzer;
 
-import java.util.List;
-
 /**
- * @author <a href="mailto:evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id$
+ * Expose information from a JAR during the identification process. Implementations should be made to be thread safe.
+ *
+ * @see org.apache.maven.shared.jar.identification.JarIdentificationAnalysis
  */
 public interface JarIdentificationExposer
 {
-    String ROLE = JarIdentificationExposer.class.getName();
-
-    void setJar( JarAnalyzer jar );
-
-    void initialize();
-
-    void expose();
-
-    boolean isAuthoritative();
-
-    String getExposerName();
-
-    List getGroupIds();
-
-    List getArtifactIds();
-
-    List getVersions();
-
-    List getNames();
-
-    List getVendors();
+    /**
+     * Expose metadata during the identification process.
+     *
+     * @param identification the identification record to populate with the exposed metadata
+     * @param jarAnalyzer    the JAR to obtain the information from. Should be treated as read only, with the exception
+     *                       of caching the metadata if it would be identical when run over the same file again.
+     */
+    void expose( JarIdentification identification, JarAnalyzer jarAnalyzer );
 }

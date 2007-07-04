@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.identification;
+package org.apache.maven.shared.jar.identification.repository;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,32 +19,27 @@ package org.apache.maven.shared.jar.identification;
  * under the License.
  */
 
-import java.util.Collections;
 import java.util.List;
 
 /**
- * Empty Repository Hash Search.  Always returns an empty list.
- * Used for local only implementation of a RepositoryHashSearch.
- * It is expected for the users of this library to provide an implementation
- * of a RepositoryHashSearch against a real repository.
- *
- * @plexus.component role="org.apache.maven.shared.jar.identification.RepositoryHashSearch"
+ * Interface for Repository Hash Searches.
  */
-public class EmptyRepositoryHashSearch
-    implements RepositoryHashSearch
+public interface RepositoryHashSearch
 {
-    public boolean isValid()
-    {
-        return false;
-    }
+    /**
+     * Search the repository for artifacts matching the given hash code when consider the entire contents of the file.
+     *
+     * @param hash the hash code to use
+     * @return a list of {@link org.apache.maven.artifact.Artifact} instances that matched
+     */
+    List searchFileHash( String hash );
 
-    public List searchBytecodeHash( String hash )
-    {
-        return Collections.EMPTY_LIST;
-    }
-
-    public List searchFileHash( String hash )
-    {
-        return Collections.EMPTY_LIST;
-    }
+    /**
+     * Search the repository for artifacts matching the given hash code when consider the bytecode of the classes in the
+     * file.
+     *
+     * @param hash the hash code to use
+     * @return a list of {@link org.apache.maven.artifact.Artifact} instances that matched
+     */
+    List searchBytecodeHash( String hash );
 }

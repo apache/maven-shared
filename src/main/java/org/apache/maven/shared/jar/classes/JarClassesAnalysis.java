@@ -34,9 +34,13 @@ import java.util.List;
 import java.util.jar.JarEntry;
 
 /**
- * JarAnalyzer Classes Analyzer
+ * Analyze the classes in a JAR file. This class is thread safe and immutable as it retains no state.
+ * <p/>
+ * Note that you must first create an instance of {@link org.apache.maven.shared.jar.JarAnalyzer} - see its Javadoc for
+ * a typical use.
  *
- * @plexus.component role="org.apache.maven.shared.jar.classes.JarClassesAnalysis"
+ * @plexus.component role="org.apache.maven.shared.jar.classes.JarClassesAnalysis" role-hint="default"
+ * @see #analyze(org.apache.maven.shared.jar.JarAnalyzer)
  */
 public class JarClassesAnalysis
     extends AbstractLogEnabled
@@ -54,112 +58,121 @@ public class JarClassesAnalysis
     private static final double JAVA_1_1_CLASS_VERSION = 45.3;
 
     /**
-     * Analyze and populate the <code>jar.information.classes</code> object.
+     * Analyze a JAR and find any classes and their details. Note that if the provided JAR analyzer has previously
+     * analyzed the JAR, the cached results will be returned. You must obtain a new JAR analyzer to the re-read the
+     * contents of the file.
      *
-     * @param jar the jar analyzer to use
+     * @param jarAnalyzer the JAR to analyze. This must not yet have been closed.
+     * @return the details of the classes found
      */
-    public void analyze( JarAnalyzer jar )
+    public JarClasses analyze( JarAnalyzer jarAnalyzer )
     {
-        String jarfilename = jar.getFile().getAbsolutePath();
-        JarClasses classes = new JarClasses();
-
-        List classList = jar.getNameRegexEntryList( "[A-Za-z0-9]*\\.class$" );
-
-        classes.setDebugPresent( false );
-
-        double maxVersion = 0.0;
-
-        Iterator it = classList.iterator();
-        while ( it.hasNext() )
+        JarClasses classes = jarAnalyzer.getJarData().getJarClasses();
+        if ( classes == null )
         {
-            JarEntry entry = (JarEntry) it.next();
-            String classname = entry.getName();
+            String jarfilename = jarAnalyzer.getFile().getAbsolutePath();
+            classes = new JarClasses();
 
-            try
+            List classList = jarAnalyzer.getClassEntries();
+
+            classes.setDebugPresent( false );
+
+            double maxVersion = 0.0;
+
+            Iterator it = classList.iterator();
+            while ( it.hasNext() )
             {
-                ClassParser classParser = new ClassParser( jarfilename, classname );
+                JarEntry entry = (JarEntry) it.next();
+                String classname = entry.getName();
 
-                JavaClass javaClass = classParser.parse();
-
-                String classSignature = javaClass.getClassName();
-
-                if ( !classes.isDebugPresent() )
+                try
                 {
-                    if ( hasDebugSymbols( javaClass ) )
+                    ClassParser classParser = new ClassParser( jarfilename, classname );
+
+                    JavaClass javaClass = classParser.parse();
+
+                    String classSignature = javaClass.getClassName();
+
+                    if ( !classes.isDebugPresent() )
                     {
-                        classes.setDebugPresent( true );
+                        if ( hasDebugSymbols( javaClass ) )
+                        {
+                            classes.setDebugPresent( true );
+                        }
                     }
-                }
 
-                double classVersion = javaClass.getMajor();
-                if ( javaClass.getMinor() > 0 )
+                    double classVersion = javaClass.getMajor();
+                    if ( javaClass.getMinor() > 0 )
+                    {
+                        classVersion = classVersion + 1 / (double) javaClass.getMinor();
+                    }
+
+                    if ( classVersion > maxVersion )
+                    {
+                        maxVersion = classVersion;
+                    }
+
+                    Method[] methods = javaClass.getMethods();
+                    for ( int i = 0; i < methods.length; i++ )
+                    {
+                        classes.addMethod( classSignature + "." + methods[i].getName() + methods[i].getSignature() );
+                    }
+
+                    String classPackageName = javaClass.getPackageName();
+
+                    classes.addClassName( classSignature );
+                    classes.addPackage( classPackageName );
+
+                    ImportVisitor importVisitor = new ImportVisitor( javaClass );
+                    DescendingVisitor descVisitor = new DescendingVisitor( javaClass, importVisitor );
+                    javaClass.accept( descVisitor );
+
+                    classes.addImports( importVisitor.getImports() );
+                }
+                catch ( ClassFormatException e )
                 {
-                    classVersion = classVersion + 1 / (double) javaClass.getMinor();
+                    getLogger().warn( "Unable to process class " + classname + " in JarAnalyzer File " + jarfilename,
+                                      e );
                 }
-
-                if ( classVersion > maxVersion )
+                catch ( IOException e )
                 {
-                    maxVersion = classVersion;
+                    getLogger().warn( "Unable to process JarAnalyzer File " + jarfilename, e );
                 }
-
-                Method[] methods = javaClass.getMethods();
-                for ( int i = 0; i < methods.length; i++ )
-                {
-                    classes.addMethod( classSignature + "." + methods[i].getName() + methods[i].getSignature() );
-                }
-
-                String classPackageName = javaClass.getPackageName();
-
-                classes.addClassName( classSignature );
-                classes.addPackage( classPackageName );
-
-                ImportVisitor importVisitor = new ImportVisitor( javaClass );
-                DescendingVisitor descVisitor = new DescendingVisitor( javaClass, importVisitor );
-                javaClass.accept( descVisitor );
-
-                addImports( classes, importVisitor.getImports() );
             }
-            catch ( ClassFormatException e )
+
+            // TODO: check these since they are > instead of >=
+            if ( maxVersion >= JAVA_1_6_CLASS_VERSION )
             {
-                getLogger().warn( "Unable to process class " + classname + " in JarAnalyzer File " + jar.getFile(), e );
+                classes.setJdkRevision( "1.6" );
             }
-            catch ( IOException e )
+            else if ( maxVersion >= JAVA_1_5_CLASS_VERSION )
             {
-                getLogger().warn( "Unable to process JarAnalyzer File " + jar.getFile(), e );
+                classes.setJdkRevision( "1.5" );
             }
-        }
+            else if ( maxVersion > JAVA_1_4_CLASS_VERSION )
+            {
+                classes.setJdkRevision( "1.4" );
+            }
+            else if ( maxVersion > JAVA_1_3_CLASS_VERSION )
+            {
+                classes.setJdkRevision( "1.3" );
+            }
+            else if ( maxVersion > JAVA_1_2_CLASS_VERSION )
+            {
+                classes.setJdkRevision( "1.2" );
+            }
+            else if ( maxVersion > JAVA_1_1_CLASS_VERSION )
+            {
+                classes.setJdkRevision( "1.1" );
+            }
+            else if ( maxVersion > 0 )
+            {
+                classes.setJdkRevision( "1.0" );
+            }
 
-        // TODO: check these since they are > instead of >=
-        if ( maxVersion >= JAVA_1_6_CLASS_VERSION )
-        {
-            classes.setJdkRevision( "1.6" );
+            jarAnalyzer.getJarData().setJarClasses( classes );
         }
-        else if ( maxVersion >= JAVA_1_5_CLASS_VERSION )
-        {
-            classes.setJdkRevision( "1.5" );
-        }
-        else if ( maxVersion > JAVA_1_4_CLASS_VERSION )
-        {
-            classes.setJdkRevision( "1.4" );
-        }
-        else if ( maxVersion > JAVA_1_3_CLASS_VERSION )
-        {
-            classes.setJdkRevision( "1.3" );
-        }
-        else if ( maxVersion > JAVA_1_2_CLASS_VERSION )
-        {
-            classes.setJdkRevision( "1.2" );
-        }
-        else if ( maxVersion > JAVA_1_1_CLASS_VERSION )
-        {
-            classes.setJdkRevision( "1.1" );
-        }
-        else
-        {
-            classes.setJdkRevision( "1.0" );
-        }
-
-        jar.setClasses( classes );
+        return classes;
     }
 
     private boolean hasDebugSymbols( JavaClass javaClass )
@@ -175,16 +188,6 @@ public class JarClassesAnalysis
                 break;
             }
         }
-
         return ret;
-    }
-
-    private void addImports( JarClasses facts, List imports )
-    {
-        Iterator it = imports.iterator();
-        while ( it.hasNext() )
-        {
-            facts.addImport( (String) it.next() );
-        }
     }
 }

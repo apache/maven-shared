@@ -19,7 +19,7 @@ package org.apache.maven.shared.jar.classes;
  * under the License.
  */
 
-import org.apache.maven.shared.jar.AbstractJarTestCase;
+import org.apache.maven.shared.jar.AbstractJarAnalyzerTestCase;
 import org.apache.maven.shared.jar.JarAnalyzer;
 
 import java.io.File;
@@ -29,18 +29,16 @@ import java.io.File;
  * JarAnalyzer Classes Test Case
  */
 public class JarClassesAnalyzerTest
-    extends AbstractJarTestCase
+    extends AbstractJarAnalyzerTestCase
 {
-    private JarClasses getJarClasses( String filename )
+    private JarClassesAnalysis analyzer;
+
+    public void setUp()
         throws Exception
     {
-        File jarfile = new File( getSampleJarsDirectory(), filename );
-        JarAnalyzer jar = getJarAnalyzerFactory().getJarAnalyzer( jarfile );
+        super.setUp();
 
-        JarClasses jclass = jar.getClasses();
-        assertNotNull( "JarClasses", jclass );
-
-        return jclass;
+        analyzer = (JarClassesAnalysis) lookup( JarClassesAnalysis.class.getName() );
     }
 
     public void testAnalyzeJXR()
@@ -48,17 +46,18 @@ public class JarClassesAnalyzerTest
     {
         JarClasses jclass = getJarClasses( "jxr.jar" );
 
-        assertTrue( "classes.imports.length > 0", jclass.getImports().size() > 0 );
-        assertTrue( "classes.packages.length > 0", jclass.getPackages().size() > 0 );
+        assertFalse( "classes.imports.length > 0", jclass.getImports().isEmpty() );
+        assertFalse( "classes.packages.length > 0", jclass.getPackages().isEmpty() );
+        assertFalse( "classes.methods.length > 0", jclass.getMethods().isEmpty() );
 
         assertNotContainsRegex( "Import List", "[\\[\\)\\(\\;]", jclass.getImports() );
 
-        // TODO: test for classes count.
+        // TODO: test for classes, methods, etc.
 
-        assertContains( "classes.imports", "org.apache.maven.jxr.JXR", jclass.getImports() );
-        assertContains( "classes.imports", "org.apache.oro.text.perl.Perl5Util", jclass.getImports() );
-        assertContains( "classes.imports", "org.codehaus.plexus.util.IOUtil", jclass.getImports() );
-        assertContains( "classes.packages", "org.apache.maven.jxr.pacman", jclass.getPackages() );
+        assertTrue( "classes.imports", jclass.getImports().contains( "org.apache.maven.jxr.JXR" ) );
+        assertTrue( "classes.imports", jclass.getImports().contains( "org.apache.oro.text.perl.Perl5Util" ) );
+        assertTrue( "classes.imports", jclass.getImports().contains( "org.codehaus.plexus.util.IOUtil" ) );
+        assertTrue( "classes.packages", jclass.getPackages().contains( "org.apache.maven.jxr.pacman" ) );
     }
 
     public void testAnalyzeANT()
@@ -66,16 +65,30 @@ public class JarClassesAnalyzerTest
     {
         JarClasses jclass = getJarClasses( "ant.jar" );
 
-        assertTrue( "classes.imports.length > 0", jclass.getImports().size() > 0 );
-        assertTrue( "classes.packages.length > 0", jclass.getPackages().size() > 0 );
+        assertFalse( "classes.imports.length > 0", jclass.getImports().isEmpty() );
+        assertFalse( "classes.packages.length > 0", jclass.getPackages().isEmpty() );
+        assertFalse( "classes.methods.length > 0", jclass.getMethods().isEmpty() );
 
         assertNotContainsRegex( "Import List", "[\\[\\)\\(\\;]", jclass.getImports() );
 
-        assertContains( "classes.imports", "java.util.zip.GZIPInputStream", jclass.getImports() );
-        assertContains( "classes.imports", "org.apache.tools.ant.XmlLogger$TimedElement", jclass.getImports() );
-        assertContains( "classes.imports", "org.apache.tools.mail.MailMessage", jclass.getImports() );
-        assertContains( "classes.packages", "org.apache.tools.ant", jclass.getPackages() );
-        assertContains( "classes.packages", "org.apache.tools.bzip2", jclass.getPackages() );
+        assertTrue( "classes.imports", jclass.getImports().contains( "java.util.zip.GZIPInputStream" ) );
+        assertTrue( "classes.imports", jclass.getImports().contains( "org.apache.tools.ant.XmlLogger$TimedElement" ) );
+        assertTrue( "classes.imports", jclass.getImports().contains( "org.apache.tools.mail.MailMessage" ) );
+        assertTrue( "classes.packages", jclass.getPackages().contains( "org.apache.tools.ant" ) );
+        assertTrue( "classes.packages", jclass.getPackages().contains( "org.apache.tools.bzip2" ) );
+    }
+
+    public void testAnalyzeJarWithInvalidClassFile()
+        throws Exception
+    {
+        JarClasses jclass = getJarClasses( "invalid-class-file.jar" );
+
+        // Doesn't fail, as exceptions are ignored.
+        assertTrue( jclass.getClassNames().isEmpty() );
+        assertTrue( jclass.getPackages().isEmpty() );
+        assertTrue( jclass.getImports().isEmpty() );
+        assertNull( jclass.getJdkRevision() );
+        assertTrue( jclass.getMethods().isEmpty() );
     }
 
     public void testAnalyzeJarWithDebug()
@@ -92,6 +105,14 @@ public class JarClassesAnalyzerTest
         JarClasses jclass = getJarClasses( "helloworld-1.4.jar" );
 
         assertFalse( "no debug present", jclass.isDebugPresent() );
+    }
+
+    public void testAnalyzeJarVersion16()
+        throws Exception
+    {
+        JarClasses jclass = getJarClasses( "helloworld-1.6.jar" );
+
+        assertEquals( "jdkrevision", "1.6", jclass.getJdkRevision() );
     }
 
     public void testAnalyzeJarVersion15()
@@ -132,5 +153,16 @@ public class JarClassesAnalyzerTest
         JarClasses jclass = getJarClasses( "helloworld-1.1.jar" );
 
         assertEquals( "jdkrevision", "1.1", jclass.getJdkRevision() );
+    }
+
+    private JarClasses getJarClasses( String filename )
+        throws Exception
+    {
+        File file = getSampleJar( filename );
+
+        JarClasses jclass = analyzer.analyze( new JarAnalyzer( file ) );
+        assertNotNull( "JarClasses", jclass );
+
+        return jclass;
     }
 }

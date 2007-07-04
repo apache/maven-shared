@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar.util;
+package org.apache.maven.shared.jar.identification.hash;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,35 +19,18 @@ package org.apache.maven.shared.jar.util;
  * under the License.
  */
 
-import java.util.Comparator;
-import java.util.jar.JarEntry;
+import org.apache.maven.shared.jar.JarAnalyzer;
 
 /**
- * JarEntryComparator
- *
- * @author <a href="mailto:joakim@erdfelt.com">Joakim Erdfelt</a>
- * @version $Id$
+ * Classes that can calculate various hash signatures for a JAR file to later uniquely identify them.
  */
-public class JarEntryComparator
-    implements Comparator
+public interface JarHashAnalyzer
 {
-
-    public int compare( Object o1, Object o2 )
-    {
-        if ( !( o1 instanceof JarEntry ) )
-        {
-            return 0;
-        }
-
-        if ( !( o2 instanceof JarEntry ) )
-        {
-            return 0;
-        }
-
-        JarEntry j1 = (JarEntry) o1;
-        JarEntry j2 = (JarEntry) o2;
-
-        return j1.getName().compareTo( j2.getName() );
-    }
-
+    /**
+     * Compute the hash for the JAR. The hashcode will then be cached in the JAR data class for later use.
+     *
+     * @param jarAnalyzer the JAR analyzer to use to obtain the entries to hash
+     * @return the hash, or null if not able to be computed due to an exception.
+     */
+    String computeHash( JarAnalyzer jarAnalyzer );
 }

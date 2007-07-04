@@ -19,26 +19,14 @@ package org.apache.maven.shared.jar;
  * under the License.
  */
 
-import org.apache.maven.shared.jar.classes.JarClasses;
-import org.apache.maven.shared.jar.classes.JarClassesAnalysis;
-import org.apache.maven.shared.jar.identification.JarIdentification;
-import org.apache.maven.shared.jar.identification.JarIdentificationAnalysis;
-import org.apache.maven.shared.jar.util.JarEntryComparator;
-import org.codehaus.plexus.digest.Digester;
-import org.codehaus.plexus.digest.DigesterException;
-import org.codehaus.plexus.digest.StreamingDigester;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.util.StringUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Enumeration;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -46,267 +34,206 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A JarAnalyzer Toolbox for working with Jar Files.
+ * Open a JAR file to be analyzed. Note that once created, the {@link #closeQuietly()} method should be called to
+ * release the associated file handle.
  * <p/>
- * Use the {@link JarAnalyzerFactory#getJarAnalyzer(File)} to obtain a valid JarAnalyzer object.
+ * Typical usage:
+ * <pre>
+ *  JarAnalyzer jar = new JarAnalyzer( jarFile );
+ * <p/>
+ *  try
+ *  {
+ *      // do some analysis, such as:
+ *      jarClasses = jarClassAnalyzer.analyze( jar );
+ *  }
+ *  finally
+ *  {
+ *      jar.closeQuietly();
+ *  }
+ * <p/>
+ *  // use jar.getJarData() in some way, or the data returned by the JAR analyzer. jar itself can no longer be used.
+ * </pre>
+ * <p/>
+ * Note: that the actual data is separated from this class by design to minimise the chance of forgetting to close the
+ * JAR file. The {@link org.apache.maven.shared.jar.JarData} class exposed, as well as any data returned by actual
+ * analyzers that use this class, can be used safely once this class is out of scope.
  *
- * @plexus.component role="org.apache.maven.shared.jar.JarAnalyzer" instantiation-strategy="per-lookup"
+ * @see org.apache.maven.shared.jar.identification.JarIdentificationAnalysis#analyze(JarAnalyzer)
+ * @see org.apache.maven.shared.jar.classes.JarClassesAnalysis#analyze(JarAnalyzer)
  */
 public class JarAnalyzer
-    extends AbstractLogEnabled
 {
-    public static final String ROLE = JarAnalyzer.class.getName();
-
-    private List entries;
-
-    private JarFile jarfile;
-
-    private File file;
-
-    private JarClasses classes;
-
-    private JarIdentification identification;
-
-    private boolean isSealed;
-
     /**
-     * @plexus.requirement
-     * @noinspection UnusedDeclaration
-     */
-    private JarClassesAnalysis classesAnalyzer;
-
-    /**
-     * @plexus.requirement
-     * @noinspection UnusedDeclaration
-     */
-    private JarIdentificationAnalysis taxonAnalyzer;
-
-    protected void setFile( File file )
-        throws JarAnalyzerException
-    {
-        if ( file == null )
-        {
-            throw new JarAnalyzerException( "file is null." );
-        }
-
-        init( file );
-    }
-
-    /**
-     * Compute the HashCode for this JarAnalyzer File.
+     * Pattern to filter JAR entries for class files.
      *
-     * @param digester the digester to use to calculate the hash
-     * @return the hashcode, or null if not able to be computed.
+     * @todo why are inner classes and other potentially valid classes omitted? (It flukes it by finding everything after $)
      */
-    public String computeFileHash( Digester digester )
-    {
-        try
-        {
-            return digester.calc( new File( getFilename() ) );
-        }
-        catch ( DigesterException e )
-        {
-            getLogger().warn( "Unable to calculate the hashcode.", e );
-            return null;
-        }
-    }
+    private static final Pattern CLASS_FILTER = Pattern.compile( "[A-Za-z0-9]*\\.class$" );
 
     /**
-     * Compute the HashCode for the Bytecode within this JarAnalyzer File.
-     * <p/>
-     * Useful to see thru a recompile, recompression, or timestamp change.
-     *
-     * @param digester the digester to use to calculate the hash
-     * @return the hashcode, or null if not able to be computed.
+     * Pattern to filter JAR entries for Maven POM files.
      */
-    public String computeBytecodeHash( StreamingDigester digester )
-    {
-        Iterator it = entries.iterator();
+    private static final Pattern MAVEN_POM_FILTER = Pattern.compile( "META-INF/maven/.*/pom\\.xml$" );
 
-        try
+    /**
+     * Pattern to filter JAR entries for text files that may contain a version.
+     */
+    private static final Pattern VERSION_FILTER = Pattern.compile( "[Vv][Ee][Rr][Ss][Ii][Oo][Nn]" );
+
+    /**
+     * The associated JAR file.
+     */
+    private final JarFile jarFile;
+
+    /**
+     * Contains information about the data collected so far.
+     */
+    private final JarData jarData;
+
+    /**
+     * Constructor. Opens the JAR file, so should be matched by a call to {@link #closeQuietly()}.
+     *
+     * @param file the JAR file to open
+     * @throws java.io.IOException if there is a problem opening the JAR file, or reading the manifest. The JAR file will be closed if this occurs.
+     */
+    public JarAnalyzer( File file )
+        throws IOException
+    {
+        this.jarFile = new JarFile( file );
+
+        // Obtain entries list.
+        List entries = Collections.list( jarFile.entries() );
+
+        // Sorting of list is done by name to ensure a bytecode hash is always consistent.
+        Collections.sort( entries, new Comparator()
         {
-            digester.reset();
-            while ( it.hasNext() )
+            public int compare( Object o1, Object o2 )
             {
-                JarEntry entry = (JarEntry) it.next();
+                JarEntry entry1 = (JarEntry) o1;
+                JarEntry entry2 = (JarEntry) o2;
 
-                if ( entry.getName().endsWith( ".class" ) )
-                {
-                    // TODO: check if it needs to be closed!
-                    InputStream is = jarfile.getInputStream( entry );
-
-                    digester.update( is );
-                }
+                return entry1.getName().compareTo( entry2.getName() );
             }
-            return digester.calc();
-        }
-        catch ( DigesterException e )
+        } );
+
+        Manifest manifest;
+        try
         {
-            getLogger().warn( "Unable to calculate the hashcode.", e );
-            return null;
+            manifest = jarFile.getManifest();
         }
         catch ( IOException e )
         {
-            getLogger().warn( "Unable to calculate the hashcode.", e );
-            return null;
+            closeQuietly();
+            throw e;
         }
-
+        this.jarData = new JarData( file, manifest, entries );
     }
 
+    /**
+     * Get the data for an individual entry in the JAR. The caller should closeQuietly the input stream, and should not retain
+     * the stream as the JAR file may be closed elsewhere.
+     *
+     * @param entry the JAR entry to read from
+     * @return the input stream of the individual JAR entry.
+     * @throws java.io.IOException if there is a problem opening the individual entry
+     */
     public InputStream getEntryInputStream( JarEntry entry )
+        throws IOException
+    {
+        return jarFile.getInputStream( entry );
+    }
+
+    /**
+     * Close the associated JAR file, ignoring any errors that may occur.
+     */
+    public void closeQuietly()
     {
         try
         {
-            return jarfile.getInputStream( entry );
+            jarFile.close();
         }
         catch ( IOException e )
         {
-            getLogger().error( "Unable to get input stream for entry " + entry.getName() + ": " + e.getMessage() );
-            return null;
+            // not much we can do about it but ignore it
         }
     }
 
-    public File getFile()
-    {
-        return file;
-    }
-
-    public String getFilename()
-    {
-        return jarfile.getName();
-    }
-
-    public Manifest getManifest()
-    {
-        try
-        {
-            return jarfile.getManifest();
-        }
-        catch ( IOException e )
-        {
-            getLogger().error( "Unable to get manifest on " + this + ": " + e.getMessage() );
-            return null;
-        }
-    }
-
-    public List getNameRegexEntryList( String regex )
+    /**
+     * Filter a list of JAR entries against the pattern.
+     *
+     * @param pattern the pattern to filter against
+     * @return the list of files found, in {@link java.util.jar.JarEntry} elements
+     */
+    public List filterEntries( Pattern pattern )
     {
         List ret = new ArrayList();
 
-        Pattern pat = Pattern.compile( regex );
-
-        Iterator it = entries.iterator();
+        Iterator it = getEntries().iterator();
         while ( it.hasNext() )
         {
             JarEntry entry = (JarEntry) it.next();
 
-            Matcher mat = pat.matcher( entry.getName() );
+            Matcher mat = pattern.matcher( entry.getName() );
             if ( mat.find() )
             {
                 ret.add( entry );
             }
         }
-
         return ret;
     }
 
-    private void init( File jfile )
-        throws JarAnalyzerException
+    /**
+     * Get all the classes in the JAR.
+     *
+     * @return the list of files found, in {@link java.util.jar.JarEntry} elements
+     */
+    public List getClassEntries()
     {
-        if ( !jfile.exists() )
-        {
-            throw new JarAnalyzerException( "File " + jfile.getAbsolutePath() + " does not exist." );
-        }
-
-        if ( !jfile.canRead() )
-        {
-            throw new JarAnalyzerException( "No read access to file " + jfile.getAbsolutePath() + "." );
-        }
-
-        try
-        {
-            this.jarfile = new JarFile( jfile );
-            this.file = jfile;
-        }
-        catch ( IOException e )
-        {
-            throw new JarAnalyzerException( "Unable to open artifact " + jfile.getAbsolutePath(), e );
-        }
-
-        // Obtain entries list.
-
-        entries = new ArrayList();
-        Enumeration jarentries = jarfile.entries();
-        while ( jarentries.hasMoreElements() )
-        {
-            JarEntry entry = (JarEntry) jarentries.nextElement();
-            entries.add( entry );
-        }
-
-        // Sorting of list is done to ensure a proper Bytecode Hash.
-        Collections.sort( entries, new JarEntryComparator() );
-
-        Manifest manifest = getManifest();
-
-        isSealed = false;
-
-        if ( manifest != null )
-        {
-            String sval = manifest.getMainAttributes().getValue( Attributes.Name.SEALED );
-            if ( StringUtils.isNotEmpty( sval ) )
-            {
-                isSealed = "true".equalsIgnoreCase( sval.trim() );
-            }
-        }
+        return filterEntries( CLASS_FILTER );
     }
 
-    public String toString()
+    /**
+     * Get all the Maven POM entries in the JAR.
+     *
+     * @return the list of files found, in {@link java.util.jar.JarEntry} elements
+     */
+    public List getMavenPomEntries()
     {
-        return "<JarAnalyzer:" + jarfile.getName() + ">";
+        return filterEntries( MAVEN_POM_FILTER );
     }
 
-    public boolean isSealed()
+    /**
+     * Get all the version text files in the JAR.
+     *
+     * @return the list of files found, in {@link java.util.jar.JarEntry} elements
+     */
+    public List getVersionEntries()
     {
-        return isSealed;
+        return filterEntries( VERSION_FILTER );
     }
 
-    public void setSealed( boolean isSealed )
-    {
-        this.isSealed = isSealed;
-    }
-
-    public JarClasses getClasses()
-    {
-        if ( classes == null )
-        {
-            classesAnalyzer.analyze( this );
-        }
-
-        return classes;
-    }
-
-    public void setClasses( JarClasses classes )
-    {
-        this.classes = classes;
-    }
-
-    public JarIdentification getIdentification()
-    {
-        if ( identification == null )
-        {
-            taxonAnalyzer.analyze( this );
-        }
-
-        return identification;
-    }
-
-    public void setIdentification( JarIdentification taxon )
-    {
-        this.identification = taxon;
-    }
-
+    /**
+     * Get all the contained files in the JAR.
+     *
+     * @return the list of files found, in {@link java.util.jar.JarEntry} elements
+     */
     public List getEntries()
     {
-        return entries;
+        return jarData.getEntries();
+    }
+
+    /**
+     * Get the file that was opened by this analyzer.
+     *
+     * @return the JAR file reference
+     */
+    public File getFile()
+    {
+        return jarData.getFile();
+    }
+
+    public JarData getJarData()
+    {
+        return jarData;
     }
 }

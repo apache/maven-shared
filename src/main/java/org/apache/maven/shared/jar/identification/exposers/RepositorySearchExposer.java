@@ -20,67 +20,70 @@ package org.apache.maven.shared.jar.identification.exposers;
  */
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
-import org.apache.maven.shared.jar.identification.RepositoryHashSearch;
-import org.codehaus.plexus.digest.Digester;
-import org.codehaus.plexus.digest.StreamingDigester;
+import org.apache.maven.shared.jar.JarAnalyzer;
+import org.apache.maven.shared.jar.identification.JarIdentification;
+import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
+import org.apache.maven.shared.jar.identification.hash.JarHashAnalyzer;
+import org.apache.maven.shared.jar.identification.repository.RepositoryHashSearch;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * JarAnalyzer Taxon Exposer for the hashcode hits within a repository.
+ * Exposer that examines a Maven repository for identical files to the JAR being analyzed. It will look for both
+ * identical files, and files with identical classes.
+ * <p/>
+ * Note: if not using Plexus, you must call the following methods to be able to expose any data from the class:
+ * {@link #setBytecodeHashAnalyzer(org.apache.maven.shared.jar.identification.hash.JarHashAnalyzer)},
+ * {@link #setFileHashAnalyzer(org.apache.maven.shared.jar.identification.hash.JarHashAnalyzer)},
+ * {@link #setRepositoryHashSearch(org.apache.maven.shared.jar.identification.repository.RepositoryHashSearch)}
  *
  * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="repositorySearch"
  */
 public class RepositorySearchExposer
-    extends AbstractJarIdentificationExposer
+    extends AbstractLogEnabled
+    implements JarIdentificationExposer
 {
     /**
-     * @plexus.requirement role-hint="sha1"
-     * @noinspection UnusedDeclaration
-     */
-    private Digester digester;
-
-    /**
-     * @plexus.requirement role-hint="sha1"
-     * @noinspection UnusedDeclaration
-     */
-    private StreamingDigester streamingDigester;
-
-    /**
+     * The repository searcher to use.
+     *
      * @plexus.requirement
+     * @todo this currently only provides for the 'empty' repository search, which isn't very useful
      */
     private RepositoryHashSearch repositoryHashSearch;
 
-    public String getExposerName()
-    {
-        return "Repository Hashcode Hit";
-    }
+    /**
+     * The hash analyzer for the entire file.
+     *
+     * @plexus.requirement role-hint="file"
+     */
+    private JarHashAnalyzer fileHashAnalyzer;
 
-    public boolean isAuthoritative()
-    {
-        return true;
-    }
+    /**
+     * The hash analyzer for the file's bytecode.
+     *
+     * @plexus.requirement role-hint="bytecode"
+     */
+    private JarHashAnalyzer bytecodeHashAnalyzer;
 
-    public RepositoryHashSearch getRepositoryHashSearch()
+    public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
-        return repositoryHashSearch;
-    }
-
-    public void setRepositoryHashSearch( RepositoryHashSearch repo )
-    {
-        this.repositoryHashSearch = repo;
-    }
-
-    public void expose()
-    {
-        String hash = getJar().computeFileHash( digester );
-        String bytecodehash = getJar().computeBytecodeHash( streamingDigester );
         List repohits = new ArrayList();
-        repohits.addAll( repositoryHashSearch.searchFileHash( hash ) );
-        repohits.addAll( repositoryHashSearch.searchBytecodeHash( bytecodehash ) );
+
+        String hash = fileHashAnalyzer.computeHash( jarAnalyzer );
+        if ( hash != null )
+        {
+            repohits.addAll( repositoryHashSearch.searchFileHash( hash ) );
+        }
+
+        String bytecodehash = bytecodeHashAnalyzer.computeHash( jarAnalyzer );
+        if ( bytecodehash != null )
+        {
+            repohits.addAll( repositoryHashSearch.searchBytecodeHash( bytecodehash ) );
+        }
+
         if ( !repohits.isEmpty() )
         {
             // Found hits in the repository.
@@ -88,10 +91,25 @@ public class RepositorySearchExposer
             while ( it.hasNext() )
             {
                 Artifact artifact = (Artifact) it.next();
-                addGroupId( artifact.getGroupId() );
-                addArtifactId( artifact.getArtifactId() );
-                addVersion( artifact.getVersion() );
+                identification.addAndSetGroupId( artifact.getGroupId() );
+                identification.addAndSetArtifactId( artifact.getArtifactId() );
+                identification.addAndSetVersion( artifact.getVersion() );
             }
         }
+    }
+
+    public void setRepositoryHashSearch( RepositoryHashSearch repo )
+    {
+        this.repositoryHashSearch = repo;
+    }
+
+    public void setFileHashAnalyzer( JarHashAnalyzer fileHashAnalyzer )
+    {
+        this.fileHashAnalyzer = fileHashAnalyzer;
+    }
+
+    public void setBytecodeHashAnalyzer( JarHashAnalyzer bytecodeHashAnalyzer )
+    {
+        this.bytecodeHashAnalyzer = bytecodeHashAnalyzer;
     }
 }

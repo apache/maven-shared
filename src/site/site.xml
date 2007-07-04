@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 
-<project name="Shared">
+<project name="Enforcer Rule API">
   <!-- TODO: banners, skin, publish date, version should be inherited from Maven itself -->
   <bannerLeft>
     <name>${project.name}</name>
@@ -35,7 +35,6 @@
     <!-- TODO: Link, head, reports should be inherited -->
     <!-- TODO: use breadcrumbs more structure, links for links, and inherit subprojects as a menu or not at all -->
     <links>
-      <item name="Apache" href="http://www.apache.org/"/>
       <item name="Maven 1.x" href="http://maven.apache.org/maven-1.x"/>
       <item name="Maven 2.x" href="http://maven.apache.org/"/>
       <item name="Maven 2.x Plugins" href="http://maven.apache.org/plugins/"/>
@@ -57,6 +56,9 @@
       <item name="Introduction" href="index.html"/>
       <item name="Writing a custom rule" href="writing-a-custom-rule.html"/>
     </menu>
+	<menu name="Rule Execution Engines">
+	  <item name="Maven Enforcer Plugin" href="http://maven.apache.org/plugins/maven-enforcer-plugin"/>
+	</menu>
     <menu ref="reports" inherit="bottom" />
   </body>
 </project>

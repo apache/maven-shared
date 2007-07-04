@@ -42,6 +42,7 @@ import org.apache.maven.artifact.resolver.ArtifactCollector;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ResolutionNode;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
@@ -305,6 +306,25 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
+    // TODO: fix when ArtifactCollector filters events
+    /*
+    public void testProjectWithFilter() throws DependencyTreeBuilderException, ArtifactResolutionException
+    {
+        Artifact projectArtifact = createArtifact( "g:p:t:1" );
+        Artifact child1Artifact = createArtifact( "g:a:t:1" );
+        Artifact child2Artifact = createArtifact( "g:b:t:1:test" );
+
+        MavenProject project = createProject( projectArtifact, new Artifact[] { child1Artifact, child2Artifact } );
+
+        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
+        expectedRootNode.addChild( createNode( "g:a:t:1" ) );
+
+        ArtifactFilter artifactFilter = new ScopeArtifactFilter( Artifact.SCOPE_COMPILE );
+        
+        assertDependencyTree( expectedRootNode, project, artifactFilter );
+    }
+    */
+
     // private methods --------------------------------------------------------
     
     private DependencyNode createNode( String id )
@@ -380,27 +400,32 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
     
     private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project ) throws DependencyTreeBuilderException, ArtifactResolutionException
     {
+        assertDependencyTree( expectedRootNode, project, null );
+    }
+    
+    private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project, ArtifactFilter artifactFilter ) throws DependencyTreeBuilderException, ArtifactResolutionException
+    {
         // assert built dependency tree is as expected
         
         DependencyNode actualRootNode =
-            builder.buildDependencyTree( project, artifactRepository, artifactFactory, artifactMetadataSource, null,
-                                         artifactCollector );
+            builder.buildDependencyTree( project, artifactRepository, artifactFactory, artifactMetadataSource,
+                                         artifactFilter, artifactCollector );
         
         assertEquals( "Dependency tree", expectedRootNode, actualRootNode );
         
         // assert resolution tree is as expected
         
-        ArtifactResolutionResult result = collect( project );
+        ArtifactResolutionResult result = collect( project, artifactFilter );
         
         assertTreeEquals( expectedRootNode, project, result );
     }
     
-    private ArtifactResolutionResult collect( MavenProject project ) throws ArtifactResolutionException
+    private ArtifactResolutionResult collect( MavenProject project, ArtifactFilter artifactFilter ) throws ArtifactResolutionException
     {
         return artifactCollector.collect( project.getDependencyArtifacts(), project.getArtifact(),
                                           project.getManagedVersionMap(), artifactRepository,
-                                          project.getRemoteArtifactRepositories(), artifactMetadataSource, null,
-                                          Collections.EMPTY_LIST );
+                                          project.getRemoteArtifactRepositories(), artifactMetadataSource,
+                                          artifactFilter, Collections.EMPTY_LIST );
     }
     
     private void assertTreeEquals( DependencyNode dependencyNode, MavenProject project, ArtifactResolutionResult resolutionResult )

@@ -376,6 +376,10 @@ public class MavenCommandLineBuilder
                 }
             }
 
+            if ( mavenHome == null && System.getenv( "M2_HOME" ) != null )
+            {
+                mavenHome = new File( System.getenv( "M2_HOME" ) );
+            }
         }
 
         logger.debug( "Using ${maven.home} of: \'" + mavenHome + "\'." );

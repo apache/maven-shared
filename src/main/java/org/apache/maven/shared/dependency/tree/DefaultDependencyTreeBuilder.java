@@ -20,6 +20,7 @@ package org.apache.maven.shared.dependency.tree;
  */
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -27,8 +28,11 @@ import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactCollector;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.conflict.ConflictResolverFactory;
+import org.apache.maven.artifact.resolver.conflict.ConflictResolverNotFoundException;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectUtils;
 import org.apache.maven.shared.dependency.tree.traversal.CollectingDependencyNodeVisitor;
 
 /**
@@ -42,6 +46,15 @@ import org.apache.maven.shared.dependency.tree.traversal.CollectingDependencyNod
  */
 public class DefaultDependencyTreeBuilder implements DependencyTreeBuilder
 {
+    // fields -----------------------------------------------------------------
+    
+    /**
+     * The conflict resolver factory to use.
+     * 
+     * @plexus.requirement
+     */
+    private ConflictResolverFactory conflictResolverFactory;
+    
     // DependencyTreeBuilder methods ------------------------------------------
 
     /*
@@ -79,14 +92,20 @@ public class DefaultDependencyTreeBuilder implements DependencyTreeBuilder
         try
         {
             Map managedVersions = project.getManagedVersionMap();
+            
+            List conflictResolvers = ProjectUtils.buildConflictResolvers( project, conflictResolverFactory );
 
             collector.collect( project.getDependencyArtifacts(), project.getArtifact(), managedVersions, repository,
                                project.getRemoteArtifactRepositories(), metadataSource, filter,
-                               Collections.singletonList( listener ) );
+                               Collections.singletonList( listener ), conflictResolvers );
 
             return listener.getRootNode();
         }
         catch ( ArtifactResolutionException exception )
+        {
+            throw new DependencyTreeBuilderException( "Cannot build project dependency tree", exception );
+        }
+        catch ( ConflictResolverNotFoundException exception )
         {
             throw new DependencyTreeBuilderException( "Cannot build project dependency tree", exception );
         }

@@ -214,7 +214,7 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
-    // TODO: fix when discussion resolved
+    // TODO: fix when discussion resolved: http://www.mail-archive.com/dev@maven.apache.org/msg68011.html
     /*
     public void testProjectWithConflictDependencyScope() throws DependencyTreeBuilderException, ArtifactResolutionException
     {
@@ -306,7 +306,7 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
-    // TODO: fix when ArtifactCollector filters events
+    // TODO: reinstate when MNG-3089 fixed
     /*
     public void testProjectWithFilter() throws DependencyTreeBuilderException, ArtifactResolutionException
     {

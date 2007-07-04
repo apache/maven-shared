@@ -31,30 +31,43 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * ImportVisitor
+ * Implementation of a BCEL class visitor that analyzes a class and collects imports.
  */
 public class ImportVisitor
     extends EmptyVisitor
 {
+    /**
+     * The list of imports discovered.
+     */
     private List imports;
 
+    /**
+     * The Java class that is being analyzed.
+     */
     private JavaClass javaClass;
 
-    private Pattern qualifiedPat;
+    /**
+     * Pattern to detect if the import is qualified and allows retrieval of the actual import name from the string via the group 1.
+     */
+    private static final Pattern QUALIFIED_IMPORT_PATTERN = Pattern.compile( "L([a-zA-Z][a-zA-Z0-9\\.]+);" );
 
-    private Pattern validUtfPat;
+    /**
+     * Pattern that checks whether a string is valid UTF-8. Imports that are not are ignored.
+     */
+    private static final Pattern VALID_UTF8_PATTERN = Pattern.compile( "^[\\(\\)\\[A-Za-z0-9;/]+$" );
 
     /**
      * Create an Import visitor.
      *
-     * @param javaClass the javaclass to work off of.
+     * @param javaClass the javaclass to work from
      */
     public ImportVisitor( JavaClass javaClass )
     {
         this.javaClass = javaClass;
+
+        // Create a list that is guaranteed to be unique while retaining it's list qualities (LinkedHashSet does not
+        // expose the list interface even if natural ordering is retained)  
         this.imports = SetUniqueList.decorate( new ArrayList() );
-        this.qualifiedPat = Pattern.compile( "L([a-zA-Z][a-zA-Z0-9\\.]+);" );
-        this.validUtfPat = Pattern.compile( "^[\\(\\)\\[A-Za-z0-9;/]+$" );
     }
 
     /**
@@ -89,7 +102,7 @@ public class ImportVisitor
             name = name.substring( 0, name.length() - 6 );
         }
 
-        Matcher mat = qualifiedPat.matcher( name );
+        Matcher mat = QUALIFIED_IMPORT_PATTERN.matcher( name );
         if ( mat.find() )
         {
             this.imports.add( mat.group( 1 ) );
@@ -116,7 +129,7 @@ public class ImportVisitor
         }
 
         // Only valid characters please.
-        if ( !validUtfPat.matcher( ret ).matches() )
+        if ( !VALID_UTF8_PATTERN.matcher( ret ).matches() )
         {
             return;
         }
@@ -144,7 +157,7 @@ public class ImportVisitor
             return;
         }
 
-        Matcher mat = qualifiedPat.matcher( ret );
+        Matcher mat = QUALIFIED_IMPORT_PATTERN.matcher( ret );
         char prefix = ret.charAt( 0 );
 
         if ( prefix == '(' )

@@ -21,7 +21,9 @@ package org.apache.maven.shared.jar.identification.exposers;
 
 import org.apache.commons.collections.Bag;
 import org.apache.commons.collections.bag.HashBag;
-import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
+import org.apache.maven.shared.jar.JarAnalyzer;
+import org.apache.maven.shared.jar.identification.JarIdentification;
+import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -31,28 +33,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.jar.JarEntry;
 
-
 /**
- * JarAnalyzer Taxon Exposer - using Majority Timestamp of classes.
+ * Exposer that examines a a JAR and uses the most recent timestamp as a potential version.
  *
  * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="timestamp"
  */
 public class TimestampExposer
-    extends AbstractJarIdentificationExposer
+    implements JarIdentificationExposer
 {
-    public String getExposerName()
+    public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
-        return "Timestamp";
-    }
-
-    public boolean isAuthoritative()
-    {
-        return false;
-    }
-
-    public void expose()
-    {
-        List entries = getJar().getNameRegexEntryList( ".*" ); //$NON-NLS-1$
+        List entries = jarAnalyzer.getEntries();
         SimpleDateFormat tsformat = new SimpleDateFormat( "yyyyMMdd", Locale.US ); //$NON-NLS-1$
         Bag timestamps = new HashBag();
         Iterator it = entries.iterator();
@@ -80,7 +71,7 @@ public class TimestampExposer
 
         if ( StringUtils.isNotEmpty( ts ) )
         {
-            addVersion( ts );
+            identification.addVersion( ts );
         }
     }
 }

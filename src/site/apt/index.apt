@@ -1,0 +1,15 @@
+ -----
+ JAR Utilities
+ -----
+ Brett Porter
+ -----
+ 2 July 2007
+ -----
+
+Maven Shared Components - JAR Utilities
+
+  Utilities that help identify the contents of a JAR, including Java class analysis and Maven metadata analysis.
+
+* Using the Utilities
+
+  Instructions on how to use the utilities can be found in the {{{apidocs/index.html} Javadoc Overview}}.

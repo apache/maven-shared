@@ -23,6 +23,7 @@ import junit.framework.AssertionFailedError;
 import org.codehaus.plexus.PlexusTestCase;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -33,41 +34,13 @@ import java.util.regex.Pattern;
 /**
  * Abstract JarAnalyzer TestCase
  */
-public abstract class AbstractJarTestCase
+public abstract class AbstractJarAnalyzerTestCase
     extends PlexusTestCase
 {
-    protected File testdir;
-
-    public void setUp()
-        throws Exception
+    public File getSampleJar( String filename )
+        throws MalformedURLException
     {
-        super.setUp();
-
-        this.testdir = new File( getBasedir(), "src/test" );
-    }
-
-    public File getSampleJarsDirectory()
-    {
-        return new File( testdir, "jars" );
-    }
-
-    public File getTestLocalRepoDirectory()
-    {
-        return new File( testdir, "localrepo" );
-    }
-
-    public JarAnalyzerFactory getJarAnalyzerFactory()
-        throws Exception
-    {
-        return (JarAnalyzerFactory) lookup( JarAnalyzerFactory.ROLE, "default" );
-    }
-
-    public void assertContains( String msg, Object expected, Collection coll )
-    {
-        if ( !coll.contains( expected ) )
-        {
-            throw new AssertionFailedError( msg + " collection did not have: " + expected.toString() );
-        }
+        return new File( getClass().getResource( "/jars/" + filename ).getPath() );
     }
 
     public void assertNotContainsRegex( String msg, String regex, Collection coll )

@@ -19,32 +19,25 @@ package org.apache.maven.shared.jar.identification.exposers;
  * under the License.
  */
 
-import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
+import org.apache.maven.shared.jar.JarAnalyzer;
+import org.apache.maven.shared.jar.identification.JarIdentification;
+import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-
 /**
- * JarAnalyzer Taxon Exposer - Static Main Class Output
+ * Exposer that examines a a JAR for classes that have <code>Version</code> in the name and calls their
+ * <code>main</code> method if it exists to obtain the version.
  *
+ * @todo not currently implemented
  * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="staticMainOutput"
  */
 public class StaticMainOutputExposer
-    extends AbstractJarIdentificationExposer
+    implements JarIdentificationExposer
 {
-    public String getExposerName()
-    {
-        return "Static Main Output";
-    }
-
-    public boolean isAuthoritative()
-    {
-        return false;
-    }
-
-    public void expose()
+    public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
         List staticMains = findStaticMainVersions();
         if ( !staticMains.isEmpty() )
@@ -53,7 +46,7 @@ public class StaticMainOutputExposer
             while ( itvers.hasNext() )
             {
                 String ver = (String) itvers.next();
-                addVersion( ver );
+                identification.addVersion( ver );
             }
         }
     }

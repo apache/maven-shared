@@ -19,7 +19,11 @@ package org.apache.maven.shared.jar.identification.exposers;
  * under the License.
  */
 
-import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
+import org.apache.maven.shared.jar.JarAnalyzer;
+import org.apache.maven.shared.jar.identification.JarIdentification;
+import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.BufferedReader;
@@ -33,41 +37,33 @@ import java.util.jar.JarEntry;
 
 
 /**
- * JarAnalyzer Taxon Exposer based on Text File contents.
+ * Exposer that examines a a JAR for files that contain the text <code>version</code> (case-insensitive) and
+ * adds the contents as potential version(s).
  *
  * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="textFile"
  */
 public class TextFileExposer
-    extends AbstractJarIdentificationExposer
+    extends AbstractLogEnabled
+    implements JarIdentificationExposer
 {
-    public String getExposerName()
+    public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
-        return "Text File";
-    }
-
-    public boolean isAuthoritative()
-    {
-        return false;
-    }
-
-    public void expose()
-    {
-        List textFiles = findTextFileVersions();
+        List textFiles = findTextFileVersions( jarAnalyzer );
         if ( !textFiles.isEmpty() )
         {
             Iterator ithits = textFiles.iterator();
             while ( ithits.hasNext() )
             {
                 String ver = (String) ithits.next();
-                addVersion( ver );
+                identification.addVersion( ver );
             }
         }
     }
 
-    private List findTextFileVersions()
+    private List findTextFileVersions( JarAnalyzer jarAnalyzer )
     {
         List textVersions = new ArrayList();
-        List hits = getJar().getNameRegexEntryList( "[Vv][Ee][Rr][Ss][Ii][Oo][Nn]" ); //$NON-NLS-1$
+        List hits = jarAnalyzer.getVersionEntries();
 
         Iterator it = hits.iterator();
         while ( it.hasNext() )
@@ -78,10 +74,12 @@ public class TextFileExposer
             if ( !entry.getName().endsWith( ".class" ) ) //$NON-NLS-1$
             {
                 getLogger().debug( "Version Hit: " + entry.getName() );
-                InputStream is = getJar().getEntryInputStream( entry );
-                BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
+                InputStream is = null;
                 try
                 {
+                    is = jarAnalyzer.getEntryInputStream( entry );
+                    BufferedReader br = new BufferedReader( new InputStreamReader( is ) );
+
                     String line = br.readLine();
                     // TODO: check for key=value pair.
                     // TODO: maybe even for groupId entries.
@@ -95,6 +93,10 @@ public class TextFileExposer
                 catch ( IOException e )
                 {
                     getLogger().warn( "Unable to read line from " + entry.getName(), e );
+                }
+                finally
+                {
+                    IOUtil.close( is );
                 }
             }
         }

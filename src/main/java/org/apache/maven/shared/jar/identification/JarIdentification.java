@@ -20,31 +20,199 @@ package org.apache.maven.shared.jar.identification;
  */
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
- * JarAnalyzer Taxon, the set of Maven dependency information both found and potential.
+ * Gathered Maven information about the JAR file. Stores both assumed/validated values and potential values.
+ *
+ * @see org.apache.maven.shared.jar.identification.JarIdentificationAnalysis#analyze(org.apache.maven.shared.jar.JarAnalyzer)
  */
 public class JarIdentification
 {
-    private boolean wellKnown;
-
+    /**
+     * The group ID derived or guessed from the list of potentials of the JAR.
+     */
     private String groupId;
 
+    /**
+     * The artifact ID derived or guessed from the list of potentials of the JAR.
+     */
     private String artifactId;
 
+    /**
+     * The version derived or guessed from the list of potentials of the JAR.
+     */
     private String version;
 
+    /**
+     * The project name derived or guessed from the list of potentials of the JAR.
+     */
     private String name;
 
+    /**
+     * The vendor (organization name) derived or guessed from the list of potentials of the JAR.
+     */
     private String vendor;
 
-    private List potentials;
+    /**
+     * The list of possible group IDs discovered.
+     */
+    private List potentialGroupIds = new ArrayList();
 
-    public JarIdentification()
+    /**
+     * The list of possible artifact IDs discovered.
+     */
+    private List potentialArtifactIds = new ArrayList();
+
+    /**
+     * The list of possible versions discovered.
+     */
+    private List potentialVersions = new ArrayList();
+
+    /**
+     * The list of possible artifact names discovered.
+     */
+    private List potentialNames = new ArrayList();
+
+    /**
+     * The list of possible vendors discovered.
+     */
+    private List potentialVendors = new ArrayList();
+
+    /**
+     * Add a validated group ID.
+     *
+     * @param groupId the group ID discovered
+     */
+    public void addAndSetGroupId( String groupId )
     {
-        potentials = new ArrayList();
+        if ( groupId != null )
+        {
+            this.groupId = groupId;
+        }
+
+        addGroupId( groupId );
+    }
+
+    /**
+     * Add a potential group ID.
+     *
+     * @param groupId the group ID discovered
+     */
+    public void addGroupId( String groupId )
+    {
+        addUnique( potentialGroupIds, groupId );
+    }
+
+    /**
+     * Add a validated artifact ID.
+     *
+     * @param artifactId the artifact ID discovered
+     */
+    public void addAndSetArtifactId( String artifactId )
+    {
+        if ( artifactId != null )
+        {
+            this.artifactId = artifactId;
+        }
+
+        addArtifactId( artifactId );
+    }
+
+    /**
+     * Add a potential artifact ID.
+     *
+     * @param artifactId the artifact ID discovered
+     */
+    public void addArtifactId( String artifactId )
+    {
+        addUnique( potentialArtifactIds, artifactId );
+    }
+
+    /**
+     * Add a validated version.
+     *
+     * @param version the version discovered
+     */
+    public void addAndSetVersion( String version )
+    {
+        if ( version != null )
+        {
+            this.version = version;
+        }
+
+        addVersion( version );
+    }
+
+    /**
+     * Add a potential version.
+     *
+     * @param version the version discovered
+     */
+    public void addVersion( String version )
+    {
+        addUnique( potentialVersions, version );
+    }
+
+    /**
+     * Add a validated vendor name.
+     *
+     * @param name the vendor name discovered
+     */
+    public void addAndSetVendor( String name )
+    {
+        if ( name != null )
+        {
+            vendor = name;
+        }
+
+        addVendor( name );
+    }
+
+    /**
+     * Add a potential vendor name.
+     *
+     * @param name the vendor name discovered
+     */
+    public void addVendor( String name )
+    {
+        addUnique( potentialVendors, name );
+    }
+
+    /**
+     * Add a validated artifact name.
+     *
+     * @param name the artifact name discovered
+     */
+    public void addAndSetName( String name )
+    {
+        if ( name != null )
+        {
+            this.name = name;
+        }
+
+        addName( name );
+    }
+
+    /**
+     * Add a potential artifact name.
+     *
+     * @param name the artifact name discovered
+     */
+    public void addName( String name )
+    {
+        addUnique( potentialNames, name );
+    }
+
+    private static void addUnique( List list, String value )
+    {
+        if ( value != null )
+        {
+            if ( !list.contains( value ) )
+            {
+                list.add( value );
+            }
+        }
     }
 
     public String getArtifactId()
@@ -77,11 +245,6 @@ public class JarIdentification
         this.name = name;
     }
 
-    public List getPotentials()
-    {
-        return potentials;
-    }
-
     public String getVendor()
     {
         return vendor;
@@ -102,88 +265,28 @@ public class JarIdentification
         this.version = version;
     }
 
-    public boolean isWellKnown()
+    public List getPotentialVersions()
     {
-        return wellKnown;
+        return potentialVersions;
     }
 
-    public void setWellKnown( boolean wellKnown )
+    public List getPotentialNames()
     {
-        this.wellKnown = wellKnown;
+        return potentialNames;
     }
 
-    public List getGroupIds()
+    public List getPotentialGroupIds()
     {
-        List ret = new ArrayList();
-        Iterator it = potentials.iterator();
-        while ( it.hasNext() )
-        {
-            AbstractJarIdentificationExposer exposer = (AbstractJarIdentificationExposer) it.next();
-            if ( exposer.getGroupIds() != null )
-            {
-                ret.addAll( exposer.getGroupIds() );
-            }
-        }
-        return ret;
+        return potentialGroupIds;
     }
 
-    public List getArtifactIds()
+    public List getPotentialArtifactIds()
     {
-        List ret = new ArrayList();
-        Iterator it = potentials.iterator();
-        while ( it.hasNext() )
-        {
-            AbstractJarIdentificationExposer exposer = (AbstractJarIdentificationExposer) it.next();
-            if ( exposer.getArtifactIds() != null )
-            {
-                ret.addAll( exposer.getArtifactIds() );
-            }
-        }
-        return ret;
+        return potentialArtifactIds;
     }
 
-    public List getVersions()
+    public List getPotentialVendors()
     {
-        List ret = new ArrayList();
-        Iterator it = potentials.iterator();
-        while ( it.hasNext() )
-        {
-            AbstractJarIdentificationExposer exposer = (AbstractJarIdentificationExposer) it.next();
-            if ( exposer.getVersions() != null )
-            {
-                ret.addAll( exposer.getVersions() );
-            }
-        }
-        return ret;
-    }
-
-    public List getNames()
-    {
-        List ret = new ArrayList();
-        Iterator it = potentials.iterator();
-        while ( it.hasNext() )
-        {
-            AbstractJarIdentificationExposer exposer = (AbstractJarIdentificationExposer) it.next();
-            if ( exposer.getNames() != null )
-            {
-                ret.addAll( exposer.getNames() );
-            }
-        }
-        return ret;
-    }
-
-    public List getVendors()
-    {
-        List ret = new ArrayList();
-        Iterator it = potentials.iterator();
-        while ( it.hasNext() )
-        {
-            AbstractJarIdentificationExposer exposer = (AbstractJarIdentificationExposer) it.next();
-            if ( exposer.getVendors() != null )
-            {
-                ret.addAll( exposer.getVendors() );
-            }
-        }
-        return ret;
+        return potentialVendors;
     }
 }

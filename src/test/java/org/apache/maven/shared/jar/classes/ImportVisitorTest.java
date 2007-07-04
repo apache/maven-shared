@@ -23,7 +23,7 @@ import org.apache.bcel.classfile.ClassFormatException;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.DescendingVisitor;
 import org.apache.bcel.classfile.JavaClass;
-import org.apache.maven.shared.jar.AbstractJarTestCase;
+import org.apache.maven.shared.jar.AbstractJarAnalyzerTestCase;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,12 +34,12 @@ import java.util.List;
  * Import Visitor Test
  */
 public class ImportVisitorTest
-    extends AbstractJarTestCase
+    extends AbstractJarAnalyzerTestCase
 {
     public void testImportsJxr()
         throws ClassFormatException, IOException
     {
-        File jxrjar = new File( getSampleJarsDirectory(), "jxr.jar" );
+        File jxrjar = getSampleJar( "jxr.jar" );
         String classname = "org/apache/maven/jxr/DirectoryIndexer.class";
         ClassParser classParser = new ClassParser( jxrjar.getAbsolutePath(), classname );
         JavaClass javaClass = classParser.parse();
@@ -53,15 +53,15 @@ public class ImportVisitorTest
 
         assertNotContainsRegex( "Import List", "[\\[\\)\\(\\;]", imports );
 
-        assertContains( "imports", "org.apache.maven.jxr.pacman.PackageType", imports );
-        assertContains( "imports", "org.codehaus.plexus.util.IOUtil", imports );
-        assertContains( "imports", "org.apache.oro.text.perl.Perl5Util", imports );
+        assertTrue( "imports", imports.contains( "org.apache.maven.jxr.pacman.PackageType" ) );
+        assertTrue( "imports", imports.contains( "org.codehaus.plexus.util.IOUtil" ) );
+        assertTrue( "imports", imports.contains( "org.apache.oro.text.perl.Perl5Util" ) );
     }
 
     public void testImportsAnt()
         throws ClassFormatException, IOException
     {
-        File jxrjar = new File( getSampleJarsDirectory(), "ant.jar" );
+        File jxrjar = getSampleJar( "ant.jar" );
         String classname = "org/apache/tools/ant/Target.class";
         ClassParser classParser = new ClassParser( jxrjar.getAbsolutePath(), classname );
         JavaClass javaClass = classParser.parse();
@@ -75,7 +75,7 @@ public class ImportVisitorTest
 
         assertNotContainsRegex( "Import List", "[\\[\\)\\(\\;]", imports );
 
-        assertContains( "imports", "org.apache.tools.ant.Location", imports );
-        assertContains( "imports", "org.apache.tools.ant.Task", imports );
+        assertTrue( "imports", imports.contains( "org.apache.tools.ant.Location" ) );
+        assertTrue( "imports", imports.contains( "org.apache.tools.ant.Task" ) );
     }
 }

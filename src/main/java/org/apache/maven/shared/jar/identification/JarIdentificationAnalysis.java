@@ -22,122 +22,111 @@ package org.apache.maven.shared.jar.identification;
 import org.apache.maven.shared.jar.JarAnalyzer;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * JarAnalyzer Taxon Analyzer
+ * Analyze the JAR file to identify Maven artifact metadata. This class is thread safe and immutable as long as all
+ * provided exposers are, as it retains no state.
+ * <p/>
+ * If using Plexus, the class will use all available exposers in the container.
+ * <p/>
+ * If not using Plexus, the exposers must be set using {@link #setExposers(java.util.List)} before calling
+ * {@link #analyze(org.apache.maven.shared.jar.JarAnalyzer)}
+ * <p/>
+ * Note that you must first create an instance of {@link org.apache.maven.shared.jar.JarAnalyzer} - see its Javadoc for
+ * a typical use.
  *
- * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationAnalysis"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationAnalysis" role-hint="default"
  */
 public class JarIdentificationAnalysis
 {
     /**
+     * The Maven information exposers to use during identification.
+     *
      * @plexus.requirement role="org.apache.maven.shared.jar.identification.JarIdentificationExposer"
-     * @noinspection UnusedDeclaration,MismatchedQueryAndUpdateOfCollection
      */
     private List exposers;
 
-    public void analyze( JarAnalyzer jar )
+    /**
+     * Analyze a JAR and find any associated Maven metadata. Note that if the provided JAR analyzer has previously
+     * analyzed the JAR, the cached results will be returned. You must obtain a new JAR analyzer to the re-read the
+     * contents of the file.
+     *
+     * @param jarAnalyzer the JAR to analyze. This must not yet have been closed.
+     * @return the Maven metadata discovered
+     */
+    public JarIdentification analyze( JarAnalyzer jarAnalyzer )
     {
-        JarIdentification taxon = new JarIdentification();
+        JarIdentification taxon = jarAnalyzer.getJarData().getJarIdentification();
+        if ( taxon != null )
+        {
+            return taxon;
+        }
+
+        taxon = new JarIdentification();
 
         for ( Iterator i = exposers.iterator(); i.hasNext(); )
         {
             JarIdentificationExposer exposer = (JarIdentificationExposer) i.next();
-            exposer.initialize();
-            exposer.setJar( jar );
-            addExposer( taxon, exposer );
+            exposer.expose( taxon, jarAnalyzer );
         }
 
         normalize( taxon );
 
-        jar.setIdentification( taxon );
-    }
+        jarAnalyzer.getJarData().setJarIdentification( taxon );
 
-    private void addExposer( JarIdentification taxon, JarIdentificationExposer exposer )
-    {
-        taxon.getPotentials().add( exposer );
-        exposer.expose();
-
-        if ( exposer.isAuthoritative() )
-        {
-            if ( StringUtils.isEmpty( taxon.getGroupId() ) && isNotEmpty( exposer.getGroupIds() ) )
-            {
-                taxon.setGroupId( (String) exposer.getGroupIds().get( 0 ) );
-            }
-
-            if ( StringUtils.isEmpty( taxon.getArtifactId() ) && isNotEmpty( exposer.getArtifactIds() ) )
-            {
-                taxon.setArtifactId( (String) exposer.getArtifactIds().get( 0 ) );
-            }
-
-            if ( StringUtils.isEmpty( taxon.getVersion() ) && isNotEmpty( exposer.getVersions() ) )
-            {
-                taxon.setVersion( (String) exposer.getVersions().get( 0 ) );
-            }
-
-            if ( StringUtils.isEmpty( taxon.getName() ) && isNotEmpty( exposer.getNames() ) )
-            {
-                taxon.setName( (String) exposer.getNames().get( 0 ) );
-            }
-
-            if ( StringUtils.isEmpty( taxon.getVendor() ) && isNotEmpty( exposer.getVendors() ) )
-            {
-                taxon.setVendor( (String) exposer.getVendors().get( 0 ) );
-            }
-        }
+        return taxon;
     }
 
     private void normalize( JarIdentification taxon )
     {
         if ( StringUtils.isEmpty( taxon.getGroupId() ) )
         {
-            taxon.setGroupId( pickSmallest( taxon.getGroupIds() ) );
+            taxon.setGroupId( pickSmallest( taxon.getPotentialGroupIds() ) );
         }
 
         if ( StringUtils.isEmpty( taxon.getArtifactId() ) )
         {
-            taxon.setArtifactId( pickLargest( taxon.getArtifactIds() ) );
+            taxon.setArtifactId( pickLargest( taxon.getPotentialArtifactIds() ) );
         }
 
         if ( StringUtils.isEmpty( taxon.getVersion() ) )
         {
-            taxon.setVersion( pickSmallest( taxon.getVersions() ) );
+            taxon.setVersion( pickSmallest( taxon.getPotentialVersions() ) );
         }
 
         if ( StringUtils.isEmpty( taxon.getName() ) )
         {
-            taxon.setName( pickLargest( taxon.getNames() ) );
+            taxon.setName( pickLargest( taxon.getPotentialNames() ) );
         }
 
         if ( StringUtils.isEmpty( taxon.getVendor() ) )
         {
-            taxon.setVendor( pickLargest( taxon.getVendors() ) );
+            taxon.setVendor( pickLargest( taxon.getPotentialVendors() ) );
         }
     }
 
     private String pickSmallest( List list )
     {
-        if ( isEmpty( list ) )
-        {
-            return null;
-        }
-
-        int size = Integer.MAX_VALUE;
         String smallest = null;
-        Iterator it = list.iterator();
-        while ( it.hasNext() )
-        {
-            String val = (String) it.next();
 
-            if ( StringUtils.isNotEmpty( val ) )
+        if ( !list.isEmpty() )
+        {
+            int size = Integer.MAX_VALUE;
+            Iterator it = list.iterator();
+            while ( it.hasNext() )
             {
-                if ( val.length() < size )
+                String val = (String) it.next();
+
+                if ( StringUtils.isNotEmpty( val ) )
                 {
-                    smallest = val;
-                    size = val.length();
+                    if ( val.length() < size )
+                    {
+                        smallest = val;
+                        size = val.length();
+                    }
                 }
             }
         }
@@ -147,37 +136,29 @@ public class JarIdentificationAnalysis
 
     private String pickLargest( List list )
     {
-        if ( isEmpty( list ) )
-        {
-            return null;
-        }
-
-        int size = Integer.MIN_VALUE;
         String largest = null;
-        Iterator it = list.iterator();
-        while ( it.hasNext() )
+        if ( !list.isEmpty() )
         {
-            String val = (String) it.next();
-            if ( StringUtils.isNotEmpty( val ) )
+            int size = Integer.MIN_VALUE;
+            Iterator it = list.iterator();
+            while ( it.hasNext() )
             {
-                if ( val.length() > size )
+                String val = (String) it.next();
+                if ( StringUtils.isNotEmpty( val ) )
                 {
-                    largest = val;
-                    size = val.length();
+                    if ( val.length() > size )
+                    {
+                        largest = val;
+                        size = val.length();
+                    }
                 }
             }
         }
-
         return largest;
     }
 
-    private boolean isEmpty( Collection coll )
+    public void setExposers( List exposers )
     {
-        return coll == null || coll.isEmpty();
-    }
-
-    private boolean isNotEmpty( Collection coll )
-    {
-        return coll != null && !coll.isEmpty();
+        this.exposers = Collections.unmodifiableList( exposers );
     }
 }

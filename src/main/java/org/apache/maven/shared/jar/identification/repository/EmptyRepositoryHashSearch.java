@@ -1,4 +1,4 @@
-package org.apache.maven.shared.jar;
+package org.apache.maven.shared.jar.identification.repository;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,24 +19,28 @@ package org.apache.maven.shared.jar;
  * under the License.
  */
 
+import java.util.Collections;
+import java.util.List;
+
 /**
- * Exceptions that occur during JarAnalyzer utility methods.
+ * Empty repository hash search.  Always returns an empty list.
+ * <p/>
+ * Used for local only implementation of a RepositoryHashSearch. It is expected for the users of this library to provide
+ * an implementation of a {@link org.apache.maven.shared.jar.identification.repository.RepositoryHashSearch} against a
+ * real repository.
+ *
+ * @plexus.component role="org.apache.maven.shared.jar.identification.repository.RepositoryHashSearch" role-hint="empty"
  */
-public class JarAnalyzerException
-    extends Exception
+public class EmptyRepositoryHashSearch
+    implements RepositoryHashSearch
 {
-    public JarAnalyzerException( String message, Throwable cause )
+    public List searchBytecodeHash( String hash )
     {
-        super( message, cause );
+        return Collections.EMPTY_LIST;
     }
 
-    public JarAnalyzerException( String message )
+    public List searchFileHash( String hash )
     {
-        super( message );
-    }
-
-    public JarAnalyzerException( Throwable cause )
-    {
-        super( cause );
+        return Collections.EMPTY_LIST;
     }
 }

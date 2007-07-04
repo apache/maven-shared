@@ -19,7 +19,9 @@ package org.apache.maven.shared.jar.identification.exposers;
  * under the License.
  */
 
-import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
+import org.apache.maven.shared.jar.JarAnalyzer;
+import org.apache.maven.shared.jar.identification.JarIdentification;
+import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
 import org.codehaus.plexus.util.FileUtils;
 
 import java.util.regex.Matcher;
@@ -27,39 +29,31 @@ import java.util.regex.Pattern;
 
 
 /**
- * JarAnalyzer Taxon Exposer based on Filename patterns.
+ * Exposer that examines a JAR file to derive Maven metadata from the pattern of the JAR's filename.
+ * Will match the format <i>artifactId</i>-<i>version</i>.jar.
  *
  * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="filename"
  */
 public class FilenameExposer
-    extends AbstractJarIdentificationExposer
+    implements JarIdentificationExposer
 {
-    public String getExposerName()
-    {
-        return "Filename";
-    }
+    private static final Pattern VERSION_PATTERN = Pattern.compile( "-[0-9]" );
 
-    public boolean isAuthoritative()
+    public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
-        return false;
-    }
-
-    public void expose()
-    {
-        String fname = FileUtils.removeExtension( getJar().getFile().getName() );
-        Pattern verSplit = Pattern.compile( "-[0-9]" ); //$NON-NLS-1$
-        Matcher mat = verSplit.matcher( fname );
+        String filename = FileUtils.removeExtension( jarAnalyzer.getFile().getName() );
+        Matcher mat = VERSION_PATTERN.matcher( filename );
         if ( mat.find() )
         {
-            String prefix = fname.substring( 0, mat.start() );
-            addArtifactId( prefix );
-            addName( prefix );
-            addVersion( fname.substring( mat.end() - 1 ) );
+            String prefix = filename.substring( 0, mat.start() );
+            identification.addArtifactId( prefix );
+            identification.addName( prefix );
+            identification.addVersion( filename.substring( mat.end() - 1 ) );
         }
         else
         {
-            addArtifactId( fname );
-            addName( fname );
+            identification.addArtifactId( filename );
+            identification.addName( filename );
         }
     }
 }

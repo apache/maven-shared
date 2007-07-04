@@ -19,38 +19,29 @@ package org.apache.maven.shared.jar.identification.exposers;
  * under the License.
  */
 
-import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
+import org.apache.maven.shared.jar.JarAnalyzer;
+import org.apache.maven.shared.jar.identification.JarIdentification;
+import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-
 /**
- * JarAnalyzer Taxon Exposer for the Manifest.mf contents.
+ * Exposer that examines a JAR's manifest to derive Maven metadata.
  *
  * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="manifest"
  */
 public class ManifestExposer
-    extends AbstractJarIdentificationExposer
+    implements JarIdentificationExposer
 {
-    public String getExposerName()
+    public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
-        return "Manifest.mf";
-    }
-
-    public boolean isAuthoritative()
-    {
-        return false;
-    }
-
-    public void expose()
-    {
-        Manifest manifest = getJar().getManifest();
+        Manifest manifest = jarAnalyzer.getJarData().getManifest();
         if ( manifest != null )
         {
-            addManifestAttributeValues( manifest.getMainAttributes() );
+            addManifestAttributeValues( manifest.getMainAttributes(), identification );
 
             Map entries = manifest.getEntries();
             Iterator itentries = entries.entrySet().iterator();
@@ -59,21 +50,21 @@ public class ManifestExposer
                 Map.Entry entry = (Map.Entry) itentries.next();
                 Attributes attribs = (Attributes) entry.getValue();
 
-                addManifestAttributeValues( attribs );
+                addManifestAttributeValues( attribs, identification );
             }
         }
     }
 
-    private void addManifestAttributeValues( Attributes attribs )
+    private void addManifestAttributeValues( Attributes attribs, JarIdentification identification )
     {
-        addName( attribs.getValue( Attributes.Name.IMPLEMENTATION_TITLE ) );
-        addVersion( attribs.getValue( Attributes.Name.IMPLEMENTATION_VERSION ) );
-        addVendor( attribs.getValue( Attributes.Name.IMPLEMENTATION_VENDOR ) );
+        identification.addName( attribs.getValue( Attributes.Name.IMPLEMENTATION_TITLE ) );
+        identification.addVersion( attribs.getValue( Attributes.Name.IMPLEMENTATION_VERSION ) );
+        identification.addVendor( attribs.getValue( Attributes.Name.IMPLEMENTATION_VENDOR ) );
 
-        addName( attribs.getValue( Attributes.Name.SPECIFICATION_TITLE ) );
-        addVersion( attribs.getValue( Attributes.Name.SPECIFICATION_VERSION ) );
-        addVendor( attribs.getValue( Attributes.Name.SPECIFICATION_VENDOR ) );
+        identification.addName( attribs.getValue( Attributes.Name.SPECIFICATION_TITLE ) );
+        identification.addVersion( attribs.getValue( Attributes.Name.SPECIFICATION_VERSION ) );
+        identification.addVendor( attribs.getValue( Attributes.Name.SPECIFICATION_VENDOR ) );
 
-        addGroupId( attribs.getValue( Attributes.Name.EXTENSION_NAME ) );
+        identification.addGroupId( attribs.getValue( Attributes.Name.EXTENSION_NAME ) );
     }
 }

@@ -22,80 +22,114 @@ package org.apache.maven.shared.jar.classes;
 import org.apache.commons.collections.list.SetUniqueList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Facts about the classes within a JarAnalyzer File.
+ * Gathered facts about the classes within a JAR file.
+ *
+ * @see org.apache.maven.shared.jar.classes.JarClassesAnalysis#analyze(org.apache.maven.shared.jar.JarAnalyzer)
  */
 public class JarClasses
 {
+    /**
+     * The list of imports in the classes in the JAR.
+     */
     private List imports;
 
+    /**
+     * A list of packages represented by classes in the JAR.
+     */
     private List packages;
 
+    /**
+     * A list of the classes that in the JAR.
+     */
     private List classNames;
 
+    /**
+     * A list of methods within the classes in the JAR.
+     */
     private List methods;
 
+    /**
+     * Whether the JAR contains any code with debug information. If there is a mix of debug and release code, this will
+     * still be true.
+     */
     private boolean isDebugPresent;
 
+    /**
+     * The highest JVM revision available in any class files. While the JAR may work on earlier JVMs if particular
+     * classes are not used, this is the minimum JVM that guarantees compatibility.
+     */
     private String jdkRevision;
 
     /**
-     * Create Empty JarFacts.
+     * Constructor to create an empty instance.
      */
     public JarClasses()
     {
+        // Unique list decorators are used to ensure natural ordering is retained, the list interface is availble, and
+        // that duplicates are not entered.
         imports = SetUniqueList.decorate( new ArrayList() );
         packages = SetUniqueList.decorate( new ArrayList() );
         classNames = SetUniqueList.decorate( new ArrayList() );
         methods = SetUniqueList.decorate( new ArrayList() );
     }
 
+    /**
+     * Add a discovered class to the record.
+     *
+     * @param name the name of the class
+     */
     public void addClassName( String name )
     {
         this.classNames.add( name );
     }
 
     /**
-     * Add an Import.
+     * Add a discovered package to the record.
      *
-     * @param iname the import name
+     * @param name the name of the package
      */
-    public void addImport( String iname )
+    public void addPackage( String name )
     {
-        this.imports.add( iname );
+        this.packages.add( name );
     }
 
     /**
-     * Add a Package name.
+     * Add a discovered method to the record.
      *
-     * @param pname the package name
+     * @param name the name of the method
      */
-    public void addPackage( String pname )
+    public void addMethod( String name )
     {
-        this.packages.add( pname );
+        this.methods.add( name );
+    }
+
+    /**
+     * Add a list of discovered imports to the record.
+     *
+     * @param imports the imports to add. Each item should be a String to avoid down the line ClassCastExceptions.
+     */
+    public void addImports( List imports )
+    {
+        this.imports.addAll( imports );
+    }
+
+    public List getImports()
+    {
+        return Collections.unmodifiableList( imports );
     }
 
     public List getClassNames()
     {
-        return classNames;
+        return Collections.unmodifiableList( classNames );
     }
 
-    /**
-     * @return Returns the imports.
-     */
-    public List getImports()
-    {
-        return imports;
-    }
-
-    /**
-     * @return Returns the packages.
-     */
     public List getPackages()
     {
-        return packages;
+        return Collections.unmodifiableList( packages );
     }
 
     public boolean isDebugPresent()
@@ -118,13 +152,8 @@ public class JarClasses
         this.jdkRevision = jdkRevision;
     }
 
-    public void addMethod( String method )
-    {
-        this.methods.add( method );
-    }
-
     public List getMethods()
     {
-        return methods;
+        return Collections.unmodifiableList( methods );
     }
 }

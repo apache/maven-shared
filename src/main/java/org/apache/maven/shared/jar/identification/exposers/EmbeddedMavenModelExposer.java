@@ -22,7 +22,11 @@ package org.apache.maven.shared.jar.identification.exposers;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Organization;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.shared.jar.identification.AbstractJarIdentificationExposer;
+import org.apache.maven.shared.jar.JarAnalyzer;
+import org.apache.maven.shared.jar.identification.JarIdentification;
+import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import java.io.IOException;
@@ -33,57 +37,65 @@ import java.util.jar.JarEntry;
 
 
 /**
- * JarAnalyzer Taxon Exposer for the Embedded Maven Model.
+ * Exposer that examines a JAR file for any embedded Maven metadata for identification.
  *
  * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="embeddedMavenModel"
  */
 public class EmbeddedMavenModelExposer
-    extends AbstractJarIdentificationExposer
+    extends AbstractLogEnabled
+    implements JarIdentificationExposer
 {
-    public void expose()
+    public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
-        List entries = getJar().getNameRegexEntryList( "META-INF/maven/.*/pom\\.xml$" ); //$NON-NLS-1$
+        List entries = jarAnalyzer.getMavenPomEntries();
         if ( entries.isEmpty() )
         {
             return;
         }
 
+        if ( entries.size() > 1 )
+        {
+            getLogger().warn(
+                "More than one Maven model entry was found in the JAR, using only the first of: " + entries );
+        }
+
         JarEntry pom = (JarEntry) entries.get( 0 );
         MavenXpp3Reader pomreader = new MavenXpp3Reader();
+        InputStream is = null;
         try
         {
-            InputStream istream = getJar().getEntryInputStream( pom );
-            InputStreamReader isreader = new InputStreamReader( istream );
+            is = jarAnalyzer.getEntryInputStream( pom );
+            InputStreamReader isreader = new InputStreamReader( is );
             Model model = pomreader.read( isreader );
 
-            addGroupId( model.getGroupId() );
-            addArtifactId( model.getArtifactId() );
-            addVersion( model.getVersion() );
-            addName( model.getName() );
+            identification.addAndSetGroupId( model.getGroupId() );
+            identification.addAndSetArtifactId( model.getArtifactId() );
+            identification.addAndSetVersion( model.getVersion() );
+            identification.addAndSetName( model.getName() );
+
+            // TODO: suboptimal - we are reproducing Maven's built in default
+            if ( model.getName() == null )
+            {
+                identification.addAndSetName( model.getArtifactId() );
+            }
 
             Organization org = model.getOrganization();
             if ( org != null )
             {
-                addVendor( org.getName() );
+                identification.addAndSetVendor( org.getName() );
             }
         }
         catch ( IOException e )
         {
-            getLogger().error( "Unable to read model " + pom.getName() + " in " + getJar().getFilename() + ".", e );
+            getLogger().error( "Unable to read model " + pom.getName() + " in " + jarAnalyzer.getFile() + ".", e );
         }
         catch ( XmlPullParserException e )
         {
-            getLogger().error( "Unable to parse model " + pom.getName() + " in " + getJar().getFilename() + ".", e );
+            getLogger().error( "Unable to parse model " + pom.getName() + " in " + jarAnalyzer.getFile() + ".", e );
         }
-    }
-
-    public String getExposerName()
-    {
-        return "Embedded Model";
-    }
-
-    public boolean isAuthoritative()
-    {
-        return true;
+        finally
+        {
+            IOUtil.close( is );
+        }
     }
 }

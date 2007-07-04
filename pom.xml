@@ -44,6 +44,7 @@
     <module>maven-common-artifact-filters</module>
     <module>maven-dependency-analyzer</module>
     <module>maven-enforcer-rule-api</module>
+    <module>maven-shared-jar</module>
   </modules>
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>

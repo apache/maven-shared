@@ -1,0 +1,119 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<html>
+<head>
+    <title>Maven Shared Components: Jar Analyzer</title>
+</head>
+<body>
+
+<h1>Maven Shared Components: Jar Analyzer</h1>
+
+<p>
+    The Maven Jar Analyzer components can be used to gather various pieces of information about a given JAR file.
+
+    Currently, the following operations are supported:
+</p>
+<ul>
+    <li><a href="#Identification">Maven Artifact Identification</a> - examine the JAR and its contents to try and
+        determine any associated Maven metadata such as group and artifact ID.
+    </li>
+    <li><a href="#ClassAnalysis">Java Class Analysis</a> - examine ther JAR's class file contents to determine various
+        pieces of Java metadata.
+    </li>
+</ul>
+
+<a name="Identification"><h2>Maven Artifact Identification</h2></a>
+
+<p>
+    To determine the Maven artifact metadata for a particular JAR, the
+    {@link org.apache.maven.shared.jar.identification.JarIdentificationAnalysis} class is used.
+    The class can be obtained through Plexus, or created standalone (in which case, see the class Javadoc for
+    information on proper wiring).
+</p>
+
+<p>
+    Note that to use the class, you must first obtain a {@link org.apache.maven.shared.jar.JarAnalyzer} instance as
+    instructed in its Javadoc.
+</p>
+
+<p>
+    The resulting information will be populated in the returned
+    {@link org.apache.maven.shared.jar.identification.JarIdentification} class.
+</p>
+
+<p>
+    Example usage:
+    <pre>
+        JarAnalyzer jar = new JarAnalyzer( jarFile );
+        JarIdenfitication jarIdenfitication;
+        try
+        {
+            // instance must have been previously obtained through Plexus or created as instructed in its Javadoc
+            jarIdenfitication = jarIdenfiticationAnalyzer.analyze( jar );
+        }
+        finally
+        {
+            jar.closeQuietly();
+        }
+
+        // continue to use jarIdenfitication or jar.getJarData()
+    </pre>
+</p>
+
+<a name="ClassAnalysis"><h2>Java Class Analysis</h2></a>
+
+<p>
+    To determine the Java class metadata for a particular JAR, the
+    {@link org.apache.maven.shared.jar.classes.JarClassesAnalysis} class is used.
+    The class can be obtained through Plexus, or created standalone (in which case, see the class Javadoc for
+    information on proper wiring).
+</p>
+
+<p>
+    Note that to use the class, you must first obtain a {@link org.apache.maven.shared.jar.JarAnalyzer} instance as
+    instructed in its Javadoc.
+</p>
+
+<p>
+    The resulting information will be populated in the returned
+    {@link org.apache.maven.shared.jar.classes.JarClasses} class.
+</p>
+
+<p>
+    Example usage:
+    <pre>
+        JarAnalyzer jar = new JarAnalyzer( jarFile );
+        JarClasses jarClasses;
+        try
+        {
+            // instance must have been previously obtained through Plexus or created as instructed in its Javadoc
+            jarClasses = jarClassAnalyzer.analyze( jar );
+        }
+        finally
+        {
+            jar.closeQuietly();
+        }
+
+        // continue to use jarClasses or jar.getJarData()
+    </pre>
+</p>
+
+</body>
+</html>

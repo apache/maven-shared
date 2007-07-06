@@ -18,24 +18,8 @@
  */
 package org.apache.maven.shared.repository;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.lang.reflect.Field;
-import java.security.NoSuchAlgorithmException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -67,6 +51,23 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.lang.reflect.Field;
+import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
 
 /**
  * @author Jason van Zyl
@@ -207,7 +208,7 @@ public class DefaultRepositoryAssembler
         }
 
         addPomWithAncestry( project.getArtifact(), project.getRemoteArtifactRepositories(), localRepository,
-                            targetRepository, groupVersionAlignments, project.getFile() );
+                            targetRepository, groupVersionAlignments, project );
     }
 
     private ArtifactFilter buildRepositoryFilter( RepositoryInfo repository, MavenProject project )
@@ -307,7 +308,7 @@ public class DefaultRepositoryAssembler
 
                     writeChecksums( targetFile );
 
-                    addPomWithAncestry( a, project.getRemoteArtifactRepositories(), localRepository, targetRepository, groupVersionAlignments, null );
+                    addPomWithAncestry( a, project.getRemoteArtifactRepositories(), localRepository, targetRepository, groupVersionAlignments, project );
                 }
             }
         }
@@ -330,29 +331,38 @@ public class DefaultRepositoryAssembler
      * @param pomFileOverride This is used to allow injection of a POM's file directly, for
      *         cases where the POM has not been installed into the repository yet.
      */
-    private void addPomWithAncestry( Artifact artifact, List remoteArtifactRepositories,
+    private void addPomWithAncestry( final Artifact artifact, List remoteArtifactRepositories,
                                      ArtifactRepository localRepository, ArtifactRepository targetRepository,
-                                     Map groupVersionAlignments, File pomFileOverride )
+                                     Map groupVersionAlignments, MavenProject masterProject )
         throws RepositoryAssemblyException
     {
         String type = artifact.getType();
+        Map refs = masterProject.getProjectReferences();
+
+        String projectKey = ArtifactUtils.versionlessKey( artifact );
 
         MavenProject p;
-        try
+        if ( artifact == masterProject.getArtifact() )
         {
-            if ( pomFileOverride == null )
-            {
-                artifact = artifactFactory.createProjectArtifact( artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion() );
-                p = projectBuilder.buildFromRepository( artifact, remoteArtifactRepositories, localRepository );
-            }
-            else
-            {
-                p = projectBuilder.build( pomFileOverride, localRepository, null );
-            }
+            p = masterProject;
         }
-        catch ( ProjectBuildingException e )
+        else if ( refs.containsKey( projectKey ) )
         {
-            throw new RepositoryAssemblyException( "Error reading POM for: " + artifact.getId(), e );
+            p = (MavenProject) refs.get( projectKey );
+        }
+        else
+        {
+            try
+            {
+                artifact.isSnapshot();
+
+                Artifact pomArtifact = artifactFactory.createProjectArtifact( artifact.getGroupId(), artifact.getArtifactId(), artifact.getBaseVersion() );
+                p = projectBuilder.buildFromRepository( pomArtifact, remoteArtifactRepositories, localRepository );
+            }
+            catch ( ProjectBuildingException e )
+            {
+                throw new RepositoryAssemblyException( "Error reading POM for: " + artifact.getId(), e );
+            }
         }
 
         // if we're dealing with a POM artifact, then we've already copied the POM itself; only process ancestry.
@@ -360,31 +370,25 @@ public class DefaultRepositoryAssembler
         if ( "pom".equals( type ) )
         {
             p = p.getParent();
-
-            // this automatically negates the pomFileOverride, if it exists.
-            pomFileOverride = null;
         }
 
         while( p != null )
         {
-            artifact = artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p
+            Artifact destArtifact = artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p
                 .getVersion() );
 
-            setAlignment( artifact, groupVersionAlignments );
+            setAlignment( destArtifact, groupVersionAlignments );
 
-            File sourceFile;
+            File sourceFile = p.getFile();
 
-            // if we have an override for the current POM, use it.
-            if ( pomFileOverride != null )
+            // try to use the POM file from the project instance itself first.
+            if ( ( sourceFile == null ) || !sourceFile.exists() )
             {
-                sourceFile = pomFileOverride;
+                // something that hasn't been realigned yet...we want to read from the original location.
+                Artifact srcArtifact = artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p
+                                                                               .getVersion() );
 
-                // use it at most once.
-                pomFileOverride = null;
-            }
-            else
-            {
-                sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
+                sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( srcArtifact ) );
             }
 
             if ( !sourceFile.exists() )
@@ -392,7 +396,7 @@ public class DefaultRepositoryAssembler
                 break;
             }
 
-            File targetFile = new File( targetRepository.getBasedir(), targetRepository.pathOf( artifact ) );
+            File targetFile = new File( targetRepository.getBasedir(), targetRepository.pathOf( destArtifact ) );
 
             try
             {
@@ -400,7 +404,7 @@ public class DefaultRepositoryAssembler
             }
             catch ( IOException e )
             {
-                throw new RepositoryAssemblyException( "Error writing POM metdata: " + artifact.getId(), e );
+                throw new RepositoryAssemblyException( "Error writing POM metdata: " + destArtifact.getId(), e );
             }
 
             try
@@ -409,7 +413,7 @@ public class DefaultRepositoryAssembler
             }
             catch ( IOException e )
             {
-                throw new RepositoryAssemblyException( "Error writing checksums for POM: " + artifact.getId(), e );
+                throw new RepositoryAssemblyException( "Error writing checksums for POM: " + destArtifact.getId(), e );
             }
 
             p = p.getParent();

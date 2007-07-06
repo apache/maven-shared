@@ -18,7 +18,6 @@ import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.apache.maven.shared.repository.model.DefaultRepositoryInfo;
 import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,8 +48,6 @@ public class DefaultRepositoryBuilderTest
         throws Exception
     {
         super.setUp();
-
-        getContainer().getLoggerManager().setThreshold( Logger.LEVEL_DEBUG );
 
         projectBuilder = (MavenProjectBuilder) lookup( MavenProjectBuilder.class.getName() );
 
@@ -161,11 +158,6 @@ public class DefaultRepositoryBuilderTest
         assertTrue( parentFile.exists() );
     }
 
-    // TODO: This is not working, because all projects in addPomWithAncestry(..) are
-    // assumed to come from the repository...maybe we can start being a little smarter on this
-    // by using p.getFile() != null && p.getFile().exists() checks for ancestor poms...
-    // seems like something like that was in at one point, but broke many things...
-/*
     public void test_MASSEMBLY_210_projectParentIsNotInRepository()
         throws ProjectBuildingException, RepositoryAssemblyException, IOException, InvalidDependencyVersionException
     {
@@ -196,5 +188,5 @@ public class DefaultRepositoryBuilderTest
 
         assertTrue( parentFile.exists() );
     }
-*/
+
 }

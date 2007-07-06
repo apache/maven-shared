@@ -64,6 +64,21 @@ public class ArtifactStubFactory
 
     ArchiverManager archiverManager;
 
+    /**
+     * Default constructor. This should be used only if real files aren't needed...just the artifact objects
+     *
+     */
+    public ArtifactStubFactory()
+    {
+        this.workingDir = null;
+        this.createFiles = false;
+    }
+    
+    /**
+     * This constructor is to be used if files are needed and to set a working dir
+     * @param workingDir
+     * @param createFiles
+     */
     public ArtifactStubFactory( File workingDir, boolean createFiles )
     {
         this.workingDir = new File( workingDir, "localTestRepo" );
@@ -123,6 +138,11 @@ public class ArtifactStubFactory
     public void setArtifactFile( Artifact artifact )
         throws IOException
     {
+        if (this.workingDir == null )
+        {
+            throw new IllegalArgumentException("The workingDir must be set if createFiles is true.");
+        }
+        
         String fileName = getFormattedFileName( artifact, false );
 
         File theFile = new File( this.workingDir, fileName );

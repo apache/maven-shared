@@ -54,6 +54,12 @@
       <version>1.0-beta-2</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.wagon</groupId>
+      <artifactId>wagon-http-lightweight</artifactId>
+      <version>1.0-beta-2</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -62,7 +68,7 @@
         <version>2.3</version>
         <configuration>
           <excludes>
-            <exclude>**/DefaultRepositoryBuilderTest.java</exclude>
+            <exclude>**/TestRepositoryBuilderConfigSource.java</exclude>
           </excludes>
         </configuration>
       </plugin>

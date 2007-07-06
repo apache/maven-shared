@@ -292,7 +292,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
      */
     public void selectVersionFromRange( Artifact artifact )
     {
-        // TODO: track version selection from range in node
+        // TODO: track version selection from range in node (MNG-3093)
     }
 
     /*
@@ -301,7 +301,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
      */
     public void restrictRange( Artifact artifact, Artifact artifact1, VersionRange versionRange )
     {
-        // TODO: track range restriction in node
+        // TODO: track range restriction in node (MNG-3093)
     }
     
     // ResolutionListenerForDepMgmt methods -----------------------------------

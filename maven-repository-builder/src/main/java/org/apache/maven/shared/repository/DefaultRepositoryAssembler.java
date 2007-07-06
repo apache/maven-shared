@@ -64,6 +64,7 @@ import org.apache.maven.shared.repository.model.RepositoryInfo;
 import org.apache.maven.shared.repository.utils.DigestUtils;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -121,12 +122,15 @@ public class DefaultRepositoryAssembler
                                        ArtifactRepositoryFactory artifactRepositoryFactory,
                                        ArtifactMetadataSource metadataSource, MavenProjectBuilder projectBuilder )
     {
+        // used for testing, primarily.
         this.artifactFactory = artifactFactory;
         this.artifactResolver = artifactResolver;
         this.repositoryLayout = repositoryLayout;
         this.artifactRepositoryFactory = artifactRepositoryFactory;
         this.metadataSource = metadataSource;
         this.projectBuilder = projectBuilder;
+
+        enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, getClass().getName() + "::Internal" ) );
     }
 
     public void buildRemoteRepository( File repositoryDirectory, RepositoryInfo repository,
@@ -203,7 +207,7 @@ public class DefaultRepositoryAssembler
         }
 
         addPomWithAncestry( project.getArtifact(), project.getRemoteArtifactRepositories(), localRepository,
-                            targetRepository, groupVersionAlignments );
+                            targetRepository, groupVersionAlignments, project.getFile() );
     }
 
     private ArtifactFilter buildRepositoryFilter( RepositoryInfo repository, MavenProject project )
@@ -222,7 +226,9 @@ public class DefaultRepositoryAssembler
         // descriptor everytime the POM is updated.
         // ----------------------------------------------------------------------------
 
-        if ( repository.getIncludes().isEmpty() )
+        List includes = repository.getIncludes();
+
+        if ( ( includes == null ) || includes.isEmpty() )
         {
             List patterns = new ArrayList();
 
@@ -255,7 +261,9 @@ public class DefaultRepositoryAssembler
         // up everything.
         // ----------------------------------------------------------------------------
 
-        if ( !repository.getExcludes().isEmpty() )
+        List excludes = repository.getExcludes();
+
+        if ( ( excludes != null ) && !excludes.isEmpty() )
         {
             filter.add( new PatternExcludesArtifactFilter( repository.getExcludes(), true ) );
         }
@@ -299,7 +307,7 @@ public class DefaultRepositoryAssembler
 
                     writeChecksums( targetFile );
 
-                    addPomWithAncestry( a, project.getRemoteArtifactRepositories(), localRepository, targetRepository, groupVersionAlignments );
+                    addPomWithAncestry( a, project.getRemoteArtifactRepositories(), localRepository, targetRepository, groupVersionAlignments, null );
                 }
             }
         }
@@ -317,29 +325,44 @@ public class DefaultRepositoryAssembler
         }
     }
 
+    /**
+     *
+     * @param pomFileOverride This is used to allow injection of a POM's file directly, for
+     *         cases where the POM has not been installed into the repository yet.
+     */
     private void addPomWithAncestry( Artifact artifact, List remoteArtifactRepositories,
                                      ArtifactRepository localRepository, ArtifactRepository targetRepository,
-                                     Map groupVersionAlignments )
+                                     Map groupVersionAlignments, File pomFileOverride )
         throws RepositoryAssemblyException
     {
-        artifact = artifactFactory.createProjectArtifact( artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion() );
+        String type = artifact.getType();
 
         MavenProject p;
         try
         {
-            p = projectBuilder.buildFromRepository( artifact,
-                                                                 remoteArtifactRepositories,
-                                                                 localRepository );
+            if ( pomFileOverride == null )
+            {
+                artifact = artifactFactory.createProjectArtifact( artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion() );
+                p = projectBuilder.buildFromRepository( artifact, remoteArtifactRepositories, localRepository );
+            }
+            else
+            {
+                p = projectBuilder.build( pomFileOverride, localRepository, null );
+            }
         }
         catch ( ProjectBuildingException e )
         {
-            throw new RepositoryAssemblyException( "Error reading POM: " + artifact.getId(), e );
+            throw new RepositoryAssemblyException( "Error reading POM for: " + artifact.getId(), e );
         }
 
         // if we're dealing with a POM artifact, then we've already copied the POM itself; only process ancestry.
-        if ( "pom".equals( artifact.getType() ) )
+        // NOTE: We need to preserve the original artifact for comparison here.
+        if ( "pom".equals( type ) )
         {
             p = p.getParent();
+
+            // this automatically negates the pomFileOverride, if it exists.
+            pomFileOverride = null;
         }
 
         while( p != null )
@@ -349,7 +372,20 @@ public class DefaultRepositoryAssembler
 
             setAlignment( artifact, groupVersionAlignments );
 
-            File sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
+            File sourceFile;
+
+            // if we have an override for the current POM, use it.
+            if ( pomFileOverride != null )
+            {
+                sourceFile = pomFileOverride;
+
+                // use it at most once.
+                pomFileOverride = null;
+            }
+            else
+            {
+                sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
+            }
 
             if ( !sourceFile.exists() )
             {
@@ -485,11 +521,14 @@ public class DefaultRepositoryAssembler
     {
         Map groupVersionAlignments = new HashMap();
 
-        for ( Iterator i = versionAlignments.iterator(); i.hasNext(); )
+        if ( versionAlignments != null )
         {
-            GroupVersionAlignment alignment = (GroupVersionAlignment) i.next();
+            for ( Iterator i = versionAlignments.iterator(); i.hasNext(); )
+            {
+                GroupVersionAlignment alignment = (GroupVersionAlignment) i.next();
 
-            groupVersionAlignments.put( alignment.getId(), alignment );
+                groupVersionAlignments.put( alignment.getId(), alignment );
+            }
         }
 
         return groupVersionAlignments;

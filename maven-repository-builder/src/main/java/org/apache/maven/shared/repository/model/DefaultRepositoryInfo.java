@@ -18,6 +18,8 @@
  */
 package org.apache.maven.shared.repository.model;
 
+import org.apache.maven.artifact.Artifact;
+
 import java.util.List;
 
 public class DefaultRepositoryInfo
@@ -26,7 +28,7 @@ public class DefaultRepositoryInfo
 
     private boolean includeMetadata;
 
-    private String scope;
+    private String scope = Artifact.SCOPE_COMPILE;
 
     private List includes;
 

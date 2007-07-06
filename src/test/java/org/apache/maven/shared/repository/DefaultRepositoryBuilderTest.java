@@ -1,5 +1,6 @@
 package org.apache.maven.shared.repository;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -14,15 +15,14 @@ import org.apache.maven.profiles.ProfileManager;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
+import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.apache.maven.shared.repository.model.DefaultRepositoryInfo;
 import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.Collections;
 
 public class DefaultRepositoryBuilderTest
     extends PlexusTestCase
@@ -51,41 +51,43 @@ public class DefaultRepositoryBuilderTest
 
         projectBuilder = (MavenProjectBuilder) lookup( MavenProjectBuilder.class.getName() );
 
-        File localRepo = new File( getBasedir(), "target/local-repository" );
-
         defaultLayout = (ArtifactRepositoryLayout) lookup( ArtifactRepositoryLayout.class.getName(), "default" );
         repoFactory = (ArtifactRepositoryFactory) lookup( ArtifactRepositoryFactory.class.getName() );
         artifactFactory = (ArtifactFactory) lookup( ArtifactFactory.class.getName() );
         artifactResolver = (ArtifactResolver) lookup( ArtifactResolver.class.getName() );
         metadataSource = (ArtifactMetadataSource) lookup( ArtifactMetadataSource.class.getName() );
 
+        File localRepo = new File( getBasedir(), "target/local-repository" );
+
         localRepository = repoFactory.createArtifactRepository( "local", localRepo.getAbsolutePath(), defaultLayout,
                                                                 null, null );
 
     }
 
-    private MavenProject getProject( String projectResource )
-        throws ProjectBuildingException, IOException
+    private MavenProject getProject( String projectResource, String parentGroupId, String parentArtifactId, String parentVersion )
+        throws ProjectBuildingException, IOException, InvalidDependencyVersionException
     {
         ClassLoader cloader = Thread.currentThread().getContextClassLoader();
-        URL res = cloader.getResource( projectResource );
+        URL res = cloader.getResource( "projects/" + projectResource );
 
         File projectFile = new File( res.getPath() );
 
-        return projectBuilder.build( projectFile, localRepository, getProfileManager() );
+        // pre-load the parent model...this is a hack!
+        Artifact parentArtifact = artifactFactory.createParentArtifact( parentGroupId, parentArtifactId, parentVersion );
+        projectBuilder.buildFromRepository( parentArtifact, Collections.EMPTY_LIST, localRepository );
+
+        MavenProject project = projectBuilder.build( projectFile, localRepository, getProfileManager() );
+
+        project.setDependencyArtifacts( project.createArtifacts( artifactFactory, null, null ) );
+
+        return project;
     }
 
     private ProfileManager getProfileManager() throws IOException
     {
         if ( profileManager == null )
         {
-            ClassLoader cloader = Thread.currentThread().getContextClassLoader();
-            URL res = cloader.getResource( "marker.txt" );
-
-            File markerFile = new File( res.getPath() );
-            markerFile = markerFile.getCanonicalFile();
-
-            File repoDir = new File( markerFile.getParentFile(), "remote-repository" );
+            File repoDir = getTestRemoteRepositoryBasedir();
 
             Profile profile = new Profile();
             Repository repo = new Repository();
@@ -95,6 +97,8 @@ public class DefaultRepositoryBuilderTest
             repo.setReleases( new RepositoryPolicy() );
             repo.setSnapshots( new RepositoryPolicy() );
 
+            profile.addRepository( repo );
+
             profileManager = new DefaultProfileManager( getContainer() );
             profileManager.addProfile( profile );
             profileManager.explicitlyActivate( "test.repo" );
@@ -103,12 +107,32 @@ public class DefaultRepositoryBuilderTest
         return profileManager;
     }
 
-    public void test_MASSEMBLY_210_projectParentIsIncludedInRepository()
-        throws ProjectBuildingException, RepositoryAssemblyException, IOException
+    private File getTestRemoteRepositoryBasedir()
+        throws IOException
     {
-        MavenProject project = getProject( "projects/massembly-210-direct-parent/pom.xml" );
-        // TODO: jdcasey, the project loaded that way as no initialized Artifact objects
-        // TODO: with this non resolved content the repository assembler does not run!
+        ClassLoader cloader = Thread.currentThread().getContextClassLoader();
+        URL res = cloader.getResource( "marker.txt" );
+
+        File markerFile = new File( res.getPath() );
+        markerFile = markerFile.getCanonicalFile();
+
+        File repoDir = new File( markerFile.getParentFile(), "remote-repository" );
+
+        return repoDir;
+    }
+
+    public void test_MASSEMBLY_210_projectParentIsIncludedInRepository()
+        throws ProjectBuildingException, RepositoryAssemblyException, IOException, InvalidDependencyVersionException
+    {
+        File repoDir = getTestRemoteRepositoryBasedir();
+
+        ArtifactRepository localRepository = repoFactory.createArtifactRepository(
+                                                                                   "local",
+                                                                                   repoDir.getAbsoluteFile().toURL().toExternalForm(),
+                                                                                   defaultLayout, null, null );
+
+
+        MavenProject project = getProject( "massembly-210-direct-parent/pom.xml", "massembly.210", "parent", "1.0-SNAPSHOT" );
 
         TestRepositoryBuilderConfigSource cs = new TestRepositoryBuilderConfigSource();
         cs.setProject( project );
@@ -117,14 +141,10 @@ public class DefaultRepositoryBuilderTest
         DefaultRepositoryAssembler assembler = new DefaultRepositoryAssembler( artifactFactory, artifactResolver,
                                                                                defaultLayout, repoFactory,
                                                                                metadataSource, projectBuilder );
-        // TODO: NPE thrown if logger not set
-        assembler.enableLogging( new ConsoleLogger( Logger.LEVEL_DEBUG, "console"));
 
         File repositoryDirectory = new File( getBasedir(), "target/test-repositories/massembly-210-direct-parent" );
 
         DefaultRepositoryInfo repoInfo = new DefaultRepositoryInfo();
-        // TODO: NPE if we don't call this - no clue what it's supposed to represent
-        repoInfo.setGroupVersionAlignments( new ArrayList());
 
         assembler.buildRemoteRepository( repositoryDirectory, repoInfo, cs );
 

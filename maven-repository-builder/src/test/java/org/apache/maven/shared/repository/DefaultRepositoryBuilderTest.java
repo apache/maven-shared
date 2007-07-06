@@ -18,6 +18,7 @@ import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.apache.maven.shared.repository.model.DefaultRepositoryInfo;
 import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,6 +50,8 @@ public class DefaultRepositoryBuilderTest
     {
         super.setUp();
 
+        getContainer().getLoggerManager().setThreshold( Logger.LEVEL_DEBUG );
+
         projectBuilder = (MavenProjectBuilder) lookup( MavenProjectBuilder.class.getName() );
 
         defaultLayout = (ArtifactRepositoryLayout) lookup( ArtifactRepositoryLayout.class.getName(), "default" );
@@ -64,17 +67,22 @@ public class DefaultRepositoryBuilderTest
 
     }
 
-    private MavenProject getProject( String projectResource, String parentGroupId, String parentArtifactId, String parentVersion )
+    private MavenProject getProject( String projectResource, String parentGroupId, String parentArtifactId,
+                                     String parentVersion, boolean preCacheParent )
         throws ProjectBuildingException, IOException, InvalidDependencyVersionException
     {
         ClassLoader cloader = Thread.currentThread().getContextClassLoader();
         URL res = cloader.getResource( "projects/" + projectResource );
 
-        File projectFile = new File( res.getPath() );
+        File projectFile = new File( res.getPath() ).getAbsoluteFile();
 
-        // pre-load the parent model...this is a hack!
-        Artifact parentArtifact = artifactFactory.createParentArtifact( parentGroupId, parentArtifactId, parentVersion );
-        projectBuilder.buildFromRepository( parentArtifact, Collections.EMPTY_LIST, localRepository );
+        if ( preCacheParent )
+        {
+            // pre-load the parent model...this is a hack!
+            Artifact parentArtifact = artifactFactory.createParentArtifact( parentGroupId, parentArtifactId,
+                                                                            parentVersion );
+            projectBuilder.buildFromRepository( parentArtifact, Collections.EMPTY_LIST, localRepository );
+        }
 
         MavenProject project = projectBuilder.build( projectFile, localRepository, getProfileManager() );
 
@@ -83,7 +91,8 @@ public class DefaultRepositoryBuilderTest
         return project;
     }
 
-    private ProfileManager getProfileManager() throws IOException
+    private ProfileManager getProfileManager()
+        throws IOException
     {
         if ( profileManager == null )
         {
@@ -126,13 +135,12 @@ public class DefaultRepositoryBuilderTest
     {
         File repoDir = getTestRemoteRepositoryBasedir();
 
-        ArtifactRepository localRepository = repoFactory.createArtifactRepository(
-                                                                                   "local",
-                                                                                   repoDir.getAbsoluteFile().toURL().toExternalForm(),
+        ArtifactRepository localRepository = repoFactory.createArtifactRepository( "local", repoDir.getAbsoluteFile()
+                                                                                                   .toURL()
+                                                                                                   .toExternalForm(),
                                                                                    defaultLayout, null, null );
 
-
-        MavenProject project = getProject( "massembly-210-direct-parent/pom.xml", "massembly.210", "parent", "1.0-SNAPSHOT" );
+        MavenProject project = getProject( "massembly-210-direct-parent/pom.xml", "massembly.210", "parent", "1.0-SNAPSHOT", true );
 
         TestRepositoryBuilderConfigSource cs = new TestRepositoryBuilderConfigSource();
         cs.setProject( project );
@@ -153,4 +161,40 @@ public class DefaultRepositoryBuilderTest
         assertTrue( parentFile.exists() );
     }
 
+    // TODO: This is not working, because all projects in addPomWithAncestry(..) are
+    // assumed to come from the repository...maybe we can start being a little smarter on this
+    // by using p.getFile() != null && p.getFile().exists() checks for ancestor poms...
+    // seems like something like that was in at one point, but broke many things...
+/*
+    public void test_MASSEMBLY_210_projectParentIsNotInRepository()
+        throws ProjectBuildingException, RepositoryAssemblyException, IOException, InvalidDependencyVersionException
+    {
+        File repoDir = getTestRemoteRepositoryBasedir();
+
+        ArtifactRepository localRepository = repoFactory.createArtifactRepository( "local", repoDir.getAbsoluteFile()
+                                                                                                   .toURL()
+                                                                                                   .toExternalForm(),
+                                                                                   defaultLayout, null, null );
+
+        MavenProject project = getProject( "massembly-210-direct-parent-on-fs/project/pom.xml", null, null, null, false );
+
+        TestRepositoryBuilderConfigSource cs = new TestRepositoryBuilderConfigSource();
+        cs.setProject( project );
+        cs.setLocalRepository( localRepository );
+
+        DefaultRepositoryAssembler assembler = new DefaultRepositoryAssembler( artifactFactory, artifactResolver,
+                                                                               defaultLayout, repoFactory,
+                                                                               metadataSource, projectBuilder );
+
+        File repositoryDirectory = new File( getBasedir(), "target/test-repositories/massembly-210-direct-parent-on-fs" );
+
+        DefaultRepositoryInfo repoInfo = new DefaultRepositoryInfo();
+
+        assembler.buildRemoteRepository( repositoryDirectory, repoInfo, cs );
+
+        File parentFile = new File( repositoryDirectory, "massembly/210/parent-on-fs/1.0-SNAPSHOT/parent-on-fs-1.0-SNAPSHOT.pom" );
+
+        assertTrue( parentFile.exists() );
+    }
+*/
 }

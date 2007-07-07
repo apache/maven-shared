@@ -178,8 +178,8 @@ public class ProjectTool
 
         buildTool.executeMaven( pomInfo.getPomFile(), properties, goals, buildLog );
 
-        File artifactFile = new File( pomInfo.getPomFile().getParentFile(), pomInfo.getBuildOutputDirectory() + "/" + pomInfo.getFinalName() );
-
+        File artifactFile = new File( pomInfo.getPomFile().getParentFile(), pomInfo.getBuildDirectory() + "/" + pomInfo.getFinalName() );
+        System.out.println("Using IT Plugin Jar: "+artifactFile.getAbsolutePath());
         try
         {
             MavenProject project = projectBuilder.build( pomInfo.getPomFile(), repositoryTool
@@ -227,7 +227,7 @@ public class ProjectTool
 
         Model model = null;
         String finalName = null;
-        String buildOutputDirectory = null;
+        String buildDirectory = null;
         
         try
         {
@@ -256,8 +256,19 @@ public class ProjectTool
             if ( build == null )
             {
                 build = new Build();
-                model.setBuild( build );
             }
+            buildDirectory = build.getDirectory();
+
+            if ( buildDirectory == null )
+            {
+                buildDirectory = "target";
+            }
+            
+            buildDirectory = ( buildDirectory+File.separatorChar+"it-build-target" );
+            build.setDirectory( buildDirectory );
+            build.setOutputDirectory( buildDirectory+File.separatorChar+"classes" );
+            System.out.println("Using "+build.getDirectory()+" and "+build.getOutputDirectory()+" to build IT version of plugin");
+            model.setBuild( build );
 
             finalName = build.getFinalName();
 
@@ -303,13 +314,6 @@ public class ProjectTool
             model.setDistributionManagement( distMgmt );
             
             model.addProperty( INTEGRATION_TEST_DEPLOYMENT_REPO_URL, tmpUrl );
-
-            buildOutputDirectory = build.getOutputDirectory();
-
-            if ( buildOutputDirectory == null )
-            {
-                buildOutputDirectory = "target";
-            }
 
             if ( skipUnitTests )
             {
@@ -360,7 +364,7 @@ public class ProjectTool
         }
 
         return new PomInfo( output, model.getGroupId(), model.getArtifactId(), model.getVersion(),
-                            buildOutputDirectory, finalName );
+                            model.getBuild().getDirectory(), model.getBuild().getOutputDirectory(), finalName );
     }
 
     static final class PomInfo
@@ -375,15 +379,18 @@ public class ProjectTool
 
         private final String finalName;
 
+        private final String buildDirectory;
+        
         private final String buildOutputDirectory;
 
-        PomInfo( File pomFile, String groupId, String artifactId, String version, String buildOutputDirectory,
-                 String finalName )
+        PomInfo( File pomFile, String groupId, String artifactId, String version, String buildDirectory, 
+                 String buildOutputDirectory, String finalName )
         {
             this.pomFile = pomFile;
             this.groupId = groupId;
             this.artifactId = artifactId;
             this.version = version;
+            this.buildDirectory = buildDirectory;
             this.buildOutputDirectory = buildOutputDirectory;
             this.finalName = finalName;
         }
@@ -393,11 +400,16 @@ public class ProjectTool
             return pomFile;
         }
 
+        String getBuildDirectory()
+        {
+            return buildDirectory;
+        }
+
         String getBuildOutputDirectory()
         {
             return buildOutputDirectory;
         }
-
+        
         String getFinalName()
         {
             return finalName;
@@ -405,7 +417,7 @@ public class ProjectTool
 
         File getBuildLogFile()
         {
-            return new File( buildOutputDirectory + "/test-build-logs/" + groupId + "_" + artifactId + "_" + version
+            return new File( buildDirectory + "/test-build-logs/" + groupId + "_" + artifactId + "_" + version
                 + ".build.log" );
         }
 

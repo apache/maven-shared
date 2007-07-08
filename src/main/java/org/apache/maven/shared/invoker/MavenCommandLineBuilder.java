@@ -39,10 +39,12 @@ public class MavenCommandLineBuilder
         // handling for OS-level envars
         setShellEnvironment( request, cli );
 
-        // interactive, offline, update-snapshots, debug/show-errors, checksum policy
+        // interactive, offline, update-snapshots,
+        // debug/show-errors, checksum policy
         setFlags( request, cli );
 
-        // failure behavior and [eventually] forced-reactor includes/excludes, etc.
+        // failure behavior and [eventually] forced-reactor
+        // includes/excludes, etc.
         setReactorBehavior( request, cli );
 
         // working directory and local repository location
@@ -93,7 +95,7 @@ public class MavenCommandLineBuilder
             }
 
             cli.createArg().setValue( "-s" );
-            cli.createArg().setValue( userSettingsFile.getPath() );
+            cli.createArg().setValue( wrapStringWithQuotes( userSettingsFile.getPath() ) );
         }
     }
 
@@ -154,7 +156,7 @@ public class MavenCommandLineBuilder
                 String key = (String) entry.getKey();
                 String value = (String) entry.getValue();
 
-                cli.createArg().setValue( "-D" + key + "=" + value );
+                cli.createArg().setValue( "-D" + wrapStringWithQuotes( key ) + "=" + wrapStringWithQuotes(value) );
             }
         }
     }
@@ -213,8 +215,7 @@ public class MavenCommandLineBuilder
                 logger
                     .debug( "Specified POM file is not named \'pom.xml\'. Using the \'-f\' command-line option to accommodate non-standard filename..." );
 
-                // FIXME: Handle quotes in localRepo directory path...
-                cli.createArgument().setLine( "-f " + pom.getName() );
+                cli.createArgument().setLine( "-f " + wrapStringWithQuotes(pom.getName()) );
             }
         }
     }
@@ -281,7 +282,7 @@ public class MavenCommandLineBuilder
                     + "\' is NOT a directory." );
             }
 
-            cli.createArg().setValue( "-Dmaven.repo.local=" + localRepositoryDirectory.getPath() );
+            cli.createArg().setValue( "-Dmaven.repo.local=" + wrapStringWithQuotes(localRepositoryDirectory.getPath()) );
         }
     }
 
@@ -354,18 +355,16 @@ public class MavenCommandLineBuilder
         if ( mavenHome == null )
         {
             String mavenHomeProperty = System.getProperty( "maven.home" );
-
             if ( mavenHomeProperty != null )
             {
                 mavenHome = new File( mavenHomeProperty );
-
                 if ( !mavenHome.isDirectory() )
                 {
                     File binDir = mavenHome.getParentFile();
-
                     if ( "bin".equals( binDir.getName() ) )
                     {
-                        // ah, they specified the mvn executable instead...
+                        // ah, they specified the mvn
+                        // executable instead...
                         mavenHome = binDir.getParentFile();
                     }
                     else
@@ -412,6 +411,25 @@ public class MavenCommandLineBuilder
         }
 
         return mvnCommand;
+    }
+
+    /**
+     * Wraps a path with quotes to handle paths with spaces. If no spaces are found,
+     * the original string is returned.
+     * 
+     * @param path string to wrap if containing spaces
+     * @return quote wrapped string
+     */
+    public String wrapStringWithQuotes( String path )
+    {
+        if (path.contains( " " ))
+        {
+            return "\"" + path + "\"";
+        }
+        else
+        {
+            return path;
+        }
     }
 
     public File getLocalRepositoryDirectory()

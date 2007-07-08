@@ -25,6 +25,19 @@ public class MavenCommandLineBuilderTest
 
     private Properties sysProps;
 
+    public void testWrapwithQuotes()
+    {
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        String test = "noSpacesInHere";
+        
+        assertSame( test, tcb.wrapStringWithQuotes( test ) );
+        assertEquals("noSpacesInHere",tcb.wrapStringWithQuotes( test ));
+        
+        test = "bunch of spaces in here";
+        assertNotSame( test, tcb.wrapStringWithQuotes( test ) );
+        assertEquals("\"bunch of spaces in here\"",tcb.wrapStringWithQuotes( test ));
+        
+    }
     public void testShouldFailToSetLocalRepoLocationGloballyWhenItIsAFile()
         throws IOException
     {
@@ -91,7 +104,7 @@ public class MavenCommandLineBuilderTest
 
         tcb.setEnvironmentPaths( new DefaultInvocationRequest(), cli );
 
-        assertArgumentsPresent( Collections.singleton( "-Dmaven.repo.local=" + lrd.getPath() ), cli );
+        assertArgumentsPresent( Collections.singleton( "-Dmaven.repo.local=" + tcb.wrapStringWithQuotes( lrd.getPath()) ), cli );
     }
 
     public void testShouldSetLocalRepoLocationFromRequest()
@@ -112,7 +125,7 @@ public class MavenCommandLineBuilderTest
 
         tcb.setEnvironmentPaths( new DefaultInvocationRequest().setLocalRepositoryDirectory( lrd ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "-Dmaven.repo.local=" + lrd.getPath() ), cli );
+        assertArgumentsPresent( Collections.singleton( "-Dmaven.repo.local=" + tcb.wrapStringWithQuotes(lrd.getPath()) ), cli );
     }
 
     public void testRequestProvidedLocalRepoLocationShouldOverrideGlobal()
@@ -138,7 +151,7 @@ public class MavenCommandLineBuilderTest
 
         tcb.setEnvironmentPaths( new DefaultInvocationRequest().setLocalRepositoryDirectory( lrd ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "-Dmaven.repo.local=" + lrd.getPath() ), cli );
+        assertArgumentsPresent( Collections.singleton( "-Dmaven.repo.local=" + tcb.wrapStringWithQuotes( lrd.getPath()) ), cli );
     }
 
     public void testShouldSetWorkingDirectoryGlobally()
@@ -677,7 +690,7 @@ public class MavenCommandLineBuilderTest
 
         Set args = new HashSet();
         args.add( "-s" );
-        args.add( settingsFile.getCanonicalPath() );
+        args.add( tcb.wrapStringWithQuotes( settingsFile.getCanonicalPath()) );
 
         assertArgumentsPresent( args, cli );
     }
@@ -711,7 +724,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setProperties( new DefaultInvocationRequest().setProperties( properties ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "-Dkey=value with spaces" ), cli );
+        assertArgumentsPresent( Collections.singleton( "-Dkey=\"value with spaces\"" ), cli );
     }
 
     public void testShouldSpecifyCustomPropertyWithSpacesInKeyFromRequest()
@@ -727,7 +740,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setProperties( new DefaultInvocationRequest().setProperties( properties ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "-Dkey with spaces=value with spaces" ), cli );
+        assertArgumentsPresent( Collections.singleton( "-D\"key with spaces\"=\"value with spaces\"" ), cli );
     }
 
     public void testShouldSpecifySingleGoalFromRequest()

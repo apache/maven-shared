@@ -28,7 +28,7 @@
 	<groupId>org.apache.maven.shared</groupId>
 	<artifactId>maven-enforcer-rule-api</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0-alpha-2-SNAPSHOT</version>
+	<version>1.0-alpha-2</version>
 
 	<name>Maven Enforcer Rule API</name>
 	<description>This component provides the generic interfaces needed to implement custom rules for the maven-enforcer-plugin.</description>
@@ -99,8 +99,8 @@
 		</dependency>	
 	</dependencies>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-enforcer-rule-api</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-enforcer-rule-api</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-enforcer-rule-api</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-enforcer-rule-api-1.0-alpha-2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-enforcer-rule-api-1.0-alpha-2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/maven/shared/tags/maven-enforcer-rule-api-1.0-alpha-2</url>
   </scm>
 </project>

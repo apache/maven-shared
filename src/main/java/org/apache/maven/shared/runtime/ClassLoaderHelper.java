@@ -144,10 +144,6 @@ public class ClassLoaderHelper
         {
             visitProjectsInJar( visitor, url );
         }
-        else
-        {
-            throw new MavenRuntimeException( "Unsupported URL: " + url );
-        }
     }
 
     /**

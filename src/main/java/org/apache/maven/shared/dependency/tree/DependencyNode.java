@@ -629,48 +629,49 @@ public class DependencyNode
         }
 
         buffer.append( artifact );
+        
+        ItemAppender appender = new ItemAppender( buffer, included ? " (" : " - ", "; ", included ? ")" : "" );
 
+        if ( getPremanagedVersion() != null )
+        {
+            appender.append( "version managed from ", getPremanagedVersion() );
+        }
+            
+        if ( getPremanagedScope() != null )
+        {
+            appender.append( "scope managed from ", getPremanagedScope() );
+        }
+        
+        if ( getOriginalScope() != null )
+        {
+            appender.append( "scope updated from ", getOriginalScope() );
+        }
+        
+        if ( getFailedUpdateScope() != null )
+        {
+            appender.append( "scope not updated to ", getFailedUpdateScope() );
+        }
+        
         switch ( state )
         {
             case INCLUDED:
-                ItemAppender appender = new ItemAppender( buffer, " (", "; ", ")" );
-                
-                if ( getPremanagedVersion() != null )
-                {
-                    appender.append( "version managed from ", getPremanagedVersion() );
-                }
-                    
-                if ( getPremanagedScope() != null )
-                {
-                    appender.append( "scope managed from ", getPremanagedScope() );
-                }
-                
-                if ( getOriginalScope() != null )
-                {
-                    appender.append( "scope updated from ", getOriginalScope() );
-                }
-                
-                if ( getFailedUpdateScope() != null )
-                {
-                    appender.append( "scope not updated to ", getFailedUpdateScope() );
-                }
-                
-                appender.flush();
                 break;
                 
             case OMITTED_FOR_DUPLICATE:
-                buffer.append( " - omitted for duplicate" );
+                appender.append( "omitted for duplicate" );
                 break;
 
             case OMITTED_FOR_CONFLICT:
-                buffer.append( " - omitted for conflict with " ).append( relatedArtifact.getVersion() );
+                appender.append( "omitted for conflict with ", relatedArtifact.getVersion() );
                 break;
 
             case OMITTED_FOR_CYCLE:
-                buffer.append( " - omitted for cycle" );
+                appender.append( "omitted for cycle" );
                 break;
         }
-
+        
+        appender.flush();
+        
         if ( !included )
         {
             buffer.append( ')' );

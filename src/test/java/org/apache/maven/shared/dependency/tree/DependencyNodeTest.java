@@ -96,9 +96,57 @@ public class DependencyNodeTest
         assertFalse( it.hasNext() );
     }
     
-    public void testToNodeString()
+    public void testToNodeStringIncluded()
     {
-        assertEquals( "groupId1:artifactId1:jar:1:compile", node1.toNodeString() );
+        Artifact artifact = createArtifact( "g:a:t:1:s" );
+        DependencyNode node = new DependencyNode( artifact );
+        
+        assertEquals( "g:a:t:1:s", node.toNodeString() );
+    }
+
+    public void testToNodeStringIncludedWithUpdatedScope()
+    {
+        Artifact artifact = createArtifact( "g:a:t:1:s" );
+        DependencyNode node = new DependencyNode( artifact );
+        node.setOriginalScope( "x" );
+        
+        assertEquals( "g:a:t:1:s (scope updated from x)", node.toNodeString() );
+    }
+
+    public void testToNodeStringOmittedForDuplicate()
+    {
+        Artifact artifact = createArtifact( "g:a:t:1:s" );
+        Artifact duplicateArtifact = createArtifact( "g:a:t:1:s" );
+        DependencyNode node = new DependencyNode( artifact, DependencyNode.OMITTED_FOR_DUPLICATE, duplicateArtifact );
+        
+        assertEquals( "(g:a:t:1:s - omitted for duplicate)", node.toNodeString() );
+    }
+
+    public void testToNodeStringOmittedForDuplicateWithUpdatedScope()
+    {
+        Artifact artifact = createArtifact( "g:a:t:1:s" );
+        Artifact duplicateArtifact = createArtifact( "g:a:t:1:s" );
+        DependencyNode node = new DependencyNode( artifact, DependencyNode.OMITTED_FOR_DUPLICATE, duplicateArtifact );
+        node.setOriginalScope( "x" );
+        
+        assertEquals( "(g:a:t:1:s - scope updated from x; omitted for duplicate)", node.toNodeString() );
+    }
+
+    public void testToNodeStringOmittedForConflict()
+    {
+        Artifact artifact = createArtifact( "g:a:t:1:s" );
+        Artifact conflictArtifact = createArtifact( "g:a:t:2:s" );
+        DependencyNode node = new DependencyNode(artifact, DependencyNode.OMITTED_FOR_CONFLICT, conflictArtifact);
+        
+        assertEquals( "(g:a:t:1:s - omitted for conflict with 2)", node.toNodeString() );
+    }
+
+    public void testToNodeStringOmittedForCycle()
+    {
+        Artifact artifact = createArtifact( "g:a:t:1:s" );
+        DependencyNode node = new DependencyNode(artifact, DependencyNode.OMITTED_FOR_CYCLE);
+        
+        assertEquals( "(g:a:t:1:s - omitted for cycle)", node.toNodeString() );
     }
 
     public void testToString()

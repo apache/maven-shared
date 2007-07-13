@@ -586,15 +586,22 @@ public class DefaultRepositoryAssembler
     {
         Class klass = DefaultMavenProjectBuilder.class;
 
-        Field field = klass.getDeclaredField( "processedProjectCache" );
+        try
+        {
+            Field field = klass.getDeclaredField( "processedProjectCache" );
 
-        field.setAccessible( true );
+            field.setAccessible( true );
 
-        Object cache = field.get( projectBuilder );
+            Object cache = field.get( projectBuilder );
 
-        cache.getClass().getDeclaredMethod( "clear", null ).invoke( cache, null );
+            cache.getClass().getDeclaredMethod( "clear", null ).invoke( cache, null );
 
-        field.setAccessible( false );
+            field.setAccessible( false );
+        }
+        catch( NoSuchFieldException e )
+        {
+            // fine... no field, no cache. we'll ignore it.
+        }
     }
 
     private void setAlignment( Artifact artifact, Map groupVersionAlignments )

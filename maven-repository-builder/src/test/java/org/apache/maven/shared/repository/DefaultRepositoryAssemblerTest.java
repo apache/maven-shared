@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 
-public class DefaultRepositoryBuilderTest
+public class DefaultRepositoryAssemblerTest
     extends PlexusTestCase
 {
 
@@ -137,7 +137,8 @@ public class DefaultRepositoryBuilderTest
                                                                                                    .toExternalForm(),
                                                                                    defaultLayout, null, null );
 
-        MavenProject project = getProject( "massembly-210-direct-parent/pom.xml", "massembly.210", "parent", "1.0-SNAPSHOT", true );
+        MavenProject project = getProject( "massembly-210-direct-parent/pom.xml", "massembly.210", "parent",
+                                           "1.0-SNAPSHOT", true );
 
         TestRepositoryBuilderConfigSource cs = new TestRepositoryBuilderConfigSource();
         cs.setProject( project );
@@ -184,9 +185,41 @@ public class DefaultRepositoryBuilderTest
 
         assembler.buildRemoteRepository( repositoryDirectory, repoInfo, cs );
 
-        File parentFile = new File( repositoryDirectory, "massembly/210/parent-on-fs/1.0-SNAPSHOT/parent-on-fs-1.0-SNAPSHOT.pom" );
+        File parentFile = new File( repositoryDirectory,
+                                    "massembly/210/parent-on-fs/1.0-SNAPSHOT/parent-on-fs-1.0-SNAPSHOT.pom" );
 
         assertTrue( parentFile.exists() );
     }
 
+    public void test_MASSEMBLY_218_projectDependencyWithClassifier()
+        throws ProjectBuildingException, RepositoryAssemblyException, IOException, InvalidDependencyVersionException
+    {
+        File repoDir = getTestRemoteRepositoryBasedir();
+
+        ArtifactRepository localRepository = repoFactory.createArtifactRepository( "local", repoDir.getAbsoluteFile()
+                                                                                                   .toURL()
+                                                                                                   .toExternalForm(),
+                                                                                   defaultLayout, null, null );
+
+        MavenProject project = getProject( "massembly-210-direct-parent-on-fs/project/pom.xml", null, null, null, false );
+
+        TestRepositoryBuilderConfigSource cs = new TestRepositoryBuilderConfigSource();
+        cs.setProject( project );
+        cs.setLocalRepository( localRepository );
+
+        DefaultRepositoryAssembler assembler = new DefaultRepositoryAssembler( artifactFactory, artifactResolver,
+                                                                               defaultLayout, repoFactory,
+                                                                               metadataSource, projectBuilder );
+
+        File repositoryDirectory = new File( getBasedir(), "target/test-repositories/massembly-210-direct-parent-on-fs" );
+
+        DefaultRepositoryInfo repoInfo = new DefaultRepositoryInfo();
+
+        assembler.buildRemoteRepository( repositoryDirectory, repoInfo, cs );
+
+        File parentFile = new File( repositoryDirectory,
+                                    "massembly/210/parent-on-fs/1.0-SNAPSHOT/parent-on-fs-1.0-SNAPSHOT.pom" );
+
+        assertTrue( parentFile.exists() );
+    }
 }

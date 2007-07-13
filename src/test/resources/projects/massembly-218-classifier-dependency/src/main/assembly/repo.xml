@@ -1,0 +1,15 @@
+<assembly>
+  <id>repo</id>
+  <formats>
+    <format>dir</format>
+  </formats>
+  
+  <includeBaseDirectory>false</includeBaseDirectory>
+  
+  <repositories>
+    <repository>
+      <includeMetadata>true</includeMetadata>
+      <outputDirectory>/</outputDirectory>
+    </repository>
+  </repositories>
+</assembly>

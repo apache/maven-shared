@@ -22,7 +22,6 @@ package org.apache.maven.shared.dependency.tree;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -370,7 +369,7 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
     
     private void addArtifactMetadata( Artifact artifact, Artifact[] dependencyArtifacts )
     {
-        addArtifactMetadata( artifact, new HashSet( Arrays.asList( dependencyArtifacts ) ) );
+        addArtifactMetadata( artifact, new LinkedHashSet( Arrays.asList( dependencyArtifacts ) ) );
     }
     
     private void addArtifactMetadata( Artifact artifact, Set dependencyArtifacts )

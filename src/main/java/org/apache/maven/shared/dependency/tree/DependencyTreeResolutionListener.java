@@ -233,7 +233,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
 
         if ( node == null )
         {
-            throw new IllegalStateException( "Cannot find dependency node for artifact " + artifact );
+            // updateScope events can be received prior to includeArtifact events
+            node = addNode( artifact );
         }
 
         node.setOriginalScope( artifact.getScope() );

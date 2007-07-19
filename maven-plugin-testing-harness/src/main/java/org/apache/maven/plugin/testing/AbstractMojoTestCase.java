@@ -68,7 +68,7 @@ public abstract class AbstractMojoTestCase
     {
         super.setUp();
 
-        configurator = (ComponentConfigurator) getContainer().lookup( ComponentConfigurator.ROLE );
+        configurator = (ComponentConfigurator) getContainer().lookup( ComponentConfigurator.ROLE, "basic" );
 
         //projectBuilder = (MavenProjectBuilder) getContainer().lookup( MavenProjectBuilder.ROLE );
     }

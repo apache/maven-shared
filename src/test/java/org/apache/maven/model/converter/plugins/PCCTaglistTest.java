@@ -43,7 +43,7 @@ public class PCCTaglistTest
     {
         try
         {
-            projectProperties.load( getClassLoader().getResourceAsStream( "PCCTaglistTest.properties" ) );
+            projectProperties.load( getClassLoader().getResourceAsStream( "PCCTaglistTest1.properties" ) );
 
             pluginConfigurationConverter.buildConfiguration( configuration, v3Model, projectProperties );
 

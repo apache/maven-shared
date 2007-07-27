@@ -43,8 +43,10 @@ import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,6 +61,22 @@ public class PomV3ToV4Translator
     private transient List discoveredPlugins = new ArrayList();
 
     private List warnings;
+
+    /**
+     * A map that holds artifactIds (as keys) and groupIds (as values) for
+     * reports that are not Maven's own. It is used to lookup the groupId of
+     * reports that are not specified as a dependency.
+     */
+    private Map model3ReportPlugins = new HashMap();
+
+    public PomV3ToV4Translator()
+    {
+        // Add known non-Maven project reports, i.e from the maven-plugins
+        // project at SourceForge.
+        model3ReportPlugins.put( "maven-cobertura-plugin", "maven-plugins" );
+        model3ReportPlugins.put( "maven-findbugs-plugin", "maven-plugins" );
+        model3ReportPlugins.put( "maven-javancss-plugin", "maven-plugins" );
+    }
 
     public Model translate( org.apache.maven.model.v3_0_0.Model v3Model )
         throws PomTranslationException
@@ -262,7 +280,7 @@ public class PomV3ToV4Translator
                 {
                     ReportPlugin reportPlugin = new ReportPlugin();
 
-                    reportPlugin.setGroupId( "org.apache.maven.plugins" );
+                    reportPlugin.setGroupId( findReportPluginGroupId( reportName ) );
 
                     reportPlugin.setArtifactId( reportName );
 
@@ -283,6 +301,22 @@ public class PomV3ToV4Translator
         }
 
         return reports;
+    }
+
+    /**
+     * Find a suitable groupId for a report from a model v3 pom.
+     *
+     * @param artifactId The artifactId of the report we are looking up
+     * @return A suitable groupId
+     */
+    private String findReportPluginGroupId( String artifactId )
+    {
+        String groupId = (String) model3ReportPlugins.get( artifactId );
+        if ( groupId == null )
+        {
+            groupId = "org.apache.maven.plugins";
+        }
+        return groupId;
     }
 
     private Organization translateOrganization( org.apache.maven.model.v3_0_0.Organization v3Organization )

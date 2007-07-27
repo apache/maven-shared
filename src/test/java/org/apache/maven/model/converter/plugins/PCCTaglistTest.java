@@ -21,6 +21,7 @@ package org.apache.maven.model.converter.plugins;
 
 import junit.framework.Assert;
 import org.apache.maven.model.converter.ProjectConverterException;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.io.IOException;
 
@@ -47,8 +48,29 @@ public class PCCTaglistTest
 
             pluginConfigurationConverter.buildConfiguration( configuration, v3Model, projectProperties );
 
-            String value = configuration.getChild( "tags" ).getValue();
-            Assert.assertEquals( "check tags value", "@fixme", value );
+            String value = configuration.getChild( "tags" ).getChild( "tag" ).getValue();
+            Assert.assertEquals( "check specified tags value", "@fixme", value );
+        }
+        catch ( ProjectConverterException e )
+        {
+            Assert.fail();
+        }
+        catch ( IOException e )
+        {
+            Assert.fail( "Unable to find the requested resource." );
+        }
+    }
+
+    public void testBuildConfiguration2()
+    {
+        try
+        {
+            projectProperties.load( getClassLoader().getResourceAsStream( "PCCTaglistTest2.properties" ) );
+
+            pluginConfigurationConverter.buildConfiguration( configuration, v3Model, projectProperties );
+
+            Xpp3Dom tags = configuration.getChild( "tags" );
+            Assert.assertEquals( "check unspecified tags value", null, tags );
         }
         catch ( ProjectConverterException e )
         {

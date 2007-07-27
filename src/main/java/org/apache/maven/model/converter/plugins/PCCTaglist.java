@@ -20,6 +20,7 @@ package org.apache.maven.model.converter.plugins;
  */
 
 import org.apache.maven.model.converter.ProjectConverterException;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.util.Properties;
@@ -52,6 +53,13 @@ public class PCCTaglist
                                        Properties projectProperties )
         throws ProjectConverterException
     {
-        addConfigurationChild( configuration, projectProperties, "maven.tasklist.taskTag", "tags" );
+        final String propertyName = "maven.tasklist.taskTag";
+        
+        String value = projectProperties.getProperty( propertyName );
+        if( StringUtils.isNotEmpty( value ) ) {
+            Xpp3Dom tags = new Xpp3Dom( "tags" );
+            addConfigurationChild( tags, projectProperties, propertyName, "tag" );
+            configuration.addChild( tags );
+        }
     }
 }

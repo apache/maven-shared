@@ -23,6 +23,8 @@ public class ArtifactLocatorStrategy
 
     private final List remoteRepositories;
 
+    private String defaultClassifier = null;
+
     public ArtifactLocatorStrategy( ArtifactFactory factory, ArtifactResolver resolver,
                                     ArtifactRepository localRepository, List remoteRepositories )
     {
@@ -41,6 +43,18 @@ public class ArtifactLocatorStrategy
         this.localRepository = localRepository;
         this.remoteRepositories = remoteRepositories;
         this.defaultArtifactType = defaultArtifactType;
+    }
+
+    public ArtifactLocatorStrategy( ArtifactFactory factory, ArtifactResolver resolver,
+                                    ArtifactRepository localRepository, List remoteRepositories,
+                                    String defaultArtifactType, String defaultClassifier )
+    {
+        this.factory = factory;
+        this.resolver = resolver;
+        this.localRepository = localRepository;
+        this.remoteRepositories = remoteRepositories;
+        this.defaultArtifactType = defaultArtifactType;
+        this.defaultClassifier = defaultClassifier;
     }
 
     /**
@@ -69,7 +83,7 @@ public class ArtifactLocatorStrategy
                 }
             }
 
-            String classifier = null;
+            String classifier = defaultClassifier;
             if ( parts.length > 4 )
             {
                 classifier = parts[4];

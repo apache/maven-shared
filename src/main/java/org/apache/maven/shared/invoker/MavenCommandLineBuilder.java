@@ -69,7 +69,7 @@ public class MavenCommandLineBuilder
             throw new IllegalStateException( "A logger instance is required." );
         }
 
-        if ( mavenHome == null && System.getProperty( "maven.home" ) == null )
+        if ( ( mavenHome == null ) && ( System.getProperty( "maven.home" ) == null ) )
         {
             throw new IllegalStateException( "Maven application directory was not "
                 + "specified, and ${maven.home} is not provided in the system "
@@ -137,7 +137,7 @@ public class MavenCommandLineBuilder
     {
         List goals = request.getGoals();
 
-        if ( goals != null && !goals.isEmpty() )
+        if ( ( goals != null ) && !goals.isEmpty() )
         {
             cli.createArgument().setLine( StringUtils.join( goals.iterator(), " " ) );
         }
@@ -375,7 +375,7 @@ public class MavenCommandLineBuilder
                 }
             }
 
-            if ( mavenHome == null && System.getenv( "M2_HOME" ) != null )
+            if ( ( mavenHome == null ) && ( System.getenv( "M2_HOME" ) != null ) )
             {
                 mavenHome = new File( System.getenv( "M2_HOME" ) );
             }
@@ -416,13 +416,13 @@ public class MavenCommandLineBuilder
     /**
      * Wraps a path with quotes to handle paths with spaces. If no spaces are found,
      * the original string is returned.
-     * 
+     *
      * @param path string to wrap if containing spaces
      * @return quote wrapped string
      */
     public String wrapStringWithQuotes( String path )
     {
-        if (path.contains( " " ))
+        if ( path.indexOf( " " ) > -1 )
         {
             return "\"" + path + "\"";
         }

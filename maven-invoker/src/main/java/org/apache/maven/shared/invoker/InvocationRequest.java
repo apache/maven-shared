@@ -37,15 +37,15 @@ public interface InvocationRequest
     boolean isDebug();
 
     boolean isShowErrors();
-    
+
     boolean isShellEnvironmentInherited();
 
     String getFailureBehavior();
-    
+
     File getLocalRepositoryDirectory( File defaultDirectory );
-    
+
     InputStream getInputStream( InputStream defaultStream );
-    
+
     InvocationOutputHandler getOutputHandler( InvocationOutputHandler defaultHandler );
 
     InvocationOutputHandler getErrorHandler( InvocationOutputHandler defaultHandler );
@@ -61,10 +61,12 @@ public interface InvocationRequest
     Properties getProperties();
 
     List getGoals();
-    
+
     File getUserSettingsFile();
-    
+
     String getGlobalChecksumPolicy();
+
+    List getProfiles();
 
     // ----------------------------------------------------------------------
     // Reactor Failure Mode
@@ -79,9 +81,9 @@ public interface InvocationRequest
     // ----------------------------------------------------------------------
     // Artifactr repository policies
     // ----------------------------------------------------------------------
-    
+
     static final String CHECKSUM_POLICY_FAIL = "fail";
-    
+
     static final String CHECKSUM_POLICY_WARN = "warn";
 
     // ----------------------------------------------------------------------
@@ -97,15 +99,15 @@ public interface InvocationRequest
     InvocationRequest setShowErrors( boolean showErrors );
 
     InvocationRequest setUpdateSnapshots( boolean updateSnapshots );
-    
+
     InvocationRequest setFailureBehavior( String failureBehavior );
 
     InvocationRequest activateReactor( String[] includes, String[] excludes );
 
     InvocationRequest setLocalRepositoryDirectory( File localRepository );
-    
+
     InvocationRequest setInputStream( InputStream inputStream );
-    
+
     InvocationRequest setOutputHandler( InvocationOutputHandler outputHandler );
 
     InvocationRequest setErrorHandler( InvocationOutputHandler errorHandler );
@@ -117,13 +119,15 @@ public interface InvocationRequest
     InvocationRequest setBaseDirectory( File basedir );
 
     InvocationRequest setProperties( Properties properties );
-    
+
     InvocationRequest setGoals( List goals );
-    
+
+    InvocationRequest setProfiles( List profiles );
+
     InvocationRequest setShellEnvironmentInherited( boolean shellEnvironmentInherited );
-    
+
     InvocationRequest setUserSettingsFile( File userSettings );
-    
+
     InvocationRequest setGlobalChecksumPolicy( String globalChecksumPolicy );
 
 }

@@ -57,6 +57,8 @@ public class MavenCommandLineBuilder
 
         setProperties( request, cli );
 
+        setProfiles( request, cli );
+
         setGoals( request, cli );
 
         return cli;
@@ -131,6 +133,17 @@ public class MavenCommandLineBuilder
                 }
             }
         }
+    }
+
+    protected void setProfiles( InvocationRequest request, Commandline cli )
+    {
+        List profiles = request.getProfiles();
+
+        if ( ( profiles != null ) && !profiles.isEmpty() )
+        {
+            cli.createArgument().setLine( "-P" + StringUtils.join( profiles.iterator(), "," ) );
+        }
+
     }
 
     protected void setGoals( InvocationRequest request, Commandline cli )

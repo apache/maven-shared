@@ -29,14 +29,14 @@ public class MavenCommandLineBuilderTest
     {
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         String test = "noSpacesInHere";
-        
+
         assertSame( test, tcb.wrapStringWithQuotes( test ) );
         assertEquals("noSpacesInHere",tcb.wrapStringWithQuotes( test ));
-        
+
         test = "bunch of spaces in here";
         assertNotSame( test, tcb.wrapStringWithQuotes( test ) );
         assertEquals("\"bunch of spaces in here\"",tcb.wrapStringWithQuotes( test ));
-        
+
     }
     public void testShouldFailToSetLocalRepoLocationGloballyWhenItIsAFile()
         throws IOException
@@ -244,10 +244,10 @@ public class MavenCommandLineBuilderTest
         throws Exception
     {
         String mavenHome = System.getProperty( "maven.home" );
-        
+
         File appDir = null;
 
-        if ( mavenHome == null || !new File( mavenHome ).exists() )
+        if ( ( mavenHome == null ) || !new File( mavenHome ).exists() )
         {
             File tmpDir = getTempDir();
             appDir = new File( tmpDir, "invoker-tests/maven-home" );
@@ -275,7 +275,7 @@ public class MavenCommandLineBuilderTest
         {
             appDir = new File( mavenHome );
         }
-        
+
         return appDir;
     }
 
@@ -818,7 +818,7 @@ public class MavenCommandLineBuilderTest
         goals.add( "post-clean" );
         goals.add( "deploy" );
         goals.add( "site-deploy" );
-        
+
         request.setGoals( goals );
 
         MavenCommandLineBuilder commandLineBuilder = new MavenCommandLineBuilder();
@@ -828,7 +828,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( expectedArgs, commandline );
         assertArgumentsNotPresent( bannedArgs, commandline );
         assertArgumentsPresentInOrder( goals, commandline );
-        
+
         File mavenFile;
         if ( Os.isFamily( "windows" ) )
         {
@@ -838,10 +838,10 @@ public class MavenCommandLineBuilderTest
         {
             mavenFile = new File( mavenDir, "bin/mvn" );
         }
-        
+
         String executable = commandline.getExecutable();
         System.out.println( "Executable is: " + executable );
-        
+
         assertTrue( executable.indexOf( mavenFile.getCanonicalPath() ) > -1 );
         assertEquals( projectDir.getCanonicalPath(), commandline.getWorkingDirectory().getCanonicalPath() );
     }
@@ -885,9 +885,33 @@ public class MavenCommandLineBuilderTest
 
     }
 
+    public void testShouldInsertActivatedProfiles()
+        throws Exception
+    {
+        File mavenDir = setupTempMavenHomeIfMissing();
+
+        String profile1 = "profile-1";
+        String profile2 = "profile-2";
+
+        InvocationRequest request = new DefaultInvocationRequest();
+
+        List profiles = new ArrayList();
+        profiles.add( profile1 );
+        profiles.add( profile2 );
+
+        request.setProfiles( profiles );
+
+        MavenCommandLineBuilder commandLineBuilder = new MavenCommandLineBuilder();
+
+
+        Commandline commandline = commandLineBuilder.build( request );
+
+        assertArgumentsPresent( Collections.singleton( "-P" + profile1 + "," + profile2 ), commandline );
+    }
+
     public void setUp()
     {
-        sysProps = System.getProperties();        
+        sysProps = System.getProperties();
 
         Properties p = new Properties( sysProps );
 
@@ -931,13 +955,13 @@ public class MavenCommandLineBuilderTest
         String[] arguments = cli.getArguments();
 
         int expectedCounter = 0;
-        
+
 //        System.out.println( "Command-line has " + arguments.length + " arguments." );
 
         for ( int i = 0; i < arguments.length; i++ )
         {
 //            System.out.println( "Checking argument: " + arguments[i] + " against: " + expected.get( expectedCounter ) );
-            
+
             if ( arguments[i].equals( expected.get( expectedCounter ) ) )
             {
                 expectedCounter++;
@@ -953,8 +977,8 @@ public class MavenCommandLineBuilderTest
         String[] argv = cli.getArguments();
         List args = Arrays.asList( argv );
 
-        //        System.out.println( "Command-line: " + cli );
-        //        System.out.println( "Arguments: " + args );
+//        System.out.println( "Command-line: " + cli );
+//        System.out.println( "Arguments: " + args );
 
         for ( Iterator it = requiredArgs.iterator(); it.hasNext(); )
         {

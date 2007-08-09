@@ -28,6 +28,7 @@ public class DefaultInvocationRequest
     private File userSettings;
     private String globalChecksumPolicy;
     private String pomFilename;
+    private List profiles;
 
     public InvocationRequest activateReactor( String[] includes, String[] excludes )
     {
@@ -245,6 +246,17 @@ public class DefaultInvocationRequest
     public InvocationRequest setPomFileName( String pomFilename )
     {
         this.pomFilename = pomFilename;
+        return this;
+    }
+
+    public List getProfiles()
+    {
+        return profiles;
+    }
+
+    public InvocationRequest setProfiles( List profiles )
+    {
+        this.profiles = profiles;
         return this;
     }
 

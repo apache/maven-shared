@@ -133,6 +133,11 @@ public class MavenCommandLineBuilder
                 }
             }
         }
+
+        if ( request.getJavaHome() != null )
+        {
+            cli.addEnvironment( "JAVA_HOME", request.getJavaHome().getAbsolutePath() );
+        }
     }
 
     protected void setProfiles( InvocationRequest request, Commandline cli )

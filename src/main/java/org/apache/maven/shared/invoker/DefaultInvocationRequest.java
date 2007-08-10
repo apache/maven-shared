@@ -28,6 +28,7 @@ public class DefaultInvocationRequest
     private File userSettings;
     private String globalChecksumPolicy;
     private String pomFilename;
+    private File javaHome;
     private List profiles;
 
     public InvocationRequest activateReactor( String[] includes, String[] excludes )
@@ -213,6 +214,17 @@ public class DefaultInvocationRequest
     public InvocationRequest setShellEnvironmentInherited( boolean shellEnvironmentInherited )
     {
         this.shellEnvironmentInherited  = shellEnvironmentInherited;
+        return this;
+    }
+
+    public File getJavaHome()
+    {
+        return javaHome;
+    }
+
+    public InvocationRequest setJavaHome( File javaHome )
+    {
+        this.javaHome = javaHome;
         return this;
     }
 

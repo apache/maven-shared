@@ -58,6 +58,8 @@ public interface InvocationRequest
 
     File getBaseDirectory( File defaultDirectory );
 
+    File getJavaHome();
+
     Properties getProperties();
 
     List getGoals();
@@ -118,6 +120,8 @@ public interface InvocationRequest
 
     InvocationRequest setBaseDirectory( File basedir );
 
+    InvocationRequest setJavaHome( File javaHome );
+
     InvocationRequest setProperties( Properties properties );
 
     InvocationRequest setGoals( List goals );
@@ -129,5 +133,4 @@ public interface InvocationRequest
     InvocationRequest setUserSettingsFile( File userSettings );
 
     InvocationRequest setGlobalChecksumPolicy( String globalChecksumPolicy );
-
 }

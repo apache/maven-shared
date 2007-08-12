@@ -29,6 +29,11 @@
   <artifactId>maven-reporting-impl</artifactId>
   <name>Maven Reporting Implementation</name>
   <version>2.1-SNAPSHOT</version>
+
+  <properties>
+    <doxiaVersion>1.0-alpha-9-SNAPSHOT</doxiaVersion>
+  </properties>
+
   <developers>
     <developer>
       <id>vsiveton</id>
@@ -54,17 +59,17 @@
     <dependency>
       <groupId>org.apache.maven.doxia</groupId>
       <artifactId>doxia-sink-api</artifactId>
-      <version>1.0-alpha-9-SNAPSHOT</version>
+      <version>${doxiaVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.doxia</groupId>
       <artifactId>doxia-core</artifactId>
-      <version>1.0-alpha-7</version>
+      <version>${doxiaVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.doxia</groupId>
       <artifactId>doxia-site-renderer</artifactId>
-      <version>1.0-alpha-9-SNAPSHOT</version>
+      <version>${doxiaVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>

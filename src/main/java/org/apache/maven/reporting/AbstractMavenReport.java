@@ -95,7 +95,7 @@ public abstract class AbstractMavenReport
 
         if ( !canGenerateReport() )
         {
-            getLog().info( "This report cannot be generated as part of the current build." );
+            getLog().info( "This report cannot be generated as part of the current build. The report name should be referenced in this line of output." );
             return;
         }
 

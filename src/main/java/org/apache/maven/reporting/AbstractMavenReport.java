@@ -93,10 +93,16 @@ public abstract class AbstractMavenReport
             throw new MavenReportException( "You must specify a sink." );
         }
 
+        if ( !canGenerateReport() )
+        {
+            getLog().info( "This report cannot be generated as part of the current build." );
+            return;
+        }
+
         this.sink = sink;
 
         this.sinkFactory = sinkFactory;
-
+        
         executeReport( locale );
 
         closeReport();

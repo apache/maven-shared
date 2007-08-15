@@ -164,6 +164,7 @@ public class PatternIncludesArtifactFilter
 
     private boolean matchAgainst( String value, List patterns, boolean regionMatch )
     {
+    	boolean match = false;
         for ( Iterator i = patterns.iterator(); i.hasNext(); )
         {
             // TODO: what about wildcards? Just specifying groups? versions?
@@ -180,7 +181,7 @@ public class PatternIncludesArtifactFilter
                 if ( value.indexOf( pattern ) > -1 )
                 {
                     patternsTriggered.add( pattern );
-                    return true;
+                    match = true;
                 }
             }
             else
@@ -188,7 +189,7 @@ public class PatternIncludesArtifactFilter
                 if ( value.equals( pattern ) )
                 {
                     patternsTriggered.add( pattern );
-                    return true;
+                    match = true;
                 }
             }
 
@@ -212,18 +213,17 @@ public class PatternIncludesArtifactFilter
 
                     idxes[j] = value.indexOf( subPattern, lastIdx );
 
-                    if ( idxes[j] < 0 )
+                    if ( idxes[j] >= 0 )
                     {
-                        return false;
+                    	patternsTriggered.add( pattern );
+                        match = true;
                     }
-                }
-
-                patternsTriggered.add( pattern );
-                return true;
+                }            	
+                
             }
         }
 
-        return false;
+        return match;
     }
 
     public void reportMissedCriteria( Logger logger )

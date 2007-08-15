@@ -43,6 +43,11 @@ public class PatternExcludesArtifactFilterTest
 
     };
 
+    public void testShouldTriggerBothPatternsWithWildcards()
+    {
+        tck.testShouldTriggerBothPatternsWithWildcards( true );
+    }
+
     public void testShouldNotIncludeDirectlyMatchedArtifactByDependencyConflictId()
     {
         tck.testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId( true );

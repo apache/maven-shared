@@ -39,6 +39,39 @@ public abstract class PatternArtifactFilterTCK
 
     protected abstract ArtifactFilter createFilter( List patterns, boolean actTransitively );
 
+    public void testShouldTriggerBothPatternsWithWildcards( boolean reverse )
+    {
+        String groupId1 = "group";
+        String artifactId1 = "artifact";
+
+        String groupId2 = "group2";
+        String artifactId2 = "artifact2";
+
+        ArtifactMockAndControl mac1 = new ArtifactMockAndControl( groupId1, artifactId1 );
+        ArtifactMockAndControl mac2 = new ArtifactMockAndControl( groupId2, artifactId2 );
+
+        mockManager.replayAll();
+
+        List patterns = new ArrayList();
+        patterns.add( groupId1 + ":" + artifactId1 + ":*" );
+        patterns.add( groupId2 + ":" + artifactId2 + ":*" );
+
+        ArtifactFilter filter = createFilter( patterns );
+
+        if ( reverse )
+        {
+            assertFalse( filter.include( mac1.artifact ) );
+            assertFalse( filter.include( mac2.artifact ) );
+        }
+        else
+        {
+            assertTrue( filter.include( mac1.artifact ) );
+            assertTrue( filter.include( mac2.artifact ) );
+        }
+
+        mockManager.verifyAll();
+    }
+
     public void testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId( boolean reverse )
     {
         String groupId = "group";

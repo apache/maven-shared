@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -139,6 +140,16 @@ public class Maven1Converter
             pluginRelocator = (PluginRelocator) iterator.next();
             pluginRelocator.addListeners( listeners );
             pluginRelocator.relocate( v4Model );
+        }
+
+        // Sort the plugins
+        if ( v4Model.getBuild() != null )
+        {
+            Collections.sort( v4Model.getBuild().getPlugins(), new PluginComparator() );
+        }
+        if ( v4Model.getReporting() != null )
+        {
+            Collections.sort( v4Model.getReporting().getPlugins(), new ReportPluginComparator() );
         }
 
         try

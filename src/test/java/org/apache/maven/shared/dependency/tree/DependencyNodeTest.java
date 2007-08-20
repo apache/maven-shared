@@ -200,6 +200,18 @@ public class DependencyNodeTest
         assertNull( node5.getParent() );
     }
     
+    public void testGetDepth()
+    {
+        assertEquals( 0, rootNode.getDepth() );
+        assertEquals( 0, node1.getDepth() );
+        assertEquals( 1, node2.getDepth() );
+        assertEquals( 1, node3.getDepth() );
+        assertEquals( 2, node4.getDepth() );
+        assertEquals( 2, node5.getDepth() );
+        assertEquals( 3, node6.getDepth() );
+        assertEquals( 2, node7.getDepth() );
+    }
+
     private void assertLine( BufferedReader reader, int i, int depth )
         throws IOException
     {

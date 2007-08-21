@@ -552,7 +552,20 @@ public class DependencyNode
 
         this.relatedArtifact = relatedArtifact;
 
-        boolean duplicate = getArtifact().getVersion().equals( relatedArtifact.getVersion() );
+        boolean duplicate = false;
+        if ( getArtifact().getVersion() != null )
+        {
+            duplicate = getArtifact().getVersion().equals( relatedArtifact.getVersion() );
+        }
+        else if ( getArtifact().getVersionRange() != null )
+        {
+            duplicate = getArtifact().getVersionRange().equals( relatedArtifact.getVersionRange() );
+        }
+        else
+        {
+            throw new RuntimeException( "Artifact version and version range is null: " + getArtifact() );
+        }
+
         state = duplicate ? OMITTED_FOR_DUPLICATE : OMITTED_FOR_CONFLICT;
 
         removeAllChildren();

@@ -382,6 +382,16 @@ public class DependencyTreeResolutionListenerTest extends AbstractDependencyNode
         assertEquals( projectArtifactNode, listener.getRootNode() );
     }
 
+    public void testAddNode()
+    {
+        Artifact a1 = createArtifact( "test-project", "project-artifact", "1.0" );
+        listener.addNode( a1 );
+        listener.startProcessChildren( a1 );
+        Artifact a2 = createArtifact( "test-project", "project-artifact", "1.1" );
+        listener.addNode( a2 );
+        assertEquals( 1, listener.getRootNode().getChildren().size() );
+    }
+
     // protected methods ------------------------------------------------------
 
     /*

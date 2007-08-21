@@ -390,6 +390,11 @@ public class DependencyNode
         return Collections.unmodifiableList( children );
     }
 
+    public boolean hasChildren()
+    {
+        return children.size() > 0;
+    }
+
     /**
      * Gets the state of this dependency node.
      * 

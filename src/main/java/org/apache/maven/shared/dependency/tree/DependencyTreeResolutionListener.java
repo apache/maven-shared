@@ -276,16 +276,18 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
      * @see org.apache.maven.artifact.resolver.ResolutionListener#updateScopeCurrentPom(org.apache.maven.artifact.Artifact,
      *      java.lang.String)
      */
-    public void updateScopeCurrentPom( Artifact artifact, String scope )
+    public void updateScopeCurrentPom( Artifact artifact, String scopeIgnored )
     {
         DependencyNode node = getNode( artifact );
 
         if ( node == null )
         {
-            throw new IllegalStateException( "Cannot find dependency node for artifact " + artifact );
+            // updateScopeCurrentPom events can be received prior to includeArtifact events
+            node = addNode( artifact );
+            // TODO remove the node that tried to impose its scope and add some info
         }
-        
-        node.setFailedUpdateScope( scope );
+
+        node.setFailedUpdateScope( scopeIgnored );
     }
 
     /*
@@ -349,8 +351,6 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         }
     }
 
-    // public methods ---------------------------------------------------------
-    
     /**
      * Gets a list of all dependency nodes in the computed dependency tree.
      * 
@@ -403,7 +403,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
      *            the attached artifact for the new dependency node
      * @return the new dependency node
      */
-    private DependencyNode addNode( Artifact artifact )
+    DependencyNode addNode( Artifact artifact )
     {
         DependencyNode node = createNode( artifact );
 

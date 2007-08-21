@@ -21,6 +21,7 @@ package org.apache.maven.shared.dependency.tree;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
@@ -29,6 +30,7 @@ import org.apache.maven.artifact.resolver.ArtifactCollector;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.apache.maven.shared.dependency.tree.traversal.CollectingDependencyNodeVisitor;
 
 /**
@@ -80,7 +82,14 @@ public class DefaultDependencyTreeBuilder implements DependencyTreeBuilder
         {
             Map managedVersions = project.getManagedVersionMap();
 
-            collector.collect( project.getDependencyArtifacts(), project.getArtifact(), managedVersions, repository,
+            Set dependencyArtifacts = project.getDependencyArtifacts();
+
+            if ( dependencyArtifacts == null )
+            {
+                dependencyArtifacts = project.createArtifacts( factory, null, null );
+            }
+
+            collector.collect( dependencyArtifacts, project.getArtifact(), managedVersions, repository,
                                project.getRemoteArtifactRepositories(), metadataSource, filter,
                                Collections.singletonList( listener ) );
 
@@ -89,6 +98,11 @@ public class DefaultDependencyTreeBuilder implements DependencyTreeBuilder
         catch ( ArtifactResolutionException exception )
         {
             throw new DependencyTreeBuilderException( "Cannot build project dependency tree", exception );
+        }
+        catch ( InvalidDependencyVersionException e )
+        {
+            throw new DependencyTreeBuilderException( "Invalid dependency version for artifact "
+                + project.getArtifact() );
         }
     }
 }

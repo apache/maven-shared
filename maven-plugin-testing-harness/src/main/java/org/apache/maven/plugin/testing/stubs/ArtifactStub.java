@@ -55,6 +55,8 @@ public class ArtifactStub
 
     private File file;
 
+    private ArtifactRepository artifactRepository;
+
     /**
      * By default, return <code>0</code>
      *
@@ -223,23 +225,23 @@ public class ArtifactStub
     }
 
     /**
-     * By default, do nothing.
+     * Set a new artifact repository
      *
      * @see org.apache.maven.artifact.Artifact#setRepository(org.apache.maven.artifact.repository.ArtifactRepository)
      */
     public void setRepository( ArtifactRepository artifactRepository )
     {
-        // nop
+        this.artifactRepository = artifactRepository;
     }
 
     /**
-     * By default, return <code>null</code>.
+     * Returns repository for artifact 
      *
      * @see org.apache.maven.artifact.Artifact#getRepository()
      */
     public ArtifactRepository getRepository()
     {
-        return null;
+        return artifactRepository;
     }
 
     /**

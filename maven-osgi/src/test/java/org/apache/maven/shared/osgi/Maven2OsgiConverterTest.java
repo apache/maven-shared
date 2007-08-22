@@ -51,6 +51,7 @@ public class Maven2OsgiConverterTest
 
         artifact.setFile( getTestFile( "junit-3.8.2.jar" ) );
         artifact.setGroupId( "junit" );
+        artifact.setArtifactId( "junit" );
         s = maven2Osgi.getBundleSymbolicName( artifact );
         assertEquals( "junit", s );
 
@@ -65,6 +66,12 @@ public class Maven2OsgiConverterTest
         artifact.setArtifactId( "test" );
         s = maven2Osgi.getBundleSymbolicName( artifact );
         assertEquals( "test", s );
+
+        artifact.setFile( getTestFile( "xercesImpl-2.6.2.jar" ) );
+        artifact.setGroupId( "xerces" );
+        artifact.setArtifactId( "xercesImpl" );
+        s = maven2Osgi.getBundleSymbolicName( artifact );
+        assertEquals( "xerces.Impl", s );
     }
 
     public void testGetBundleFileName()

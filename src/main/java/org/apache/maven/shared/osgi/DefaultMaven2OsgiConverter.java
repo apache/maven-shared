@@ -122,7 +122,7 @@ public class DefaultMaven2OsgiConverter
         }
         if ( artifact.getArtifactId().startsWith( lastSection ) )
         {
-            String artifactId = artifact.getArtifactId().substring( lastSection.length() + 1 );
+            String artifactId = artifact.getArtifactId().substring( lastSection.length() );
             if ( Character.isLetterOrDigit( artifactId.charAt( 0 ) ) )
             {
                 return getBundleSymbolicName( artifact.getGroupId(), artifactId );
@@ -189,6 +189,12 @@ public class DefaultMaven2OsgiConverter
             }
 
             if ( ( groupIdSections == null ) || ( groupIdSections.length == 0 ) )
+            {
+                return null;
+            }
+
+            /* only one section as id doesn't seem enough, so ignore it */
+            if ( groupIdSections.length == 1 )
             {
                 return null;
             }

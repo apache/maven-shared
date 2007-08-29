@@ -363,8 +363,8 @@ public class DependencyNode
      * 
      * @return the depth
      * @deprecated As of 1.1, depth is computed by node hierarchy. With the introduction of node
-     *             visitors and filters since it can give misleading results. For example, consider
-     *             serialising a tree with a filter using a visitor: getDepth would return the
+     *             visitors and filters this method can give misleading results. For example, consider
+     *             serialising a tree with a filter using a visitor: this method would return the
      *             unfiltered depth of a node, whereas the correct depth would be calculated by the
      *             visitor.
      */

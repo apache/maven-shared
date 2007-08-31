@@ -230,7 +230,7 @@ public class MavenArchiverTest
         long timeStamp2 = jarFile.lastModified();
         assertEquals( timeStamp2, timeStamp1 );
 
-        Thread.sleep( 1 ); // Make sure, that System.currentTimeMillis() is different from timeStamp
+        Thread.sleep( 10 ); // Make sure, that System.currentTimeMillis() is different from timeStamp
         config.setForced( true );
         archiver.createArchive( project, config );
         assertTrue( jarFile.lastModified() > timeStamp2 );

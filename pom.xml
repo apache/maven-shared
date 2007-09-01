@@ -43,7 +43,6 @@
     <module>maven-repository-builder</module>
     <module>maven-common-artifact-filters</module>
     <module>maven-dependency-analyzer</module>
-    <module>maven-enforcer-rule-api</module>
     <module>maven-shared-jar</module>
   </modules>
   <scm>

@@ -41,6 +41,7 @@
     <module>maven-plugin-testing-tools</module>
     <module>maven-test-tools</module>
     <module>maven-repository-builder</module>
+    <module>maven-script</module>
     <module>maven-common-artifact-filters</module>
     <module>maven-dependency-analyzer</module>
     <module>maven-shared-jar</module>

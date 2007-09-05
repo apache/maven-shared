@@ -29,6 +29,7 @@ under the License.
   <modelVersion>4.0.0</modelVersion>
   <artifactId>maven-script</artifactId>
   <packaging>pom</packaging>
+  <version>2.1-SNAPSHOT</version>
   <name>Maven Script Support Root</name>
   <modules>
     <module>maven-script-ant</module>

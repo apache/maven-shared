@@ -92,7 +92,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         rootNode = null;
         currentNode = null;
         managedId = null;
-        premanagedScope = null;
+        premanagedVersion = null;
         premanagedScope = null;
     }
 

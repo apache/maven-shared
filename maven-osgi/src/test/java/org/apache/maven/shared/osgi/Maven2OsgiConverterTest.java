@@ -38,7 +38,8 @@ public class Maven2OsgiConverterTest
     public void testGetBundleSymbolicName()
     {
         ArtifactStub artifact = getTestArtifact();
-        String s = maven2Osgi.getBundleSymbolicName( artifact );
+        String s;
+        s = maven2Osgi.getBundleSymbolicName( artifact );
         assertEquals( "org.apache.commons.logging", s );
 
         artifact.setGroupId( "org.apache.commons" );
@@ -72,20 +73,32 @@ public class Maven2OsgiConverterTest
         artifact.setArtifactId( "xercesImpl" );
         s = maven2Osgi.getBundleSymbolicName( artifact );
         assertEquals( "xerces.Impl", s );
+
+        artifact.setFile( getTestFile( "aopalliance-1.0.jar" ) );
+        artifact.setGroupId( "org.aopalliance" );
+        artifact.setArtifactId( "aopalliance" );
+        s = maven2Osgi.getBundleSymbolicName( artifact );
+        assertEquals( "org.aopalliance", s );
     }
 
     public void testGetBundleFileName()
     {
         ArtifactStub artifact = getTestArtifact();
-        String s = maven2Osgi.getBundleFileName( artifact );
-        assertEquals( "org.apache.commons.logging_1.1.jar", s );
+        String s;
+        s = maven2Osgi.getBundleFileName( artifact );
+        assertEquals( "org.apache.commons.logging_1.1.0.jar", s );
+
+        artifact.setGroupId( "org.aopalliance" );
+        artifact.setArtifactId( "aopalliance" );
+        s = maven2Osgi.getBundleFileName( artifact );
+        assertEquals( "org.aopalliance_1.1.0.jar", s );
     }
 
     public void testGetVersion()
     {
         ArtifactStub artifact = getTestArtifact();
         String s = maven2Osgi.getVersion( artifact );
-        assertEquals( "1.1", s );
+        assertEquals( "1.1.0", s );
     }
 
     public void testConvertVersionToOsgi()
@@ -102,10 +115,10 @@ public class Maven2OsgiConverterTest
         assertEquals( "2.0.0.SNAPSHOT", osgiVersion );
 
         osgiVersion = maven2Osgi.getVersion( "2" );
-        assertEquals( "2", osgiVersion );
+        assertEquals( "2.0.0", osgiVersion );
 
         osgiVersion = maven2Osgi.getVersion( "2.1" );
-        assertEquals( "2.1", osgiVersion );
+        assertEquals( "2.1.0", osgiVersion );
 
         osgiVersion = maven2Osgi.getVersion( "2.1.3" );
         assertEquals( "2.1.3", osgiVersion );

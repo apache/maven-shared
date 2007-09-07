@@ -48,7 +48,7 @@ public class DefaultMaven2OsgiConverter
 
     /** Bundle-Version must match this pattern */
     private static final Pattern OSGI_VERSION_PATTERN = Pattern
-        .compile( "[0-9]+(\\.[0-9]+(\\.[0-9]+(\\.[0-9A-Za-z_-]+)?)?)?" );
+        .compile( "[0-9]+\\.[0-9]+\\.[0-9]+(\\.[0-9A-Za-z_-]+)?" );
 
     /** pattern used to change - to . */
     // private static final Pattern P_VERSION = Pattern.compile("([0-9]+(\\.[0-9])*)-(.*)");
@@ -291,21 +291,47 @@ public class DefaultMaven2OsgiConverter
             }
         }
 
-        /* convert 1.string into 1.0.0.string and 1.2.string into 1.2.0.string */
-        Pattern NEED_TO_FILL_ZEROS = Pattern.compile( "([0-9])(\\.([0-9]))?\\.([0-9A-Za-z_-]+)" );
+        /* convert
+         * 1.string   -> 1.0.0.string
+         * 1.2.string -> 1.2.0.string
+         * 1          -> 1.0.0
+         * 1.1        -> 1.1.0
+         */
+        //Pattern NEED_TO_FILL_ZEROS = Pattern.compile( "([0-9])(\\.([0-9]))?\\.([0-9A-Za-z_-]+)" );
+        Pattern NEED_TO_FILL_ZEROS = Pattern.compile( "([0-9])(\\.([0-9]))?(\\.([0-9A-Za-z_-]+))?" );
         m = NEED_TO_FILL_ZEROS.matcher( osgiVersion );
         if ( m.matches() )
         {
             String major = m.group( 1 );
-            String minor = ( m.group( 3 ) != null ) ? m.group( 3 ) : "0";
-            String service = "0";
-            String qualifier = m.group( 4 );
+            String minor = m.group( 3 );
+            String service = null;
+            String qualifier = m.group( 5 );
 
-            Matcher qualifierMatcher = ONLY_NUMBERS.matcher( qualifier );
-            /* if last portion is only numbers then it's not a qualifier */
-            if ( !qualifierMatcher.matches() )
+            /* if there's no qualifier just fill with 0s */
+            if ( qualifier == null )
             {
-                osgiVersion = major + "." + minor + "." + service + "." + qualifier;
+                osgiVersion = getVersion( major, minor, service, qualifier );
+            }
+            else
+            {
+                /* if last portion is only numbers then it's not a qualifier */
+                Matcher qualifierMatcher = ONLY_NUMBERS.matcher( qualifier );
+                if ( qualifierMatcher.matches() )
+                {
+                    if ( minor == null )
+                    {
+                        minor = qualifier;
+                    }
+                    else
+                    {
+                        service = qualifier;
+                    }
+                    osgiVersion = getVersion( major, minor, service, null );
+                }
+                else
+                {
+                    osgiVersion = getVersion( major, minor, service, qualifier );
+                }
             }
         }
 
@@ -323,4 +349,19 @@ public class DefaultMaven2OsgiConverter
         return osgiVersion;
     }
 
+    private String getVersion( String major, String minor, String service, String qualifier )
+    {
+        StringBuffer sb = new StringBuffer();
+        sb.append( major != null ? major : "0" );
+        sb.append( '.' );
+        sb.append( minor != null ? minor : "0" );
+        sb.append( '.' );
+        sb.append( service != null ? service : "0" );
+        if ( qualifier != null )
+        {
+            sb.append( '.' );
+            sb.append( qualifier );
+        }
+        return sb.toString();
+    }
 }

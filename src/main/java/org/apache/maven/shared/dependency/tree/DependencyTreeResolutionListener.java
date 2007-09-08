@@ -21,6 +21,7 @@ package org.apache.maven.shared.dependency.tree;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -64,21 +65,14 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
     private DependencyNode currentNode;
     
     /**
-     * The id of the currently managed artifact, or <code>null</code> if the current artifact is not managed.
+     * Map &lt; String replacementId, String premanaged version >
      */
-    private String managedId;
-    
+    private Map managedVersions = new HashMap();
+
     /**
-     * The original version of the currently managed artifact, or <code>null</code> if the current artifact is not
-     * managed.
+     * Map &lt; String replacementId, String premanaged scope >
      */
-    private String premanagedVersion;
-    
-    /**
-     * The original scope of the currently managed artifact, or <code>null</code> if the current artifact is not
-     * managed.
-     */
-    private String premanagedScope;
+    private Map managedScopes = new HashMap();
 
     // constructors -----------------------------------------------------------
 
@@ -91,9 +85,6 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         nodesByArtifact = new IdentityHashMap();
         rootNode = null;
         currentNode = null;
-        managedId = null;
-        premanagedVersion = null;
-        premanagedScope = null;
     }
 
     // ResolutionListener methods ---------------------------------------------
@@ -158,13 +149,10 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
              * Add the dependency management information cached in any prior manageArtifact calls, since includeArtifact
              * is always called after manageArtifact.
              */
+            String premanagedVersion = (String) managedVersions.get( artifact.getId() );
+            String premanagedScope = (String) managedScopes.get( artifact.getId() );
             if ( premanagedVersion != null || premanagedScope != null )
             {
-                if ( !managedId.equals( artifact.getId() ) )
-                {
-                    throw new IllegalStateException( "Managed artifact id was expected to be " + managedId + " but was " + artifact.getId() );
-                }
-                
                 if ( premanagedVersion != null )
                 {
                     node.setPremanagedVersion( premanagedVersion );
@@ -175,7 +163,6 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
                     node.setPremanagedScope( premanagedScope );
                 }
                 
-                managedId = null;
                 premanagedVersion = null;
                 premanagedScope = null;
             }
@@ -325,8 +312,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
              * Cache management information and apply in includeArtifact, since DefaultArtifactCollector mutates the
              * artifact and then calls includeArtifact after manageArtifact.
              */
-            managedId = replacement.getId();
-            premanagedVersion = artifact.getVersion();
+            managedVersions.put( replacement.getId(), artifact.getVersion() );
         }
     }
 
@@ -346,8 +332,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
              * Cache management information and apply in includeArtifact, since DefaultArtifactCollector mutates the
              * artifact and then calls includeArtifact after manageArtifact.
              */
-            managedId = replacement.getId();
-            premanagedScope = artifact.getScope();
+            managedScopes.put( replacement.getId(), artifact.getScope() );
         }
     }
 

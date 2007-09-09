@@ -179,12 +179,12 @@ public class SerializingDependencyNodeVisitor implements DependencyNodeVisitor
     {
         for ( int i = 1; i < depth; i++ )
         {
-            writer.append( tokens.getFillIndent( isLast( node, i ) ) );
+            writer.write( tokens.getFillIndent( isLast( node, i ) ) );
         }
 
         if ( depth > 0 )
         {
-            writer.append( tokens.getNodeIndent( isLast( node ) ) );
+            writer.write( tokens.getNodeIndent( isLast( node ) ) );
         }
     }
 

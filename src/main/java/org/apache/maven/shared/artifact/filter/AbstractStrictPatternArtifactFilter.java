@@ -112,8 +112,12 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
      */
     private boolean include( Artifact artifact, String pattern )
     {
-        String[] tokens =
-            new String[] { artifact.getGroupId(), artifact.getArtifactId(), artifact.getType(), artifact.getVersion() };
+        String[] tokens = new String[] {
+            artifact.getGroupId(),
+            artifact.getArtifactId(),
+            artifact.getType(),
+            artifact.getBaseVersion()
+        };
 
         String[] patternTokens = pattern.split( ":" );
 

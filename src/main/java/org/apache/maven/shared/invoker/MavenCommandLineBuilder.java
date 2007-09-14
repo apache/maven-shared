@@ -96,8 +96,8 @@ public class MavenCommandLineBuilder
                     + ". Using as-is.", e );
             }
 
-            cli.createArg().setValue( "-s" );
-            cli.createArg().setValue( wrapStringWithQuotes( userSettingsFile.getPath() ) );
+            cli.createArgument().setValue( "-s" );
+            cli.createArgument().setValue( wrapStringWithQuotes( userSettingsFile.getPath() ) );
         }
     }
 
@@ -174,7 +174,7 @@ public class MavenCommandLineBuilder
                 String key = (String) entry.getKey();
                 String value = (String) entry.getValue();
 
-                cli.createArg().setValue( "-D" + wrapStringWithQuotes( key ) + "=" + wrapStringWithQuotes(value) );
+                cli.createArgument().setValue( "-D" + wrapStringWithQuotes( key ) + "=" + wrapStringWithQuotes(value) );
             }
         }
     }
@@ -300,7 +300,7 @@ public class MavenCommandLineBuilder
                     + "\' is NOT a directory." );
             }
 
-            cli.createArg().setValue( "-Dmaven.repo.local=" + wrapStringWithQuotes(localRepositoryDirectory.getPath()) );
+            cli.createArgument().setValue( "-Dmaven.repo.local=" + wrapStringWithQuotes(localRepositoryDirectory.getPath()) );
         }
     }
 

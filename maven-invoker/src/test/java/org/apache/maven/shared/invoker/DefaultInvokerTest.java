@@ -27,20 +27,22 @@ public class DefaultInvokerTest
         invoker.setMavenHome( findMavenHome() );
 
         Properties props = new Properties();
-        props.put( "key with spaces", "value with spaces" );
+//        props.put( "key with spaces", "value with spaces" );
 
         InvocationRequest request = new DefaultInvocationRequest();
         request.setBaseDirectory( basedir );
         request.setProperties( props );
 
+        request.setDebug( true );
+
         List goals = new ArrayList();
         goals.add( "clean" );
         goals.add( "package" );
-        
+
         request.setGoals( goals );
-        
+
         InvocationResult result = invoker.execute( request );
-        
+
         assertEquals( 0, result.getExitCode() );
     }
 
@@ -54,11 +56,13 @@ public class DefaultInvokerTest
 
         InvocationRequest request = new DefaultInvocationRequest();
         request.setBaseDirectory( basedir );
-        
+
+        request.setDebug( true );
+
         List goals = new ArrayList();
         goals.add( "clean" );
         goals.add( "package" );
-        
+
         request.setGoals( goals );
 
         InvocationResult result = invoker.execute( request );

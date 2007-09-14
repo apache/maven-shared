@@ -32,6 +32,8 @@ import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.DeploymentRepository;
 import org.apache.maven.model.DistributionManagement;
@@ -113,6 +115,43 @@ public class ProjectTool
             return projectBuilder.build( pomFile, localRepository, null );
         }
         catch ( ProjectBuildingException e )
+        {
+            throw new TestToolsException( "Error building MavenProject instance from test pom: " + pomFile, e );
+        }
+    }
+
+    /**
+     * Construct a MavenProject instance from the specified POM file with dependencies.
+     */
+    public MavenProject readProjectWithDependencies( File pomFile )
+        throws TestToolsException
+    {
+        return readProjectWithDependencies( pomFile, repositoryTool.findLocalRepositoryDirectory() );
+    }
+
+    /**
+     * Construct a MavenProject instance from the specified POM file with dependencies, using the specified local
+     * repository directory to resolve ancestor POMs as needed.
+     */
+    public MavenProject readProjectWithDependencies( File pomFile, File localRepositoryBasedir )
+        throws TestToolsException
+    {
+        try
+        {
+            ArtifactRepository localRepository = repositoryTool
+                .createLocalArtifactRepositoryInstance( localRepositoryBasedir );
+
+            return projectBuilder.buildWithDependencies( pomFile, localRepository, null );
+        }
+        catch ( ProjectBuildingException e )
+        {
+            throw new TestToolsException( "Error building MavenProject instance from test pom: " + pomFile, e );
+        }
+        catch ( ArtifactResolutionException e )
+        {
+            throw new TestToolsException( "Error building MavenProject instance from test pom: " + pomFile, e );
+        }
+        catch ( ArtifactNotFoundException e )
         {
             throw new TestToolsException( "Error building MavenProject instance from test pom: " + pomFile, e );
         }

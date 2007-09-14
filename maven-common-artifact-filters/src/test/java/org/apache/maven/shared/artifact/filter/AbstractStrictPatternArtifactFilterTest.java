@@ -51,10 +51,7 @@ public abstract class AbstractStrictPatternArtifactFilterTest extends TestCase
      */
     protected void setUp() throws Exception
     {
-        VersionRange version = VersionRange.createFromVersion( "version" );
-        ArtifactHandler handler = new DefaultArtifactHandler();
-
-        artifact = new DefaultArtifact( "groupId", "artifactId", version, null, "type", null, handler );
+        artifact = createArtifact( "groupId", "artifactId", "type", "version" );
     }
 
     // tests ------------------------------------------------------------------
@@ -314,7 +311,35 @@ public abstract class AbstractStrictPatternArtifactFilterTest extends TestCase
         assertIncluded( "group*:*Id:*:version" );
     }
 
+    public void testSnapshotVersion()
+    {
+        artifact = createArtifact( "groupId", "artifactId", "type", "version-12345678.123456-1" );
+
+        assertIncluded( ":::*-SNAPSHOT" );
+    }
+
     // protected methods ------------------------------------------------------
+
+    /**
+     * Creates an artifact with the specified attributes.
+     * 
+     * @param groupId
+     *            the group id for the new artifact
+     * @param artifactId
+     *            the artifact id for the new artifact
+     * @param type
+     *            the type for the new artifact
+     * @param version
+     *            the version for the new artifact
+     * @return the artifact
+     */
+    protected Artifact createArtifact( String groupId, String artifactId, String type, String version )
+    {
+        VersionRange versionRange = VersionRange.createFromVersion( version );
+        ArtifactHandler handler = new DefaultArtifactHandler();
+
+        return new DefaultArtifact( groupId, artifactId, versionRange, null, type, null, handler );
+    }
 
     /**
      * Asserts that the specified pattern is included by the filter being tested.

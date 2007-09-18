@@ -98,6 +98,17 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
 
     // tests ------------------------------------------------------------------
 
+    /**
+     * Tests building a tree for a project with one dependency:
+     * 
+     * <pre>
+     * g:p:t:1
+     * \- g:a:t:1
+     * </pre>
+     * 
+     * @throws DependencyTreeBuilderException 
+     * @throws ArtifactResolutionException 
+     */
     public void testProjectWithDependency() throws DependencyTreeBuilderException, ArtifactResolutionException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
@@ -111,6 +122,18 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
+    /**
+     * Tests building a tree for a project with one transitive dependency:
+     * 
+     * <pre>
+     * g:p:t:1
+     * \- g:a:t:1
+     *    \- g:b:t:1
+     * </pre>
+     *
+     * @throws DependencyTreeBuilderException
+     * @throws ArtifactResolutionException
+     */
     public void testProjectWithTransitiveDependency() throws DependencyTreeBuilderException, ArtifactResolutionException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
@@ -128,6 +151,20 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
+    /**
+     * Tests building a tree for a project with a duplicate transitive dependency:
+     * 
+     * <pre>
+     * g:p:t:1
+     * +- g:a:t:1
+     * |  \- g:c:t:1
+     * \- g:b:t:1
+     *    \- (g:c:t:1 - omitted for duplicate)
+     * </pre>
+     *
+     * @throws DependencyTreeBuilderException
+     * @throws ArtifactResolutionException
+     */
     public void testProjectWithDuplicateDependency() throws DependencyTreeBuilderException, ArtifactResolutionException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
@@ -152,6 +189,20 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
+    /**
+     * Tests building a tree for a project with a dependency that has conflicting versions, where the nearest is
+     * encountered first:
+     * 
+     * <pre>
+     * g:p:t:1
+     * +- g:a:t:1
+     * \- g:b:t:1
+     *    \- (g:a:t:2 - omitted for conflict with 1)
+     * </pre>
+     *
+     * @throws DependencyTreeBuilderException
+     * @throws ArtifactResolutionException
+     */
     public void testProjectWithConflictDependencyVersionFirstWins() throws DependencyTreeBuilderException, ArtifactResolutionException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
@@ -172,6 +223,20 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
+    /**
+     * Tests building a tree for a project with a dependency that has conflicting versions, where the nearest is
+     * encountered last:
+     * 
+     * <pre>
+     * g:p:t:1
+     * +- g:a:t:1
+     * |  \- (g:b:t:2 - omitted for conflict with 1)
+     * \- g:b:t:1
+     * </pre>
+     *
+     * @throws DependencyTreeBuilderException
+     * @throws ArtifactResolutionException
+     */
     public void testProjectWithConflictDependencyVersionLastWins() throws DependencyTreeBuilderException, ArtifactResolutionException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
@@ -192,6 +257,20 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
+    /**
+     * Tests building a tree for a project with a dependency that has conflicting scopes, where the nearest is not
+     * broadened since it is defined in the top-level POM:
+     * 
+     * <pre>
+     * g:p:t:1
+     * +- g:b:t:1:test (scope not updated to compile)
+     * \- g:a:t:1
+     *    \- (g:b:t:1:compile - omitted for duplicate)
+     * </pre>
+     *
+     * @throws DependencyTreeBuilderException
+     * @throws ArtifactResolutionException
+     */
     public void testProjectWithConflictDependencyScopeCurrentPom() throws DependencyTreeBuilderException, ArtifactResolutionException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
@@ -283,6 +362,19 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
     }
     */
 
+    /**
+     * Tests building a tree for a project with one transitive dependency whose version is fixed in dependency
+     * management:
+     * 
+     * <pre>
+     * g:p:t:1
+     * \- g:a:t:1
+     *    \- g:b:t:2 (version managed from 1)
+     * </pre>
+     * 
+     * @throws DependencyTreeBuilderException
+     * @throws ArtifactResolutionException
+     */
     public void testProjectWithManagedTransitiveDependencyVersion() throws DependencyTreeBuilderException, ArtifactResolutionException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
@@ -304,6 +396,18 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
+    /**
+     * Tests building a tree for a project with one transitive dependency whose scope is fixed in dependency management:
+     * 
+     * <pre>
+     * g:p:t:1
+     * \- g:a:t:1
+     *    \- g:b:t:1:test (scope managed from compile)
+     * </pre>
+     *
+     * @throws DependencyTreeBuilderException
+     * @throws ArtifactResolutionException
+     */
     public void testProjectWithManagedTransitiveDependencyScope() throws DependencyTreeBuilderException, ArtifactResolutionException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
@@ -325,6 +429,19 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
+    /**
+     * Tests building a tree for a project with one transitive dependency whose version and scope are fixed in
+     * dependency management:
+     * 
+     * <pre>
+     * g:p:t:1
+     * \- g:a:t:1
+     *    \- g:b:t:2:test (version managed from 1; scope managed from compile)
+     * </pre>
+     * 
+     * @throws DependencyTreeBuilderException
+     * @throws ArtifactResolutionException
+     */
     public void testProjectWithManagedTransitiveDependencyVersionAndScope() throws DependencyTreeBuilderException, ArtifactResolutionException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );

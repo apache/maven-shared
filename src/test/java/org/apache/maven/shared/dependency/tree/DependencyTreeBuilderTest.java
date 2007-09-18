@@ -463,6 +463,44 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
 
         assertDependencyTree( expectedRootNode, project );
     }
+    
+    /**
+     * Tests building a tree for a project with a dependency that has conflicting versions and the version is also fixed
+     * in dependency management:
+     * 
+     * <pre>
+     * g:p:t:1
+     * +- g:a:t:1
+     * \- g:b:t:1
+     *    \- (g:a:t:3 - version managed from 2; omitted for conflict with 1)
+     * </pre>
+     * 
+     * @throws DependencyTreeBuilderException
+     * @throws ArtifactResolutionException
+     */
+    public void testProjectWithManagedTransitiveDependencyVersionAndConflictDependencyVersion() throws DependencyTreeBuilderException, ArtifactResolutionException
+    {
+        Artifact projectArtifact = createArtifact( "g:p:t:1" );
+        Artifact nearestArtifact = createArtifact( "g:a:t:1" );
+        Artifact childArtifact = createArtifact( "g:b:t:1" );
+        Artifact farthestArtifact = createArtifact( "g:a:t:2" );
+        Artifact managedTransitiveArtifact = createArtifact( "g:a:t:3" );
+        addArtifactMetadata( childArtifact, farthestArtifact );
+
+        MavenProject project = createProject( projectArtifact, new Artifact[] { nearestArtifact, childArtifact } );
+        setManagedVersionMap( project, Collections.singleton( managedTransitiveArtifact ) );
+
+        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
+        DependencyNode nearestArtifactNode = createNode( "g:a:t:1" );
+        expectedRootNode.addChild( nearestArtifactNode );
+        DependencyNode childArtifactNode = createNode( "g:b:t:1" );
+        expectedRootNode.addChild( childArtifactNode );
+        DependencyNode managedTransitiveArtifactNode = createNode( "g:a:t:3", DependencyNode.OMITTED_FOR_CONFLICT, nearestArtifactNode.getArtifact() );
+        managedTransitiveArtifactNode.setPremanagedVersion( "2" );
+        childArtifactNode.addChild( managedTransitiveArtifactNode );
+
+        assertDependencyTree( expectedRootNode, project );
+    }
 
     // TODO: reinstate when MNG-3089 fixed
     /*

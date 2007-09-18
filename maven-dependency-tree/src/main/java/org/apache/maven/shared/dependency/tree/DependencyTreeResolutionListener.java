@@ -166,23 +166,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
              * Add the dependency management information cached in any prior manageArtifact calls, since includeArtifact
              * is always called after manageArtifact.
              */
-            String premanagedVersion = (String) managedVersions.get( artifact.getId() );
-            String premanagedScope = (String) managedScopes.get( artifact.getId() );
-            if ( premanagedVersion != null || premanagedScope != null )
-            {
-                if ( premanagedVersion != null )
-                {
-                    node.setPremanagedVersion( premanagedVersion );
-                }
-                
-                if ( premanagedScope != null )
-                {
-                    node.setPremanagedScope( premanagedScope );
-                }
-                
-                premanagedVersion = null;
-                premanagedScope = null;
-            }
+            flushDependencyManagement( node );
         }
     }
 
@@ -218,7 +202,11 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
 
             omittedNode.omitForConflict( kept );
             
-            
+            /*
+             * Add the dependency management information cached in any prior manageArtifact calls, since omitForNearer
+             * is always called after manageArtifact.
+             */
+            flushDependencyManagement( omittedNode );
             
             DependencyNode keptNode = getNode( kept );
             
@@ -520,5 +508,35 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         }
 
         return included;
+    }
+
+    /**
+     * Updates the specified node with any dependency management information cached in prior <code>manageArtifact</code>
+     * calls.
+     * 
+     * @param node
+     *            the node to update
+     */
+    private void flushDependencyManagement( DependencyNode node )
+    {
+        Artifact artifact = node.getArtifact();
+        String premanagedVersion = (String) managedVersions.get( artifact.getId() );
+        String premanagedScope = (String) managedScopes.get( artifact.getId() );
+        
+        if ( premanagedVersion != null || premanagedScope != null )
+        {
+            if ( premanagedVersion != null )
+            {
+                node.setPremanagedVersion( premanagedVersion );
+            }
+            
+            if ( premanagedScope != null )
+            {
+                node.setPremanagedScope( premanagedScope );
+            }
+            
+            premanagedVersion = null;
+            premanagedScope = null;
+        }
     }
 }

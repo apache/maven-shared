@@ -83,6 +83,10 @@ public class BuildingDependencyNodeVisitor implements DependencyNodeVisitor
     {
         // clone the node
         DependencyNode newNode = new DependencyNode( node.getArtifact(), node.getState(), node.getRelatedArtifact() );
+        newNode.setOriginalScope( node.getOriginalScope() );
+        newNode.setFailedUpdateScope( node.getFailedUpdateScope() );
+        newNode.setPremanagedVersion( node.getPremanagedVersion() );
+        newNode.setPremanagedScope( node.getPremanagedScope() );
 
         if ( parentNodes.empty() )
         {

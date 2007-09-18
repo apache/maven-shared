@@ -51,6 +51,88 @@ public class BuildingDependencyNodeVisitorTest extends AbstractDependencyNodeTes
         assertEquals( sourceNode, resultNode );
     }
 
+    public void testVisitNodeWithState()
+    {
+        DependencyNode sourceNode = createNode( "g:a:t:1", DependencyNode.OMITTED_FOR_CYCLE );
+
+        visitor = new BuildingDependencyNodeVisitor();
+        visitor.visit( sourceNode );
+        visitor.endVisit( sourceNode );
+
+        DependencyNode resultNode = visitor.getDependencyTree();
+        assertNotSame( sourceNode, resultNode );
+        assertEquals( sourceNode, resultNode );
+    }
+
+    public void testVisitNodeWithRelatedArtifact()
+    {
+        DependencyNode sourceNode = createNode( "g:a:t:1", DependencyNode.OMITTED_FOR_CONFLICT, "g:a:t:2" );
+
+        visitor = new BuildingDependencyNodeVisitor();
+        visitor.visit( sourceNode );
+        visitor.endVisit( sourceNode );
+
+        DependencyNode resultNode = visitor.getDependencyTree();
+        assertNotSame( sourceNode, resultNode );
+        assertEquals( sourceNode, resultNode );
+    }
+
+    public void testVisitNodeWithOriginalScope()
+    {
+        DependencyNode sourceNode = createNode( "g:a:t:1" );
+        sourceNode.setOriginalScope( "x" );
+
+        visitor = new BuildingDependencyNodeVisitor();
+        visitor.visit( sourceNode );
+        visitor.endVisit( sourceNode );
+
+        DependencyNode resultNode = visitor.getDependencyTree();
+        assertNotSame( sourceNode, resultNode );
+        assertEquals( sourceNode, resultNode );
+    }
+
+    public void testVisitNodeWithFailedUpdateScope()
+    {
+        DependencyNode sourceNode = createNode( "g:a:t:1" );
+        sourceNode.setFailedUpdateScope( "x" );
+
+        visitor = new BuildingDependencyNodeVisitor();
+        visitor.visit( sourceNode );
+        visitor.endVisit( sourceNode );
+
+        DependencyNode resultNode = visitor.getDependencyTree();
+        assertNotSame( sourceNode, resultNode );
+        assertEquals( sourceNode, resultNode );
+    }
+
+    public void testVisitNodeWithPremanagedVersion()
+    {
+        DependencyNode sourceNode = createNode( "g:a:t:1" );
+        sourceNode.setPremanagedVersion( "2" );
+
+        visitor = new BuildingDependencyNodeVisitor();
+        visitor.visit( sourceNode );
+        visitor.endVisit( sourceNode );
+
+        DependencyNode resultNode = visitor.getDependencyTree();
+        assertNotSame( sourceNode, resultNode );
+        assertEquals( sourceNode, resultNode );
+    }
+
+    public void testVisitNodeWithPremanagedScope()
+    {
+        DependencyNode sourceNode = createNode( "g:a:t:1" );
+        sourceNode.setPremanagedScope( "x" );
+
+        visitor = new BuildingDependencyNodeVisitor();
+        visitor.visit( sourceNode );
+        visitor.endVisit( sourceNode );
+
+        DependencyNode resultNode = visitor.getDependencyTree();
+        assertNotSame( sourceNode, resultNode );
+        assertEquals( sourceNode, resultNode );
+    }
+
     public void testVisitNodeWithChild()
     {
         DependencyNode sourceNode = createNode( "g:a:t:1" );

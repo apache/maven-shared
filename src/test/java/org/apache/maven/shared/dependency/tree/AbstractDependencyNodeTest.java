@@ -35,11 +35,26 @@ public abstract class AbstractDependencyNodeTest extends MockObjectTestCase
 
     protected DependencyNode createNode( String id )
     {
-        return new DependencyNode( createArtifact( id ) );
+        return createNode( id, DependencyNode.INCLUDED );
+    }
+
+    protected DependencyNode createNode( String id, int state )
+    {
+        return createNode( id, state, null );
+    }
+
+    protected DependencyNode createNode( String id, int state, String relatedId )
+    {
+        return new DependencyNode( createArtifact( id ), state, createArtifact( relatedId ) );
     }
 
     protected Artifact createArtifact( String id )
     {
+        if ( id == null )
+        {
+            return null;
+        }
+        
         String[] tokens = id.split( ":" );
 
         return createArtifact( get( tokens, 0 ), get( tokens, 1 ), get( tokens, 2 ), get( tokens, 3 ), get( tokens, 4 ) );

@@ -435,6 +435,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
      *            the attached artifact for the new dependency node
      * @return the new dependency node
      */
+    // package protected for unit test
     DependencyNode addNode( Artifact artifact )
     {
         DependencyNode node = createNode( artifact );

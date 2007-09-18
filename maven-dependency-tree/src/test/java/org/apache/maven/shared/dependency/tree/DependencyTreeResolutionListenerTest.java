@@ -23,6 +23,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.artifact.versioning.VersionRange;
+import org.apache.maven.plugin.testing.SilentLog;
 
 /**
  * Tests <code>DependencyTreeResolutionListener</code>.
@@ -47,7 +48,7 @@ public class DependencyTreeResolutionListenerTest extends AbstractDependencyNode
     {
         super.setUp();
 
-        listener = new DependencyTreeResolutionListener();
+        listener = new DependencyTreeResolutionListener( new SilentLog() );
     }
 
     // tests ------------------------------------------------------------------

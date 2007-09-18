@@ -32,6 +32,7 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.apache.maven.shared.dependency.tree.traversal.CollectingDependencyNodeVisitor;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
  * Default implementation of <code>DependencyTreeBuilder</code>.
@@ -42,7 +43,7 @@ import org.apache.maven.shared.dependency.tree.traversal.CollectingDependencyNod
  * @plexus.component role="org.apache.maven.shared.dependency.tree.DependencyTreeBuilder"
  * @see DependencyTreeBuilder
  */
-public class DefaultDependencyTreeBuilder implements DependencyTreeBuilder
+public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements DependencyTreeBuilder
 {
     // DependencyTreeBuilder methods ------------------------------------------
 
@@ -76,7 +77,7 @@ public class DefaultDependencyTreeBuilder implements DependencyTreeBuilder
                                                ArtifactFilter filter, ArtifactCollector collector )
         throws DependencyTreeBuilderException
     {
-        DependencyTreeResolutionListener listener = new DependencyTreeResolutionListener();
+        DependencyTreeResolutionListener listener = new DependencyTreeResolutionListener( getLogger() );
 
         try
         {
@@ -88,6 +89,8 @@ public class DefaultDependencyTreeBuilder implements DependencyTreeBuilder
             {
                 dependencyArtifacts = project.createArtifacts( factory, null, null );
             }
+            
+            getLogger().debug( "Dependency tree resolution listener events:" );
 
             collector.collect( dependencyArtifacts, project.getArtifact(), managedVersions, repository,
                                project.getRemoteArtifactRepositories(), metadataSource, filter,

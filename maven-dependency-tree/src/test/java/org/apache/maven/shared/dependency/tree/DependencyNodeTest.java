@@ -104,6 +104,24 @@ public class DependencyNodeTest
         assertEquals( "g:a:t:1:s", node.toNodeString() );
     }
 
+    public void testToNodeStringIncludedWithManagedVersion()
+    {
+        Artifact artifact = createArtifact( "g:a:t:1:s" );
+        DependencyNode node = new DependencyNode( artifact );
+        node.setPremanagedVersion( "2" );
+        
+        assertEquals( "g:a:t:1:s (version managed from 2)", node.toNodeString() );
+    }
+
+    public void testToNodeStringIncludedWithManagedScope()
+    {
+        Artifact artifact = createArtifact( "g:a:t:1:s" );
+        DependencyNode node = new DependencyNode( artifact );
+        node.setPremanagedScope( "x" );
+        
+        assertEquals( "g:a:t:1:s (scope managed from x)", node.toNodeString() );
+    }
+
     public void testToNodeStringIncludedWithUpdatedScope()
     {
         Artifact artifact = createArtifact( "g:a:t:1:s" );

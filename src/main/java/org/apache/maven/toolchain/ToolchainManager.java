@@ -25,23 +25,26 @@ import org.apache.maven.context.BuildContext;
  *
  * @author mkleint
  */
-public interface ToolchainManager {
+public interface ToolchainManager
+{
 
-    String ROLE = ToolchainManager.class.getName();
-    
+    String ROLE = ToolchainManager.class.getName(  );
+
     /**
      * to be called from toolchains-plugin only.. TODO split?
-     */ 
-    ToolchainPrivate[] getToolchainsForType(String type) throws MisconfiguredToolchainException;
+     */
+    ToolchainPrivate[] getToolchainsForType( String type )
+        throws MisconfiguredToolchainException;
 
     /**
      * to be used from plugins capable of working with toolchains.
-     */ 
-    Toolchain getToolchainFromBuildContext(String type, BuildContext context);
-    
+     */
+    Toolchain getToolchainFromBuildContext( String type,
+                                            BuildContext context );
+
     /**
      * to be called from toolchains-plugin only.. TODO split?
-     */ 
-    void storeToolchainToBuildContext(ToolchainPrivate toolchain, BuildContext context);
-    
+     */
+    void storeToolchainToBuildContext( ToolchainPrivate toolchain,
+                                       BuildContext context );
 }

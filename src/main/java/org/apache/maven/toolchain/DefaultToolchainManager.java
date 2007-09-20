@@ -43,95 +43,136 @@ import org.codehaus.plexus.util.IOUtil;
  *
  * @author mkleint
  */
-public class DefaultToolchainManager implements ToolchainManager, Contextualizable {
+public class DefaultToolchainManager
+    implements ToolchainManager,
+               Contextualizable
+{
 
-    /** 
+    /**
      * @component
      */
     private PlexusContainer container;
 
-    public DefaultToolchainManager() {
+    public DefaultToolchainManager( )
+    {
     }
 
-    public void contextualize(Context context) throws ContextException {
-        container = (PlexusContainer)context.get(PlexusConstants.PLEXUS_KEY);
+    public void contextualize( Context context )
+        throws ContextException
+    {
+        container = (PlexusContainer) context.get(PlexusConstants.PLEXUS_KEY);
     }
 
-    public ToolchainPrivate[] getToolchainsForType(String type) throws MisconfiguredToolchainException {
-        try {
-            PersistedToolchains pers = readToolchainSettings();
-            Map factories = container.lookupMap(ToolchainFactory.ROLE);
-            List toRet = new ArrayList();
-            if (pers != null) {
-                List lst = pers.getToolchains();
-                if (lst != null) {
-                    Iterator it = lst.iterator();
-                    while (it.hasNext()) {
+    public ToolchainPrivate[] getToolchainsForType( String type )
+        throws MisconfiguredToolchainException
+    {
+        try
+        {
+            PersistedToolchains pers = readToolchainSettings(  );
+            Map factories = container.lookupMap( ToolchainFactory.ROLE );
+            List toRet = new ArrayList(  );
+            if ( pers != null )
+            {
+                List lst = pers.getToolchains(  );
+                if ( lst != null )
+                {
+                    Iterator it = lst.iterator(  );
+                    while ( it.hasNext(  ) )
+                    {
                         ToolchainModel toolchainModel = (ToolchainModel) it.next();
-                        ToolchainFactory fact = (ToolchainFactory)factories.get(toolchainModel.getType());
-                        if (fact != null) {
-                            toRet.add(fact.createToolchain(toolchainModel));
-                        } else {
+                        ToolchainFactory fact = (ToolchainFactory) factories.get(toolchainModel.getType());
+                        if ( fact != null )
+                        {
+                            toRet.add( fact.createToolchain( toolchainModel ) );
+                        }
+                        else
+                        {
                             //TODO log the missing factory.
-                            System.out.println("missing factory.." + toolchainModel);
+                            System.out.println( "missing factory.." + toolchainModel );
                         }
                     }
                 }
             }
-            Iterator it = factories.values().iterator();
-            while (it.hasNext()) {
-                ToolchainFactory fact = (ToolchainFactory)it.next();
-                ToolchainPrivate tool = fact.createDefaultToolchain();
-                if (tool != null) {
-                    toRet.add(tool);
+            Iterator it = factories.values(  ).iterator(  );
+            while ( it.hasNext(  ) )
+            {
+                ToolchainFactory fact = (ToolchainFactory) it.next();
+                ToolchainPrivate tool = fact.createDefaultToolchain(  );
+                if ( tool != null )
+                {
+                    toRet.add( tool );
                 }
             }
-            ToolchainPrivate[] tc = new ToolchainPrivate[toRet.size()];
+            ToolchainPrivate[] tc = new ToolchainPrivate[toRet.size(  )];
             return (ToolchainPrivate[]) toRet.toArray(tc);
-        } catch (ComponentLookupException ex) {
+        }
+        catch ( ComponentLookupException ex )
+        {
             //TODO
-            ex.printStackTrace();
+            ex.printStackTrace(  );
         }
         return new ToolchainPrivate[0];
     }
 
-    public Toolchain getToolchainFromBuildContext(String type, BuildContext context) {
-        try {
+    public Toolchain getToolchainFromBuildContext( String type,
+                                                   BuildContext context )
+    {
+        try
+        {
             ToolchainFactory fact = (ToolchainFactory) container.lookup(ToolchainFactory.ROLE, type);
-            Toolchain dt = fact.createToolchain(context);
-            if (dt != null) {
+            Toolchain dt = fact.createToolchain( context );
+            if ( dt != null )
+            {
                 return dt;
             }
             return null;
-        } catch (ComponentLookupException ex) {
+        }
+        catch ( ComponentLookupException ex )
+        {
             //TODO report
-            ex.printStackTrace();
-        } catch (MisconfiguredToolchainException ex) {
+            ex.printStackTrace(  );
+        }
+        catch ( MisconfiguredToolchainException ex )
+        {
             //TODO report
-            ex.printStackTrace();
+            ex.printStackTrace(  );
         }
         return null;
     }
-    
-    public void storeToolchainToBuildContext(ToolchainPrivate toolchain, BuildContext context) {
-        context.store(toolchain);
+
+    public void storeToolchainToBuildContext( ToolchainPrivate toolchain,
+                                              BuildContext context )
+    {
+        context.store( toolchain );
     }
-    
-    private PersistedToolchains readToolchainSettings() throws MisconfiguredToolchainException {
+
+    private PersistedToolchains readToolchainSettings( )
+        throws MisconfiguredToolchainException
+    {
         //TODO how to point to the local path?
-        File tch = new File(System.getProperty("user.home"), ".m2/toolchains.xml");
-        if (tch.exists()) {
-            MavenToolchainsXpp3Reader reader = new MavenToolchainsXpp3Reader();
+        File tch = new File( System.getProperty( "user.home" ),
+            ".m2/toolchains.xml" );
+        if ( tch.exists(  ) )
+        {
+            MavenToolchainsXpp3Reader reader = new MavenToolchainsXpp3Reader(  );
             InputStreamReader in = null;
-            try {
-                in = new InputStreamReader(new BufferedInputStream(new FileInputStream(tch)));
-                return reader.read(in);
-            } catch (Exception ex) {
-                throw new MisconfiguredToolchainException("Cannot read toolchains file at " + tch.getAbsolutePath(), ex);
-            } finally {
-                IOUtil.close(in);
+            try
+            {
+                in = new InputStreamReader( new BufferedInputStream( new FileInputStream( tch ) ) );
+                return reader.read( in );
             }
-        } else {
+            catch ( Exception ex )
+            {
+                throw new MisconfiguredToolchainException( "Cannot read toolchains file at " + tch.getAbsolutePath(  ),
+                    ex );
+            }
+            finally
+            {
+                IOUtil.close( in );
+            }
+        }
+        else
+        {
             //TODO log the fact that no toolchains file was found.
         }
         return null;

@@ -34,56 +34,74 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
  *
  * @author mkleint
  */
-public class DefaultJavaToolchainFactory implements ToolchainFactory {
+public class DefaultJavaToolchainFactory
+    implements ToolchainFactory
+{
 
-    public DefaultJavaToolchainFactory() {
+    public DefaultJavaToolchainFactory( )
+    {
     }
 
-    public ToolchainPrivate createToolchain(ToolchainModel model) throws MisconfiguredToolchainException {
-        DefaultJavaToolChain jtc = new DefaultJavaToolChain();
-        Xpp3Dom dom = (Xpp3Dom)model.getConfiguration();
-        Xpp3Dom javahome = dom.getChild(DefaultJavaToolChain.KEY_JAVAHOME);
-        if (javahome == null) {
-            throw new MisconfiguredToolchainException("Java toolchain without the " + DefaultJavaToolChain.KEY_JAVAHOME + " configuration element.");
+    public ToolchainPrivate createToolchain( ToolchainModel model )
+        throws MisconfiguredToolchainException
+    {
+        DefaultJavaToolChain jtc = new DefaultJavaToolChain(  );
+        Xpp3Dom dom = (Xpp3Dom) model.getConfiguration();
+        Xpp3Dom javahome = dom.getChild( DefaultJavaToolChain.KEY_JAVAHOME );
+        if ( javahome == null )
+        {
+            throw new MisconfiguredToolchainException( "Java toolchain without the " + DefaultJavaToolChain.KEY_JAVAHOME + " configuration element." );
         }
-        File normal = new File(FileUtils.normalize(javahome.getValue()));
-        if (normal.exists()) {
-            jtc.setJavaHome(FileUtils.normalize(javahome.getValue()));
-        } else {
-            throw new MisconfiguredToolchainException("Non-existing JDK home configuration at " + normal.getAbsolutePath());
+        File normal = new File( FileUtils.normalize( javahome.getValue(  ) ) );
+        if ( normal.exists(  ) )
+        {
+            jtc.setJavaHome( FileUtils.normalize( javahome.getValue(  ) ) );
         }
-        
+        else
+        {
+            throw new MisconfiguredToolchainException( "Non-existing JDK home configuration at " + normal.getAbsolutePath(  ) );
+        }
+
         //now populate the provides section.
         //TODO possibly move at least parts to a utility method or abstract implementation.
-        dom = (Xpp3Dom)model.getProvides();
-        Xpp3Dom[] provides = dom.getChildren();
-        for (int i = 0; i < provides.length; i++) {
-            String key = provides[i].getName();
-            String value = provides[i].getValue();
-            if (value == null) {
-                throw new MisconfiguredToolchainException("Provides token '" + key + "' doesn't have any value configured.");
+        dom = (Xpp3Dom) model.getProvides();
+        Xpp3Dom[] provides = dom.getChildren(  );
+        for ( int i = 0; i < provides.length; i++ )
+        {
+            String key = provides[i].getName(  );
+            String value = provides[i].getValue(  );
+            if ( value == null )
+            {
+                throw new MisconfiguredToolchainException( "Provides token '" + key + "' doesn't have any value configured." );
             }
-            if ("version".equals(key)) {
-                jtc.addProvideToken(key, RequirementMatcherFactory.createVersionMatcher(value));
-            } else {
-                jtc.addProvideToken(key, RequirementMatcherFactory.createExactMatcher(value));
+            if ( "version".equals( key ) )
+            {
+                jtc.addProvideToken( key,
+                    RequirementMatcherFactory.createVersionMatcher( value ) );
+            }
+            else
+            {
+                jtc.addProvideToken( key,
+                    RequirementMatcherFactory.createExactMatcher( value ) );
             }
         }
         return jtc;
     }
 
-
-    public ToolchainPrivate createDefaultToolchain() {
+    public ToolchainPrivate createDefaultToolchain( )
+    {
         return null;
     }
 
-    public Toolchain createToolchain(BuildContext context) throws MisconfiguredToolchainException {
-        DefaultJavaToolChain jtc = new DefaultJavaToolChain();
-        boolean retrieve = context.retrieve(jtc);
-        if (retrieve) {
+    public Toolchain createToolchain( BuildContext context )
+        throws MisconfiguredToolchainException
+    {
+        DefaultJavaToolChain jtc = new DefaultJavaToolChain(  );
+        boolean retrieve = context.retrieve( jtc );
+        if ( retrieve )
+        {
             return jtc;
         }
         return null;
     }
-
 }

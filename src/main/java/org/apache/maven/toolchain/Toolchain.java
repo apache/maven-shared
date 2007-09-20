@@ -25,11 +25,11 @@ import org.apache.maven.context.ManagedBuildData;
  * @author Milos Kleint
  * @author Jason van Zyl
  */
-public interface Toolchain extends ManagedBuildData
+public interface Toolchain
+    extends ManagedBuildData
 {
-    
-    String getType();
-    
+
+    String getType( );
 
     /**
      * Gets the platform tool executable.
@@ -38,5 +38,4 @@ public interface Toolchain extends ManagedBuildData
      * @return file representing the tool executable, or null if the tool can not be found
      */
     String findTool( String toolName );
-
 }

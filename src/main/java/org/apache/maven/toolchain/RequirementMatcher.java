@@ -23,8 +23,8 @@ package org.apache.maven.toolchain;
  *
  * @author mkleint
  */
-public interface RequirementMatcher {
-    
-    boolean matches(String requirement);
-    
+public interface RequirementMatcher
+{
+
+    boolean matches( String requirement );
 }

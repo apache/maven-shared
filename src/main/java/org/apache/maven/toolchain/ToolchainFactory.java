@@ -23,25 +23,27 @@ import org.apache.maven.context.BuildContext;
 import org.apache.maven.toolchain.model.ToolchainModel;
 
 /**
- * 
+ *
  * @author mkleint
  */
-public interface ToolchainFactory {
+public interface ToolchainFactory
+{
 
-    String ROLE = ToolchainFactory.class.getName();
+    String ROLE = ToolchainFactory.class.getName(  );
 
-    Toolchain createToolchain(BuildContext context) throws MisconfiguredToolchainException;
+    Toolchain createToolchain( BuildContext context )
+        throws MisconfiguredToolchainException;
 
     /**
      * Create instance of toolchain.
      **/
-    ToolchainPrivate createToolchain(ToolchainModel model) throws MisconfiguredToolchainException;
+    ToolchainPrivate createToolchain( ToolchainModel model )
+        throws MisconfiguredToolchainException;
 
     /**
      * Returns the default instance of the particular type of toolchain, can return null
      * if not applicable.
      * TODO keep around??
      **/
-    ToolchainPrivate createDefaultToolchain();
-
+    ToolchainPrivate createDefaultToolchain( );
 }

@@ -26,32 +26,40 @@ import java.util.Map;
  *
  * @author mkleint
  */
-public abstract class DefaultToolchain implements Toolchain, ToolchainPrivate {
-    
+public abstract class DefaultToolchain
+    implements Toolchain, ToolchainPrivate
+{
+
     private String type;
-    private Map provides = new HashMap/*<String,RequirementMatcher>*/(); 
+
+    private Map provides = new HashMap /*<String,RequirementMatcher>*/ (  );
+
     public static final String KEY_TYPE = "type"; //NOI18N
 
-    protected DefaultToolchain() {
+    protected DefaultToolchain( )
+    {
     }
-    
-    protected DefaultToolchain(String type) {
+
+    protected DefaultToolchain( String type )
+    {
         this.type = type;
     }
 
-    public final String getType() {
+    public final String getType( )
+    {
         return type;
     }
 
-    public final String getStorageKey() {
+    public final String getStorageKey( )
+    {
         return "toolchain-" + type; //NOI18N
     }
 
-    public Map getData()
+    public Map getData( )
     {
         Map data = new HashMap( 2 );
         data.put( KEY_TYPE, type );
-        
+
         return data;
     }
 
@@ -59,14 +67,15 @@ public abstract class DefaultToolchain implements Toolchain, ToolchainPrivate {
     {
         type = (String) data.get( KEY_TYPE );
     }
-    
-    public final void addProvideToken(String type, RequirementMatcher matcher) {
-        provides.put(type, matcher);
+
+    public final void addProvideToken( String type,
+                                       RequirementMatcher matcher )
+    {
+        provides.put( type, matcher );
     }
 
-    public Map getRequirementMatchers() {
-        return new HashMap(provides);
+    public Map getRequirementMatchers( )
+    {
+        return new HashMap( provides );
     }
-    
-
 }

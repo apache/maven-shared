@@ -23,39 +23,55 @@ package org.apache.maven.toolchain;
  *
  * @author mkleint
  */
-public final class RequirementMatcherFactory {
-    
-    private RequirementMatcherFactory() {}
-    
-    public static RequirementMatcher createExactMatcher(String provideValue) {
-        return new ExactMatcher(provideValue);
+public final class RequirementMatcherFactory
+{
+
+    private RequirementMatcherFactory( )
+    {
     }
-    
-    public static RequirementMatcher createVersionMatcher(String provideValue) {
-        return new VersionMatcher(provideValue);
+
+    public static RequirementMatcher createExactMatcher( String provideValue )
+    {
+        return new ExactMatcher( provideValue );
     }
-    
-    private static final class ExactMatcher implements RequirementMatcher {
+
+    public static RequirementMatcher createVersionMatcher( String provideValue )
+    {
+        return new VersionMatcher( provideValue );
+    }
+
+    private static final class ExactMatcher
+        implements RequirementMatcher
+    {
+
         private String provides;
-        private ExactMatcher(String provides) {
+
+        private ExactMatcher( String provides )
+        {
             this.provides = provides;
         }
 
-        public boolean matches(String requirement) {
-            return provides.equalsIgnoreCase(requirement);
+        public boolean matches( String requirement )
+        {
+            return provides.equalsIgnoreCase( requirement );
         }
     }
-    
-    private static final class VersionMatcher implements RequirementMatcher {
+
+    private static final class VersionMatcher
+        implements RequirementMatcher
+    {
+
         private String version;
-        
-        private VersionMatcher(String version) {
+
+        private VersionMatcher( String version )
+        {
             this.version = version;
         }
-        
-        public boolean matches(String requirement) {
+
+        public boolean matches( String requirement )
+        {
             //TODO have exact the same version resolution as the enforcer has..
-            return version.equals(requirement);
+            return version.equals( requirement );
         }
     }
 }

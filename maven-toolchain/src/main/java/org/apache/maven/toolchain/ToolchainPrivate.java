@@ -25,7 +25,9 @@ import java.util.Map;
  * a private contract between the toolchains plugin and the components.
  * @author mkleint
  */
-public interface ToolchainPrivate extends Toolchain {
+public interface ToolchainPrivate
+    extends Toolchain
+{
 
-    Map getRequirementMatchers();
+    Map getRequirementMatchers( );
 }

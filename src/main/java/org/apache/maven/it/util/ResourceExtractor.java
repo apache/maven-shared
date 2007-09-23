@@ -58,7 +58,6 @@ public class ResourceExtractor {
         ZipFile z = new ZipFile(jarFile, ZipFile.OPEN_READ);
         String zipStyleResourcePath = resourcePath.substring(1) + "/"; 
         ZipEntry ze = z.getEntry(zipStyleResourcePath);
-        System.out.println( "Extracting "+resourcePath+" to " + dest.getAbsolutePath() );
         if (ze != null) {
             // DGF If it's a directory, then we need to look at all the entries
             for (Enumeration entries = z.entries(); entries.hasMoreElements();) {

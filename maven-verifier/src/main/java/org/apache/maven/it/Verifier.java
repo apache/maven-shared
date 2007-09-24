@@ -881,7 +881,7 @@ public class Verifier
                 System.out.println();
             }
 
-            if ( System.getenv( "JAVA_HOME" ) == null && envVars.get( "JAVA_HOME" ) == null )
+            if ( envVars.get( "JAVA_HOME" ) == null )
             {
                 cli.addEnvironment( "JAVA_HOME", System.getProperty( "java.home" ));
             }

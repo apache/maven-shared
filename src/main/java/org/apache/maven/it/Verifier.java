@@ -202,7 +202,7 @@ public class Verifier
             // A hack to keep stupid velocity resource loader errors from triggering failure
             if ( line.indexOf( "[ERROR]" ) >= 0 && line.indexOf( "VM_global_library.vm" ) == -1 )
             {
-                throw new VerificationException( "Error in execution." );
+                throw new VerificationException( "Error in execution: " + line );
             }
         }
     }

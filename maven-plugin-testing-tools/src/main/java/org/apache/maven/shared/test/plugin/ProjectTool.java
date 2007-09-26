@@ -212,8 +212,7 @@ public class ProjectTool
         goals.add( "package" );
 
         File buildLog = logFile == null ? pomInfo.getBuildLogFile() : logFile;
-        
-        System.out.println( "Using staged plugin-pom: " + pomInfo.getPomFile().getAbsolutePath() );
+        System.out.println( "Now Building test version of the plugin...\nUsing staged plugin-pom: " + pomInfo.getPomFile().getAbsolutePath() );
 
         buildTool.executeMaven( pomInfo.getPomFile(), properties, goals, buildLog );
 

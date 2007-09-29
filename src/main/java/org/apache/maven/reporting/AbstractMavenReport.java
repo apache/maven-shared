@@ -99,7 +99,7 @@ public abstract class AbstractMavenReport
     public void generate( Sink aSink, SinkFactory aSinkFactory, Locale aLocale )
         throws MavenReportException
     {
-        if ( sink == null )
+        if ( aSink == null )
         {
             throw new MavenReportException( "You must specify a sink." );
         }

@@ -52,10 +52,10 @@ public class DefaultJavaToolchainFactory
         {
             throw new MisconfiguredToolchainException( "Java toolchain without the " + DefaultJavaToolChain.KEY_JAVAHOME + " configuration element." );
         }
-        File normal = new File( FileUtils.normalize( javahome.getValue(  ) ) );
-        if ( normal.exists(  ) )
+        File normal = new File( FileUtils.normalize( javahome.getValue() ) );
+        if ( normal.exists() )
         {
-            jtc.setJavaHome( FileUtils.normalize( javahome.getValue(  ) ) );
+            jtc.setJavaHome( FileUtils.normalize( javahome.getValue() ) );
         }
         else
         {
@@ -65,7 +65,7 @@ public class DefaultJavaToolchainFactory
         //now populate the provides section.
         //TODO possibly move at least parts to a utility method or abstract implementation.
         dom = (Xpp3Dom) model.getProvides();
-        Xpp3Dom[] provides = dom.getChildren(  );
+        Xpp3Dom[] provides = dom.getChildren();
         for ( int i = 0; i < provides.length; i++ )
         {
             String key = provides[i].getName(  );
@@ -96,7 +96,7 @@ public class DefaultJavaToolchainFactory
     public Toolchain createToolchain( BuildContext context )
         throws MisconfiguredToolchainException
     {
-        DefaultJavaToolChain jtc = new DefaultJavaToolChain(  );
+        DefaultJavaToolChain jtc = new DefaultJavaToolChain();
         boolean retrieve = context.retrieve( jtc );
         if ( retrieve )
         {

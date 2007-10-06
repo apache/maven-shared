@@ -19,6 +19,10 @@
 
 package org.apache.maven.toolchain;
 
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
+
 /**
  *
  * @author mkleint
@@ -61,17 +65,31 @@ public final class RequirementMatcherFactory
         implements RequirementMatcher
     {
 
-        private String version;
+        DefaultArtifactVersion version;
 
         private VersionMatcher( String version )
         {
-            this.version = version;
+            this.version = new DefaultArtifactVersion(version);
+            System.out.println("version=" + version.toString());
         }
 
         public boolean matches( String requirement )
         {
-            //TODO have exact the same version resolution as the enforcer has..
-            return version.equals( requirement );
+            try 
+            {
+                VersionRange range = VersionRange.createFromVersionSpec(requirement);
+                if (range.hasRestrictions()) {
+                    return range.containsVersion(version);
+                } else {
+                    return range.getRecommendedVersion().equals(version);
+                }
+            } 
+            catch (InvalidVersionSpecificationException ex) 
+            {
+                //TODO error reporting
+                ex.printStackTrace();
+                return false;
+            }
         }
     }
 }

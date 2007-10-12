@@ -502,7 +502,7 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
-    // TODO: reinstate when MNG-3089 fixed
+    // TODO: reinstate when MNG-3236 fixed
     /*
     public void testProjectWithFilter() throws DependencyTreeBuilderException, ArtifactResolutionException
     {

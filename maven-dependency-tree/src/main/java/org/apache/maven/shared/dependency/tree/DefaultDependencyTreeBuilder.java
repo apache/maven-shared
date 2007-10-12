@@ -91,6 +91,8 @@ public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements 
             }
             
             getLogger().debug( "Dependency tree resolution listener events:" );
+            
+            // TODO: note that filter does not get applied due to MNG-3236
 
             collector.collect( dependencyArtifacts, project.getArtifact(), managedVersions, repository,
                                project.getRemoteArtifactRepositories(), metadataSource, filter,

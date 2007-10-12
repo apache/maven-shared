@@ -46,13 +46,13 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
 
 /**
- * Tests <code>DependencyTreeBuilder</code>.
+ * Tests <code>DefaultDependencyTreeBuilder</code>.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
- * @see DependencyTreeBuilder
+ * @see DefaultDependencyTreeBuilder
  */
-public class DependencyTreeBuilderTest extends PlexusTestCase
+public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
 {
     // fields -----------------------------------------------------------------
 

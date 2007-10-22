@@ -38,7 +38,6 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactCollector;
-import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ResolutionNode;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
@@ -47,17 +46,17 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
 
 /**
- * Tests <code>DependencyTreeBuilder</code>.
+ * Tests <code>DefaultDependencyTreeBuilder</code>.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
- * @see DependencyTreeBuilder
+ * @see DefaultDependencyTreeBuilder
  */
-public class DependencyTreeBuilderTest extends PlexusTestCase
+public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
 {
     // fields -----------------------------------------------------------------
 
-    private DependencyTreeBuilder builder;
+    private DefaultDependencyTreeBuilder builder;
 
     private ArtifactRepository artifactRepository;
 
@@ -76,7 +75,7 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
     {
         super.setUp();
 
-        builder = (DependencyTreeBuilder) lookup( DependencyTreeBuilder.ROLE );
+        builder = (DefaultDependencyTreeBuilder) lookup( DependencyTreeBuilder.ROLE );
 
         String repositoryURL = getTestFile( "target/local-repo" ).toURI().toString();
         artifactRepository = new DefaultArtifactRepository( "local", repositoryURL, new DefaultRepositoryLayout() );
@@ -107,9 +106,8 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
      * </pre>
      * 
      * @throws DependencyTreeBuilderException 
-     * @throws ArtifactResolutionException 
      */
-    public void testProjectWithDependency() throws DependencyTreeBuilderException, ArtifactResolutionException
+    public void testProjectWithDependency() throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -132,9 +130,8 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
      * </pre>
      *
      * @throws DependencyTreeBuilderException
-     * @throws ArtifactResolutionException
      */
-    public void testProjectWithTransitiveDependency() throws DependencyTreeBuilderException, ArtifactResolutionException
+    public void testProjectWithTransitiveDependency() throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -163,9 +160,8 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
      * </pre>
      *
      * @throws DependencyTreeBuilderException
-     * @throws ArtifactResolutionException
      */
-    public void testProjectWithDuplicateDependency() throws DependencyTreeBuilderException, ArtifactResolutionException
+    public void testProjectWithDuplicateDependency() throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact child1Artifact = createArtifact( "g:a:t:1" );
@@ -201,9 +197,8 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
      * </pre>
      *
      * @throws DependencyTreeBuilderException
-     * @throws ArtifactResolutionException
      */
-    public void testProjectWithConflictDependencyVersionFirstWins() throws DependencyTreeBuilderException, ArtifactResolutionException
+    public void testProjectWithConflictDependencyVersionFirstWins() throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact nearestArtifact = createArtifact( "g:a:t:1" );
@@ -235,9 +230,8 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
      * </pre>
      *
      * @throws DependencyTreeBuilderException
-     * @throws ArtifactResolutionException
      */
-    public void testProjectWithConflictDependencyVersionLastWins() throws DependencyTreeBuilderException, ArtifactResolutionException
+    public void testProjectWithConflictDependencyVersionLastWins() throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -269,9 +263,8 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
      * </pre>
      *
      * @throws DependencyTreeBuilderException
-     * @throws ArtifactResolutionException
      */
-    public void testProjectWithConflictDependencyScopeCurrentPom() throws DependencyTreeBuilderException, ArtifactResolutionException
+    public void testProjectWithConflictDependencyScopeCurrentPom() throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact nearestArtifact = createArtifact( "g:b:t:1:test" );
@@ -292,9 +285,87 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
-    // TODO: fix when discussion resolved: http://www.mail-archive.com/dev@maven.apache.org/msg68011.html
-    /*
-    public void testProjectWithConflictDependencyScope() throws DependencyTreeBuilderException, ArtifactResolutionException
+    /**
+     * Tests building a tree for a project with a dependency that has conflicting scopes, where the winner is
+     * encountered first:
+     * 
+     * <pre>
+     * g:p:t:1
+     * \- g:a:t:1
+     *    +- g:b:t:1
+     *    |  \- g:c:t:1:compile
+     *    \- (g:c:t:1:compile - scope updated from test; omitted for duplicate)
+     * </pre>
+     *
+     * @throws DependencyTreeBuilderException
+     */
+    public void testProjectWithConflictDependencyScopeFirstWins() throws DependencyTreeBuilderException
+    {
+        Artifact projectArtifact = createArtifact( "g:p:t:1" );
+        Artifact childArtifact = createArtifact( "g:a:t:1" );
+        Artifact grandchildArtifact = createArtifact( "g:b:t:1" );
+        Artifact farthestArtifact = createArtifact( "g:c:t:1:compile" );
+        Artifact nearestArtifact = createArtifact( "g:c:t:1:test" );
+        addArtifactMetadata( childArtifact, new Artifact[] { grandchildArtifact, nearestArtifact } );
+        addArtifactMetadata( grandchildArtifact, farthestArtifact );
+
+        MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } );
+
+        /*
+         * TODO: Not entirely convinced that the expected tree is correct - I would have expected:
+         * 
+         * <pre>
+         * g:p:t:1
+         * \- g:a:t:1
+         *    +- g:b:t:1
+         *    |  \- (g:c:t:1:compile - omitted for duplicate)
+         *    \- g:c:t:1:compile (scope updated from test)
+         * </pre>
+         * 
+         * @see http://www.mail-archive.com/dev@maven.apache.org/msg68011.html
+         */
+        /*
+        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
+        DependencyNode childArtifactNode = createNode( "g:a:t:1" );
+        expectedRootNode.addChild( childArtifactNode );
+        DependencyNode grandchildArtifactNode = createNode( "g:b:t:1" );
+        childArtifactNode.addChild( grandchildArtifactNode );
+        DependencyNode nearestArtifactNode = createNode( "g:c:t:1:compile" );
+        DependencyNode farthestArtifactNode = createNode( "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, nearestArtifactNode.getArtifact() );
+        grandchildArtifactNode.addChild( farthestArtifactNode );
+        nearestArtifactNode.setOriginalScope( "test" );
+        childArtifactNode.addChild( nearestArtifactNode );
+        */
+
+        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
+        DependencyNode childArtifactNode = createNode( "g:a:t:1" );
+        expectedRootNode.addChild( childArtifactNode );
+        DependencyNode grandchildArtifactNode = createNode( "g:b:t:1" );
+        childArtifactNode.addChild( grandchildArtifactNode );
+        DependencyNode farthestArtifactNode = createNode( "g:c:t:1:compile" );
+        grandchildArtifactNode.addChild( farthestArtifactNode );
+        DependencyNode nearestArtifactNode = createNode( "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, farthestArtifactNode.getArtifact() );
+        nearestArtifactNode.setOriginalScope( "test" );
+        childArtifactNode.addChild( nearestArtifactNode );
+        
+        assertDependencyTree( expectedRootNode, project );
+    }
+
+    /**
+     * Tests building a tree for a project with a dependency that has conflicting scopes, where the winner is
+     * encountered last:
+     * 
+     * <pre>
+     * g:p:t:1
+     * \- g:a:t:1
+     *    +- (g:c:t:1:compile - scope updated from test; omitted for duplicate)
+     *    \- g:b:t:1
+     *       \- g:c:t:1:compile
+     * </pre>
+     *
+     * @throws DependencyTreeBuilderException
+     */
+    public void testProjectWithConflictDependencyScopeLastWins() throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -306,17 +377,31 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
 
         MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } );
 
-        // TODO: i would have expected this..
-//        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
-//        DependencyNode childArtifactNode = createNode( "g:a:t:1" );
-//        expectedRootNode.addChild( childArtifactNode );
-//        DependencyNode nearestArtifactNode = createNode( "g:c:t:1:compile" );
-//        nearestArtifactNode.setOriginalScope( "test" );
-//        childArtifactNode.addChild( nearestArtifactNode );
-//        DependencyNode grandchildArtifactNode = createNode( "g:b:t:1" );
-//        childArtifactNode.addChild( grandchildArtifactNode );
-//        grandchildArtifactNode.addChild( createNode( "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, nearestArtifactNode.getArtifact() ) );
-
+        /*
+         * TODO: Not entirely convinced that the expected tree is correct - I would have expected:
+         * 
+         * <pre>
+         * g:p:t:1
+         * \- g:a:t:1
+         *    +- g:c:t:1:compile (scope updated from test)
+         *    \- g:b:t:1
+         *       \- (g:c:t:1:compile - omitted for duplicate)
+         * </pre>
+         * 
+         * @see http://www.mail-archive.com/dev@maven.apache.org/msg68011.html
+         */
+        /*
+        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
+        DependencyNode childArtifactNode = createNode( "g:a:t:1" );
+        expectedRootNode.addChild( childArtifactNode );
+        DependencyNode nearestArtifactNode = createNode( "g:c:t:1:compile" );
+        nearestArtifactNode.setOriginalScope( "test" );
+        childArtifactNode.addChild( nearestArtifactNode );
+        DependencyNode grandchildArtifactNode = createNode( "g:b:t:1" );
+        childArtifactNode.addChild( grandchildArtifactNode );
+        grandchildArtifactNode.addChild( createNode( "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, nearestArtifactNode.getArtifact() ) );
+        */
+        
         DependencyNode expectedRootNode = createNode( "g:p:t:1" );
         DependencyNode childArtifactNode = createNode( "g:a:t:1" );
         expectedRootNode.addChild( childArtifactNode );
@@ -330,37 +415,6 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         
         assertDependencyTree( expectedRootNode, project );
     }
-    */
-
-    // TODO: fix when discussion resolved: http://www.mail-archive.com/dev@maven.apache.org/msg68011.html
-    /*
-    public void testProjectWithConflictDependencyScopeReversedOrder() throws DependencyTreeBuilderException, ArtifactResolutionException
-    {
-        Artifact projectArtifact = createArtifact( "g:p:t:1" );
-        Artifact childArtifact = createArtifact( "g:a:t:1" );
-        Artifact nearestArtifact = createArtifact( "g:c:t:1:test" );
-        Artifact grandchildArtifact = createArtifact( "g:b:t:1" );
-        Artifact farthestArtifact = createArtifact( "g:c:t:1:compile" );
-        addArtifactMetadata( childArtifact, new Artifact[] { grandchildArtifact, nearestArtifact } );
-        addArtifactMetadata( grandchildArtifact, farthestArtifact );
-
-        MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } );
-
-        // TODO: add expected results as per above test method
-        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
-        DependencyNode childArtifactNode = createNode( "g:a:t:1" );
-        expectedRootNode.addChild( childArtifactNode );
-        DependencyNode grandchildArtifactNode = createNode( "g:b:t:1" );
-        childArtifactNode.addChild( grandchildArtifactNode );
-        DependencyNode farthestArtifactNode = createNode( "g:c:t:1:compile" );
-        grandchildArtifactNode.addChild( farthestArtifactNode );
-        DependencyNode nearestArtifactNode = createNode( "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, farthestArtifactNode.getArtifact() );
-        nearestArtifactNode.setOriginalScope( "test" );
-        childArtifactNode.addChild( nearestArtifactNode );
-        
-        assertDependencyTree( expectedRootNode, project );
-    }
-    */
 
     /**
      * Tests building a tree for a project with one transitive dependency whose version is fixed in dependency
@@ -373,9 +427,8 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
      * </pre>
      * 
      * @throws DependencyTreeBuilderException
-     * @throws ArtifactResolutionException
      */
-    public void testProjectWithManagedTransitiveDependencyVersion() throws DependencyTreeBuilderException, ArtifactResolutionException
+    public void testProjectWithManagedTransitiveDependencyVersion() throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -406,9 +459,8 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
      * </pre>
      *
      * @throws DependencyTreeBuilderException
-     * @throws ArtifactResolutionException
      */
-    public void testProjectWithManagedTransitiveDependencyScope() throws DependencyTreeBuilderException, ArtifactResolutionException
+    public void testProjectWithManagedTransitiveDependencyScope() throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -440,9 +492,8 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
      * </pre>
      * 
      * @throws DependencyTreeBuilderException
-     * @throws ArtifactResolutionException
      */
-    public void testProjectWithManagedTransitiveDependencyVersionAndScope() throws DependencyTreeBuilderException, ArtifactResolutionException
+    public void testProjectWithManagedTransitiveDependencyVersionAndScope() throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -476,9 +527,8 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
      * </pre>
      * 
      * @throws DependencyTreeBuilderException
-     * @throws ArtifactResolutionException
      */
-    public void testProjectWithManagedTransitiveDependencyVersionAndConflictDependencyVersion() throws DependencyTreeBuilderException, ArtifactResolutionException
+    public void testProjectWithManagedTransitiveDependencyVersionAndConflictDependencyVersion() throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact nearestArtifact = createArtifact( "g:a:t:1" );
@@ -502,7 +552,7 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
-    // TODO: reinstate when MNG-3089 fixed
+    // TODO: reinstate when MNG-3236 fixed
     /*
     public void testProjectWithFilter() throws DependencyTreeBuilderException, ArtifactResolutionException
     {
@@ -594,12 +644,12 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         return artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getType() + (artifact.getClassifier() != null ? ":" + artifact.getClassifier() : "");
     }
     
-    private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project ) throws DependencyTreeBuilderException, ArtifactResolutionException
+    private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project ) throws DependencyTreeBuilderException
     {
         assertDependencyTree( expectedRootNode, project, null );
     }
     
-    private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project, ArtifactFilter artifactFilter ) throws DependencyTreeBuilderException, ArtifactResolutionException
+    private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project, ArtifactFilter artifactFilter ) throws DependencyTreeBuilderException
     {
         // assert built dependency tree is as expected
         
@@ -611,17 +661,9 @@ public class DependencyTreeBuilderTest extends PlexusTestCase
         
         // assert resolution tree is as expected
         
-        ArtifactResolutionResult result = collect( project, artifactFilter );
+        ArtifactResolutionResult result = builder.getArtifactResolutionResult();
         
         assertTreeEquals( expectedRootNode, project, result );
-    }
-    
-    private ArtifactResolutionResult collect( MavenProject project, ArtifactFilter artifactFilter ) throws ArtifactResolutionException
-    {
-        return artifactCollector.collect( project.getDependencyArtifacts(), project.getArtifact(),
-                                          project.getManagedVersionMap(), artifactRepository,
-                                          project.getRemoteArtifactRepositories(), artifactMetadataSource,
-                                          artifactFilter, Collections.EMPTY_LIST );
     }
     
     private void assertTreeEquals( DependencyNode dependencyNode, MavenProject project, ArtifactResolutionResult resolutionResult )

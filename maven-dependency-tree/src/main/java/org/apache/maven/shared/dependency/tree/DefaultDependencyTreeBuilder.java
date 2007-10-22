@@ -28,6 +28,7 @@ import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactCollector;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
@@ -45,6 +46,10 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
  */
 public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements DependencyTreeBuilder
 {
+    // fields -----------------------------------------------------------------
+    
+    private ArtifactResolutionResult result;
+    
     // DependencyTreeBuilder methods ------------------------------------------
 
     /*
@@ -91,8 +96,10 @@ public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements 
             }
             
             getLogger().debug( "Dependency tree resolution listener events:" );
+            
+            // TODO: note that filter does not get applied due to MNG-3236
 
-            collector.collect( dependencyArtifacts, project.getArtifact(), managedVersions, repository,
+            result = collector.collect( dependencyArtifacts, project.getArtifact(), managedVersions, repository,
                                project.getRemoteArtifactRepositories(), metadataSource, filter,
                                Collections.singletonList( listener ) );
 
@@ -107,5 +114,12 @@ public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements 
             throw new DependencyTreeBuilderException( "Invalid dependency version for artifact "
                 + project.getArtifact() );
         }
+    }
+    
+    // protected methods ------------------------------------------------------
+    
+    protected ArtifactResolutionResult getArtifactResolutionResult()
+    {
+        return result;
     }
 }

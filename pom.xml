@@ -3,13 +3,13 @@
   <parent>
     <groupId>org.apache.maven</groupId>
     <artifactId>maven-parent</artifactId>
-    <version>5</version>
+    <version>7</version>
     <relativePath>../pom/maven/pom.xml</relativePath>
   </parent>
   <groupId>org.apache.maven.shared</groupId>
   <artifactId>maven-shared-components</artifactId>
   <packaging>pom</packaging>
-  <version>8-SNAPSHOT</version>
+  <version>8</version>
   <name>Maven Shared Components</name>
   <description>Maven shared components</description>
   <url>http://maven.apache.org/shared/</url>
@@ -46,9 +46,9 @@
     <module>maven-shared-jar</module>
   </modules>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-8</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-8</developerConnection>
+    <url>https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-8</url>
   </scm>
   <build>
     <pluginManagement>

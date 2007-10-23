@@ -46,9 +46,9 @@
     <module>maven-shared-jar</module>
   </modules>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-8</connection>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-8</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-8</developerConnection>
-    <url>https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-8</url>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/tags/maven-shared-components-8</url>
   </scm>
   <build>
     <pluginManagement>

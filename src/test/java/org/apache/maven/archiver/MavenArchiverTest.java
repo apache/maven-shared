@@ -32,6 +32,7 @@ import org.codehaus.plexus.util.FileUtils;
 import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -184,6 +185,8 @@ public class MavenArchiverTest
             throws Exception
     {
         File jarFile = new File( "target/test/dummy.jar" );
+        jarFile.delete();
+        assertFalse( jarFile.exists() );
         JarArchiver jarArchiver = new JarArchiver();
         jarArchiver.setDestFile( jarFile );
 
@@ -219,20 +222,23 @@ public class MavenArchiverTest
         config.setForced( false );
         
         FileUtils.deleteDirectory( "target/maven-archiver" );
-        long timeStamp0 = System.currentTimeMillis();
-        Thread.sleep( 1 ); // Make sure, that System.currentTimeMillis() is different from timeStamp
         archiver.createArchive( project, config );
-        long timeStamp1 = jarFile.lastModified();
-        assertTrue( timeStamp1 > timeStamp0 );
+        assertTrue( jarFile.exists() );
+        jarFile.setLastModified( System.currentTimeMillis() - 60000L );
+        long time = jarFile.lastModified();
 
-        Thread.sleep( 1 ); // Make sure, that System.currentTimeMillis() is different from timeStamp
+        List files = FileUtils.getFiles( new File( "target/maven-archiver" ), "**/**", null, true );
+        for ( Iterator i = files.iterator(); i.hasNext(); )
+	{
+	    File f = (File) i.next();
+	    f.setLastModified( time );
+        }
+
         archiver.createArchive( project,config );
-        long timeStamp2 = jarFile.lastModified();
-        assertEquals( timeStamp2, timeStamp1 );
+        assertEquals( jarFile.lastModified(), time );
 
-        Thread.sleep( 10 ); // Make sure, that System.currentTimeMillis() is different from timeStamp
         config.setForced( true );
         archiver.createArchive( project, config );
-        assertTrue( jarFile.lastModified() > timeStamp2 );
+        assertTrue( jarFile.lastModified() > time );
     }
 }

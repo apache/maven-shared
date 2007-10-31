@@ -59,7 +59,7 @@ public class PatternIncludesArtifactFilter
         this.actTransitively = actTransitively;
         List pos = new ArrayList();
         List neg = new ArrayList();
-        if ( patterns != null && !patterns.isEmpty() )
+        if ( ( patterns != null ) && !patterns.isEmpty() )
         {
             for ( Iterator it = patterns.iterator(); it.hasNext(); )
             {
@@ -76,8 +76,8 @@ public class PatternIncludesArtifactFilter
             }
         }
 
-        this.positivePatterns = pos;
-        this.negativePatterns = neg;
+        positivePatterns = pos;
+        negativePatterns = neg;
     }
 
     public boolean include( Artifact artifact )
@@ -94,7 +94,7 @@ public class PatternIncludesArtifactFilter
 
     protected boolean patternMatches( Artifact artifact )
     {
-        return positiveMatch( artifact ) == Boolean.TRUE || negativeMatch( artifact ) == Boolean.FALSE;
+        return ( positiveMatch( artifact ) == Boolean.TRUE ) || ( negativeMatch( artifact ) == Boolean.FALSE );
     }
 
     protected void addFilteredArtifactId( String artifactId )
@@ -104,7 +104,7 @@ public class PatternIncludesArtifactFilter
 
     private Boolean negativeMatch( Artifact artifact )
     {
-        if ( negativePatterns == null || negativePatterns.isEmpty() )
+        if ( ( negativePatterns == null ) || negativePatterns.isEmpty() )
         {
             return null;
         }
@@ -116,7 +116,7 @@ public class PatternIncludesArtifactFilter
 
     protected Boolean positiveMatch( Artifact artifact )
     {
-        if ( positivePatterns == null || positivePatterns.isEmpty() )
+        if ( ( positivePatterns == null ) || positivePatterns.isEmpty() )
         {
             return null;
         }
@@ -151,7 +151,7 @@ public class PatternIncludesArtifactFilter
         {
             List depTrail = artifact.getDependencyTrail();
 
-            if ( depTrail != null && !depTrail.isEmpty() )
+            if ( ( depTrail != null ) && !depTrail.isEmpty() )
             {
                 String trailStr = "," + StringUtils.join( depTrail.iterator(), "," );
 
@@ -164,14 +164,13 @@ public class PatternIncludesArtifactFilter
 
     private boolean matchAgainst( String value, List patterns, boolean regionMatch )
     {
-    	boolean match = false;
         for ( Iterator i = patterns.iterator(); i.hasNext(); )
         {
             // TODO: what about wildcards? Just specifying groups? versions?
             String pattern = (String) i.next();
 
             // don't allow wildcards in region-matched searches...i.e. in transitive dependencies.
-            if ( regionMatch && pattern.indexOf( '*' ) > -1 )
+            if ( regionMatch && ( pattern.indexOf( '*' ) > -1 ) )
             {
                 continue;
             }
@@ -181,7 +180,7 @@ public class PatternIncludesArtifactFilter
                 if ( value.indexOf( pattern ) > -1 )
                 {
                     patternsTriggered.add( pattern );
-                    match = true;
+                    return true;
                 }
             }
             else
@@ -189,7 +188,7 @@ public class PatternIncludesArtifactFilter
                 if ( value.equals( pattern ) )
                 {
                     patternsTriggered.add( pattern );
-                    match = true;
+                    return true;
                 }
             }
 
@@ -202,7 +201,7 @@ public class PatternIncludesArtifactFilter
                 {
                     String subPattern = subPatterns[j];
 
-                    if ( subPattern == null || subPattern.length() < 1 )
+                    if ( ( subPattern == null ) || ( subPattern.length() < 1 ) )
                     {
                         idxes[j] = j == 0 ? 0 : idxes[j - 1];
 
@@ -216,14 +215,14 @@ public class PatternIncludesArtifactFilter
                     if ( idxes[j] >= 0 )
                     {
                     	patternsTriggered.add( pattern );
-                        match = true;
+                        return true;
                     }
-                }            	
-                
+                }
+
             }
         }
 
-        return match;
+        return false;
     }
 
     public void reportMissedCriteria( Logger logger )

@@ -143,6 +143,12 @@ public class Maven2OsgiConverterTest
 
         osgiVersion = maven2Osgi.getVersion( "1.4.1-20070217.082013-7" );
         assertEquals( "1.4.1.20070217_082013_7", osgiVersion );
+        
+        osgiVersion = maven2Osgi.getVersion( "0.0.0.4aug2000r7-dev" );
+        assertEquals( "0.0.0.4aug2000r7-dev", osgiVersion );
+        
+        osgiVersion = maven2Osgi.getVersion( "4aug2000r7-dev" );
+        assertEquals( "0.0.0.4aug2000r7_dev", osgiVersion );
     }
 
     private ArtifactStub getTestArtifact()

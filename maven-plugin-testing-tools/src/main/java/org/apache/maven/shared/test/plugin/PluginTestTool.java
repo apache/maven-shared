@@ -143,22 +143,22 @@ public class PluginTestTool
 
             tmpDir.mkdirs();
 
-//            Runtime.getRuntime().addShutdownHook( new Thread( new Runnable()
-//            {
-//
-//                public void run()
-//                {
-//                    try
-//                    {
-//                        FileUtils.deleteDirectory( tmpDir );
-//                    }
-//                    catch ( IOException e )
-//                    {
-//                        // it'll get cleaned up when the temp dir is purged next...
-//                    }
-//                }
-//
-//            } ) );
+            Runtime.getRuntime().addShutdownHook( new Thread( new Runnable()
+            {
+
+                public void run()
+                {
+                    try
+                    {
+                        FileUtils.deleteDirectory( tmpDir );
+                    }
+                    catch ( IOException e )
+                    {
+                        // it'll get cleaned up when the temp dir is purged next...
+                    }
+                }
+
+            } ) );
 
             FileUtils.copyDirectoryStructure( realProjectDir, tmpDir );
         }

@@ -36,6 +36,7 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -43,8 +44,9 @@ import org.codehaus.plexus.util.IOUtil;
  *
  * @author mkleint
  */
-public class DefaultToolchainManager
+public class DefaultToolchainManager extends AbstractLogEnabled
     implements ToolchainManager,
+               ToolchainManagerPrivate,
                Contextualizable
 {
 

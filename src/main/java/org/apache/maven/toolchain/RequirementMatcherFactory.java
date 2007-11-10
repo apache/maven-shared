@@ -70,7 +70,6 @@ public final class RequirementMatcherFactory
         private VersionMatcher( String version )
         {
             this.version = new DefaultArtifactVersion(version);
-            System.out.println("version=" + version.toString());
         }
 
         public boolean matches( String requirement )

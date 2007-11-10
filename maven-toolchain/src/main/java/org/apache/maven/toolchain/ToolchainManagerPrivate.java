@@ -17,24 +17,29 @@
  * under the License.
  */
 
+
 package org.apache.maven.toolchain;
 
 import org.apache.maven.context.BuildContext;
 
 /**
- *
+ * Component for use by the maven-toolchains-plugin only.
  * @author mkleint
  */
-public interface ToolchainManager
+public interface ToolchainManagerPrivate
 {
-
-    String ROLE = ToolchainManager.class.getName();
-
+    String ROLE = ToolchainManagerPrivate.class.getName();
 
     /**
-     * to be used from plugins capable of working with toolchains.
+     * Retrieves the toolchains of given type from the user settings.
      */
-    Toolchain getToolchainFromBuildContext( String type,
-                                            BuildContext context );
+    ToolchainPrivate[] getToolchainsForType( String type )
+        throws MisconfiguredToolchainException;
 
+    /**
+     * Stores the toolchain into build context.
+     */
+    void storeToolchainToBuildContext( ToolchainPrivate toolchain,
+                                       BuildContext context );
+    
 }

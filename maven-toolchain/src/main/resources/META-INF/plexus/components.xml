@@ -23,6 +23,11 @@ under the License.
       <role>org.apache.maven.toolchain.ToolchainManager</role>
       <implementation>org.apache.maven.toolchain.DefaultToolchainManager</implementation>
     </component>
+    <!--- TODO do I really need to define 2 components? I'd rather have 1 istance shared for both lookups. -->
+    <component>
+      <role>org.apache.maven.toolchain.ToolchainManagerPrivate</role>
+      <implementation>org.apache.maven.toolchain.DefaultToolchainManager</implementation>
+    </component>
     <component>
       <role>org.apache.maven.toolchain.ToolchainFactory</role>
       <role-hint>jdk</role-hint>

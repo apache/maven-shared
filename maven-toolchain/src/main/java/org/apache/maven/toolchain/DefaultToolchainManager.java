@@ -70,16 +70,16 @@ public class DefaultToolchainManager extends AbstractLogEnabled
     {
         try
         {
-            PersistedToolchains pers = readToolchainSettings(  );
+            PersistedToolchains pers = readToolchainSettings();
             Map factories = container.lookupMap( ToolchainFactory.ROLE );
             List toRet = new ArrayList(  );
             if ( pers != null )
             {
-                List lst = pers.getToolchains(  );
+                List lst = pers.getToolchains();
                 if ( lst != null )
                 {
-                    Iterator it = lst.iterator(  );
-                    while ( it.hasNext(  ) )
+                    Iterator it = lst.iterator();
+                    while ( it.hasNext() )
                     {
                         ToolchainModel toolchainModel = (ToolchainModel) it.next();
                         ToolchainFactory fact = (ToolchainFactory) factories.get(toolchainModel.getType());
@@ -89,17 +89,16 @@ public class DefaultToolchainManager extends AbstractLogEnabled
                         }
                         else
                         {
-                            //TODO log the missing factory.
-                            System.out.println( "missing factory.." + toolchainModel );
+                            getLogger().error("Missing toolchain factory for type:" + toolchainModel.getType() + ". Possibly caused by misconfigured project.");
                         }
                     }
                 }
             }
-            Iterator it = factories.values(  ).iterator(  );
-            while ( it.hasNext(  ) )
+            Iterator it = factories.values().iterator();
+            while ( it.hasNext() )
             {
                 ToolchainFactory fact = (ToolchainFactory) it.next();
-                ToolchainPrivate tool = fact.createDefaultToolchain(  );
+                ToolchainPrivate tool = fact.createDefaultToolchain();
                 if ( tool != null )
                 {
                     toRet.add( tool );
@@ -110,8 +109,7 @@ public class DefaultToolchainManager extends AbstractLogEnabled
         }
         catch ( ComponentLookupException ex )
         {
-            //TODO
-            ex.printStackTrace(  );
+            getLogger().fatalError("Error in component lookup", ex);
         }
         return new ToolchainPrivate[0];
     }
@@ -131,13 +129,11 @@ public class DefaultToolchainManager extends AbstractLogEnabled
         }
         catch ( ComponentLookupException ex )
         {
-            //TODO report
-            ex.printStackTrace(  );
+            getLogger().fatalError("Error in component lookup", ex);
         }
         catch ( MisconfiguredToolchainException ex )
         {
-            //TODO report
-            ex.printStackTrace(  );
+            getLogger().error("Misconfigured toolchain.", ex);
         }
         return null;
     }
@@ -154,9 +150,9 @@ public class DefaultToolchainManager extends AbstractLogEnabled
         //TODO how to point to the local path?
         File tch = new File( System.getProperty( "user.home" ),
             ".m2/toolchains.xml" );
-        if ( tch.exists(  ) )
+        if ( tch.exists() )
         {
-            MavenToolchainsXpp3Reader reader = new MavenToolchainsXpp3Reader(  );
+            MavenToolchainsXpp3Reader reader = new MavenToolchainsXpp3Reader();
             InputStreamReader in = null;
             try
             {

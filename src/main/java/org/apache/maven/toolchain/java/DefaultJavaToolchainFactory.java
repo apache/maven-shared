@@ -68,8 +68,8 @@ public class DefaultJavaToolchainFactory
         Xpp3Dom[] provides = dom.getChildren();
         for ( int i = 0; i < provides.length; i++ )
         {
-            String key = provides[i].getName(  );
-            String value = provides[i].getValue(  );
+            String key = provides[i].getName();
+            String value = provides[i].getValue();
             if ( value == null )
             {
                 throw new MisconfiguredToolchainException( "Provides token '" + key + "' doesn't have any value configured." );
@@ -88,8 +88,10 @@ public class DefaultJavaToolchainFactory
         return jtc;
     }
 
-    public ToolchainPrivate createDefaultToolchain( )
+    public ToolchainPrivate createDefaultToolchain()
     {
+        //not sure it's necessary to provide a default toolchain here.
+        //only version can be eventually supplied, and 
         return null;
     }
 

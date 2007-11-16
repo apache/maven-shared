@@ -1,0 +1,143 @@
+ ------
+ Using Maven File Management API In A MOJO
+ ------
+ Vincent Siveton
+ ------
+ November 2007
+ ------
+
+~~ Licensed to the Apache Software Foundation (ASF) under one
+~~ or more contributor license agreements.  See the NOTICE file
+~~ distributed with this work for additional information
+~~ regarding copyright ownership.  The ASF licenses this file
+~~ to you under the Apache License, Version 2.0 (the
+~~ "License"); you may not use this file except in compliance
+~~ with the License.  You may obtain a copy of the License at
+~~
+~~   http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~ Unless required by applicable law or agreed to in writing,
+~~ software distributed under the License is distributed on an
+~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~~ KIND, either express or implied.  See the License for the
+~~ specific language governing permissions and limitations
+~~ under the License.
+
+~~ NOTE: For help with the syntax of this file, see:
+~~ http://maven.apache.org/guides/mini/guide-apt-format.html
+
+Using Maven File Management API In A MOJO
+
+ This part explains how to use the Maven File Management API in a Maven Plugin.
+
+* Added File Management API dependency
+
+ The first step is to add the File Management API as a Maven dependency, i.e. in the pom.xml:
+
++-----+
+<project>
+  ...
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>file-management</artifactId>
+      <version>1.2-SNAPSHOT</version>
+    </dependency>
+    ...
+  </dependencies>
+  ...
+</project>
++-----+
+
+* Added FileSet in a MOJO
+
+ The second step is to create your MOJO and add a <<<FileSet>>> object:
+
++-----+
+/**
+ * My MOJO
+ *
+ * @goal myGoal
+ */
+public class MyMojo
+    extends AbstractMojo
+{
+    /**
+     * A list of <code>fileSet</code> rules to select files and directories.
+     *
+     * @parameter
+     */
+    private List filesets;
+
+    /**
+     * A specific <code>fileSet</code> rule to select files and directories.
+     *
+     * @parameter
+     */
+    private FileSet fileset;
+
+    ...
+}
++-----+
+
+ To use the <<<FileSet>>> object, you need to instantiate the <<<FileSetManager>>>.
+
++-----+
+FileSetManager fileSetManager = new FileSetManager();
+
+String[] includedFiles = fileSetManager.getIncludedFiles( fileset );
+String[] includedDir = fileSetManager.getIncludedDirectories( fileset );
+String[] excludedFiles = fileSetManager.getExcludedFiles( fileset );
+String[] excludedDir = fileSetManager.getExcludedDirectories( fileset );
+fileSetManager.delete( fileset );
++-----+
+
+* Configure your Maven Plugin
+
+ The last step is the Maven Plugin configuration.
+
++-----+
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>your-plugin-groupId</groupId>
+        <artifactId>your-plugin-artifactId</artifactId>
+        <version>your-plugin-version</version>
+        <configuration>
+          <!-- List of filesets -->
+          <filesets>
+            <fileset>
+              <directory>some/relative/path</directory>
+              <includes>
+                <include>**/*.txt</include>
+              </includes>
+              <excludes>
+                <exclude>**/log.log</exclude>
+              </excludes>
+              <followSymlinks>false</followSymlinks>
+            </fileset>
+          </filesets>
+
+          <!-- Given fileset -->
+          <fileset>
+            <directory>some/relative/path</directory>
+            <includes>
+              <include>**/*.txt</include>
+            </includes>
+            <excludes>
+              <exclude>**/log.log</exclude>
+            </excludes>
+            <followSymlinks>false</followSymlinks>
+          </fileset>
+
+          ...
+        </configuration>
+      </plugin>
+      ...
+    </plugins>
+  </build>
+  ...
+</project>
++-----+

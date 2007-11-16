@@ -25,25 +25,26 @@ package org.apache.maven.shared.model.fileset.mappers;
  * <p>This is the default FileNameMapper for the copy and move
  * tasks.</p>
  *
+ * @version $Id$
  */
-public class IdentityMapper implements FileNameMapper {
-
-    /**
-     * Ignored.
-     */
-    public void setFrom(String from) {
+public class IdentityMapper
+    implements FileNameMapper
+{
+    /** {@inheritDoc} */
+    public void setFrom( String from )
+    {
+        // nop
     }
 
-    /**
-     * Ignored.
-     */
-    public void setTo(String to) {
+    /** {@inheritDoc} */
+    public void setTo( String to )
+    {
+        // nop
     }
 
-    /**
-     * Returns an one-element array containing the source file name.
-     */
-    public String mapFileName(String sourceFileName) {
+    /** {@inheritDoc} */
+    public String mapFileName( String sourceFileName )
+    {
         return sourceFileName;
     }
 }

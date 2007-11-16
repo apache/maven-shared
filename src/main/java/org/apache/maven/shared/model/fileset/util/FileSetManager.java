@@ -49,11 +49,10 @@ import java.util.Set;
  * matching entries, etc.
  *
  * @author jdcasey
- *
+ * @version $Id$
  */
 public class FileSetManager
 {
-
     private static final int DELETE_RETRY_SLEEP_MILLIS = 10;
 
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
@@ -65,22 +64,20 @@ public class FileSetManager
     /**
      * Create a new manager instance with the supplied log instance and flag for whether to output verbose messages.
      *
-     * @param log
-     *            The mojo log instance
-     * @param verbose
-     *            Whether to output verbose messages
+     * @param log The mojo log instance
+     * @param verbose Whether to output verbose messages
      */
     public FileSetManager( Log log, boolean verbose )
     {
         if ( verbose )
         {
-            this.messages =
-                new DefaultMessageHolder( MessageLevels.LEVEL_DEBUG, MessageLevels.LEVEL_INFO, new MojoLogSink( log ) );
+            this.messages = new DefaultMessageHolder( MessageLevels.LEVEL_DEBUG, MessageLevels.LEVEL_INFO,
+                                                      new MojoLogSink( log ) );
         }
         else
         {
-            this.messages =
-                new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO, new MojoLogSink( log ) );
+            this.messages = new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO,
+                                                      new MojoLogSink( log ) );
         }
 
         this.verbose = verbose;
@@ -89,37 +86,32 @@ public class FileSetManager
     /**
      * Create a new manager instance with the supplied log instance. Verbose flag is set to false.
      *
-     * @param log
-     *            The mojo log instance
+     * @param log The mojo log instance
      */
     public FileSetManager( Log log )
     {
-        this.messages =
-            new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO, new MojoLogSink( log ) );
+        this.messages = new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO,
+                                                  new MojoLogSink( log ) );
         this.verbose = false;
     }
 
     /**
      * Create a new manager instance with the supplied log instance and flag for whether to output verbose messages.
      *
-     * @param log
-     *            The mojo log instance
-     * @param verbose
-     *            Whether to output verbose messages
+     * @param log The mojo log instance
+     * @param verbose Whether to output verbose messages
      */
     public FileSetManager( Logger log, boolean verbose )
     {
         if ( verbose )
         {
-            this.messages =
-                new DefaultMessageHolder( MessageLevels.LEVEL_DEBUG, MessageLevels.LEVEL_INFO,
-                                          new PlexusLoggerSink( log ) );
+            this.messages = new DefaultMessageHolder( MessageLevels.LEVEL_DEBUG, MessageLevels.LEVEL_INFO,
+                                                      new PlexusLoggerSink( log ) );
         }
         else
         {
-            this.messages =
-                new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO,
-                                          new PlexusLoggerSink( log ) );
+            this.messages = new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO,
+                                                      new PlexusLoggerSink( log ) );
         }
 
         this.verbose = verbose;
@@ -128,21 +120,19 @@ public class FileSetManager
     /**
      * Create a new manager instance with the supplied log instance. Verbose flag is set to false.
      *
-     * @param log
-     *            The mojo log instance
+     * @param log The mojo log instance
      */
     public FileSetManager( Logger log )
     {
-        this.messages =
-            new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO, new PlexusLoggerSink( log ) );
+        this.messages = new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO,
+                                                  new PlexusLoggerSink( log ) );
         this.verbose = false;
     }
 
     /**
      * Create a new manager instance with an empty messages. Verbose flag is set to false.
      *
-     * @param log
-     *            The mojo log instance
+     * @param log The mojo log instance
      */
     public FileSetManager()
     {
@@ -162,7 +152,7 @@ public class FileSetManager
             String sourcePath = sourcePaths[i];
 
             String destPath;
-            if( fileMapper != null )
+            if ( fileMapper != null )
             {
                 destPath = fileMapper.mapFileName( sourcePath );
             }
@@ -276,12 +266,13 @@ public class FileSetManager
 
         if ( messages != null && messages.isDebugEnabled() )
         {
-            messages.addDebugMessage( "Found deletable paths: " + String.valueOf( deletablePaths ).replace( ',', '\n' ) );
+            messages
+                .addDebugMessage( "Found deletable paths: " + String.valueOf( deletablePaths ).replace( ',', '\n' ) );
         }
 
         for ( Iterator it = deletablePaths.iterator(); it.hasNext(); )
         {
-            String path = ( String ) it.next();
+            String path = (String) it.next();
 
             File file = new File( fileSet.getDirectory(), path );
 
@@ -321,11 +312,11 @@ public class FileSetManager
         if ( messages != null && messages.isDebugEnabled() )
         {
             messages.addDebugMessage( "Checking for symlink:\nParent file's canonical path: "
-                            + parent.getCanonicalPath() + "\nMy canonical path: " + canonicalFile.getPath() );
+                + parent.getCanonicalPath() + "\nMy canonical path: " + canonicalFile.getPath() );
         }
         return parent != null
-                        && ( !canonicalFile.getName().equals( file.getName() ) || !canonicalFile.getPath().startsWith(
-                                                                                                                       parent.getCanonicalPath() ) );
+            && ( !canonicalFile.getName().equals( file.getName() ) || !canonicalFile.getPath()
+                .startsWith( parent.getCanonicalPath() ) );
     }
 
     private Set findDeletablePaths( FileSet fileSet )
@@ -361,7 +352,8 @@ public class FileSetManager
         {
             if ( verbose && messages != null )
             {
-                messages.addInfoMessage( "Adding symbolic link dirs which were previously excluded to the list being deleted." );
+                messages
+                    .addInfoMessage( "Adding symbolic link dirs which were previously excluded to the list being deleted." );
             }
 
             // we need to see which entries were excluded because they're symlinks...
@@ -400,7 +392,7 @@ public class FileSetManager
                 if ( messages != null && messages.isDebugEnabled() )
                 {
                     messages.addDebugMessage( "Verifying path: " + parentPath
-                                    + " is not present; contains file which is excluded." );
+                        + " is not present; contains file which is excluded." );
                 }
 
                 boolean removed = includes.remove( parentPath );
@@ -445,7 +437,8 @@ public class FileSetManager
         {
             if ( verbose && messages != null )
             {
-                messages.addInfoMessage( "Adding symbolic link files which were previously excluded to the list being deleted." );
+                messages
+                    .addInfoMessage( "Adding symbolic link files which were previously excluded to the list being deleted." );
             }
 
             // we need to see which entries were excluded because they're symlinks...
@@ -484,7 +477,7 @@ public class FileSetManager
                 if ( messages != null && messages.isDebugEnabled() )
                 {
                     messages.addDebugMessage( "Verifying path: " + parentPath
-                                    + " is not present; contains file which is excluded." );
+                        + " is not present; contains file which is excluded." );
                 }
 
                 boolean removed = includes.remove( parentPath );

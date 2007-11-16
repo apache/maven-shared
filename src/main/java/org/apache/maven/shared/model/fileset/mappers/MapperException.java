@@ -19,18 +19,34 @@ package org.apache.maven.shared.model.fileset.mappers;
  * under the License.
  */
 
+/**
+ * Mapper Exception
+ *
+ * @version $Id$
+ */
 public class MapperException
     extends Exception
 {
+    static final long serialVersionUID = 20064059145045044L;
 
+    /**
+     * Constructor
+     *
+     * @param message
+     * @param cause
+     */
     public MapperException( String message, Throwable cause )
     {
         super( message, cause );
     }
 
+    /**
+     * Constructor
+     *
+     * @param message
+     */
     public MapperException( String message )
     {
         super( message );
     }
-
 }

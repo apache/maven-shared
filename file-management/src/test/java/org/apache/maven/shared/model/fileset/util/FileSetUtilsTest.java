@@ -22,10 +22,8 @@ package org.apache.maven.shared.model.fileset.util;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -36,14 +34,21 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.Commandline;
 
+/**
+ * Test the FileSet
+ *
+ * @version $Id$
+ */
 public class FileSetUtilsTest
     extends TestCase
 {
-
     private Set testDirectories = new HashSet();
+
     private Set linkFiles = new HashSet();
 
-    public void tearDown() throws IOException
+    /** {@inheritDoc} */
+    public void tearDown()
+        throws IOException
     {
         for ( Iterator it = linkFiles.iterator(); it.hasNext(); )
         {
@@ -60,7 +65,11 @@ public class FileSetUtilsTest
         }
     }
 
-    public void testGetIncludedFiles() throws IOException
+    /**
+     * @throws IOException if any
+     */
+    public void testGetIncludedFiles()
+        throws IOException
     {
         File directory = setupTestDirectory( "testGetIncludedFiles" );
 
@@ -75,7 +84,13 @@ public class FileSetUtilsTest
         Assert.assertEquals( 1, included.length );
     }
 
-    public void testIncludesDontFollowSymlinks() throws IOException, InterruptedException, CommandLineException
+    /**
+     * @throws IOException if any
+     * @throws InterruptedException if any
+     * @throws CommandLineException if any
+     */
+    public void testIncludesDontFollowSymlinks()
+        throws IOException, InterruptedException, CommandLineException
     {
         File directory = setupTestDirectory( "testIncludesDontFollowSymlinks" );
         File subdir = new File( directory, "linked-to-self" );
@@ -99,7 +114,13 @@ public class FileSetUtilsTest
         Assert.assertEquals( 1, included.length );
     }
 
-    public void testDeleteDontFollowSymlinks() throws IOException, InterruptedException, CommandLineException
+    /**
+     * @throws IOException if any
+     * @throws InterruptedException if any
+     * @throws CommandLineException if any
+     */
+    public void testDeleteDontFollowSymlinks()
+        throws IOException, InterruptedException, CommandLineException
     {
         File directory = setupTestDirectory( "testDeleteDontFollowSymlinks" );
         File subdir = new File( directory, "linked-to-self" );
@@ -124,7 +145,11 @@ public class FileSetUtilsTest
         Assert.assertFalse( subdir.exists() );
     }
 
-    public void testDelete() throws IOException
+    /**
+     * @throws IOException if any
+     */
+    public void testDelete()
+        throws IOException
     {
         File directory = setupTestDirectory( "testDelete" );
         File subdirFile = new File( directory, "subdir/excluded.txt" );
@@ -141,7 +166,15 @@ public class FileSetUtilsTest
         Assert.assertFalse( "file in marked subdirectory still exists.", subdirFile.exists() );
     }
 
-    private boolean createSymlink( File from, File to ) throws InterruptedException, CommandLineException
+    /**
+     * @param from
+     * @param to
+     * @return
+     * @throws InterruptedException
+     * @throws CommandLineException
+     */
+    private boolean createSymlink( File from, File to )
+        throws InterruptedException, CommandLineException
     {
         if ( to.exists() )
         {
@@ -161,7 +194,13 @@ public class FileSetUtilsTest
         return result == 0;
     }
 
-    private File setupTestDirectory( String directoryName ) throws IOException
+    /**
+     * @param directoryName
+     * @return
+     * @throws IOException
+     */
+    private File setupTestDirectory( String directoryName )
+        throws IOException
     {
         System.out.println( "Setting up directory for test: " + directoryName );
 
@@ -186,5 +225,4 @@ public class FileSetUtilsTest
 
         return testDir;
     }
-
 }

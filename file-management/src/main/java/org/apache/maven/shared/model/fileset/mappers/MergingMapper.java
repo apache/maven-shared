@@ -26,28 +26,28 @@ package org.apache.maven.shared.model.fileset.mappers;
  * <p>This is the default FileNameMapper for the archiving tasks and
  * uptodate.</p>
  *
+ * @version $Id$
  */
-public class MergingMapper implements FileNameMapper {
+public class MergingMapper
+    implements FileNameMapper
+{
     protected String mergedFile = null;
 
-    /**
-     * Ignored.
-     */
-    public void setFrom(String from) {
+    /** {@inheritDoc} */
+    public void setFrom( String from )
+    {
+        // nop
     }
 
-    /**
-     * Sets the name of the merged file.
-     */
-    public void setTo(String to) {
+    /** {@inheritDoc} */
+    public void setTo( String to )
+    {
         mergedFile = to;
     }
 
-    /**
-     * Returns an one-element array containing the file name set via setTo.
-     */
-    public String mapFileName(String sourceFileName) {
+    /** {@inheritDoc} */
+    public String mapFileName( String sourceFileName )
+    {
         return mergedFile;
     }
-
 }

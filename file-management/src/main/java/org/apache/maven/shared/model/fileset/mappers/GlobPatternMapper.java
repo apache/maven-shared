@@ -31,9 +31,11 @@ package org.apache.maven.shared.model.fileset.mappers;
  * <p>This is one of the more useful Mappers, it is used by javac for
  * example.</p>
  *
+ * @version $Id$
  */
-public class GlobPatternMapper implements FileNameMapper {
-
+public class GlobPatternMapper
+    implements FileNameMapper
+{
     /**
      * Part of &quot;from&quot; pattern before the *.
      */
@@ -65,15 +67,16 @@ public class GlobPatternMapper implements FileNameMapper {
     protected String toPostfix = null;
 
     private boolean handleDirSep = false;
+
     private boolean caseSensitive = true;
 
     /**
      * Attribute specifing whether to ignore the difference
      * between / and \ (the two common directory characters).
      * @param handleDirSep a boolean, default is false.
-     * @since Ant 1.6.3
      */
-    public void setHandleDirSep(boolean handleDirSep) {
+    public void setHandleDirSep( boolean handleDirSep )
+    {
         this.handleDirSep = handleDirSep;
     }
 
@@ -82,60 +85,55 @@ public class GlobPatternMapper implements FileNameMapper {
      * in the names.
      *
      * @param caseSensitive a boolean, default is false.
-     * @since Ant 1.6.3
      */
-    public void setCaseSensitive(boolean caseSensitive) {
+    public void setCaseSensitive( boolean caseSensitive )
+    {
         this.caseSensitive = caseSensitive;
     }
 
-    /**
-     * Sets the &quot;from&quot; pattern. Required.
-     * @param from a string
-     */
-    public void setFrom(String from) {
-        int index = from.lastIndexOf("*");
-        if (index == -1) {
+    /** {@inheritDoc} */
+    public void setFrom( String from )
+    {
+        int index = from.lastIndexOf( "*" );
+        if ( index == -1 )
+        {
             fromPrefix = from;
             fromPostfix = "";
-        } else {
-            fromPrefix = from.substring(0, index);
-            fromPostfix = from.substring(index + 1);
+        }
+        else
+        {
+            fromPrefix = from.substring( 0, index );
+            fromPostfix = from.substring( index + 1 );
         }
         prefixLength = fromPrefix.length();
         postfixLength = fromPostfix.length();
     }
 
-    /**
-     * Sets the &quot;to&quot; pattern. Required.
-     * @param to a string
-     */
-    public void setTo(String to) {
-        int index = to.lastIndexOf("*");
-        if (index == -1) {
+    /** {@inheritDoc} */
+    public void setTo( String to )
+    {
+        int index = to.lastIndexOf( "*" );
+        if ( index == -1 )
+        {
             toPrefix = to;
             toPostfix = "";
-        } else {
-            toPrefix = to.substring(0, index);
-            toPostfix = to.substring(index + 1);
+        }
+        else
+        {
+            toPrefix = to.substring( 0, index );
+            toPostfix = to.substring( index + 1 );
         }
     }
 
-    /**
-     * Returns null if the source file name doesn't match the
-     * &quot;from&quot; pattern, an one-element array containing the
-     * translated file otherwise.
-     * @param sourceFileName the filename to map
-     * @return a list of converted filenames
-     */
-    public String mapFileName(String sourceFileName) {
-        if (fromPrefix == null
-            || !modifyName(sourceFileName).startsWith(modifyName(fromPrefix))
-            || !modifyName(sourceFileName).endsWith(modifyName(fromPostfix))) {
+    /** {@inheritDoc} */
+    public String mapFileName( String sourceFileName )
+    {
+        if ( fromPrefix == null || !modifyName( sourceFileName ).startsWith( modifyName( fromPrefix ) )
+            || !modifyName( sourceFileName ).endsWith( modifyName( fromPostfix ) ) )
+        {
             return null;
         }
-        return new String (toPrefix
-                                 + extractVariablePart(sourceFileName)
-                                 + toPostfix);
+        return new String( toPrefix + extractVariablePart( sourceFileName ) + toPostfix );
     }
 
     /**
@@ -144,9 +142,9 @@ public class GlobPatternMapper implements FileNameMapper {
      * @param name the source file name
      * @return the variable part of the name
      */
-    protected String extractVariablePart(String name) {
-        return name.substring(prefixLength,
-                              name.length() - postfixLength);
+    protected String extractVariablePart( String name )
+    {
+        return name.substring( prefixLength, name.length() - postfixLength );
     }
 
     /**
@@ -154,13 +152,17 @@ public class GlobPatternMapper implements FileNameMapper {
      * @param name the name to convert
      * @return the converted name
      */
-    private String modifyName(String name) {
-        if (!caseSensitive) {
+    private String modifyName( String name )
+    {
+        if ( !caseSensitive )
+        {
             name = name.toLowerCase();
         }
-        if (handleDirSep) {
-            if (name.indexOf('\\') != -1) {
-                name = name.replace('\\', '/');
+        if ( handleDirSep )
+        {
+            if ( name.indexOf( '\\' ) != -1 )
+            {
+                name = name.replace( '\\', '/' );
             }
         }
         return name;

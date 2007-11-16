@@ -31,20 +31,15 @@ import java.io.File;
  *         from="${test.data.dir}/TEST-*Test.xml" to="*Test.java"&gt;
  * </pre>
  *
- *
+ * @version $Id$
  */
-public class UnPackageNameMapper extends GlobPatternMapper {
-    /**
-     *  Returns the part of the given string that matches the * in the
-     *  &quot;from&quot; pattern replacing dots with file separators
-     *
-     *@param  name  Source filename
-     *@return       Replaced variable part
-     */
-    protected String extractVariablePart(String name) {
-        String var = name.substring(prefixLength,
-                name.length() - postfixLength);
-        return var.replace('.', File.separatorChar);
+public class UnPackageNameMapper
+    extends GlobPatternMapper
+{
+    /** {@inheritDoc} */
+    protected String extractVariablePart( String name )
+    {
+        String var = name.substring( prefixLength, name.length() - postfixLength );
+        return var.replace( '.', File.separatorChar );
     }
 }
-

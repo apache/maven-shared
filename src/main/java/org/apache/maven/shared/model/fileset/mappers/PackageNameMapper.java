@@ -30,19 +30,15 @@ import java.io.File;
  *         from="*Test.java" to="${test.data.dir}/TEST-*Test.xml"/&gt;
  * </pre>
  *
+ * @version $Id$
  */
-public class PackageNameMapper extends GlobPatternMapper {
-    /**
-     *  Returns the part of the given string that matches the * in the
-     *  &quot;from&quot; pattern replacing file separators with dots
-     *
-     *@param  name  Source filename
-     *@return       Replaced variable part
-     */
-    protected String extractVariablePart(String name) {
-        String var = name.substring(prefixLength,
-                name.length() - postfixLength);
-        return var.replace(File.separatorChar, '.');
+public class PackageNameMapper
+    extends GlobPatternMapper
+{
+    /** {@inheritDoc} */
+    protected String extractVariablePart( String name )
+    {
+        String var = name.substring( prefixLength, name.length() - postfixLength );
+        return var.replace( File.separatorChar, '.' );
     }
 }
-

@@ -28,16 +28,18 @@ import java.util.Properties;
 
 /**
  * Element to define a FileNameMapper.
+ *
+ * @version $Id$
  */
 public final class MapperUtil
 {
-
     private static final String MAPPER_PROPERTIES = "mapper.properties";
 
     private static Properties implementations;
 
     private MapperUtil()
     {
+        // nop
     }
 
     /**
@@ -80,6 +82,10 @@ public final class MapperUtil
 
     /**
      * Returns a fully configured FileNameMapper implementation.
+     *
+     * @param mapper
+     * @return
+     * @throws MapperException
      */
     public static FileNameMapper getFileNameMapper( Mapper mapper )
         throws MapperException
@@ -130,5 +136,4 @@ public final class MapperUtil
             throw new MapperException( "Cannot load mapper implementation: " + classname, e );
         }
     }
-
 }

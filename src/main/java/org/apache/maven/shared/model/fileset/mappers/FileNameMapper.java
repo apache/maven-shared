@@ -29,18 +29,23 @@ package org.apache.maven.shared.model.fileset.mappers;
  * via the setFrom and setTo methods. The exact meaning of these is
  * implementation dependent.</p>
  *
+ * @version $Id$
  */
-public interface FileNameMapper {
-
+public interface FileNameMapper
+{
     /**
      * Sets the from part of the transformation rule.
+     *
+     * @param from
      */
-    void setFrom(String from);
+    void setFrom( String from );
 
     /**
      * Sets the to part of the transformation rule.
+     *
+     * @param to
      */
-    void setTo(String to);
+    void setTo( String to );
 
     /**
      * Returns the target filename for the
@@ -50,8 +55,8 @@ public interface FileNameMapper {
      * implementation must return null. SourceFileScanner will then
      * omit the source file in question.</p>
      *
-     * @param sourceFileName the name of the source file relative to
-     *                       some given basedirectory.
+     * @param sourceFileName the name of the source file relative to some given basedirectory.
+     * @return the target filename for the given source file.
      */
-    String mapFileName(String sourceFileName);
+    String mapFileName( String sourceFileName );
 }

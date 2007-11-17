@@ -1,5 +1,24 @@
 package org.apache.maven.shared.io.logging;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,9 +34,9 @@ public final class MessageLevels
     public static final int LEVEL_ERROR = 3;
     public static final int LEVEL_SEVERE = 4;
     public static final int LEVEL_DISABLED = 5;
-    
+
     private static final List LEVEL_NAMES;
-    
+
     static
     {
         List names = new ArrayList();
@@ -26,20 +45,20 @@ public final class MessageLevels
         names.add( "WARN" );
         names.add( "ERROR" );
         names.add( "SEVERE" );
-        
+
         LEVEL_NAMES = Collections.unmodifiableList( names );
     }
-    
+
     private MessageLevels()
     {
     }
-    
+
     public static boolean[] getLevelStates( int maxMessageLevel )
     {
         boolean[] states = new boolean[5];
-        
+
         Arrays.fill( states, false );
-        
+
         switch ( maxMessageLevel )
         {
         case (LEVEL_DEBUG): {
@@ -58,7 +77,7 @@ public final class MessageLevels
             states[LEVEL_SEVERE] = true;
         }
         }
-        
+
         return states;
     }
 
@@ -68,7 +87,7 @@ public final class MessageLevels
         {
             return (String) LEVEL_NAMES.get( messageLevel );
         }
-        
+
         throw new IllegalArgumentException( "Invalid message level: " + messageLevel );
     }
 }

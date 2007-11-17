@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <!--
   Licensed to the Apache Software Foundation (ASF) under one
@@ -24,10 +24,10 @@
   <name>FileSet</name>
   <description>
     <![CDATA[
-  <p>
-  A definition of a file-set. This model defines how file-sets can be
-        captured, using directory, includes, and excludes.
-  </p>
+    <p>
+      A definition of a file-set. This model defines how file-sets can be
+      captured, using directory, includes, and excludes.
+    </p>
     ]]>
   </description>
   <defaults>
@@ -65,7 +65,10 @@
           <version>1.1.0</version>
           <type>boolean</type>
           <default>true</default>
-          <description>Whether to include exclusion patterns for common temporary and SCM control files (true by default).</description>
+          <description>
+            Whether to include exclusion patterns for common temporary and SCM control
+            files (true by default).
+          </description>
         </field>
         <field>
           <name>includes</name>
@@ -106,7 +109,8 @@
             component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
             the default value of 0644 translates to User read-write, Group and Other
             read-only.
-            <a href="http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html">(more on unix-style permissions)</a>
+            <a href="http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html">(more on unix-style
+            permissions)</a>
             ]]>
           </description>
         </field>
@@ -119,9 +123,10 @@
             <![CDATA[
             Similar to a UNIX permission.  Format: (User)(Group)(Other) where each
             component is a sum of Read = 4, Write = 2, and Execute = 1.  For example,
-            the default value of 0644 translates to User read-write, Group and Other
+            the default value of 0755 translates to User read-write, Group and Other
             read-only.
-            <a href="http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html">(more on unix-style permissions)</a>
+            <a href="http://www.onlamp.com/pub/a/bsd/2000/09/06/FreeBSD_Basics.html">(more on unix-style
+            permissions)</a>
             ]]>
           </description>
         </field>
@@ -142,7 +147,7 @@
           <version>1.0.0+</version>
           <code><![CDATA[
     /**
-     * Return the file-set inclusion rules in array form.
+     * @return the file-set inclusion rules in array form.
      */
     public String[] getIncludesArray()
     {
@@ -161,7 +166,7 @@
     }
 
     /**
-     * Return the file-set exclusion rules in array form.
+     * @return the file-set exclusion rules in array form.
      */
     public String[] getExcludesArray()
     {
@@ -289,6 +294,7 @@
           <description>
             <![CDATA[
             Controls the line-endings of files in this fileSet.
+            <br/>
             Valid values:
             <ul>
               <li><b>"keep"</b> - Preserve all line endings</li>
@@ -304,4 +310,3 @@
     </class>
   </classes>
 </model>
-

@@ -58,7 +58,7 @@ public class ArtifactLocationTest
 
         String testStr = "This is a test";
 
-        TestUtils.writeToFile( f, testStr );
+        TestUtils.writeFileWithEncoding( f, testStr, "US-ASCII" );
 
         Artifact a = new DefaultArtifact( "group", "artifact", VersionRange.createFromVersion( "1" ), null, "jar",
                                           null, new DefaultArtifactHandler() );
@@ -75,7 +75,7 @@ public class ArtifactLocationTest
 
         assertEquals( testStr.length(), read );
 
-        assertEquals( testStr, new String( buffer ) );
+        assertEquals( testStr, new String( buffer, "US-ASCII" ) );
     }
 
 }

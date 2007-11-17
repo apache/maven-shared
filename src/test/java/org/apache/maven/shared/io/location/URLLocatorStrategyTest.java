@@ -59,7 +59,7 @@ public class URLLocatorStrategyTest
 
         String testStr = "This is a test.";
 
-        TestUtils.writeToFile( tempFile, testStr );
+        TestUtils.writeFileWithEncoding( tempFile, testStr, "US-ASCII" );
 
         MessageHolder mh = new DefaultMessageHolder();
 
@@ -73,7 +73,7 @@ public class URLLocatorStrategyTest
         byte[] buffer = new byte[testStr.length()];
         location.read( buffer );
 
-        assertEquals( testStr, new String( buffer ) );
+        assertEquals( testStr, new String( buffer, "US-ASCII" ) );
     }
 
 }

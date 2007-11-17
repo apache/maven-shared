@@ -22,6 +22,7 @@ package org.apache.maven.shared.io.location;
 import org.apache.maven.shared.io.TestUtils;
 import org.codehaus.plexus.util.IOUtil;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +53,7 @@ public class FileLocationTest
 
         String testStr = "This is a test";
 
-        TestUtils.writeToFile( file, testStr );
+        TestUtils.writeFileWithEncoding( file, testStr, "US-ASCII" );
 
         FileLocation location = new FileLocation( file, file.getAbsolutePath() );
 
@@ -61,7 +62,7 @@ public class FileLocationTest
         ByteBuffer buffer = ByteBuffer.allocate( testStr.length() );
         location.read( buffer );
 
-        assertEquals( testStr, new String( buffer.array() ) );
+        assertEquals( testStr, new String( buffer.array(), "US-ASCII" ) );
     }
 
     public void testShouldReadFileContentsUsingStream() throws IOException
@@ -71,17 +72,17 @@ public class FileLocationTest
 
         String testStr = "This is a test";
 
-        TestUtils.writeToFile( file, testStr );
+        TestUtils.writeFileWithEncoding( file, testStr, "US-ASCII" );
 
         FileLocation location = new FileLocation( file, file.getAbsolutePath() );
 
         location.open();
 
         InputStream stream = location.getInputStream();
-        StringWriter writer = new StringWriter();
-        IOUtil.copy( stream, writer );
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        IOUtil.copy( stream, out );
 
-        assertEquals( testStr, writer.toString() );
+        assertEquals( testStr, new String(out.toByteArray(), "US-ASCII" ) );
     }
 
     public void testShouldReadFileContentsUsingByteArray() throws IOException
@@ -91,7 +92,7 @@ public class FileLocationTest
 
         String testStr = "This is a test";
 
-        TestUtils.writeToFile( file, testStr );
+        TestUtils.writeFileWithEncoding( file, testStr, "US-ASCII" );
 
         FileLocation location = new FileLocation( file, file.getAbsolutePath() );
 
@@ -100,7 +101,7 @@ public class FileLocationTest
         byte[] buffer = new byte[ testStr.length() ];
         location.read( buffer );
 
-        assertEquals( testStr, new String( buffer ) );
+        assertEquals( testStr, new String( buffer, "US-ASCII" ) );
     }
 
     public void testShouldReadThenClose() throws IOException
@@ -110,7 +111,7 @@ public class FileLocationTest
 
         String testStr = "This is a test";
 
-        TestUtils.writeToFile( file, testStr );
+        TestUtils.writeFileWithEncoding( file, testStr, "US-ASCII" );
 
         FileLocation location = new FileLocation( file, file.getAbsolutePath() );
 
@@ -119,7 +120,7 @@ public class FileLocationTest
         byte[] buffer = new byte[ testStr.length() ];
         location.read( buffer );
 
-        assertEquals( testStr, new String( buffer ) );
+        assertEquals( testStr, new String( buffer, "US-ASCII" ) );
 
         location.close();
     }

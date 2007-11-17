@@ -61,7 +61,7 @@ public class URLLocationTest
 
         String testStr = "This is a test";
 
-        TestUtils.writeToFile( f, testStr );
+        TestUtils.writeFileWithEncoding( f, testStr, "US-ASCII" );
 
         URL url = f.toURL();
 
@@ -75,7 +75,7 @@ public class URLLocationTest
 
         assertEquals( testStr.length(), read );
 
-        assertEquals( testStr, new String( buffer ) );
+        assertEquals( testStr, new String( buffer, "US-ASCII" ) );
     }
 
 }

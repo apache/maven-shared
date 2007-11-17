@@ -21,13 +21,16 @@ package org.apache.maven.shared.io;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.Writer;
 
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.ReaderFactory;
+import org.codehaus.plexus.util.WriterFactory;
 
 public final class TestUtils
 {
@@ -36,37 +39,105 @@ public final class TestUtils
     {
     }
 
-    public static void writeToFile( File file, String testStr )
+    private static void write( Writer writer, String content )
         throws IOException
     {
-        FileWriter fw = null;
         try
         {
-            fw = new FileWriter( file );
-            fw.write( testStr );
+            writer.write( content );
         }
         finally
         {
-            IOUtil.close( fw );
+            IOUtil.close( writer );
         }
     }
 
+    public static void writePlatformFile( File file, String content )
+        throws IOException
+    {
+        write( WriterFactory.newPlatformWriter( file ), content );
+    }
+
+    public static void writeFileWithEncoding( File file, String content, String encoding )
+        throws IOException
+    {
+        write( WriterFactory.newWriter( file, encoding ), content );
+    }
+
+    public static void writeXmlFile( File file, String content )
+        throws IOException
+    {
+        write( WriterFactory.newXmlWriter( file ), content );
+    }
+
+    /**
+     * writes content to a file, using platform encoding.
+     * @deprecated this API isn't explicit about encoding, use writePlatformFile() or writeXmlFile()
+     * depending on your need
+     */
+    public static void writeToFile( File file, String testStr )
+        throws IOException
+    {
+        writePlatformFile( file, testStr );
+    }
+
+    /**
+     * reads content from a file and normalize EOLs to simple line feed (\\n), using platform encoding.
+     * @deprecated this API isn't explicit about encoding nor EOL normalization, use readPlatformFile() or
+     * readXmlFile() depending on your need, in conjunction with normalizeEndOfLine()
+     */
     public static String readFile( File file ) throws IOException
+    {
+        return normalizeEndOfLine( readPlatformFile( file ) );
+    }
+
+    public static String readPlatformFile( File file ) throws IOException
+    {
+        StringWriter buffer = new StringWriter();
+
+        Reader reader = ReaderFactory.newPlatformReader( file );
+
+        IOUtil.copy( reader, buffer );
+
+        return buffer.toString();
+    }
+
+    public static String readXmlFile( File file ) throws IOException
+    {
+        StringWriter buffer = new StringWriter();
+
+        Reader reader = ReaderFactory.newXmlReader( file );
+
+        IOUtil.copy( reader, buffer );
+
+        return buffer.toString();
+    }
+
+    /**
+     * normalize EOLs to simple line feed (\\n).
+     */
+    public static String normalizeEndOfLine( String content )
     {
         StringBuffer buffer = new StringBuffer();
 
-        BufferedReader reader = new BufferedReader( new FileReader( file ) );
+        BufferedReader reader = new BufferedReader( new StringReader( content ) );
 
         String line = null;
 
-        while( ( line = reader.readLine() ) != null )
-        {
-            if ( buffer.length() > 0 )
+        try {
+            while( ( line = reader.readLine() ) != null )
             {
-                buffer.append( '\n' );
-            }
+                if ( buffer.length() > 0 )
+                {
+                    buffer.append( '\n' );
+                }
 
-            buffer.append( line );
+                buffer.append( line );
+            }
+        }
+        catch ( IOException ioe )
+        {
+            // should not occur since everything happens in-memory
         }
 
         return buffer.toString();

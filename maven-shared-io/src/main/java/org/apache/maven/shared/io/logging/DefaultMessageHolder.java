@@ -1,5 +1,24 @@
 package org.apache.maven.shared.io.logging;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -13,9 +32,9 @@ public class DefaultMessageHolder
     private List messages = new ArrayList();
 
     private Message currentMessage;
-    
+
     private int defaultMessageLevel = MessageLevels.LEVEL_INFO;
-    
+
     private boolean[] messageLevelStates;
 
     private MessageSink onDemandSink;
@@ -42,7 +61,7 @@ public class DefaultMessageHolder
     {
         return addMessage( defaultMessageLevel, messagePart, error );
     }
-    
+
     protected MessageHolder addMessage( int level, CharSequence messagePart, Throwable error )
     {
         newMessage( level );
@@ -56,7 +75,7 @@ public class DefaultMessageHolder
     {
         return addMessage( defaultMessageLevel, messagePart );
     }
-    
+
     protected MessageHolder addMessage( int level, CharSequence messagePart )
     {
         newMessage( level );
@@ -69,7 +88,7 @@ public class DefaultMessageHolder
     {
         return addMessage( defaultMessageLevel, error );
     }
-    
+
     protected MessageHolder addMessage( int level, Throwable error )
     {
         newMessage( level );
@@ -113,14 +132,14 @@ public class DefaultMessageHolder
 
         return this;
     }
-    
+
     protected void newMessage( int messageLevel )
     {
         if ( onDemandSink != null && currentMessage != null )
         {
             renderTo( currentMessage, onDemandSink );
         }
-        
+
         currentMessage = new Message( messageLevel );
         messages.add( currentMessage );
     }
@@ -133,22 +152,22 @@ public class DefaultMessageHolder
         for ( Iterator it = messages.iterator(); it.hasNext(); )
         {
             Message message = (Message) it.next();
-            
+
             int ml = message.getMessageLevel();
-            
+
             if ( ml >= messageLevelStates.length || ml < 0 )
             {
                 ml = MessageLevels.LEVEL_DEBUG;
             }
-            
+
             if ( !messageLevelStates[ml] )
             {
                 continue;
             }
-            
+
             CharSequence content = message.render();
             String label = MessageLevels.getLevelLabel( message.getMessageLevel() );
-            
+
             if ( content.length() > label.length() + 3 )
             {
                 buffer.append( '[' ).append( counter++ ).append( "] " );
@@ -174,7 +193,7 @@ public class DefaultMessageHolder
         private StringBuffer message = new StringBuffer();
 
         private Throwable error;
-        
+
         private final int messageLevel;
 
         public Message( int messageLevel )
@@ -193,7 +212,7 @@ public class DefaultMessageHolder
             this.message.append( message.toString() );
             return this;
         }
-        
+
         public int getMessageLevel()
         {
             return messageLevel;
@@ -202,7 +221,7 @@ public class DefaultMessageHolder
         public CharSequence render()
         {
             StringBuffer buffer = new StringBuffer();
-            
+
             buffer.append( '[' ).append( MessageLevels.getLevelLabel( messageLevel ) ).append( "] " );
 
             if ( message != null && message.length() > 0 )
@@ -334,11 +353,11 @@ public class DefaultMessageHolder
     {
         return countMessagesOfType( MessageLevels.LEVEL_WARNING );
     }
-    
+
     private int countMessagesOfType( int messageLevel )
     {
         int count = 0;
-        
+
         for ( Iterator it = messages.iterator(); it.hasNext(); )
         {
             Message message = (Message) it.next();
@@ -347,7 +366,7 @@ public class DefaultMessageHolder
                 count++;
             }
         }
-        
+
         return count;
     }
 
@@ -382,7 +401,7 @@ public class DefaultMessageHolder
         {
             newMessage( MessageLevels.LEVEL_DEBUG );
         }
-        
+
         return this;
     }
 
@@ -392,7 +411,7 @@ public class DefaultMessageHolder
         {
             newMessage( MessageLevels.LEVEL_ERROR );
         }
-        
+
         return this;
     }
 
@@ -402,7 +421,7 @@ public class DefaultMessageHolder
         {
             newMessage( MessageLevels.LEVEL_INFO );
         }
-        
+
         return this;
     }
 
@@ -412,7 +431,7 @@ public class DefaultMessageHolder
         {
             newMessage( MessageLevels.LEVEL_SEVERE );
         }
-        
+
         return this;
     }
 
@@ -422,7 +441,7 @@ public class DefaultMessageHolder
         {
             newMessage( MessageLevels.LEVEL_WARNING );
         }
-        
+
         return this;
     }
 
@@ -450,7 +469,7 @@ public class DefaultMessageHolder
     {
         messageLevelStates[MessageLevels.LEVEL_WARNING] = enabled;
     }
-    
+
     public void flush()
     {
         if ( onDemandSink != null && currentMessage != null )
@@ -465,7 +484,7 @@ public class DefaultMessageHolder
         for ( Iterator it = messages.iterator(); it.hasNext(); )
         {
             Message message = (Message) it.next();
-            
+
             renderTo( message, sink );
         }
     }

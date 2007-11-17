@@ -32,6 +32,10 @@
   <name>Maven Shared I/O API</name>
   <description>API for I/O support like logging, download or file scanning.</description>
 
+  <prerequisites>
+    <maven>2.0.6</maven>
+  </prerequisites>
+
   <contributors>
     <contributor>
       <name>Joakim Erdfelt</name>

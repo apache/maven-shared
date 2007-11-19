@@ -23,7 +23,7 @@ under the License.
   <bannerLeft>
     <name>${project.name}</name>
     <src>http://maven.apache.org/images/apache-maven-project-2.png</src>
-    <href>http://maven.apache.org/plugins/maven-jxr-plugin/</href>
+    <href>http://maven.apache.org/shared/file-management/</href>
   </bannerLeft>
 
   <bannerRight>

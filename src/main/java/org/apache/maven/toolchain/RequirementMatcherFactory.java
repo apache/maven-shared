@@ -80,7 +80,7 @@ public final class RequirementMatcherFactory
                 if (range.hasRestrictions()) {
                     return range.containsVersion(version);
                 } else {
-                    return range.getRecommendedVersion().equals(version);
+                    return range.getRecommendedVersion().compareTo(version) == 0;
                 }
             } 
             catch (InvalidVersionSpecificationException ex) 

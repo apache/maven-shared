@@ -50,6 +50,7 @@ public class RequirementMatcherFactoryTest extends TestCase {
         RequirementMatcher matcher;
         matcher = RequirementMatcherFactory.createVersionMatcher("1.5.2");
         assertFalse(matcher.matches("1.5"));
+        assertTrue(matcher.matches("1.5.2"));
         assertFalse(matcher.matches("[1.4,1.5)"));
         assertFalse(matcher.matches("[1.5,1.5.2)"));
         assertFalse(matcher.matches("(1.5.2,1.6)"));

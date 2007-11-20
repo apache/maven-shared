@@ -31,6 +31,7 @@ import org.apache.maven.shared.model.fileset.mappers.MapperException;
 import org.apache.maven.shared.model.fileset.mappers.MapperUtil;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,8 +55,6 @@ import java.util.Set;
  */
 public class FileSetManager
 {
-    private static final int DELETE_RETRY_SLEEP_MILLIS = 10;
-
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     private final boolean verbose;
@@ -608,33 +607,19 @@ public class FileSetManager
     }
 
     /**
-     * Accommodate Windows bug encountered in both Sun and IBM JDKs. Others possible. If the delete does not work, call
-     * System.gc(), wait a little and try again.
+     * Delete a file
      *
-     * @todo Use org.codehaus.plexus.util.FileUtils#forceDelete(File)
-     *
-     * @param f
-     * @throws IOException if any
+     * @param f a file
      */
     private boolean delete( File f )
-        throws IOException
     {
-        if ( !f.delete() )
+        try
         {
-            if ( System.getProperty( "os.name" ).toLowerCase().indexOf( "windows" ) > -1 )
-            {
-                f = f.getCanonicalFile();
-                System.gc();
-            }
-            try
-            {
-                Thread.sleep( DELETE_RETRY_SLEEP_MILLIS );
-                return f.delete();
-            }
-            catch ( InterruptedException ex )
-            {
-                return f.delete();
-            }
+            FileUtils.forceDelete( f );
+        }
+        catch ( IOException e )
+        {
+            return false;
         }
 
         return true;

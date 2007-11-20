@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -254,12 +255,24 @@ public class FileSetManager
     /**
      * Delete the matching files and directories for the given file-set definition.
      *
-     * @param fileSet
-     *            The file-set matching rules, along with search base directory
-     * @throws IOException
-     *             If a matching file cannot be deleted
+     * @param fileSet The file-set matching rules, along with search base directory
+     * @throws IOException If a matching file cannot be deleted
      */
     public void delete( FileSet fileSet )
+        throws IOException
+    {
+        delete( fileSet, true );
+    }
+
+    /**
+     * Delete the matching files and directories for the given file-set definition.
+     *
+     * @param fileSet The file-set matching rules, along with search base directory.
+     * @param throwsError Throw IOException when errors have occurred by deleting files or directories.
+     * @throws IOException If a matching file cannot be deleted and <code>throwsError=true</code>, otherwise
+     * print warning messages.
+     */
+    public void delete( FileSet fileSet, boolean throwsError )
         throws IOException
     {
         Set deletablePaths = findDeletablePaths( fileSet );
@@ -269,6 +282,8 @@ public class FileSetManager
             messages
                 .addDebugMessage( "Found deletable paths: " + String.valueOf( deletablePaths ).replace( ',', '\n' ) );
         }
+
+        List warnMessages = new LinkedList();
 
         for ( Iterator it = deletablePaths.iterator(); it.hasNext(); )
         {
@@ -285,7 +300,7 @@ public class FileSetManager
                         messages.addInfoMessage( "Deleting directory: " + file );
                     }
 
-                    removeDir( file, fileSet.isFollowSymlinks() );
+                    removeDir( file, fileSet.isFollowSymlinks(), throwsError, warnMessages );
                 }
                 else
                 {
@@ -296,9 +311,25 @@ public class FileSetManager
 
                     if ( !delete( file ) )
                     {
-                        throw new IOException( "Failed to delete file: " + file + ". Reason is unknown." );
+                        String message = "Failed to delete file " + file.getAbsolutePath() + ". Reason is unknown.";
+                        if ( throwsError )
+                        {
+                            throw new IOException( message );
+                        }
+
+                        warnMessages.add( message );
                     }
                 }
+            }
+        }
+
+        if ( messages != null && messages.isWarningEnabled() && !throwsError && ( warnMessages.size() > 0 ) )
+        {
+            for ( Iterator it = warnMessages.iterator(); it.hasNext(); )
+            {
+                String msg = (String) it.next();
+
+                messages.addWarningMessage( msg ).flush();
             }
         }
     }
@@ -509,12 +540,13 @@ public class FileSetManager
     /**
      * Delete a directory
      *
-     * @param dir
-     *            the directory to delete
-     * @param followSymlinks
-     *            whether to follow symbolic links, or simply delete the link
+     * @param dir the directory to delete
+     * @param followSymlinks whether to follow symbolic links, or simply delete the link
+     * @param throwsError Throw IOException when errors have occurred by deleting files or directories.
+     * @param warnMessages A list of warning messages used when <code>throwsError=false</code>.
+     * @throws IOException If a matching file cannot be deleted and <code>throwsError=true</code>.
      */
-    private void removeDir( File dir, boolean followSymlinks )
+    private void removeDir( File dir, boolean followSymlinks, boolean throwsError, List warnMessages )
         throws IOException
     {
         String[] list = dir.list();
@@ -522,28 +554,29 @@ public class FileSetManager
         {
             list = new String[0];
         }
+
         for ( int i = 0; i < list.length; i++ )
         {
             String s = list[i];
             File f = new File( dir, s );
             if ( f.isDirectory() && ( followSymlinks || !isSymlink( f ) ) )
             {
-                removeDir( f, followSymlinks );
+                removeDir( f, followSymlinks, throwsError, warnMessages );
             }
             else
             {
                 if ( !delete( f ) )
                 {
                     String message = "Unable to delete file " + f.getAbsolutePath();
-                    // TODO:...
-                    // if ( failOnError )
-                    // {
-                    throw new IOException( message );
-                    // }
-                    // else
-                    // {
-                    // getLog().info( message );
-                    // }
+                    if ( throwsError )
+                    {
+                        throw new IOException( message );
+                    }
+
+                    if ( !warnMessages.contains( message ) )
+                    {
+                        warnMessages.add( message );
+                    }
                 }
             }
         }
@@ -551,15 +584,15 @@ public class FileSetManager
         if ( !delete( dir ) )
         {
             String message = "Unable to delete directory " + dir.getAbsolutePath();
-            // TODO:...
-            // if ( failOnError )
-            // {
-            throw new IOException( message );
-            // }
-            // else
-            // {
-            // getLog().info( message );
-            // }
+            if ( throwsError )
+            {
+                throw new IOException( message );
+            }
+
+            if ( !warnMessages.contains( message ) )
+            {
+                warnMessages.add( message );
+            }
         }
     }
 

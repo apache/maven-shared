@@ -101,15 +101,6 @@
     </plugins>
   </build>
 
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </reporting>
-
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-io</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-io</developerConnection>

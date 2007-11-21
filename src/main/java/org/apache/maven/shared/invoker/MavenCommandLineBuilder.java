@@ -28,8 +28,12 @@ import java.util.Properties;
 
 import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 
+/**
+ * @version $Id$
+ */
 public class MavenCommandLineBuilder
 {
     private static final InvokerLogger DEFAULT_LOGGER = new SystemOutLogger();
@@ -43,14 +47,29 @@ public class MavenCommandLineBuilder
     private File mavenHome;
 
     private File mvnCommand;
+    
+    private Properties systemEnvVars;
 
     public Commandline build( InvocationRequest request )
         throws CommandLineConfigurationException
     {
-        checkRequiredState();
-
-        File mvn = findMavenExecutable();
-
+        try
+        {
+            checkRequiredState();
+        }
+        catch ( IOException e )
+        {
+            throw new CommandLineConfigurationException( e.getMessage(), e );
+        }
+        File mvn = null;
+        try
+        {
+            mvn = findMavenExecutable();
+        }
+        catch ( IOException e )
+        {
+            throw new CommandLineConfigurationException( e.getMessage(), e );
+        }
         Commandline cli = new Commandline();
 
         cli.setExecutable( mvn.getAbsolutePath() );
@@ -84,6 +103,7 @@ public class MavenCommandLineBuilder
     }
 
     protected void checkRequiredState()
+      throws IOException
     {
         if ( logger == null )
         {
@@ -91,10 +111,15 @@ public class MavenCommandLineBuilder
         }
 
         if ( ( mavenHome == null ) && ( System.getProperty( "maven.home" ) == null ) )
+            // can be restored with 1.5
+            //&& ( System.getenv( "M2_HOME" ) != null ) )
         {
-            throw new IllegalStateException( "Maven application directory was not "
-                + "specified, and ${maven.home} is not provided in the system "
-                + "properties. Please specify at least on of these." );
+            if ( !getSystemEnvVars().containsKey( "M2_HOME" ) )
+            {
+                throw new IllegalStateException( "Maven application directory was not "
+                    + "specified, and ${maven.home} is not provided in the system "
+                    + "properties. Please specify at least on of these." );
+            }
         }
     }
 
@@ -387,7 +412,7 @@ public class MavenCommandLineBuilder
     }
 
     protected File findMavenExecutable()
-        throws CommandLineConfigurationException
+        throws CommandLineConfigurationException, IOException
     {
         if ( mavenHome == null )
         {
@@ -412,9 +437,9 @@ public class MavenCommandLineBuilder
                 }
             }
 
-            if ( ( mavenHome == null ) && ( System.getenv( "M2_HOME" ) != null ) )
+            if ( ( mavenHome == null ) && ( getSystemEnvVars().getProperty( "M2_HOME" ) != null ) )
             {
-                mavenHome = new File( System.getenv( "M2_HOME" ) );
+                mavenHome = new File( getSystemEnvVars().getProperty( "M2_HOME" ) );
             }
         }
 
@@ -467,6 +492,17 @@ public class MavenCommandLineBuilder
         {
             return path;
         }
+    }
+    
+    private Properties getSystemEnvVars()
+        throws IOException
+    {
+        if ( this.systemEnvVars == null )
+        {
+            // with 1.5 replace with System.getenv()
+            this.systemEnvVars = CommandLineUtils.getSystemEnvVars();
+        }
+        return this.systemEnvVars;
     }
 
     public File getLocalRepositoryDirectory()

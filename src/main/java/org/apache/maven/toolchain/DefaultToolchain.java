@@ -21,6 +21,7 @@ package org.apache.maven.toolchain;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.maven.toolchain.model.ToolchainModel;
 
 /**
  *
@@ -35,13 +36,17 @@ public abstract class DefaultToolchain
     private Map provides = new HashMap /*<String,RequirementMatcher>*/ (  );
 
     public static final String KEY_TYPE = "type"; //NOI18N
+    
+    private ToolchainModel model;
 
-    protected DefaultToolchain( )
+    protected DefaultToolchain( ToolchainModel model ) 
     {
+        this.model = model;
     }
 
-    protected DefaultToolchain( String type )
+    protected DefaultToolchain( ToolchainModel model, String type )
     {
+        this(model);
         this.type = type;
     }
 
@@ -50,22 +55,10 @@ public abstract class DefaultToolchain
         return type;
     }
 
-    public final String getStorageKey( )
+    
+    public final ToolchainModel getModel( ) 
     {
-        return "toolchain-" + type; //NOI18N
-    }
-
-    public Map getData( )
-    {
-        Map data = new HashMap( 2 );
-        data.put( KEY_TYPE, type );
-
-        return data;
-    }
-
-    public void setData( Map data )
-    {
-        type = (String) data.get( KEY_TYPE );
+        return model;
     }
 
     public final void addProvideToken( String type,

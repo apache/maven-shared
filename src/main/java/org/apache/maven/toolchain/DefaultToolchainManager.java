@@ -27,7 +27,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.maven.context.BuildContext;
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.toolchain.model.PersistedToolchains;
 import org.apache.maven.toolchain.model.ToolchainModel;
 import org.apache.maven.toolchain.model.io.xpp3.MavenToolchainsXpp3Reader;
@@ -70,7 +71,7 @@ public class DefaultToolchainManager extends AbstractLogEnabled
     {
         try
         {
-            PersistedToolchains pers = readToolchainSettings();
+            PersistedToolchains pers = readToolchainSettings ();
             Map factories = container.lookupMap( ToolchainFactory.ROLE );
             List toRet = new ArrayList(  );
             if ( pers != null )
@@ -82,7 +83,7 @@ public class DefaultToolchainManager extends AbstractLogEnabled
                     while ( it.hasNext() )
                     {
                         ToolchainModel toolchainModel = (ToolchainModel) it.next();
-                        ToolchainFactory fact = (ToolchainFactory) factories.get(toolchainModel.getType());
+                        ToolchainFactory fact = (ToolchainFactory) factories.get( toolchainModel.getType() );
                         if ( fact != null )
                         {
                             toRet.add( fact.createToolchain( toolchainModel ) );
@@ -104,7 +105,7 @@ public class DefaultToolchainManager extends AbstractLogEnabled
                     toRet.add( tool );
                 }
             }
-            ToolchainPrivate[] tc = new ToolchainPrivate[toRet.size(  )];
+            ToolchainPrivate[] tc = new ToolchainPrivate[ toRet.size() ];
             return (ToolchainPrivate[]) toRet.toArray(tc);
         }
         catch ( ComponentLookupException ex )
@@ -115,34 +116,58 @@ public class DefaultToolchainManager extends AbstractLogEnabled
     }
 
     public Toolchain getToolchainFromBuildContext( String type,
-                                                   BuildContext context )
+                                                   MavenSession session )
     {
-        try
+        Map context = retrieveContext(session);
+        if ( "javac".equals( type )) 
         {
-            ToolchainFactory fact = (ToolchainFactory) container.lookup(ToolchainFactory.ROLE, type);
-            Toolchain dt = fact.createToolchain( context );
-            if ( dt != null )
+            //HACK to make compiler plugin happy
+            type = "jdk";
+        }
+        Object obj = context.get( getStorageKey( type ) );
+        ToolchainModel model = (ToolchainModel)obj;
+        
+        if ( model != null ) 
+        {
+            try
             {
-                return dt;
+                ToolchainFactory fact = (ToolchainFactory) container.lookup(ToolchainFactory.ROLE, type);
+                return fact.createToolchain( model );
             }
-            return null;
-        }
-        catch ( ComponentLookupException ex )
-        {
-            getLogger().fatalError("Error in component lookup", ex);
-        }
-        catch ( MisconfiguredToolchainException ex )
-        {
-            getLogger().error("Misconfigured toolchain.", ex);
+            catch ( ComponentLookupException ex )
+            {
+                getLogger().fatalError("Error in component lookup", ex);
+            }
+            catch ( MisconfiguredToolchainException ex )
+            {
+                getLogger().error("Misconfigured toolchain.", ex);
+            }
         }
         return null;
     }
+    
+    private Map retrieveContext( MavenSession session ) 
+    {
+        PluginDescriptor desc = new PluginDescriptor();
+        desc.setGroupId( PluginDescriptor.getDefaultPluginGroupId() );
+        desc.setArtifactId( PluginDescriptor.getDefaultPluginArtifactId ("toolchains") );
+        
+        return  session.getPluginContext( desc, session.getCurrentProject() );
+        
+    }
 
     public void storeToolchainToBuildContext( ToolchainPrivate toolchain,
-                                              BuildContext context )
+                                              MavenSession session )
     {
-        context.store( toolchain );
+        Map context = retrieveContext( session );
+        context.put( getStorageKey( toolchain.getType() ), toolchain.getModel () );
     }
+    
+    public static final String getStorageKey( String type )
+    {
+        return "toolchain-" + type; //NOI18N
+    }
+    
 
     private PersistedToolchains readToolchainSettings( )
         throws MisconfiguredToolchainException

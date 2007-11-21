@@ -19,7 +19,8 @@
 
 package org.apache.maven.toolchain;
 
-import org.apache.maven.context.BuildContext;
+import org.apache.maven.execution.MavenSession;
+
 
 /**
  *
@@ -35,6 +36,6 @@ public interface ToolchainManager
      * to be used from plugins capable of working with toolchains.
      */
     Toolchain getToolchainFromBuildContext( String type,
-                                            BuildContext context );
+                                            MavenSession context );
 
 }

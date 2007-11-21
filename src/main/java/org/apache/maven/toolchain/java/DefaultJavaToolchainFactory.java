@@ -20,7 +20,7 @@
 package org.apache.maven.toolchain.java;
 
 import java.io.File;
-import org.apache.maven.context.BuildContext;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.toolchain.MisconfiguredToolchainException;
 import org.apache.maven.toolchain.RequirementMatcherFactory;
 import org.apache.maven.toolchain.Toolchain;
@@ -45,7 +45,10 @@ public class DefaultJavaToolchainFactory
     public ToolchainPrivate createToolchain( ToolchainModel model )
         throws MisconfiguredToolchainException
     {
-        DefaultJavaToolChain jtc = new DefaultJavaToolChain(  );
+        if (model == null) {
+            return null;
+        }
+        DefaultJavaToolChain jtc = new DefaultJavaToolChain( model );
         Xpp3Dom dom = (Xpp3Dom) model.getConfiguration();
         Xpp3Dom javahome = dom.getChild( DefaultJavaToolChain.KEY_JAVAHOME );
         if ( javahome == null )
@@ -92,18 +95,6 @@ public class DefaultJavaToolchainFactory
     {
         //not sure it's necessary to provide a default toolchain here.
         //only version can be eventually supplied, and 
-        return null;
-    }
-
-    public Toolchain createToolchain( BuildContext context )
-        throws MisconfiguredToolchainException
-    {
-        DefaultJavaToolChain jtc = new DefaultJavaToolChain();
-        boolean retrieve = context.retrieve( jtc );
-        if ( retrieve )
-        {
-            return jtc;
-        }
         return null;
     }
 }

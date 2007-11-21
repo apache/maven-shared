@@ -20,7 +20,8 @@
 
 package org.apache.maven.toolchain;
 
-import org.apache.maven.context.BuildContext;
+import org.apache.maven.execution.MavenSession;
+
 
 /**
  * Component for use by the maven-toolchains-plugin only.
@@ -40,6 +41,6 @@ public interface ToolchainManagerPrivate
      * Stores the toolchain into build context.
      */
     void storeToolchainToBuildContext( ToolchainPrivate toolchain,
-                                       BuildContext context );
+                                       MavenSession context );
     
 }

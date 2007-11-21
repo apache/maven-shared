@@ -22,6 +22,7 @@ package org.apache.maven.toolchain.java;
 import java.io.File;
 import java.util.Map;
 import org.apache.maven.toolchain.DefaultToolchain;
+import org.apache.maven.toolchain.model.ToolchainModel;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.Os;
@@ -38,9 +39,9 @@ public class DefaultJavaToolChain
 
     public static final String KEY_JAVAHOME = "jdkHome"; //NOI18N
 
-    public DefaultJavaToolChain( )
+    public DefaultJavaToolChain( ToolchainModel model)
     {
-        super( "jdk" );
+        super( model, "jdk" );
     }
 
     public String getJavaHome( )
@@ -69,18 +70,6 @@ public class DefaultJavaToolChain
         return null;
     }
 
-    public Map getData( )
-    {
-        Map map = super.getData(  );
-        map.put( KEY_JAVAHOME, javaHome );
-        return map;
-    }
-
-    public void setData( Map data )
-    {
-        super.setData( data );
-        javaHome = (String) data.get(KEY_JAVAHOME);
-    }
 
     private static File findTool( String toolName, File installFolder )
     {

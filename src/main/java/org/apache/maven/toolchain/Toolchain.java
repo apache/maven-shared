@@ -19,14 +19,12 @@
 
 package org.apache.maven.toolchain;
 
-import org.apache.maven.context.ManagedBuildData;
 
 /**
  * @author Milos Kleint
  * @author Jason van Zyl
  */
 public interface Toolchain
-    extends ManagedBuildData
 {
 
     String getType( );

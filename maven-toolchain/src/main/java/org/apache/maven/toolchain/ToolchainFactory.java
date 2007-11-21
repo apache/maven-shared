@@ -19,7 +19,6 @@
 
 package org.apache.maven.toolchain;
 
-import org.apache.maven.context.BuildContext;
 import org.apache.maven.toolchain.model.ToolchainModel;
 
 /**
@@ -29,10 +28,7 @@ import org.apache.maven.toolchain.model.ToolchainModel;
 public interface ToolchainFactory
 {
 
-    String ROLE = ToolchainFactory.class.getName(  );
-
-    Toolchain createToolchain( BuildContext context )
-        throws MisconfiguredToolchainException;
+    String ROLE = ToolchainFactory.class.getName();
 
     /**
      * Create instance of toolchain.

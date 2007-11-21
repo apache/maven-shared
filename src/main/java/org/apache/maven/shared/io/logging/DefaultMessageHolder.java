@@ -140,7 +140,7 @@ public class DefaultMessageHolder
             renderTo( currentMessage, onDemandSink );
         }
 
-        currentMessage = new Message( messageLevel );
+        currentMessage = new Message( messageLevel, onDemandSink );
         messages.add( currentMessage );
     }
 
@@ -196,9 +196,13 @@ public class DefaultMessageHolder
 
         private final int messageLevel;
 
-        public Message( int messageLevel )
+        private final MessageSink onDemandSink;
+
+        public Message( int messageLevel, MessageSink onDemandSink )
         {
             this.messageLevel = messageLevel;
+
+            this.onDemandSink = onDemandSink;
         }
 
         public Message setError( Throwable error )
@@ -222,8 +226,10 @@ public class DefaultMessageHolder
         {
             StringBuffer buffer = new StringBuffer();
 
-            buffer.append( '[' ).append( MessageLevels.getLevelLabel( messageLevel ) ).append( "] " );
-
+            if ( onDemandSink == null )
+            {
+                buffer.append( '[' ).append( MessageLevels.getLevelLabel( messageLevel ) ).append( "] " );
+            }
             if ( message != null && message.length() > 0 )
             {
                 buffer.append( message );

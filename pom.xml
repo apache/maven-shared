@@ -17,20 +17,23 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>7</version>
+    <version>8</version>
   </parent>
 
   <artifactId>maven-shared-io</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <name>Maven Shared I/O API</name>
   <description>API for I/O support like logging, download or file scanning.</description>
+
+  <prerequisites>
+    <maven>2.0.6</maven>
+  </prerequisites>
 
   <contributors>
     <contributor>
@@ -86,21 +89,6 @@
 
   <build>
     <plugins>
-      <!--
-        <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <configuration>
-        <filesets>
-        <fileset>
-        <directory>${basedir}</directory>
-        <includes>
-        <include>cobertura.ser</include>
-        </includes>
-        </fileset>
-        </filesets>
-        </configuration>
-        </plugin>
-      -->
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.3</version>
@@ -113,19 +101,10 @@
     </plugins>
   </build>
 
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </reporting>
-
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-io</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-io</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-shared-io</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-io-1.1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-io-1.1</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/tags/maven-shared-io-1.1</url>
   </scm>
 
   <distributionManagement>

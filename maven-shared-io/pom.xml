@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>maven-shared-io</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <name>Maven Shared I/O API</name>
   <description>API for I/O support like logging, download or file scanning.</description>
 
@@ -102,9 +102,9 @@
   </build>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-io</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-io</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-shared-io</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-io-1.1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-io-1.1</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/tags/maven-shared-io-1.1</url>
   </scm>
 
   <distributionManagement>

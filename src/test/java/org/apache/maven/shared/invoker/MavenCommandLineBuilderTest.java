@@ -313,6 +313,10 @@ public class MavenCommandLineBuilderTest
         catch ( IllegalStateException e )
         {
         }
+        catch ( IOException e )
+        {
+            fail( e.getMessage() );
+        }
     }
 
     public void testShouldFindDummyMavenExecutable()
@@ -1045,12 +1049,13 @@ public class MavenCommandLineBuilderTest
         extends MavenCommandLineBuilder
     {
         public void checkRequiredState()
+          throws IOException
         {
             super.checkRequiredState();
         }
 
         public File findMavenExecutable()
-            throws CommandLineConfigurationException
+            throws CommandLineConfigurationException, IOException
         {
             return super.findMavenExecutable();
         }

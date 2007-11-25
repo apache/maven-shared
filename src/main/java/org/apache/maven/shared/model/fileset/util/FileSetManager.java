@@ -31,6 +31,7 @@ import org.apache.maven.shared.model.fileset.mappers.MapperException;
 import org.apache.maven.shared.model.fileset.mappers.MapperUtil;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +41,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,13 +55,15 @@ import java.util.Set;
  */
 public class FileSetManager
 {
-    private static final int DELETE_RETRY_SLEEP_MILLIS = 10;
-
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     private final boolean verbose;
 
     private MessageHolder messages;
+
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
 
     /**
      * Create a new manager instance with the supplied log instance and flag for whether to output verbose messages.
@@ -139,6 +143,17 @@ public class FileSetManager
         this.verbose = false;
     }
 
+    // ----------------------------------------------------------------------
+    // Public methods
+    // ----------------------------------------------------------------------
+
+    /**
+     *
+     * @param fileSet
+     * @return the included files as map
+     * @throws MapperException if any
+     * @see #getIncludedFiles(FileSet)
+     */
     public Map mapIncludedFiles( FileSet fileSet )
         throws MapperException
     {
@@ -182,10 +197,8 @@ public class FileSetManager
         {
             return scanner.getIncludedFiles();
         }
-        else
-        {
-            return EMPTY_STRING_ARRAY;
-        }
+
+        return EMPTY_STRING_ARRAY;
     }
 
     /**
@@ -203,10 +216,8 @@ public class FileSetManager
         {
             return scanner.getIncludedDirectories();
         }
-        else
-        {
-            return EMPTY_STRING_ARRAY;
-        }
+
+        return EMPTY_STRING_ARRAY;
     }
 
     /**
@@ -224,10 +235,8 @@ public class FileSetManager
         {
             return scanner.getExcludedFiles();
         }
-        else
-        {
-            return EMPTY_STRING_ARRAY;
-        }
+
+        return EMPTY_STRING_ARRAY;
     }
 
     /**
@@ -245,21 +254,31 @@ public class FileSetManager
         {
             return scanner.getExcludedDirectories();
         }
-        else
-        {
-            return EMPTY_STRING_ARRAY;
-        }
+
+        return EMPTY_STRING_ARRAY;
     }
 
     /**
      * Delete the matching files and directories for the given file-set definition.
      *
-     * @param fileSet
-     *            The file-set matching rules, along with search base directory
-     * @throws IOException
-     *             If a matching file cannot be deleted
+     * @param fileSet The file-set matching rules, along with search base directory
+     * @throws IOException If a matching file cannot be deleted
      */
     public void delete( FileSet fileSet )
+        throws IOException
+    {
+        delete( fileSet, true );
+    }
+
+    /**
+     * Delete the matching files and directories for the given file-set definition.
+     *
+     * @param fileSet The file-set matching rules, along with search base directory.
+     * @param throwsError Throw IOException when errors have occurred by deleting files or directories.
+     * @throws IOException If a matching file cannot be deleted and <code>throwsError=true</code>, otherwise
+     * print warning messages.
+     */
+    public void delete( FileSet fileSet, boolean throwsError )
         throws IOException
     {
         Set deletablePaths = findDeletablePaths( fileSet );
@@ -267,8 +286,10 @@ public class FileSetManager
         if ( messages != null && messages.isDebugEnabled() )
         {
             messages
-                .addDebugMessage( "Found deletable paths: " + String.valueOf( deletablePaths ).replace( ',', '\n' ) );
+                .addDebugMessage( "Found deletable paths: " + String.valueOf( deletablePaths ).replace( ',', '\n' ) ).flush();
         }
+
+        List warnMessages = new LinkedList();
 
         for ( Iterator it = deletablePaths.iterator(); it.hasNext(); )
         {
@@ -282,26 +303,46 @@ public class FileSetManager
                 {
                     if ( verbose && messages != null )
                     {
-                        messages.addInfoMessage( "Deleting directory: " + file );
+                        messages.addInfoMessage( "Deleting directory: " + file ).flush();
                     }
 
-                    removeDir( file, fileSet.isFollowSymlinks() );
+                    removeDir( file, fileSet.isFollowSymlinks(), throwsError, warnMessages );
                 }
                 else
                 {
                     if ( verbose && messages != null )
                     {
-                        messages.addInfoMessage( "Deleting file: " + file );
+                        messages.addInfoMessage( "Deleting file: " + file ).flush();
                     }
 
                     if ( !delete( file ) )
                     {
-                        throw new IOException( "Failed to delete file: " + file + ". Reason is unknown." );
+                        String message = "Failed to delete file " + file.getAbsolutePath() + ". Reason is unknown.";
+                        if ( throwsError )
+                        {
+                            throw new IOException( message );
+                        }
+
+                        warnMessages.add( message );
                     }
                 }
             }
         }
+
+        if ( messages != null && messages.isWarningEnabled() && !throwsError && ( warnMessages.size() > 0 ) )
+        {
+            for ( Iterator it = warnMessages.iterator(); it.hasNext(); )
+            {
+                String msg = (String) it.next();
+
+                messages.addWarningMessage( msg ).flush();
+            }
+        }
     }
+
+    // ----------------------------------------------------------------------
+    // Private methods
+    // ----------------------------------------------------------------------
 
     private boolean isSymlink( File file )
         throws IOException
@@ -312,7 +353,7 @@ public class FileSetManager
         if ( messages != null && messages.isDebugEnabled() )
         {
             messages.addDebugMessage( "Checking for symlink:\nParent file's canonical path: "
-                + parent.getCanonicalPath() + "\nMy canonical path: " + canonicalFile.getPath() );
+                + parent.getCanonicalPath() + "\nMy canonical path: " + canonicalFile.getPath() ).flush();
         }
         return parent != null
             && ( !canonicalFile.getName().equals( file.getName() ) || !canonicalFile.getPath()
@@ -331,7 +372,7 @@ public class FileSetManager
     {
         if ( verbose && messages != null )
         {
-            messages.addInfoMessage( "Scanning for deletable directories." );
+            messages.addInfoMessage( "Scanning for deletable directories." ).flush();
         }
 
         DirectoryScanner scanner = scan( fileSet );
@@ -353,7 +394,7 @@ public class FileSetManager
             if ( verbose && messages != null )
             {
                 messages
-                    .addInfoMessage( "Adding symbolic link dirs which were previously excluded to the list being deleted." );
+                    .addInfoMessage( "Adding symbolic link dirs which were previously excluded to the list being deleted." ).flush();
             }
 
             // we need to see which entries were excluded because they're symlinks...
@@ -362,8 +403,8 @@ public class FileSetManager
 
             if ( messages != null && messages.isDebugEnabled() )
             {
-                messages.addDebugMessage( "Originally marked for delete: " + includes );
-                messages.addDebugMessage( "Marked for preserve (with followSymlinks == false): " + excludes );
+                messages.addDebugMessage( "Originally marked for delete: " + includes ).flush();
+                messages.addDebugMessage( "Marked for preserve (with followSymlinks == false): " + excludes ).flush();
             }
 
             List notSymlinks = Arrays.asList( scanner.getIncludedDirectories() );
@@ -373,7 +414,7 @@ public class FileSetManager
 
             if ( messages != null && messages.isDebugEnabled() )
             {
-                messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): " + linksForDeletion );
+                messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): " + linksForDeletion ).flush();
             }
 
             excludes.removeAll( notSymlinks );
@@ -392,14 +433,14 @@ public class FileSetManager
                 if ( messages != null && messages.isDebugEnabled() )
                 {
                     messages.addDebugMessage( "Verifying path: " + parentPath
-                        + " is not present; contains file which is excluded." );
+                        + " is not present; contains file which is excluded." ).flush();
                 }
 
                 boolean removed = includes.remove( parentPath );
 
                 if ( removed && messages != null && messages.isDebugEnabled() )
                 {
-                    messages.addDebugMessage( "Path: " + parentPath + " was removed from delete list." );
+                    messages.addDebugMessage( "Path: " + parentPath + " was removed from delete list." ).flush();
                 }
 
                 parentPath = new File( parentPath ).getParent();
@@ -415,7 +456,7 @@ public class FileSetManager
     {
         if ( verbose && messages != null )
         {
-            messages.addInfoMessage( "Re-scanning for deletable files." );
+            messages.addInfoMessage( "Re-scanning for deletable files." ).flush();
         }
 
         DirectoryScanner scanner = scan( fileSet );
@@ -438,7 +479,7 @@ public class FileSetManager
             if ( verbose && messages != null )
             {
                 messages
-                    .addInfoMessage( "Adding symbolic link files which were previously excluded to the list being deleted." );
+                    .addInfoMessage( "Adding symbolic link files which were previously excluded to the list being deleted." ).flush();
             }
 
             // we need to see which entries were excluded because they're symlinks...
@@ -447,8 +488,8 @@ public class FileSetManager
 
             if ( messages != null && messages.isDebugEnabled() )
             {
-                messages.addDebugMessage( "Originally marked for delete: " + includes );
-                messages.addDebugMessage( "Marked for preserve (with followSymlinks == false): " + excludes );
+                messages.addDebugMessage( "Originally marked for delete: " + includes ).flush();
+                messages.addDebugMessage( "Marked for preserve (with followSymlinks == false): " + excludes ).flush();
             }
 
             List notSymlinks = Arrays.asList( scanner.getExcludedFiles() );
@@ -458,7 +499,7 @@ public class FileSetManager
 
             if ( messages != null && messages.isDebugEnabled() )
             {
-                messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): " + linksForDeletion );
+                messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): " + linksForDeletion ).flush();
             }
 
             excludes.removeAll( notSymlinks );
@@ -477,14 +518,14 @@ public class FileSetManager
                 if ( messages != null && messages.isDebugEnabled() )
                 {
                     messages.addDebugMessage( "Verifying path: " + parentPath
-                        + " is not present; contains file which is excluded." );
+                        + " is not present; contains file which is excluded." ).flush();
                 }
 
                 boolean removed = includes.remove( parentPath );
 
                 if ( removed && messages != null && messages.isDebugEnabled() )
                 {
-                    messages.addDebugMessage( "Path: " + parentPath + " was removed from delete list." );
+                    messages.addDebugMessage( "Path: " + parentPath + " was removed from delete list." ).flush();
                 }
 
                 parentPath = new File( parentPath ).getParent();
@@ -509,12 +550,13 @@ public class FileSetManager
     /**
      * Delete a directory
      *
-     * @param dir
-     *            the directory to delete
-     * @param followSymlinks
-     *            whether to follow symbolic links, or simply delete the link
+     * @param dir the directory to delete
+     * @param followSymlinks whether to follow symbolic links, or simply delete the link
+     * @param throwsError Throw IOException when errors have occurred by deleting files or directories.
+     * @param warnMessages A list of warning messages used when <code>throwsError=false</code>.
+     * @throws IOException If a matching file cannot be deleted and <code>throwsError=true</code>.
      */
-    private void removeDir( File dir, boolean followSymlinks )
+    private void removeDir( File dir, boolean followSymlinks, boolean throwsError, List warnMessages )
         throws IOException
     {
         String[] list = dir.list();
@@ -522,28 +564,29 @@ public class FileSetManager
         {
             list = new String[0];
         }
+
         for ( int i = 0; i < list.length; i++ )
         {
             String s = list[i];
             File f = new File( dir, s );
             if ( f.isDirectory() && ( followSymlinks || !isSymlink( f ) ) )
             {
-                removeDir( f, followSymlinks );
+                removeDir( f, followSymlinks, throwsError, warnMessages );
             }
             else
             {
                 if ( !delete( f ) )
                 {
                     String message = "Unable to delete file " + f.getAbsolutePath();
-                    // TODO:...
-                    // if ( failOnError )
-                    // {
-                    throw new IOException( message );
-                    // }
-                    // else
-                    // {
-                    // getLog().info( message );
-                    // }
+                    if ( throwsError )
+                    {
+                        throw new IOException( message );
+                    }
+
+                    if ( !warnMessages.contains( message ) )
+                    {
+                        warnMessages.add( message );
+                    }
                 }
             }
         }
@@ -551,46 +594,32 @@ public class FileSetManager
         if ( !delete( dir ) )
         {
             String message = "Unable to delete directory " + dir.getAbsolutePath();
-            // TODO:...
-            // if ( failOnError )
-            // {
-            throw new IOException( message );
-            // }
-            // else
-            // {
-            // getLog().info( message );
-            // }
+            if ( throwsError )
+            {
+                throw new IOException( message );
+            }
+
+            if ( !warnMessages.contains( message ) )
+            {
+                warnMessages.add( message );
+            }
         }
     }
 
     /**
-     * Accommodate Windows bug encountered in both Sun and IBM JDKs. Others possible. If the delete does not work, call
-     * System.gc(), wait a little and try again.
+     * Delete a file
      *
-     * @todo Use org.codehaus.plexus.util.FileUtils#forceDelete(File)
-     *
-     * @param f
-     * @throws IOException if any
+     * @param f a file
      */
     private boolean delete( File f )
-        throws IOException
     {
-        if ( !f.delete() )
+        try
         {
-            if ( System.getProperty( "os.name" ).toLowerCase().indexOf( "windows" ) > -1 )
-            {
-                f = f.getCanonicalFile();
-                System.gc();
-            }
-            try
-            {
-                Thread.sleep( DELETE_RETRY_SLEEP_MILLIS );
-                return f.delete();
-            }
-            catch ( InterruptedException ex )
-            {
-                return f.delete();
-            }
+            FileUtils.forceDelete( f );
+        }
+        catch ( IOException e )
+        {
+            return false;
         }
 
         return true;

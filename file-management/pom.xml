@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>file-management</artifactId>
-  <version>1.2</version>
+  <version>1.3-SNAPSHOT</version>
   <name>Maven Shared File Management API</name>
   <description>API to collect files from a given directory using several include/exclude rules.</description>
 
@@ -108,8 +108,8 @@
   </dependencies>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/file-management-1.2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/file-management-1.2</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/tags/file-management-1.2</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/file-management</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/file-management</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/file-management</url>
   </scm>
 </project>

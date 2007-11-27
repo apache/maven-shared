@@ -43,6 +43,8 @@ public interface InvocationRequest
 
     boolean isShellEnvironmentInherited();
 
+    boolean isNonPluginUpdates();
+    
     String getFailureBehavior();
 
     File getLocalRepositoryDirectory( File defaultDirectory );
@@ -136,4 +138,6 @@ public interface InvocationRequest
     InvocationRequest setUserSettingsFile( File userSettings );
 
     InvocationRequest setGlobalChecksumPolicy( String globalChecksumPolicy );
+    
+    InvocationRequest setNonPluginUpdates( boolean nonPluginUpdates);
 }

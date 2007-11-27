@@ -49,6 +49,7 @@ public class DefaultInvocationRequest
     private String pomFilename;
     private File javaHome;
     private List profiles;
+    private boolean nonPluginUpdates;
 
     public InvocationRequest activateReactor( String[] includes, String[] excludes )
     {
@@ -288,6 +289,17 @@ public class DefaultInvocationRequest
     public InvocationRequest setProfiles( List profiles )
     {
         this.profiles = profiles;
+        return this;
+    }
+
+    public boolean isNonPluginUpdates()
+    {
+        return nonPluginUpdates;
+    }
+
+    public InvocationRequest setNonPluginUpdates( boolean nonPluginUpdates )
+    {
+        this.nonPluginUpdates = nonPluginUpdates;
         return this;
     }
 

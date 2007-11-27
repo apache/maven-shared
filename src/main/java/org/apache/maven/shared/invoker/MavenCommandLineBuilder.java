@@ -409,6 +409,10 @@ public class MavenCommandLineBuilder
         {
             cli.createArgument().setLine( "-c" );
         }
+        if (request.isNonPluginUpdates())
+        {
+            cli.createArgument().setLine( "-npu" );
+        }
     }
 
     protected File findMavenExecutable()

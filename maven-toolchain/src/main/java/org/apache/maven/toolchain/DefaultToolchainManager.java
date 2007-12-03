@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -148,6 +149,9 @@ public class DefaultToolchainManager extends AbstractLogEnabled
     
     private Map retrieveContext( MavenSession session ) 
     {
+        if (session == null) {
+            return Collections.EMPTY_MAP;
+        }
         PluginDescriptor desc = new PluginDescriptor();
         desc.setGroupId( PluginDescriptor.getDefaultPluginGroupId() );
         desc.setArtifactId( PluginDescriptor.getDefaultPluginArtifactId ("toolchains") );

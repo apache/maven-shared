@@ -215,7 +215,7 @@ public class MavenArchiverTest
         project.setExtensionArtifacts( Collections.EMPTY_SET );
         project.setRemoteArtifactRepositories( Collections.EMPTY_LIST );
         project.setPluginArtifactRepositories( Collections.EMPTY_LIST );
-        project.setFile( new File( "pom.xml" ) );
+        project.setFile( new File( "src/test/resources/pom.xml" ) );
         Build build = new Build();
         build.setDirectory( "target" );
         project.setBuild( build );

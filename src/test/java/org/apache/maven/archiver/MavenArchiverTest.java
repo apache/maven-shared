@@ -23,13 +23,11 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -288,34 +286,34 @@ public class MavenArchiverTest
         JarFile jar = null;
         try
         {
-        File jarFile = new File( "target/test/dummy.jar" );
-        jarFile.delete();
-        assertFalse( jarFile.exists() );
-        JarArchiver jarArchiver = new JarArchiver();
-        jarArchiver.setDestFile( jarFile );
+            File jarFile = new File( "target/test/dummy.jar" );
+            jarFile.delete();
+            assertFalse( jarFile.exists() );
+            JarArchiver jarArchiver = new JarArchiver();
+            jarArchiver.setDestFile( jarFile );
 
-        MavenArchiver archiver = new MavenArchiver();
-        archiver.setArchiver( jarArchiver );
-        archiver.setOutputFile( jarArchiver.getDestFile() );
+            MavenArchiver archiver = new MavenArchiver();
+            archiver.setArchiver( jarArchiver );
+            archiver.setOutputFile( jarArchiver.getDestFile() );
 
-        MavenProject project = getDummyProject();
+            MavenProject project = getDummyProject();
 
-        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-        config.setForced( true );
-        config.getManifest().setAddDefaultImplementationEntries( true );
-        archiver.createArchive( project, config );
-        assertTrue( jarFile.exists() );
+            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+            config.setForced( true );
+            config.getManifest().setAddDefaultImplementationEntries( true );
+            archiver.createArchive( project, config );
+            assertTrue( jarFile.exists() );
 
-        jar = new JarFile( jarFile );
+            jar = new JarFile( jarFile );
 
-        ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
-        Properties manifest = new Properties();
-        inputStream = jar.getInputStream( zipEntry );
-        manifest.load( inputStream );
+            ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
+            Properties manifest = new Properties();
+            inputStream = jar.getInputStream( zipEntry );
+            manifest.load( inputStream );
 
-        assertTrue( manifest.containsKey( "Implementation-Version" ) );
-        assertEquals( "0.1", manifest.get( "Implementation-Version" ) );
-        
+            assertTrue( manifest.containsKey( "Implementation-Version" ) );
+            assertEquals( "0.1", manifest.get( "Implementation-Version" ) );
+
         }
         finally
         {

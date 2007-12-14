@@ -19,6 +19,20 @@ package org.apache.maven.archiver;
  * under the License.
  */
 
+import java.io.File;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+
 import junit.framework.TestCase;
 
 import org.apache.maven.artifact.Artifact;
@@ -28,14 +42,7 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.Manifest;
 import org.codehaus.plexus.util.FileUtils;
-
-import java.io.File;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import org.codehaus.plexus.util.IOUtil;
 
 public class MavenArchiverTest
     extends TestCase
@@ -203,32 +210,7 @@ public class MavenArchiverTest
         archiver.setArchiver( jarArchiver );
         archiver.setOutputFile( jarArchiver.getDestFile() );
 
-        Model model = new Model();
-        model.setGroupId( "org.apache.dummy" );
-        model.setArtifactId( "dummy" );
-        model.setVersion( "0.1" );
-        MavenProject project = new MavenProject( model );
-
-        project.setArtifacts( Collections.EMPTY_SET );
-        project.setPluginArtifacts( Collections.EMPTY_SET );
-        project.setReportArtifacts( Collections.EMPTY_SET );
-        project.setExtensionArtifacts( Collections.EMPTY_SET );
-        project.setRemoteArtifactRepositories( Collections.EMPTY_LIST );
-        project.setPluginArtifactRepositories( Collections.EMPTY_LIST );
-        File pomFile = new File( "src/test/resources/pom.xml" );
-        pomFile.setLastModified( System.currentTimeMillis() - 60000L );
-        project.setFile( pomFile );
-        
-        Build build = new Build();
-        build.setDirectory( "target" );
-        project.setBuild( build );
-
-        MockArtifact artifact = new MockArtifact();
-        artifact.setGroupId( "org.apache.dummy" );
-        artifact.setArtifactId( "dummy" );
-        artifact.setVersion( "0.1" );
-        artifact.setType( "jar" );
-        project.setArtifact( artifact );
+        MavenProject project = getDummyProject();
 
         MavenArchiveConfiguration config = new MavenArchiveConfiguration();
         config.setForced( false );
@@ -252,5 +234,130 @@ public class MavenArchiverTest
         config.setForced( true );
         archiver.createArchive( project, config );
         assertTrue( jarFile.lastModified() > time );
+    }
+    
+    public void testNotGenerateImplementationVersionForMANIFESTMF()
+        throws Exception
+    {
+        InputStream inputStream = null;
+        JarFile jar = null;
+        try
+        {
+            File jarFile = new File( "target/test/dummy.jar" );
+            jarFile.delete();
+            assertFalse( jarFile.exists() );
+            JarArchiver jarArchiver = new JarArchiver();
+            jarArchiver.setDestFile( jarFile );
+
+            MavenArchiver archiver = new MavenArchiver();
+            archiver.setArchiver( jarArchiver );
+            archiver.setOutputFile( jarArchiver.getDestFile() );
+
+            MavenProject project = getDummyProject();
+
+            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+            config.setForced( true );
+            config.getManifest().setAddDefaultImplementationEntries( false );
+            archiver.createArchive( project, config );
+            assertTrue( jarFile.exists() );
+
+            jar = new JarFile( jarFile );
+
+            ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
+            Properties manifest = new Properties();
+            inputStream = jar.getInputStream( zipEntry );
+            manifest.load( inputStream );
+
+            assertFalse( manifest.containsKey( "Implementation-Version" ) );
+        }
+        finally
+        {
+            // cleanup streams
+            IOUtil.close( inputStream );
+            if ( jar != null )
+            {
+                jar.close();
+            }
+        }
+    }
+    
+    public void testGenerateImplementationVersionForMANIFESTMF()
+        throws Exception
+    {
+        InputStream inputStream = null;
+        JarFile jar = null;
+        try
+        {
+        File jarFile = new File( "target/test/dummy.jar" );
+        jarFile.delete();
+        assertFalse( jarFile.exists() );
+        JarArchiver jarArchiver = new JarArchiver();
+        jarArchiver.setDestFile( jarFile );
+
+        MavenArchiver archiver = new MavenArchiver();
+        archiver.setArchiver( jarArchiver );
+        archiver.setOutputFile( jarArchiver.getDestFile() );
+
+        MavenProject project = getDummyProject();
+
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        archiver.createArchive( project, config );
+        assertTrue( jarFile.exists() );
+
+        jar = new JarFile( jarFile );
+
+        ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
+        Properties manifest = new Properties();
+        inputStream = jar.getInputStream( zipEntry );
+        manifest.load( inputStream );
+
+        assertTrue( manifest.containsKey( "Implementation-Version" ) );
+        assertEquals( "0.1", manifest.get( "Implementation-Version" ) );
+        
+        }
+        finally
+        {
+            // cleanup streams
+            IOUtil.close( inputStream );
+            if ( jar != null )
+            {
+                jar.close();
+            }
+        }
+    }    
+    
+    // ----------------------------------------
+    //  common methods for testing
+    // ----------------------------------------
+    
+    private MavenProject getDummyProject()
+    {
+        Model model = new Model();
+        model.setGroupId( "org.apache.dummy" );
+        model.setArtifactId( "dummy" );
+        model.setVersion( "0.1" );
+        MavenProject project = new MavenProject( model );
+
+        project.setArtifacts( Collections.EMPTY_SET );
+        project.setPluginArtifacts( Collections.EMPTY_SET );
+        project.setReportArtifacts( Collections.EMPTY_SET );
+        project.setExtensionArtifacts( Collections.EMPTY_SET );
+        project.setRemoteArtifactRepositories( Collections.EMPTY_LIST );
+        project.setPluginArtifactRepositories( Collections.EMPTY_LIST );
+        File pomFile = new File( "src/test/resources/pom.xml" );
+        pomFile.setLastModified( System.currentTimeMillis() - 60000L );
+        project.setFile( pomFile );
+        Build build = new Build();
+        build.setDirectory( "target" );
+        project.setBuild( build );        
+        MockArtifact artifact = new MockArtifact();
+        artifact.setGroupId( "org.apache.dummy" );
+        artifact.setArtifactId( "dummy" );
+        artifact.setVersion( "0.1" );
+        artifact.setType( "jar" );
+        project.setArtifact( artifact );
+        return project;
     }
 }

@@ -92,4 +92,39 @@ public class ManifestConfiguration
     {
         return addDefaultSpecificationEntries;
     }
+
+    public void setMainClass( String mainClass )
+    {
+        this.mainClass = mainClass;
+    }
+
+    public void setPackageName( String packageName )
+    {
+        this.packageName = packageName;
+    }
+
+    public void setAddClasspath( boolean addClasspath )
+    {
+        this.addClasspath = addClasspath;
+    }
+
+    public void setAddExtensions( boolean addExtensions )
+    {
+        this.addExtensions = addExtensions;
+    }
+
+    public void setClasspathPrefix( String classpathPrefix )
+    {
+        this.classpathPrefix = classpathPrefix;
+    }
+
+    public void setAddDefaultSpecificationEntries( boolean addDefaultSpecificationEntries )
+    {
+        this.addDefaultSpecificationEntries = addDefaultSpecificationEntries;
+    }
+
+    public void setAddDefaultImplementationEntries( boolean addDefaultImplementationEntries )
+    {
+        this.addDefaultImplementationEntries = addDefaultImplementationEntries;
+    }
 }

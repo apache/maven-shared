@@ -297,10 +297,12 @@ public class MavenArchiverTest
             archiver.setOutputFile( jarArchiver.getDestFile() );
 
             MavenProject project = getDummyProject();
-
+            String ls = System.getProperty( "line.separator" );
+            project.setDescription( "foo " + ls + " bar " );
             MavenArchiveConfiguration config = new MavenArchiveConfiguration();
             config.setForced( true );
             config.getManifest().setAddDefaultImplementationEntries( true );
+            config.addManifestEntry( "Description", project.getDescription() );
             archiver.createArchive( project, config );
             assertTrue( jarFile.exists() );
 
@@ -313,7 +315,6 @@ public class MavenArchiverTest
 
             assertTrue( manifest.containsKey( "Implementation-Version" ) );
             assertEquals( "0.1", manifest.get( "Implementation-Version" ) );
-
         }
         finally
         {
@@ -325,6 +326,57 @@ public class MavenArchiverTest
             }
         }
     }    
+    
+    public void testCarriageReturnInManifestEntry()
+        throws Exception
+    {
+        InputStream inputStream = null;
+        JarFile jar = null;
+        try
+        {
+            File jarFile = new File( "target/test/dummy.jar" );
+            jarFile.delete();
+            assertFalse( jarFile.exists() );
+            JarArchiver jarArchiver = new JarArchiver();
+            jarArchiver.setDestFile( jarFile );
+
+            MavenArchiver archiver = new MavenArchiver();
+            archiver.setArchiver( jarArchiver );
+            archiver.setOutputFile( jarArchiver.getDestFile() );
+
+            MavenProject project = getDummyProject();
+            String ls = System.getProperty( "line.separator" );
+            project.setDescription( "foo " + ls + " bar " );
+            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+            config.setForced( true );
+            config.getManifest().setAddDefaultImplementationEntries( true );
+            config.addManifestEntry( "Description", project.getDescription() );
+            //config.addManifestEntry( "EntryWithTab", " foo tab " + ( '\u0009' ) + ( '\u0009' ) + " bar tab" + ( '\u0009' ) );
+            archiver.createArchive( project, config );
+            assertTrue( jarFile.exists() );
+
+            jar = new JarFile( jarFile );
+
+            ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
+            Properties manifest = new Properties();
+            inputStream = jar.getInputStream( zipEntry );
+            manifest.load( inputStream );
+
+            assertTrue( project.getDescription().indexOf( ls ) > 0 );
+            assertFalse( manifest.getProperty( "Description" ).indexOf( ls ) > 0 );
+            //System.out.println("tabEnt |" + manifest.getProperty( "EntryWithTab" ) + "|" );
+            //assertFalse( manifest.getProperty( "EntryWithTab" ).indexOf( ( '\u0009' ) ) > 0 );
+        }
+        finally
+        {
+            // cleanup streams
+            IOUtil.close( inputStream );
+            if ( jar != null )
+            {
+                jar.close();
+            }
+        }
+    }     
     
     // ----------------------------------------
     //  common methods for testing

@@ -36,6 +36,7 @@ import junit.framework.TestCase;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Organization;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.Manifest;
@@ -378,6 +379,62 @@ public class MavenArchiverTest
         }
     }     
     
+    public void testManifestEntries()
+        throws Exception
+    {
+        InputStream inputStream = null;
+        JarFile jar = null;
+        try
+        {
+            File jarFile = new File( "target/test/dummy.jar" );
+            jarFile.delete();
+            assertFalse( jarFile.exists() );
+            JarArchiver jarArchiver = new JarArchiver();
+            jarArchiver.setDestFile( jarFile );
+
+            MavenArchiver archiver = new MavenArchiver();
+            archiver.setArchiver( jarArchiver );
+            archiver.setOutputFile( jarArchiver.getDestFile() );
+
+            MavenProject project = getDummyProject();
+            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+            config.setForced( true );
+            config.getManifest().setAddDefaultImplementationEntries( true );
+            config.getManifest().setAddDefaultSpecificationEntries( true );
+            config.getManifest().setMainClass( "org.apache.maven.Foo" );
+            archiver.createArchive( project, config );
+            assertTrue( jarFile.exists() );
+            jar = new JarFile( jarFile );
+
+            ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
+            Properties manifest = new Properties();
+            inputStream = jar.getInputStream( zipEntry );
+            manifest.load( inputStream );
+            assertEquals( "Apache Maven", manifest.get( "Created-By" ) );
+            assertEquals( "archiver test", manifest.get( "Specification-Title" ) );
+            assertEquals( "0.1", manifest.get( "Specification-Version" ) );
+            assertEquals( "Apache", manifest.get( "Specification-Vendor" ) );
+
+            assertEquals( "archiver test", manifest.get( "Implementation-Title" ) );
+            assertEquals( "0.1", manifest.get( "Implementation-Version" ) );
+            assertEquals( "org.apache.dummy", manifest.get( "Implementation-Vendor-Id" ) );
+            assertEquals( "Apache", manifest.get( "Implementation-Vendor" ) );
+            assertEquals( "org.apache.maven.Foo", manifest.get( "Main-Class" ) );
+            
+            assertEquals(System.getProperty( "java.version"), manifest.getProperty( "Build-Jdk" ) );
+            assertEquals(System.getProperty( "user.name"), manifest.getProperty( "Built-By" ) );
+        }
+        finally
+        {
+            // cleanup streams
+            IOUtil.close( inputStream );
+            if ( jar != null )
+            {
+                jar.close();
+            }
+        }
+    }
+    
     // ----------------------------------------
     //  common methods for testing
     // ----------------------------------------
@@ -401,7 +458,11 @@ public class MavenArchiverTest
         project.setFile( pomFile );
         Build build = new Build();
         build.setDirectory( "target" );
-        project.setBuild( build );        
+        project.setBuild( build );
+        project.setName( "archiver test" );
+        Organization organization = new Organization();
+        organization.setName( "Apache" );
+        project.setOrganization( organization );
         MockArtifact artifact = new MockArtifact();
         artifact.setGroupId( "org.apache.dummy" );
         artifact.setArtifactId( "dummy" );

@@ -26,6 +26,7 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.Manifest;
 import org.codehaus.plexus.archiver.jar.ManifestException;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -129,6 +130,7 @@ public class MavenArchiver
         if ( config.isAddClasspath() )
         {
             StringBuffer classpath = new StringBuffer();
+            
             List artifacts = project.getRuntimeClasspathElements();
             String classpathPrefix = config.getClasspathPrefix();
 
@@ -137,16 +139,37 @@ public class MavenArchiver
                 File f = new File( (String) iter.next() );
                 if ( f.isFile() )
                 {
+                    classpath.append( classpathPrefix );
                     if ( classpath.length() > 0 )
                     {
                         classpath.append( " " );
                     }
-
-                    classpath.append( classpathPrefix );
-                    classpath.append( f.getName() );
+                    if ( !config.isClassPathMavenRepositoryLayout() )
+                    {
+                        classpath.append( f.getName() );
+                    }
+                    else
+                    {
+                        // we use layout /$groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
+                        // here we must find the Artifact in the projet Artifacts to generate the maven layout
+                        Artifact artifact = findArtifactWithFile( project.getArtifacts(), f );
+                        StringBuffer classpathElement = new StringBuffer();
+                        if ( !StringUtils.isEmpty( artifact.getGroupId() ) )
+                        {
+                            classpathElement.append( artifact.getGroupId().replace( '.', '/' ) ).append( '/' );
+                        }
+                        classpathElement.append( artifact.getArtifactId() ).append( '/' );
+                        classpathElement.append( artifact.getVersion() ).append( '/' );
+                        classpathElement.append( f.getName() );
+                        classpath.append( classpathElement );
+                    }
                 }
+
             }
 
+            
+            
+            
             if ( classpath.length() > 0 )
             {
                 // Class-Path is special and should be added to manifest even if
@@ -390,5 +413,23 @@ public class MavenArchiver
 
         // create archive
         archiver.createArchive();
+    }
+    
+    
+    private Artifact findArtifactWithFile(Set artifacts, File file)
+    {
+        for ( Iterator iterator = artifacts.iterator(); iterator.hasNext(); )
+        {
+            Artifact artifact = (Artifact) iterator.next();
+            // normally not null but we can check
+            if ( artifact.getFile() != null )
+            {
+                if ( artifact.getFile().equals( file ) )
+                {
+                    return artifact;
+                }
+            }
+        }
+        return null;
     }
 }

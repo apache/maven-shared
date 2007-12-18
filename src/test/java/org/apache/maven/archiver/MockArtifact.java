@@ -53,6 +53,8 @@ class MockArtifact
     private String classifier;
 
     private String baseVersion;
+    
+    private ArtifactHandler artifactHandler;
 
     public String getGroupId()
     {
@@ -181,8 +183,7 @@ class MockArtifact
 
     public ArtifactHandler getArtifactHandler()
     {
-        // TODO
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return artifactHandler;
     }
 
     public List getDependencyTrail()
@@ -241,8 +242,7 @@ class MockArtifact
 
     public void setArtifactHandler( ArtifactHandler artifactHandler )
     {
-        // TODO
-        //To change body of implemented methods use File | Settings | File Templates.
+        this.artifactHandler = artifactHandler;
     }
 
     public boolean isRelease()

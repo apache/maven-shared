@@ -50,6 +50,8 @@ public class ManifestConfiguration
      * Add default implementation entries if this is an extension.
      */
     private boolean addDefaultImplementationEntries;
+    
+    private boolean classPathMavenRepositoryLayout = false;
 
     public String getMainClass()
     {
@@ -126,5 +128,15 @@ public class ManifestConfiguration
     public void setAddDefaultImplementationEntries( boolean addDefaultImplementationEntries )
     {
         this.addDefaultImplementationEntries = addDefaultImplementationEntries;
+    }
+
+    public boolean isClassPathMavenRepositoryLayout()
+    {
+        return classPathMavenRepositoryLayout;
+    }
+
+    public void setClassPathMavenRepositoryLayout( boolean classPathMavenRepositoryLayout )
+    {
+        this.classPathMavenRepositoryLayout = classPathMavenRepositoryLayout;
     }
 }

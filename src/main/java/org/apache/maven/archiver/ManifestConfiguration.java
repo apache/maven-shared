@@ -51,6 +51,11 @@ public class ManifestConfiguration
      */
     private boolean addDefaultImplementationEntries;
     
+    /**
+     * the generated ClassPath entry will contains maven2 repository layout
+     * $groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
+     * @since 2.3
+     */
     private boolean classPathMavenRepositoryLayout = false;
 
     public String getMainClass()

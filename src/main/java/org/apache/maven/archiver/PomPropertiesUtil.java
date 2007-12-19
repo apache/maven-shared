@@ -36,6 +36,7 @@ import org.codehaus.plexus.util.IOUtil;
 /**
  * This class is responsible for creating the pom.properties
  * file.
+ * @version $Id$
  */
 public class PomPropertiesUtil
 {

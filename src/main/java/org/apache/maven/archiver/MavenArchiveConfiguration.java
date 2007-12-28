@@ -127,19 +127,19 @@ public class MavenArchiveConfiguration
     }
     
     public void addManifestSection( ManifestSection section ) {
-    	manifestSections.add( section );
+        manifestSections.add( section );
     }
     
     public void addManifestSections( List list ) {
-    	manifestSections.addAll( list );
+        manifestSections.addAll( list );
     }
     
     public boolean isManifestSectionsEmpty() {
-    	return manifestSections.isEmpty();
+        return manifestSections.isEmpty();
     }
     
     public List getManifestSections() {
-    	return manifestSections;
+        return manifestSections;
     }
 
     /**
@@ -160,7 +160,7 @@ public class MavenArchiveConfiguration
      */
     public boolean isForced()
     {
-    	return forced;
+        return forced;
     }
 
     /**
@@ -181,7 +181,7 @@ public class MavenArchiveConfiguration
      */
     public void setForced( boolean forced )
     {
-    	this.forced = forced;
+        this.forced = forced;
     }
 
     /**

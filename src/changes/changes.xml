@@ -29,5 +29,9 @@
       <action type="add" dev="olamy" issue="MNG-3332">Class-Path manifest entry should support maven repository layout.</action>
       <action type="add" dev="olamy" issue="MNG-3334">Add a changes report in maven-archiver.</action>
     </release>
+    <release version="2.2" date="2006-09-29">
+    </release>
+    <release version="2.1" date="2006-06-28">
+    </release>
   </body>
 </document>

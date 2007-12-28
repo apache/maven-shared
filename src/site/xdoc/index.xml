@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+  
+  http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<document>
+  <properties>
+    <title>Maven Archiver Home Page</title>
+    <author email="olamy@apache.org">Olivier Lamy</author>
+  </properties>
+  <body>
+    <section name="Maven Archiver">
+      <p>The Maven Archiver is used in some plugins for handle packaging.</p>
+      <p>
+        The configuration is divided in two parts :
+        <ul>
+          <li><a href="#archive-reference">Archive Reference</a></li>
+          <li><a href="#manifest-configuration-reference">ManifestConfiguration Reference</a></li>
+        </ul>
+      </p>
+      <subsection name="Content Reference">
+        <source>
+<![CDATA[
+  <archive>
+    <compress></compress>
+    <index></index>
+    <addMavenDescriptor></addMavenDescriptor>
+    <manifestFile></manifestFile>
+    <manifestEntries>
+      <url>${pom.url}</url>
+    </manifestEntries>
+    <manifestSections>
+    </manifestSections>
+    <forced></forced>
+    <pomPropertiesFile></pomPropertiesFile>
+    <manifest>
+      <mainClass></mainClass>
+      <packageName></packageName>
+      <addClasspath>true</addClasspath>
+      <addExtensions></addExtensions>
+      <classpathPrefix></classpathPrefix>
+      <addDefaultSpecificationEntries></addDefaultSpecificationEntries>
+      <addDefaultImplementationEntries></addDefaultImplementationEntries>
+      <classPathMavenRepositoryLayout></classPathMavenRepositoryLayout>
+    </manifest>  
+  </archive>  
+]]>            
+        </source>
+      </subsection>
+      <subsection name="Archive Reference">
+        <a name="archive-reference"/>
+        <table>
+          <tr>
+            <th>Element</th>
+            <th>Description</th>
+            <th>Default Value</th>
+          </tr>
+          <tr>
+            <td>compress</td>
+            <td>Active commpression for the archive</td>
+            <td>true</td>
+          </tr>
+          <tr>
+            <td>index</td>
+            <td></td>
+            <td>false</td>
+          </tr>
+          <tr>
+            <td>addMavenDescriptor</td>
+            <td></td>
+            <td>true</td>
+          </tr>
+        </table>
+      </subsection>
+      <subsection name="ManifestConfiguration Reference">
+        <a name="manifest-configuration-reference"/>
+        <table>
+          <tr>
+            <th>Element</th>
+            <th>Description</th>
+            <th>Default Value</th>
+          </tr>
+          <tr>
+            <td>mainClass</td>
+            <td>Main-Class Manifest entry</td>
+            <td>N/A</td>
+          </tr>
+          <tr>
+            <td>packageName</td>
+            <td>Package Manifest entry</td>
+            <td>N/A</td>
+          </tr>
+          <tr>
+            <td>addClasspath</td>
+            <td>generate Class-Path Manifest entry</td>
+            <td>false</td>
+          </tr>
+          <tr>
+            <td>addExtensions</td>
+            <td>generate Extension-List Manifest entry</td>
+            <td>false</td>
+          </tr>
+          <tr>
+            <td>classpathPrefix</td>
+            <td>start of yout Class-Path entries</td>
+            <td>empty String</td>
+          </tr>
+          <tr>
+            <td>addDefaultSpecificationEntries</td>
+            <td>Manifest will contains :
+              <ul>
+                <li>Specification-Title : ${pom.name}</li>
+                <li>Specification-Version : ${pom.version}</li>
+              </ul>
+            </td>
+            <td>false</td>
+          </tr>
+          <tr>
+            <td>addDefaultImplementationEntries</td>
+            <td>Manifest will contains :
+              <ul>
+                <li>Implementation-Title : ${pom.name}</li>
+                <li>Implementation-Version : ${pom.version}</li>
+                <li>Implementation-Vendor-Id : ${pom.groupId}</li>
+                <li>Implementation-Vendor : ${pom.organization.name}</li>
+              </ul>
+            </td>
+            <td>false</td>
+          </tr>        
+          <tr>
+            <td>classPathMavenRepositoryLayout</td>
+            <td>the generated ClassPath entry will contains maven2 repository layout : $groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}</td>
+            <td>false</td>
+          </tr>  
+        </table>
+      </subsection>      
+    </section>
+  </body>
+</document>

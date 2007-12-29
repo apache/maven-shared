@@ -28,6 +28,7 @@
       <action type="update" dev="olamy" issue="MNG-2768">Update to plexus-archiver 1.0-alpha-9</action>
       <action type="add" dev="olamy" issue="MNG-3332">Class-Path manifest entry should support maven repository layout.</action>
       <action type="add" dev="olamy" issue="MNG-3334">Add a changes report in maven-archiver.</action>
+      <action type="add" dev="olamy" issue="MNG-3329">Improve the documentation concerning the archiver configuration.</action>
     </release>
     <release version="2.2" date="2006-09-29">
     </release>

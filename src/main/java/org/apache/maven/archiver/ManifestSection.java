@@ -26,17 +26,20 @@ import java.util.Map;
  * 
  * @version $Id$
  */
-public class ManifestSection {
+public class ManifestSection 
+{
 
     private String name = null;
 
     private Map manifestEntries = new HashMap();
 
-    public void setName( String name ) {
+    public void setName( String name ) 
+    {
         this.name = name;
     }
 
-    public String getName() {
+    public String getName() 
+    {
         return name;
     }
     

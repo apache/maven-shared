@@ -126,19 +126,23 @@ public class MavenArchiveConfiguration
         return manifestEntries;
     }
     
-    public void addManifestSection( ManifestSection section ) {
+    public void addManifestSection( ManifestSection section ) 
+    {
         manifestSections.add( section );
     }
     
-    public void addManifestSections( List list ) {
+    public void addManifestSections( List list ) 
+    {
         manifestSections.addAll( list );
     }
     
-    public boolean isManifestSectionsEmpty() {
+    public boolean isManifestSectionsEmpty() 
+    {
         return manifestSections.isEmpty();
     }
     
-    public List getManifestSections() {
+    public List getManifestSections() 
+    {
         return manifestSections;
     }
 

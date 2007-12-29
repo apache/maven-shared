@@ -68,16 +68,19 @@
             <th>Element</th>
             <th>Description</th>
             <th>Default Value</th>
+            <th>Type</th>
           </tr>
           <tr>
             <td>compress</td>
             <td>Active commpression for the archive.</td>
             <td>true</td>
+            <td>boolean</td>
           </tr>
           <tr>
             <td>index</td>
             <td>the generated archive will contains a INDEX.LIST file.</td>
             <td>false</td>
+            <td>boolean</td>
           </tr>
           <tr>
             <td>addMavenDescriptor</td>
@@ -88,26 +91,31 @@
               </ul>
             </td>
             <td>true</td>
+            <td>boolean</td>
           </tr>
           <tr>
             <td>manifestFile</td>
             <td>in order to provide a manifest file.</td>
             <td>N/A</td>
+            <td>File</td>
           </tr>
           <tr>
             <td>manifestEntries</td>
             <td>a list of key/value to add in the manifest file.</td>
             <td>N/A</td>
+            <td>Map</td>
           </tr>
           <tr>
             <td>manifestSections</td>
             <td>A place to configure <a href="#customs-manifest-sections">some customs manifest sections</a>.</td>
             <td>N/A</td>
+            <td>List of ManifestSection.</td>
           </tr>
           <tr>
             <td>pomPropertiesFile</td>
             <td>to override the auto generated <a href="#pom-properties-content">pom.properties</a> file (only if addMavenDescriptor set to true)</td>
             <td>N/A</td>
+            <td>File</td>
           </tr>
         </table>
       </subsection>
@@ -118,31 +126,37 @@
             <th>Element</th>
             <th>Description</th>
             <th>Default Value</th>
+            <th>Type</th>
           </tr>
           <tr>
             <td>mainClass</td>
             <td>Main-Class Manifest entry</td>
             <td>N/A</td>
+            <td>String</td>
           </tr>
           <tr>
             <td>packageName</td>
             <td>Package Manifest entry</td>
             <td>N/A</td>
+            <td>String</td>
           </tr>
           <tr>
             <td>addClasspath</td>
             <td>generate Class-Path Manifest entry</td>
             <td>false</td>
+            <td>boolean</td>
           </tr>
           <tr>
             <td>addExtensions</td>
             <td>generate Extension-List Manifest entry</td>
             <td>false</td>
+            <td>boolean</td>
           </tr>
           <tr>
             <td>classpathPrefix</td>
             <td>start of yout Class-Path entries</td>
             <td>empty String</td>
+            <td>String</td>
           </tr>
           <tr>
             <td>addDefaultSpecificationEntries</td>
@@ -153,6 +167,7 @@
               </source>
             </td>
             <td>false</td>
+            <td>boolean</td>
           </tr>
           <tr>
             <td>addDefaultImplementationEntries</td>
@@ -165,11 +180,13 @@
               </source>
             </td>
             <td>false</td>
+            <td>boolean</td>
           </tr>        
           <tr>
             <td>classPathMavenRepositoryLayout</td>
             <td>the generated ClassPath entry will contains maven2 repository layout : $groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}</td>
             <td>false</td>
+            <td>boolean</td>
           </tr>  
         </table>
       </subsection>

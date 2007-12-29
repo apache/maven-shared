@@ -41,7 +41,7 @@
     <addMavenDescriptor></addMavenDescriptor>
     <manifestFile></manifestFile>
     <manifestEntries>
-      <url>${pom.url}</url>
+      <key>value</key>
     </manifestEntries>
     <manifestSections>
     </manifestSections>
@@ -71,18 +71,43 @@
           </tr>
           <tr>
             <td>compress</td>
-            <td>Active commpression for the archive</td>
+            <td>Active commpression for the archive.</td>
             <td>true</td>
           </tr>
           <tr>
             <td>index</td>
-            <td></td>
+            <td>the generated archive will contains a INDEX.LIST file.</td>
             <td>false</td>
           </tr>
           <tr>
             <td>addMavenDescriptor</td>
-            <td></td>
+            <td>the generated archive will contains two maven files :
+              <ul>
+                <li>The pom file, located in the archive in META-INF/maven/${groupId}/${artifactId}/pom.xml</li>
+                <li>A <a href="#pom-properties-content">pom.properties</a> file, located in the archive in META-INF/maven/${groupId}/${artifactId}/pom.properties</li>
+              </ul>
+            </td>
             <td>true</td>
+          </tr>
+          <tr>
+            <td>manifestFile</td>
+            <td>in order to provide a manifest file.</td>
+            <td>N/A</td>
+          </tr>
+          <tr>
+            <td>manifestEntries</td>
+            <td>a list of key/value to add in the manifest file.</td>
+            <td>N/A</td>
+          </tr>
+          <tr>
+            <td>manifestSections</td>
+            <td>A place to configure <a href="#customs-manifest-sections">some customs manifest sections</a>.</td>
+            <td>N/A</td>
+          </tr>
+          <tr>
+            <td>pomPropertiesFile</td>
+            <td>to override the auto generated <a href="#pom-properties-content">pom.properties</a> file (only if addMavenDescriptor set to true)</td>
+            <td>N/A</td>
           </tr>
         </table>
       </subsection>
@@ -122,22 +147,22 @@
           <tr>
             <td>addDefaultSpecificationEntries</td>
             <td>Manifest will contains :
-              <ul>
-                <li>Specification-Title : ${pom.name}</li>
-                <li>Specification-Version : ${pom.version}</li>
-              </ul>
+              <source>
+                Specification-Title: ${pom.name}
+                Specification-Version: ${pom.version}
+              </source>
             </td>
             <td>false</td>
           </tr>
           <tr>
             <td>addDefaultImplementationEntries</td>
             <td>Manifest will contains :
-              <ul>
-                <li>Implementation-Title : ${pom.name}</li>
-                <li>Implementation-Version : ${pom.version}</li>
-                <li>Implementation-Vendor-Id : ${pom.groupId}</li>
-                <li>Implementation-Vendor : ${pom.organization.name}</li>
-              </ul>
+              <source>
+                Implementation-Title: ${pom.name}
+                Implementation-Version: ${pom.version}
+                Implementation-Vendor-Id: ${pom.groupId}
+                Implementation-Vendor: ${pom.organization.name}
+              </source>
             </td>
             <td>false</td>
           </tr>        
@@ -147,7 +172,47 @@
             <td>false</td>
           </tr>  
         </table>
-      </subsection>      
+      </subsection>
+      <subsection name="pom.properties content">
+        <a name="pom-properties-content"/>
+        <p>The auto generated pom.properties file will contains the following content :
+          <source>
+version=${pom.version}
+groupId=${pom.groupId}
+artifactId=${pom.artifactId}           
+          </source>
+        </p>
+      </subsection> 
+      <subsection name="Customs Manifest Sections">
+        <a name="customs-manifest-sections"/>
+        <p>The manifestSections element provide a way to add some custom manifest section.
+          <source>
+archive configuration             
+<![CDATA[
+<manifestSections>
+  <manifestSection>
+    <name>foo</name>
+    <manifestEntries>
+      <id>nice foo</id>
+    </manifestEntries>
+  </manifestSection>
+  <manifestSection>
+    <name>bar</name>
+    <manifestEntries>
+      <id>nice bar</id>
+    </manifestEntries>                
+  </manifestSection>
+</manifestSections>  
+]]>    
+manifest content                      
+Name: foo
+id: nice foo
+
+Name: bar
+id: nice bar            
+          </source>
+        </p>
+      </subsection>     
     </section>
   </body>
 </document>

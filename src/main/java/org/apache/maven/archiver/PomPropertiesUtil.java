@@ -51,7 +51,8 @@ public class PomPropertiesUtil
         }
         Properties fileProps = new Properties();
         InputStream istream = null;
-        try {
+        try 
+        {
             istream = new FileInputStream( file );
             fileProps.load( istream );
             istream.close();
@@ -97,8 +98,9 @@ public class PomPropertiesUtil
     /**
      * Creates the pom.properties file.
      */
-    public void createPomProperties( MavenProject project, Archiver archiver, File pomPropertiesFile, boolean forceCreation )
-            throws ArchiverException, IOException
+    public void createPomProperties( MavenProject project, Archiver archiver, File pomPropertiesFile,
+                                     boolean forceCreation )
+        throws ArchiverException, IOException
     {
         final String artifactId = project.getArtifactId();
         final String groupId = project.getGroupId();

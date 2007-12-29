@@ -66,7 +66,7 @@ public class MavenArchiver
             {
                 String key = (String) iter.next();
                 String value = (String) entries.get( key );
-                Manifest.Attribute attr = manifest.getMainSection().getAttribute(key);
+                Manifest.Attribute attr = manifest.getMainSection().getAttribute( key );
                 if ( key.equals( "Class-Path" ) && attr != null )
                 {
                     // Merge the user-supplied Class-Path value with the programmatically
@@ -407,8 +407,8 @@ public class MavenArchiver
         archiver.setForced( forced );
         if ( !archiveConfiguration.isForced()  &&  archiver.isSupportingForced() )
         {
-            // Should issue a warning here, but how do we get a logger?
-            //getLog().warn( "Forced build is disabled, but disabling the forced mode isn't supported by the archiver." );
+            // TODO Should issue a warning here, but how do we get a logger?
+            // TODO getLog().warn( "Forced build is disabled, but disabling the forced mode isn't supported by the archiver." );
         }
 
         // create archive
@@ -416,7 +416,7 @@ public class MavenArchiver
     }
     
     
-    private Artifact findArtifactWithFile(Set artifacts, File file)
+    private Artifact findArtifactWithFile( Set artifacts, File file )
     {
         for ( Iterator iterator = artifacts.iterator(); iterator.hasNext(); )
         {

@@ -63,31 +63,14 @@ public class ManifestConfiguration
         return mainClass;
     }
 
-    public boolean isAddClasspath()
-    {
-        return addClasspath;
-    }
-
-    public boolean isAddExtensions()
-    {
-        return addExtensions;
-    }
-
     public String getPackageName()
     {
         return packageName;
     }
 
-    public String getClasspathPrefix()
+    public boolean isAddClasspath()
     {
-        String cpp = classpathPrefix.replaceAll( "\\\\", "/" );
-
-        if ( cpp.length() != 0 && !cpp.endsWith( "/" ) )
-        {
-            cpp += "/";
-        }
-
-        return cpp;
+        return addClasspath;
     }
 
     public boolean isAddDefaultImplementationEntries()
@@ -100,6 +83,46 @@ public class ManifestConfiguration
         return addDefaultSpecificationEntries;
     }
 
+    public boolean isAddExtensions()
+    {
+        return addExtensions;
+    }
+
+    public boolean isClassPathMavenRepositoryLayout()
+    {
+        return classPathMavenRepositoryLayout;
+    }
+
+    public void setAddClasspath( boolean addClasspath )
+    {
+        this.addClasspath = addClasspath;
+    }
+
+    public void setAddDefaultImplementationEntries( boolean addDefaultImplementationEntries )
+    {
+        this.addDefaultImplementationEntries = addDefaultImplementationEntries;
+    }
+
+    public void setAddDefaultSpecificationEntries( boolean addDefaultSpecificationEntries )
+    {
+        this.addDefaultSpecificationEntries = addDefaultSpecificationEntries;
+    }
+
+    public void setAddExtensions( boolean addExtensions )
+    {
+        this.addExtensions = addExtensions;
+    }
+
+    public void setClassPathMavenRepositoryLayout( boolean classPathMavenRepositoryLayout )
+    {
+        this.classPathMavenRepositoryLayout = classPathMavenRepositoryLayout;
+    }
+
+    public void setClasspathPrefix( String classpathPrefix )
+    {
+        this.classpathPrefix = classpathPrefix;
+    }
+
     public void setMainClass( String mainClass )
     {
         this.mainClass = mainClass;
@@ -110,38 +133,15 @@ public class ManifestConfiguration
         this.packageName = packageName;
     }
 
-    public void setAddClasspath( boolean addClasspath )
+    public String getClasspathPrefix()
     {
-        this.addClasspath = addClasspath;
-    }
+        String cpp = classpathPrefix.replaceAll( "\\\\", "/" );
 
-    public void setAddExtensions( boolean addExtensions )
-    {
-        this.addExtensions = addExtensions;
-    }
+        if ( cpp.length() != 0 && !cpp.endsWith( "/" ) )
+        {
+            cpp += "/";
+        }
 
-    public void setClasspathPrefix( String classpathPrefix )
-    {
-        this.classpathPrefix = classpathPrefix;
-    }
-
-    public void setAddDefaultSpecificationEntries( boolean addDefaultSpecificationEntries )
-    {
-        this.addDefaultSpecificationEntries = addDefaultSpecificationEntries;
-    }
-
-    public void setAddDefaultImplementationEntries( boolean addDefaultImplementationEntries )
-    {
-        this.addDefaultImplementationEntries = addDefaultImplementationEntries;
-    }
-
-    public boolean isClassPathMavenRepositoryLayout()
-    {
-        return classPathMavenRepositoryLayout;
-    }
-
-    public void setClassPathMavenRepositoryLayout( boolean classPathMavenRepositoryLayout )
-    {
-        this.classPathMavenRepositoryLayout = classPathMavenRepositoryLayout;
+        return cpp;
     }
 }

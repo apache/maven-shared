@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>7</version>
+    <version>8</version>
   </parent>
   <artifactId>maven-test-tools</artifactId>
   <name>Maven Testing Tools</name>
@@ -46,8 +46,8 @@
     </dependency>
   </dependencies>
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-test-tools-1.0-alpha-2</connection>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-test-tools-1.0-alpha-2</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-test-tools-1.0-alpha-2</developerConnection>
-    <url>https://svn.apache.org/repos/asf/maven/shared/tags/maven-test-tools-1.0-alpha-2</url>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/tags/maven-test-tools-1.0-alpha-2</url>
   </scm>
 </project>

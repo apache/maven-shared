@@ -33,19 +33,24 @@ public class ManifestSection
 
     private Map manifestEntries = new HashMap();
 
-    public void setName( String name ) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-    
     public void addManifestEntry( Object key, Object value )
     {
         manifestEntries.put( key, value );
+    }
+
+    public Map getManifestEntries()
+    {
+        return manifestEntries;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
     }
 
     public void addManifestEntries( Map map )
@@ -57,10 +62,4 @@ public class ManifestSection
     {
         return manifestEntries.isEmpty();
     }
-
-    public Map getManifestEntries()
-    {
-        return manifestEntries;
-    }
-
 }

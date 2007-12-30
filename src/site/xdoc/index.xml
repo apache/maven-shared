@@ -21,48 +21,46 @@
   <properties>
     <title>Maven Archiver Home Page</title>
     <author email="olamy@apache.org">Olivier Lamy</author>
+    <author email="dennis@apache.org">Dennis Lundberg</author>
   </properties>
   <body>
     <section name="Maven Archiver">
-      <p>The Maven Archiver is used in some plugins for handle packaging.</p>
-      <p>
-        The configuration is divided in two parts :
-        <ul>
-          <li><a href="#archive-reference">Archive Reference</a></li>
-          <li><a href="#manifest-configuration-reference">ManifestConfiguration Reference</a></li>
-        </ul>
-      </p>
-      <subsection name="Content Reference">
-        <source>
-<![CDATA[
-  <archive>
-    <compress></compress>
-    <index></index>
-    <addMavenDescriptor></addMavenDescriptor>
-    <manifestFile></manifestFile>
-    <manifestEntries>
-      <key>value</key>
-    </manifestEntries>
-    <manifestSections>
-    </manifestSections>
-    <forced></forced>
-    <pomPropertiesFile></pomPropertiesFile>
-    <manifest>
-      <mainClass></mainClass>
-      <packageName></packageName>
-      <addClasspath>true</addClasspath>
-      <addExtensions></addExtensions>
-      <classpathPrefix></classpathPrefix>
-      <addDefaultSpecificationEntries></addDefaultSpecificationEntries>
-      <addDefaultImplementationEntries></addDefaultImplementationEntries>
-      <classpathMavenRepositoryLayout></classpathMavenRepositoryLayout>
-    </manifest>  
-  </archive>  
-]]>            
-        </source>
-      </subsection>
-      <subsection name="Archive Reference">
-        <a name="archive-reference"/>
+      <p>The Maven Archiver is mainly used by plugins to handle packaging.</p>
+
+      <source>
+  &lt;<a href="#class_archive">archive</a>&gt;
+    &lt;addMavenDescriptor/&gt;
+    &lt;compress/&gt;
+    &lt;forced/&gt;
+    &lt;index/&gt;
+    &lt;<a href="#class_manifest">manifest</a>&gt;
+      &lt;addClasspath/&gt;
+      &lt;addDefaultImplementationEntries/&gt;
+      &lt;addDefaultSpecificationEntries/&gt;
+      &lt;addExtensions/&gt;
+      &lt;classpathMavenRepositoryLayout/&gt;
+      &lt;classpathPrefix/&gt;
+      &lt;mainClass/&gt;
+      &lt;packageName/&gt;
+    &lt;/manifest&gt;
+    &lt;manifestEntries&gt;
+      &lt;key&gt;value&lt;/key&gt;
+    &lt;/manifestEntries&gt;
+    &lt;manifestFile/&gt;
+    &lt;manifestSections&gt;
+      &lt;<a href="#class_manifestSection">manifestSection</a>&gt;
+        &lt;name/&gt;
+        &lt;manifestEntries&gt;
+          &lt;key&gt;value&lt;/key&gt;
+        &lt;/manifestEntries&gt;
+      &lt;manifestSection/&gt;
+    &lt;/manifestSections&gt;
+    &lt;pomPropertiesFile/&gt;
+  &lt;/archive&gt;
+      </source>
+
+      <a name="class_archive"/>
+      <subsection name="archive">
         <table>
           <tr>
             <th>Element</th>
@@ -71,56 +69,84 @@
             <th>Type</th>
           </tr>
           <tr>
-            <td>compress</td>
-            <td>Active commpression for the archive.</td>
-            <td>true</td>
-            <td>boolean</td>
-          </tr>
-          <tr>
-            <td>index</td>
-            <td>the generated archive will contains a INDEX.LIST file.</td>
-            <td>false</td>
-            <td>boolean</td>
-          </tr>
-          <tr>
             <td>addMavenDescriptor</td>
-            <td>the generated archive will contains two maven files :
+            <td>Whether the generated archive will contain these two Maven files:
               <ul>
-                <li>The pom file, located in the archive in META-INF/maven/${groupId}/${artifactId}/pom.xml</li>
-                <li>A <a href="#pom-properties-content">pom.properties</a> file, located in the archive in META-INF/maven/${groupId}/${artifactId}/pom.properties</li>
+                <li>
+                  The pom file, located in the archive in
+                  <code>META-INF/maven/${groupId}/${artifactId}/pom.xml</code>
+                </li>
+                <li>
+                  A <a href="#pom-properties-content">pom.properties</a> file,
+                  located in the archive in <code>META-INF/maven/${groupId}/${artifactId}/pom.properties</code>
+                </li>
               </ul>
             </td>
             <td>true</td>
             <td>boolean</td>
           </tr>
           <tr>
-            <td>manifestFile</td>
-            <td>in order to provide a manifest file.</td>
-            <td>N/A</td>
-            <td>File</td>
+            <td>compress</td>
+            <td>Activate compression for the archive.</td>
+            <td>true</td>
+            <td>boolean</td>
+          </tr>
+          <tr>
+            <td>forced</td>
+            <td>
+              Whether recreating the archive is forced (default) or not. Setting
+              this option to <code>false</code>, means that the archiver should compare the
+              timestamps of included files with the timestamp of the target archive
+              and rebuild the archive, only if the latter timestamp precedes the
+              former timestamps. Checking for timestamps will typically offer a
+              performance gain (in particular, if the following steps in a build
+              can be suppressed, if an archive isn't recrated) on the cost that
+              you get inaccurate results from time to time. In particular, removal
+              of source files won't be detected.
+              <p>
+                An archiver doesn't necessarily support checks for uptodate. If
+                so, setting this option to <code>true</code> will simply be ignored.
+              </p>
+            </td>
+            <td>true</td>
+            <td>boolean</td>
+          </tr>
+          <tr>
+            <td>index</td>
+            <td>
+              Whether the generated archive will contain an
+              <code>INDEX.LIST</code> file.
+            </td>
+            <td>false</td>
+            <td>boolean</td>
           </tr>
           <tr>
             <td>manifestEntries</td>
-            <td>a list of key/value to add in the manifest file.</td>
+            <td>A list of key/value pairs to add to the manifest.</td>
             <td>N/A</td>
             <td>Map</td>
           </tr>
           <tr>
-            <td>manifestSections</td>
-            <td>A place to configure <a href="#customs-manifest-sections">some customs manifest sections</a>.</td>
+            <td>manifestFile</td>
+            <td>With this you can supply your own manifest file.</td>
             <td>N/A</td>
-            <td>List of ManifestSection.</td>
+            <td>File</td>
           </tr>
           <tr>
             <td>pomPropertiesFile</td>
-            <td>to override the auto generated <a href="#pom-properties-content">pom.properties</a> file (only if addMavenDescriptor set to true)</td>
+            <td>
+              Use this to override the auto generated
+              <a href="#pom-properties-content">pom.properties</a> file
+              (only if <code>addMavenDescriptor</code> is set to <code>true</code>)
+            </td>
             <td>N/A</td>
             <td>File</td>
           </tr>
         </table>
       </subsection>
-      <subsection name="ManifestConfiguration Reference">
-        <a name="manifest-configuration-reference"/>
+
+      <a name="class_manifest"/>
+      <subsection name="manifest">
         <table>
           <tr>
             <th>Element</th>
@@ -129,84 +155,119 @@
             <th>Type</th>
           </tr>
           <tr>
-            <td>mainClass</td>
-            <td>Main-Class Manifest entry</td>
-            <td>N/A</td>
-            <td>String</td>
-          </tr>
-          <tr>
-            <td>packageName</td>
-            <td>Package Manifest entry</td>
-            <td>N/A</td>
-            <td>String</td>
-          </tr>
-          <tr>
             <td>addClasspath</td>
-            <td>generate Class-Path Manifest entry</td>
-            <td>false</td>
-            <td>boolean</td>
-          </tr>
-          <tr>
-            <td>addExtensions</td>
-            <td>generate Extension-List Manifest entry</td>
-            <td>false</td>
-            <td>boolean</td>
-          </tr>
-          <tr>
-            <td>classpathPrefix</td>
-            <td>start of yout Class-Path entries</td>
-            <td>empty String</td>
-            <td>String</td>
-          </tr>
-          <tr>
-            <td>addDefaultSpecificationEntries</td>
-            <td>Manifest will contains :
-              <source>
-                Specification-Title: ${pom.name}
-                Specification-Version: ${pom.version}
-              </source>
+            <td>
+              Whether to generate a <code>Class-Path</code> manifest entry.
             </td>
             <td>false</td>
             <td>boolean</td>
           </tr>
           <tr>
             <td>addDefaultImplementationEntries</td>
-            <td>Manifest will contains :
+            <td>
+              If the manifest will contain these entries:
               <source>
-                Implementation-Title: ${pom.name}
-                Implementation-Version: ${pom.version}
-                Implementation-Vendor-Id: ${pom.groupId}
-                Implementation-Vendor: ${pom.organization.name}
+Implementation-Title: ${pom.name}
+Implementation-Version: ${pom.version}
+Implementation-Vendor-Id: ${pom.groupId}
+Implementation-Vendor: ${pom.organization.name}
               </source>
             </td>
             <td>false</td>
             <td>boolean</td>
-          </tr>        
+          </tr>
           <tr>
-            <td>classpathMavenRepositoryLayout</td>
-            <td>The generated Class-Path entry will contains paths that follow the Maven 2 repository layout: $groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}</td>
+            <td>addDefaultSpecificationEntries</td>
+            <td>
+              If the manifest will contain these entries:
+              <source>
+Specification-Title: ${pom.name}
+Specification-Version: ${pom.version}
+              </source>
+            </td>
             <td>false</td>
             <td>boolean</td>
-          </tr>  
+          </tr>
+          <tr>
+            <td>addExtensions</td>
+            <td>
+              Whether to generate an <code>Extension-List</code> manifest
+              entry.
+            </td>
+            <td>false</td>
+            <td>boolean</td>
+          </tr>
+          <tr>
+            <td>classpathMavenRepositoryLayout</td>
+            <td>
+              The generated <code>Class-Path</code> entry will contains paths
+              that follow the Maven 2 repository layout:
+              <code>${groupId}/${artifactId}/${version}/${fileName}</code>
+            </td>
+            <td>false</td>
+            <td>boolean</td>
+          </tr>
+          <tr>
+            <td>classpathPrefix</td>
+            <td>
+              A text that will be prefixed to all your <code>Class-Path</code>
+              entries.
+            </td>
+            <td>empty String</td>
+            <td>String</td>
+          </tr>
+          <tr>
+            <td>mainClass</td>
+            <td>The <code>Main-Class</code> manifest entry.</td>
+            <td>N/A</td>
+            <td>String</td>
+          </tr>
+          <tr>
+            <td>packageName</td>
+            <td>Package manifest entry.</td>
+            <td>N/A</td>
+            <td>String</td>
+          </tr>
         </table>
       </subsection>
-      <subsection name="pom.properties content">
-        <a name="pom-properties-content"/>
-        <p>The auto generated pom.properties file will contains the following content :
-          <source>
-version=${pom.version}
-groupId=${pom.groupId}
-artifactId=${pom.artifactId}           
-          </source>
+
+      <a name="class_manifestSection"/>
+      <subsection name="manifestSection">
+        <table>
+          <tr>
+            <th>Element</th>
+            <th>Description</th>
+            <th>Default Value</th>
+            <th>Type</th>
+          </tr>
+          <tr>
+            <td>name</td>
+            <td>
+              The name of the section.
+            </td>
+            <td>N/A</td>
+            <td>String</td>
+          </tr>
+          <tr>
+            <td>manifestEntries</td>
+            <td>A list of key/value pairs to add to the manifest.</td>
+            <td>N/A</td>
+            <td>Map</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <a name="exampleManifestSections"/>
+      <subsection name="Example of ManifestSections">
+        <p>
+          The <code>&lt;manifestSections&gt;</code> element provide a way to
+          add custom manifest sections. It contains a list of
+          <code>&lt;<a href="#class_manifestSection">manifestSection</a>&gt;</code>
+          elements.
         </p>
-      </subsection> 
-      <subsection name="Customs Manifest Sections">
-        <a name="customs-manifest-sections"/>
-        <p>The manifestSections element provide a way to add some custom manifest section.
-          <source>
-archive configuration             
-<![CDATA[
-<manifestSections>
+        <p>Given this configuration:</p>
+        <source>
+<![CDATA[<manifestSections>
   <manifestSection>
     <name>foo</name>
     <manifestEntries>
@@ -217,19 +278,32 @@ archive configuration
     <name>bar</name>
     <manifestEntries>
       <id>nice bar</id>
-    </manifestEntries>                
+    </manifestEntries>
   </manifestSection>
-</manifestSections>  
-]]>    
-manifest content                      
+</manifestSections>]]>
+        </source>
+        <p>The following content will end up in the manifest:</p>
+        <source>
 Name: foo
 id: nice foo
 
 Name: bar
-id: nice bar            
-          </source>
+id: nice bar
+        </source>
+      </subsection>
+
+      <subsection name="pom.properties content">
+        <a name="pom-properties-content"/>
+        <p>
+          The auto generated <code>pom.properties</code> file will contain the
+          following content:
         </p>
-      </subsection>     
+        <source>
+version=${pom.version}
+groupId=${pom.groupId}
+artifactId=${pom.artifactId}
+        </source>
+      </subsection>
     </section>
   </body>
 </document>

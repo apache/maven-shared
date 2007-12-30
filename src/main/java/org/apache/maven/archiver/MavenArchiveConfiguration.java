@@ -126,6 +126,11 @@ public class MavenArchiveConfiguration
         return manifestEntries;
     }
     
+    public void setManifestEntries( Map manifestEntries )
+    {
+        this.manifestEntries = manifestEntries;
+    }
+    
     public void addManifestSection( ManifestSection section ) 
     {
         manifestSections.add( section );
@@ -144,6 +149,11 @@ public class MavenArchiveConfiguration
     public List getManifestSections() 
     {
         return manifestSections;
+    }
+    
+    public void setManifestSections( List manifestSections )
+    {
+        this.manifestSections = manifestSections;
     }
 
     /**

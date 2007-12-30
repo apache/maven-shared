@@ -144,7 +144,7 @@ public class MavenArchiver
                     {
                         classpath.append( " " );
                     }
-                    if ( !config.isClassPathMavenRepositoryLayout() )
+                    if ( !config.isClasspathMavenRepositoryLayout() )
                     {
                         classpath.append( f.getName() );
                     }

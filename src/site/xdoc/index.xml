@@ -55,7 +55,7 @@
       <classpathPrefix></classpathPrefix>
       <addDefaultSpecificationEntries></addDefaultSpecificationEntries>
       <addDefaultImplementationEntries></addDefaultImplementationEntries>
-      <classPathMavenRepositoryLayout></classPathMavenRepositoryLayout>
+      <classpathMavenRepositoryLayout></classpathMavenRepositoryLayout>
     </manifest>  
   </archive>  
 ]]>            
@@ -183,8 +183,8 @@
             <td>boolean</td>
           </tr>        
           <tr>
-            <td>classPathMavenRepositoryLayout</td>
-            <td>the generated ClassPath entry will contains maven2 repository layout : $groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}</td>
+            <td>classpathMavenRepositoryLayout</td>
+            <td>The generated Class-Path entry will contains paths that follow the Maven 2 repository layout: $groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}</td>
             <td>false</td>
             <td>boolean</td>
           </tr>  

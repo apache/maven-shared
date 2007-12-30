@@ -19,23 +19,18 @@ package org.apache.maven.archiver;
  * under the License.
  */
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.jar.Attributes;
 import java.util.jar.JarFile;
-import java.util.zip.ZipEntry;
 
 import junit.framework.TestCase;
 
@@ -48,7 +43,6 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.Manifest;
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
 public class MavenArchiverTest
@@ -246,7 +240,6 @@ public class MavenArchiverTest
     public void testNotGenerateImplementationVersionForMANIFESTMF()
         throws Exception
     {
-        InputStream inputStream = null;
         JarFile jar = null;
         try
         {
@@ -269,18 +262,12 @@ public class MavenArchiverTest
             assertTrue( jarFile.exists() );
 
             jar = new JarFile( jarFile );
-
-            ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
-            Properties manifest = new Properties();
-            inputStream = jar.getInputStream( zipEntry );
-            manifest.load( inputStream );
-
-            assertFalse( manifest.containsKey( "Implementation-Version" ) );
+            Map entries = jar.getManifest().getMainAttributes();
+            assertFalse( entries.containsKey( Attributes.Name.IMPLEMENTATION_VERSION ) ); // "Implementation-Version"
         }
         finally
         {
             // cleanup streams
-            IOUtil.close( inputStream );
             if ( jar != null )
             {
                 jar.close();
@@ -291,7 +278,6 @@ public class MavenArchiverTest
     public void testGenerateImplementationVersionForMANIFESTMF()
         throws Exception
     {
-        InputStream inputStream = null;
         JarFile jar = null;
         try
         {
@@ -317,18 +303,14 @@ public class MavenArchiverTest
 
             jar = new JarFile( jarFile );
 
-            ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
-            Properties manifest = new Properties();
-            inputStream = jar.getInputStream( zipEntry );
-            manifest.load( inputStream );
+            Map entries = jar.getManifest().getMainAttributes();
 
-            assertTrue( manifest.containsKey( "Implementation-Version" ) );
-            assertEquals( "0.1", manifest.get( "Implementation-Version" ) );
+            assertTrue( entries.containsKey( Attributes.Name.IMPLEMENTATION_VERSION ) );
+            assertEquals( "0.1", entries.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
         }
         finally
         {
             // cleanup streams
-            IOUtil.close( inputStream );
             if ( jar != null )
             {
                 jar.close();
@@ -339,7 +321,6 @@ public class MavenArchiverTest
     public void testCarriageReturnInManifestEntry()
         throws Exception
     {
-        InputStream inputStream = null;
         JarFile jar = null;
         try
         {
@@ -366,20 +347,16 @@ public class MavenArchiverTest
 
             jar = new JarFile( jarFile );
 
-            ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
-            Properties manifest = new Properties();
-            inputStream = jar.getInputStream( zipEntry );
-            manifest.load( inputStream );
-
+            Attributes attributes = jar.getManifest().getMainAttributes();
             assertTrue( project.getDescription().indexOf( ls ) > 0 );
-            assertFalse( manifest.getProperty( "Description" ).indexOf( ls ) > 0 );
-            //System.out.println("tabEnt |" + manifest.getProperty( "EntryWithTab" ) + "|" );
-            //assertFalse( manifest.getProperty( "EntryWithTab" ).indexOf( ( '\u0009' ) ) > 0 );
+            Attributes.Name description = new Attributes.Name( "Description" );
+            String value = attributes.getValue( description );
+            assertNotNull( value );
+            assertFalse( value.indexOf( ls ) > 0 );
         }
         finally
         {
             // cleanup streams
-            IOUtil.close( inputStream );
             if ( jar != null )
             {
                 jar.close();
@@ -390,9 +367,7 @@ public class MavenArchiverTest
     public void testManifestEntries()
         throws Exception
     {
-        InputStream inputStream = null;
         JarFile jar = null;
-        BufferedReader bufferedReader = null;
         try
         {
             File jarFile = new File( "target/test/dummy.jar" );
@@ -428,40 +403,38 @@ public class MavenArchiverTest
             assertTrue( jarFile.exists() );
             jar = new JarFile( jarFile );
 
-            ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
+            Attributes manifest = jar.getManifest().getMainAttributes();
+
+            assertEquals( "Apache Maven", manifest.get( new Attributes.Name( "Created-By" ) ) );
+            assertEquals( "archiver test", manifest.get( Attributes.Name.SPECIFICATION_TITLE ));// "Specification-Title" ) );
+            assertEquals( "0.1", manifest.get( Attributes.Name.SPECIFICATION_VERSION ));// "Specification-Version" ) );
+            assertEquals( "Apache", manifest.get( Attributes.Name.SPECIFICATION_VENDOR ));// "Specification-Vendor" ) );
+
+            assertEquals( "archiver test", manifest.get( Attributes.Name.IMPLEMENTATION_TITLE ));// "Implementation-Title" ) );
+            assertEquals( "0.1", manifest.get( Attributes.Name.IMPLEMENTATION_VERSION ));// "Implementation-Version" ) );
+            assertEquals( "org.apache.dummy", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR_ID ));// "Implementation-Vendor-Id" ) );
+            assertEquals( "Apache", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR ));// "Implementation-Vendor" ) );
+            assertEquals( "org.apache.maven.Foo", manifest.get( Attributes.Name.MAIN_CLASS ));// "Main-Class" ) );
+
+            assertEquals( "bar", manifest.get( new Attributes.Name( "foo" ) ) );
+            assertEquals( "olivier", manifest.get( new Attributes.Name( "first-name" ) ) );
+
             
-            inputStream = jar.getInputStream( zipEntry );
-            bufferedReader = new BufferedReader( new InputStreamReader( inputStream ) );
-            Map manifest = getMapFromManifestContent( bufferedReader );
-
-            assertEquals( "Apache Maven", manifest.get( "Created-By" ) );
-            assertEquals( "archiver test", manifest.get( "Specification-Title" ) );
-            assertEquals( "0.1", manifest.get( "Specification-Version" ) );
-            assertEquals( "Apache", manifest.get( "Specification-Vendor" ) );
-
-            assertEquals( "archiver test", manifest.get( "Implementation-Title" ) );
-            assertEquals( "0.1", manifest.get( "Implementation-Version" ) );
-            assertEquals( "org.apache.dummy", manifest.get( "Implementation-Vendor-Id" ) );
-            assertEquals( "Apache", manifest.get( "Implementation-Vendor" ) );
-            assertEquals( "org.apache.maven.Foo", manifest.get( "Main-Class" ) );
-
-            assertEquals( "bar", manifest.get( "foo" ) );
-            assertEquals( "olivier", manifest.get( "first-name" ) );
-
-            assertEquals( "UserSection", manifest.get( "Name" ) );
-            assertEquals( "value", manifest.get( "key" ) );
-            assertTrue( StringUtils.isEmpty( (String) manifest.get( "keyWithEmptyValue" ) ) );
-            assertTrue( manifest.containsKey( "keyWithEmptyValue" ) );
+            assertEquals( System.getProperty( "java.version"), manifest.get( new Attributes.Name( "Build-Jdk" ) ) );
+            assertEquals( System.getProperty( "user.name"), manifest.get( new Attributes.Name( "Built-By" ) ) );            
             
-            assertEquals( System.getProperty( "java.version"), manifest.get( "Build-Jdk" ) );
-            assertEquals( System.getProperty( "user.name"), manifest.get( "Built-By" ) );
+            assertTrue( StringUtils.isEmpty( manifest.getValue( new Attributes.Name( "keyWithEmptyValue" ) ) ) );
+            assertTrue( manifest.containsKey( new Attributes.Name( "keyWithEmptyValue" ) ) );
             
+            
+            manifest = jar.getManifest().getAttributes( "UserSection" );
+            
+            assertEquals( "value", manifest.get( new Attributes.Name( "key" ) ) );
+                 
         }
         finally
         {
             // cleanup streams
-            IOUtil.close( inputStream );
-            IOUtil.close( bufferedReader );
             if ( jar != null )
             {
                 jar.close();
@@ -473,7 +446,6 @@ public class MavenArchiverTest
         throws Exception
     {
         MavenProject project = getDummyProject();
-        InputStream inputStream = null;
         JarFile jar = null;
         try
         {
@@ -496,12 +468,8 @@ public class MavenArchiverTest
             archiver.createArchive( project, config );
             assertTrue( jarFile.exists() );
             jar = new JarFile( jarFile );
-
-            ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
-            Properties manifest = new Properties();
-            inputStream = jar.getInputStream( zipEntry );
-            manifest.load( inputStream );
-            String classPath = manifest.getProperty( "Class-Path" );
+            
+            String classPath = jar.getManifest().getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
             assertNotNull( classPath );
             String[] classPathEntries = StringUtils.split( classPath, " " );
             assertEquals("dummy1-1.0.jar", classPathEntries[0]);
@@ -511,7 +479,6 @@ public class MavenArchiverTest
         finally
         {
             // cleanup streams
-            IOUtil.close( inputStream );
             if ( jar != null )
             {
                 jar.close();
@@ -523,9 +490,7 @@ public class MavenArchiverTest
         throws Exception
     {
         MavenProject project = getDummyProject();
-        InputStream inputStream = null;
         JarFile jar = null;
-        BufferedReader bufferedReader = null;
         try
         {
             File jarFile = new File( "target/test/dummy.jar" );
@@ -549,10 +514,6 @@ public class MavenArchiverTest
             assertTrue( jarFile.exists() );
             jar = new JarFile( jarFile );
 
-            // we are upper than 72 characters with maven2 layout
-            // we can't test the zip file entry
-
-            //
             Manifest manifest = archiver.getManifest( project, config );
             String[] classPathEntries = StringUtils.split( new String( manifest.getMainSection()
                 .getAttributeValue( "Class-Path" ).getBytes() ), " " );
@@ -560,32 +521,8 @@ public class MavenArchiverTest
             assertEquals( "org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
             assertEquals( "org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
 
-            ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
-            inputStream = jar.getInputStream( zipEntry );
-            bufferedReader = new BufferedReader( new InputStreamReader( inputStream ) );
             
-            /*
-            Properties manifest2 = new Properties();
-            String line = null;
-            String currentKey = null;
-            while ( ( line = bufferedReader.readLine() ) != null )
-            {
-                int index = line.indexOf( ':' );
-                if ( index > 0 )
-                {
-                    currentKey = line.substring( 0, index );
-                    String value = line.substring( index + 1, line.length() );
-                    manifest2.put( currentKey, value );
-                }
-                if ( line.startsWith( " " ) )
-                {
-                    String value = manifest2.getProperty( currentKey );
-                    manifest2.put( currentKey, value + line.substring( 1 ) );
-                }
-            }
-            */
-            Map manifest2 = getMapFromManifestContent( bufferedReader );
-            String classPath = (String) manifest2.get( "Class-Path" );
+            String classPath = jar.getManifest().getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
             assertNotNull( classPath );
             classPathEntries = StringUtils.split( classPath, " " );
             assertEquals( "org/apache/dummy/dummy1/1.0/dummy1-1.0.jar", classPathEntries[0] );
@@ -596,8 +533,6 @@ public class MavenArchiverTest
         finally
         {
             // cleanup streams
-            IOUtil.close( inputStream );
-            IOUtil.close( bufferedReader );
             if ( jar != null )
             {
                 jar.close();
@@ -608,31 +543,7 @@ public class MavenArchiverTest
     // ----------------------------------------
     //  common methods for testing
     // ----------------------------------------
-    
-    private Map getMapFromManifestContent( BufferedReader bufferedReader )
-        throws Exception
-    {
-        Map properties = new LinkedHashMap();
-        String line = null;
-        String currentKey = null;
-        while ( ( line = bufferedReader.readLine() ) != null )
-        {
-            int index = line.indexOf( ':' );
-            if ( index > 0 )
-            {
-                currentKey = line.substring( 0, index );
-                String value = line.substring( index + 1, line.length() );
-                properties.put( currentKey, StringUtils.trim( value ) );
-            }
-            if ( line.startsWith( " " ) )
-            {
-                String value = (String) properties.get( currentKey );
-                properties.put( currentKey, StringUtils.trim( value + line.substring( 1 ) ) );
-            }
-        }
-        return properties;
-    }
-    
+        
     private MavenProject getDummyProject()
     {
         Model model = new Model();

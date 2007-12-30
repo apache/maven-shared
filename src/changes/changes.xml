@@ -29,6 +29,7 @@
       <action type="add" dev="olamy" issue="MNG-3332">Class-Path manifest entry should support maven repository layout.</action>
       <action type="add" dev="olamy" issue="MNG-3334">Add a changes report in maven-archiver.</action>
       <action type="add" dev="olamy" issue="MNG-3329">Improve the documentation concerning the archiver configuration.</action>
+      <action type="fix" dev="olamy" issue="MNG-3342">Impossible to create entries with empty value in MANIFEST</action>
     </release>
     <release version="2.2" date="2006-09-29">
     </release>

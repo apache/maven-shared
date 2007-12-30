@@ -414,6 +414,7 @@ public class MavenArchiverTest
             Map manifestEntries = new HashMap();
             manifestEntries.put( "foo", "bar" );
             manifestEntries.put( "first-name", "olivier" );
+            manifestEntries.put( "keyWithEmptyValue", null );
             config.setManifestEntries( manifestEntries );
             
             ManifestSection manifestSection = new ManifestSection();
@@ -432,6 +433,7 @@ public class MavenArchiverTest
             inputStream = jar.getInputStream( zipEntry );
             bufferedReader = new BufferedReader( new InputStreamReader( inputStream ) );
             Map manifest = getMapFromManifestContent( bufferedReader );
+
             assertEquals( "Apache Maven", manifest.get( "Created-By" ) );
             assertEquals( "archiver test", manifest.get( "Specification-Title" ) );
             assertEquals( "0.1", manifest.get( "Specification-Version" ) );
@@ -448,6 +450,8 @@ public class MavenArchiverTest
 
             assertEquals( "UserSection", manifest.get( "Name" ) );
             assertEquals( "value", manifest.get( "key" ) );
+            assertTrue( StringUtils.isEmpty( (String) manifest.get( "keyWithEmptyValue" ) ) );
+            assertTrue( manifest.containsKey( "keyWithEmptyValue" ) );
             
             assertEquals( System.getProperty( "java.version"), manifest.get( "Build-Jdk" ) );
             assertEquals( System.getProperty( "user.name"), manifest.get( "Built-By" ) );

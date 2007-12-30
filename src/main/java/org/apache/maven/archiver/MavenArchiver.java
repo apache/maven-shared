@@ -108,10 +108,16 @@ public class MavenArchiver
     private void addManifestAttribute( Manifest manifest, String key, String value )
         throws ManifestException
     {
-        // Use the empty string to suppress a Manifest entry
-        if ( value != null && !"".equals( value ) )
+        if ( !StringUtils.isEmpty( value ) )
         {
             Manifest.Attribute attr = new Manifest.Attribute( key, value );
+            manifest.addConfiguredAttribute( attr );
+        }
+        else
+        {
+            // if the value is empty we have create an entry with an empty string 
+            // to prevent null print in the manifest file
+            Manifest.Attribute attr = new Manifest.Attribute( key, "" );
             manifest.addConfiguredAttribute( attr );
         }
     }

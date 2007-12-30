@@ -23,10 +23,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -388,6 +392,7 @@ public class MavenArchiverTest
     {
         InputStream inputStream = null;
         JarFile jar = null;
+        BufferedReader bufferedReader = null;
         try
         {
             File jarFile = new File( "target/test/dummy.jar" );
@@ -405,15 +410,28 @@ public class MavenArchiverTest
             config.setForced( true );
             config.getManifest().setAddDefaultImplementationEntries( true );
             config.getManifest().setAddDefaultSpecificationEntries( true );
+            
+            Map manifestEntries = new HashMap();
+            manifestEntries.put( "foo", "bar" );
+            manifestEntries.put( "first-name", "olivier" );
+            config.setManifestEntries( manifestEntries );
+            
+            ManifestSection manifestSection = new ManifestSection();
+            manifestSection.setName( "UserSection" );
+            manifestSection.addManifestEntry( "key", "value" );
+            List manifestSections = new ArrayList();
+            manifestSections.add( manifestSection );
+            config.setManifestSections( manifestSections );
             config.getManifest().setMainClass( "org.apache.maven.Foo" );
             archiver.createArchive( project, config );
             assertTrue( jarFile.exists() );
             jar = new JarFile( jarFile );
 
             ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
-            Properties manifest = new Properties();
+            
             inputStream = jar.getInputStream( zipEntry );
-            manifest.load( inputStream );
+            bufferedReader = new BufferedReader( new InputStreamReader( inputStream ) );
+            Map manifest = getMapFromManifestContent( bufferedReader );
             assertEquals( "Apache Maven", manifest.get( "Created-By" ) );
             assertEquals( "archiver test", manifest.get( "Specification-Title" ) );
             assertEquals( "0.1", manifest.get( "Specification-Version" ) );
@@ -424,14 +442,22 @@ public class MavenArchiverTest
             assertEquals( "org.apache.dummy", manifest.get( "Implementation-Vendor-Id" ) );
             assertEquals( "Apache", manifest.get( "Implementation-Vendor" ) );
             assertEquals( "org.apache.maven.Foo", manifest.get( "Main-Class" ) );
+
+            assertEquals( "bar", manifest.get( "foo" ) );
+            assertEquals( "olivier", manifest.get( "first-name" ) );
+
+            assertEquals( "UserSection", manifest.get( "Name" ) );
+            assertEquals( "value", manifest.get( "key" ) );
             
-            assertEquals(System.getProperty( "java.version"), manifest.getProperty( "Build-Jdk" ) );
-            assertEquals(System.getProperty( "user.name"), manifest.getProperty( "Built-By" ) );
+            assertEquals( System.getProperty( "java.version"), manifest.get( "Build-Jdk" ) );
+            assertEquals( System.getProperty( "user.name"), manifest.get( "Built-By" ) );
+            
         }
         finally
         {
             // cleanup streams
             IOUtil.close( inputStream );
+            IOUtil.close( bufferedReader );
             if ( jar != null )
             {
                 jar.close();
@@ -533,6 +559,8 @@ public class MavenArchiverTest
             ZipEntry zipEntry = jar.getEntry( "META-INF/MANIFEST.MF" );
             inputStream = jar.getInputStream( zipEntry );
             bufferedReader = new BufferedReader( new InputStreamReader( inputStream ) );
+            
+            /*
             Properties manifest2 = new Properties();
             String line = null;
             String currentKey = null;
@@ -551,7 +579,9 @@ public class MavenArchiverTest
                     manifest2.put( currentKey, value + line.substring( 1 ) );
                 }
             }
-            String classPath = manifest2.getProperty( "Class-Path" );
+            */
+            Map manifest2 = getMapFromManifestContent( bufferedReader );
+            String classPath = (String) manifest2.get( "Class-Path" );
             assertNotNull( classPath );
             classPathEntries = StringUtils.split( classPath, " " );
             assertEquals( "org/apache/dummy/dummy1/1.0/dummy1-1.0.jar", classPathEntries[0] );
@@ -574,6 +604,30 @@ public class MavenArchiverTest
     // ----------------------------------------
     //  common methods for testing
     // ----------------------------------------
+    
+    private Map getMapFromManifestContent( BufferedReader bufferedReader )
+        throws Exception
+    {
+        Map properties = new LinkedHashMap();
+        String line = null;
+        String currentKey = null;
+        while ( ( line = bufferedReader.readLine() ) != null )
+        {
+            int index = line.indexOf( ':' );
+            if ( index > 0 )
+            {
+                currentKey = line.substring( 0, index );
+                String value = line.substring( index + 1, line.length() );
+                properties.put( currentKey, StringUtils.trim( value ) );
+            }
+            if ( line.startsWith( " " ) )
+            {
+                String value = (String) properties.get( currentKey );
+                properties.put( currentKey, StringUtils.trim( value + line.substring( 1 ) ) );
+            }
+        }
+        return properties;
+    }
     
     private MavenProject getDummyProject()
     {

@@ -52,11 +52,12 @@ public class ManifestConfiguration
     private boolean addDefaultImplementationEntries;
     
     /**
-     * the generated ClassPath entry will contains maven2 repository layout
+     * The generated Class-Path entry will contains paths that follow the
+     * Maven 2 repository layout:
      * $groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
      * @since 2.3
      */
-    private boolean classPathMavenRepositoryLayout = false;
+    private boolean classpathMavenRepositoryLayout = false;
 
     public String getMainClass()
     {
@@ -88,9 +89,9 @@ public class ManifestConfiguration
         return addExtensions;
     }
 
-    public boolean isClassPathMavenRepositoryLayout()
+    public boolean isClasspathMavenRepositoryLayout()
     {
-        return classPathMavenRepositoryLayout;
+        return classpathMavenRepositoryLayout;
     }
 
     public void setAddClasspath( boolean addClasspath )
@@ -113,9 +114,9 @@ public class ManifestConfiguration
         this.addExtensions = addExtensions;
     }
 
-    public void setClassPathMavenRepositoryLayout( boolean classPathMavenRepositoryLayout )
+    public void setClasspathMavenRepositoryLayout( boolean classpathMavenRepositoryLayout )
     {
-        this.classPathMavenRepositoryLayout = classPathMavenRepositoryLayout;
+        this.classpathMavenRepositoryLayout = classpathMavenRepositoryLayout;
     }
 
     public void setClasspathPrefix( String classpathPrefix )

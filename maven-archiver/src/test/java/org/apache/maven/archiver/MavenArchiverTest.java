@@ -514,7 +514,7 @@ public class MavenArchiverTest
             config.getManifest().setAddDefaultSpecificationEntries( true );
             config.getManifest().setMainClass( "org.apache.maven.Foo" );
             config.getManifest().setAddClasspath( true );
-            config.getManifest().setClassPathMavenRepositoryLayout( true );
+            config.getManifest().setClasspathMavenRepositoryLayout( true );
             archiver.createArchive( project, config );
             assertTrue( jarFile.exists() );
             jar = new JarFile( jarFile );

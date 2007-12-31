@@ -66,6 +66,7 @@
             <th>Element</th>
             <th>Description</th>
             <th>Type</th>
+            <th>Since</th>
           </tr>
           <tr>
             <td>addMavenDescriptor</td>
@@ -84,6 +85,7 @@
               The default value is <code>true</code>.
             </td>
             <td>boolean</td>
+            <td></td>
           </tr>
           <tr>
             <td>compress</td>
@@ -92,6 +94,7 @@
               The default value is <code>true</code>.
             </td>
             <td>boolean</td>
+            <td></td>
           </tr>
           <tr>
             <td>forced</td>
@@ -112,6 +115,7 @@
               The default value is <code>true</code>.
             </td>
             <td>boolean</td>
+            <td></td>
           </tr>
           <tr>
             <td>index</td>
@@ -121,9 +125,11 @@
               The default value is <code>false</code>.
             </td>
             <td>boolean</td>
+            <td></td>
           </tr>
           <tr>
             <td><a href="#class_manifest">manifest</a></td>
+            <td></td>
             <td></td>
             <td></td>
           </tr>
@@ -131,14 +137,17 @@
             <td>manifestEntries</td>
             <td>A list of key/value pairs to add to the manifest.</td>
             <td>Map</td>
+            <td></td>
           </tr>
           <tr>
             <td>manifestFile</td>
             <td>With this you can supply your own manifest file.</td>
             <td>File</td>
+            <td></td>
           </tr>
           <tr>
             <td><a href="#class_manifestSection">manifestSections</a></td>
+            <td></td>
             <td></td>
             <td></td>
           </tr>
@@ -150,6 +159,7 @@
               (only if <code>addMavenDescriptor</code> is set to <code>true</code>)
             </td>
             <td>File</td>
+            <td></td>
           </tr>
         </table>
       </subsection>
@@ -161,6 +171,7 @@
             <th>Element</th>
             <th>Description</th>
             <th>Type</th>
+            <th>Since</th>
           </tr>
           <tr>
             <td>addClasspath</td>
@@ -169,6 +180,7 @@
               The default value is <code>false</code>.
             </td>
             <td>boolean</td>
+            <td></td>
           </tr>
           <tr>
             <td>addDefaultImplementationEntries</td>
@@ -183,6 +195,7 @@ Implementation-Vendor: ${pom.organization.name}
               The default value is <code>false</code>.
             </td>
             <td>boolean</td>
+            <td></td>
           </tr>
           <tr>
             <td>addDefaultSpecificationEntries</td>
@@ -195,6 +208,7 @@ Specification-Version: ${pom.version}
               The default value is <code>false</code>.
             </td>
             <td>boolean</td>
+            <td></td>
           </tr>
           <tr>
             <td>addExtensions</td>
@@ -204,6 +218,7 @@ Specification-Version: ${pom.version}
               The default value is <code>false</code>.
             </td>
             <td>boolean</td>
+            <td></td>
           </tr>
           <tr>
             <td>classpathMavenRepositoryLayout</td>
@@ -214,6 +229,7 @@ Specification-Version: ${pom.version}
               The default value is <code>false</code>.
             </td>
             <td>boolean</td>
+            <td>2.3</td>
           </tr>
           <tr>
             <td>classpathPrefix</td>
@@ -223,16 +239,19 @@ Specification-Version: ${pom.version}
               The default value is <code>&quot;&quot;</code>.
             </td>
             <td>String</td>
+            <td></td>
           </tr>
           <tr>
             <td>mainClass</td>
             <td>The <code>Main-Class</code> manifest entry.</td>
             <td>String</td>
+            <td></td>
           </tr>
           <tr>
             <td>packageName</td>
             <td>Package manifest entry.</td>
             <td>String</td>
+            <td></td>
           </tr>
         </table>
       </subsection>
@@ -244,6 +263,7 @@ Specification-Version: ${pom.version}
             <th>Element</th>
             <th>Description</th>
             <th>Type</th>
+            <th>Since</th>
           </tr>
           <tr>
             <td>name</td>
@@ -251,11 +271,13 @@ Specification-Version: ${pom.version}
               The name of the section.
             </td>
             <td>String</td>
+            <td></td>
           </tr>
           <tr>
             <td>manifestEntries</td>
             <td>A list of key/value pairs to add to the manifest.</td>
             <td>Map</td>
+            <td></td>
           </tr>
         </table>
       </subsection>

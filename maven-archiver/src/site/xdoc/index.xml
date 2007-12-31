@@ -115,7 +115,7 @@
               The default value is <code>true</code>.
             </td>
             <td>boolean</td>
-            <td></td>
+            <td>2.2</td>
           </tr>
           <tr>
             <td>index</td>
@@ -159,7 +159,7 @@
               (only if <code>addMavenDescriptor</code> is set to <code>true</code>)
             </td>
             <td>File</td>
-            <td></td>
+            <td>2.3</td>
           </tr>
         </table>
       </subsection>
@@ -195,7 +195,7 @@ Implementation-Vendor: ${pom.organization.name}
               The default value is <code>false</code>.
             </td>
             <td>boolean</td>
-            <td></td>
+            <td>2.1</td>
           </tr>
           <tr>
             <td>addDefaultSpecificationEntries</td>
@@ -208,7 +208,7 @@ Specification-Version: ${pom.version}
               The default value is <code>false</code>.
             </td>
             <td>boolean</td>
-            <td></td>
+            <td>2.1</td>
           </tr>
           <tr>
             <td>addExtensions</td>

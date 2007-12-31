@@ -43,11 +43,15 @@ public class ManifestConfiguration
 
     /**
      * Add default implementation entries if this is an extension specification.
+     *
+     * @since 2.1
      */
     private boolean addDefaultSpecificationEntries;
 
     /**
      * Add default implementation entries if this is an extension.
+     *
+     * @since 2.1
      */
     private boolean addDefaultImplementationEntries;
     

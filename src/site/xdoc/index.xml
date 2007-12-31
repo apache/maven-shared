@@ -19,7 +19,7 @@
 -->
 <document>
   <properties>
-    <title>Maven Archiver Home Page</title>
+    <title>Reference</title>
     <author email="olamy@apache.org">Olivier Lamy</author>
     <author email="dennisl@apache.org">Dennis Lundberg</author>
   </properties>
@@ -260,43 +260,8 @@ Specification-Version: ${pom.version}
         </table>
       </subsection>
 
-      <a name="exampleManifestSections"/>
-      <subsection name="Example of ManifestSections">
-        <p>
-          The <code>&lt;manifestSections&gt;</code> element provide a way to
-          add custom manifest sections. It contains a list of
-          <code>&lt;<a href="#class_manifestSection">manifestSection</a>&gt;</code>
-          elements.
-        </p>
-        <p>Given this configuration:</p>
-        <source>
-<![CDATA[<manifestSections>
-  <manifestSection>
-    <name>foo</name>
-    <manifestEntries>
-      <id>nice foo</id>
-    </manifestEntries>
-  </manifestSection>
-  <manifestSection>
-    <name>bar</name>
-    <manifestEntries>
-      <id>nice bar</id>
-    </manifestEntries>
-  </manifestSection>
-</manifestSections>]]>
-        </source>
-        <p>The following content will end up in the manifest:</p>
-        <source>
-Name: foo
-id: nice foo
-
-Name: bar
-id: nice bar
-        </source>
-      </subsection>
-
+      <a name="pom-properties-content"/>
       <subsection name="pom.properties content">
-        <a name="pom-properties-content"/>
         <p>
           The auto generated <code>pom.properties</code> file will contain the
           following content:

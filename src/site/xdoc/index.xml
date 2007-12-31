@@ -21,42 +21,42 @@
   <properties>
     <title>Maven Archiver Home Page</title>
     <author email="olamy@apache.org">Olivier Lamy</author>
-    <author email="dennis@apache.org">Dennis Lundberg</author>
+    <author email="dennisl@apache.org">Dennis Lundberg</author>
   </properties>
   <body>
     <section name="Maven Archiver">
       <p>The Maven Archiver is mainly used by plugins to handle packaging.</p>
 
       <source>
-  &lt;<a href="#class_archive">archive</a>&gt;
-    &lt;addMavenDescriptor/&gt;
-    &lt;compress/&gt;
-    &lt;forced/&gt;
-    &lt;index/&gt;
-    &lt;<a href="#class_manifest">manifest</a>&gt;
-      &lt;addClasspath/&gt;
-      &lt;addDefaultImplementationEntries/&gt;
-      &lt;addDefaultSpecificationEntries/&gt;
-      &lt;addExtensions/&gt;
-      &lt;classpathMavenRepositoryLayout/&gt;
-      &lt;classpathPrefix/&gt;
-      &lt;mainClass/&gt;
-      &lt;packageName/&gt;
-    &lt;/manifest&gt;
-    &lt;manifestEntries&gt;
-      &lt;key&gt;value&lt;/key&gt;
-    &lt;/manifestEntries&gt;
-    &lt;manifestFile/&gt;
-    &lt;manifestSections&gt;
-      &lt;<a href="#class_manifestSection">manifestSection</a>&gt;
-        &lt;name/&gt;
-        &lt;manifestEntries&gt;
-          &lt;key&gt;value&lt;/key&gt;
-        &lt;/manifestEntries&gt;
-      &lt;manifestSection/&gt;
-    &lt;/manifestSections&gt;
-    &lt;pomPropertiesFile/&gt;
-  &lt;/archive&gt;
+&lt;<a href="#class_archive">archive</a>&gt;
+  &lt;addMavenDescriptor/&gt;
+  &lt;compress/&gt;
+  &lt;forced/&gt;
+  &lt;index/&gt;
+  &lt;<a href="#class_manifest">manifest</a>&gt;
+    &lt;addClasspath/&gt;
+    &lt;addDefaultImplementationEntries/&gt;
+    &lt;addDefaultSpecificationEntries/&gt;
+    &lt;addExtensions/&gt;
+    &lt;classpathMavenRepositoryLayout/&gt;
+    &lt;classpathPrefix/&gt;
+    &lt;mainClass/&gt;
+    &lt;packageName/&gt;
+  &lt;/manifest&gt;
+  &lt;manifestEntries&gt;
+    &lt;key&gt;value&lt;/key&gt;
+  &lt;/manifestEntries&gt;
+  &lt;manifestFile/&gt;
+  &lt;manifestSections&gt;
+    &lt;<a href="#class_manifestSection">manifestSection</a>&gt;
+      &lt;name/&gt;
+      &lt;manifestEntries&gt;
+        &lt;key&gt;value&lt;/key&gt;
+      &lt;/manifestEntries&gt;
+    &lt;manifestSection/&gt;
+  &lt;/manifestSections&gt;
+  &lt;pomPropertiesFile/&gt;
+&lt;/archive&gt;
       </source>
 
       <a name="class_archive"/>
@@ -65,12 +65,12 @@
           <tr>
             <th>Element</th>
             <th>Description</th>
-            <th>Default Value</th>
             <th>Type</th>
           </tr>
           <tr>
             <td>addMavenDescriptor</td>
-            <td>Whether the generated archive will contain these two Maven files:
+            <td>
+              Whether the generated archive will contain these two Maven files:
               <ul>
                 <li>
                   The pom file, located in the archive in
@@ -81,14 +81,16 @@
                   located in the archive in <code>META-INF/maven/${groupId}/${artifactId}/pom.properties</code>
                 </li>
               </ul>
+              The default value is <code>true</code>.
             </td>
-            <td>true</td>
             <td>boolean</td>
           </tr>
           <tr>
             <td>compress</td>
-            <td>Activate compression for the archive.</td>
-            <td>true</td>
+            <td>
+              Activate compression for the archive.
+              The default value is <code>true</code>.
+            </td>
             <td>boolean</td>
           </tr>
           <tr>
@@ -107,8 +109,8 @@
                 An archiver doesn't necessarily support checks for uptodate. If
                 so, setting this option to <code>true</code> will simply be ignored.
               </p>
+              The default value is <code>true</code>.
             </td>
-            <td>true</td>
             <td>boolean</td>
           </tr>
           <tr>
@@ -116,21 +118,29 @@
             <td>
               Whether the generated archive will contain an
               <code>INDEX.LIST</code> file.
+              The default value is <code>false</code>.
             </td>
-            <td>false</td>
             <td>boolean</td>
+          </tr>
+          <tr>
+            <td><a href="#class_manifest">manifest</a></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <td>manifestEntries</td>
             <td>A list of key/value pairs to add to the manifest.</td>
-            <td>N/A</td>
             <td>Map</td>
           </tr>
           <tr>
             <td>manifestFile</td>
             <td>With this you can supply your own manifest file.</td>
-            <td>N/A</td>
             <td>File</td>
+          </tr>
+          <tr>
+            <td><a href="#class_manifestSection">manifestSections</a></td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
             <td>pomPropertiesFile</td>
@@ -139,7 +149,6 @@
               <a href="#pom-properties-content">pom.properties</a> file
               (only if <code>addMavenDescriptor</code> is set to <code>true</code>)
             </td>
-            <td>N/A</td>
             <td>File</td>
           </tr>
         </table>
@@ -151,15 +160,14 @@
           <tr>
             <th>Element</th>
             <th>Description</th>
-            <th>Default Value</th>
             <th>Type</th>
           </tr>
           <tr>
             <td>addClasspath</td>
             <td>
               Whether to generate a <code>Class-Path</code> manifest entry.
+              The default value is <code>false</code>.
             </td>
-            <td>false</td>
             <td>boolean</td>
           </tr>
           <tr>
@@ -172,8 +180,8 @@ Implementation-Version: ${pom.version}
 Implementation-Vendor-Id: ${pom.groupId}
 Implementation-Vendor: ${pom.organization.name}
               </source>
+              The default value is <code>false</code>.
             </td>
-            <td>false</td>
             <td>boolean</td>
           </tr>
           <tr>
@@ -184,8 +192,8 @@ Implementation-Vendor: ${pom.organization.name}
 Specification-Title: ${pom.name}
 Specification-Version: ${pom.version}
               </source>
+              The default value is <code>false</code>.
             </td>
-            <td>false</td>
             <td>boolean</td>
           </tr>
           <tr>
@@ -193,8 +201,8 @@ Specification-Version: ${pom.version}
             <td>
               Whether to generate an <code>Extension-List</code> manifest
               entry.
+              The default value is <code>false</code>.
             </td>
-            <td>false</td>
             <td>boolean</td>
           </tr>
           <tr>
@@ -202,9 +210,9 @@ Specification-Version: ${pom.version}
             <td>
               The generated <code>Class-Path</code> entry will contains paths
               that follow the Maven 2 repository layout:
-              <code>${groupId}/${artifactId}/${version}/${fileName}</code>
+              <code>${groupId}/${artifactId}/${version}/${fileName}</code>.
+              The default value is <code>false</code>.
             </td>
-            <td>false</td>
             <td>boolean</td>
           </tr>
           <tr>
@@ -212,20 +220,18 @@ Specification-Version: ${pom.version}
             <td>
               A text that will be prefixed to all your <code>Class-Path</code>
               entries.
+              The default value is <code>&quot;&quot;</code>.
             </td>
-            <td>empty String</td>
             <td>String</td>
           </tr>
           <tr>
             <td>mainClass</td>
             <td>The <code>Main-Class</code> manifest entry.</td>
-            <td>N/A</td>
             <td>String</td>
           </tr>
           <tr>
             <td>packageName</td>
             <td>Package manifest entry.</td>
-            <td>N/A</td>
             <td>String</td>
           </tr>
         </table>
@@ -237,7 +243,6 @@ Specification-Version: ${pom.version}
           <tr>
             <th>Element</th>
             <th>Description</th>
-            <th>Default Value</th>
             <th>Type</th>
           </tr>
           <tr>
@@ -245,13 +250,11 @@ Specification-Version: ${pom.version}
             <td>
               The name of the section.
             </td>
-            <td>N/A</td>
             <td>String</td>
           </tr>
           <tr>
             <td>manifestEntries</td>
             <td>A list of key/value pairs to add to the manifest.</td>
-            <td>N/A</td>
             <td>Map</td>
           </tr>
         </table>

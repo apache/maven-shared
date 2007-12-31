@@ -48,8 +48,14 @@ public class MavenArchiveConfiguration
 
     private List manifestSections = new ArrayList();
 
+    /**
+     * @since 2.2
+     */
     private boolean forced = true;
 
+    /**
+     * @since 2.3
+     */
     private File pomPropertiesFile;
 
     public boolean isCompress()

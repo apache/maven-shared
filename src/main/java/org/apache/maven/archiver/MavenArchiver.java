@@ -145,11 +145,11 @@ public class MavenArchiver
                 File f = new File( (String) iter.next() );
                 if ( f.isFile() )
                 {
-                    classpath.append( classpathPrefix );
                     if ( classpath.length() > 0 )
                     {
                         classpath.append( " " );
                     }
+                    classpath.append( classpathPrefix );
                     if ( !config.isClasspathMavenRepositoryLayout() )
                     {
                         classpath.append( f.getName() );
@@ -157,7 +157,7 @@ public class MavenArchiver
                     else
                     {
                         // we use layout /$groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
-                        // here we must find the Artifact in the projet Artifacts to generate the maven layout
+                        // here we must find the Artifact in the project Artifacts to generate the maven layout
                         Artifact artifact = findArtifactWithFile( project.getArtifacts(), f );
                         StringBuffer classpathElement = new StringBuffer();
                         if ( !StringUtils.isEmpty( artifact.getGroupId() ) )

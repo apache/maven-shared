@@ -1,7 +1,6 @@
  ------
- Manifest Sections
+ Manifest Entries
  ------
- Olivier Lamy
  Dennis Lundberg
  ------
  2008-01-01
@@ -24,19 +23,22 @@
  ~~ specific language governing permissions and limitations
  ~~ under the License.
 
-Manifest Sections
+Manifest Entries
 
- The <<<\<manifestSections\>>>> element provides a way to add custom manifest
- sections. It contains a list of
- <<<\<{{{../index.html#class_manifestSection}manifestSection}}\>>>> elements.
+ If you find that the other configuration options for Maven Archiver are not
+ enough for manipulating the manifest, you can add your own entries to it.
+ This is done with the <<<\<manifestEntries\>>>> configuration element.
+ 
+ In this example we'll add some entries to the manifest by specifying what we'd
+ like in the <<<\<configuration\>>>>/<<<\<archive\>>>> element of
+ maven-jar-plugin.
 
  <<Note:>> As with all the examples here, this configuration can be used in all
- plugins that use Maven Archiver, not just maven-jar-plugin as in this example.
-
- Given this configuration:
+ plugins that use Maven Archiver, not just maven-jar-plugin as in this example. 
 
 +-----+
 <project>
+  <url>http://some.url.org/</url>
   ...
   <build>
     <plugins>
@@ -46,20 +48,10 @@ Manifest Sections
         ...
         <configuration>
           <archive>
-            <manifestSections>
-              <manifestSection>
-                <name>foo</name>
-                <manifestEntries>
-                  <id>nice foo</id>
-                </manifestEntries>
-              </manifestSection>
-              <manifestSection>
-                <name>bar</name>
-                <manifestEntries>
-                  <id>nice bar</id>
-                </manifestEntries>
-              </manifestSection>
-            </manifestSections>
+            <manifestEntries>
+              <mode>development</mode>
+              <url>${pom.url}</url>
+            </manifestEntries>
           </archive>
         </configuration>
         ...
@@ -70,7 +62,9 @@ Manifest Sections
 </project>
 +-----+
 
- The following content will end up in the manifest:
+ As you see above you can use literal values or you can have values from the
+ POM interpolated into literals or simply use straight POM expressions. So this
+ is what your resultant manifest will look like inside the generated jar:
 
 +-----+
 Manifest-Version: 1.0
@@ -78,10 +72,10 @@ Archiver-Version: Plexus Archiver
 Created-By: Apache Maven
 Built-By: ${user.name}
 Build-Jdk: ${java.version}
-
-Name: foo
-id: nice foo
-
-Name: bar
-id: nice bar
+mode: development
+url: http://some.url.org/
 +-----+
+
+ <<Note:>> If your pom.xml does not have the <<<\<url\>>>> element, referenced
+ through interpolation, then the entry <<<url>>> will <<not>> be in the
+ manifest.

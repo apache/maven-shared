@@ -204,6 +204,7 @@ Implementation-Vendor: ${pom.organization.name}
               <source>
 Specification-Title: ${pom.name}
 Specification-Version: ${pom.version}
+Specification-Vendor: ${pom.organization.name}
               </source>
               The default value is <code>false</code>.
             </td>

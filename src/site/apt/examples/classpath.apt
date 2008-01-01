@@ -1,0 +1,192 @@
+ ------
+ Set Up The Classpath
+ ------
+ Dennis Lundberg
+ ------
+ 2008-01-01
+ ------
+
+ ~~ Licensed to the Apache Software Foundation (ASF) under one
+ ~~ or more contributor license agreements.  See the NOTICE file
+ ~~ distributed with this work for additional information
+ ~~ regarding copyright ownership.  The ASF licenses this file
+ ~~ to you under the Apache License, Version 2.0 (the
+ ~~ "License"); you may not use this file except in compliance
+ ~~ with the License.  You may obtain a copy of the License at
+ ~~
+ ~~   http://www.apache.org/licenses/LICENSE-2.0
+ ~~
+ ~~ Unless required by applicable law or agreed to in writing,
+ ~~ software distributed under the License is distributed on an
+ ~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~~ KIND, either express or implied.  See the License for the
+ ~~ specific language governing permissions and limitations
+ ~~ under the License.
+
+Set Up The Classpath
+
+
+* Add A Class-Path Entry To The Manifest
+
+ Maven Archiver can add the classpath of your project to the manifest. This is
+ done with the <<<\<addClasspath\>>>> configuration element.
+
++-----+
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        ...
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+            </manifest>
+          </archive>
+        </configuration>
+        ...
+      </plugin>
+    </plugins>
+  </build>
+  ...
+  <dependencies>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>1.1</version>
+    </dependency>
+  </dependencies>
+  ...
+</project>
++-----+
+
+ The manifest produced using the above configuration would look like this:
+
++-----+
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: ${user.name}
+Build-Jdk: ${java.version}
+Class-Path: plexus-utils-1.1.jar commons-lang-2.1.jar
++-----+
+
+
+* Make The Jar Executable
+
+ If you want to create an executable jar file, you need to configure Maven
+ Archiver accordingly. You need to tell it which main class to use. This is
+ done with the <<<\<mainClass\>>>> configuration element. Here is a sample
+ <<<pom.xml>>> configured to add the classpath and use the class
+ <<<fully.qualified.MainClass>>> as the main class:
+
++-----+
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        ...
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>fully.qualified.MainClass</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+        ...
+      </plugin>
+    </plugins>
+  </build>
+  ...
+  <dependencies>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>1.1</version>
+    </dependency>
+  </dependencies>
+  ...
+</project>
++-----+
+
+ The manifest produced using the above configuration would look like this:
+
++-----+
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: ${user.name}
+Build-Jdk: ${java.version}
+Main-Class: fully.qualified.MainClass
+Class-Path: plexus-utils-1.1.jar commons-lang-2.1.jar
++-----+
+
+
+* Altering The Classpath
+
+ Sometimes it is useful to be able to alter the classpath, for example when
+ {{{http://maven.apache.org/plugins/maven-war-plugin/examples/skinny-wars.html}creating skinny war-files}}.
+ This can be achieved with the <<<\<classpathPrefix\>>>> configuration element.
+
++-----+
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+         <artifactId>maven-war-plugin</artifactId>
+         <configuration>
+           <archive>
+             <manifest>
+               <addClasspath>true</addClasspath>
+               <classpathPrefix>lib/</classpathPrefix>
+             </manifest>
+           </archive>
+         </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  ...
+  <dependencies>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>1.1</version>
+    </dependency>
+  </dependencies>
+  ...
+</project>
++-----+
+
+ The manifest produced using the above configuration would look like this:
+
++-----+
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: ${user.name}
+Build-Jdk: ${java.version}
+Class-Path: lib/plexus-utils-1.1.jar lib/commons-lang-2.1.jar
++-----+

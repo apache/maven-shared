@@ -39,7 +39,11 @@ under the License.
       <item name="Reference" href="index.html"/>
     </menu>
     <menu name="Examples">
+      <item name="Manifest" href="examples/manifest.html"/>
+      <item name="Manifest Entries" href="examples/manifestEntries.html"/>
       <item name="Manifest Sections" href="examples/manifestSections.html"/>
+      <item name="Set Up The Classpath" href="examples/classpath.html"/>
+      <item name="Use Your Own Manifest File" href="examples/manifestFile.html"/>
     </menu>
     <!-- TODO: Link, head, reports should be inherited -->
     <!-- TODO: use breadcrumbs more structure, links for links, and inherit subprojects as a menu or not at all -->

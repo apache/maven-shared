@@ -30,9 +30,9 @@ public abstract class AbstractArtifactsFilter
     /**
      * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
      * @version $Id$
+     * @throws ArtifactFilterException 
      */
-    public boolean okToProcess( Artifact artifact )
-        throws ArtifactFilterException
+    public boolean isArtifactIncluded( Artifact artifact ) throws ArtifactFilterException
     {
         Set set = new HashSet();
         set.add( artifact );

@@ -36,6 +36,6 @@ public interface ArtifactsFilter
     Set filter( Set artifacts )
         throws ArtifactFilterException;
 
-    boolean okToProcess( Artifact artifact )
+    boolean isArtifactIncluded( Artifact artifact )
         throws ArtifactFilterException;
 }

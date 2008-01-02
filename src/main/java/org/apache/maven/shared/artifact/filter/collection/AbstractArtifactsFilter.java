@@ -1,6 +1,6 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
-/* 
+/*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,28 +16,28 @@ package org.apache.maven.plugin.dependency.utils.filters;
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License. 
  */
 
-/**
- * 
- */
-
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 
-/**
- * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
- * @version $Id$
- */
-public interface ArtifactsFilter
+public abstract class AbstractArtifactsFilter
+    implements ArtifactsFilter
 {
-    Set filter( Set artifacts, Log log )
-        throws MojoExecutionException;
+    /**
+     * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
+     * @version $Id$
+     */
+    public boolean okToProcess( Artifact artifact )
+        throws ArtifactFilterException
+    {
+        Set set = new HashSet();
+        set.add( artifact );
 
-    boolean okToProcess( Artifact artifact, Log log )
-        throws MojoExecutionException;
+        set = filter( set );
+        return set.contains( artifact );
+    }
 }

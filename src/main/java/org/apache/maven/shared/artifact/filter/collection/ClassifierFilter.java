@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /* 
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -31,7 +31,7 @@ public class ClassifierFilter
 {
     public ClassifierFilter( String include, String exclude )
     {
-        super( include, exclude, "Classifiers" );
+        super( include, exclude);
     }
 
     /*

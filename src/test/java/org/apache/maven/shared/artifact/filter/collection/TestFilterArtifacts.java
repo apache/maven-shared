@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /* 
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -30,20 +30,15 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.dependency.testUtils.DependencyArtifactStubFactory;
-import org.apache.maven.plugin.dependency.testUtils.DependencyTestUtils;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugin.testing.SilentLog;
+import org.apache.maven.plugin.testing.ArtifactStubFactory;
+import org.codehaus.plexus.util.FileUtils;
 
 /**
- * @author brianf
- * 
+ * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
  */
 public class TestFilterArtifacts
     extends TestCase
 {
-    Log log = new SilentLog();
 
     protected void setUp()
         throws Exception
@@ -52,23 +47,25 @@ public class TestFilterArtifacts
     }
 
     public void testNullFilters()
-        throws IOException, MojoExecutionException
+        throws IOException, ArtifactFilterException
+
     {
         // TODO: convert these old tests to use the abstract test case for dep
         // plugin
-        File outputFolder = outputFolder = new File( "target/filters/" );
-        DependencyTestUtils.removeDirectory( outputFolder );
+        File outputFolder = new File( "target/filters/" );
 
-        DependencyArtifactStubFactory fact = new DependencyArtifactStubFactory( outputFolder, false );
+        FileUtils.deleteDirectory( outputFolder );
+
+        ArtifactStubFactory fact = new ArtifactStubFactory( outputFolder, false );
         Set artifacts = fact.getReleaseAndSnapshotArtifacts();
         FilterArtifacts fa = new FilterArtifacts();
 
-        fa.filter( artifacts, log );
+        fa.filter( artifacts );
 
         // make sure null filters don't hurt anything.
         fa.addFilter( null );
 
-        fa.filter( artifacts, log );
+        fa.filter( artifacts );
         assertEquals( 0, fa.getFilters().size() );
 
         ArrayList filters = new ArrayList();
@@ -78,7 +75,7 @@ public class TestFilterArtifacts
 
         assertEquals( 2, fa.getFilters().size() );
 
-        fa.filter( artifacts, log );
+        fa.filter( artifacts );
     }
 
     public void testArtifactFilter()

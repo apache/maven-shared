@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /* 
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -29,13 +29,10 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.dependency.testUtils.DependencyArtifactStubFactory;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugin.testing.SilentLog;
+import org.apache.maven.plugin.testing.ArtifactStubFactory;
 
 /**
- * @author brianf
- * 
+ * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
  */
 public class TestTransitivityFilter
     extends TestCase
@@ -44,14 +41,12 @@ public class TestTransitivityFilter
 
     Set directArtifacts = new HashSet();
 
-    Log log = new SilentLog();
-
     protected void setUp()
         throws Exception
     {
         super.setUp();
 
-        DependencyArtifactStubFactory fact = new DependencyArtifactStubFactory( null, false );
+        ArtifactStubFactory fact = new ArtifactStubFactory( null, false );
         artifacts = fact.getScopedArtifacts();
 
         directArtifacts = fact.getReleaseAndSnapshotArtifacts();
@@ -63,7 +58,7 @@ public class TestTransitivityFilter
     {
         TransitivityFilter filter = new TransitivityFilter( directArtifacts, false );
 
-        Set result = filter.filter( artifacts, log );
+        Set result = filter.filter( artifacts );
 
         assertEquals( 7, result.size() );
     }
@@ -74,7 +69,7 @@ public class TestTransitivityFilter
         assertFalse( filter.isExcludeTransitive() );
         filter.setExcludeTransitive( true );
         assertTrue( filter.isExcludeTransitive() );
-        Set result = filter.filter( artifacts, log );
+        Set result = filter.filter( artifacts );
 
         assertEquals( 2, result.size() );
 

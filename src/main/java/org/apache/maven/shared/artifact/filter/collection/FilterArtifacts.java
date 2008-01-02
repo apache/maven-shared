@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,9 +27,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-
 /**
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
  * @version $Id$
@@ -44,8 +41,7 @@ public class FilterArtifacts
     }
 
     /**
-     * Removes all of the elements from this list. The list will be empty after
-     * this call returns.
+     * Removes all of the elements from this list. The list will be empty after this call returns.
      */
     public void clearFilters()
     {
@@ -55,8 +51,7 @@ public class FilterArtifacts
     /**
      * Appends the specified element to the end of this list.
      * 
-     * @param filter
-     *            element to be appended to this list.
+     * @param filter element to be appended to this list.
      */
     public void addFilter( ArtifactsFilter filter )
     {
@@ -67,17 +62,12 @@ public class FilterArtifacts
     }
 
     /**
-     * Inserts the specified element at the specified position in this list.
-     * Shifts the element currently at that position (if any) and any subsequent
-     * elements to the right (adds one to their indices).
+     * Inserts the specified element at the specified position in this list. Shifts the element currently at that
+     * position (if any) and any subsequent elements to the right (adds one to their indices).
      * 
-     * @param index
-     *            index at which the specified element is to be inserted.
-     * @param element
-     *            element to be inserted.
-     * @throws IndexOutOfBoundsException
-     *             if index is out of range
-     *             <tt>(index &lt; 0 || index &gt; size())</tt>.
+     * @param index index at which the specified element is to be inserted.
+     * @param element element to be inserted.
+     * @throws IndexOutOfBoundsException if index is out of range <tt>(index &lt; 0 || index &gt; size())</tt>.
      */
     public void addFilter( int index, ArtifactsFilter filter )
     {
@@ -87,8 +77,8 @@ public class FilterArtifacts
         }
     }
 
-    public Set filter( Set artifacts, Log log )
-        throws MojoExecutionException
+    public Set filter( Set artifacts )
+        throws ArtifactFilterException
     {
         // apply filters
         Iterator filterIterator = filters.iterator();
@@ -98,7 +88,7 @@ public class FilterArtifacts
             ArtifactsFilter filter = (ArtifactsFilter) filterIterator.next();
             try
             {
-                artifacts = filter.filter( artifacts, log );
+                artifacts = filter.filter( artifacts );
             }
             catch ( NullPointerException e )
             {
@@ -119,8 +109,7 @@ public class FilterArtifacts
     }
 
     /**
-     * @param filters
-     *            The filters to set.
+     * @param filters The filters to set.
      */
     public void setFilters( ArrayList filters )
     {

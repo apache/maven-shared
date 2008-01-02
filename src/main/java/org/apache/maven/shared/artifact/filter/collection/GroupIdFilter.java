@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /* 
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,25 +22,26 @@ package org.apache.maven.plugin.dependency.utils.filters;
 import org.apache.maven.artifact.Artifact;
 
 /**
- * Filter on ArtifactId name
+ * Filter on GroupId Name.
  * 
  * @author clove
  * @see org.apache.maven.plugin.dependency.utils.filters.AbstractArtifactFeatureFilter
- * @since 2.0-alpha-2
+ * @since 2.0
  * @version $Id$
  */
-public class ArtifactIdFilter
+public class GroupIdFilter
     extends AbstractArtifactFeatureFilter
 {
+
     /**
-     * Will setup super with 'ArtifactId' as the filterType
+     * Construction will setup the super call with a filtertype of 'GroupId'
      * 
      * @param include
      * @param exclude
      */
-    public ArtifactIdFilter( String include, String exclude )
+    public GroupIdFilter( String include, String exclude )
     {
-        super( include, exclude, "ArtifactId" );
+        super( include, exclude);
     }
 
     /*
@@ -50,7 +51,18 @@ public class ArtifactIdFilter
      */
     protected String getArtifactFeature( Artifact artifact )
     {
-        return artifact.getArtifactId();
+        return artifact.getGroupId();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.maven.plugin.dependency.utils.filters.AbstractArtifactFeatureFilter#compareFeatures(String,String)
+     */
+
+    protected boolean compareFeatures( String lhs, String rhs )
+    {
+        return lhs.startsWith( rhs );
     }
 
 }

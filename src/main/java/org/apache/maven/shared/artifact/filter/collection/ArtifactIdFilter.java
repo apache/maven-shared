@@ -1,6 +1,6 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
-/*
+/* 
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,15 +22,25 @@ package org.apache.maven.plugin.dependency.utils.filters;
 import org.apache.maven.artifact.Artifact;
 
 /**
- * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
+ * Filter on ArtifactId name
+ * 
+ * @author clove
+ * @see org.apache.maven.plugin.dependency.utils.filters.AbstractArtifactFeatureFilter
+ * @since 2.0-alpha-2
  * @version $Id$
  */
-public class TypeFilter
+public class ArtifactIdFilter
     extends AbstractArtifactFeatureFilter
 {
-    public TypeFilter( String include, String exclude )
+    /**
+     * Will setup super with 'ArtifactId' as the filterType
+     * 
+     * @param include
+     * @param exclude
+     */
+    public ArtifactIdFilter( String include, String exclude )
     {
-        super( include, exclude, "Types" );
+        super( include, exclude);
     }
 
     /*
@@ -40,6 +50,7 @@ public class TypeFilter
      */
     protected String getArtifactFeature( Artifact artifact )
     {
-        return artifact.getType();
+        return artifact.getArtifactId();
     }
+
 }

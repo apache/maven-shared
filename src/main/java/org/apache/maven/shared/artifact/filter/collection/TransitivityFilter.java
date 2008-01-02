@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.logging.Log;
 
 /**
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
@@ -44,7 +43,7 @@ public class TransitivityFilter
         this.directDependencies = directDependencies;
     }
 
-    public Set filter( Set artifacts, Log log )
+    public Set filter( Set artifacts )
     {
         // why not just take the directDependencies here?
         // because if this filter is run after some other process, the
@@ -53,7 +52,6 @@ public class TransitivityFilter
 
         if ( excludeTransitive )
         {
-            log.debug( "Excluding Transitive Dependencies." );
             result = new HashSet();
             Iterator iterator = artifacts.iterator();
             while ( iterator.hasNext() )
@@ -62,25 +60,16 @@ public class TransitivityFilter
                 if ( artifactIsADirectDependency( artifact ) )
                 {
                     result.add( artifact );
-                    log.debug( "Added: " + artifact );
                 }
             }
-            log.debug( "Added " + result.size() );
         }
-        else
-        {
-            log.debug( "Including Transitive Dependencies." );
-        }
-
         return result;
     }
 
     /**
-     * Compares the artifact to the list of dependencies to see if it is
-     * directly included by this project
+     * Compares the artifact to the list of dependencies to see if it is directly included by this project
      * 
-     * @param artifact
-     *            representing the item to compare.
+     * @param artifact representing the item to compare.
      * @return true if artifact is a direct dependency
      */
     public boolean artifactIsADirectDependency( Artifact artifact )
@@ -90,8 +79,8 @@ public class TransitivityFilter
         while ( iterator.hasNext() )
         {
             Artifact dependency = (Artifact) iterator.next();
-            if ( dependency.getGroupId().equals( artifact.getGroupId() )
-                && dependency.getArtifactId().equals( artifact.getArtifactId() ) )
+            if ( dependency.getGroupId().equals( artifact.getGroupId() ) &&
+                dependency.getArtifactId().equals( artifact.getArtifactId() ) )
             {
                 result = true;
                 break;
@@ -109,8 +98,7 @@ public class TransitivityFilter
     }
 
     /**
-     * @param excludeTransitive
-     *            The excludeTransitive to set.
+     * @param excludeTransitive The excludeTransitive to set.
      */
     public void setExcludeTransitive( boolean excludeTransitive )
     {

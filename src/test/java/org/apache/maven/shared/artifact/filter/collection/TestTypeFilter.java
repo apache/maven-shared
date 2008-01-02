@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /* 
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -30,27 +30,22 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.dependency.testUtils.DependencyArtifactStubFactory;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugin.testing.SilentLog;
+import org.apache.maven.plugin.testing.ArtifactStubFactory;
 
 /**
- * @author brianf
- * 
+ * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
  */
 public class TestTypeFilter
     extends TestCase
 {
     Set artifacts = new HashSet();
 
-    Log log = new SilentLog();
-
     protected void setUp()
         throws Exception
     {
         super.setUp();
 
-        DependencyArtifactStubFactory factory = new DependencyArtifactStubFactory( null, false );
+        ArtifactStubFactory factory = new ArtifactStubFactory( null, false );
         artifacts = factory.getTypedArtifacts();
     }
 
@@ -71,7 +66,7 @@ public class TestTypeFilter
     public void testFiltering()
     {
         TypeFilter filter = new TypeFilter( "war,jar", "war,zip," );
-        Set result = filter.filter( artifacts, log );
+        Set result = filter.filter( artifacts );
         assertEquals( 1, result.size() );
 
         Iterator iter = result.iterator();
@@ -85,7 +80,7 @@ public class TestTypeFilter
     public void testFiltering2()
     {
         TypeFilter filter = new TypeFilter( null, "war,jar," );
-        Set result = filter.filter( artifacts, log );
+        Set result = filter.filter( artifacts );
         assertEquals( 3, result.size() );
 
         Iterator iter = result.iterator();
@@ -99,7 +94,7 @@ public class TestTypeFilter
     public void testFiltering3()
     {
         TypeFilter filter = new TypeFilter( null, null );
-        Set result = filter.filter( artifacts, log );
+        Set result = filter.filter( artifacts );
         assertEquals( 5, result.size() );
     }
 }

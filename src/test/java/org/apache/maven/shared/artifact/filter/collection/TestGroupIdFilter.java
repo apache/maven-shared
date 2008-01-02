@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /* 
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -28,15 +28,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.dependency.testUtils.AbstractArtifactFeatureFilterTestCase;
-import org.apache.maven.plugin.dependency.testUtils.DependencyArtifactStubFactory;
-import org.apache.maven.plugin.testing.SilentLog;
+import org.apache.maven.plugin.testing.ArtifactStubFactory;
 
 /**
  * @author clove TestCases for GroupIdFilter
  * @see org.apache.maven.plugin.dependency.testUtils.AbstractArtifactFeatureFilterTestCase
- * 
  */
 public class TestGroupIdFilter
     extends AbstractArtifactFeatureFilterTestCase
@@ -47,7 +43,7 @@ public class TestGroupIdFilter
     {
         super.setUp();
         filterClass = GroupIdFilter.class;
-        DependencyArtifactStubFactory factory = new DependencyArtifactStubFactory( null, false );
+        ArtifactStubFactory factory = new ArtifactStubFactory( null, false );
         artifacts = factory.getGroupIdArtifacts();
 
     }
@@ -91,12 +87,11 @@ public class TestGroupIdFilter
     public void testFiltering4()
         throws Exception
     {
-        SilentLog log = new SilentLog();
         // include o* from groupIds one,two should leave one
         Set result = filtering();
-        assertEquals( 1, result.size());
+        assertEquals( 1, result.size() );
         GroupIdFilter filter = new GroupIdFilter( "o", null );
-        result = filter.filter( result, log );
+        result = filter.filter( result );
         Iterator iter = result.iterator();
         while ( iter.hasNext() )
         {
@@ -107,9 +102,9 @@ public class TestGroupIdFilter
 
         // exclude on* from groupIds one,two should leave two
         result = filtering();
-        assertEquals(1, result.size());
+        assertEquals( 1, result.size() );
         filter = new GroupIdFilter( null, "on" );
-        result = filter.filter( result, log );
+        result = filter.filter( result );
         iter = result.iterator();
         while ( iter.hasNext() )
         {
@@ -118,26 +113,30 @@ public class TestGroupIdFilter
 
         }
     }
-    
-    public void testMultipleInclude() throws SecurityException, IllegalArgumentException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, MojoExecutionException
+
+    public void testMultipleInclude()
+        throws SecurityException, IllegalArgumentException, NoSuchMethodException, InstantiationException,
+        IllegalAccessException, InvocationTargetException, ArtifactFilterException
     {
-       ArtifactsFilter filter = new GroupIdFilter("one,two",null);
-       
-       assertEquals( 4, artifacts.size() );
-       
-       Set result = filter.filter( artifacts, new SilentLog() );
-       
-       assertEquals( 2, result.size() );       
+        ArtifactsFilter filter = new GroupIdFilter( "one,two", null );
+
+        assertEquals( 4, artifacts.size() );
+
+        Set result = filter.filter( artifacts );
+
+        assertEquals( 2, result.size() );
     }
-    
-    public void testMultipleExclude() throws SecurityException, IllegalArgumentException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, MojoExecutionException
+
+    public void testMultipleExclude()
+        throws SecurityException, IllegalArgumentException, NoSuchMethodException, InstantiationException,
+        IllegalAccessException, InvocationTargetException, ArtifactFilterException
     {
-       ArtifactsFilter filter = new GroupIdFilter(null,"one,two");
-       
-       assertEquals( 4, artifacts.size() );
-       
-       Set result = filter.filter( artifacts, new SilentLog() );
-       
-       assertEquals( 2, result.size() );       
+        ArtifactsFilter filter = new GroupIdFilter( null, "one,two" );
+
+        assertEquals( 4, artifacts.size() );
+
+        Set result = filter.filter( artifacts );
+
+        assertEquals( 2, result.size() );
     }
 }

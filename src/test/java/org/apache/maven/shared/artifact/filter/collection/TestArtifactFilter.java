@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /* 
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,8 +27,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.dependency.testUtils.AbstractArtifactFeatureFilterTestCase;
-import org.apache.maven.plugin.dependency.testUtils.DependencyArtifactStubFactory;
+import org.apache.maven.plugin.testing.ArtifactStubFactory;
 
 /**
  * @author clove TestCases for ArtifactFilter
@@ -43,7 +42,7 @@ public class TestArtifactFilter
     {
         super.setUp();
         filterClass = ArtifactIdFilter.class;
-        DependencyArtifactStubFactory factory = new DependencyArtifactStubFactory( null, false );
+        ArtifactStubFactory factory = new ArtifactStubFactory( null, false );
         artifacts = factory.getArtifactArtifacts();
     }
 
@@ -61,7 +60,7 @@ public class TestArtifactFilter
         while ( iter.hasNext() )
         {
             Artifact artifact = (Artifact) iter.next();
-            assertTrue( artifact.getArtifactId().equals( "two" ));
+            assertTrue( artifact.getArtifactId().equals( "two" ) );
         }
     }
 

@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,8 +25,6 @@ import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -55,10 +53,10 @@ public class ScopeFilter
      *            the set of dependencies to filter.
      * 
      * @return a Set of filtered dependencies.
-     * @throws MojoExecutionException
+     * @throws ArtifactFilterException
      */
-    public Set filter( Set artifacts, Log log )
-        throws MojoExecutionException
+    public Set filter( Set artifacts)
+        throws ArtifactFilterException
     {
         Set results = artifacts;
 
@@ -68,7 +66,7 @@ public class ScopeFilter
                 && !Artifact.SCOPE_PROVIDED.equals( includeScope ) && !Artifact.SCOPE_RUNTIME.equals( includeScope )
                 && !Artifact.SCOPE_SYSTEM.equals( includeScope ) )
             {
-                throw new MojoExecutionException( "Invalid Scope in includeScope: " + includeScope );
+                throw new ArtifactFilterException( "Invalid Scope in includeScope: " + includeScope );
             }
 
             results = new HashSet();
@@ -98,7 +96,7 @@ public class ScopeFilter
                 && !Artifact.SCOPE_PROVIDED.equals( excludeScope ) && !Artifact.SCOPE_RUNTIME.equals( excludeScope )
                 && !Artifact.SCOPE_SYSTEM.equals( excludeScope ) )
             {
-                throw new MojoExecutionException( "Invalid Scope in excludeScope: " + excludeScope );
+                throw new ArtifactFilterException( "Invalid Scope in excludeScope: " + excludeScope );
             }
             results = new HashSet();
             // plexus ScopeArtifactFilter doesn't handle the provided scope so
@@ -106,7 +104,7 @@ public class ScopeFilter
             // need special handling for it.
             if ( Artifact.SCOPE_TEST.equals( excludeScope ) )
             {
-                throw new MojoExecutionException( " Can't exclude Test scope, this will exclude everything." );
+                throw new ArtifactFilterException( " Can't exclude Test scope, this will exclude everything." );
             }
             else if ( !Artifact.SCOPE_PROVIDED.equals( excludeScope ) && !Artifact.SCOPE_SYSTEM.equals( excludeScope ) )
             {

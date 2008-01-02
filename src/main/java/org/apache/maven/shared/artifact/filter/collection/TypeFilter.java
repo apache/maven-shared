@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -16,30 +16,30 @@ package org.apache.maven.plugin.dependency.utils.filters;
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.    
  */
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 
-public abstract class AbstractArtifactsFilter
-    implements ArtifactsFilter
+/**
+ * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
+ * @version $Id$
+ */
+public class TypeFilter
+    extends AbstractArtifactFeatureFilter
 {
-    /**
-     * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
-     * @version $Id$
-     */
-    public boolean okToProcess( Artifact artifact, Log log )
-        throws MojoExecutionException
+    public TypeFilter( String include, String exclude )
     {
-        Set set = new HashSet();
-        set.add( artifact );
+        super( include, exclude);
+    }
 
-        set = filter( set, log );
-        return set.contains( artifact );
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.apache.maven.plugin.dependency.utils.filters.AbstractArtifactFeatureFilter#getArtifactFeature(org.apache.maven.artifact.Artifact)
+     */
+    protected String getArtifactFeature( Artifact artifact )
+    {
+        return artifact.getType();
     }
 }

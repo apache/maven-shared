@@ -1,4 +1,4 @@
-package org.apache.maven.plugin.dependency.utils.filters;
+package org.apache.maven.shared.artifact.filter.collection;
 
 /* 
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -27,13 +27,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.dependency.testUtils.AbstractArtifactFeatureFilterTestCase;
-import org.apache.maven.plugin.dependency.testUtils.DependencyArtifactStubFactory;
+import org.apache.maven.plugin.testing.ArtifactStubFactory;
 
 /**
- * @author brianf Test case for ClassifierFilter
+ * @author <a href="mailto:brianf@apache.org">Brian Fox</a> Test case for ClassifierFilter
  * @see org.apache.maven.plugin.dependency.testUtils.AbstractArtifactFeatureFilterTestCase
- * 
  */
 public class TestClassifierFilter
     extends AbstractArtifactFeatureFilterTestCase
@@ -44,7 +42,7 @@ public class TestClassifierFilter
     {
         super.setUp();
         filterClass = ClassifierFilter.class;
-        DependencyArtifactStubFactory factory = new DependencyArtifactStubFactory( null, false );
+        ArtifactStubFactory factory = new ArtifactStubFactory( null, false );
         artifacts = factory.getClassifiedArtifacts();
 
     }

@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
@@ -76,6 +77,8 @@ public class Verifier
     private Properties systemProperties = new Properties();
 
     private Properties verifierProperties = new Properties();
+
+    private boolean autoclean = true;
 
     // TODO: needs to be configurable
     private static String localRepoLayout = "default";
@@ -612,6 +615,31 @@ public class Verifier
         }
     }
 
+    /**
+     * Check that given file's content matches an regular expression. Note this method also checks that the file exists
+     * and is readable.
+     *
+     * @param file the file to check.
+     * @param regex a regular expression.
+     * @see Pattern
+     */
+    public void assertFileMatches( String file, String regex )
+    {
+        assertFilePresent( file );
+        try
+        {
+            String content = FileUtils.fileRead( file );
+            if ( !Pattern.matches( regex, content ) )
+            {
+                Assert.fail( "Content of " + file + " does not match " + regex );
+            }
+        }
+        catch ( IOException e )
+        {
+            Assert.fail( e.getMessage() );
+        }
+    }
+
     public void assertFileNotPresent( String file )
     {
         try
@@ -733,7 +761,7 @@ public class Verifier
                 {
                     if ( wanted )
                     {
-                        throw new VerificationException( "Expected file was not found: " + expectedFile.getPath() );
+                        throw new VerificationException( "Expected file pattern was not found: " + expectedFile.getPath() );
                     }
                 }
                 else
@@ -800,7 +828,7 @@ public class Verifier
     public void executeGoal( String goal, Map envVars )
         throws VerificationException
     {
-        executeGoals( Arrays.asList( new String[]{goal} ), envVars );
+        executeGoals( Arrays.asList( new String[] { goal } ), envVars );
     }
 
     public void executeGoals( List goals )
@@ -852,7 +880,10 @@ public class Verifier
 
         List allGoals = new ArrayList();
 
-        allGoals.add( "clean:clean" );
+        if ( autoclean )
+        {
+            allGoals.add( "clean:clean" );
+        }
 
         allGoals.addAll( goals );
 
@@ -875,7 +906,7 @@ public class Verifier
                 }
                 catch ( IOException e )
                 {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
                 }
 
                 System.out.println();
@@ -883,7 +914,7 @@ public class Verifier
 
             if ( envVars.get( "JAVA_HOME" ) == null )
             {
-                cli.addEnvironment( "JAVA_HOME", System.getProperty( "java.home" ));
+                cli.addEnvironment( "JAVA_HOME", System.getProperty( "java.home" ) );
             }
 
             cli.setWorkingDirectory( getBasedir() );
@@ -995,15 +1026,13 @@ public class Verifier
         if ( version == null )
         {
             throw new VerificationException( "Illegal maven output: String 'Maven version: ' not found in the following output:\n"
-                + StringUtils.join( logLines.iterator(), "\n" )
-            );
+                + StringUtils.join( logLines.iterator(), "\n" ) );
         }
         else
         {
             return version;
         }
     }
-
 
     private int runCommandLine( String mavenHome, Commandline cli, File logFile )
         throws CommandLineException, IOException
@@ -1624,10 +1653,19 @@ public class Verifier
         this.verifierProperties = verifierProperties;
     }
 
+    public boolean isAutoclean()
+    {
+        return autoclean;
+    }
+
+    public void setAutoclean( boolean autoclean )
+    {
+        this.autoclean = autoclean;
+    }
+
     public String getBasedir()
     {
         return basedir;
     }
-
 }
 

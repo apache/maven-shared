@@ -23,7 +23,7 @@
     <author email="olamy@apache.org">Olivier Lamy</author>
   </properties>
   <body>
-    <release version="2.3" date="in trunk">
+    <release version="2.3" date="2008-01-07">
       <action type="fix" dev="carlos" issue="MNG-2854">Recreating pom.properties always breaks the archivers uptodate check</action>
       <action type="update" dev="olamy" issue="MNG-2768">Update to plexus-archiver 1.0-alpha-9</action>
       <action type="add" dev="olamy" issue="MNG-3332">Class-Path manifest entry should support maven repository layout.</action>

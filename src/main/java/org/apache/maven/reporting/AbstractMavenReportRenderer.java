@@ -737,7 +737,7 @@ public abstract class AbstractMavenReportRenderer
                                 }
                                 else
                                 {
-                                    segments.add( subString.substring( 0, lastComma ).trim() );
+                                    segments.add( subString );
                                     segments.add( null );
                                 }
                             }

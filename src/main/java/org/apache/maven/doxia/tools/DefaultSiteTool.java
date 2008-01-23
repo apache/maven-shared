@@ -20,9 +20,11 @@ package org.apache.maven.doxia.tools;
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import org.apache.maven.artifact.Artifact;
@@ -35,6 +37,7 @@ import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.doxia.site.decoration.DecorationModel;
 import org.apache.maven.doxia.site.decoration.Skin;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
@@ -337,5 +340,148 @@ public class DefaultSiteTool
         }
 
         return relativePath;
+    }
+
+    /** {@inheritDoc} */
+    public File getSiteDescriptorFromBasedir( File siteDirectory, File basedir, Locale locale )
+    {
+        if ( basedir == null )
+        {
+            throw new IllegalArgumentException( "basedir could not be null" );
+        }
+
+        if ( siteDirectory == null )
+        {
+            siteDirectory = new File( basedir, "src/site" );
+        }
+        if ( locale == null )
+        {
+            locale = new Locale( "" );
+        }
+
+        String relativePath = getRelativePath( siteDirectory.getAbsolutePath(), basedir.getAbsolutePath() );
+
+        File siteDescriptor = new File( relativePath, "site_" + locale.getLanguage() + ".xml" );
+
+        if ( !siteDescriptor.exists() )
+        {
+            siteDescriptor = new File( relativePath, "site.xml" );
+        }
+        return siteDescriptor;
+    }
+
+    /** {@inheritDoc} */
+    public File getSiteDescriptorFromRepository( MavenProject project, ArtifactRepository localRepository, List remoteArtifactRepositories, Locale locale )
+        throws SiteToolException
+    {
+        if ( project == null )
+        {
+            throw new IllegalArgumentException( "project could not be null" );
+        }
+        if ( localRepository == null )
+        {
+            throw new IllegalArgumentException( "localRepository could not be null" );
+        }
+        if ( remoteArtifactRepositories == null )
+        {
+            throw new IllegalArgumentException( "remoteArtifactRepositories could not be null" );
+        }
+
+        if ( locale == null )
+        {
+            locale = new Locale( "" );
+        }
+
+        try
+        {
+            return resolveSiteDescriptor( project, localRepository, remoteArtifactRepositories, locale );
+        }
+        catch ( ArtifactNotFoundException e )
+        {
+            getLogger().debug( "ArtifactNotFoundException: Unable to locate site descriptor: " + e );
+            return null;
+        }
+        catch ( ArtifactResolutionException e )
+        {
+            throw new SiteToolException( "ArtifactResolutionException: Unable to locate site descriptor: " + e.getMessage() );
+        }
+        catch ( IOException e )
+        {
+            throw new SiteToolException( "IOException: Unable to locate site descriptor: " + e.getMessage() );
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Private methods
+    // ----------------------------------------------------------------------
+
+    private File resolveSiteDescriptor( MavenProject project, ArtifactRepository localRepository, List repositories, Locale locale )
+        throws IOException, ArtifactResolutionException, ArtifactNotFoundException
+    {
+        File result;
+
+        // TODO: this is a bit crude - proper type, or proper handling as metadata rather than an artifact in 2.1?
+        Artifact artifact = artifactFactory.createArtifactWithClassifier( project.getGroupId(),
+                                                                          project.getArtifactId(),
+                                                                          project.getVersion(), "xml", "site_"
+                                                                              + locale.getLanguage() );
+
+        boolean found = false;
+        try
+        {
+            artifactResolver.resolve( artifact, repositories, localRepository );
+
+            result = artifact.getFile();
+
+            // we use zero length files to avoid re-resolution (see below)
+            if ( result.length() > 0 )
+            {
+                found = true;
+            }
+            else
+            {
+                getLogger().debug( "Skipped locale's site descriptor" );
+            }
+        }
+        catch ( ArtifactNotFoundException e )
+        {
+            getLogger().debug( "Unable to locate locale's site descriptor: " + e );
+
+            // we can afford to write an empty descriptor here as we don't expect it to turn up later in the remote
+            // repository, because the parent was already released (and snapshots are updated automatically if changed)
+            result = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
+            result.getParentFile().mkdirs();
+            result.createNewFile();
+        }
+
+        if ( !found )
+        {
+            artifact = artifactFactory.createArtifactWithClassifier( project.getGroupId(), project.getArtifactId(),
+                                                                     project.getVersion(), "xml", "site" );
+            try
+            {
+                artifactResolver.resolve( artifact, repositories, localRepository );
+            }
+            catch ( ArtifactNotFoundException e )
+            {
+                // see above regarding this zero length file
+                result = new File( localRepository.getBasedir(), localRepository.pathOf( artifact ) );
+                result.getParentFile().mkdirs();
+                result.createNewFile();
+
+                throw e;
+            }
+
+            result = artifact.getFile();
+
+            // we use zero length files to avoid re-resolution (see below)
+            if ( result.length() == 0 )
+            {
+                getLogger().debug( "Skipped remote site descriptor check" );
+                result = null;
+            }
+        }
+
+        return result;
     }
 }

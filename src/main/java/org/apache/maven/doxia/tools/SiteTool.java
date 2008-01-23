@@ -19,12 +19,15 @@ package org.apache.maven.doxia.tools;
  * under the License.
  */
 
+import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.doxia.site.decoration.DecorationModel;
 import org.apache.maven.doxia.site.decoration.Skin;
+import org.apache.maven.project.MavenProject;
 
 /**
  * This tool contains some utilities methods to play with Doxia <code>DecorationModel</code>.
@@ -76,4 +79,24 @@ public interface SiteTool
      * @return a relative path from <code>from</code> to <code>to</code>.
      */
     String getRelativePath( String to, String from );
+
+    /**
+     * @param siteDirectory containing the <code>site.xml</code> file. If null, using by default "${basedir}/src/site".
+     * @param basedir not null.
+     * @param locale the locale wanted for the site descriptor. If not null, searching for <code>site_<i>localeLanguage</i>.xml</code>
+     * @return the site descriptor relative file, i.e. <code>src/site/site.xml</code>, depending parameters value.
+     */
+    File getSiteDescriptorFromBasedir( File siteDirectory, File basedir, Locale locale );
+
+    /**
+     * @param project Maven project not null
+     * @param localRepository not null
+     * @param repositories not null
+     * @param locale the locale wanted for the site descriptor. If not null, searching for <code>site_<i>localeLanguage</i>.xml</code>
+     * @return the site descriptor into the local repository after download of it from repositories or null if not found in repositories.
+     * @throws SiteToolException if any
+     */
+    File getSiteDescriptorFromRepository( MavenProject project, ArtifactRepository localRepository,
+                                          List repositories, Locale locale )
+        throws SiteToolException;
 }

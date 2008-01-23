@@ -20,6 +20,7 @@ package org.apache.maven.doxia.tools;
  */
 
 import java.io.File;
+import java.util.Locale;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
@@ -74,6 +75,15 @@ public class SiteToolTest
     /**
      * @throws Exception
      */
+    protected File getLocalRepoDir()
+        throws Exception
+    {
+        return new File( getLocalRepo().getBasedir() );
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testGetDefaultSkinArtifact()
         throws Exception
     {
@@ -121,5 +131,46 @@ public class SiteToolTest
         to = "http://maven.apache.org/plugins/maven-site-plugin/";
         from = "http://maven.apache.org";
         assertEquals( tool.getRelativePath( to, from ), "plugins" + File.separator + "maven-site-plugin" );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetSiteDescriptorFromBasedir()
+        throws Exception
+    {
+        SiteTool tool = (SiteTool) lookup( SiteTool.ROLE );
+        assertNotNull( tool );
+
+        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub();
+        assertEquals( tool.getSiteDescriptorFromBasedir( null, project.getBasedir(), null ).toString(), "src"
+            + File.separator + "site" + File.separator + "site.xml" );
+        assertEquals( tool.getSiteDescriptorFromBasedir( null, project.getBasedir(), Locale.ENGLISH ).toString(), "src"
+            + File.separator + "site" + File.separator + "site.xml" );
+        File siteDir = new File( project.getBasedir(), "src/blabla" );
+        assertEquals( tool.getSiteDescriptorFromBasedir( siteDir, project.getBasedir(), null ).toString(), "src"
+            + File.separator + "blabla" + File.separator + "site.xml" );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetSiteDescriptorFromRepository()
+        throws Exception
+    {
+        SiteTool tool = (SiteTool) lookup( SiteTool.ROLE );
+        assertNotNull( tool );
+
+        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub();
+        project.setGroupId( "org.apache.maven" );
+        project.setArtifactId( "maven-site" );
+        project.setVersion( "1.0" );
+        String result = getLocalRepoDir() + File.separator + "org" + File.separator + "apache" + File.separator
+            + "maven" + File.separator + "maven-site" + File.separator + "1.0" + File.separator
+            + "maven-site-1.0-site.xml";
+
+        assertEquals( tool.getSiteDescriptorFromRepository( project, getLocalRepo(),
+                                                            project.getRemoteArtifactRepositories(), Locale.ENGLISH )
+            .toString(), result );
     }
 }

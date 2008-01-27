@@ -21,10 +21,17 @@ package org.apache.maven.doxia.tools;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.maven.artifact.Artifact;
@@ -35,12 +42,32 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
+import org.apache.maven.doxia.site.decoration.Banner;
 import org.apache.maven.doxia.site.decoration.DecorationModel;
+import org.apache.maven.doxia.site.decoration.Menu;
+import org.apache.maven.doxia.site.decoration.MenuItem;
 import org.apache.maven.doxia.site.decoration.Skin;
+import org.apache.maven.doxia.site.decoration.inheritance.DecorationModelInheritanceAssembler;
+import org.apache.maven.doxia.site.decoration.io.xpp3.DecorationXpp3Reader;
+import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.project.ProjectBuildingException;
+import org.apache.maven.reporting.MavenReport;
+import org.codehaus.plexus.i18n.I18N;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.ReaderFactory;
+import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.interpolation.EnvarBasedValueSource;
+import org.codehaus.plexus.util.interpolation.MapBasedValueSource;
+import org.codehaus.plexus.util.interpolation.ObjectBasedValueSource;
+import org.codehaus.plexus.util.interpolation.RegexBasedInterpolator;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 /**
+ * Default implementation of the site tool.
+ *
  * @author <a href="mailto:vincent.siveton@gmail.com">Vincent Siveton</a>
  * @version $Id$
  *
@@ -67,6 +94,27 @@ public class DefaultSiteTool
      * @plexus.requirement
      */
     private ArtifactFactory artifactFactory;
+
+    /**
+     * Internationalization.
+     *
+     * @plexus.requirement
+     */
+    protected I18N i18n;
+
+    /**
+     * The component for assembling inheritance.
+     *
+     * @plexus.requirement
+     */
+    protected DecorationModelInheritanceAssembler assembler;
+
+    /**
+     * Project builder.
+     *
+     * @plexus.requirement
+     */
+    protected MavenProjectBuilder mavenProjectBuilder;
 
     // ----------------------------------------------------------------------
     // Public methods
@@ -352,6 +400,7 @@ public class DefaultSiteTool
 
         if ( siteDirectory == null )
         {
+            // TODO need to be more dynamic
             siteDirectory = new File( basedir, "src/site" );
         }
         if ( locale == null )
@@ -371,7 +420,8 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public File getSiteDescriptorFromRepository( MavenProject project, ArtifactRepository localRepository, List remoteArtifactRepositories, Locale locale )
+    public File getSiteDescriptorFromRepository( MavenProject project, ArtifactRepository localRepository,
+                                                 List remoteArtifactRepositories, Locale locale )
         throws SiteToolException
     {
         if ( project == null )
@@ -403,7 +453,8 @@ public class DefaultSiteTool
         }
         catch ( ArtifactResolutionException e )
         {
-            throw new SiteToolException( "ArtifactResolutionException: Unable to locate site descriptor: " + e.getMessage() );
+            throw new SiteToolException( "ArtifactResolutionException: Unable to locate site descriptor: "
+                + e.getMessage() );
         }
         catch ( IOException e )
         {
@@ -411,11 +462,460 @@ public class DefaultSiteTool
         }
     }
 
+    /** {@inheritDoc} */
+    public DecorationModel getDecorationModel( MavenProject project, List reactorProjects,
+                                               ArtifactRepository localRepository, List repositories,
+                                               File siteDirectory, Locale locale, String inputEncoding,
+                                               String outputEncoding )
+        throws SiteToolException
+    {
+        if ( project == null )
+        {
+            throw new IllegalArgumentException( "project could not be null" );
+        }
+        if ( reactorProjects == null )
+        {
+            throw new IllegalArgumentException( "reactorProjects could not be null" );
+        }
+        if ( localRepository == null )
+        {
+            throw new IllegalArgumentException( "localRepository could not be null" );
+        }
+        if ( repositories == null )
+        {
+            throw new IllegalArgumentException( "repositories could not be null" );
+        }
+        if ( inputEncoding == null )
+        {
+            throw new IllegalArgumentException( "inputEncoding could not be null" );
+        }
+        if ( outputEncoding == null )
+        {
+            throw new IllegalArgumentException( "outputEncoding could not be null" );
+        }
+
+        if ( siteDirectory == null )
+        {
+            // TODO need to be more dynamic
+            siteDirectory = new File( project.getBasedir(), "src/site" );
+        }
+        if ( locale == null )
+        {
+            locale = Locale.getDefault();
+        }
+
+        Map props = new HashMap();
+
+        // This is to support the deprecated ${reports} and ${modules} tags.
+        props.put( "reports", "<menu ref=\"reports\"/>\n" );
+        props.put( "modules", "<menu ref=\"modules\"/>\n" );
+
+        DecorationModel decorationModel = getDecorationModel( project, reactorProjects, localRepository, repositories,
+                                                              siteDirectory, locale, props, inputEncoding,
+                                                              outputEncoding );
+
+        if ( decorationModel == null )
+        {
+            String siteDescriptorContent;
+
+            try
+            {
+                // Note the default is not a super class - it is used when nothing else is found
+                siteDescriptorContent = IOUtil.toString( getClass().getResourceAsStream( "/default-site.xml" ) );
+            }
+            catch ( IOException e )
+            {
+                throw new SiteToolException( "Error reading default site descriptor: " + e.getMessage(), e );
+            }
+
+            siteDescriptorContent = getInterpolatedSiteDescriptorContent( props, project, siteDescriptorContent,
+                                                                          inputEncoding, outputEncoding );
+
+            decorationModel = readDecorationModel( siteDescriptorContent );
+        }
+        populateModules( project, reactorProjects, localRepository, decorationModel, locale, true );
+
+        if ( decorationModel.getBannerLeft() == null )
+        {
+            // extra default to set
+            Banner banner = new Banner();
+            banner.setName( project.getName() );
+            decorationModel.setBannerLeft( banner );
+        }
+
+        if ( project.getUrl() != null )
+        {
+            assembler.resolvePaths( decorationModel, project.getUrl() );
+        }
+        else
+        {
+            getLogger().warn( "No URL defined for the project - decoration links will not be resolved" );
+        }
+
+        return decorationModel;
+    }
+
+    /** {@inheritDoc} */
+    public void populateReportsMenu( DecorationModel decorationModel, Locale locale, Map categories )
+    {
+        if ( decorationModel == null )
+        {
+            throw new IllegalArgumentException( "decorationModel could not be null" );
+        }
+        if ( categories == null )
+        {
+            throw new IllegalArgumentException( "categories could not be null" );
+        }
+
+        if ( locale == null )
+        {
+            locale = Locale.getDefault();
+        }
+
+        Menu menu = decorationModel.getMenuRef( "reports" );
+
+        if ( menu != null )
+        {
+            if ( menu.getName() == null )
+            {
+                menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.projectdocumentation" ) );
+            }
+
+            boolean found = false;
+            if ( menu.getItems().isEmpty() )
+            {
+                List categoryReports = (List) categories.get( MavenReport.CATEGORY_PROJECT_INFORMATION );
+                if ( !isEmptyList( categoryReports ) )
+                {
+                    MenuItem item = createCategoryMenu( i18n.getString( "site-tool", locale,
+                                                                        "decorationModel.menu.projectinformation" ),
+                                                        "/project-info.html", categoryReports, locale );
+                    menu.getItems().add( item );
+                    found = true;
+                }
+
+                categoryReports = (List) categories.get( MavenReport.CATEGORY_PROJECT_REPORTS );
+                if ( !isEmptyList( categoryReports ) )
+                {
+                    MenuItem item = createCategoryMenu( i18n.getString( "site-tool", locale,
+                                                                        "decorationModel.menu.projectreports" ),
+                                                        "/project-reports.html", categoryReports, locale );
+                    menu.getItems().add( item );
+                    found = true;
+                }
+            }
+            if ( !found )
+            {
+                decorationModel.removeMenuRef( "reports" );
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    public String getInterpolatedSiteDescriptorContent( Map props, MavenProject aProject, String siteDescriptorContent,
+                                                        String inputEncoding, String outputEncoding )
+        throws SiteToolException
+    {
+        if ( props == null )
+        {
+            throw new IllegalArgumentException( "props could not be null" );
+        }
+        if ( aProject == null )
+        {
+            throw new IllegalArgumentException( "aProject could not be null" );
+        }
+        if ( siteDescriptorContent == null )
+        {
+            throw new IllegalArgumentException( "siteDescriptorContent could not be null" );
+        }
+        if ( inputEncoding == null )
+        {
+            throw new IllegalArgumentException( "inputEncoding could not be null" );
+        }
+        if ( outputEncoding == null )
+        {
+            throw new IllegalArgumentException( "outputEncoding could not be null" );
+        }
+
+        // MSITE-201: The ObjectBasedValueSource( aProject ) below will match
+        // ${modules} to aProject.getModules(), so we need to interpolate that
+        // first.
+
+        Map modulesProps = new HashMap();
+
+        // Legacy for the old ${modules} syntax
+        modulesProps.put( "modules", "<menu ref=\"modules\"/>" );
+
+        siteDescriptorContent = StringUtils.interpolate( siteDescriptorContent, modulesProps );
+
+        RegexBasedInterpolator interpolator = new RegexBasedInterpolator();
+
+        try
+        {
+            interpolator.addValueSource( new EnvarBasedValueSource() );
+        }
+        catch ( IOException e )
+        {
+            // Prefer logging?
+            throw new SiteToolException( "IOException: cannot interpolate environment properties: " + e.getMessage(), e );
+        }
+
+        interpolator.addValueSource( new ObjectBasedValueSource( aProject ) );
+
+        interpolator.addValueSource( new MapBasedValueSource( aProject.getProperties() ) );
+
+        siteDescriptorContent = interpolator.interpolate( siteDescriptorContent, "project" );
+
+        props.put( "inputEncoding", inputEncoding );
+
+        props.put( "outputEncoding", outputEncoding );
+
+        // Legacy for the old ${parentProject} syntax
+        props.put( "parentProject", "<menu ref=\"parent\"/>" );
+
+        // Legacy for the old ${reports} syntax
+        props.put( "reports", "<menu ref=\"reports\"/>" );
+
+        return StringUtils.interpolate( siteDescriptorContent, props );
+    }
+
+    /** {@inheritDoc} */
+    public MavenProject getParentProject( MavenProject aProject, List reactorProjects,
+                                          ArtifactRepository localRepository )
+    {
+        if ( aProject == null )
+        {
+            throw new IllegalArgumentException( "aProject could not be null" );
+        }
+        if ( reactorProjects == null )
+        {
+            throw new IllegalArgumentException( "reactorProjects could not be null" );
+        }
+        if ( localRepository == null )
+        {
+            throw new IllegalArgumentException( "localRepository could not be null" );
+        }
+
+        MavenProject parentProject = null;
+
+        MavenProject origParent = aProject.getParent();
+        if ( origParent != null )
+        {
+            Iterator reactorItr = reactorProjects.iterator();
+
+            while ( reactorItr.hasNext() )
+            {
+                MavenProject reactorProject = (MavenProject) reactorItr.next();
+
+                if ( reactorProject.getGroupId().equals( origParent.getGroupId() )
+                    && reactorProject.getArtifactId().equals( origParent.getArtifactId() )
+                    && reactorProject.getVersion().equals( origParent.getVersion() ) )
+                {
+                    parentProject = reactorProject;
+                    break;
+                }
+            }
+
+            if ( parentProject == null && aProject.getBasedir() != null )
+            {
+                try
+                {
+                    MavenProject mavenProject = mavenProjectBuilder.build( new File( aProject.getBasedir(), aProject
+                        .getModel().getParent().getRelativePath() ), localRepository, null );
+                    if ( mavenProject.getGroupId().equals( origParent.getGroupId() )
+                        && mavenProject.getArtifactId().equals( origParent.getArtifactId() )
+                        && mavenProject.getVersion().equals( origParent.getVersion() ) )
+                    {
+                        parentProject = mavenProject;
+                    }
+                }
+                catch ( ProjectBuildingException e )
+                {
+                    getLogger().info( "Unable to load parent project from a relative path: " + e.getMessage() );
+                }
+            }
+
+            if ( parentProject == null )
+            {
+                try
+                {
+                    parentProject = mavenProjectBuilder.buildFromRepository( aProject.getParentArtifact(), aProject
+                        .getRemoteArtifactRepositories(), localRepository );
+                    getLogger().info( "Parent project loaded from repository." );
+                }
+                catch ( ProjectBuildingException e )
+                {
+                    getLogger().warn( "Unable to load parent project from repository: " + e.getMessage() );
+                }
+            }
+
+            if ( parentProject == null )
+            {
+                // fallback to uninterpolated value
+
+                parentProject = origParent;
+            }
+        }
+        return parentProject;
+    }
+
+    /** {@inheritDoc} */
+    public void populateProjectParentMenu( DecorationModel decorationModel, Locale locale, MavenProject project,
+                                           MavenProject parentProject, boolean keepInheritedRefs )
+    {
+        if ( decorationModel == null )
+        {
+            throw new IllegalArgumentException( "decorationModel could not be null" );
+        }
+        if ( project == null )
+        {
+            throw new IllegalArgumentException( "project could not be null" );
+        }
+        if ( parentProject == null )
+        {
+            throw new IllegalArgumentException( "parentProject could not be null" );
+        }
+
+        if ( locale == null )
+        {
+            locale = Locale.getDefault();
+        }
+
+        Menu menu = decorationModel.getMenuRef( "parent" );
+
+        if ( menu != null )
+        {
+            if ( !keepInheritedRefs || !menu.isInheritAsRef() )
+            {
+                String parentUrl = parentProject.getUrl();
+
+                if ( parentUrl != null )
+                {
+                    if ( parentUrl.endsWith( "/" ) )
+                    {
+                        parentUrl += "index.html";
+                    }
+                    else
+                    {
+                        parentUrl += "/index.html";
+                    }
+
+                    parentUrl = getRelativePath( parentUrl, project.getUrl() );
+
+                    if ( menu.getName() == null )
+                    {
+                        menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.parentproject" ) );
+                    }
+
+                    MenuItem item = new MenuItem();
+                    item.setName( parentProject.getName() );
+                    item.setHref( parentUrl );
+                    menu.addItem( item );
+                }
+                else
+                {
+                    decorationModel.removeMenuRef( "parent" );
+                }
+            }
+        }
+    }
+
+    /** {@inheritDoc} */
+    public void populateModules( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
+                                 DecorationModel decorationModel, Locale locale, boolean keepInheritedRefs )
+        throws SiteToolException
+    {
+        if ( project == null )
+        {
+            throw new IllegalArgumentException( "project could not be null" );
+        }
+        if ( reactorProjects == null )
+        {
+            throw new IllegalArgumentException( "reactorProjects could not be null" );
+        }
+        if ( localRepository == null )
+        {
+            throw new IllegalArgumentException( "localRepository could not be null" );
+        }
+        if ( decorationModel == null )
+        {
+            throw new IllegalArgumentException( "decorationModel could not be null" );
+        }
+
+        if ( locale == null )
+        {
+            locale = Locale.getDefault();
+        }
+
+        Menu menu = decorationModel.getMenuRef( "modules" );
+
+        if ( menu != null )
+        {
+            if ( !keepInheritedRefs || !menu.isInheritAsRef() )
+            {
+                // we require child modules and reactors to process module menu
+                if ( project.getModules().size() > 0 )
+                {
+                    List projects = reactorProjects;
+
+                    if ( menu.getName() == null )
+                    {
+                        menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.projectmodules" ) );
+                    }
+
+                    if ( projects.size() == 1 )
+                    {
+                        getLogger().debug( "Attempting to source module information from local filesystem" );
+
+                        // Not running reactor - search for the projects manually
+                        List models = new ArrayList( project.getModules().size() );
+                        for ( Iterator i = project.getModules().iterator(); i.hasNext(); )
+                        {
+                            String module = (String) i.next();
+                            Model model;
+                            File f = new File( project.getBasedir(), module + "/pom.xml" );
+                            if ( f.exists() )
+                            {
+                                try
+                                {
+                                    model = mavenProjectBuilder.build( f, localRepository, null ).getModel();
+                                }
+                                catch ( ProjectBuildingException e )
+                                {
+                                    throw new SiteToolException( "Unable to read local module-POM", e );
+                                }
+                            }
+                            else
+                            {
+                                getLogger().warn( "No filesystem module-POM available" );
+
+                                model = new Model();
+                                model.setName( module );
+                                model.setUrl( module );
+                            }
+                            models.add( model );
+                        }
+                        populateModulesMenuItemsFromModels( project, models, menu );
+                    }
+                    else
+                    {
+                        populateModulesMenuItemsFromReactorProjects( project, reactorProjects, menu );
+                    }
+                }
+                else
+                {
+                    decorationModel.removeMenuRef( "modules" );
+                }
+            }
+        }
+    }
+
     // ----------------------------------------------------------------------
     // Private methods
     // ----------------------------------------------------------------------
 
-    private File resolveSiteDescriptor( MavenProject project, ArtifactRepository localRepository, List repositories, Locale locale )
+    private File resolveSiteDescriptor( MavenProject project, ArtifactRepository localRepository, List repositories,
+                                        Locale locale )
         throws IOException, ArtifactResolutionException, ArtifactNotFoundException
     {
         File result;
@@ -483,5 +983,207 @@ public class DefaultSiteTool
         }
 
         return result;
+    }
+
+    private DecorationModel getDecorationModel( MavenProject project, List reactorProjects,
+                                                ArtifactRepository localRepository, List repositories,
+                                                File siteDirectory, Locale locale, Map origProps, String inputEncoding,
+                                                String outputEncoding )
+        throws SiteToolException
+    {
+        Map props = new HashMap( origProps );
+
+        File siteDescriptor;
+        if ( project.getBasedir() == null )
+        {
+            // POM is in the repository, look there for site descriptor
+            try
+            {
+                siteDescriptor = getSiteDescriptorFromRepository( project, localRepository, repositories, locale );
+            }
+            catch ( SiteToolException e )
+            {
+                throw new SiteToolException( "The site descriptor cannot be resolved from the repository: "
+                    + e.getMessage(), e );
+            }
+        }
+        else
+        {
+            siteDescriptor = getSiteDescriptorFromBasedir( siteDirectory, project.getBasedir(), locale );
+        }
+
+        String siteDescriptorContent = null;
+        try
+        {
+            if ( siteDescriptor != null && siteDescriptor.exists() )
+            {
+                getLogger().debug( "Reading site descriptor from " + siteDescriptor );
+                Reader siteDescriptorReader = ReaderFactory.newXmlReader( siteDescriptor );
+                siteDescriptorContent = IOUtil.toString( siteDescriptorReader );
+            }
+        }
+        catch ( IOException e )
+        {
+            throw new SiteToolException( "The site descriptor cannot be read!", e );
+        }
+
+        DecorationModel decoration = null;
+        if ( siteDescriptorContent != null )
+        {
+            siteDescriptorContent = getInterpolatedSiteDescriptorContent( props, project, siteDescriptorContent,
+                                                                          inputEncoding, outputEncoding );
+
+            decoration = readDecorationModel( siteDescriptorContent );
+        }
+
+        MavenProject parentProject = getParentProject( project, reactorProjects, localRepository );
+        if ( parentProject != null )
+        {
+            getLogger().debug( "Parent project loaded ..." );
+            DecorationModel parent = getDecorationModel( parentProject, reactorProjects, localRepository, repositories,
+                                                         siteDirectory, locale, props, inputEncoding, outputEncoding );
+
+            if ( decoration == null )
+            {
+                decoration = parent;
+            }
+            else
+            {
+                assembler.assembleModelInheritance( project.getName(), decoration, parent, project.getUrl(),
+                                                    parentProject.getUrl() == null ? project.getUrl() : parentProject
+                                                        .getUrl() );
+            }
+            if ( decoration != null )
+            {
+                populateProjectParentMenu( decoration, locale, project, parentProject, true );
+            }
+        }
+        if ( decoration != null && decoration.getSkin() != null )
+        {
+            getLogger().debug( "Skin used: " + decoration.getSkin() );
+        }
+
+        return decoration;
+    }
+
+    private DecorationModel readDecorationModel( String siteDescriptorContent )
+        throws SiteToolException
+    {
+        DecorationModel decoration;
+        try
+        {
+            decoration = new DecorationXpp3Reader().read( new StringReader( siteDescriptorContent ) );
+        }
+        catch ( XmlPullParserException e )
+        {
+            throw new SiteToolException( "Error parsing site descriptor", e );
+        }
+        catch ( IOException e )
+        {
+            throw new SiteToolException( "Error reading site descriptor", e );
+        }
+        return decoration;
+    }
+
+    private void populateModulesMenuItemsFromReactorProjects( MavenProject project, List reactorProjects, Menu menu )
+    {
+        if ( reactorProjects != null && reactorProjects.size() > 1 )
+        {
+            Iterator reactorItr = reactorProjects.iterator();
+
+            while ( reactorItr.hasNext() )
+            {
+                MavenProject reactorProject = (MavenProject) reactorItr.next();
+
+                if ( reactorProject != null && reactorProject.getParent() != null
+                    && project.getArtifactId().equals( reactorProject.getParent().getArtifactId() ) )
+                {
+                    String reactorUrl = reactorProject.getUrl();
+                    String name = reactorProject.getName();
+
+                    appendMenuItem( project, menu, name, reactorUrl, reactorProject.getArtifactId() );
+                }
+            }
+        }
+    }
+
+    private void populateModulesMenuItemsFromModels( MavenProject project, List models, Menu menu )
+    {
+        if ( models != null && models.size() > 1 )
+        {
+            Iterator reactorItr = models.iterator();
+
+            while ( reactorItr.hasNext() )
+            {
+                Model model = (Model) reactorItr.next();
+
+                String reactorUrl = model.getUrl();
+                String name = model.getName();
+
+                appendMenuItem( project, menu, name, reactorUrl, model.getArtifactId() );
+            }
+        }
+    }
+
+    private void appendMenuItem( MavenProject project, Menu menu, String name, String href, String defaultHref )
+    {
+        String selectedHref = href;
+
+        if ( selectedHref == null )
+        {
+            selectedHref = defaultHref;
+        }
+
+        MenuItem item = new MenuItem();
+        item.setName( name );
+
+        String baseUrl = project.getUrl();
+        if ( baseUrl != null )
+        {
+            selectedHref = getRelativePath( selectedHref, baseUrl );
+        }
+
+        if ( selectedHref.endsWith( "/" ) )
+        {
+            item.setHref( selectedHref + "index.html" );
+        }
+        else
+        {
+            item.setHref( selectedHref + "/index.html" );
+        }
+        menu.addItem( item );
+    }
+
+    private MenuItem createCategoryMenu( String name, String href, List categoryReports, Locale locale )
+    {
+        MenuItem item = new MenuItem();
+        item.setName( name );
+        item.setCollapse( true );
+        item.setHref( href );
+
+        Collections.sort( categoryReports, new ReportComparator( locale ) );
+
+        for ( Iterator k = categoryReports.iterator(); k.hasNext(); )
+        {
+            MavenReport report = (MavenReport) k.next();
+
+            MenuItem subitem = new MenuItem();
+            subitem.setName( report.getName( locale ) );
+            subitem.setHref( report.getOutputName() + ".html" );
+            item.getItems().add( subitem );
+        }
+
+        return item;
+    }
+
+    /**
+     * Convenience method.
+     *
+     * @param list
+     * @return true if the list is <code>null</code> or <code>null</code>
+     */
+    private static boolean isEmptyList( List list )
+    {
+        return list == null || list.isEmpty();
     }
 }

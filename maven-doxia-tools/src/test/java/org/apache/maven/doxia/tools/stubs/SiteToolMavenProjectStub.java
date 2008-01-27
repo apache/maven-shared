@@ -30,7 +30,6 @@ import org.apache.maven.artifact.repository.DefaultArtifactRepository;
 import org.apache.maven.artifact.repository.layout.DefaultRepositoryLayout;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.Reporting;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.plugin.testing.stubs.MavenProjectStub;
 
@@ -43,7 +42,7 @@ public class SiteToolMavenProjectStub
 {
     private Build build;
 
-    private Reporting reporting;
+    private File basedir;
 
     public SiteToolMavenProjectStub()
     {
@@ -60,6 +59,8 @@ public class SiteToolMavenProjectStub
             throw new RuntimeException( e );
         }
 
+        basedir = new File( super.getBasedir() + "/src/test/resources/unit/site-tool-test" );
+
         setGroupId( model.getGroupId() );
         setArtifactId( model.getArtifactId() );
         setVersion( model.getVersion() );
@@ -67,14 +68,13 @@ public class SiteToolMavenProjectStub
         setUrl( model.getUrl() );
         setPackaging( model.getPackaging() );
 
-        Build build = new Build();
+        build = new Build();
         build.setFinalName( model.getArtifactId() );
         build.setDirectory( super.getBasedir() + "/target/test/unit/site-tool-test/target" );
         build.setSourceDirectory( getBasedir() + "/src/main/java" );
         build.setOutputDirectory( super.getBasedir() + "/target/test/unit/site-tool-test/target/classes" );
         build.setTestSourceDirectory( getBasedir() + "/src/test/java" );
         build.setTestOutputDirectory( super.getBasedir() + "/target/test/unit/site-tool-test/target/test-classes" );
-        setBuild( build );
 
         List compileSourceRoots = new ArrayList();
         compileSourceRoots.add( getBasedir() + "/src/main/java" );
@@ -83,9 +83,6 @@ public class SiteToolMavenProjectStub
         List testCompileSourceRoots = new ArrayList();
         testCompileSourceRoots.add( getBasedir() + "/src/test/java" );
         setTestCompileSourceRoots( testCompileSourceRoots );
-
-        reporting = new Reporting();
-        reporting.setOutputDirectory( super.getBasedir() + "/target/test/unit/site-tool-test/target/site" );
     }
 
     /** {@inheritDoc} */
@@ -103,7 +100,12 @@ public class SiteToolMavenProjectStub
     /** {@inheritDoc} */
     public File getBasedir()
     {
-        return new File( super.getBasedir() + "/src/test/resources/unit/site-tool-test" );
+        return basedir;
+    }
+
+    public void setBasedir( File basedir )
+    {
+        this.basedir = basedir;
     }
 
     /** {@inheritDoc} */
@@ -113,11 +115,5 @@ public class SiteToolMavenProjectStub
                                                                        new DefaultRepositoryLayout() );
 
         return Collections.singletonList( repository );
-    }
-
-    /** {@inheritDoc} */
-    public Reporting getReporting()
-    {
-        return this.reporting;
     }
 }

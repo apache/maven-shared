@@ -20,6 +20,8 @@ package org.apache.maven.doxia.tools;
  */
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -172,5 +174,36 @@ public class SiteToolTest
         assertEquals( tool.getSiteDescriptorFromRepository( project, getLocalRepo(),
                                                             project.getRemoteArtifactRepositories(), Locale.ENGLISH )
             .toString(), result );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetDecorationModel()
+        throws Exception
+    {
+        SiteTool tool = (SiteTool) lookup( SiteTool.ROLE );
+        assertNotNull( tool );
+
+        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub();
+        project.setGroupId( "org.apache.maven" );
+        project.setArtifactId( "maven-site" );
+        project.setVersion( "1.0" );
+        File siteDirectory = new File( project.getBasedir(), "src/site" );
+        List reactorProjects = new ArrayList();
+
+        project.setBasedir( null ); // get it from repo
+
+        DecorationModel model = tool.getDecorationModel( project, reactorProjects, getLocalRepo(), project
+            .getRemoteArtifactRepositories(), siteDirectory, Locale.getDefault(), "ISO-8859-1", "ISO-8859-1" );
+        assertNotNull( model );
+        assertNotNull( model.getBannerLeft() );
+        assertEquals( "Maven", model.getBannerLeft().getName() );
+        assertEquals( "images/apache-maven-project-2.png", model.getBannerLeft().getSrc() );
+        assertEquals( "http://maven.apache.org/", model.getBannerLeft().getHref() );
+        assertNotNull( model.getBannerRight() );
+        assertNull( model.getBannerRight().getName() );
+        assertEquals( "images/maven-logo-2.gif", model.getBannerRight().getSrc() );
+        assertNull( model.getBannerRight().getHref() );
     }
 }

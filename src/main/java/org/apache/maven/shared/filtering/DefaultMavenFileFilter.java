@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -35,7 +36,8 @@ import org.codehaus.plexus.util.InterpolationFilterReader;
  * @since 22 janv. 08
  * @version $Id$
  * 
- * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter" role-hint="default"
+ * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter" 
+ *                   role-hint="default"
  */
 public class DefaultMavenFileFilter
     implements MavenFileFilter
@@ -82,17 +84,18 @@ public class DefaultMavenFileFilter
     /** 
      * @see org.apache.maven.shared.filtering.MavenFileFilter#getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List)
      */
-    public List getDefaultFilterWrappers( final MavenProject mavenProject, List filters, final boolean escapedBackslashesInFilePath )
+    public List getDefaultFilterWrappers( final MavenProject mavenProject, List filters,
+                                          final boolean escapedBackslashesInFilePath )
         throws MavenFilteringException
     {
-        
+
         final Properties filterProperties = new Properties();
 
         // System properties
         filterProperties.putAll( System.getProperties() );
 
         // Project properties
-        filterProperties.putAll( mavenProject.getProperties() );
+        filterProperties.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject.getProperties() );
 
         // Take a copy of filterProperties to ensure that evaluated filterTokens are not propagated
         // to subsequent filter files. NB this replicates current behaviour and seems to make sense.
@@ -116,21 +119,25 @@ public class DefaultMavenFileFilter
                 }
             }
         }
-        
-        List defaultFilterWrappers = new ArrayList(3);
-        
+
+        List defaultFilterWrappers = new ArrayList( 3 );
+
         // support ${token}
-        FileUtils.FilterWrapper one = new FileUtils.FilterWrapper() {
-            public Reader getReader(Reader reader) {
-                return new InterpolationFilterReader(reader, filterProperties, "${", "}");
+        FileUtils.FilterWrapper one = new FileUtils.FilterWrapper()
+        {
+            public Reader getReader( Reader reader )
+            {
+                return new InterpolationFilterReader( reader, filterProperties, "${", "}" );
             }
         };
         defaultFilterWrappers.add( one );
-        
+
         // support @token@
-        FileUtils.FilterWrapper second = new FileUtils.FilterWrapper() {
-            public Reader getReader(Reader reader) {
-                return new InterpolationFilterReader(reader, filterProperties, "@", "@");
+        FileUtils.FilterWrapper second = new FileUtils.FilterWrapper()
+        {
+            public Reader getReader( Reader reader )
+            {
+                return new InterpolationFilterReader( reader, filterProperties, "@", "@" );
             }
         };
         defaultFilterWrappers.add( second );
@@ -145,8 +152,7 @@ public class DefaultMavenFileFilter
             }
         };
         defaultFilterWrappers.add( third );
-        
-        
+
         return defaultFilterWrappers;
     }
 

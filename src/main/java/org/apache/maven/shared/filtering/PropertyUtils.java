@@ -72,7 +72,7 @@ public final class PropertyUtils
         }
 
         final Properties combinedProps = new Properties();
-        combinedProps.putAll( baseProps );
+        combinedProps.putAll( baseProps == null ? new Properties() : baseProps );
         combinedProps.putAll( fileProps );
 
         // The algorithm iterates only over the fileProps which is all that is required to resolve
@@ -185,7 +185,7 @@ public final class PropertyUtils
             // else prefix the original string with the
             // resolved property ( so it can be parsed further )
             // taking recursion into account.
-            if ( nv == null || nv.equals( k ) )
+            if ( nv == null || nv.equals( k ) || k.equals( nk ) )
             {
                 ret += "${" + nk + "}";
             }

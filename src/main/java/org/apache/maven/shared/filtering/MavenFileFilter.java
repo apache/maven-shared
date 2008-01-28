@@ -43,18 +43,18 @@ public interface MavenFileFilter
      * @param filters {@link List} of properties file 
      * @throws IOException 
      */
-    public void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject,
-                          List/* File */filters, boolean escapedBackslashesInFilePath, String encoding )
+    public void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject, List filters,
+                          boolean escapedBackslashesInFilePath, String encoding )
         throws MavenFilteringException;
 
     /**
      * @param from
      * @param to
      * @param filtering
-     * @param filterWrappers
+     * @param filterWrappers {@link List} of FileUtils.FilterWrapper
      * @throws MavenFilteringException
      */
-    public void copyFile( File from, final File to, boolean filtering, List /*FileUtils.FilterWrapper*/filterWrappers, String encoding )
+    public void copyFile( File from, final File to, boolean filtering, List filterWrappers, String encoding )
         throws MavenFilteringException;
 
     /**
@@ -73,7 +73,6 @@ public interface MavenFileFilter
      * @return {@link List} of FileUtils.FilterWrapper 
      * 
      */
-    public List/*FileUtils.FilterWrapper*/getDefaultFilterWrappers( MavenProject mavenProject, List/* File */filters,
-                                                                     boolean escapedBackslashesInFilePath )
+    public List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath )
         throws MavenFilteringException;
 }

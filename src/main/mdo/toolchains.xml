@@ -32,7 +32,7 @@
         </default>
     </defaults>
     <classes>
-        <class rootElement="true" xml.tagName="toolchains">
+        <class rootElement="true" xml.tagName="toolchains" xsd.compositor="sequence">
             <name>PersistedToolchains</name>
             <description><![CDATA[
          The <code>&lt;project&gt;</code> element is the root of the descriptor.

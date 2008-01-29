@@ -22,14 +22,19 @@ package org.apache.maven.toolchain;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.toolchain.model.PersistedToolchains;
 import org.apache.maven.toolchain.model.ToolchainModel;
 import org.apache.maven.toolchain.model.io.xpp3.MavenToolchainsXpp3Reader;
@@ -40,7 +45,6 @@ import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-import org.codehaus.plexus.util.IOUtil;
 
 /**
  *
@@ -146,19 +150,38 @@ public class DefaultToolchainManager extends AbstractLogEnabled
         }
         return null;
     }
+
+    private MavenProject getCurrentProject(MavenSession session) {
+        //use reflection since MavenSession.getCurrentProject() is not part of 3.0.8
+        try 
+        {
+            Method meth = session.getClass().getMethod("getCurrentProject", new Class[0]);
+            return (MavenProject) meth.invoke(session, null);
+        } catch (Exception ex) 
+        {
+            //just ignore, we're running in pre- 3.0.9
+        }
+        return null;
+    }
     
     private Map retrieveContext( MavenSession session ) 
     {
-        if (session == null) {
-            return Collections.EMPTY_MAP;
+        if (session == null) 
+        {
+            return new HashMap();
         }
         PluginDescriptor desc = new PluginDescriptor();
         desc.setGroupId( PluginDescriptor.getDefaultPluginGroupId() );
         desc.setArtifactId( PluginDescriptor.getDefaultPluginArtifactId ("toolchains") );
-        
-        return  session.getPluginContext( desc, session.getCurrentProject() );
-        
+        MavenProject current = getCurrentProject(session);
+        if ( current != null ) 
+        {
+            return session.getPluginContext( desc, current );
+            
+        }
+        return new HashMap();
     }
+    
 
     public void storeToolchainToBuildContext( ToolchainPrivate toolchain,
                                               MavenSession session )
@@ -195,7 +218,16 @@ public class DefaultToolchainManager extends AbstractLogEnabled
             }
             finally
             {
-                IOUtil.close( in );
+                if (in != null) 
+                {
+                    try 
+                    {
+                        in.close();
+                    } 
+                    catch (IOException ex) 
+                    { }
+                }
+//                IOUtil.close( in );
             }
         }
         else

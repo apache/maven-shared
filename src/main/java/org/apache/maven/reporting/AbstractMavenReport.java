@@ -187,7 +187,17 @@ public abstract class AbstractMavenReport
     protected abstract Renderer getSiteRenderer();
 
     /**
-     * @return the output directory path.
+     * The output directory when the mojo is run directly from the command line. Implementors should use this method to
+     * return the value of a mojo parameter that the user may use to customize the output directory.
+     * <br/>
+     * <strong>Note:</strong>
+     * When the mojo is run as part of a site generation, Maven will set the effective output directory via
+     * {@link org.apache.maven.reporting.MavenReport#setReportOutputDirectory(java.io.File)}. In this case, the return
+     * value of this method is irrelevant. Therefore, developers should always call {@link #getReportOutputDirectory()}
+     * to get the effective output directory for the report. The later method will eventually fallback to this method
+     * if the mojo is not run as part of a site generation.
+     * 
+     * @return The path to the output directory as specified in the plugin configuration for this report.
      */
     protected abstract String getOutputDirectory();
 

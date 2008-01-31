@@ -89,7 +89,6 @@ public class ReflectionProperties
         catch ( Exception e ) 
         {
             //TODO: remove the try-catch block when ReflectionValueExtractor.evaluate() throws no more exceptions
-            e.printStackTrace();
         } 
         return value;
     }

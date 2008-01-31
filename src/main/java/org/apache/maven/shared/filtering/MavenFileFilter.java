@@ -62,8 +62,8 @@ public interface MavenFileFilter
      * Will return the default FileUtils.FilterWrappers
      * 
      * <ul>
-     *   <li>interpolation with token ${ } and values from System.getProperties, project.getProperties and from filters.</li>
-     *   <li>interpolation with token @ @ and values from System.getProperties, project.getProperties and from filters.</li>
+     *   <li>interpolation with token ${ } and values from System.getProperties, project.getProperties, from filters and project filters.</li>
+     *   <li>interpolation with token @ @ and values from System.getProperties, project.getProperties, from filters and project filters.</li>
      *   <li>interpolation with token ${ } and values from mavenProject interpolation.</li>
      * </ul>
      * 

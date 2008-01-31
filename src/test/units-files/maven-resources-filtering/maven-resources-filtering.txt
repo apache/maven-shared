@@ -20,3 +20,4 @@ version=${pom.version}
 groupId=${pom.groupId}
 foo=${foo}
 none=none filtered
+base=${pom.basedir}

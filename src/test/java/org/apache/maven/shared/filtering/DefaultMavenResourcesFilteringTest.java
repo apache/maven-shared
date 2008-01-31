@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.model.Resource;
-import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.util.FileUtils;
 
@@ -55,12 +54,12 @@ public class DefaultMavenResourcesFilteringTest
     public void testSimpleFiltering()
         throws Exception
     {
-        StubMavenProject mavenProject = new StubMavenProject();
+        StubMavenProject mavenProject = new StubMavenProject( new File( getBasedir() ) );
         mavenProject.setVersion( "1.0" );
         mavenProject.setGroupId( "org.apache" );
 
         Properties projectProperties = new Properties();
-        projectProperties.put( "foo", "bar" );        
+        projectProperties.put( "foo", "bar" );     
         mavenProject.setProperties( projectProperties );
         MavenResourcesFiltering mavenResourcesFiltering = (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class
             .getName() );
@@ -82,12 +81,15 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals("1.0", result.get( "version" ));
         assertEquals("org.apache", result.get( "groupId" ));
         assertEquals("bar", result.get( "foo" ));
+        // FIXME this can fail with a windows path
+        String base = result.getProperty( "base" );
+        assertEquals(getBasedir(), base);
     }
     
     public void testNoFiltering()
         throws Exception
     {
-        StubMavenProject mavenProject = new StubMavenProject();
+        StubMavenProject mavenProject = new StubMavenProject( new File( getBasedir() ) );
         mavenProject.setVersion( "1.0" );
         mavenProject.setGroupId( "org.apache" );
 

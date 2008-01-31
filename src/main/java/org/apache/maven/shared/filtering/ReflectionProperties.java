@@ -19,6 +19,7 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
+import java.io.File;
 import java.util.AbstractMap;
 import java.util.Set;
 
@@ -58,24 +59,37 @@ public class ReflectionProperties
         Object value = null;
         try 
         {
-            value = ReflectionValueExtractor.evaluate( "" + key , project );
+            value = ReflectionValueExtractor.evaluate( "" + key, project );
 
-            if ( escapedBackslashesInFilePath && value != null &&
-                "java.lang.String".equals( value.getClass().getName() ) )
+            if ( escapedBackslashesInFilePath && value != null
+                && "java.lang.String".equals( value.getClass().getName() ) )
             {
                 String val = (String) value;
 
                 // Check if it's a windows path
                 if ( val.indexOf( ":\\" ) == 1 )
                 {
-                    value = StringUtils.replace( (String)value, "\\", "\\\\" );
-                    value = StringUtils.replace( (String)value, ":", "\\:" );
+                    value = StringUtils.replace( (String) value, "\\", "\\\\" );
+                    value = StringUtils.replace( (String) value, ":", "\\:" );
                 }
             }
+            else if ( escapedBackslashesInFilePath && value != null
+                && File.class.getName().equals( value.getClass().getName() ) )
+            {
+                String val = ( (File) value ).getPath();
+                // Check if it's a windows path
+                if ( val.indexOf( ":\\" ) == 1 )
+                {
+                    value = StringUtils.replace( (String) val, "\\", "\\\\" );
+                    value = StringUtils.replace( (String) value, ":", "\\:" );
+                }
+            }
+            
         }
         catch ( Exception e ) 
         {
             //TODO: remove the try-catch block when ReflectionValueExtractor.evaluate() throws no more exceptions
+            e.printStackTrace();
         } 
         return value;
     }

@@ -42,7 +42,7 @@ import org.codehaus.plexus.util.InterpolationFilterReader;
 public class DefaultMavenFileFilter
     implements MavenFileFilter
 {
-
+    
     /** 
      * @see org.apache.maven.shared.filtering.MavenFileFilter#copyFile(java.io.File, java.io.File, boolean, org.apache.maven.project.MavenProject, java.util.List)
      */
@@ -119,7 +119,46 @@ public class DefaultMavenFileFilter
                 }
             }
         }
+        
+        List buildFilters = mavenProject.getFilters();
+        if (buildFilters != null)
+        {
+            for (Iterator iterator = buildFilters.iterator();iterator.hasNext();)
+            {
+                String filterFile = (String) iterator.next();
+                try
+                {
 
+                    Properties properties = PropertyUtils.loadPropertyFile( new File( filterFile ), baseProps );
+                    filterProperties.putAll( properties );
+                }
+                catch ( IOException e )
+                {
+                    throw new MavenFilteringException( "Error loading property file '" + filterFile + "'", e );
+                }
+            }
+        }        
+        
+        buildFilters = mavenProject.getBuild().getFilters();
+        if (buildFilters != null)
+        {
+            for (Iterator iterator = buildFilters.iterator();iterator.hasNext();)
+            {
+                String filterFile = (String) iterator.next();
+                try
+                {
+
+                    Properties properties = PropertyUtils.loadPropertyFile( new File( filterFile ), baseProps );
+                    filterProperties.putAll( properties );
+                }
+                catch ( IOException e )
+                {
+                    throw new MavenFilteringException( "Error loading property file '" + filterFile + "'", e );
+                }
+            }
+        }
+
+       
         List defaultFilterWrappers = new ArrayList( 3 );
 
         // support ${token}
@@ -151,6 +190,7 @@ public class DefaultMavenFileFilter
                 return new InterpolationFilterReader( reader, reflectionProperties, "${", "}" );
             }
         };
+        
         defaultFilterWrappers.add( third );
 
         return defaultFilterWrappers;

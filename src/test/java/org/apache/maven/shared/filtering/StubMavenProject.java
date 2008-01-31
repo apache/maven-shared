@@ -18,6 +18,7 @@
  */
 package org.apache.maven.shared.filtering;
 
+import java.io.File;
 import java.util.Properties;
 
 import org.apache.maven.project.MavenProject;
@@ -31,7 +32,14 @@ public class StubMavenProject
     extends MavenProject
 {
     private Properties properties;
+    
+    private File basedir;
 
+    protected StubMavenProject (File basedir)
+    {
+        this.basedir = basedir;
+    }
+    
     public Properties getProperties()
     {
         return this.properties;
@@ -40,6 +48,11 @@ public class StubMavenProject
     public void setProperties( Properties properties )
     {
         this.properties = properties;
+    }
+
+    public File getBasedir()
+    {
+        return basedir;
     }
 
 

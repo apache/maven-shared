@@ -26,7 +26,7 @@ import org.codehaus.plexus.PlexusTestCase;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 4 févr. 08
+ * @since 4 feb 08
  * @version $Id$
  */
 public class PropertyUtilsTest

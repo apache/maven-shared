@@ -942,7 +942,7 @@ public class Verifier
 
             for ( Iterator it = cliOptions.iterator(); it.hasNext(); )
             {
-                String key = (String) it.next();
+                String key = String.valueOf( it.next() );
 
                 String resolvedArg = resolveCommandLineArg( key );
 

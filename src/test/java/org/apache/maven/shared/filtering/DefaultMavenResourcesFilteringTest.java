@@ -84,6 +84,9 @@ public class DefaultMavenResourcesFilteringTest
         // FIXME this can fail with a windows path
         String base = result.getProperty( "base" );
         assertEquals(getBasedir(), base);
+        
+        assertEquals( "@@", result.getProperty( "emptyexpression" ) );
+        assertEquals( "${}", result.getProperty( "emptyexpression2" ) );
     }
     
     public void testNoFiltering()
@@ -114,5 +117,7 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals( "${pom.version}", result.get( "version" ) );
         assertEquals( "${pom.groupId}", result.get( "groupId" ) );
         assertEquals( "${foo}", result.get( "foo" ) );
+        assertEquals( "@@", result.getProperty( "emptyexpression" ) );
+        assertEquals( "${}", result.getProperty( "emptyexpression2" ) );
     }    
 }

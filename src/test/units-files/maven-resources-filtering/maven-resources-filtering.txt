@@ -21,3 +21,5 @@ groupId=${pom.groupId}
 foo=${foo}
 none=none filtered
 base=${pom.basedir}
+emptyexpression=@@
+emptyexpression2=${}

@@ -56,6 +56,11 @@ public class ReflectionProperties
     
     public Object get( Object key )
     {
+        if (key == null || StringUtils.isEmpty( key.toString() ))
+        {
+            return null;
+        }
+        
         Object value = null;
         try 
         {

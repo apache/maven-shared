@@ -19,6 +19,7 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -175,7 +176,7 @@ public final class PropertyUtils
             String nv = p.getProperty( nk );
 
             // try global environment..
-            if ( nv == null )
+            if ( nv == null && !StringUtils.isEmpty( nk ) )
             {
                 nv = System.getProperty( nk );
             }

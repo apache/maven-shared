@@ -48,7 +48,6 @@ Use Your Own Manifest File
         <artifactId>maven-jar-plugin</artifactId>
         ...
         <configuration>
-          <useDefaultManifestFile>true</useDefaultManifestFile>
           <archive>
             <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
           </archive>

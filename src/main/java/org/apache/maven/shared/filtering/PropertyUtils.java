@@ -18,6 +18,7 @@ package org.apache.maven.shared.filtering;
  * specific language governing permissions and limitations
  * under the License.
  */
+
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -36,6 +37,9 @@ import java.util.Properties;
  */
 public final class PropertyUtils
 {
+    /**
+     * private empty constructor to prevent instantiation
+     */
     private PropertyUtils()
     {
         // prevent instantiation
@@ -44,8 +48,8 @@ public final class PropertyUtils
     /**
      * Reads a property file, resolving all internal variables, using the supplied base properties.
      * <p>
-     * The properties are resolved iteratively, so if the value of property A refers to property B, then after resolution
-     * the value of property B will contain the value of property B.
+     * The properties are resolved iteratively, so if the value of property A refers to property B, 
+     * then after resolution the value of property B will contain the value of property B.
      * </p>
      * 
      * @param propFile The property file to load.
@@ -109,26 +113,27 @@ public final class PropertyUtils
         
         final Properties baseProps = new Properties();
 
-        if (useSystemProps) 
+        if ( useSystemProps )
         {
-            baseProps.putAll(System.getProperties());
+            baseProps.putAll( System.getProperties() );
         }
 
         final Properties resolvedProps = new Properties();
-        try 
+        try
         {
-            resolvedProps.putAll(loadPropertyFile(propfile, baseProps));
-        } catch (FileNotFoundException e)
+            resolvedProps.putAll( loadPropertyFile( propfile, baseProps ) );
+        }
+        catch ( FileNotFoundException e )
         {
-            if (fail) 
+            if ( fail )
             {
-                throw new FileNotFoundException(propfile.toString());
+                throw new FileNotFoundException( propfile.toString() );
             }
         }
 
-        if (useSystemProps) 
+        if ( useSystemProps )
         {
-            resolvedProps.putAll(baseProps);
+            resolvedProps.putAll( baseProps );
         }
 
         return resolvedProps;

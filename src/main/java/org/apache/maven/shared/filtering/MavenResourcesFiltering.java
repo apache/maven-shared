@@ -1,3 +1,5 @@
+package org.apache.maven.shared.filtering;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,13 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.shared.filtering;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -40,9 +39,8 @@ public interface MavenResourcesFiltering
      * @param encoding
      * @param fileFilters {@link List} of Properties file
      * @throws MavenFilteringException
-     * @throws IOException
      */
-    public void filterResources( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
+    void filterResources( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
                                  List fileFilters )
         throws MavenFilteringException;
 

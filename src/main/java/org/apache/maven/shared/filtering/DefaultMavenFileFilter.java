@@ -1,3 +1,5 @@
+package org.apache.maven.shared.filtering;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.shared.filtering;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,10 +43,7 @@ import org.codehaus.plexus.util.InterpolationFilterReader;
 public class DefaultMavenFileFilter
     implements MavenFileFilter
 {
-    
-    /** 
-     * @see org.apache.maven.shared.filtering.MavenFileFilter#copyFile(java.io.File, java.io.File, boolean, org.apache.maven.project.MavenProject, java.util.List)
-     */
+
     public void copyFile( File from, File to, boolean filtering, MavenProject mavenProject, List filters,
                           boolean escapedBackslashesInFilePath, String encoding )
         throws MavenFilteringException
@@ -54,9 +52,6 @@ public class DefaultMavenFileFilter
         copyFile( from, to, filtering, filterWrappers, encoding );
     }
 
-    /** 
-     * @see org.apache.maven.shared.filtering.MavenFileFilter#copyFile(java.io.File, java.io.File, boolean, java.util.List)
-     */
     public void copyFile( File from, File to, boolean filtering, List filterWrappers, String encoding )
         throws MavenFilteringException
     {
@@ -81,9 +76,6 @@ public class DefaultMavenFileFilter
 
     }
 
-    /** 
-     * @see org.apache.maven.shared.filtering.MavenFileFilter#getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List)
-     */
     public List getDefaultFilterWrappers( final MavenProject mavenProject, List filters,
                                           final boolean escapedBackslashesInFilePath )
         throws MavenFilteringException
@@ -121,9 +113,9 @@ public class DefaultMavenFileFilter
         }
         
         List buildFilters = mavenProject.getFilters();
-        if (buildFilters != null)
+        if ( buildFilters != null )
         {
-            for (Iterator iterator = buildFilters.iterator();iterator.hasNext();)
+            for ( Iterator iterator = buildFilters.iterator(); iterator.hasNext(); )
             {
                 String filterFile = (String) iterator.next();
                 try
@@ -137,12 +129,12 @@ public class DefaultMavenFileFilter
                     throw new MavenFilteringException( "Error loading property file '" + filterFile + "'", e );
                 }
             }
-        }        
-        
+        }
+
         buildFilters = mavenProject.getBuild().getFilters();
-        if (buildFilters != null)
+        if ( buildFilters != null )
         {
-            for (Iterator iterator = buildFilters.iterator();iterator.hasNext();)
+            for ( Iterator iterator = buildFilters.iterator(); iterator.hasNext(); )
             {
                 String filterFile = (String) iterator.next();
                 try

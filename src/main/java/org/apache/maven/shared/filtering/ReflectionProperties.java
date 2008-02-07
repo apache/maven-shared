@@ -38,11 +38,11 @@ public class ReflectionProperties
 
     private MavenProject project;
 
-    boolean escapedBackslashesInFilePath;
+    private boolean escapedBackslashesInFilePath;
 
     public ReflectionProperties( MavenProject mavenProject  ) 
     {
-       this(mavenProject, false);
+       this( mavenProject, false );
     }    
     
     public ReflectionProperties( MavenProject mavenProject, boolean escapedBackslashesInFilePath ) 
@@ -56,7 +56,7 @@ public class ReflectionProperties
     
     public Object get( Object key )
     {
-        if (key == null || StringUtils.isEmpty( key.toString() ))
+        if ( key == null || StringUtils.isEmpty( key.toString() ) )
         {
             return null;
         }

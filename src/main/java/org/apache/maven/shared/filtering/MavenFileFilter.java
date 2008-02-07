@@ -1,3 +1,5 @@
+package org.apache.maven.shared.filtering;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.shared.filtering;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public interface MavenFileFilter
     
     /**
      * Will copy a file with some filtering using defaultFilterWrappers 
-     * @see #getDefaultFilterWrappers(MavenProject, List)
+     * @see #getDefaultFilterWrappers(MavenProject, List, boolean)
      * 
      * @param from file to copy/filter
      * @param to destination file
@@ -43,7 +44,7 @@ public interface MavenFileFilter
      * @param filters {@link List} of properties file 
      * @throws IOException 
      */
-    public void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject, List filters,
+    void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject, List filters,
                           boolean escapedBackslashesInFilePath, String encoding )
         throws MavenFilteringException;
 
@@ -54,7 +55,7 @@ public interface MavenFileFilter
      * @param filterWrappers {@link List} of FileUtils.FilterWrapper
      * @throws MavenFilteringException
      */
-    public void copyFile( File from, final File to, boolean filtering, List filterWrappers, String encoding )
+    void copyFile( File from, final File to, boolean filtering, List filterWrappers, String encoding )
         throws MavenFilteringException;
 
     /**
@@ -62,8 +63,8 @@ public interface MavenFileFilter
      * Will return the default FileUtils.FilterWrappers
      * 
      * <ul>
-     *   <li>interpolation with token ${ } and values from System.getProperties, project.getProperties, from filters and project filters.</li>
-     *   <li>interpolation with token @ @ and values from System.getProperties, project.getProperties, from filters and project filters.</li>
+     *   <li>interpolation with token ${ } and values from SystemProps, project.properties, from filters and project filters.</li>
+     *   <li>interpolation with token @ @ and values from SystemProps, project.properties, from filters and project filters.</li>
      *   <li>interpolation with token ${ } and values from mavenProject interpolation.</li>
      * </ul>
      * 
@@ -73,6 +74,6 @@ public interface MavenFileFilter
      * @return {@link List} of FileUtils.FilterWrapper 
      * 
      */
-    public List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath )
+    List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath )
         throws MavenFilteringException;
 }

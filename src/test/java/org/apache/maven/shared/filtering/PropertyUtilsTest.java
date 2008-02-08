@@ -1,3 +1,5 @@
+package org.apache.maven.shared.filtering;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.shared.filtering;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -98,4 +99,18 @@ public class PropertyUtilsTest
             // exception ok
         }
     }
+    
+    public void testloadpropertiesFile()
+        throws Exception
+    {
+        File propertyFile = new File( getBasedir() + "/src/test/units-files/propertyutils-test.properties" );
+        Properties baseProps = new Properties();
+        baseProps.put( "pom.version", "realVersion" );
+
+        Properties interpolated = PropertyUtils.loadPropertyFile( propertyFile, baseProps );
+        assertEquals( "realVersion", interpolated.get( "version" ) );
+        assertEquals( "${foo}", interpolated.get( "foo" ) );
+        assertEquals( "realVersion", interpolated.get( "bar" ) );
+        assertEquals( "none filtered", interpolated.get( "none" ) );
+    }    
 }

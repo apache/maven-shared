@@ -60,7 +60,8 @@ public class DefaultMavenResourcesFilteringTest
         mavenProject.setGroupId( "org.apache" );
 
         Properties projectProperties = new Properties();
-        projectProperties.put( "foo", "bar" );     
+        projectProperties.put( "foo", "bar" );
+        projectProperties.put( "java.version", "zloug" );
         mavenProject.setProperties( projectProperties );
         MavenResourcesFiltering mavenResourcesFiltering = (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class
             .getName() );
@@ -88,6 +89,7 @@ public class DefaultMavenResourcesFilteringTest
         
         assertEquals( "@@", result.getProperty( "emptyexpression" ) );
         assertEquals( "${}", result.getProperty( "emptyexpression2" ) );
+        assertEquals( "zloug", result.getProperty( "javaVersion" ) );
     }
     
     public void testNoFiltering()

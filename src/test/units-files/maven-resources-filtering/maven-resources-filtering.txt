@@ -23,3 +23,4 @@ none=none filtered
 base=${pom.basedir}
 emptyexpression=@@
 emptyexpression2=${}
+javaVersion=${java.version}

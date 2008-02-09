@@ -33,7 +33,7 @@ public interface MavenResourcesFiltering
 {
 
     /**
-     * @param resources {@link List} of {@link Resource}
+     * @param resources {@link List} of {@link org.apache.maven.model.Resource}
      * @param outputDirectory parent destination directory
      * @param mavenProject
      * @param encoding 
@@ -44,4 +44,14 @@ public interface MavenResourcesFiltering
                                  List fileFilters )
         throws MavenFilteringException;
 
+    
+    /**
+     * @param resources {@link List} of {@link org.apache.maven.model.Resource}
+     * @param outputDirectory parent destination directory
+     * @param encoding
+     * @param filterWrappers {@link List} of FileUtils.FilterWrapper
+     * @throws MavenFilteringException
+     */
+    void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers, File resourcesBaseDirectory )
+        throws MavenFilteringException;    
 }

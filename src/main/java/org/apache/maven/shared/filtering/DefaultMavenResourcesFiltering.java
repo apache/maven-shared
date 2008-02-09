@@ -54,6 +54,14 @@ public class DefaultMavenResourcesFiltering
                                  List fileFilters )
         throws MavenFilteringException
     {
+        List filterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenProject, fileFilters, true );
+
+        filterResources( resources, outputDirectory, encoding, filterWrappers, mavenProject.getBasedir() );
+    }
+
+    public void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers, File resourcesBaseDirectory )
+        throws MavenFilteringException
+    {
         for ( Iterator i = resources.iterator(); i.hasNext(); )
         {
             Resource resource = (Resource) i.next();
@@ -63,7 +71,7 @@ public class DefaultMavenResourcesFiltering
             File resourceDirectory = new File( resource.getDirectory() );
             if ( !resourceDirectory.isAbsolute() )
             {
-                resourceDirectory = new File( mavenProject.getBasedir(), resourceDirectory.getPath() );
+                resourceDirectory = new File( resourcesBaseDirectory, resourceDirectory.getPath() );
             }
 
             if ( !resourceDirectory.exists() )
@@ -103,8 +111,6 @@ public class DefaultMavenResourcesFiltering
             scanner.scan();
 
             List includedFiles = Arrays.asList( scanner.getIncludedFiles() );
-
-            List filterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenProject, fileFilters, true );            
             
             for ( Iterator j = includedFiles.iterator(); j.hasNext(); )
             {
@@ -128,7 +134,9 @@ public class DefaultMavenResourcesFiltering
                 mavenFileFilter.copyFile( source, destinationFile, resource.isFiltering(), filterWrappers, encoding );
             }
         }
-
+        
     }
 
+    
+    
 }

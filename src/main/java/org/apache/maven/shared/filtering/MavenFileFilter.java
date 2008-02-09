@@ -41,7 +41,7 @@ public interface MavenFileFilter
      * @param to destination file
      * @param filtering enable or not filering
      * @param mavenProject the mavenproject
-     * @param filters {@link List} of properties file 
+     * @param filters {@link List} of String which are path to a Property file
      * @throws IOException 
      */
     void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject, List filters,

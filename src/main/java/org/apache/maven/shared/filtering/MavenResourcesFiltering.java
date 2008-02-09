@@ -36,8 +36,8 @@ public interface MavenResourcesFiltering
      * @param resources {@link List} of {@link Resource}
      * @param outputDirectory parent destination directory
      * @param mavenProject
-     * @param encoding
-     * @param fileFilters {@link List} of Properties file
+     * @param encoding 
+     * @param fileFilters {@link List} of String which are path to a Property file 
      * @throws MavenFilteringException
      */
     void filterResources( List resources, File outputDirectory, MavenProject mavenProject, String encoding,

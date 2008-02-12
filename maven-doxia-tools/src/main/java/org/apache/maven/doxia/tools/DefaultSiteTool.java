@@ -391,7 +391,7 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public File getSiteDescriptorFromBasedir( File siteDirectory, File basedir, Locale locale )
+    public File getSiteDescriptorFromBasedir( String siteDirectory, File basedir, Locale locale )
     {
         if ( basedir == null )
         {
@@ -401,20 +401,20 @@ public class DefaultSiteTool
         if ( siteDirectory == null )
         {
             // TODO need to be more dynamic
-            siteDirectory = new File( basedir, "src/site" );
+            siteDirectory = "src/site";
         }
         if ( locale == null )
         {
             locale = new Locale( "" );
         }
 
-        String relativePath = getRelativePath( siteDirectory.getAbsolutePath(), basedir.getAbsolutePath() );
+        File siteDir = new File( basedir, siteDirectory );
 
-        File siteDescriptor = new File( relativePath, "site_" + locale.getLanguage() + ".xml" );
+        File siteDescriptor = new File( siteDir, "site_" + locale.getLanguage() + ".xml" );
 
-        if ( !siteDescriptor.exists() )
+        if ( !siteDescriptor.isFile() )
         {
-            siteDescriptor = new File( relativePath, "site.xml" );
+            siteDescriptor = new File( siteDir, "site.xml" );
         }
         return siteDescriptor;
     }
@@ -465,7 +465,7 @@ public class DefaultSiteTool
     /** {@inheritDoc} */
     public DecorationModel getDecorationModel( MavenProject project, List reactorProjects,
                                                ArtifactRepository localRepository, List repositories,
-                                               File siteDirectory, Locale locale, String inputEncoding,
+                                               String siteDirectory, Locale locale, String inputEncoding,
                                                String outputEncoding )
         throws SiteToolException
     {
@@ -494,11 +494,6 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "outputEncoding could not be null" );
         }
 
-        if ( siteDirectory == null )
-        {
-            // TODO need to be more dynamic
-            siteDirectory = new File( project.getBasedir(), "src/site" );
-        }
         if ( locale == null )
         {
             locale = Locale.getDefault();
@@ -987,7 +982,7 @@ public class DefaultSiteTool
 
     private DecorationModel getDecorationModel( MavenProject project, List reactorProjects,
                                                 ArtifactRepository localRepository, List repositories,
-                                                File siteDirectory, Locale locale, Map origProps, String inputEncoding,
+                                                String siteDirectory, Locale locale, Map origProps, String inputEncoding,
                                                 String outputEncoding )
         throws SiteToolException
     {

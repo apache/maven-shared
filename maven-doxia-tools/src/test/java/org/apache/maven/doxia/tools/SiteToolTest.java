@@ -145,13 +145,13 @@ public class SiteToolTest
         assertNotNull( tool );
 
         SiteToolMavenProjectStub project = new SiteToolMavenProjectStub();
-        assertEquals( tool.getSiteDescriptorFromBasedir( null, project.getBasedir(), null ).toString(), "src"
-            + File.separator + "site" + File.separator + "site.xml" );
-        assertEquals( tool.getSiteDescriptorFromBasedir( null, project.getBasedir(), Locale.ENGLISH ).toString(), "src"
-            + File.separator + "site" + File.separator + "site.xml" );
-        File siteDir = new File( project.getBasedir(), "src/blabla" );
-        assertEquals( tool.getSiteDescriptorFromBasedir( siteDir, project.getBasedir(), null ).toString(), "src"
-            + File.separator + "blabla" + File.separator + "site.xml" );
+        assertEquals( tool.getSiteDescriptorFromBasedir( null, project.getBasedir(), null ).toString(),
+            project.getBasedir() + File.separator + "src" + File.separator + "site" + File.separator + "site.xml" );
+        assertEquals( tool.getSiteDescriptorFromBasedir( null, project.getBasedir(), Locale.ENGLISH ).toString(),
+            project.getBasedir() + File.separator + "src" + File.separator + "site" + File.separator + "site.xml" );
+        String siteDir = "src/blabla";
+        assertEquals( tool.getSiteDescriptorFromBasedir( siteDir, project.getBasedir(), null ).toString(),
+            project.getBasedir() + File.separator + "src" + File.separator + "blabla" + File.separator + "site.xml" );
     }
 
     /**
@@ -189,7 +189,7 @@ public class SiteToolTest
         project.setGroupId( "org.apache.maven" );
         project.setArtifactId( "maven-site" );
         project.setVersion( "1.0" );
-        File siteDirectory = new File( project.getBasedir(), "src/site" );
+        String siteDirectory = "src/site";
         List reactorProjects = new ArrayList();
 
         project.setBasedir( null ); // get it from repo

@@ -84,13 +84,13 @@ public interface SiteTool
     String getRelativePath( String to, String from );
 
     /**
-     * @param siteDirectory containing the <code>site.xml</code> file. If null, using by default "${basedir}/src/site".
+     * @param siteDirectory The path to the directory containing the <code>site.xml</code> file, relative to the project base directory. If null, using by default "src/site".
      * @param basedir not null.
      * @param locale the locale wanted for the site descriptor. If not null, searching for <code>site_<i>localeLanguage</i>.xml</code>,
      * otherwise searching for <code>site.xml</code>.
      * @return the site descriptor relative file, i.e. <code>src/site/site.xml</code>, depending parameters value.
      */
-    File getSiteDescriptorFromBasedir( File siteDirectory, File basedir, Locale locale );
+    File getSiteDescriptorFromBasedir( String siteDirectory, File basedir, Locale locale );
 
     /**
      * @param project the Maven project, not null.
@@ -110,7 +110,7 @@ public interface SiteTool
      * @param reactorProjects the Maven reactor projects, not null.
      * @param localRepository the Maven local repository, not null.
      * @param repositories the Maven remote repositories, not null.
-     * @param siteDirectory containing the <code>site.xml</code> file. If null, using by default "${basedir}/src/site".
+     * @param siteDirectory The path to the directory containing the <code>site.xml</code> file, relative to the project base directory. If null, using by default "src/site".
      * @param locale the locale used for the i18n in DecorationModel. If null, using the default locale in the jvm.
      * @param inputEncoding the input encoding of the site descriptor, not null.
      * @param outputEncoding the output encoding wanted, not null.
@@ -118,7 +118,7 @@ public interface SiteTool
      * @throws SiteToolException if any
      */
     DecorationModel getDecorationModel( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
-                                        List repositories, File siteDirectory, Locale locale, String inputEncoding,
+                                        List repositories, String siteDirectory, Locale locale, String inputEncoding,
                                         String outputEncoding )
         throws SiteToolException;
 

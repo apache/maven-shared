@@ -310,6 +310,7 @@ public class MavenArchiver
     {
         // we have to clone the project instance so we can write out the pom with the deployment version,
         // without impacting the main project instance...
+        // TODO use clone() in Maven 2.0.9+
         MavenProject workingProject = new MavenProject( project );
 
         boolean forced = archiveConfiguration.isForced();

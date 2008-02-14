@@ -20,11 +20,10 @@
 package org.apache.maven.toolchain.java;
 
 import java.io.File;
-import java.util.Map;
 import org.apache.maven.toolchain.DefaultToolchain;
 import org.apache.maven.toolchain.model.ToolchainModel;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.Os;
 
 /**
@@ -39,9 +38,9 @@ public class DefaultJavaToolChain
 
     public static final String KEY_JAVAHOME = "jdkHome"; //NOI18N
 
-    public DefaultJavaToolChain( ToolchainModel model)
+    public DefaultJavaToolChain( ToolchainModel model, Logger logger )
     {
-        super( model, "jdk" );
+        super( model, "jdk", logger );
     }
 
     public String getJavaHome( )

@@ -20,13 +20,13 @@
 package org.apache.maven.toolchain.java;
 
 import java.io.File;
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.toolchain.MisconfiguredToolchainException;
 import org.apache.maven.toolchain.RequirementMatcherFactory;
-import org.apache.maven.toolchain.Toolchain;
 import org.apache.maven.toolchain.ToolchainFactory;
 import org.apache.maven.toolchain.ToolchainPrivate;
 import org.apache.maven.toolchain.model.ToolchainModel;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
@@ -35,20 +35,22 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
  * @author mkleint
  */
 public class DefaultJavaToolchainFactory
-    implements ToolchainFactory
+    implements ToolchainFactory, LogEnabled
 {
+
+    private Logger logger;
 
     public DefaultJavaToolchainFactory( )
     {
     }
-
+    
     public ToolchainPrivate createToolchain( ToolchainModel model )
         throws MisconfiguredToolchainException
     {
         if (model == null) {
             return null;
         }
-        DefaultJavaToolChain jtc = new DefaultJavaToolChain( model );
+        DefaultJavaToolChain jtc = new DefaultJavaToolChain( model , logger);
         Xpp3Dom dom = (Xpp3Dom) model.getConfiguration();
         Xpp3Dom javahome = dom.getChild( DefaultJavaToolChain.KEY_JAVAHOME );
         if ( javahome == null )
@@ -97,4 +99,15 @@ public class DefaultJavaToolchainFactory
         //only version can be eventually supplied, and 
         return null;
     }
+    
+    protected Logger getLogger()
+    {
+        return logger;
+    }
+
+    public void enableLogging( Logger logger )
+    {
+        this.logger = logger;
+    }
+    
 }

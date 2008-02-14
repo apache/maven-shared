@@ -20,8 +20,10 @@
 package org.apache.maven.toolchain;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import org.apache.maven.toolchain.model.ToolchainModel;
+import org.codehaus.plexus.logging.Logger;
 
 /**
  *
@@ -38,15 +40,19 @@ public abstract class DefaultToolchain
     public static final String KEY_TYPE = "type"; //NOI18N
     
     private ToolchainModel model;
+    
+    private Logger logger;
 
-    protected DefaultToolchain( ToolchainModel model ) 
+    protected DefaultToolchain( ToolchainModel model, Logger logger ) 
     {
         this.model = model;
+        
+        this.logger = logger;
     }
 
-    protected DefaultToolchain( ToolchainModel model, String type )
+    protected DefaultToolchain( ToolchainModel model, String type, Logger logger )
     {
-        this(model);
+        this( model, logger );
         this.type = type;
     }
 
@@ -67,8 +73,30 @@ public abstract class DefaultToolchain
         provides.put( type, matcher );
     }
 
-    public Map getRequirementMatchers( )
-    {
-        return new HashMap( provides );
+
+    public boolean matchesRequirements(Map requirements) {
+        Iterator it = requirements.keySet().iterator();
+        while ( it.hasNext() )
+        {
+            String key = (String) it.next();
+            
+            RequirementMatcher matcher = (RequirementMatcher) provides.get(key);
+            
+            if ( matcher == null )
+            {
+                getLog().debug( "Toolchain "  + this + " is missing required property: "  + key );
+                return false;
+            }
+            if ( !matcher.matches( (String) requirements.get(key) ) )
+            {
+                getLog().debug( "Toolchain "  + this + " doesn't match required property: "  + key );
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    protected Logger getLog() {
+        return logger;
     }
 }

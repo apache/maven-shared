@@ -30,7 +30,13 @@ public interface ToolchainPrivate
     extends Toolchain
 {
 
-    Map getRequirementMatchers( );
+    /**
+     * Let the toolchain decide if it matches requirements defined
+     * in the toolchain plugin configuration.
+     * @param requirements Map<String, String> key value pair
+     * @return
+     */
+    boolean matchesRequirements( Map requirements);
     
     ToolchainModel getModel( );
     

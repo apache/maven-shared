@@ -29,7 +29,7 @@ import org.apache.maven.artifact.Artifact;
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
  * @version $Id$
  */
-public class TransitivityFilter
+public class ProjectTransitivityFilter
     extends AbstractArtifactsFilter
 {
 
@@ -37,7 +37,7 @@ public class TransitivityFilter
 
     private Set directDependencies;
 
-    public TransitivityFilter( Set directDependencies, boolean excludeTransitive )
+    public ProjectTransitivityFilter( Set directDependencies, boolean excludeTransitive )
     {
         this.excludeTransitive = excludeTransitive;
         this.directDependencies = directDependencies;

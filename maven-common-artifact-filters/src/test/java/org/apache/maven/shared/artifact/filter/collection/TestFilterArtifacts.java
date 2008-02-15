@@ -84,7 +84,7 @@ public class TestFilterArtifacts
         FilterArtifacts fa = new FilterArtifacts();
         ArtifactsFilter scope = new ScopeFilter( "compile", "system" );
         ArtifactsFilter type = new TypeFilter( "jar", "war" );
-        ArtifactsFilter trans = new TransitivityFilter( a, true );
+        ArtifactsFilter trans = new ProjectTransitivityFilter( a, true );
 
         assertEquals( 0, fa.getFilters().size() );
         fa.addFilter( scope );
@@ -96,7 +96,7 @@ public class TestFilterArtifacts
         fa.addFilter( 1, trans );
         assertEquals( 3, fa.getFilters().size() );
         assertTrue( fa.getFilters().get( 0 ) instanceof ScopeFilter );
-        assertTrue( fa.getFilters().get( 1 ) instanceof TransitivityFilter );
+        assertTrue( fa.getFilters().get( 1 ) instanceof ProjectTransitivityFilter );
         assertTrue( fa.getFilters().get( 2 ) instanceof TypeFilter );
 
         ArrayList list = new ArrayList();
@@ -108,7 +108,7 @@ public class TestFilterArtifacts
         fa.setFilters( list );
         assertEquals( 3, fa.getFilters().size() );
         assertTrue( fa.getFilters().get( 0 ) instanceof ScopeFilter );
-        assertTrue( fa.getFilters().get( 1 ) instanceof TransitivityFilter );
+        assertTrue( fa.getFilters().get( 1 ) instanceof ProjectTransitivityFilter );
         assertTrue( fa.getFilters().get( 2 ) instanceof TypeFilter );
 
     }

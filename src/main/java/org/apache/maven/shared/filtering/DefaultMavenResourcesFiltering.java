@@ -27,6 +27,7 @@ import java.util.List;
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
+import org.codehaus.plexus.util.FileUtils;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -51,15 +52,17 @@ public class DefaultMavenResourcesFiltering
     private MavenFileFilter mavenFileFilter;
     
     public void filterResources( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
-                                 List fileFilters )
+                                 List fileFilters, List nonFilteredFileExtensions )
         throws MavenFilteringException
     {
         List filterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenProject, fileFilters, true );
 
-        filterResources( resources, outputDirectory, encoding, filterWrappers, mavenProject.getBasedir() );
+        filterResources( resources, outputDirectory, encoding, filterWrappers, mavenProject.getBasedir(),
+                         nonFilteredFileExtensions );
     }
 
-    public void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers, File resourcesBaseDirectory )
+    public void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers,
+                                 File resourcesBaseDirectory, List nonFilteredFileExtensions )
         throws MavenFilteringException
     {
         for ( Iterator i = resources.iterator(); i.hasNext(); )
@@ -69,6 +72,7 @@ public class DefaultMavenResourcesFiltering
             String targetPath = resource.getTargetPath();
 
             File resourceDirectory = new File( resource.getDirectory() );
+
             if ( !resourceDirectory.isAbsolute() )
             {
                 resourceDirectory = new File( resourcesBaseDirectory, resourceDirectory.getPath() );
@@ -111,7 +115,7 @@ public class DefaultMavenResourcesFiltering
             scanner.scan();
 
             List includedFiles = Arrays.asList( scanner.getIncludedFiles() );
-            
+
             for ( Iterator j = includedFiles.iterator(); j.hasNext(); )
             {
                 String name = (String) j.next();
@@ -131,12 +135,23 @@ public class DefaultMavenResourcesFiltering
                 {
                     destinationFile.getParentFile().mkdirs();
                 }
-                mavenFileFilter.copyFile( source, destinationFile, resource.isFiltering(), filterWrappers, encoding );
+                boolean filteredExt = filteredFileExtension( source, nonFilteredFileExtensions );
+                mavenFileFilter.copyFile( source, destinationFile, resource.isFiltering() && filteredExt,
+                                          filterWrappers, encoding );
             }
         }
-        
+
     }
 
+    
+    private boolean filteredFileExtension(File file, List nonFilteredFileExtensions)
+    {
+        if (nonFilteredFileExtensions == null)
+        {
+            return true;
+        }
+        return !nonFilteredFileExtensions.contains( FileUtils.extension( file.getName() ) );
+    }
     
     
 }

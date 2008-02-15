@@ -38,20 +38,23 @@ public interface MavenResourcesFiltering
      * @param mavenProject
      * @param encoding 
      * @param fileFilters {@link List} of String which are path to a Property file 
+     * @param nonFilteredFileExtensions {@link List} of String for non filtered file extensions
      * @throws MavenFilteringException
      */
     void filterResources( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
-                                 List fileFilters )
+                          List fileFilters, List nonFilteredFileExtensions )
         throws MavenFilteringException;
 
-    
     /**
      * @param resources {@link List} of {@link org.apache.maven.model.Resource}
      * @param outputDirectory parent destination directory
      * @param encoding
      * @param filterWrappers {@link List} of FileUtils.FilterWrapper
+     * @param resourcesBaseDirectory baseDirectory of resources
+     * @param nonFilteredFileExtensions {@link List} of String for non filtered file extensions
      * @throws MavenFilteringException
      */
-    void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers, File resourcesBaseDirectory )
+    void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers,
+                          File resourcesBaseDirectory, List nonFilteredFileExtensions )
         throws MavenFilteringException;    
 }

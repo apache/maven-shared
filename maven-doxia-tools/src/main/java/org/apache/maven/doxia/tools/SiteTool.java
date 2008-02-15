@@ -43,6 +43,11 @@ public interface SiteTool
     String ROLE = SiteTool.class.getName();
 
     /**
+     * The locale by default for all default bundles
+     */
+    Locale DEFAULT_LOCALE = Locale.ENGLISH;
+
+    /**
      * @param localRepository the Maven local repository, not null.
      * @param remoteArtifactRepositories the Maven remote repositories, not null.
      * @param decoration the Doxia site descriptor model, not null.
@@ -204,4 +209,16 @@ public interface SiteTool
     void populateModules( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
                           DecorationModel decorationModel, Locale locale, boolean keepInheritedRefs )
         throws SiteToolException;
+
+    /**
+     *
+     * Init the <code>localesList</code> variable.
+     * <p>If <code>locales</code> variable is available, the first valid token will be the <code>defaultLocale</code>
+     * for this instance of the Java Virtual Machine.</p>
+     *
+     * @param locales A comma separated list of locales supported by Maven. The first valid token will be the default Locale
+     * for this instance of the Java Virtual Machine.
+     * @return a list of <code>Locale</code>
+     */
+    List getAvailableLocales( String locales );
 }

@@ -26,6 +26,7 @@ import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -905,6 +906,71 @@ public class DefaultSiteTool
         }
     }
 
+    /** {@inheritDoc} */
+    public List getAvailableLocales( String locales )
+    {
+        List localesList = new ArrayList();
+        if ( locales != null )
+        {
+            String[] localesArray = StringUtils.split( locales, "," );
+
+            for ( int i = 0; i < localesArray.length; i++ )
+            {
+                Locale locale = codeToLocale( localesArray[i] );
+
+                if ( locale != null )
+                {
+                    if ( !Arrays.asList( Locale.getAvailableLocales() ).contains( locale ) )
+                    {
+                        if ( getLogger().isWarnEnabled() )
+                        {
+                            getLogger().warn( "The locale parsed defined by '" + locale
+                                + "' is not available in this Java Virtual Machine (" + System.getProperty( "java.version" )
+                                + " from " + System.getProperty( "java.vendor" ) + ") - IGNORING" );
+                        }
+                        continue;
+                    }
+
+                    // Default bundles are in English
+                    if ( !locale.getLanguage().equals( DEFAULT_LOCALE.getLanguage() ) )
+                    {
+                        if ( !i18n.getBundle( "site-plugin", locale ).getLocale().getLanguage().equals(
+                            locale.getLanguage() ) )
+                        {
+                            StringBuffer sb = new StringBuffer();
+
+                            sb.append( "The locale '" ).append( locale ).append( "' (" );
+                            sb.append( locale.getDisplayName( Locale.ENGLISH ) );
+                            sb.append( ") is not currently support by Maven - IGNORING. " );
+                            sb.append( "\n" );
+                            sb.append( "Contribution are welcome and greatly appreciated! " );
+                            sb.append( "\n" );
+                            sb.append( "If you want to contribute a new translation, please visit " );
+                            sb.append( "http://maven.apache.org/plugins/maven-site-plugin/i18n.html " );
+                            sb.append( "for detailed instructions." );
+
+                            if ( getLogger().isWarnEnabled() )
+                            {
+                                getLogger().warn( sb.toString() );
+                            }
+
+                            continue;
+                        }
+                    }
+
+                    localesList.add( locale );
+                }
+            }
+        }
+
+        if ( localesList.isEmpty() )
+        {
+            localesList = Collections.singletonList( DEFAULT_LOCALE );
+        }
+
+        return localesList;
+    }
+
     // ----------------------------------------------------------------------
     // Private methods
     // ----------------------------------------------------------------------
@@ -1180,5 +1246,57 @@ public class DefaultSiteTool
     private static boolean isEmptyList( List list )
     {
         return list == null || list.isEmpty();
+    }
+
+    /**
+     * Converts a locale code like "en", "en_US" or "en_US_win" to a <code>java.util.Locale</code>
+     * object.
+     * <p>If localeCode = <code>default</code>, return the current value of the default locale for this instance
+     * of the Java Virtual Machine.</p>
+     *
+     * @param localeCode the locale code string.
+     * @return a java.util.Locale object instancied or null if errors occurred
+     * @see <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Locale.html">java.util.Locale#getDefault()</a>
+     */
+    private Locale codeToLocale( String localeCode )
+    {
+        if ( localeCode == null )
+        {
+            return null;
+        }
+
+        if ( "default".equalsIgnoreCase( localeCode ) )
+        {
+            return Locale.getDefault();
+        }
+
+        String language = "";
+        String country = "";
+        String variant = "";
+
+        StringTokenizer tokenizer = new StringTokenizer( localeCode, "_" );
+        if ( tokenizer.countTokens() > 3 )
+        {
+            if ( getLogger().isWarnEnabled() )
+            {
+                getLogger().warn( "Invalid java.util.Locale format for '" + localeCode + "' entry - IGNORING" );
+            }
+            return null;
+        }
+
+        if ( tokenizer.hasMoreTokens() )
+        {
+            language = tokenizer.nextToken();
+            if ( tokenizer.hasMoreTokens() )
+            {
+                country = tokenizer.nextToken();
+                if ( tokenizer.hasMoreTokens() )
+                {
+                    variant = tokenizer.nextToken();
+                }
+            }
+        }
+
+        return new Locale( language, country, variant );
     }
 }

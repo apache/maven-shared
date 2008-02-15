@@ -20,13 +20,17 @@ package org.apache.maven.shared.filtering;
  */
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.model.Resource;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -66,14 +70,22 @@ public class DefaultMavenResourcesFilteringTest
         MavenResourcesFiltering mavenResourcesFiltering = (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class
             .getName() );
 
+        String unitFilesDir = getBasedir() + "/src/test/units-files/maven-resources-filtering";
+        File initialImageFile = new File(unitFilesDir, "happy_duke.gif");
+        
         Resource resource = new Resource();
         List resources = new ArrayList();
         resources.add( resource );
-        resource.setDirectory( getBasedir() + "/src/test/units-files/maven-resources-filtering" );
+        resource.setDirectory( unitFilesDir );
         resource.setFiltering( true );
-        mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, null, null );
+
+        List filtersFile = new ArrayList();
+        filtersFile.add( getBasedir() + "/src/test/units-files/maven-resources-filtering/empty-maven-resources-filtering.txt" );
+        
+        List nonFilteredFileExtensions = Collections.singletonList( "gif" );
+        mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, null, filtersFile, nonFilteredFileExtensions );
        
-        assertEquals( 2, outputDirectory.listFiles().length );
+        assertEquals( 3, outputDirectory.listFiles().length );
         Properties result = PropertyUtils.loadPropertyFile( new File(outputDirectory, "empty-maven-resources-filtering.txt"), null );
         assertTrue (result.isEmpty());
         
@@ -90,6 +102,11 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals( "@@", result.getProperty( "emptyexpression" ) );
         assertEquals( "${}", result.getProperty( "emptyexpression2" ) );
         assertEquals( "zloug", result.getProperty( "javaVersion" ) );
+        
+        File imageFile = new File(outputDirectory, "happy_duke.gif");
+        assertTrue( imageFile.exists() );
+        //assertEquals( initialImageFile.length(), imageFile.length() );
+        assertTrue(filesAreIdentical( initialImageFile, imageFile ));
     }
     
     public void testNoFiltering()
@@ -102,14 +119,19 @@ public class DefaultMavenResourcesFilteringTest
         MavenResourcesFiltering mavenResourcesFiltering = (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class
             .getName() );
 
+        String unitFilesDir = getBasedir() + "/src/test/units-files/maven-resources-filtering";
+        File initialImageFile = new File(unitFilesDir, "happy_duke.gif");
+        
         Resource resource = new Resource();
         List resources = new ArrayList();
         resources.add( resource );
-        resource.setDirectory( getBasedir() + "/src/test/units-files/maven-resources-filtering" );
+        
+        resource.setDirectory( unitFilesDir );
         resource.setFiltering( false );
-        mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, null, null );
+        mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, null, null,
+                                                 Collections.EMPTY_LIST );
 
-        assertEquals( 2, outputDirectory.listFiles().length );
+        assertEquals( 3, outputDirectory.listFiles().length );
         Properties result = PropertyUtils.loadPropertyFile( new File( outputDirectory,
                                                                       "empty-maven-resources-filtering.txt" ), null );
         assertTrue( result.isEmpty() );
@@ -122,5 +144,43 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals( "${foo}", result.get( "foo" ) );
         assertEquals( "@@", result.getProperty( "emptyexpression" ) );
         assertEquals( "${}", result.getProperty( "emptyexpression2" ) );
-    }    
+        File imageFile = new File(outputDirectory, "happy_duke.gif");
+        assertTrue(filesAreIdentical( initialImageFile, imageFile ));
+    }  
+    
+    public static boolean filesAreIdentical( File expected, File current )
+        throws IOException
+    {
+        if ( expected.length() != current.length() )
+        {
+            return false;
+        }
+        FileInputStream expectedIn = new FileInputStream( expected );
+        FileInputStream currentIn = new FileInputStream( current );
+        try
+        {
+            byte[] expectedBuffer = IOUtil.toByteArray( expectedIn );
+            
+            byte[] currentBuffer = IOUtil.toByteArray( currentIn );
+            if (expectedBuffer.length != currentBuffer.length)
+            {
+                return false;
+            }
+            for (int i = 0,size = expectedBuffer.length;i<size;i++)
+            {
+                if(expectedBuffer[i]!= currentBuffer[i])
+                {
+                    return false;
+                }
+            }
+        }
+        finally
+        {
+            expectedIn.close();
+            currentIn.close();
+        }
+        return true;
+    }
+
+
 }

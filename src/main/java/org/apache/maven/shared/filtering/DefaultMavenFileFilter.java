@@ -98,16 +98,15 @@ public class DefaultMavenFileFilter
         {
             for ( Iterator i = filters.iterator(); i.hasNext(); )
             {
-                String filtersfile = (String) i.next();
+                String filterfile = (String) i.next();
                 try
                 {
-
-                    Properties properties = PropertyUtils.loadPropertyFile( new File( filtersfile ), baseProps );
+                    Properties properties = PropertyUtils.loadPropertyFile( new File( filterfile ), baseProps );
                     filterProperties.putAll( properties );
                 }
                 catch ( IOException e )
                 {
-                    throw new MavenFilteringException( "Error loading property file '" + filtersfile + "'", e );
+                    throw new MavenFilteringException( "Error loading property file '" + filterfile + "'", e );
                 }
             }
         }

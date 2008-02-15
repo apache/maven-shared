@@ -34,7 +34,7 @@ import org.apache.maven.plugin.testing.ArtifactStubFactory;
 /**
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
  */
-public class TestTransitivityFilter
+public class TestProjectTransitivityFilter
     extends TestCase
 {
     Set artifacts = new HashSet();
@@ -56,7 +56,7 @@ public class TestTransitivityFilter
 
     public void testAll()
     {
-        TransitivityFilter filter = new TransitivityFilter( directArtifacts, false );
+        ProjectTransitivityFilter filter = new ProjectTransitivityFilter( directArtifacts, false );
 
         Set result = filter.filter( artifacts );
 
@@ -65,7 +65,7 @@ public class TestTransitivityFilter
 
     public void testExclude()
     {
-        TransitivityFilter filter = new TransitivityFilter( directArtifacts, false );
+        ProjectTransitivityFilter filter = new ProjectTransitivityFilter( directArtifacts, false );
         assertFalse( filter.isExcludeTransitive() );
         filter.setExcludeTransitive( true );
         assertTrue( filter.isExcludeTransitive() );

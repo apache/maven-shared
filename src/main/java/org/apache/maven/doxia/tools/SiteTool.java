@@ -221,4 +221,16 @@ public interface SiteTool
      * @return a list of <code>Locale</code>
      */
     List getAvailableLocales( String locales );
+
+    /**
+     * Converts a locale code like "en", "en_US" or "en_US_win" to a <code>java.util.Locale</code>
+     * object.
+     * <p>If localeCode = <code>default</code>, return the current value of the default locale for this instance
+     * of the Java Virtual Machine.</p>
+     *
+     * @param localeCode the locale code string.
+     * @return a java.util.Locale object instancied or null if errors occurred
+     * @see <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Locale.html">java.util.Locale#getDefault()</a>
+     */
+    Locale codeToLocale( String localeCode );
 }

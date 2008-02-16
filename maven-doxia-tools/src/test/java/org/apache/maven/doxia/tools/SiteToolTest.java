@@ -127,11 +127,30 @@ public class SiteToolTest
         String to = "http://maven.apache.org";
         String from = "http://maven.apache.org";
         assertEquals( tool.getRelativePath( to, from ), "" );
+        to = "http://maven.apache.org/";
+        from = "http://maven.apache.org/plugins/maven-site-plugin";
+        assertEquals( tool.getRelativePath( to, from ), ".." + File.separator + ".." );
         to = "http://maven.apache.org";
         from = "http://maven.apache.org/plugins/maven-site-plugin/";
         assertEquals( tool.getRelativePath( to, from ), ".." + File.separator + ".." );
+        to = "http://maven.apache.org/";
+        from = "http://maven.apache.org/plugins/maven-site-plugin/";
+        assertEquals( tool.getRelativePath( to, from ), ".." + File.separator + ".." );
+        to = "http://maven.apache.org";
+        from = "http://maven.apache.org/plugins/maven-site-plugin";
+        assertEquals( tool.getRelativePath( to, from ), ".." + File.separator + ".." );
+
         to = "http://maven.apache.org/plugins/maven-site-plugin/";
         from = "http://maven.apache.org";
+        assertEquals( tool.getRelativePath( to, from ), "plugins" + File.separator + "maven-site-plugin" );
+        to = "http://maven.apache.org/plugins/maven-site-plugin/";
+        from = "http://maven.apache.org/";
+        assertEquals( tool.getRelativePath( to, from ), "plugins" + File.separator + "maven-site-plugin" );
+        to = "http://maven.apache.org/plugins/maven-site-plugin";
+        from = "http://maven.apache.org";
+        assertEquals( tool.getRelativePath( to, from ), "plugins" + File.separator + "maven-site-plugin" );
+        to = "http://maven.apache.org/plugins/maven-site-plugin";
+        from = "http://maven.apache.org/";
         assertEquals( tool.getRelativePath( to, from ), "plugins" + File.separator + "maven-site-plugin" );
     }
 

@@ -716,8 +716,15 @@ public class DefaultSiteTool
             {
                 try
                 {
-                    MavenProject mavenProject = mavenProjectBuilder.build( new File( aProject.getBasedir(), aProject
-                        .getModel().getParent().getRelativePath() ), localRepository, null );
+                    File pomFile = new File( aProject.getBasedir(), aProject.getModel().getParent().getRelativePath() );
+
+                    if ( pomFile.isDirectory() )
+                    {
+                        pomFile = new File( pomFile, "pom.xml" );
+                    }
+
+                    MavenProject mavenProject = mavenProjectBuilder.build( pomFile, localRepository, null );
+
                     if ( mavenProject.getGroupId().equals( origParent.getGroupId() )
                         && mavenProject.getArtifactId().equals( origParent.getArtifactId() )
                         && mavenProject.getVersion().equals( origParent.getVersion() ) )

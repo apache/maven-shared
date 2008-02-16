@@ -971,6 +971,49 @@ public class DefaultSiteTool
         return localesList;
     }
 
+    /** {@inheritDoc} */
+    public Locale codeToLocale( String localeCode )
+    {
+        if ( localeCode == null )
+        {
+            return null;
+        }
+
+        if ( "default".equalsIgnoreCase( localeCode ) )
+        {
+            return Locale.getDefault();
+        }
+
+        String language = "";
+        String country = "";
+        String variant = "";
+
+        StringTokenizer tokenizer = new StringTokenizer( localeCode, "_" );
+        if ( tokenizer.countTokens() > 3 )
+        {
+            if ( getLogger().isWarnEnabled() )
+            {
+                getLogger().warn( "Invalid java.util.Locale format for '" + localeCode + "' entry - IGNORING" );
+            }
+            return null;
+        }
+
+        if ( tokenizer.hasMoreTokens() )
+        {
+            language = tokenizer.nextToken();
+            if ( tokenizer.hasMoreTokens() )
+            {
+                country = tokenizer.nextToken();
+                if ( tokenizer.hasMoreTokens() )
+                {
+                    variant = tokenizer.nextToken();
+                }
+            }
+        }
+
+        return new Locale( language, country, variant );
+    }
+
     // ----------------------------------------------------------------------
     // Private methods
     // ----------------------------------------------------------------------
@@ -1246,57 +1289,5 @@ public class DefaultSiteTool
     private static boolean isEmptyList( List list )
     {
         return list == null || list.isEmpty();
-    }
-
-    /**
-     * Converts a locale code like "en", "en_US" or "en_US_win" to a <code>java.util.Locale</code>
-     * object.
-     * <p>If localeCode = <code>default</code>, return the current value of the default locale for this instance
-     * of the Java Virtual Machine.</p>
-     *
-     * @param localeCode the locale code string.
-     * @return a java.util.Locale object instancied or null if errors occurred
-     * @see <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Locale.html">java.util.Locale#getDefault()</a>
-     */
-    private Locale codeToLocale( String localeCode )
-    {
-        if ( localeCode == null )
-        {
-            return null;
-        }
-
-        if ( "default".equalsIgnoreCase( localeCode ) )
-        {
-            return Locale.getDefault();
-        }
-
-        String language = "";
-        String country = "";
-        String variant = "";
-
-        StringTokenizer tokenizer = new StringTokenizer( localeCode, "_" );
-        if ( tokenizer.countTokens() > 3 )
-        {
-            if ( getLogger().isWarnEnabled() )
-            {
-                getLogger().warn( "Invalid java.util.Locale format for '" + localeCode + "' entry - IGNORING" );
-            }
-            return null;
-        }
-
-        if ( tokenizer.hasMoreTokens() )
-        {
-            language = tokenizer.nextToken();
-            if ( tokenizer.hasMoreTokens() )
-            {
-                country = tokenizer.nextToken();
-                if ( tokenizer.hasMoreTokens() )
-                {
-                    variant = tokenizer.nextToken();
-                }
-            }
-        }
-
-        return new Locale( language, country, variant );
     }
 }

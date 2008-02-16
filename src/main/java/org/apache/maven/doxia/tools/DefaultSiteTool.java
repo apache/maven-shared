@@ -934,7 +934,7 @@ public class DefaultSiteTool
                     // Default bundles are in English
                     if ( !locale.getLanguage().equals( DEFAULT_LOCALE.getLanguage() ) )
                     {
-                        if ( !i18n.getBundle( "site-plugin", locale ).getLocale().getLanguage().equals(
+                        if ( !i18n.getBundle( "site-tool", locale ).getLocale().getLanguage().equals(
                             locale.getLanguage() ) )
                         {
                             StringBuffer sb = new StringBuffer();

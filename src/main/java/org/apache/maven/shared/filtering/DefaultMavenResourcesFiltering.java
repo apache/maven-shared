@@ -20,14 +20,18 @@ package org.apache.maven.shared.filtering;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -38,12 +42,31 @@ import org.codehaus.plexus.util.FileUtils;
  *                   role-hint="default"
  */
 public class DefaultMavenResourcesFiltering
-    implements MavenResourcesFiltering
+    implements MavenResourcesFiltering, Initializable
 {
 
     private static final String[] EMPTY_STRING_ARRAY = {};
 
     private static final String[] DEFAULT_INCLUDES = {"**/**"};
+    
+    private List defaultNonFilteredFileExtensions;
+    
+    // ------------------------------------------------
+    //  Plexus lifecycle
+    // ------------------------------------------------
+    public void initialize()
+        throws InitializationException
+    {
+        // jpg,jpeg,gif,bmp,png
+        this.defaultNonFilteredFileExtensions = new ArrayList( 5 );
+        this.defaultNonFilteredFileExtensions.add( "jpg" );
+        this.defaultNonFilteredFileExtensions.add( "jpeg" );
+        this.defaultNonFilteredFileExtensions.add( "gif" );
+        this.defaultNonFilteredFileExtensions.add( "bmp" );
+        this.defaultNonFilteredFileExtensions.add( "png" );
+    }    
+    
+    
     
     /**
      * @plexus.requirement
@@ -144,13 +167,19 @@ public class DefaultMavenResourcesFiltering
     }
 
     
-    private boolean filteredFileExtension(File file, List nonFilteredFileExtensions)
+    private boolean filteredFileExtension( File file, List userNonFilteredFileExtensions )
     {
-        if (nonFilteredFileExtensions == null)
+        List nonFilteredFileExtensions = new ArrayList( getDefaultNonFilteredFileExtensions() );
+        if ( userNonFilteredFileExtensions != null )
         {
-            return true;
+            nonFilteredFileExtensions.addAll( userNonFilteredFileExtensions );
         }
-        return !nonFilteredFileExtensions.contains( FileUtils.extension( file.getName() ) );
+        return !nonFilteredFileExtensions.contains( StringUtils.lowerCase( FileUtils.extension( file.getName() ) ) );
+    }
+
+    public List getDefaultNonFilteredFileExtensions()
+    {
+        return this.defaultNonFilteredFileExtensions;
     }
     
     

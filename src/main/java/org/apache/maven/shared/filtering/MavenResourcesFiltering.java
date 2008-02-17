@@ -63,4 +63,6 @@ public interface MavenResourcesFiltering
      * @return {@link List} of {@link String}
      */
     public List getDefaultNonFilteredFileExtensions();
+    
+    boolean filteredFileExtension( String fileName, List userNonFilteredFileExtensions );
 }

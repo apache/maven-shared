@@ -158,7 +158,7 @@ public class DefaultMavenResourcesFiltering
                 {
                     destinationFile.getParentFile().mkdirs();
                 }
-                boolean filteredExt = filteredFileExtension( source, nonFilteredFileExtensions );
+                boolean filteredExt = filteredFileExtension( source.getName(), nonFilteredFileExtensions );
                 mavenFileFilter.copyFile( source, destinationFile, resource.isFiltering() && filteredExt,
                                           filterWrappers, encoding );
             }
@@ -167,14 +167,14 @@ public class DefaultMavenResourcesFiltering
     }
 
     
-    private boolean filteredFileExtension( File file, List userNonFilteredFileExtensions )
+    public boolean filteredFileExtension( String fileName, List userNonFilteredFileExtensions )
     {
         List nonFilteredFileExtensions = new ArrayList( getDefaultNonFilteredFileExtensions() );
         if ( userNonFilteredFileExtensions != null )
         {
             nonFilteredFileExtensions.addAll( userNonFilteredFileExtensions );
         }
-        return !nonFilteredFileExtensions.contains( StringUtils.lowerCase( FileUtils.extension( file.getName() ) ) );
+        return !nonFilteredFileExtensions.contains( StringUtils.lowerCase( FileUtils.extension( fileName ) ) );
     }
 
     public List getDefaultNonFilteredFileExtensions()

@@ -57,4 +57,10 @@ public interface MavenResourcesFiltering
     void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers,
                           File resourcesBaseDirectory, List nonFilteredFileExtensions )
         throws MavenFilteringException;    
+    
+    /**
+     * return the List of the non filtered extensions (jpg,jpeg,gif,bmp,png)
+     * @return {@link List} of {@link String}
+     */
+    public List getDefaultNonFilteredFileExtensions();
 }

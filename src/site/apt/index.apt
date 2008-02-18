@@ -25,14 +25,17 @@
 
 Maven Filtering Component
 
-  This Plexus components has been build with the filtering process coming from the maven-resources-plugin.
+  This Plexus components has been build with the filtering process/code coming from the maven-resources-plugin.
   
   The goal is to provide a common way for all plugins which needs to filtering resources. 
   
 * Component MavenResourcesFiltering
 
   This component will apply filtering on a List of org.apache.maven.model.Resource. 
-  The method without the filterWrappers parameter will interpolate the files using the default FileUtils.FilterWrapper. 
+  
+  The method without the filterWrappers parameter will interpolate the files using the default List of FileUtils.FilterWrapper (see above). 
+  
+  The component will not filtering some predefined file extensions (jpg,jpeg,gif,bmp,png). Note : you can easily add extra file extensions.
 
 * Component MavenFileFilter
 
@@ -47,6 +50,17 @@ Maven Filtering Component
     
     []
     
-    <<NOTE>> : The sentence "values from SystemProps, project.properties, filters, project.filters and project.build.filters" 
-    means pairs of key/value will be loaded/overriding with this order. The value for key java.version can be overriding 
-    with a property in the maven project (yes crazy but possible).
+    The values (Properties object) used for interpolation are loaded with the following order :
+    
+    * System Properties
+    
+    * List of properties ( the method has a parameter which accept a List of String -> path properties files )
+    
+    * pom.filters
+    
+    * pom.build.filters
+    
+    []
+    
+    <<NOTE>> : As it's a Properties object, last defined key/value pair wins . 
+    The value for key java.version can be overriding with a property in the maven project (yes crazy but possible).

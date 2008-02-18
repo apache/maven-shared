@@ -87,69 +87,20 @@ public class DefaultMavenFileFilter
         filterProperties.putAll( System.getProperties() );
 
         // Project properties
-        filterProperties.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject.getProperties() );
+        filterProperties.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
+            .getProperties() );
 
         // Take a copy of filterProperties to ensure that evaluated filterTokens are not propagated
         // to subsequent filter files. NB this replicates current behaviour and seems to make sense.
         final Properties baseProps = new Properties();
         baseProps.putAll( filterProperties );
 
-        if ( filters != null )
-        {
-            for ( Iterator i = filters.iterator(); i.hasNext(); )
-            {
-                String filterfile = (String) i.next();
-                try
-                {
-                    Properties properties = PropertyUtils.loadPropertyFile( new File( filterfile ), baseProps );
-                    filterProperties.putAll( properties );
-                }
-                catch ( IOException e )
-                {
-                    throw new MavenFilteringException( "Error loading property file '" + filterfile + "'", e );
-                }
-            }
-        }
-        
-        List buildFilters = mavenProject.getFilters();
-        if ( buildFilters != null )
-        {
-            for ( Iterator iterator = buildFilters.iterator(); iterator.hasNext(); )
-            {
-                String filterFile = (String) iterator.next();
-                try
-                {
+        loadProperties( filterProperties, filters, baseProps );
 
-                    Properties properties = PropertyUtils.loadPropertyFile( new File( filterFile ), baseProps );
-                    filterProperties.putAll( properties );
-                }
-                catch ( IOException e )
-                {
-                    throw new MavenFilteringException( "Error loading property file '" + filterFile + "'", e );
-                }
-            }
-        }
+        loadProperties( filterProperties, mavenProject.getFilters(), baseProps );
 
-        buildFilters = mavenProject.getBuild().getFilters();
-        if ( buildFilters != null )
-        {
-            for ( Iterator iterator = buildFilters.iterator(); iterator.hasNext(); )
-            {
-                String filterFile = (String) iterator.next();
-                try
-                {
+        loadProperties( filterProperties, mavenProject.getBuild().getFilters(), baseProps );
 
-                    Properties properties = PropertyUtils.loadPropertyFile( new File( filterFile ), baseProps );
-                    filterProperties.putAll( properties );
-                }
-                catch ( IOException e )
-                {
-                    throw new MavenFilteringException( "Error loading property file '" + filterFile + "'", e );
-                }
-            }
-        }
-
-       
         List defaultFilterWrappers = new ArrayList( 3 );
 
         // support ${token}
@@ -181,10 +132,32 @@ public class DefaultMavenFileFilter
                 return new InterpolationFilterReader( reader, reflectionProperties, "${", "}" );
             }
         };
-        
+
         defaultFilterWrappers.add( third );
 
         return defaultFilterWrappers;
+    }
+
+    private void loadProperties( Properties filterProperties, List /*String*/propertiesFilePaths, Properties baseProps )
+        throws MavenFilteringException
+    {
+        if ( propertiesFilePaths != null )
+        {
+            for ( Iterator iterator = propertiesFilePaths.iterator(); iterator.hasNext(); )
+            {
+                String filterFile = (String) iterator.next();
+                try
+                {
+                    // TODO new File should be new File(mavenProject.getBasedir(), filterfile ) ? 
+                    Properties properties = PropertyUtils.loadPropertyFile( new File( filterFile ), baseProps );
+                    filterProperties.putAll( properties );
+                }
+                catch ( IOException e )
+                {
+                    throw new MavenFilteringException( "Error loading property file '" + filterFile + "'", e );
+                }
+            }
+        }
     }
 
 }

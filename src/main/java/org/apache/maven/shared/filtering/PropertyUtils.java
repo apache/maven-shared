@@ -106,6 +106,7 @@ public final class PropertyUtils
      * @param fail wheter to throw an exception when the file cannot be loaded or to return null
      * @param useSystemProps wheter to incorporate System.getProperties settings into the returned Properties object.
      * @return the loaded and fully resolved Properties object
+     * @throws IOException if profile does not exist, or cannot be read.
      */
     public static Properties loadPropertyFile( File propfile, boolean fail, boolean useSystemProps )
         throws IOException
@@ -149,6 +150,9 @@ public final class PropertyUtils
      * the value of a property contains a key), and will
      * not loop endlessly on a pair like
      * test = ${test}.
+     * @param k
+     * @param p
+     * @return 
      */
     private static String getPropertyValue( String k, Properties p )
     {

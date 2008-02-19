@@ -24,3 +24,4 @@ base=${pom.basedir}
 emptyexpression=@@
 emptyexpression2=${}
 javaVersion=${java.version}
+pomName=@pom.name@

@@ -37,6 +37,7 @@ under the License.
   <body>
     <menu name="Overview">
       <item name="Reference" href="index.html"/>
+      <item name="Usage" href="usage.html"/>
     </menu>
     <!-- TODO: Link, head, reports should be inherited -->
     <!-- TODO: use breadcrumbs more structure, links for links, and inherit subprojects as a menu or not at all -->

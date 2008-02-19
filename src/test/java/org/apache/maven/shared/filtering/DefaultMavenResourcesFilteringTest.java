@@ -22,15 +22,18 @@ package org.apache.maven.shared.filtering;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.model.Resource;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.InterpolationFilterReader;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -56,12 +59,15 @@ public class DefaultMavenResourcesFilteringTest
         outputDirectory.mkdirs();
     }
     
+   
     public void testSimpleFiltering()
         throws Exception
     {
-        StubMavenProject mavenProject = new StubMavenProject( new File( getBasedir() ) );
+        File baseDir = new File( "c:\\foo\\bar" );
+        StubMavenProject mavenProject = new StubMavenProject( baseDir );
         mavenProject.setVersion( "1.0" );
         mavenProject.setGroupId( "org.apache" );
+        mavenProject.setName( "test project" );
 
         Properties projectProperties = new Properties();
         projectProperties.put( "foo", "bar" );
@@ -97,16 +103,70 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals("bar", result.get( "foo" ));
         // FIXME this can fail with a windows path
         String base = result.getProperty( "base" );
-        assertEquals(getBasedir(), base);
         
         assertEquals( "@@", result.getProperty( "emptyexpression" ) );
         assertEquals( "${}", result.getProperty( "emptyexpression2" ) );
         assertEquals( "zloug", result.getProperty( "javaVersion" ) );
         
+        assertEquals( baseDir.toString(), result.get( "base" ) );
+        
         File imageFile = new File(outputDirectory, "happy_duke.gif");
         assertTrue( imageFile.exists() );
         //assertEquals( initialImageFile.length(), imageFile.length() );
         assertTrue(filesAreIdentical( initialImageFile, imageFile ));
+    }
+    
+    public void testaddingTokens()
+        throws Exception
+    {
+        File baseDir = new File( "c:\\foo\\bar" );
+        final StubMavenProject mavenProject = new StubMavenProject( baseDir );
+        mavenProject.setVersion( "1.0" );
+        mavenProject.setGroupId( "org.apache" );
+        mavenProject.setName( "test project" );
+
+        Properties projectProperties = new Properties();
+        projectProperties.put( "foo", "bar" );
+        projectProperties.put( "java.version", "zloug" );
+        mavenProject.setProperties( projectProperties );
+        MavenResourcesFiltering mavenResourcesFiltering = (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class
+            .getName() );
+
+        String unitFilesDir = getBasedir() + "/src/test/units-files/maven-resources-filtering";
+        File initialImageFile = new File( unitFilesDir, "happy_duke.gif" );
+
+        Resource resource = new Resource();
+        List resources = new ArrayList();
+        resources.add( resource );
+        resource.setDirectory( unitFilesDir );
+        resource.setFiltering( true );
+
+        List filtersFile = new ArrayList();
+        filtersFile.add( getBasedir()
+            + "/src/test/units-files/maven-resources-filtering/empty-maven-resources-filtering.txt" );
+
+        List nonFilteredFileExtensions = Collections.singletonList( "gif" );
+        
+        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+        List defaultFilterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenProject, null, true );
+
+        List filterWrappers = new ArrayList( );
+        filterWrappers.addAll( defaultFilterWrappers );
+        FileUtils.FilterWrapper filterWrapper = new FileUtils.FilterWrapper()
+        {
+            public Reader getReader( Reader reader )
+            {
+                ReflectionProperties reflectionProperties = new ReflectionProperties( mavenProject, true );
+                return new InterpolationFilterReader( reader, reflectionProperties, "@", "@" );
+            }
+        };
+        filterWrappers.add( filterWrapper );
+        mavenResourcesFiltering.filterResources( resources, outputDirectory, null, filterWrappers,
+                                                 new File( getBasedir() ), nonFilteredFileExtensions );
+        
+        Properties result = PropertyUtils.loadPropertyFile( new File(outputDirectory, "maven-resources-filtering.txt"), null );
+        assertFalse( result.isEmpty() );
+        assertEquals( mavenProject.getName(), result.get( "pomName" ) );
     }
     
     public void testNoFiltering()

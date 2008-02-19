@@ -54,6 +54,8 @@ Maven Filtering Component
     
     * System Properties
     
+    * pom.properties
+    
     * List of properties ( the method has a parameter which accept a List of String -> path properties files )
     
     * pom.filters

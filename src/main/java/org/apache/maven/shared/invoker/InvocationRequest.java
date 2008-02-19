@@ -140,4 +140,6 @@ public interface InvocationRequest
     InvocationRequest setGlobalChecksumPolicy( String globalChecksumPolicy );
     
     InvocationRequest setNonPluginUpdates( boolean nonPluginUpdates);
+    
+    InvocationRequest setRecursive( boolean recursive );
 }

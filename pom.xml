@@ -6,7 +6,7 @@
     <version>7</version>
   </parent>
   <artifactId>maven-repository-builder</artifactId>
-  <version>1.0-alpha-2-SNAPSHOT</version>
+  <version>1.0-alpha-2</version>
   <name>Maven Repository Builder</name>
 
   <dependencies>
@@ -89,8 +89,8 @@
     </plugins>
   </build>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-repository-builder</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-repository-builder-1.0-alpha-2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-repository-builder-1.0-alpha-2</developerConnection>
+    <url>https://svn.apache.org/repos/asf/maven/shared/tags/maven-repository-builder-1.0-alpha-2</url>
   </scm>
 </project>

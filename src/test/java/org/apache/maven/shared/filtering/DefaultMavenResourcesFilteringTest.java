@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.model.Resource;
-import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
@@ -106,7 +105,7 @@ public class DefaultMavenResourcesFilteringTest
         
         assertEquals( "@@", result.getProperty( "emptyexpression" ) );
         assertEquals( "${}", result.getProperty( "emptyexpression2" ) );
-        assertEquals( "zloug", result.getProperty( "javaVersion" ) );
+        assertEquals( System.getProperty( "java.version" ), result.getProperty( "javaVersion" ) );
         
         assertEquals( baseDir.toString(), result.get( "base" ) );
         

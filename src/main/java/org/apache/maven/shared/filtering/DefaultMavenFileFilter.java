@@ -80,27 +80,38 @@ public class DefaultMavenFileFilter
                                           final boolean escapedBackslashesInFilePath )
         throws MavenFilteringException
     {
-
-        final Properties filterProperties = new Properties();
-
-        // System properties
-        filterProperties.putAll( System.getProperties() );
-
-        // Project properties
-        filterProperties.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
-            .getProperties() );
+        
+        // here we build some properties which will be used to read some properties files
+        // to interpolate the expression ${ }  in this properties file
 
         // Take a copy of filterProperties to ensure that evaluated filterTokens are not propagated
         // to subsequent filter files. NB this replicates current behaviour and seems to make sense.
+        
         final Properties baseProps = new Properties();
-        baseProps.putAll( filterProperties );
 
+        // Project properties
+        baseProps.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
+            .getProperties() );        
+        // System properties wins
+        baseProps.putAll( System.getProperties() );         
+        
+        // now we build properties to use for resources interpolation
+        
+        final Properties filterProperties = new Properties();
+        
         loadProperties( filterProperties, filters, baseProps );
 
         loadProperties( filterProperties, mavenProject.getFilters(), baseProps );
 
         loadProperties( filterProperties, mavenProject.getBuild().getFilters(), baseProps );
 
+        // Project properties
+        filterProperties.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
+            .getProperties() );        
+        // System properties wins
+        filterProperties.putAll( System.getProperties() );        
+        
+        
         List defaultFilterWrappers = new ArrayList( 3 );
 
         // support ${token}

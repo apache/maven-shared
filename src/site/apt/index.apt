@@ -42,9 +42,9 @@ Maven Filtering Component
   This component has a method which returns the default FileUtils.FilterWrapper.
   This are :
   
-    * interpolation with token $\{ \} and values from filters, project.filters, project.build.filters, pom.properties and SystemProps
+    * interpolation with token $\{ \} and values from filters, project.filters, project.build.filters, pom.properties and mavenSession.executionProperties
     
-    * interpolation with token @ @ and values from filters, project.filters, project.build.filters, pom.properties and SystemProps
+    * interpolation with token @ @ and values from filters, project.filters, project.build.filters, pom.properties and mavenSession.executionProperties
     
     * interpolation with token $\{ \} and values from mavenProject interpolation
     
@@ -67,4 +67,4 @@ Maven Filtering Component
     <<NOTE>> : As it's a Properties object, last defined key/value pair wins . 
     
     <<NOTE>> : When building the global Properties object and reading the properties files defined the different filters, 
-    interpolation with the token $\{ \} is supported for this filters with a limited properties values coming from pom.properties and System Properties (last wins too)
+    interpolation with the token $\{ \} is supported for this filters with a limited properties values coming from pom.properties and mavenSession.executionProperties (last wins too)

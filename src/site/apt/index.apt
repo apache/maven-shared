@@ -60,7 +60,7 @@ Maven Filtering Component
     
     * pom.properties
     
-    * System Properties
+    * mavenSession.executionProperties
     
     []
     

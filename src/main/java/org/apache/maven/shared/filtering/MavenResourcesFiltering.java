@@ -22,6 +22,7 @@ package org.apache.maven.shared.filtering;
 import java.io.File;
 import java.util.List;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -42,7 +43,7 @@ public interface MavenResourcesFiltering
      * @throws MavenFilteringException
      */
     void filterResources( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
-                          List fileFilters, List nonFilteredFileExtensions )
+                          List fileFilters, List nonFilteredFileExtensions, MavenSession mavenSession )
         throws MavenFilteringException;
 
     /**

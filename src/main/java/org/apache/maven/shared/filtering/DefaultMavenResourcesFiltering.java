@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -75,10 +76,10 @@ public class DefaultMavenResourcesFiltering
     private MavenFileFilter mavenFileFilter;
     
     public void filterResources( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
-                                 List fileFilters, List nonFilteredFileExtensions )
+                                 List fileFilters, List nonFilteredFileExtensions, MavenSession mavenSession )
         throws MavenFilteringException
     {
-        List filterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenProject, fileFilters, true );
+        List filterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenProject, fileFilters, true, mavenSession );
 
         filterResources( resources, outputDirectory, encoding, filterWrappers, mavenProject.getBasedir(),
                          nonFilteredFileExtensions );

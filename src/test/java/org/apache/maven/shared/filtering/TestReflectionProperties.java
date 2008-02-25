@@ -56,7 +56,7 @@ public class TestReflectionProperties
                 to.delete();
             }            
             
-            mavenFileFilter.copyFile( from, to, true, mavenProject, null, false, null );
+            mavenFileFilter.copyFile( from, to, true, mavenProject, null, false, null, new StubMavenSession() );
 
             Properties reading = new Properties();
             readFileInputStream = new FileInputStream( to );
@@ -98,7 +98,7 @@ public class TestReflectionProperties
                 to.delete();
             }
             
-            mavenFileFilter.copyFile( from, to, false, mavenProject, null, false, null );
+            mavenFileFilter.copyFile( from, to, false, mavenProject, null, false, null, new StubMavenSession() );
 
             Properties reading = new Properties();
             readFileInputStream = new FileInputStream( to );

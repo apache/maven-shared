@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.InterpolationFilterReader;
@@ -45,10 +46,10 @@ public class DefaultMavenFileFilter
 {
 
     public void copyFile( File from, File to, boolean filtering, MavenProject mavenProject, List filters,
-                          boolean escapedBackslashesInFilePath, String encoding )
+                          boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )
         throws MavenFilteringException
     {
-        List filterWrappers = getDefaultFilterWrappers( mavenProject, filters, escapedBackslashesInFilePath );
+        List filterWrappers = getDefaultFilterWrappers( mavenProject, filters, escapedBackslashesInFilePath, mavenSession );
         copyFile( from, to, filtering, filterWrappers, encoding );
     }
 
@@ -77,7 +78,7 @@ public class DefaultMavenFileFilter
     }
 
     public List getDefaultFilterWrappers( final MavenProject mavenProject, List filters,
-                                          final boolean escapedBackslashesInFilePath )
+                                          final boolean escapedBackslashesInFilePath, MavenSession mavenSession )
         throws MavenFilteringException
     {
         
@@ -91,9 +92,14 @@ public class DefaultMavenFileFilter
 
         // Project properties
         baseProps.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
-            .getProperties() );        
-        // System properties wins
-        baseProps.putAll( System.getProperties() );         
+            .getProperties() );    
+        // TODO this is NPE free but do we consider this as normal
+        // or do we have to throw an MavenFilteringException with mavenSession cannot be null
+        if ( mavenSession != null )
+        {
+            // execution properties wins
+            baseProps.putAll( mavenSession.getExecutionProperties() );
+        }
         
         // now we build properties to use for resources interpolation
         
@@ -107,10 +113,12 @@ public class DefaultMavenFileFilter
 
         // Project properties
         filterProperties.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
-            .getProperties() );        
-        // System properties wins
-        filterProperties.putAll( System.getProperties() );        
-        
+            .getProperties() );     
+        if ( mavenSession != null )
+        {
+            // execution properties wins
+            filterProperties.putAll( mavenSession.getExecutionProperties() );
+        }
         
         List defaultFilterWrappers = new ArrayList( 3 );
 

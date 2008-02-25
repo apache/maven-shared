@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Resource;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.util.FileUtils;
@@ -88,7 +89,9 @@ public class DefaultMavenResourcesFilteringTest
         filtersFile.add( getBasedir() + "/src/test/units-files/maven-resources-filtering/empty-maven-resources-filtering.txt" );
         
         List nonFilteredFileExtensions = Collections.singletonList( "gif" );
-        mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, null, filtersFile, nonFilteredFileExtensions );
+        
+        mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, null, filtersFile,
+                                                 nonFilteredFileExtensions, new StubMavenSession() );
        
         assertEquals( 3, outputDirectory.listFiles().length );
         Properties result = PropertyUtils.loadPropertyFile( new File(outputDirectory, "empty-maven-resources-filtering.txt"), null );
@@ -147,7 +150,8 @@ public class DefaultMavenResourcesFilteringTest
         List nonFilteredFileExtensions = Collections.singletonList( "gif" );
         
         MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
-        List defaultFilterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenProject, null, true );
+        List defaultFilterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenProject, null, true,
+                                                                               new StubMavenSession() );
 
         List filterWrappers = new ArrayList( );
         filterWrappers.addAll( defaultFilterWrappers );
@@ -188,7 +192,7 @@ public class DefaultMavenResourcesFilteringTest
         resource.setDirectory( unitFilesDir );
         resource.setFiltering( false );
         mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, null, null,
-                                                 Collections.EMPTY_LIST );
+                                                 Collections.EMPTY_LIST, new StubMavenSession() );
 
         assertEquals( 3, outputDirectory.listFiles().length );
         Properties result = PropertyUtils.loadPropertyFile( new File( outputDirectory,

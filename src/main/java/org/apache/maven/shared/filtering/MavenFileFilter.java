@@ -22,7 +22,9 @@ package org.apache.maven.shared.filtering;
 import java.io.File;
 import java.util.List;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.settings.MavenSettingsBuilder;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -44,7 +46,7 @@ public interface MavenFileFilter
      * @throws IOException 
      */
     void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject, List filters,
-                          boolean escapedBackslashesInFilePath, String encoding )
+                          boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )
         throws MavenFilteringException;
 
     /**
@@ -73,6 +75,6 @@ public interface MavenFileFilter
      * @return {@link List} of FileUtils.FilterWrapper 
      * 
      */
-    List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath )
+    List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath, MavenSession mavenSession )
         throws MavenFilteringException;
 }

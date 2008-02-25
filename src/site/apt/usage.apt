@@ -47,7 +47,7 @@ encoding can be null platform default will be used
 
 nonFilteredFileExtensions : is a List of String which file extensions to not apply filtering (default List contains jpg,jpeg,gif,bmp,png)
 
-mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, encoding, filtersFile, nonFilteredFileExtensions );
+mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, encoding, filtersFile, nonFilteredFileExtensions, mavenSession );
 
 +-----+
 

@@ -72,4 +72,11 @@ public interface MavenResourcesFiltering
      *         default List or in the user defined extension List)
      */
     boolean filteredFileExtension( String fileName, List userNonFilteredFileExtensions );
+    
+    /**
+     * @param mavenResourcesExecution
+     * @throws MavenFilteringException
+     */
+    void filterResources( MavenResourcesExecution mavenResourcesExecution )
+        throws MavenFilteringException;
 }

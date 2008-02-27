@@ -79,17 +79,59 @@ public class DefaultMavenResourcesFiltering
                                  List fileFilters, List nonFilteredFileExtensions, MavenSession mavenSession )
         throws MavenFilteringException
     {
-        List filterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenProject, fileFilters, true, mavenSession );
-
-        filterResources( resources, outputDirectory, encoding, filterWrappers, mavenProject.getBasedir(),
-                         nonFilteredFileExtensions );
+        MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, outputDirectory,
+                                                                                       mavenProject, encoding,
+                                                                                       fileFilters,
+                                                                                       nonFilteredFileExtensions,
+                                                                                       mavenSession );
+        mavenResourcesExecution.setUseDefaultFilterWrappers( true );
+        filterResources( mavenResourcesExecution );
     }
 
     public void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers,
                                  File resourcesBaseDirectory, List nonFilteredFileExtensions )
         throws MavenFilteringException
     {
-        for ( Iterator i = resources.iterator(); i.hasNext(); )
+        MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, outputDirectory,
+                                                                                       encoding, filterWrappers,
+                                                                                       resourcesBaseDirectory,
+                                                                                       nonFilteredFileExtensions );
+        filterResources( mavenResourcesExecution );
+    }
+
+    
+    public boolean filteredFileExtension( String fileName, List userNonFilteredFileExtensions )
+    {
+        List nonFilteredFileExtensions = new ArrayList( getDefaultNonFilteredFileExtensions() );
+        if ( userNonFilteredFileExtensions != null )
+        {
+            nonFilteredFileExtensions.addAll( userNonFilteredFileExtensions );
+        }
+        return !nonFilteredFileExtensions.contains( StringUtils.lowerCase( FileUtils.extension( fileName ) ) );
+    }
+
+    public List getDefaultNonFilteredFileExtensions()
+    {
+        return this.defaultNonFilteredFileExtensions;
+    }
+
+    public void filterResources( MavenResourcesExecution mavenResourcesExecution )
+        throws MavenFilteringException
+    {
+        if ( mavenResourcesExecution == null )
+        {
+            throw new MavenFilteringException( "mavenResourcesExecution cannot be null" );
+        }
+        if ( mavenResourcesExecution.isUseDefaultFilterWrappers() )
+        {
+            List filterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenResourcesExecution.getMavenProject(),
+                                                                            mavenResourcesExecution.getFileFilters(),
+                                                                            true, mavenResourcesExecution
+                                                                                .getMavenSession() );
+            mavenResourcesExecution.setFilterWrappers( filterWrappers );
+        }
+
+        for ( Iterator i = mavenResourcesExecution.getResources().iterator(); i.hasNext(); )
         {
             Resource resource = (Resource) i.next();
 
@@ -99,7 +141,8 @@ public class DefaultMavenResourcesFiltering
 
             if ( !resourceDirectory.isAbsolute() )
             {
-                resourceDirectory = new File( resourcesBaseDirectory, resourceDirectory.getPath() );
+                resourceDirectory = new File( mavenResourcesExecution.getResourcesBaseDirectory(), resourceDirectory
+                    .getPath() );
             }
 
             if ( !resourceDirectory.exists() )
@@ -110,6 +153,7 @@ public class DefaultMavenResourcesFiltering
 
             // this part is required in case the user specified "../something" as destination
             // see MNG-1345
+            File outputDirectory = mavenResourcesExecution.getOutputDirectory();
             if ( !outputDirectory.exists() )
             {
                 if ( !outputDirectory.mkdirs() )
@@ -159,28 +203,14 @@ public class DefaultMavenResourcesFiltering
                 {
                     destinationFile.getParentFile().mkdirs();
                 }
-                boolean filteredExt = filteredFileExtension( source.getName(), nonFilteredFileExtensions );
+                boolean filteredExt = filteredFileExtension( source.getName(), mavenResourcesExecution
+                    .getNonFilteredFileExtensions() );
                 mavenFileFilter.copyFile( source, destinationFile, resource.isFiltering() && filteredExt,
-                                          filterWrappers, encoding );
+                                          mavenResourcesExecution.getFilterWrappers(), mavenResourcesExecution
+                                              .getEncoding() );
             }
         }
 
-    }
-
-    
-    public boolean filteredFileExtension( String fileName, List userNonFilteredFileExtensions )
-    {
-        List nonFilteredFileExtensions = new ArrayList( getDefaultNonFilteredFileExtensions() );
-        if ( userNonFilteredFileExtensions != null )
-        {
-            nonFilteredFileExtensions.addAll( userNonFilteredFileExtensions );
-        }
-        return !nonFilteredFileExtensions.contains( StringUtils.lowerCase( FileUtils.extension( fileName ) ) );
-    }
-
-    public List getDefaultNonFilteredFileExtensions()
-    {
-        return this.defaultNonFilteredFileExtensions;
     }
     
     

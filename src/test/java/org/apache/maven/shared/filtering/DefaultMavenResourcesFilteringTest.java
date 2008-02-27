@@ -28,7 +28,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Resource;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
@@ -194,12 +196,6 @@ public class DefaultMavenResourcesFilteringTest
 
         List nonFilteredFileExtensions = Collections.singletonList( "gif" );
 
-        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
-        List defaultFilterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenProject, null, true,
-                                                                               new StubMavenSession() );
-
-        List filterWrappers = new ArrayList();
-        filterWrappers.addAll( defaultFilterWrappers );
         FileUtils.FilterWrapper filterWrapper = new FileUtils.FilterWrapper()
         {
             public Reader getReader( Reader reader )
@@ -208,9 +204,13 @@ public class DefaultMavenResourcesFilteringTest
                 return new InterpolationFilterReader( reader, reflectionProperties, "@", "@" );
             }
         };
-        filterWrappers.add( filterWrapper );
-        mavenResourcesFiltering.filterResources( resources, outputDirectory, null, filterWrappers,
-                                                 new File( getBasedir() ), nonFilteredFileExtensions );
+
+        MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, outputDirectory,
+                                                                                       mavenProject, null, null,
+                                                                                       nonFilteredFileExtensions,
+                                                                                       new StubMavenSession() );
+        mavenResourcesExecution.addFilterWrapper( filterWrapper );
+        mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
         Properties result = PropertyUtils
             .loadPropertyFile( new File( outputDirectory, "maven-resources-filtering.txt" ), null );

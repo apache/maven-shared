@@ -43,11 +43,24 @@ Maven Filtering Component Basic Usage
 
 +-----+
 
-encoding can be null platform default will be used
+resources : List of org.apache.maven.model.Resource
+
+outputDirectory : base output directory for Resource.targetPath
+
+mavenProject : a mavenProject 
+
+encoding : output encoding for filtered files (can be null platform default will be used)
+
+filtersFile : List of String pointed to a properties file 
 
 nonFilteredFileExtensions : is a List of String which file extensions to not apply filtering (default List contains jpg,jpeg,gif,bmp,png)
 
-mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, encoding, filtersFile, nonFilteredFileExtensions, mavenSession );
+mavenSession : executionProperties will be used for file filtering
+
+MavenResourcesExecution mavenResourcesExecution = 
+  new MavenResourcesExecution ( resources, outputDirectory, mavenProject, encoding, filtersFile, nonFilteredFileExtensions, mavenSession );
+
+mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
 +-----+
 
@@ -58,11 +71,8 @@ mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProjec
 
 +-----+
 
-MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
-List defaultFilterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenProject, null, true, mavenSession );
+Create your FilterWrapper.
 
-List filterWrappers = new ArrayList( );
-filterWrappers.addAll( defaultFilterWrappers );
 FileUtils.FilterWrapper filterWrapper = new FileUtils.FilterWrapper()
 {
     public Reader getReader( Reader reader )
@@ -71,15 +81,14 @@ FileUtils.FilterWrapper filterWrapper = new FileUtils.FilterWrapper()
         return new InterpolationFilterReader( reader, reflectionProperties, "@", "@" );
     }
 };
-filterWrappers.add( filterWrapper );
+
+Create your MavenResourcesExecution instance and add a new filterWrapper.
+
+mavenResourcesExecution.addFilterWrapper( filterWrapper ); 
+If the mavenResourcesExecution.useDefaultFilterWrappers is set to true default FilterWrapper will be added first. 
 
 here you can apply filtering on your resources.
 
-encoding can be null platform default will be used
-
-nonFilteredFileExtensions : is a List of String which file extensions to not apply filtering (default List contains jpg,jpeg,gif,bmp,png)
-
-mavenResourcesFiltering.filterResources( resources, outputDirectory, encoding, filterWrappers,
-                                         outputDirectory, nonFilteredFileExtensions, mavenSession );
+mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
 +-----+

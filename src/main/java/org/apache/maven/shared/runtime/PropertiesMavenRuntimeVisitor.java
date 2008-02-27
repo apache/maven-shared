@@ -70,8 +70,8 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
 
     // MavenRuntimeVisitor methods --------------------------------------------
 
-    /*
-     * @see org.apache.maven.shared.runtime.MavenRuntimeVisitor#visitProjectProperties(java.io.InputStream)
+    /**
+     * {@inheritDoc}
      */
     public void visitProjectProperties( InputStream in ) throws MavenRuntimeException
     {
@@ -80,8 +80,8 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
         projects.add( project );
     }
 
-    /*
-     * @see org.apache.maven.shared.runtime.MavenRuntimeVisitor#visitProjectXML(java.io.InputStream)
+    /**
+     * {@inheritDoc}
      */
     public void visitProjectXML( InputStream in ) throws MavenRuntimeException
     {

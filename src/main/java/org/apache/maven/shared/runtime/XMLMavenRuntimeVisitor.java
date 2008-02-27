@@ -61,16 +61,16 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
 
     // MavenRuntimeVisitor methods --------------------------------------------
 
-    /*
-     * @see org.apache.maven.shared.runtime.MavenRuntimeVisitor#visitProjectProperties(java.io.InputStream)
+    /**
+     * {@inheritDoc}
      */
     public void visitProjectProperties( InputStream in ) throws MavenRuntimeException
     {
         // no-op
     }
 
-    /*
-     * @see org.apache.maven.shared.runtime.MavenRuntimeVisitor#visitProjectXML(java.io.InputStream)
+    /**
+     * {@inheritDoc}
      */
     public void visitProjectXML( InputStream in ) throws MavenRuntimeException
     {

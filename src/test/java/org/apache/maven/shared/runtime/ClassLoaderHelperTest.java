@@ -46,8 +46,8 @@ public class ClassLoaderHelperTest extends TestCase
     
     // TestCase methods -------------------------------------------------------
     
-    /*
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * {@inheritDoc}
      */
     protected void setUp() throws Exception
     {
@@ -57,8 +57,8 @@ public class ClassLoaderHelperTest extends TestCase
         mockVisitorControl.replay();
     }
     
-    /*
-     * @see junit.framework.TestCase#tearDown()
+    /**
+     * {@inheritDoc}
      */
     protected void tearDown() throws Exception
     {

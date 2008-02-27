@@ -163,6 +163,7 @@ public class ClassLoaderHelper
             JarInputStream in = new JarInputStream( url.openStream() );
 
             JarEntry entry;
+            
             while ( ( entry = in.getNextJarEntry() ) != null )
             {
                 String name = entry.getName();
@@ -222,12 +223,16 @@ public class ClassLoaderHelper
     private boolean matches( String[] matchTokens, String[] tokens )
     {
         if ( tokens.length != matchTokens.length )
+        {
             return false;
+        }
 
         for ( int i = 0; i < tokens.length; i++ )
         {
             if ( matchTokens[i] != null && !tokens[i].equals( matchTokens[i] ) )
+            {
                 return false;
+            }
         }
 
         return true;

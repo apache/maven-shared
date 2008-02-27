@@ -34,7 +34,7 @@ public interface MavenRuntime
     /**
      * The Plexus role for this component.
      */
-    static String ROLE = MavenRuntime.class.getName();
+    String ROLE = MavenRuntime.class.getName();
 
     // public methods ---------------------------------------------------------
 

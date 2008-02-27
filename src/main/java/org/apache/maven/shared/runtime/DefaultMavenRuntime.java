@@ -33,8 +33,8 @@ public class DefaultMavenRuntime implements MavenRuntime
 {
     // MavenRuntime methods ---------------------------------------------------
 
-    /*
-     * @see org.apache.maven.shared.runtime.MavenRuntime#getProjectProperties(java.lang.ClassLoader)
+    /**
+     * {@inheritDoc}
      */
     public List getProjectProperties( ClassLoader classLoader ) throws MavenRuntimeException
     {
@@ -45,8 +45,8 @@ public class DefaultMavenRuntime implements MavenRuntime
         return visitor.getProjects();
     }
 
-    /*
-     * @see org.apache.maven.shared.runtime.MavenRuntime#getProjects(java.lang.ClassLoader)
+    /**
+     * {@inheritDoc}
      */
     public List getProjects( ClassLoader classLoader ) throws MavenRuntimeException
     {
@@ -57,8 +57,8 @@ public class DefaultMavenRuntime implements MavenRuntime
         return visitor.getProjects();
     }
 
-    /*
-     * @see org.apache.maven.shared.runtime.MavenRuntime#getSortedProjects(java.lang.ClassLoader)
+    /**
+     * {@inheritDoc}
      */
     public List getSortedProjects( ClassLoader classLoader ) throws MavenRuntimeException
     {

@@ -52,8 +52,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
     // TestCase methods -------------------------------------------------------
 
-    /*
-     * @see org.codehaus.plexus.PlexusTestCase#setUp()
+    /**
+     * {@inheritDoc}
      */
     protected void setUp() throws Exception
     {

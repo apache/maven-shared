@@ -74,13 +74,19 @@ public class MavenProjectProperties implements Serializable
     public MavenProjectProperties( String groupId, String artifactId, String version )
     {
         if ( groupId == null )
+        {
             throw new IllegalArgumentException( "groupId cannot be null" );
+        }
 
         if ( artifactId == null )
+        {
             throw new IllegalArgumentException( "artifactId cannot be null" );
+        }
 
         if ( version == null )
+        {
             throw new IllegalArgumentException( "version cannot be null" );
+        }
 
         this.groupId = groupId;
         this.artifactId = artifactId;
@@ -121,8 +127,8 @@ public class MavenProjectProperties implements Serializable
 
     // Object methods ---------------------------------------------------------
 
-    /*
-     * @see java.lang.Object#hashCode()
+    /**
+     * {@inheritDoc}
      */
     public int hashCode()
     {
@@ -135,17 +141,21 @@ public class MavenProjectProperties implements Serializable
         return hashCode;
     }
 
-    /*
-     * @see java.lang.Object#equals(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     public boolean equals( Object object )
     {
         if ( !( object instanceof MavenProjectProperties ) )
+        {
             return false;
+        }
 
         MavenProjectProperties info = (MavenProjectProperties) object;
 
-        return ( groupId.equals( info.getGroupId() ) && artifactId.equals( info.getArtifactId() ) && version.equals( info.getVersion() ) );
+        return groupId.equals( info.getGroupId() )
+            && artifactId.equals( info.getArtifactId() )
+            && version.equals( info.getVersion() );
     }
 
     /*

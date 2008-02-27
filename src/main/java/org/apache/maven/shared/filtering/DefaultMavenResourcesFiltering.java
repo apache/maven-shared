@@ -138,10 +138,15 @@ public class DefaultMavenResourcesFiltering
         
         if ( mavenResourcesExecution.isUseDefaultFilterWrappers() )
         {
-            List filterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenResourcesExecution.getMavenProject(),
-                                                                            mavenResourcesExecution.getFileFilters(),
-                                                                            true, mavenResourcesExecution
-                                                                                .getMavenSession() );
+            List filterWrappers = new ArrayList();
+            if ( mavenResourcesExecution.getFilterWrappers() != null )
+            {
+                filterWrappers.addAll( mavenResourcesExecution.getFilterWrappers() );
+            }
+            filterWrappers.addAll( mavenFileFilter.getDefaultFilterWrappers( mavenResourcesExecution.getMavenProject(),
+                                                                             mavenResourcesExecution.getFileFilters(),
+                                                                             true, mavenResourcesExecution
+                                                                                 .getMavenSession() ) );
             mavenResourcesExecution.setFilterWrappers( filterWrappers );
         }
 
@@ -209,8 +214,8 @@ public class DefaultMavenResourcesFiltering
 
             getLogger().info(
                               "Copying " + includedFiles.size() + " resource" + ( includedFiles.size() > 1 ? "s" : "" )
-                                  + ( targetPath == null ? "" : " to " + targetPath ) );            
-            
+                                  + ( targetPath == null ? "" : " to " + targetPath ) );
+
             for ( Iterator j = includedFiles.iterator(); j.hasNext(); )
             {
                 String name = (String) j.next();
@@ -230,8 +235,10 @@ public class DefaultMavenResourcesFiltering
                 {
                     destinationFile.getParentFile().mkdirs();
                 }
+                
                 boolean filteredExt = filteredFileExtension( source.getName(), mavenResourcesExecution
                     .getNonFilteredFileExtensions() );
+                
                 mavenFileFilter.copyFile( source, destinationFile, resource.isFiltering() && filteredExt,
                                           mavenResourcesExecution.getFilterWrappers(), mavenResourcesExecution
                                               .getEncoding() );

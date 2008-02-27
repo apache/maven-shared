@@ -38,9 +38,9 @@
   <name>Maven Files Filtering</name>
 	
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/sandbox/trunk/shared/maven-interpolation</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/sandbox/trunk/shared/maven-interpolation</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/sandbox/trunk/shared/maven-interpolation</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/maven/sandbox/trunk/shared/maven-filtering</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/sandbox/trunk/shared/maven-filtering</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/sandbox/trunk/shared/maven-filtering</url>
   </scm>	
 	
   <build>

@@ -28,6 +28,7 @@ import java.util.List;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.DirectoryScanner;
@@ -43,6 +44,7 @@ import org.codehaus.plexus.util.StringUtils;
  *                   role-hint="default"
  */
 public class DefaultMavenResourcesFiltering
+    extends AbstractLogEnabled
     implements MavenResourcesFiltering, Initializable
 {
 
@@ -122,6 +124,18 @@ public class DefaultMavenResourcesFiltering
         {
             throw new MavenFilteringException( "mavenResourcesExecution cannot be null" );
         }
+        
+        if ( mavenResourcesExecution.getResources() == null )
+        {
+            getLogger().info( "No resources configured skip copying/filtering" );
+            return;
+        }
+        
+        if ( mavenResourcesExecution.getOutputDirectory() == null )
+        {
+            throw new MavenFilteringException( "outputDirectory cannot be null" );
+        }
+        
         if ( mavenResourcesExecution.isUseDefaultFilterWrappers() )
         {
             List filterWrappers = mavenFileFilter.getDefaultFilterWrappers( mavenResourcesExecution.getMavenProject(),
@@ -131,6 +145,15 @@ public class DefaultMavenResourcesFiltering
             mavenResourcesExecution.setFilterWrappers( filterWrappers );
         }
 
+        if ( mavenResourcesExecution.getEncoding() == null || mavenResourcesExecution.getEncoding().length() < 1 )
+        {
+            getLogger().info( "Using default encoding to copy filtered resources." );
+        }
+        else
+        {
+            getLogger().info( "Using '" + mavenResourcesExecution.getEncoding() + "' to copy filtered resources." );
+        }
+        
         for ( Iterator i = mavenResourcesExecution.getResources().iterator(); i.hasNext(); )
         {
             Resource resource = (Resource) i.next();
@@ -184,6 +207,10 @@ public class DefaultMavenResourcesFiltering
 
             List includedFiles = Arrays.asList( scanner.getIncludedFiles() );
 
+            getLogger().info(
+                              "Copying " + includedFiles.size() + " resource" + ( includedFiles.size() > 1 ? "s" : "" )
+                                  + ( targetPath == null ? "" : " to " + targetPath ) );            
+            
             for ( Iterator j = includedFiles.iterator(); j.hasNext(); )
             {
                 String name = (String) j.next();

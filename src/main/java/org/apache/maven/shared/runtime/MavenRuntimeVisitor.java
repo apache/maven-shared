@@ -19,7 +19,7 @@ package org.apache.maven.shared.runtime;
  * under the License.
  */
 
-import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Defines a visitor for the Maven runtime environment.
@@ -32,20 +32,20 @@ public interface MavenRuntimeVisitor
     /**
      * Visits the specified Maven project properties.
      * 
-     * @param in
-     *            an input stream to the properties
+     * @param url
+     *            a URL to the properties
      * @throws MavenRuntimeException
      *             if an error occurs visiting the stream
      */
-    void visitProjectProperties( InputStream in ) throws MavenRuntimeException;
+    void visitProjectProperties( URL url ) throws MavenRuntimeException;
 
     /**
      * Visits the specified Maven project XML.
      * 
-     * @param in
-     *            an input stream to the XML
+     * @param url
+     *            a URL to the XML
      * @throws MavenRuntimeException
      *             if an error occurs visiting the stream
      */
-    void visitProjectXML( InputStream in ) throws MavenRuntimeException;
+    void visitProjectXML( URL url ) throws MavenRuntimeException;
 }

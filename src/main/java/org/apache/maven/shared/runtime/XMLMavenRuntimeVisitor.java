@@ -20,7 +20,7 @@ package org.apache.maven.shared.runtime;
  */
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -64,7 +64,7 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * {@inheritDoc}
      */
-    public void visitProjectProperties( InputStream in ) throws MavenRuntimeException
+    public void visitProjectProperties( URL url ) throws MavenRuntimeException
     {
         // no-op
     }
@@ -72,9 +72,9 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * {@inheritDoc}
      */
-    public void visitProjectXML( InputStream in ) throws MavenRuntimeException
+    public void visitProjectXML( URL url ) throws MavenRuntimeException
     {
-        MavenProject project = parseProjectXML( in );
+        MavenProject project = parseProjectXML( url );
 
         projects.add( project );
     }
@@ -121,19 +121,19 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * Parses the specified Maven project XML into a <code>MavenProject</code> object.
      * 
-     * @param in
-     *            an input stream to the Maven project XML
+     * @param url
+     *            a URL to the Maven project XML
      * @return a <code>MavenProject</code> object that represents the XML
      * @throws MavenRuntimeException
      *             if an error occurs parsing the XML
      */
-    private MavenProject parseProjectXML( InputStream in ) throws MavenRuntimeException
+    private MavenProject parseProjectXML( URL url ) throws MavenRuntimeException
     {
         MavenXpp3Reader reader = new MavenXpp3Reader();
 
         try
         {
-            Model model = reader.read( ReaderFactory.newXmlReader( in ) );
+            Model model = reader.read( ReaderFactory.newXmlReader( url ) );
 
             MavenProject project = new MavenProject( model );
 

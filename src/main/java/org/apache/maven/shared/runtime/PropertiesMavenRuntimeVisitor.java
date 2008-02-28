@@ -21,6 +21,7 @@ package org.apache.maven.shared.runtime;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,9 +74,9 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * {@inheritDoc}
      */
-    public void visitProjectProperties( InputStream in ) throws MavenRuntimeException
+    public void visitProjectProperties( URL url ) throws MavenRuntimeException
     {
-        MavenProjectProperties project = parseProjectProperties( in );
+        MavenProjectProperties project = parseProjectProperties( url );
 
         projects.add( project );
     }
@@ -83,7 +84,7 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * {@inheritDoc}
      */
-    public void visitProjectXML( InputStream in ) throws MavenRuntimeException
+    public void visitProjectXML( URL url ) throws MavenRuntimeException
     {
         // no-op
     }
@@ -105,23 +106,41 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * Parses the specified Maven project properties into a <code>MavenProjectProperties</code> object.
      * 
-     * @param in
-     *            an input stream to the Maven project properties
+     * @param url
+     *            a URL to the Maven project properties
      * @return a <code>MavenProjectProperties</code> object that represents the properties
      * @throws MavenRuntimeException
      *             if an error occurs parsing the properties
      */
-    private MavenProjectProperties parseProjectProperties( InputStream in ) throws MavenRuntimeException
+    private MavenProjectProperties parseProjectProperties( URL url ) throws MavenRuntimeException
     {
         Properties properties = new Properties();
 
+        InputStream in = null;
+        
         try
         {
+            in = url.openStream();
+
             properties.load( in );
         }
         catch ( IOException exception )
         {
             throw new MavenRuntimeException( "Cannot read project properties", exception );
+        }
+        finally
+        {
+            if ( in != null )
+            {
+                try
+                {
+                    in.close();
+                }
+                catch ( IOException exception )
+                {
+                    throw new MavenRuntimeException( "Cannot close project properties", exception );
+                }
+            }
         }
 
         String groupId = properties.getProperty( GROUP_ID_PROPERTY );

@@ -20,6 +20,7 @@ package org.apache.maven.shared.runtime;
  */
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.jar.JarEntry;
@@ -163,7 +164,7 @@ public class ClassLoaderHelper
             
             while ( ( entry = in.getNextJarEntry() ) != null )
             {
-                acceptJarEntry( in, entry, visitor );
+                acceptJarEntry( url, entry, visitor );
             }
         }
         catch ( IOException exception )
@@ -190,8 +191,8 @@ public class ClassLoaderHelper
      * Invokes the specified visitor on the specified Jar entry if it corresponds to a Maven project XML or properties
      * file.
      * 
-     * @param in
-     *            an input stream to the Jar file for this entry
+     * @param jarURL
+     *            a URL to the Jar file for this entry
      * @param entry
      *            the Jar entry to introspect
      * @param visitor
@@ -199,18 +200,27 @@ public class ClassLoaderHelper
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private void acceptJarEntry( JarInputStream in, JarEntry entry, MavenRuntimeVisitor visitor )
+    private void acceptJarEntry( URL jarURL, JarEntry entry, MavenRuntimeVisitor visitor )
         throws MavenRuntimeException
     {
         String name = entry.getName();
 
-        if ( isProjectPropertiesPath( name ) )
+        try
         {
-            visitor.visitProjectProperties( in );
+            URL url = new URL("jar:" + jarURL + "!/" + entry.getName());
+            
+            if ( isProjectPropertiesPath( name ) )
+            {
+                visitor.visitProjectProperties( url );
+            }
+            else if ( isProjectXMLPath( name ) )
+            {
+                visitor.visitProjectXML( url );
+            }
         }
-        else if ( isProjectXMLPath( name ) )
+        catch ( MalformedURLException exception )
         {
-            visitor.visitProjectXML( in );
+            throw new MavenRuntimeException( "Cannot read jar entry", exception );
         }
     }
 

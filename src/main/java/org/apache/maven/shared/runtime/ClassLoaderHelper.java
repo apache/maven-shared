@@ -89,7 +89,7 @@ public class ClassLoaderHelper
 
         while ( currentClassLoader != null )
         {
-            visitClassLoader( visitor, currentClassLoader );
+            acceptClassLoader( currentClassLoader, visitor );
 
             currentClassLoader = currentClassLoader.getParent();
         }
@@ -100,89 +100,117 @@ public class ClassLoaderHelper
     /**
      * Invokes the specified visitor on all Maven projects found within the specified class loader.
      * 
-     * @param visitor
-     *            the visitor to invoke
      * @param classLoader
      *            the class loader to introspect
+     * @param visitor
+     *            the visitor to invoke
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private void visitClassLoader( MavenRuntimeVisitor visitor, ClassLoader classLoader )
+    private void acceptClassLoader( ClassLoader classLoader, MavenRuntimeVisitor visitor )
         throws MavenRuntimeException
     {
-        if ( !( classLoader instanceof URLClassLoader ) )
+        if ( classLoader instanceof URLClassLoader )
         {
-            throw new MavenRuntimeException( "Cannot introspect non-URL class loader: "
-                            + classLoader.getClass().getName() );
-        }
-        
-        URLClassLoader urlClassLoader = (URLClassLoader) classLoader;
-        
-        URL[] urls = urlClassLoader.getURLs();
+            URLClassLoader urlClassLoader = (URLClassLoader) classLoader;
+            
+            URL[] urls = urlClassLoader.getURLs();
 
-        for ( int i = 0; i < urls.length; i++ )
-        {
-            visitProjects( visitor, urls[i] );
+            for ( int i = 0; i < urls.length; i++ )
+            {
+                acceptURL( urls[i], visitor );
+            }
         }
     }
 
     /**
      * Invokes the specified visitor on all Maven projects found within the specified URL.
      * 
-     * @param visitor
-     *            the visitor to invoke
      * @param url
      *            the URL to introspect
+     * @param visitor
+     *            the visitor to invoke
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private void visitProjects( MavenRuntimeVisitor visitor, URL url ) throws MavenRuntimeException
+    private void acceptURL( URL url, MavenRuntimeVisitor visitor ) throws MavenRuntimeException
     {
-        String path = url.getPath();
-
-        if ( path.endsWith( ".jar" ) )
+        if ( url.getPath().endsWith( ".jar" ) )
         {
-            visitProjectsInJar( visitor, url );
+            acceptJar( url, visitor );
         }
     }
 
     /**
      * Invokes the specified visitor on all Maven projects found within the specified Jar URL.
      * 
-     * @param visitor
-     *            the visitor to invoke
      * @param url
      *            the Jar URL to introspect
+     * @param visitor
+     *            the visitor to invoke
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private void visitProjectsInJar( MavenRuntimeVisitor visitor, URL url ) throws MavenRuntimeException
+    private void acceptJar( URL url, MavenRuntimeVisitor visitor ) throws MavenRuntimeException
     {
+        JarInputStream in = null;
+        
         try
         {
-            JarInputStream in = new JarInputStream( url.openStream() );
+            in = new JarInputStream( url.openStream() );
 
             JarEntry entry;
             
             while ( ( entry = in.getNextJarEntry() ) != null )
             {
-                String name = entry.getName();
-
-                if ( isProjectPropertiesPath( name ) )
-                {
-                    visitor.visitProjectProperties( in );
-                }
-                else if ( isProjectXMLPath( name ) )
-                {
-                    visitor.visitProjectXML( in );
-                }
+                acceptJarEntry( in, entry, visitor );
             }
-
-            in.close();
         }
         catch ( IOException exception )
         {
             throw new MavenRuntimeException( "Cannot read jar", exception );
+        }
+        finally
+        {
+            try
+            {
+                if (in != null)
+                {
+                    in.close();
+                }
+            }
+            catch ( IOException exception )
+            {
+                throw new MavenRuntimeException( "Cannot close jar", exception );
+            }
+        }
+    }
+    
+    /**
+     * Invokes the specified visitor on the specified Jar entry if it corresponds to a Maven project XML or properties
+     * file.
+     * 
+     * @param in
+     *            an input stream to the Jar file for this entry
+     * @param entry
+     *            the Jar entry to introspect
+     * @param visitor
+     *            the visitor to invoke
+     * @throws MavenRuntimeException
+     *             if an error occurs visiting the projects
+     */
+    private void acceptJarEntry( JarInputStream in, JarEntry entry, MavenRuntimeVisitor visitor )
+        throws MavenRuntimeException
+    {
+        String name = entry.getName();
+
+        if ( isProjectPropertiesPath( name ) )
+        {
+            visitor.visitProjectProperties( in );
+        }
+        else if ( isProjectXMLPath( name ) )
+        {
+            visitor.visitProjectXML( in );
         }
     }
 

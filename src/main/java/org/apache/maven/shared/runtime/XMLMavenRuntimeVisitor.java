@@ -135,11 +135,7 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
         {
             Model model = reader.read( ReaderFactory.newXmlReader( url ) );
 
-            MavenProject project = new MavenProject( model );
-
-            // TODO: set file on project when possible
-
-            return project;
+            return new MavenProject( model );
         }
         catch ( XmlPullParserException exception )
         {

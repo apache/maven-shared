@@ -21,7 +21,6 @@ package org.apache.maven.shared.runtime;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +30,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.project.DuplicateProjectException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectSorter;
+import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
@@ -133,8 +133,7 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
 
         try
         {
-            // TODO: set encoding?
-            Model model = reader.read( new InputStreamReader( in ) );
+            Model model = reader.read( ReaderFactory.newXmlReader( in ) );
 
             MavenProject project = new MavenProject( model );
 

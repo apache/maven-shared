@@ -129,8 +129,9 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         File pom = getTestFile( "target/test-classes/", pomPath );
         Properties properties = new Properties();
         List goals = Arrays.asList( new String[] { "clean", "package" } );
+        File log = new File( pom.getParentFile(), "build.log" );
 
-        InvocationResult result = buildTool.executeMaven( pom, properties, goals, null );
+        InvocationResult result = buildTool.executeMaven( pom, properties, goals, log );
         assertNull( "Error building test project", result.getExecutionException() );
         assertEquals( "Error building test project", 0, result.getExitCode() );
     }

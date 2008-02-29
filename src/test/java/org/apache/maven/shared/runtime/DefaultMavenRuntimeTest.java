@@ -66,7 +66,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
     // tests ------------------------------------------------------------------
 
-    public void testSingleJar() throws TestToolsException, MalformedURLException, MavenRuntimeException
+    public void testGetSortedProjectsWithSingleJar()
+        throws TestToolsException, MalformedURLException, MavenRuntimeException
     {
         packageProject( "testSingleJar/pom.xml" );
 
@@ -79,7 +80,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
     }
 
-    public void testMultipleJars() throws TestToolsException, MalformedURLException, MavenRuntimeException
+    public void testGetSortedProjectsWithMultipleJars()
+        throws TestToolsException, MalformedURLException, MavenRuntimeException
     {
         packageProject( "testMultipleJars/project1/pom.xml" );
         packageProject( "testMultipleJars/project2/pom.xml" );
@@ -100,7 +102,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         }, projects );
     }
 
-    public void testDependentJars() throws TestToolsException, MalformedURLException, MavenRuntimeException
+    public void testGetSortedProjectsWithDependentJars()
+        throws TestToolsException, MalformedURLException, MavenRuntimeException
     {
         packageProject( "testDependentJars/pom.xml" );
 

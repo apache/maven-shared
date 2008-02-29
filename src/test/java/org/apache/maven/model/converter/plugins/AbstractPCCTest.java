@@ -28,7 +28,7 @@ import java.util.Properties;
  * @author Dennis Lundberg
  * @version $Id$
  */
-public class AbstractPCCTest extends PlexusTestCase
+public abstract class AbstractPCCTest extends PlexusTestCase
 {
     protected Xpp3Dom configuration;
     protected AbstractPluginConfigurationConverter pluginConfigurationConverter;

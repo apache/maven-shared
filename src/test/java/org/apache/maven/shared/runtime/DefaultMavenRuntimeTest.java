@@ -21,12 +21,14 @@ package org.apache.maven.shared.runtime;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.Vector;
 
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.maven.project.MavenProject;
@@ -34,6 +36,8 @@ import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.test.plugin.BuildTool;
 import org.apache.maven.shared.test.plugin.TestToolsException;
 import org.codehaus.plexus.PlexusTestCase;
+
+import com.sun.appserv.ClassLoaderUtil;
 
 /**
  * Tests <code>DefaultMavenRuntime</code>.
@@ -67,21 +71,23 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     // tests ------------------------------------------------------------------
 
     public void testGetSortedProjectsWithSingleJar()
-        throws TestToolsException, MalformedURLException, MavenRuntimeException
+        throws TestToolsException, MavenRuntimeException, IOException
     {
         packageProject( "testSingleJar/pom.xml" );
 
         File jar = getPackage( "testSingleJar/pom.xml" );
 
-        ClassLoader classLoader = newClassLoader( jar );
+        URLClassLoader classLoader = newClassLoader( jar );
 
         List projects = mavenRuntime.getSortedProjects( classLoader );
+
+        close( classLoader );
 
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
     }
 
     public void testGetSortedProjectsWithMultipleJars()
-        throws TestToolsException, MalformedURLException, MavenRuntimeException
+        throws TestToolsException, MavenRuntimeException, IOException
     {
         packageProject( "testMultipleJars/project1/pom.xml" );
         packageProject( "testMultipleJars/project2/pom.xml" );
@@ -91,9 +97,11 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         File jar2 = getPackage( "testMultipleJars/project2/pom.xml" );
         File jar3 = getPackage( "testMultipleJars/project3/pom.xml" );
 
-        ClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
+        URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
 
         List projects = mavenRuntime.getSortedProjects( classLoader );
+
+        close( classLoader );
 
         assertMavenProjects( new String[] {
             "org.apache.maven.shared.runtime.tests:testMultipleJars1:1.0",
@@ -103,7 +111,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetSortedProjectsWithDependentJars()
-        throws TestToolsException, MalformedURLException, MavenRuntimeException
+        throws TestToolsException, MavenRuntimeException, IOException
     {
         packageProject( "testDependentJars/pom.xml" );
 
@@ -111,9 +119,11 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         File jar2 = getPackage( "testDependentJars/project2/pom.xml" );
         File jar3 = getPackage( "testDependentJars/project3/pom.xml" );
 
-        ClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
+        URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
 
         List projects = mavenRuntime.getSortedProjects( classLoader );
+
+        close( classLoader );
 
         assertMavenProjects( new String[] {
             "org.apache.maven.shared.runtime.tests:testDependentJars3:1.0",
@@ -150,12 +160,12 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         return jar;
     }
 
-    private ClassLoader newClassLoader( File file ) throws MalformedURLException
+    private URLClassLoader newClassLoader( File file ) throws MalformedURLException
     {
         return newClassLoader( new File[] { file } );
     }
 
-    private ClassLoader newClassLoader( File[] files ) throws MalformedURLException
+    private URLClassLoader newClassLoader( File[] files ) throws MalformedURLException
     {
         URL[] urls = new URL[files.length];
 
@@ -165,6 +175,16 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         }
 
         return new URLClassLoader( urls, null );
+    }
+    
+    private void close( URLClassLoader classLoader ) throws IOException
+    {
+        IOException[] exceptions = ClassLoaderUtil.releaseLoader( classLoader, new Vector() );
+        
+        if (exceptions.length > 0)
+        {
+            throw exceptions[0];
+        }
     }
 
     private void assertMavenProjects( String id, List projects )
@@ -191,6 +211,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
     private void assertMavenProject( String groupId, String artifactId, String version, MavenProject project )
     {
+        assertNotNull( "Project is null", project );
+        
         assertEquals( "Group id", groupId, project.getGroupId() );
         assertEquals( "Artifact id", artifactId, project.getArtifactId() );
         assertEquals( "Version", version, project.getVersion() );

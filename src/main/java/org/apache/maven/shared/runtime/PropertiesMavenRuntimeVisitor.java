@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+import org.codehaus.plexus.util.IOUtil;
+
 /**
  * A visitor that parses and collects Maven project property files.
  * 
@@ -130,17 +132,7 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
         }
         finally
         {
-            if ( in != null )
-            {
-                try
-                {
-                    in.close();
-                }
-                catch ( IOException exception )
-                {
-                    throw new MavenRuntimeException( "Cannot close project properties", exception );
-                }
-            }
+            IOUtil.close( in );
         }
 
         String groupId = properties.getProperty( GROUP_ID_PROPERTY );

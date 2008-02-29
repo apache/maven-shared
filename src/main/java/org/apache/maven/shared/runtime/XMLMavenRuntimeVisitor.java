@@ -20,7 +20,9 @@ package org.apache.maven.shared.runtime;
  */
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +32,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.project.DuplicateProjectException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectSorter;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
@@ -131,9 +134,16 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
     {
         MavenXpp3Reader reader = new MavenXpp3Reader();
 
+        InputStream in = null;
+        
         try
         {
-            Model model = reader.read( ReaderFactory.newXmlReader( url ) );
+            URLConnection connection = url.openConnection();
+            connection.setUseCaches( false );
+            
+            in = connection.getInputStream();
+            
+            Model model = reader.read( ReaderFactory.newXmlReader( in ) );
 
             return new MavenProject( model );
         }
@@ -144,6 +154,10 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
         catch ( IOException exception )
         {
             throw new MavenRuntimeException( "Cannot read project XML", exception );
+        }
+        finally
+        {
+            IOUtil.close( in );
         }
     }
 }

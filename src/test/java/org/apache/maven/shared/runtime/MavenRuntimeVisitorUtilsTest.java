@@ -30,13 +30,13 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
 /**
- * Tests <code>ClassLoaderHelper</code>.
+ * Tests <code>MavenRuntimeVisitorUtils</code>.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
- * @see ClassLoaderHelper
+ * @see MavenRuntimeVisitorUtils
  */
-public class ClassLoaderHelperTest extends TestCase
+public class MavenRuntimeVisitorUtilsTest extends TestCase
 {
     // fields -----------------------------------------------------------------
     
@@ -95,8 +95,7 @@ public class ClassLoaderHelperTest extends TestCase
     private void accept( URL[] urls ) throws MavenRuntimeException
     {
         ClassLoader classLoader = new URLClassLoader(urls, null);
-        ClassLoaderHelper helper = new ClassLoaderHelper(classLoader);
  
-        helper.accept( mockVisitor );
+        MavenRuntimeVisitorUtils.accept( classLoader, mockVisitor );
     }
 }

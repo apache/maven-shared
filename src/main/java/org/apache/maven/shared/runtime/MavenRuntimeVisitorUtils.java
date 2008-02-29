@@ -27,13 +27,13 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 /**
- * Provides a bridge between a class loader and a Maven runtime visitor.
+ * Provides various methods of applying Maven runtime visitors.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
  * @see MavenRuntimeVisitor
  */
-public class ClassLoaderHelper
+public final class MavenRuntimeVisitorUtils
 {
     // constants --------------------------------------------------------------
 
@@ -48,42 +48,29 @@ public class ClassLoaderHelper
      */
     private static final String[] XML_PATH_TOKENS = new String[] { "META-INF", "maven", null, null, "pom.xml" };
     
-    // fields -----------------------------------------------------------------
-    
-    /**
-     * The class loader that this helper uses.
-     */
-    private final ClassLoader classLoader;
-
     // constructors -----------------------------------------------------------
 
     /**
-     * Creates a <code>ClassLoaderHelper</code> that uses the specified class loader.
-     * 
-     * @param classLoader
-     *            the class loader to use, not null
+     * <code>MavenRuntimeVisitorUtils</code> is not intended to be instantiated.
      */
-    public ClassLoaderHelper(ClassLoader classLoader)
+    private MavenRuntimeVisitorUtils()
     {
-        if ( classLoader == null )
-        {
-            throw new IllegalArgumentException( "classLoader cannot be null" );
-        }
-
-        this.classLoader = classLoader;
+        // private constructor for utility class
     }
 
     // public methods ---------------------------------------------------------
 
     /**
-     * Invokes the specified visitor on all Maven projects found within this helper's class loader.
+     * Invokes the specified visitor on all Maven projects found within the specified class loader.
      * 
+     * @param classLoader
+     *            the class loader to introspect
      * @param visitor
      *            the visitor to invoke
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    public void accept( MavenRuntimeVisitor visitor )
+    public static void accept( ClassLoader classLoader, MavenRuntimeVisitor visitor )
         throws MavenRuntimeException
     {
         ClassLoader currentClassLoader = classLoader;
@@ -93,6 +80,24 @@ public class ClassLoaderHelper
             acceptClassLoader( currentClassLoader, visitor );
 
             currentClassLoader = currentClassLoader.getParent();
+        }
+    }
+    
+    /**
+     * Invokes the specified visitor on all Maven projects found within the specified URL.
+     * 
+     * @param url
+     *            the URL to introspect
+     * @param visitor
+     *            the visitor to invoke
+     * @throws MavenRuntimeException
+     *             if an error occurs visiting the projects
+     */
+    public static void accept( URL url, MavenRuntimeVisitor visitor ) throws MavenRuntimeException
+    {
+        if ( url.getPath().endsWith( ".jar" ) )
+        {
+            acceptJar( url, visitor );
         }
     }
 
@@ -108,7 +113,7 @@ public class ClassLoaderHelper
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private void acceptClassLoader( ClassLoader classLoader, MavenRuntimeVisitor visitor )
+    private static void acceptClassLoader( ClassLoader classLoader, MavenRuntimeVisitor visitor )
         throws MavenRuntimeException
     {
         if ( classLoader instanceof URLClassLoader )
@@ -119,26 +124,8 @@ public class ClassLoaderHelper
 
             for ( int i = 0; i < urls.length; i++ )
             {
-                acceptURL( urls[i], visitor );
+                accept( urls[i], visitor );
             }
-        }
-    }
-
-    /**
-     * Invokes the specified visitor on all Maven projects found within the specified URL.
-     * 
-     * @param url
-     *            the URL to introspect
-     * @param visitor
-     *            the visitor to invoke
-     * @throws MavenRuntimeException
-     *             if an error occurs visiting the projects
-     */
-    private void acceptURL( URL url, MavenRuntimeVisitor visitor ) throws MavenRuntimeException
-    {
-        if ( url.getPath().endsWith( ".jar" ) )
-        {
-            acceptJar( url, visitor );
         }
     }
 
@@ -152,7 +139,7 @@ public class ClassLoaderHelper
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private void acceptJar( URL url, MavenRuntimeVisitor visitor ) throws MavenRuntimeException
+    private static void acceptJar( URL url, MavenRuntimeVisitor visitor ) throws MavenRuntimeException
     {
         JarInputStream in = null;
         
@@ -200,7 +187,7 @@ public class ClassLoaderHelper
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private void acceptJarEntry( URL jarURL, JarEntry entry, MavenRuntimeVisitor visitor )
+    private static void acceptJarEntry( URL jarURL, JarEntry entry, MavenRuntimeVisitor visitor )
         throws MavenRuntimeException
     {
         String name = entry.getName();
@@ -231,7 +218,7 @@ public class ClassLoaderHelper
      *            the path to examine
      * @return <code>true</code> if the specified path represents a Maven project properties file
      */
-    private boolean isProjectPropertiesPath( String path )
+    private static boolean isProjectPropertiesPath( String path )
     {
         return matches( PROPERTIES_PATH_TOKENS, path.split( "/" ) );
     }
@@ -243,7 +230,7 @@ public class ClassLoaderHelper
      *            the path to examine
      * @return <code>true</code> if the specified path represents a Maven project XML file
      */
-    private boolean isProjectXMLPath( String path )
+    private static boolean isProjectXMLPath( String path )
     {
         return matches( XML_PATH_TOKENS, path.split( "/" ) );
     }
@@ -258,7 +245,7 @@ public class ClassLoaderHelper
      * @return <code>true</code> if the <code>tokens</code> array equals the <code>matchTokens</code>, treating
      *         any <code>null</code> <code>matchTokens</code> values as wildcards
      */
-    private boolean matches( String[] matchTokens, String[] tokens )
+    private static boolean matches( String[] matchTokens, String[] tokens )
     {
         if ( tokens.length != matchTokens.length )
         {

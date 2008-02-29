@@ -40,7 +40,7 @@ public class DefaultMavenRuntime implements MavenRuntime
     {
         PropertiesMavenRuntimeVisitor visitor = new PropertiesMavenRuntimeVisitor();
 
-        new ClassLoaderHelper( classLoader ).accept( visitor );
+        MavenRuntimeVisitorUtils.accept( classLoader, visitor );
 
         return visitor.getProjects();
     }
@@ -52,7 +52,7 @@ public class DefaultMavenRuntime implements MavenRuntime
     {
         XMLMavenRuntimeVisitor visitor = new XMLMavenRuntimeVisitor();
 
-        new ClassLoaderHelper( classLoader ).accept( visitor );
+        MavenRuntimeVisitorUtils.accept( classLoader, visitor );
 
         return visitor.getProjects();
     }
@@ -64,7 +64,7 @@ public class DefaultMavenRuntime implements MavenRuntime
     {
         XMLMavenRuntimeVisitor visitor = new XMLMavenRuntimeVisitor();
 
-        new ClassLoaderHelper( classLoader ).accept( visitor );
+        MavenRuntimeVisitorUtils.accept( classLoader, visitor );
 
         return visitor.getSortedProjects();
     }

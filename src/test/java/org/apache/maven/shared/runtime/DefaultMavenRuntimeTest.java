@@ -68,7 +68,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         mavenRuntime = (MavenRuntime) lookup( MavenRuntime.ROLE );
     }
 
-    // tests ------------------------------------------------------------------
+    // getProjectProperties(Class) tests --------------------------------------
 
     public void testGetProjectPropertiesWithDefaultPackageClass()
         throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
@@ -124,6 +124,50 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
 
+    // getProjectProperties(ClassLoader) tests --------------------------------
+
+    public void testGetProjectPropertiesWithSingleJar()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( jar );
+
+        List properties = mavenRuntime.getProjectProperties( classLoader );
+
+        close( classLoader );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
+    }
+
+    public void testGetProjectPropertiesWithMultipleJars()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testMultipleJars/project1/pom.xml" );
+        packageProject( "testMultipleJars/project2/pom.xml" );
+        packageProject( "testMultipleJars/project3/pom.xml" );
+
+        File jar1 = getPackage( "testMultipleJars/project1/pom.xml" );
+        File jar2 = getPackage( "testMultipleJars/project2/pom.xml" );
+        File jar3 = getPackage( "testMultipleJars/project3/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
+
+        List properties = mavenRuntime.getProjectProperties( classLoader );
+
+        close( classLoader );
+
+        assertMavenProjectProperties( new String[] {
+            "org.apache.maven.shared.runtime.tests:testMultipleJars1:1.0",
+            "org.apache.maven.shared.runtime.tests:testMultipleJars2:1.0",
+            "org.apache.maven.shared.runtime.tests:testMultipleJars3:1.0"
+        }, properties );
+    }
+
+    // getProject tests -------------------------------------------------------
+
     public void testGetProjectWithDefaultPackageClass()
         throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
     {
@@ -177,6 +221,50 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
     }
+
+    // getProjects tests ------------------------------------------------------
+
+    public void testGetProjectsWithSingleJar()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( jar );
+
+        List projects = mavenRuntime.getProjects( classLoader );
+
+        close( classLoader );
+
+        assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
+    }
+
+    public void testGetProjectsWithMultipleJars()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testMultipleJars/project1/pom.xml" );
+        packageProject( "testMultipleJars/project2/pom.xml" );
+        packageProject( "testMultipleJars/project3/pom.xml" );
+
+        File jar1 = getPackage( "testMultipleJars/project1/pom.xml" );
+        File jar2 = getPackage( "testMultipleJars/project2/pom.xml" );
+        File jar3 = getPackage( "testMultipleJars/project3/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
+
+        List projects = mavenRuntime.getProjects( classLoader );
+
+        close( classLoader );
+
+        assertMavenProjects( new String[] {
+            "org.apache.maven.shared.runtime.tests:testMultipleJars1:1.0",
+            "org.apache.maven.shared.runtime.tests:testMultipleJars2:1.0",
+            "org.apache.maven.shared.runtime.tests:testMultipleJars3:1.0"
+        }, projects );
+    }
+
+    // getSortedProjects tests ------------------------------------------------
 
     public void testGetSortedProjectsWithSingleJar()
         throws TestToolsException, MavenRuntimeException, IOException
@@ -292,6 +380,21 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         if (exceptions.length > 0)
         {
             throw exceptions[0];
+        }
+    }
+
+    private void assertMavenProjectProperties( String id, List propertiesList )
+    {
+        assertMavenProjectProperties( new String[] { id }, propertiesList );
+    }
+
+    private void assertMavenProjectProperties( String[] ids, List propertiesList )
+    {
+        assertEquals( "Number of project properties", ids.length, propertiesList.size() );
+
+        for ( int i = 0; i < ids.length; i++ )
+        {
+            assertMavenProjectProperties( ids[i], (MavenProjectProperties) propertiesList.get( i ) );
         }
     }
 

@@ -23,8 +23,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLConnection;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
+
+import org.codehaus.plexus.util.IOUtil;
 
 /**
  * Provides various methods of applying Maven runtime visitors.
@@ -145,7 +148,10 @@ public final class MavenRuntimeVisitorUtils
         
         try
         {
-            in = new JarInputStream( url.openStream() );
+            URLConnection connection = url.openConnection();
+            connection.setUseCaches( false );
+            
+            in = new JarInputStream( connection.getInputStream() );
 
             JarEntry entry;
             
@@ -160,17 +166,7 @@ public final class MavenRuntimeVisitorUtils
         }
         finally
         {
-            try
-            {
-                if (in != null)
-                {
-                    in.close();
-                }
-            }
-            catch ( IOException exception )
-            {
-                throw new MavenRuntimeException( "Cannot close jar", exception );
-            }
+            IOUtil.close( in );
         }
     }
     

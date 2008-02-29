@@ -22,6 +22,7 @@ package org.apache.maven.shared.runtime;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -122,7 +123,10 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
         
         try
         {
-            in = url.openStream();
+            URLConnection connection = url.openConnection();
+            connection.setUseCaches( false );
+            
+            in = connection.getInputStream();
 
             properties.load( in );
         }

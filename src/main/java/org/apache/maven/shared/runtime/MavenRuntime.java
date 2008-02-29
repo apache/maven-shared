@@ -61,7 +61,7 @@ public interface MavenRuntime
      * @throws MavenRuntimeException
      *             if an error occurred introspecting the Maven runtime environment
      */
-    List getProjectProperties( ClassLoader classLoader ) throws MavenRuntimeException;
+    List getProjectsProperties( ClassLoader classLoader ) throws MavenRuntimeException;
     
     /**
      * Gets the specified class's Maven project.

@@ -50,7 +50,7 @@ public class DefaultMavenRuntime implements MavenRuntime
     /**
      * {@inheritDoc}
      */
-    public List getProjectProperties( ClassLoader classLoader ) throws MavenRuntimeException
+    public List getProjectsProperties( ClassLoader classLoader ) throws MavenRuntimeException
     {
         PropertiesMavenRuntimeVisitor visitor = new PropertiesMavenRuntimeVisitor();
 

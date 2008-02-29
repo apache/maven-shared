@@ -68,7 +68,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         mavenRuntime = (MavenRuntime) lookup( MavenRuntime.ROLE );
     }
 
-    // getProjectProperties(Class) tests --------------------------------------
+    // getProjectProperties tests ---------------------------------------------
 
     public void testGetProjectPropertiesWithDefaultPackageClass()
         throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
@@ -124,9 +124,9 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
 
-    // getProjectProperties(ClassLoader) tests --------------------------------
+    // getProjectsProperties tests --------------------------------------------
 
-    public void testGetProjectPropertiesWithSingleJar()
+    public void testGetProjectsPropertiesWithSingleJar()
         throws TestToolsException, MavenRuntimeException, IOException
     {
         packageProject( "testSingleJar/pom.xml" );
@@ -135,14 +135,14 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( jar );
 
-        List properties = mavenRuntime.getProjectProperties( classLoader );
+        List properties = mavenRuntime.getProjectsProperties( classLoader );
 
         close( classLoader );
 
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
 
-    public void testGetProjectPropertiesWithMultipleJars()
+    public void testGetProjectsPropertiesWithMultipleJars()
         throws TestToolsException, MavenRuntimeException, IOException
     {
         packageProject( "testMultipleJars/project1/pom.xml" );
@@ -155,7 +155,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
 
-        List properties = mavenRuntime.getProjectProperties( classLoader );
+        List properties = mavenRuntime.getProjectsProperties( classLoader );
 
         close( classLoader );
 

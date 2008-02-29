@@ -21,6 +21,8 @@ package org.apache.maven.shared.runtime;
 
 import java.util.List;
 
+import org.apache.maven.project.MavenProject;
+
 /**
  * Provides methods to introspect the current Maven runtime environment.
  * 
@@ -39,6 +41,17 @@ public interface MavenRuntime
     // public methods ---------------------------------------------------------
 
     /**
+     * Gets the properties for the specified class's Maven project.
+     * 
+     * @param klass
+     *            the class to introspect
+     * @return the properties for the specified class's Maven project
+     * @throws MavenRuntimeException
+     *             if an error occurred introspecting the Maven runtime environment
+     */
+    MavenProjectProperties getProjectProperties( Class klass ) throws MavenRuntimeException;
+    
+    /**
      * Obtains a list of simple properties for each Maven project running within the specified class loader.
      * 
      * @param classLoader
@@ -49,6 +62,17 @@ public interface MavenRuntime
      *             if an error occurred introspecting the Maven runtime environment
      */
     List getProjectProperties( ClassLoader classLoader ) throws MavenRuntimeException;
+    
+    /**
+     * Gets the specified class's Maven project.
+     * 
+     * @param klass
+     *            the class to introspect
+     * @return the specified class's Maven project
+     * @throws MavenRuntimeException
+     *             if an error occurred introspecting the Maven runtime environment
+     */
+    MavenProject getProject( Class klass ) throws MavenRuntimeException;
 
     /**
      * Obtains a list of Maven projects running within the specified class loader.

@@ -21,6 +21,8 @@ package org.apache.maven.shared.runtime;
 
 import java.util.List;
 
+import org.apache.maven.project.MavenProject;
+
 /**
  * Default implementation of <code>MavenRuntime</code>.
  * 
@@ -32,6 +34,18 @@ import java.util.List;
 public class DefaultMavenRuntime implements MavenRuntime
 {
     // MavenRuntime methods ---------------------------------------------------
+    
+    /**
+     * {@inheritDoc}
+     */
+    public MavenProjectProperties getProjectProperties( Class klass ) throws MavenRuntimeException
+    {
+        PropertiesMavenRuntimeVisitor visitor = new PropertiesMavenRuntimeVisitor();
+
+        MavenRuntimeVisitorUtils.accept( klass, visitor );
+
+        return (MavenProjectProperties) first( visitor.getProjects() );
+    }
 
     /**
      * {@inheritDoc}
@@ -43,6 +57,18 @@ public class DefaultMavenRuntime implements MavenRuntime
         MavenRuntimeVisitorUtils.accept( classLoader, visitor );
 
         return visitor.getProjects();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public MavenProject getProject( Class klass ) throws MavenRuntimeException
+    {
+        XMLMavenRuntimeVisitor visitor = new XMLMavenRuntimeVisitor();
+
+        MavenRuntimeVisitorUtils.accept( klass, visitor );
+
+        return (MavenProject) first( visitor.getProjects() );
     }
 
     /**
@@ -67,5 +93,19 @@ public class DefaultMavenRuntime implements MavenRuntime
         MavenRuntimeVisitorUtils.accept( classLoader, visitor );
 
         return visitor.getSortedProjects();
+    }
+    
+    // private methods --------------------------------------------------------
+
+    /**
+     * Gets the first element in the specified list or <code>null</code> if it is empty.
+     * 
+     * @param list
+     *            the list to examine
+     * @return the first item in the list, or <code>null</code> if it is empty
+     */
+    private Object first( List list )
+    {
+        return !list.isEmpty() ? list.get( 0 ) : null;
     }
 }

@@ -70,6 +70,114 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
     // tests ------------------------------------------------------------------
 
+    public void testGetProjectPropertiesWithDefaultPackageClass()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( jar );
+
+        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+
+        MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
+
+        close( classLoader );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
+    }
+
+    public void testGetProjectPropertiesWithPackagedClass()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( jar );
+
+        Class klass = classLoader.loadClass( "a.PackagedClass" );
+
+        MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
+
+        close( classLoader );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
+    }
+
+    public void testGetProjectPropertiesWithSubPackagedClass()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( jar );
+
+        Class klass = classLoader.loadClass( "a.b.SubPackagedClass" );
+
+        MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
+
+        close( classLoader );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
+    }
+
+    public void testGetProjectWithDefaultPackageClass()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( jar );
+
+        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+
+        MavenProject project = mavenRuntime.getProject( klass );
+
+        close( classLoader );
+
+        assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
+    }
+
+    public void testGetProjectWithPackagedClass()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( jar );
+
+        Class klass = classLoader.loadClass( "a.PackagedClass" );
+
+        MavenProject project = mavenRuntime.getProject( klass );
+
+        close( classLoader );
+
+        assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
+    }
+
+    public void testGetProjectWithSubPackagedClass()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( jar );
+
+        Class klass = classLoader.loadClass( "a.b.SubPackagedClass" );
+
+        MavenProject project = mavenRuntime.getProject( klass );
+
+        close( classLoader );
+
+        assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
+    }
+
     public void testGetSortedProjectsWithSingleJar()
         throws TestToolsException, MavenRuntimeException, IOException
     {
@@ -187,6 +295,23 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         }
     }
 
+    private void assertMavenProjectProperties( String id, MavenProjectProperties properties )
+    {
+        String[] tokens = id.split( ":" );
+
+        assertMavenProjectProperties( tokens[0], tokens[1], tokens[2], properties );
+    }
+
+    private void assertMavenProjectProperties( String groupId, String artifactId, String version,
+                                               MavenProjectProperties properties )
+    {
+        assertNotNull( "Project properties are null", properties );
+
+        assertEquals( "Group id", groupId, properties.getGroupId() );
+        assertEquals( "Artifact id", artifactId, properties.getArtifactId() );
+        assertEquals( "Version", version, properties.getVersion() );
+    }
+    
     private void assertMavenProjects( String id, List projects )
     {
         assertMavenProjects( new String[] { id }, projects );

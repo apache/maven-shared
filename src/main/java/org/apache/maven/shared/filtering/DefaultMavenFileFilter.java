@@ -32,6 +32,7 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.InterpolationFilterReader;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -165,6 +166,11 @@ public class DefaultMavenFileFilter
             for ( Iterator iterator = propertiesFilePaths.iterator(); iterator.hasNext(); )
             {
                 String filterFile = (String) iterator.next();
+                if (StringUtils.isEmpty( filterFile ))
+                {
+                    // skip empty file name
+                    continue;
+                }
                 try
                 {
                     // TODO new File should be new File(mavenProject.getBasedir(), filterfile ) ? 

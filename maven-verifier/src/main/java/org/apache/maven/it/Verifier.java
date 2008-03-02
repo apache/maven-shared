@@ -911,7 +911,7 @@ public class Verifier
         File logFile = new File( getBasedir(), LOG_FILENAME );
         try
         {
-            Commandline cli = new Commandline();
+            Commandline cli = createCommandLine();
 
             for ( Iterator i = envVars.keySet().iterator(); i.hasNext(); )
             {
@@ -937,8 +937,6 @@ public class Verifier
             }
 
             cli.setWorkingDirectory( getBasedir() );
-
-            cli.setExecutable( getExecutable() );
 
             for ( Iterator it = cliOptions.iterator(); it.hasNext(); )
             {
@@ -1001,8 +999,7 @@ public class Verifier
     public String getMavenVersion()
         throws VerificationException
     {
-        Commandline cmd = new Commandline();
-        cmd.setExecutable( getExecutable() );
+        Commandline cmd = createCommandLine();
         cmd.addArguments( new String[] { "--version" } );
 
         File log;
@@ -1051,6 +1048,18 @@ public class Verifier
         {
             return version;
         }
+    }
+
+    private Commandline createCommandLine()
+    {
+        Commandline cmd = new Commandline();
+        String executable = getExecutable();
+        if ( executable.endsWith( "/bin/mvn" ) )
+        {
+            cmd.addEnvironment( "M2_HOME", executable.substring( 0, executable.length() - 8 ) );
+        }
+        cmd.setExecutable( executable );
+        return cmd;
     }
 
     private int runCommandLine( String mavenHome, Commandline cli, File logFile )

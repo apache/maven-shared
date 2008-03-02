@@ -91,6 +91,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.Hashtable;
 
 /**
  * <p/>
@@ -131,7 +132,7 @@ public class Commandline
 
     protected Vector arguments = new Vector();
 
-    protected Vector envVars = new Vector();
+    protected Hashtable envVars = new Hashtable();
 
     private File workingDir = null;
 
@@ -386,7 +387,7 @@ public class Commandline
     public void addEnvironment( String name,
                                 String value )
     {
-        envVars.add( name + "=" + value );
+        envVars.put( name, name + "=" + value );
     }
 
     /**
@@ -401,7 +402,10 @@ public class Commandline
         {
             String key = (String) i.next();
 
-            addEnvironment( key, envVars.getProperty( key ) );
+            if ( !this.envVars.containsKey( key ) )
+            {
+                this.envVars.put( key, key + "=" + envVars.getProperty( key ) );
+            }
         }
     }
 
@@ -420,7 +424,7 @@ public class Commandline
             throw new CommandLineException( "Error setting up environmental variables", e );
         }
 
-        return (String[]) envVars.toArray( new String[envVars.size()] );
+        return (String[]) envVars.values().toArray( new String[envVars.size()] );
     }
 
     /**

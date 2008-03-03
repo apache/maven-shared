@@ -713,6 +713,12 @@ public class DependencyNode
             appender.append( "scope not updated to ", getFailedUpdateScope() );
         }
         
+        if ( getVersionSelectedFromRange() != null )
+        {
+            appender.append( "version selected from range ", getVersionSelectedFromRange().toString() );
+            appender.append( "available versions ", getAvailableVersions().toString() );
+        }
+        
         switch ( state )
         {
             case INCLUDED:
@@ -762,6 +768,7 @@ public class DependencyNode
 
     /*
      * @see java.lang.Object#hashCode()
+     * @TODO probably better using commons-lang HashCodeBuilder
      */
     public int hashCode()
     {
@@ -780,12 +787,15 @@ public class DependencyNode
         hashCode = hashCode * 31 + nullHashCode( getPremanagedScope() );
         hashCode = hashCode * 31 + nullHashCode( getOriginalScope() );
         hashCode = hashCode * 31 + nullHashCode( getFailedUpdateScope() );
+        hashCode = hashCode * 31 + nullHashCode( getVersionSelectedFromRange() );
+        hashCode = hashCode * 31 + nullHashCode( getAvailableVersions() );
 
         return hashCode;
     }
 
     /*
      * @see java.lang.Object#equals(java.lang.Object)
+     * @TODO probably better using commons-lang EqualsBuilder
      */
     public boolean equals( Object object )
     {
@@ -808,6 +818,8 @@ public class DependencyNode
             equal &= nullEquals( getPremanagedScope(), node.getPremanagedScope() );
             equal &= nullEquals( getOriginalScope(), node.getOriginalScope() );
             equal &= nullEquals( getFailedUpdateScope(), node.getFailedUpdateScope() );
+            equal &= nullEquals( getVersionSelectedFromRange(), node.getVersionSelectedFromRange() );
+            equal &= nullEquals( getAvailableVersions(), node.getAvailableVersions() );
         }
         else
         {

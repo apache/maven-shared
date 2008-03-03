@@ -124,6 +124,90 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
 
+    public void testGetProjectPropertiesWithMultipleVersions()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2 } );
+
+        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+
+        MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
+
+        close( classLoader );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
+    }
+
+    public void testGetProjectPropertiesWithMultipleVersionsReversed()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
+
+        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+
+        MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
+
+        close( classLoader );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", properties );
+    }
+
+    public void testGetProjectPropertiesWithParentDelegation()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader1 = newClassLoader( jar1 );
+        URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1 );
+
+        Class klass = classLoader2.loadClass( "DefaultPackageClass" );
+
+        MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
+
+        close( classLoader1 );
+        close( classLoader2 );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
+    }
+
+    public void testGetProjectPropertiesWithChildDelegation()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader1 = newClassLoader( jar1 );
+        URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
+
+        Class klass = classLoader2.loadClass( "DefaultPackageClass" );
+
+        MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
+
+        close( classLoader1 );
+        close( classLoader2 );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", properties );
+    }
+
     // getProjectsProperties tests --------------------------------------------
 
     public void testGetProjectsPropertiesWithSingleJar()
@@ -164,6 +248,82 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
             "org.apache.maven.shared.runtime.tests:testMultipleJars2:1.0",
             "org.apache.maven.shared.runtime.tests:testMultipleJars3:1.0"
         }, properties );
+    }
+    
+    public void testGetProjectsPropertiesWithMultipleVersions()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2 } );
+
+        List properties = mavenRuntime.getProjectsProperties( classLoader );
+
+        close( classLoader );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
+    }
+
+    public void testGetProjectsPropertiesWithMultipleVersionsReversed()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
+
+        List properties = mavenRuntime.getProjectsProperties( classLoader );
+
+        close( classLoader );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", properties );
+    }
+
+    public void testGetProjectsPropertiesWithParentDelegation()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader1 = newClassLoader( jar1 );
+        URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1 );
+
+        List properties = mavenRuntime.getProjectsProperties( classLoader2 );
+
+        close( classLoader1 );
+        close( classLoader2 );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
+    }
+
+    public void testGetProjectsPropertiesWithChildDelegation()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader1 = newClassLoader( jar1 );
+        URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
+
+        List properties = mavenRuntime.getProjectsProperties( classLoader2 );
+
+        close( classLoader1 );
+        close( classLoader2 );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", properties );
     }
 
     // getProject tests -------------------------------------------------------
@@ -222,6 +382,90 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
     }
 
+    public void testGetProjectWithMultipleVersions()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2 } );
+
+        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+
+        MavenProject project = mavenRuntime.getProject( klass );
+
+        close( classLoader );
+
+        assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
+    }
+
+    public void testGetProjectWithMultipleVersionsReversed()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
+
+        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+
+        MavenProject project = mavenRuntime.getProject( klass );
+
+        close( classLoader );
+
+        assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", project );
+    }
+
+    public void testGetProjectWithParentDelegation()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader1 = newClassLoader( jar1 );
+        URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1 );
+
+        Class klass = classLoader2.loadClass( "DefaultPackageClass" );
+
+        MavenProject project = mavenRuntime.getProject( klass );
+
+        close( classLoader1 );
+        close( classLoader2 );
+
+        assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
+    }
+
+    public void testGetProjectWithChildDelegation()
+        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader1 = newClassLoader( jar1 );
+        URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
+
+        Class klass = classLoader2.loadClass( "DefaultPackageClass" );
+
+        MavenProject project = mavenRuntime.getProject( klass );
+
+        close( classLoader1 );
+        close( classLoader2 );
+
+        assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", project );
+    }
+
     // getProjects tests ------------------------------------------------------
 
     public void testGetProjectsWithSingleJar()
@@ -264,6 +508,82 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         }, projects );
     }
 
+    public void testGetProjectsWithMultipleVersions()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2 } );
+
+        List projects = mavenRuntime.getProjects( classLoader );
+
+        close( classLoader );
+
+        assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
+    }
+
+    public void testGetProjectsWithMultipleVersionsReversed()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
+
+        List projects = mavenRuntime.getProjects( classLoader );
+
+        close( classLoader );
+
+        assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", projects );
+    }
+
+    public void testGetProjectsWithParentDelegation()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader1 = newClassLoader( jar1 );
+        URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1 );
+
+        List projects = mavenRuntime.getProjects( classLoader2 );
+
+        close( classLoader1 );
+        close( classLoader2 );
+
+        assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
+    }
+
+    public void testGetProjectsWithChildDelegation()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader1 = newClassLoader( jar1 );
+        URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
+
+        List projects = mavenRuntime.getProjects( classLoader2 );
+
+        close( classLoader1 );
+        close( classLoader2 );
+
+        assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", projects );
+    }
+    
     // getSortedProjects tests ------------------------------------------------
 
     public void testGetSortedProjectsWithSingleJar()
@@ -328,6 +648,82 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         }, projects );
     }
 
+    public void testGetSortedProjectsWithMultipleVersions()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2 } );
+
+        List projects = mavenRuntime.getSortedProjects( classLoader );
+
+        close( classLoader );
+
+        assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
+    }
+
+    public void testGetSortedProjectsWithMultipleVersionsReversed()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
+
+        List projects = mavenRuntime.getSortedProjects( classLoader );
+
+        close( classLoader );
+
+        assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", projects );
+    }
+
+    public void testGetSortedProjectsWithParentDelegation()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader1 = newClassLoader( jar1 );
+        URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1 );
+
+        List projects = mavenRuntime.getSortedProjects( classLoader2 );
+
+        close( classLoader1 );
+        close( classLoader2 );
+
+        assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
+    }
+
+    public void testGetSortedProjectsWithChildDelegation()
+        throws TestToolsException, MavenRuntimeException, IOException
+    {
+        packageProject( "testSingleJar/pom.xml" );
+        packageProject( "testSingleJar2/pom.xml" );
+
+        File jar1 = getPackage( "testSingleJar/pom.xml" );
+        File jar2 = getPackage( "testSingleJar2/pom.xml" );
+
+        URLClassLoader classLoader1 = newClassLoader( jar1 );
+        URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
+
+        List projects = mavenRuntime.getSortedProjects( classLoader2 );
+
+        close( classLoader1 );
+        close( classLoader2 );
+
+        assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", projects );
+    }
+
     // private methods --------------------------------------------------------
 
     private void packageProject( String pomPath ) throws TestToolsException
@@ -358,10 +754,32 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
     private URLClassLoader newClassLoader( File file ) throws MalformedURLException
     {
-        return newClassLoader( new File[] { file } );
+        return newClassLoader( file, null );
+    }
+
+    private URLClassLoader newClassLoader( File file, ClassLoader parent ) throws MalformedURLException
+    {
+        return newClassLoader( file, parent, false );
+    }
+
+    private URLClassLoader newClassLoader( File file, ClassLoader parent, boolean childDelegation )
+        throws MalformedURLException
+    {
+        return newClassLoader( new File[] { file }, parent, childDelegation );
     }
 
     private URLClassLoader newClassLoader( File[] files ) throws MalformedURLException
+    {
+        return newClassLoader( files, null );
+    }
+
+    private URLClassLoader newClassLoader( File[] files, ClassLoader parent ) throws MalformedURLException
+    {
+        return newClassLoader( files, parent, false );
+    }
+
+    private URLClassLoader newClassLoader( File[] files, ClassLoader parent, boolean childDelegation )
+        throws MalformedURLException
     {
         URL[] urls = new URL[files.length];
 
@@ -370,7 +788,18 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
             urls[i] = files[i].toURI().toURL();
         }
 
-        return new URLClassLoader( urls, null );
+        URLClassLoader classLoader;
+
+        if ( childDelegation )
+        {
+            classLoader = new ChildDelegatingClassLoader( urls, parent );
+        }
+        else
+        {
+            classLoader = new URLClassLoader( urls, parent );
+        }
+
+        return classLoader;
     }
     
     private void close( URLClassLoader classLoader ) throws IOException

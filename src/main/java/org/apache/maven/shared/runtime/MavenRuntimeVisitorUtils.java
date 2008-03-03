@@ -24,6 +24,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -51,6 +56,24 @@ public final class MavenRuntimeVisitorUtils
      */
     private static final String[] XML_PATH_TOKENS = new String[] { "META-INF", "maven", null, null, "pom.xml" };
     
+    /**
+     * The path element index of a Maven project properties/XML file that contains the project group id.
+     */
+    private static final int GROUP_ID_TOKEN_INDEX = 2;
+    
+    /**
+     * The path element index of a Maven project properties/XML file that contains the project artifact id.
+     */
+    private static final int ARTIFACT_ID_TOKEN_INDEX = 3;
+    
+    /**
+     * List of known class loaders that are child-delegating.
+     */
+    private static final String[] CHILD_DELEGATING_CLASSLOADERS = new String [] {
+        "org.apache.maven.shared.runtime.ChildDelegatingClassLoader",
+        "org.apache.maven.surefire.booter.IsolatedClassLoader"
+    };
+    
     // constructors -----------------------------------------------------------
 
     /**
@@ -76,13 +99,16 @@ public final class MavenRuntimeVisitorUtils
     public static void accept( ClassLoader classLoader, MavenRuntimeVisitor visitor )
         throws MavenRuntimeException
     {
-        ClassLoader currentClassLoader = classLoader;
+        List classLoaders = getOrderedClassLoaders( classLoader );
+        
+        Set visitedProjectProperties = new HashSet();
+        Set visitedProjectXML = new HashSet();
 
-        while ( currentClassLoader != null )
+        for ( Iterator iterator = classLoaders.iterator(); iterator.hasNext(); )
         {
-            acceptClassLoader( currentClassLoader, visitor );
+            ClassLoader currentClassLoader = (ClassLoader) iterator.next();
 
-            currentClassLoader = currentClassLoader.getParent();
+            acceptClassLoader( currentClassLoader, visitor, visitedProjectProperties, visitedProjectXML );
         }
     }
     
@@ -121,13 +147,69 @@ public final class MavenRuntimeVisitorUtils
      */
     public static void accept( URL url, MavenRuntimeVisitor visitor ) throws MavenRuntimeException
     {
-        if ( url.getPath().endsWith( ".jar" ) )
-        {
-            acceptJar( url, visitor );
-        }
+        acceptURL( url, visitor, new HashSet(), new HashSet() );
     }
 
     // private methods --------------------------------------------------------
+    
+    /**
+     * Gets the class loader hierarchy for the specified class loader in search order precedence. Precedence is
+     * determined by the hierarchy of class loaders and whether a class loader is deemed to be parent- or
+     * child-delegating. The method of delegation is determined by <code>isChildDelegating</code>.
+     * 
+     * @param classLoader
+     *            the class loader to obtain the ordered class loader hierarchy of
+     * @return the class loader hierarchy for the specified class loader in search order precedence
+     * @see #isChildDelegating(ClassLoader)
+     */
+    private static List getOrderedClassLoaders( ClassLoader classLoader )
+    {
+        List classLoaders = new ArrayList();
+        List childDelegatingClassLoaders = new ArrayList();
+
+        ClassLoader currentClassLoader = classLoader;
+
+        while ( currentClassLoader != null )
+        {
+            if ( isChildDelegating( currentClassLoader ) )
+            {
+                childDelegatingClassLoaders.add( currentClassLoader );
+            }
+            else
+            {
+                classLoaders.add( 0, currentClassLoader );
+            }
+
+            currentClassLoader = currentClassLoader.getParent();
+        }
+
+        classLoaders.addAll( 0, childDelegatingClassLoaders );
+
+        return classLoaders;
+    }
+
+    /**
+     * Gets whether the specified class loader is parent- or child-delegating.
+     * 
+     * @param classLoader
+     *            the class loader to examine
+     * @return <code>true</code> if the class loader is child-delegating or <code>false</code> if it is
+     *         parent-delegating
+     */
+    private static boolean isChildDelegating( ClassLoader classLoader )
+    {
+        String className = classLoader.getClass().getName();
+
+        for ( int i = 0; i < CHILD_DELEGATING_CLASSLOADERS.length; i++ )
+        {
+            if ( CHILD_DELEGATING_CLASSLOADERS[i].equals( className ) )
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     
     /**
      * Invokes the specified visitor on all Maven projects found within the specified class loader.
@@ -136,10 +218,15 @@ public final class MavenRuntimeVisitorUtils
      *            the class loader to introspect
      * @param visitor
      *            the visitor to invoke
+     * @param visitedProjectProperties
+     *            the ids of projects' properties that have been visited
+     * @param visitedProjectXML
+     *            the ids of projects' XML that have been visited
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private static void acceptClassLoader( ClassLoader classLoader, MavenRuntimeVisitor visitor )
+    private static void acceptClassLoader( ClassLoader classLoader, MavenRuntimeVisitor visitor,
+                                           Set visitedProjectProperties, Set visitedProjectXML )
         throws MavenRuntimeException
     {
         if ( classLoader instanceof URLClassLoader )
@@ -150,8 +237,31 @@ public final class MavenRuntimeVisitorUtils
 
             for ( int i = 0; i < urls.length; i++ )
             {
-                accept( urls[i], visitor );
+                acceptURL( urls[i], visitor, visitedProjectProperties, visitedProjectXML );
             }
+        }
+    }
+    
+    /**
+     * Invokes the specified visitor on all Maven projects found within the specified URL.
+     * 
+     * @param url
+     *            the URL to introspect
+     * @param visitor
+     *            the visitor to invoke
+     * @param visitedProjectProperties
+     *            the ids of projects' properties that have been visited
+     * @param visitedProjectXML
+     *            the ids of projects' XML that have been visited
+     * @throws MavenRuntimeException
+     *             if an error occurs visiting the projects
+     */
+    public static void acceptURL( URL url, MavenRuntimeVisitor visitor, Set visitedProjectProperties,
+                                  Set visitedProjectXML ) throws MavenRuntimeException
+    {
+        if ( url.getPath().endsWith( ".jar" ) )
+        {
+            acceptJar( url, visitor, visitedProjectProperties, visitedProjectXML );
         }
     }
 
@@ -162,10 +272,15 @@ public final class MavenRuntimeVisitorUtils
      *            the Jar URL to introspect
      * @param visitor
      *            the visitor to invoke
+     * @param visitedProjectProperties
+     *            the ids of projects' properties that have been visited
+     * @param visitedProjectXML
+     *            the ids of projects' XML that have been visited
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private static void acceptJar( URL url, MavenRuntimeVisitor visitor ) throws MavenRuntimeException
+    private static void acceptJar( URL url, MavenRuntimeVisitor visitor, Set visitedProjectProperties,
+                                   Set visitedProjectXML ) throws MavenRuntimeException
     {
         JarInputStream in = null;
         
@@ -180,7 +295,7 @@ public final class MavenRuntimeVisitorUtils
             
             while ( ( entry = in.getNextJarEntry() ) != null )
             {
-                acceptJarEntry( url, entry, visitor );
+                acceptJarEntry( url, entry, visitor, visitedProjectProperties, visitedProjectXML );
             }
         }
         catch ( IOException exception )
@@ -203,10 +318,15 @@ public final class MavenRuntimeVisitorUtils
      *            the Jar entry to introspect
      * @param visitor
      *            the visitor to invoke
+     * @param visitedProjectProperties
+     *            the ids of projects' properties that have been visited
+     * @param visitedProjectXML
+     *            the ids of projects' XML that have been visited
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private static void acceptJarEntry( URL jarURL, JarEntry entry, MavenRuntimeVisitor visitor )
+    private static void acceptJarEntry( URL jarURL, JarEntry entry, MavenRuntimeVisitor visitor,
+                                        Set visitedProjectProperties, Set visitedProjectXML )
         throws MavenRuntimeException
     {
         String name = entry.getName();
@@ -217,17 +337,48 @@ public final class MavenRuntimeVisitorUtils
             
             if ( isProjectPropertiesPath( name ) )
             {
-                visitor.visitProjectProperties( url );
+                String projectId = getProjectId(name);
+                
+                if ( !visitedProjectProperties.contains( projectId ) )
+                {
+                    visitor.visitProjectProperties( url );
+                    
+                    visitedProjectProperties.add( projectId );
+                }
             }
             else if ( isProjectXMLPath( name ) )
             {
-                visitor.visitProjectXML( url );
+                String projectId = getProjectId(name);
+                
+                if ( !visitedProjectXML.contains( projectId ) )
+                {
+                    visitor.visitProjectXML( url );
+                    
+                    visitedProjectXML.add( projectId );
+                }
             }
         }
         catch ( MalformedURLException exception )
         {
             throw new MavenRuntimeException( "Cannot read jar entry", exception );
         }
+    }
+    
+    /**
+     * Gets a unique project identifier for the specified Maven project properties/XML file.
+     * 
+     * @param path
+     *            the path to a Maven project properties/XML file
+     * @return the unique project identifier
+     */
+    private static String getProjectId( String path )
+    {
+        String[] tokens = path.split( "/" );
+        
+        String groupId = tokens[GROUP_ID_TOKEN_INDEX];
+        String artifactId = tokens[ARTIFACT_ID_TOKEN_INDEX];
+        
+        return groupId + ":" + artifactId;
     }
 
     /**

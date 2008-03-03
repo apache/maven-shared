@@ -26,9 +26,9 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * Provides various utility methods for working with classes.
- *
+ * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
- * @version	$Id$
+ * @version $Id$
  */
 final class ClassUtils
 {

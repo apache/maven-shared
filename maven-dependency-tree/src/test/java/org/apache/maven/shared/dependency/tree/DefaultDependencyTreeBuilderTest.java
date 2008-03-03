@@ -19,6 +19,7 @@ package org.apache.maven.shared.dependency.tree;
  * under the License.
  */
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +42,9 @@ import org.apache.maven.artifact.resolver.ArtifactCollector;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ResolutionNode;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
@@ -552,6 +556,33 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
+    
+    /**
+     * Tests building a tree for a project with a dependency with version range
+     * 
+     * <pre>
+     * g:p:t:1
+     * \- g:a:t:1
+     * </pre>
+     * 
+     * @throws DependencyTreeBuilderException
+     */
+    public void testProjectWithVersionRange() throws DependencyTreeBuilderException
+    {
+        Artifact projectArtifact = createArtifact( "g:p:t:1" );
+        Artifact childArtifact = createArtifact( "g:a:t:[1,2)" );
+
+        MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } );
+
+        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
+        expectedRootNode.addChild( createNode( "g:a:t:1.0" ) );
+        ArtifactVersion version = new DefaultArtifactVersion( "1.0" );
+        List availableVersions = new ArrayList();
+        availableVersions.add( version );
+        artifactMetadataSource.addAvailableVersions( childArtifact, availableVersions );
+        assertDependencyTree( expectedRootNode, project );
+    }
+
     // TODO: reinstate when MNG-3236 fixed
     /*
     public void testProjectWithFilter() throws DependencyTreeBuilderException, ArtifactResolutionException
@@ -593,7 +624,15 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
         String version = get( tokens, 3 );
         String scope = get( tokens, 4 );
         
-        VersionRange versionRange = VersionRange.createFromVersion( version );
+        VersionRange versionRange;
+        try
+        {
+            versionRange = VersionRange.createFromVersionSpec( version );
+        }
+        catch ( InvalidVersionSpecificationException e )
+        {
+            throw new RuntimeException(e);
+        }
 
         return new DefaultArtifact( groupId, artifactId, versionRange, scope, type, null, new DefaultArtifactHandler() );
     }

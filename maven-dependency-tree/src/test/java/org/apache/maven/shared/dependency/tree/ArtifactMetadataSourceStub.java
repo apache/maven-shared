@@ -48,6 +48,11 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
      */
     private final Map resolutionGroupsByArtifact;
 
+    /**
+     * Map of available versions by artifact.
+     */
+    private final Map availableVersionsByArtifact;
+
     // constructors -----------------------------------------------------------
     
     /**
@@ -56,6 +61,7 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
     public ArtifactMetadataSourceStub()
     {
         resolutionGroupsByArtifact = new HashMap();
+        availableVersionsByArtifact = new HashMap();
     }
 
     // ArtifactMetadataSource methods -----------------------------------------
@@ -85,7 +91,9 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
     public List retrieveAvailableVersions( Artifact artifact, ArtifactRepository localRepository,
                                            List remoteRepositories ) throws ArtifactMetadataRetrievalException
     {
-        return Collections.EMPTY_LIST;
+        List availableVersions = (List) availableVersionsByArtifact.get( artifact );
+
+        return availableVersions != null ? availableVersions : Collections.EMPTY_LIST;
     }
 
     // public methods ---------------------------------------------------------
@@ -103,5 +111,18 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
         ResolutionGroup resolution = new ResolutionGroup( artifact, dependencyArtifacts, Collections.EMPTY_LIST );
 
         resolutionGroupsByArtifact.put( artifact, resolution );
+    }
+
+    /**
+     * Adds versions for the specified artifact to this artifact metadata source stub.
+     * 
+     * @param artifact
+     *            the artifact to add metadata to
+     * @param versions
+     *            the list of versions to register as available for the specified artifact
+     */
+    public void addAvailableVersions( Artifact artifact, List versions )
+    {
+        availableVersionsByArtifact.put( artifact, versions );
     }
 }

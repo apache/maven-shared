@@ -564,21 +564,25 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      * g:p:t:1
      * \- g:a:t:1
      * </pre>
-     * 
-     * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithVersionRange() throws DependencyTreeBuilderException
+    public void testProjectWithVersionRange() throws Exception
     {
+        String range = "[1,2)";
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
-        Artifact childArtifact = createArtifact( "g:a:t:[1,2)" );
+        Artifact childArtifact = createArtifact( "g:a:t:" + range);
 
         MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } );
 
-        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
-        expectedRootNode.addChild( createNode( "g:a:t:1.0" ) );
         ArtifactVersion version = new DefaultArtifactVersion( "1.0" );
         List availableVersions = new ArrayList();
         availableVersions.add( version );
+
+        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
+        DependencyNode childNode = createNode( "g:a:t:1.0" );
+        childNode.setAvailableVersions( availableVersions );
+        childNode.setVersionSelectedFromRange( VersionRange.createFromVersionSpec( range ) );
+        expectedRootNode.addChild( childNode );
+
         artifactMetadataSource.addAvailableVersions( childArtifact, availableVersions );
         assertDependencyTree( expectedRootNode, project );
     }

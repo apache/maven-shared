@@ -28,7 +28,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.StringUtils;
 
 /**
  * Provides various methods of applying Maven runtime visitors.
@@ -102,7 +101,7 @@ public final class MavenRuntimeVisitorUtils
     {
         try
         {
-            accept( getBaseURL( klass ), visitor );
+            accept( ClassUtils.getBaseURL( klass ), visitor );
         }
         catch ( MalformedURLException exception )
         {
@@ -281,58 +280,5 @@ public final class MavenRuntimeVisitorUtils
         }
 
         return true;
-    }
-    
-    /**
-     * Gets a URL to the specified class's default package. For example, if the class <code>foo.Bar</code> is
-     * supplied, then a URL to the directory above <code>foo</code> is returned. If the class's default package
-     * resides at the root of a Jar, then a URL to the Jar file itself is returned.
-     * 
-     * @param klass
-     *            the class to obtain the base URL for
-     * @return a URL to the class's default package, or a URL to the owning Jar file if the default package resides at
-     *         the root of a Jar
-     * @throws MalformedURLException
-     *             if the base URL cannot be determined
-     */
-    private static URL getBaseURL( Class klass )
-        throws MalformedURLException
-    {
-        URL url = getURL( klass );
-
-        String className = klass.getName();
-
-        int n = StringUtils.countMatches( className, "." );
-        String relativePath = StringUtils.repeat( "../", n );
-
-        URL baseURL = new URL( url, relativePath );
-
-        // unwrap Jar URL if at the root
-        if ( "jar".equals( baseURL.getProtocol() ) && baseURL.getPath().endsWith( "!/" ) )
-        {
-            String basePath = baseURL.getPath();
-
-            basePath = basePath.substring( 0, basePath.length() - "!/".length() );
-
-            baseURL = new URL( basePath );
-        }
-
-        return baseURL;
-    }
-
-    /**
-     * Gets a URL to the specified class.
-     * 
-     * @param klass
-     *            the class to obtain the URL for
-     * @return a URL to the class, or <code>null</code> if it cannot be found
-     */
-    private static URL getURL( Class klass )
-    {
-        ClassLoader classLoader = klass.getClassLoader();
-
-        String path = klass.getName().replace( '.', '/' ) + ".class";
-
-        return classLoader.getResource( path );
     }
 }

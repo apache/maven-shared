@@ -298,8 +298,19 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
     public void selectVersionFromRange( Artifact artifact )
     {
         log( "selectVersionFromRange: artifact=" + artifact );
-        
-        // TODO: track version selection from range in node (MNG-3093)
+
+        DependencyNode node = getNode( artifact );
+
+        /*
+         * selectVersionFromRange is called before includeArtifact
+         */
+        if ( node == null && isCurrentNodeIncluded() )
+        {
+            node = addNode( artifact );
+        }
+
+        node.setVersionSelectedFromRange( artifact.getVersionRange() );
+        node.setAvailableVersions( artifact.getAvailableVersions() );
     }
 
     /*

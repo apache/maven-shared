@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.shared.dependency.tree.traversal.DependencyNodeVisitor;
 import org.apache.maven.shared.dependency.tree.traversal.SerializingDependencyNodeVisitor;
 
@@ -189,7 +190,11 @@ public class DependencyNode
      * artifact scope has not been managed.
      */
     private String premanagedScope;
+
+    private VersionRange versionSelectedFromRange;
     
+    private List availableVersions;
+
     // constructors -----------------------------------------------------------
 
     /**
@@ -514,6 +519,40 @@ public class DependencyNode
     public void setPremanagedScope( String premanagedScope )
     {
         this.premanagedScope = premanagedScope;
+    }
+
+    /**
+     * If the version was selected from a range this method will return the range.
+     * 
+     * @return the version range before a version was selected, or <code>null</code> if the artifact had a explicit
+     *         version.
+     * @since 1.2
+     */
+    public VersionRange getVersionSelectedFromRange()
+    {
+        return versionSelectedFromRange;
+    }
+    
+    public void setVersionSelectedFromRange( VersionRange versionSelectedFromRange )
+    {
+        this.versionSelectedFromRange = versionSelectedFromRange;
+    }
+
+    /**
+     * If the version was selected from a range this method will return the available versions when making the decision.
+     * 
+     * @return {@link List} &lt; {@link String} > the versions available when a version was selected from a range, or
+     *         <code>null</code> if the artifact had a explicit version.
+     * @since 1.2
+     */
+    public List getAvailableVersions()
+    {
+        return availableVersions;
+    }
+    
+    public void setAvailableVersions( List availableVersions )
+    {
+        this.availableVersions = availableVersions;
     }
 
     /**

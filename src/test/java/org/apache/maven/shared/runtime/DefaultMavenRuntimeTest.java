@@ -788,18 +788,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
             urls[i] = files[i].toURI().toURL();
         }
 
-        URLClassLoader classLoader;
-
-        if ( childDelegation )
-        {
-            classLoader = new ChildDelegatingClassLoader( urls, parent );
-        }
-        else
-        {
-            classLoader = new URLClassLoader( urls, parent );
-        }
-
-        return classLoader;
+        return new DelegatingClassLoader( urls, parent, childDelegation );
     }
     
     private void close( URLClassLoader classLoader ) throws IOException

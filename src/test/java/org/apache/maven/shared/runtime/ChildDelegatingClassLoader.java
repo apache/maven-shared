@@ -19,8 +19,10 @@ package org.apache.maven.shared.runtime;
  * under the License.
  */
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Enumeration;
 
 /**
  * A child-delegating class loader for use by tests.
@@ -82,5 +84,22 @@ public class ChildDelegatingClassLoader extends URLClassLoader
         }
         
         return url;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public Enumeration getResources( String name ) throws IOException
+    {
+        Enumeration urls = findResources( name );
+
+        if ( getParent() != null )
+        {
+            Enumeration parentURLs = getParent().getResources( name );
+
+            urls = new CompoundEnumeration( urls, parentURLs );
+        }
+
+        return urls;
     }
 }

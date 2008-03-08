@@ -61,7 +61,6 @@ public interface SiteTool
     /**
      * @param localRepository the Maven local repository, not null.
      * @param remoteArtifactRepositories the Maven remote repositories, not null.
-     * @param decoration the Doxia site descriptor model, not null.
      * @return the default <code>Skin</code> artifact from a given project and a local repository
      * @throws SiteToolException if any
      * @see Skin#getDefaultSkin()

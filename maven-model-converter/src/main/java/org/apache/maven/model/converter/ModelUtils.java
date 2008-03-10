@@ -1,11 +1,5 @@
 package org.apache.maven.model.converter;
 
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.model.ReportPlugin;
-
-import java.util.Iterator;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,6 +18,12 @@ import java.util.Iterator;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
+import org.apache.maven.model.ReportPlugin;
+
+import java.util.Iterator;
 
 /**
  * Utility class which features various methods associated with Maven model.

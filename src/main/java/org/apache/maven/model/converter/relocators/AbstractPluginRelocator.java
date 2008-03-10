@@ -117,8 +117,8 @@ public abstract class AbstractPluginRelocator
                 {
                     // The new plugin already exist, remove the old one
                     v4Model.getBuild().getPlugins().remove( oldBuildPlugin );
-                    sendInfoMessage( "Removing old build plugin " + getOldGroupId() + ":" + getOldArtifactId() +
-                        " because the new one already exist" );
+                    sendInfoMessage( "Removing old build plugin " + getOldGroupId() + ":" + getOldArtifactId()
+                        + " because the new one already exist" );
                     fireRemovePluginEvent( getOldGroupId(), getOldArtifactId() );
                 }
             }
@@ -150,8 +150,8 @@ public abstract class AbstractPluginRelocator
                 {
                     // The new plugin already exist, remove the old one
                     v4Model.getReporting().getPlugins().remove( oldReportPlugin );
-                    sendInfoMessage( "Removing old report plugin " + getOldGroupId() + ":" + getOldArtifactId() +
-                        " because the new one already exist" );
+                    sendInfoMessage( "Removing old report plugin " + getOldGroupId() + ":" + getOldArtifactId()
+                        + " because the new one already exist" );
                     fireRemovePluginEvent( getOldGroupId(), getOldArtifactId() );
                 }
             }

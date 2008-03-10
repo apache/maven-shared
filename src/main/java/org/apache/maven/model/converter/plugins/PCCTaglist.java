@@ -56,7 +56,8 @@ public class PCCTaglist
         final String propertyName = "maven.tasklist.taskTag";
         
         String value = projectProperties.getProperty( propertyName );
-        if( StringUtils.isNotEmpty( value ) ) {
+        if ( StringUtils.isNotEmpty( value ) )
+        {
             Xpp3Dom tags = new Xpp3Dom( "tags" );
             addConfigurationChild( tags, projectProperties, propertyName, "tag" );
             configuration.addChild( tags );

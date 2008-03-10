@@ -205,8 +205,8 @@ public class PomV3ToV4Translator
 
         if ( StringUtils.isNotEmpty( v3Model.getGumpRepositoryId() ) )
         {
-            warnings.add( "Ignoring gump repository id: \'" + v3Model.getGumpRepositoryId() +
-                "\'. This is not supported in v4 POMs." );
+            warnings.add( "Ignoring gump repository id: \'" + v3Model.getGumpRepositoryId()
+                + "\'. This is not supported in v4 POMs." );
         }
 
         if ( notEmpty( v3Model.getVersions() ) )
@@ -287,7 +287,7 @@ public class PomV3ToV4Translator
                     StringBuffer info = new StringBuffer();
 
                     info.append( "Using some derived information for report: \'" ).append( reportName ).append( "\'.\n" )
-                        .append( "\to groupId: \'" ).append(reportPlugin.getGroupId()).append("\'\n" )
+                        .append( "\to groupId: \'" ).append( reportPlugin.getGroupId() ).append( "\'\n" )
                         .append( "\to artifactId: \'" ).append( reportName ).append( "\'\n" )
                         .append( "\to goal: \'report\'\n" )
                         .append( "\n" )
@@ -437,12 +437,13 @@ public class PomV3ToV4Translator
 
             site.setName( "Default Site" );
 
-            StringBuffer url = new StringBuffer("scp://");
-            url.append(siteAddress);
-            if(!siteAddress.endsWith( "/" ) && !siteDirectory.startsWith( "/" )) {
-                url.append("/");
+            StringBuffer url = new StringBuffer( "scp://" );
+            url.append( siteAddress );
+            if ( !siteAddress.endsWith( "/" ) && !siteDirectory.startsWith( "/" ) )
+            {
+                url.append( "/" );
             }
-            url.append(siteDirectory );
+            url.append( siteDirectory );
             site.setUrl( url.toString() );
         }
 

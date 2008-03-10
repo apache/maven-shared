@@ -28,14 +28,14 @@ import java.util.List;
  */
 public interface ArtifactPomRewriter
 {
-    public static final String ROLE = ArtifactPomRewriter.class.getName();
+    String ROLE = ArtifactPomRewriter.class.getName();
 
-    public static final String V3_POM = "v3";
+    String V3_POM = "v3";
 
-    public static final String V4_POM = "v4";
+    String V4_POM = "v4";
 
-    public void rewrite( Reader from, Writer to, boolean reportOnly, String groupId, String artifactId, String version,
-                         String packaging )
+    void rewrite( Reader from, Writer to, boolean reportOnly, String groupId, String artifactId, String version,
+                  String packaging )
         throws Exception;
 
     List getWarnings();

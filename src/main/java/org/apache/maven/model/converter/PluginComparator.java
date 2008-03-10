@@ -82,7 +82,7 @@ public class PluginComparator
         // Compare values
         int answer;
         answer = plugin1.getGroupId().compareTo( plugin2.getGroupId() );
-        if( answer == 0)
+        if ( answer == 0 )
         {
             answer = compareArtifactId( plugin1, plugin2 );
         }

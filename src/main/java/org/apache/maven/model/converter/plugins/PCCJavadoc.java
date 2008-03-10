@@ -46,7 +46,7 @@ public class PCCJavadoc
 
     public String getType()
     {
-        return TYPE_BUILD_PLUGIN;
+        return TYPE_REPORT_PLUGIN;
     }
 
     protected void buildConfiguration( Xpp3Dom configuration, org.apache.maven.model.v3_0_0.Model v3Model,

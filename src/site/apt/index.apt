@@ -1,0 +1,78 @@
+ ------
+ Introduction
+ ------
+ Dennis Lundberg
+ ------
+ 2008-03-11
+ ------
+
+ ~~ Licensed to the Apache Software Foundation (ASF) under one
+ ~~ or more contributor license agreements.  See the NOTICE file
+ ~~ distributed with this work for additional information
+ ~~ regarding copyright ownership.  The ASF licenses this file
+ ~~ to you under the Apache License, Version 2.0 (the
+ ~~ "License"); you may not use this file except in compliance
+ ~~ with the License.  You may obtain a copy of the License at
+ ~~
+ ~~   http://www.apache.org/licenses/LICENSE-2.0
+ ~~
+ ~~ Unless required by applicable law or agreed to in writing,
+ ~~ software distributed under the License is distributed on an
+ ~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~~ KIND, either express or implied.  See the License for the
+ ~~ specific language governing permissions and limitations
+ ~~ under the License.
+
+ ~~ NOTE: For help with the syntax of this file, see:
+ ~~ http://maven.apache.org/doxia/references/apt-format.html
+
+
+Maven Model Converter
+
+  This shared component is used to convert Maven POMs between version 3
+  (used by Maven 1.x) and version 4 (used by Maven 2.0). It is used by
+  {{{http://maven.apache.org/plugins/maven-one-plugin/}maven-one-plugin}} and
+  {{{http://maven.apache.org/archiva/}Archiva}}.
+
+  Apart from the main conversion of the different elements in the pom, there
+  are a couple of extensions to handle plugins and their configurations.
+  Which plugins are avaliable and how they are configured is not specified in
+  the xml schema for version 4 POMs. The schema only has generic definitions
+  for plugins and it allows them to have a configuration.
+
+
+* Plugin Configuration Converters
+
+  In Maven 1 a plugin is configured in the file <<<project.properties>>>. In
+  Maven 2 on the other hand the configuration is done with xml elements within
+  the plugin's <<<\<configuration\>>>> element. The conversion between the two
+  is handled by Plexus components that implement the
+  <<<org.apache.maven.model.converter.plugins.PluginConfigurationConverter>>>
+  interface.
+
+  This interface has one main method <<<convertConfiguration(...)>>> that takes
+  a Maven 1 model, a Maven 2 model and a Maven 1 <<<Properties>>> object as
+  parameters. If you want to add a new plugin configuration converter it is
+  recommended that you extend <<<AbstractPluginConfigurationConverter>>>. Have
+  a look at some of
+  {{{https://svn.apache.org/repos/asf/maven/shared/trunk/maven-model-converter/src/main/java/org/apache/maven/model/converter/plugins/}the other implementations}}
+  to get a feel for what is needed. You basically need to implement the method
+  <<<buildConfiguration(...)>>> to build a DOM configuration object.
+
+
+* Plugin Relocators
+
+  Another thing that needs to be taken care of, is that the plugins in Maven 2
+  are not the same as they were in Maven 1. Some have changed names while
+  others have moved to other projects completely. This relocation of plugins is
+  handled by Plexus components that implement the
+  <<<org.apache.maven.model.converter.relocators.PluginRelocator>>>
+  interface.
+
+  If you want to implement a new relocator you can extend the class
+  <<<AbstractPluginRelocator>>> to make your work easier. You simply need to
+  specify the old and new groupId and artifactId. Read the
+  {{{apidocs/org/apache/maven/model/converter/relocators/AbstractPluginRelocator.html}Javadocs}}
+  for some important notes. You can also save yourself some work by studying
+  {{{https://svn.apache.org/repos/asf/maven/shared/trunk/maven-model-converter/src/main/java/org/apache/maven/model/converter/relocators/}the other implementations}}
+  and picking the best from them.

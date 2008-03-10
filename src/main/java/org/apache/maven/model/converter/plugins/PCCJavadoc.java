@@ -79,7 +79,21 @@ public class PCCJavadoc
             addConfigurationChild( configuration, "isOffline", PropertyUtils.invertBoolean( online ) );
         }
 
-        addConfigurationChild( configuration, projectProperties, "maven.javadoc.links", "links" );
+        String links = projectProperties.getProperty( "maven.javadoc.links" );
+        if ( links != null )
+        {
+            StringTokenizer tokenizer = new StringTokenizer( links, " ," );
+            if ( tokenizer.hasMoreTokens() )
+            {
+                Xpp3Dom linksConfiguration = new Xpp3Dom( "links" );
+                while ( tokenizer.hasMoreTokens() )
+                {
+                    String link = tokenizer.nextToken();
+                    addConfigurationChild( linksConfiguration, "link", link );
+                }
+                configuration.addChild( linksConfiguration );
+            }
+        }
 
         addConfigurationChild( configuration, projectProperties, "maven.javadoc.locale", "locale" );
 

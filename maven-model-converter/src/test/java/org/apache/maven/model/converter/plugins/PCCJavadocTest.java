@@ -87,8 +87,24 @@ public class PCCJavadocTest
             value = configuration.getChild( "isOffline" ).getValue();
             Assert.assertEquals( "check isOffline value", "false", value );
 
-            value = configuration.getChild( "links" ).getValue();
-            Assert.assertEquals( "check links value", "http://java.sun.com/j2se/1.4/docs/api/", value );
+            Xpp3Dom links = configuration.getChild( "links" );
+            if ( links.getChildCount() == 2 )
+            {
+                Xpp3Dom tagOne = links.getChild( 0 );
+
+                value = tagOne.getValue();
+                Assert.assertEquals( "check links/link value", "http://java.sun.com/j2se/1.4/docs/api/", value );
+
+                Xpp3Dom tagTwo = links.getChild( 1 );
+
+                value = tagTwo.getValue();
+                Assert.assertEquals( "check links/link value", "http://java.sun.com/j2ee/sdk_1.3/techdocs/api/",
+                                     value );
+            }
+            else
+            {
+                Assert.fail( "Wrong number of link elements" );
+            }
 
             value = configuration.getChild( "locale" ).getValue();
             Assert.assertEquals( "check locale value", "en_US", value );

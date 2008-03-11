@@ -48,22 +48,26 @@
   </distributionManagement>
 
   <modules>
-    <module>maven-ant</module>
-    <module>maven-archiver</module>
-    <module>maven-reporting-impl</module>
-    <module>maven-model-converter</module>
-    <module>maven-shared-io</module>
-    <module>maven-shared-monitor</module>
     <module>file-management</module>
-    <module>maven-invoker</module>
-    <module>maven-verifier</module>
-    <module>maven-web-ui-tests</module>
+    <module>maven-ant</module>
     <module>maven-app-configuration</module>
-    <module>maven-repository-builder</module>
-    <module>maven-script</module>
+    <module>maven-archiver</module>
     <module>maven-common-artifact-filters</module>
     <module>maven-dependency-analyzer</module>
+    <module>maven-dependency-tree</module>
+    <module>maven-downloader</module>
+    <module>maven-doxia-tools</module>
+    <module>maven-invoker</module>
+    <module>maven-model-converter</module>
+    <module>maven-osgi</module>
+    <module>maven-reporting-impl</module>
+    <module>maven-repository-builder</module>
+    <module>maven-script</module>
+    <module>maven-shared-io</module>
     <module>maven-shared-jar</module>
+    <module>maven-shared-monitor</module>
+    <module>maven-verifier</module>
+    <module>maven-web-ui-tests</module>
   </modules>
 
   <scm>

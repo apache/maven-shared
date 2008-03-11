@@ -59,8 +59,6 @@
     <module>maven-verifier</module>
     <module>maven-web-ui-tests</module>
     <module>maven-app-configuration</module>
-    <module>maven-plugin-testing-tools</module>
-    <module>maven-test-tools</module>
     <module>maven-repository-builder</module>
     <module>maven-script</module>
     <module>maven-common-artifact-filters</module>

@@ -856,7 +856,7 @@ public class Verifier
         executeGoals( goals, Collections.EMPTY_MAP );
     }
 
-    private String getExecutable()
+    public String getExecutable()
     {
         // Use a strategy for finding the maven executable, John has a simple method like this
         // but a little strategy + chain of command would be nicer.

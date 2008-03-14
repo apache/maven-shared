@@ -20,23 +20,11 @@ public class ResourceExtractor {
     
     public static File simpleExtractResources(Class cl, String resourcePath) throws IOException {
         String tempDirPath = System.getProperty( "maven.test.tmpdir", System.getProperty( "java.io.tmpdir" ) );
-        File tempDir = null;
-        if (Os.isFamily( "windows" ))
-        {
-           //there are issues deleting on windows. use a random path.
-            tempDir = new File(tempDirPath,""+ Math.round( Math.random()*100000000 ));
-        }
-        else
-        {
-            tempDir = new File(tempDirPath);
-        }
-        
+        File tempDir = new File(tempDirPath);
+               
         File testDir = new File( tempDir, resourcePath );
 
-        if (!Os.isFamily( "windows" ))
-        {
-            FileUtils.deleteDirectory( testDir );
-        }
+        FileUtils.deleteDirectory( testDir );
         
         testDir = ResourceExtractor.extractResourcePath(cl, resourcePath, tempDir, false);
         return testDir;

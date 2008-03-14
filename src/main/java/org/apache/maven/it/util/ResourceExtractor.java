@@ -78,13 +78,14 @@ public class ResourceExtractor {
                     } else {
                         FileOutputStream fos = new FileOutputStream(destFile);
                         IOUtil.copy(z.getInputStream(ze), fos);
+                        fos.close();
                     }
                 }
             }
         } else {
             FileOutputStream fos = new FileOutputStream(dest);
             IOUtil.copy(cl.getResourceAsStream(resourcePath), fos);
-            
+            fos.close();
         }
     } 
 

@@ -77,15 +77,21 @@ public class ResourceExtractor {
                         destFile.mkdirs();
                     } else {
                         FileOutputStream fos = new FileOutputStream(destFile);
-                        IOUtil.copy(z.getInputStream(ze), fos);
-                        fos.close();
+                        try {
+                            IOUtil.copy(z.getInputStream(ze), fos);
+                        } finally {
+                            IOUtil.close(fos);
+                        }
                     }
                 }
             }
         } else {
             FileOutputStream fos = new FileOutputStream(dest);
-            IOUtil.copy(cl.getResourceAsStream(resourcePath), fos);
-            fos.close();
+            try {
+                IOUtil.copy(cl.getResourceAsStream(resourcePath), fos);
+            } finally {
+                IOUtil.close(fos);
+            }
         }
     } 
 

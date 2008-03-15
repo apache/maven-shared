@@ -70,14 +70,18 @@ public interface SiteTool
         throws SiteToolException;
 
     /**
+     * Calculate the relative path between two URL:s or between two files.
+     * 
      * For example:
      * <dl>
-     * <dt>to = "http://maven.apache.org" and from = "http://maven.apache.org"</dl>
+     * <dt>to = "http://maven.apache.org" and from = "http://maven.apache.org"</dt>
      * <dd>return ""</dd>
-     * <dt>to = "http://maven.apache.org" and from = "http://maven.apache.org/plugins/maven-site-plugin/"</dl>
+     * <dt>to = "http://maven.apache.org" and from = "http://maven.apache.org/plugins/maven-site-plugin/"</dt>
      * <dd>return "../.."</dd>
-     * <dt>to = "http://maven.apache.org/plugins/maven-site-plugin/" and from = "http://maven.apache.org"</dl>
+     * <dt>to = "http://maven.apache.org/plugins/maven-site-plugin/" and from = "http://maven.apache.org"</dt>
      * <dd>return "plugins/maven-site-plugin"</dd>
+     * <dt>to = "/myproject/myproject-module1" and from = "/myproject/myproject"</dt>
+     * <dd>return "../myproject-module1"</dd>
      * </dl>
      * <b>Note</b>: The file separator depends on the system.
      *

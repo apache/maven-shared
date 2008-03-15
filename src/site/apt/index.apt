@@ -1,5 +1,5 @@
  ------
- Maven File Management API
+ Introduction
  ------
  Vincent Siveton
  ------
@@ -26,7 +26,7 @@
 ~~ NOTE: For help with the syntax of this file, see:
 ~~ http://maven.apache.org/guides/mini/guide-apt-format.html
 
-Overview
+Maven File Management API
 
   The Maven File Management API provides an API to collect files from a given directory using
   several include/exclude rules.

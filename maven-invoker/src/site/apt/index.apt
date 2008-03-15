@@ -1,13 +1,12 @@
   ---
-  Maven Forked Invocation API - Overview
+  Introduction
   ---
   John Casey
   ---
   31-May-2006
+  ---
 
-Maven Forked Invocation API - Overview
-
-* Introduction
+Maven Process Invoker
 
   In many cases, tools (including Maven itself) may want to fire off a Maven
   build in a clean environment. Why? Perhaps you want to avoid polluting the
@@ -23,14 +22,6 @@ Maven Forked Invocation API - Overview
   capture the resulting exit code or any exception thrown to signal a failure to
   execute. Input/Output control can be specified using an <<<InputStream>>> and
   up to two <<<InvocationOutputHandler>>>s.
-  
-* Table of Contents
-
-  * {{{usage.html}Basic Usage Instructions}}
-
-  * {{{examples/index.html}Examples}}
-
-  []
   
 * Features
 

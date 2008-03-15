@@ -43,11 +43,13 @@ public interface SiteTool
     String ROLE = SiteTool.class.getName();
 
     /**
-     * The locale by default for all default bundles
+     * The locale by default for all default bundles.
      */
     Locale DEFAULT_LOCALE = Locale.ENGLISH;
 
     /**
+     * Get a site descriptor defined in the decoration from one of the repositories.
+     *
      * @param localRepository the Maven local repository, not null.
      * @param remoteArtifactRepositories the Maven remote repositories, not null.
      * @param decoration the Doxia site descriptor model, not null.
@@ -60,6 +62,8 @@ public interface SiteTool
         throws SiteToolException;
 
     /**
+     * Get the default skin artifact for a project from one of the repositories.
+     * 
      * @param localRepository the Maven local repository, not null.
      * @param remoteArtifactRepositories the Maven remote repositories, not null.
      * @return the default <code>Skin</code> artifact from a given project and a local repository
@@ -93,16 +97,20 @@ public interface SiteTool
     String getRelativePath( String to, String from );
 
     /**
+     * Get a site descriptor from the project's base direcory.
+     *
      * @param siteDirectory The path to the directory containing the <code>site.xml</code> file, relative to the
      * project base directory. If null, using by default "src/site".
      * @param basedir not null.
      * @param locale the locale wanted for the site descriptor. If not null, searching for
      * <code>site_<i>localeLanguage</i>.xml</code>, otherwise searching for <code>site.xml</code>.
-     * @return the site descriptor relative file, i.e. <code>src/site/site.xml</code>, depending parameters value.
+     * @return the site descriptor relative file, i.e. <code>src/site/site.xml</code>, depending on parameter values.
      */
     File getSiteDescriptorFromBasedir( String siteDirectory, File basedir, Locale locale );
 
     /**
+     * Get a site descriptor from one of the repositories.
+     *
      * @param project the Maven project, not null.
      * @param localRepository the Maven local repository, not null.
      * @param repositories the Maven remote repositories, not null.
@@ -117,6 +125,8 @@ public interface SiteTool
         throws SiteToolException;
 
     /**
+     * Get a decoration model for a project.
+     * 
      * @param project the Maven project, not null.
      * @param reactorProjects the Maven reactor projects, not null.
      * @param localRepository the Maven local repository, not null.
@@ -145,7 +155,7 @@ public interface SiteTool
     void populateReportsMenu( DecorationModel decorationModel, Locale locale, Map categories );
 
     /**
-     * Interpolating several expressions in the site descriptor content. Actually, the expressions could be on
+     * Interpolating several expressions in the site descriptor content. Actually, the expressions could be in
      * the project, the environment variables and the specific properties like <code>encoding</code>.
      * <p/>
      * For instance:
@@ -154,14 +164,14 @@ public interface SiteTool
      * <dd>The value from the POM of:
      * <p>
      * &lt;project&gt;<br>
-     * &lt;name&gt;myProjectName&lt;/name&gt;<br>
+     * &nbsp;&nbsp;&lt;name&gt;myProjectName&lt;/name&gt;<br>
      * &lt;/project&gt;
      * </p></dd>
      * <dt>${my.value}</dt>
      * <dd>The value from the POM of:
      * <p>
      * &lt;properties&gt;<br>
-     * &lt;my.value&gt;hello&lt;/my.value&gt;<br>
+     * &nbsp;&nbsp;&lt;my.value&gt;hello&lt;/my.value&gt;<br>
      * &lt;/properties&gt;
      * </p></dd>
      * <dt>${JAVA_HOME}</dt>
@@ -184,7 +194,7 @@ public interface SiteTool
      * Returns the parent POM with interpolated URLs. Attempts to source this value from the
      * <code>reactorProjects</code> parameters if available (reactor env model attributes
      * are interpolated), or if the reactor is unavailable (-N) resorts to the
-     * <code>project.getParent().getUrl()</code> value which will NOT have be interpolated.
+     * <code>project.getParent().getUrl()</code> value which will NOT have been interpolated.
      * <p/>
      * TODO: once bug is fixed in Maven proper, remove this.
      *
@@ -196,6 +206,8 @@ public interface SiteTool
     MavenProject getParentProject( MavenProject aProject, List reactorProjects, ArtifactRepository localRepository );
 
     /**
+     * Populate the parent menu part of the decoration model.
+     *
      * @param decorationModel the Doxia DecorationModel, not null.
      * @param locale the locale used for the i18n in DecorationModel. If null, using the default locale in the jvm.
      * @param project a Maven project, not null.
@@ -206,6 +218,8 @@ public interface SiteTool
                                     MavenProject parentProject, boolean keepInheritedRefs );
 
     /**
+     * Populate the modules menu part of the decoration model.
+     * 
      * @param project a Maven project, not null.
      * @param reactorProjects the Maven reactor projects, not null.
      * @param localRepository the Maven local repository, not null.
@@ -219,10 +233,9 @@ public interface SiteTool
         throws SiteToolException;
 
     /**
-     *
      * Init the <code>localesList</code> variable.
-     * <p>If <code>locales</code> variable is available, the first valid token will be the <code>defaultLocale</code>
-     * for this instance of the Java Virtual Machine.</p>
+     * <p>If the <code>locales</code> variable is available, the first valid token will be the
+     * <code>defaultLocale</code> for this instance of the Java Virtual Machine.</p>
      *
      * @param locales A comma separated list of locales supported by Maven. The first valid token will be the
      * default Locale for this instance of the Java Virtual Machine.

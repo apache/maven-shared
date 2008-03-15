@@ -239,7 +239,8 @@ public class DefaultSiteTool
             // URLs, determine if they share protocol and domain info
 
             if ( ( toUrl.getProtocol().equalsIgnoreCase( fromUrl.getProtocol() ) )
-                && ( toUrl.getHost().equalsIgnoreCase( fromUrl.getHost() ) ) && ( toUrl.getPort() == fromUrl.getPort() ) )
+                && ( toUrl.getHost().equalsIgnoreCase( fromUrl.getHost() ) )
+                && ( toUrl.getPort() == fromUrl.getPort() ) )
             {
                 // shared URL domain details, use URI to determine relative path
 
@@ -653,7 +654,8 @@ public class DefaultSiteTool
         catch ( IOException e )
         {
             // Prefer logging?
-            throw new SiteToolException( "IOException: cannot interpolate environment properties: " + e.getMessage(), e );
+            throw new SiteToolException( "IOException: cannot interpolate environment properties: " + e.getMessage(),
+                                         e );
         }
 
         interpolator.addValueSource( new ObjectBasedValueSource( aProject ) );
@@ -932,7 +934,8 @@ public class DefaultSiteTool
                         if ( getLogger().isWarnEnabled() )
                         {
                             getLogger().warn( "The locale parsed defined by '" + locale
-                                + "' is not available in this Java Virtual Machine (" + System.getProperty( "java.version" )
+                                + "' is not available in this Java Virtual Machine ("
+                                + System.getProperty( "java.version" )
                                 + " from " + System.getProperty( "java.vendor" ) + ") - IGNORING" );
                         }
                         continue;
@@ -1098,8 +1101,8 @@ public class DefaultSiteTool
 
     private DecorationModel getDecorationModel( MavenProject project, List reactorProjects,
                                                 ArtifactRepository localRepository, List repositories,
-                                                String siteDirectory, Locale locale, Map origProps, String inputEncoding,
-                                                String outputEncoding )
+                                                String siteDirectory, Locale locale, Map origProps,
+                                                String inputEncoding, String outputEncoding )
         throws SiteToolException
     {
         Map props = new HashMap( origProps );

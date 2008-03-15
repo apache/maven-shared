@@ -51,7 +51,8 @@ public interface SiteTool
      * @param localRepository the Maven local repository, not null.
      * @param remoteArtifactRepositories the Maven remote repositories, not null.
      * @param decoration the Doxia site descriptor model, not null.
-     * @return the <code>Skin</code> artifact defined in a <code>DecorationModel</code> from a given project and a local repository
+     * @return the <code>Skin</code> artifact defined in a <code>DecorationModel</code> from a given project and a
+     * local repository
      * @throws SiteToolException if any
      */
     Artifact getSkinArtifactFromRepository( ArtifactRepository localRepository, List remoteArtifactRepositories,
@@ -92,10 +93,11 @@ public interface SiteTool
     String getRelativePath( String to, String from );
 
     /**
-     * @param siteDirectory The path to the directory containing the <code>site.xml</code> file, relative to the project base directory. If null, using by default "src/site".
+     * @param siteDirectory The path to the directory containing the <code>site.xml</code> file, relative to the
+     * project base directory. If null, using by default "src/site".
      * @param basedir not null.
-     * @param locale the locale wanted for the site descriptor. If not null, searching for <code>site_<i>localeLanguage</i>.xml</code>,
-     * otherwise searching for <code>site.xml</code>.
+     * @param locale the locale wanted for the site descriptor. If not null, searching for
+     * <code>site_<i>localeLanguage</i>.xml</code>, otherwise searching for <code>site.xml</code>.
      * @return the site descriptor relative file, i.e. <code>src/site/site.xml</code>, depending parameters value.
      */
     File getSiteDescriptorFromBasedir( String siteDirectory, File basedir, Locale locale );
@@ -104,9 +106,10 @@ public interface SiteTool
      * @param project the Maven project, not null.
      * @param localRepository the Maven local repository, not null.
      * @param repositories the Maven remote repositories, not null.
-     * @param locale the locale wanted for the site descriptor. If not null, searching for <code>site_<i>localeLanguage</i>.xml</code>,
-     * otherwise searching for <code>site.xml</code>.
-     * @return the site descriptor into the local repository after download of it from repositories or null if not found in repositories.
+     * @param locale the locale wanted for the site descriptor. If not null, searching for
+     * <code>site_<i>localeLanguage</i>.xml</code>, otherwise searching for <code>site.xml</code>.
+     * @return the site descriptor into the local repository after download of it from repositories or null if not
+     * found in repositories.
      * @throws SiteToolException if any
      */
     File getSiteDescriptorFromRepository( MavenProject project, ArtifactRepository localRepository, List repositories,
@@ -118,11 +121,13 @@ public interface SiteTool
      * @param reactorProjects the Maven reactor projects, not null.
      * @param localRepository the Maven local repository, not null.
      * @param repositories the Maven remote repositories, not null.
-     * @param siteDirectory The path to the directory containing the <code>site.xml</code> file, relative to the project base directory. If null, using by default "src/site".
+     * @param siteDirectory The path to the directory containing the <code>site.xml</code> file, relative to the
+     * project base directory. If null, using by default "src/site".
      * @param locale the locale used for the i18n in DecorationModel. If null, using the default locale in the jvm.
      * @param inputEncoding the input encoding of the site descriptor, not null.
      * @param outputEncoding the output encoding wanted, not null.
-     * @return the <code>DecorationModel</code> object corresponding to the <code>site.xml</code> file with some interpolations.
+     * @return the <code>DecorationModel</code> object corresponding to the <code>site.xml</code> file with some
+     * interpolations.
      * @throws SiteToolException if any
      */
     DecorationModel getDecorationModel( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
@@ -219,8 +224,8 @@ public interface SiteTool
      * <p>If <code>locales</code> variable is available, the first valid token will be the <code>defaultLocale</code>
      * for this instance of the Java Virtual Machine.</p>
      *
-     * @param locales A comma separated list of locales supported by Maven. The first valid token will be the default Locale
-     * for this instance of the Java Virtual Machine.
+     * @param locales A comma separated list of locales supported by Maven. The first valid token will be the
+     * default Locale for this instance of the Java Virtual Machine.
      * @return a list of <code>Locale</code>
      */
     List getAvailableLocales( String locales );

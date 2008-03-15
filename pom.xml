@@ -23,13 +23,13 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>7</version>
+    <version>9</version>
   </parent>
 
   <artifactId>maven-shared-jar</artifactId>
   <version>1.1-SNAPSHOT</version>
 
-  <name>Maven Shared :: JAR Utilities</name>
+  <name>Maven JAR Utilities</name>
   <description>
     Utilities that help identify the contents of a JAR, including Java class analysis and Maven metadata analysis.
   </description>

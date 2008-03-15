@@ -1,12 +1,12 @@
  -----
- JAR Utilities
+ Introduction
  -----
  Brett Porter
  -----
  2 July 2007
  -----
 
-Maven Shared Components - JAR Utilities
+Maven JAR Utilities
 
   Utilities that help identify the contents of a JAR, including Java class analysis and Maven metadata analysis.
 

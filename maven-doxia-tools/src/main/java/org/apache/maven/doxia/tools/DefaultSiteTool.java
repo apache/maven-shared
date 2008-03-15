@@ -128,15 +128,15 @@ public class DefaultSiteTool
     {
         if ( localRepository == null )
         {
-            throw new IllegalArgumentException( "localRepository could not be null" );
+            throw new IllegalArgumentException( "The parameter 'localRepository' can not be null" );
         }
         if ( remoteArtifactRepositories == null )
         {
-            throw new IllegalArgumentException( "remoteArtifactRepositories could not be null" );
+            throw new IllegalArgumentException( "The parameter 'remoteArtifactRepositories' can not be null" );
         }
         if ( decoration == null )
         {
-            throw new IllegalArgumentException( "decoration could not be null" );
+            throw new IllegalArgumentException( "The parameter 'decoration' can not be null" );
         }
 
         Skin skin = decoration.getSkin();
@@ -189,11 +189,11 @@ public class DefaultSiteTool
     {
         if ( to == null )
         {
-            throw new IllegalArgumentException( "to could not be null" );
+            throw new IllegalArgumentException( "The parameter 'to' can not be null" );
         }
         if ( from == null )
         {
-            throw new IllegalArgumentException( "from could not be null" );
+            throw new IllegalArgumentException( "The parameter 'from' can not be null" );
         }
 
         URL toUrl = null;
@@ -397,7 +397,7 @@ public class DefaultSiteTool
     {
         if ( basedir == null )
         {
-            throw new IllegalArgumentException( "basedir could not be null" );
+            throw new IllegalArgumentException( "The parameter 'basedir' can not be null" );
         }
 
         if ( siteDirectory == null )
@@ -428,15 +428,15 @@ public class DefaultSiteTool
     {
         if ( project == null )
         {
-            throw new IllegalArgumentException( "project could not be null" );
+            throw new IllegalArgumentException( "The parameter 'project' can not be null" );
         }
         if ( localRepository == null )
         {
-            throw new IllegalArgumentException( "localRepository could not be null" );
+            throw new IllegalArgumentException( "The parameter 'localRepository' can not be null" );
         }
         if ( remoteArtifactRepositories == null )
         {
-            throw new IllegalArgumentException( "remoteArtifactRepositories could not be null" );
+            throw new IllegalArgumentException( "The parameter 'remoteArtifactRepositories' can not be null" );
         }
 
         if ( locale == null )
@@ -473,27 +473,27 @@ public class DefaultSiteTool
     {
         if ( project == null )
         {
-            throw new IllegalArgumentException( "project could not be null" );
+            throw new IllegalArgumentException( "The parameter 'project' can not be null" );
         }
         if ( reactorProjects == null )
         {
-            throw new IllegalArgumentException( "reactorProjects could not be null" );
+            throw new IllegalArgumentException( "The parameter 'reactorProjects' can not be null" );
         }
         if ( localRepository == null )
         {
-            throw new IllegalArgumentException( "localRepository could not be null" );
+            throw new IllegalArgumentException( "The parameter 'localRepository' can not be null" );
         }
         if ( repositories == null )
         {
-            throw new IllegalArgumentException( "repositories could not be null" );
+            throw new IllegalArgumentException( "The parameter 'repositories' can not be null" );
         }
         if ( inputEncoding == null )
         {
-            throw new IllegalArgumentException( "inputEncoding could not be null" );
+            throw new IllegalArgumentException( "The parameter 'inputEncoding' can not be null" );
         }
         if ( outputEncoding == null )
         {
-            throw new IllegalArgumentException( "outputEncoding could not be null" );
+            throw new IllegalArgumentException( "The parameter 'outputEncoding' can not be null" );
         }
 
         if ( locale == null )
@@ -557,11 +557,11 @@ public class DefaultSiteTool
     {
         if ( decorationModel == null )
         {
-            throw new IllegalArgumentException( "decorationModel could not be null" );
+            throw new IllegalArgumentException( "The parameter 'decorationModel' can not be null" );
         }
         if ( categories == null )
         {
-            throw new IllegalArgumentException( "categories could not be null" );
+            throw new IllegalArgumentException( "The parameter 'categories' can not be null" );
         }
 
         if ( locale == null )
@@ -609,29 +609,29 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public String getInterpolatedSiteDescriptorContent( Map props, MavenProject aProject, String siteDescriptorContent,
+    public String getInterpolatedSiteDescriptorContent( Map props, MavenProject project, String siteDescriptorContent,
                                                         String inputEncoding, String outputEncoding )
         throws SiteToolException
     {
         if ( props == null )
         {
-            throw new IllegalArgumentException( "props could not be null" );
+            throw new IllegalArgumentException( "The parameter 'props' can not be null" );
         }
-        if ( aProject == null )
+        if ( project == null )
         {
-            throw new IllegalArgumentException( "aProject could not be null" );
+            throw new IllegalArgumentException( "The parameter 'project' can not be null" );
         }
         if ( siteDescriptorContent == null )
         {
-            throw new IllegalArgumentException( "siteDescriptorContent could not be null" );
+            throw new IllegalArgumentException( "The parameter 'siteDescriptorContent' can not be null" );
         }
         if ( inputEncoding == null )
         {
-            throw new IllegalArgumentException( "inputEncoding could not be null" );
+            throw new IllegalArgumentException( "The parameter 'inputEncoding' can not be null" );
         }
         if ( outputEncoding == null )
         {
-            throw new IllegalArgumentException( "outputEncoding could not be null" );
+            throw new IllegalArgumentException( "The parameter 'outputEncoding' can not be null" );
         }
 
         // MSITE-201: The ObjectBasedValueSource( aProject ) below will match
@@ -658,9 +658,9 @@ public class DefaultSiteTool
                                          e );
         }
 
-        interpolator.addValueSource( new ObjectBasedValueSource( aProject ) );
+        interpolator.addValueSource( new ObjectBasedValueSource( project ) );
 
-        interpolator.addValueSource( new MapBasedValueSource( aProject.getProperties() ) );
+        interpolator.addValueSource( new MapBasedValueSource( project.getProperties() ) );
 
         siteDescriptorContent = interpolator.interpolate( siteDescriptorContent, "project" );
 
@@ -678,25 +678,25 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public MavenProject getParentProject( MavenProject aProject, List reactorProjects,
+    public MavenProject getParentProject( MavenProject project, List reactorProjects,
                                           ArtifactRepository localRepository )
     {
-        if ( aProject == null )
+        if ( project == null )
         {
-            throw new IllegalArgumentException( "aProject could not be null" );
+            throw new IllegalArgumentException( "The parameter 'project' can not be null" );
         }
         if ( reactorProjects == null )
         {
-            throw new IllegalArgumentException( "reactorProjects could not be null" );
+            throw new IllegalArgumentException( "The parameter 'reactorProjects' can not be null" );
         }
         if ( localRepository == null )
         {
-            throw new IllegalArgumentException( "localRepository could not be null" );
+            throw new IllegalArgumentException( "The parameter 'localRepository' can not be null" );
         }
 
         MavenProject parentProject = null;
 
-        MavenProject origParent = aProject.getParent();
+        MavenProject origParent = project.getParent();
         if ( origParent != null )
         {
             Iterator reactorItr = reactorProjects.iterator();
@@ -714,11 +714,11 @@ public class DefaultSiteTool
                 }
             }
 
-            if ( parentProject == null && aProject.getBasedir() != null )
+            if ( parentProject == null && project.getBasedir() != null )
             {
                 try
                 {
-                    File pomFile = new File( aProject.getBasedir(), aProject.getModel().getParent().getRelativePath() );
+                    File pomFile = new File( project.getBasedir(), project.getModel().getParent().getRelativePath() );
 
                     if ( pomFile.isDirectory() )
                     {
@@ -744,7 +744,7 @@ public class DefaultSiteTool
             {
                 try
                 {
-                    parentProject = mavenProjectBuilder.buildFromRepository( aProject.getParentArtifact(), aProject
+                    parentProject = mavenProjectBuilder.buildFromRepository( project.getParentArtifact(), project
                         .getRemoteArtifactRepositories(), localRepository );
                     getLogger().info( "Parent project loaded from repository." );
                 }
@@ -770,15 +770,15 @@ public class DefaultSiteTool
     {
         if ( decorationModel == null )
         {
-            throw new IllegalArgumentException( "decorationModel could not be null" );
+            throw new IllegalArgumentException( "The parameter 'decorationModel' can not be null" );
         }
         if ( project == null )
         {
-            throw new IllegalArgumentException( "project could not be null" );
+            throw new IllegalArgumentException( "The parameter 'project' can not be null" );
         }
         if ( parentProject == null )
         {
-            throw new IllegalArgumentException( "parentProject could not be null" );
+            throw new IllegalArgumentException( "The parameter 'parentProject' can not be null" );
         }
 
         if ( locale == null )
@@ -832,19 +832,19 @@ public class DefaultSiteTool
     {
         if ( project == null )
         {
-            throw new IllegalArgumentException( "project could not be null" );
+            throw new IllegalArgumentException( "The parameter 'project' can not be null" );
         }
         if ( reactorProjects == null )
         {
-            throw new IllegalArgumentException( "reactorProjects could not be null" );
+            throw new IllegalArgumentException( "The parameter 'reactorProjects' can not be null" );
         }
         if ( localRepository == null )
         {
-            throw new IllegalArgumentException( "localRepository could not be null" );
+            throw new IllegalArgumentException( "The parameter 'localRepository' can not be null" );
         }
         if ( decorationModel == null )
         {
-            throw new IllegalArgumentException( "decorationModel could not be null" );
+            throw new IllegalArgumentException( "The parameter 'decorationModel' can not be null" );
         }
 
         if ( locale == null )
@@ -870,7 +870,7 @@ public class DefaultSiteTool
 
                     if ( projects.size() == 1 )
                     {
-                        getLogger().debug( "Attempting to source module information from local filesystem" );
+                        getLogger().debug( "Attempting to load module information from local filesystem" );
 
                         // Not running reactor - search for the projects manually
                         List models = new ArrayList( project.getModules().size() );
@@ -1054,12 +1054,12 @@ public class DefaultSiteTool
             }
             else
             {
-                getLogger().debug( "Skipped locale's site descriptor" );
+                getLogger().debug( "Skipped site descriptor for locale " + locale.getLanguage() );
             }
         }
         catch ( ArtifactNotFoundException e )
         {
-            getLogger().debug( "Unable to locate locale's site descriptor: " + e );
+            getLogger().debug( "Unable to locate site descriptor for locale " + locale.getLanguage() + ": " + e );
 
             // we can afford to write an empty descriptor here as we don't expect it to turn up later in the remote
             // repository, because the parent was already released (and snapshots are updated automatically if changed)
@@ -1294,7 +1294,7 @@ public class DefaultSiteTool
      * Convenience method.
      *
      * @param list
-     * @return true if the list is <code>null</code> or <code>null</code>
+     * @return true if the list is <code>null</code> or empty
      */
     private static boolean isEmptyList( List list )
     {

@@ -919,16 +919,17 @@ public class Verifier
 
                 cli.addEnvironment( key, (String) envVars.get( key ) );
 
-                try
+       /* What was the point of this? It doesn't work on windows.      
+        *   try
                 {
                     FileUtils.fileWrite( "/tmp/foo.txt", "setting envar[ " + key + " = " + envVars.get( key ) );
                 }
                 catch ( IOException e )
                 {
                     e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
-                }
+                }*/
 
-                System.out.println();
+               // System.out.println();
             }
 
             if ( envVars.get( "JAVA_HOME" ) == null )
@@ -974,7 +975,7 @@ public class Verifier
                 cli.createArgument().setValue( (String) i.next() );
             }
 
-            System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
+           // System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
 
             ret = runCommandLine( System.getProperty( "maven.home" ), cli, logFile );
         }

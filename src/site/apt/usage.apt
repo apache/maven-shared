@@ -1,15 +1,14 @@
   ---
-  Maven Forked Invocation API - Usage
+  Usage
   ---
   John Casey
   ---
   31-May-2006
+  ---
 
-Maven Forked Invocation API - Usage
+Usage
 
-* Introduction
-
-  This page documents the basic usage of the invocation API.
+  This page documents the basic usage of the process invocation API.
   
 * Hello, World
 
@@ -33,7 +32,7 @@ invoker.execute( request );
   
 * Checking the Exit Code
 
-  If we wanted to detect a build failure in the above example, we could simple
+  If we wanted to detect a build failure in the above example, we could simply
   add the following lines:
   
 +---+
@@ -45,7 +44,7 @@ if ( result.getExitCode() != 0 )
 }
 +---+
 
-  This will simply retrieve the exit code from the invocation result, and throw
+  This will retrieve the exit code from the invocation result, and throw
   an exception if it's not <<<0>>> (the traditional all-clear code). Note that
   we could capture the build output by adding an <<<InvocationOutputHandler>>>
   instance to either the <<<invoker>>> or <<<request>>>.

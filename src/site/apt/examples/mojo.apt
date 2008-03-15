@@ -30,9 +30,9 @@ Using Maven File Management API In A MOJO
 
  This part explains how to use the Maven File Management API in a Maven Plugin.
 
-* Added File Management API dependency
+* Add File Management API dependency
 
- The first step is to add the File Management API as a Maven dependency, i.e. in the pom.xml:
+ The first step is to add the File Management API as a Maven dependency, i.e. in the <<<pom.xml>>>:
 
 +-----+
 <project>
@@ -49,7 +49,7 @@ Using Maven File Management API In A MOJO
 </project>
 +-----+
 
-* Added FileSet in a MOJO
+* Add FileSet in a MOJO
 
  The second step is to create your MOJO and add a <<<FileSet>>> object:
 

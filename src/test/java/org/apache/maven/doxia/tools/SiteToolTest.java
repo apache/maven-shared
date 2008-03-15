@@ -152,6 +152,20 @@ public class SiteToolTest
         to = "http://maven.apache.org/plugins/maven-site-plugin";
         from = "http://maven.apache.org/";
         assertEquals( tool.getRelativePath( to, from ), "plugins" + File.separator + "maven-site-plugin" );
+
+        // Tests between files as described in MIDEA-102
+        to = "C:/dev/voca/gateway/parser/gateway-parser.iml";
+        from = "C:/dev/voca/gateway/";
+        assertEquals( "Child file using Windows drive letter",
+                      "parser" + File.separator + "gateway-parser.iml", tool.getRelativePath( to, from ) );
+        to = "C:/foo/child";
+        from = "C:/foo/master";
+        assertEquals( "Sibling directory using Windows drive letter",
+                      ".." + File.separator + "child", tool.getRelativePath( to, from ) );
+        to = "/myproject/myproject-module1";
+        from = "/myproject/myproject";
+        assertEquals( "Sibling directory with similar name",
+                      ".." + File.separator + "myproject-module1", tool.getRelativePath( to, from ) );
     }
 
     /**

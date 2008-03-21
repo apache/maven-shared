@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>maven-reporting-impl</artifactId>
   <name>Maven Reporting Implementation</name>
-  <version>2.0.4.1</version>
+  <version>2.0.4.2-SNAPSHOT</version>
   
   <developers>
     <developer>
@@ -52,10 +52,4 @@
       <version>1.0-alpha-10</version>
     </dependency>
   </dependencies>
-
-  <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/components/tags/maven-reporting-impl-2.0.4.1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/components/tags/maven-reporting-impl-2.0.4.1</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/components/tags/maven-reporting-impl-2.0.4.1</url>
-  </scm>
 </project>

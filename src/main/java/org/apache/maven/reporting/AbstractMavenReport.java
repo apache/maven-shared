@@ -18,14 +18,13 @@ package org.apache.maven.reporting;
 
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.siterenderer.Renderer;
-import org.apache.maven.doxia.siterenderer.RendererException;
 import org.apache.maven.doxia.siterenderer.sink.SiteRendererSink;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.reporting.sink.SinkFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Locale;
 
 /**
@@ -61,22 +60,12 @@ public abstract class AbstractMavenReport
             String outputDirectory = getOutputDirectory();
 
             SiteRendererSink sink =
-                getSiteRenderer().createSink( new File( outputDirectory ), getOutputName() + ".html" );
+                SinkFactory.createSink( new File( outputDirectory ), getOutputName() + ".html" );
 
             generate( sink, Locale.getDefault() );
 
             // TODO: add back when skinning support is in the site renderer
 //            getSiteRenderer().copyResources( outputDirectory, "maven" );
-        }
-        catch ( RendererException e )
-        {
-            throw new MojoExecutionException( "An error has occurred in " + getName( locale ) + " report generation.",
-                                              e );
-        }
-        catch ( IOException e )
-        {
-            throw new MojoExecutionException( "An error has occurred in " + getName( locale ) + " report generation.",
-                                              e );
         }
         catch ( MavenReportException e )
         {

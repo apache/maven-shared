@@ -16,9 +16,11 @@ package org.apache.maven.reporting.sink;
  * limitations under the License.
  */
 
+import org.apache.maven.doxia.module.xhtml.decoration.render.RenderingContext;
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.siterenderer.Renderer;
 import org.apache.maven.doxia.siterenderer.RendererException;
+import org.apache.maven.doxia.siterenderer.sink.SiteRendererSink;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +48,11 @@ public class SinkFactory
     public Sink getSink( String outputFileName )
         throws RendererException, IOException
     {
-        return siteRenderer.createSink( new File( siteDirectory ), outputFileName );
+        return createSink( new File( siteDirectory ), outputFileName );
+    }
+
+    public static SiteRendererSink createSink( File basedir, String document )
+    {
+        return new SiteRendererSink( new RenderingContext( basedir, document ) );
     }
 }

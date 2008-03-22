@@ -19,22 +19,6 @@ package org.apache.maven.doxia.tools;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -57,6 +41,7 @@ import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.reporting.MavenReport;
 import org.codehaus.plexus.i18n.I18N;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
@@ -65,6 +50,22 @@ import org.codehaus.plexus.util.interpolation.MapBasedValueSource;
 import org.codehaus.plexus.util.interpolation.ObjectBasedValueSource;
 import org.codehaus.plexus.util.interpolation.RegexBasedInterpolator;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Default implementation of the site tool.
@@ -184,6 +185,16 @@ public class DefaultSiteTool
         return getSkinArtifactFromRepository( localRepository, remoteArtifactRepositories, new DecorationModel() );
     }
 
+    protected String getNormalizedPath( String path )
+    {
+        String normalized = null;
+        if ( path != null )
+        {
+            normalized = FileUtils.normalize( path.replace( '\\', '/' ) );
+        }
+        return ( normalized == null ) ? path : normalized;
+    }
+
     /** {@inheritDoc} */
     public String getRelativePath( String to, String from )
     {
@@ -210,7 +221,7 @@ public class DefaultSiteTool
         {
             try
             {
-                toUrl = new File( to ).toURL();
+                toUrl = new File( getNormalizedPath( to ) ).toURL();
             }
             catch ( MalformedURLException e1 )
             {
@@ -226,7 +237,7 @@ public class DefaultSiteTool
         {
             try
             {
-                fromUrl = new File( from ).toURL();
+                fromUrl = new File( getNormalizedPath( from ) ).toURL();
             }
             catch ( MalformedURLException e1 )
             {
@@ -724,6 +735,7 @@ public class DefaultSiteTool
                     {
                         pomFile = new File( pomFile, "pom.xml" );
                     }
+                    pomFile = new File( getNormalizedPath( pomFile.getPath() ) );
 
                     MavenProject mavenProject = mavenProjectBuilder.build( pomFile, localRepository, null );
 

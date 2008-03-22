@@ -166,6 +166,14 @@ public class SiteToolTest
         from = "/myproject/myproject";
         assertEquals( "Sibling directory with similar name",
                       ".." + File.separator + "myproject-module1", tool.getRelativePath( to, from ) );
+
+        // Normalized paths as described in MSITE-284
+        assertEquals( ".." + File.separator + "project-module-1" + File.separator + "src" + File.separator + "site",
+                      tool.getRelativePath( "Z:\\dir\\project\\project-module-1\\src\\site",
+                                            "Z:\\dir\\project\\project-module-1\\..\\project-parent") );
+        assertEquals( ".." + File.separator + ".." + File.separator + ".." + File.separator + "project-parent",
+                      tool.getRelativePath( "Z:\\dir\\project\\project-module-1\\..\\project-parent",
+                                            "Z:\\dir\\project\\project-module-1\\src\\site") );
     }
 
     /**

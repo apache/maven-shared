@@ -150,6 +150,7 @@
             <locale>pt_BR</locale>
             <locale>sk</locale>
             <locale>sv</locale>
+            <locale>tr</locale>
             <locale>zh_CN</locale>
           </locales>
         </configuration>

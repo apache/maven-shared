@@ -38,6 +38,12 @@
     <maven>2.0.2</maven>
   </prerequisites>
 
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-doxia-tools/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-doxia-tools/</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-doxia-tools/</url>
+  </scm>
+
   <build>
     <plugins>
       <plugin>

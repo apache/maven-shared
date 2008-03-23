@@ -143,6 +143,7 @@
             <locale>pl</locale>
             <locale>pt_BR</locale>
             <locale>sk</locale>
+            <locale>sv</locale>
             <locale>zh_CN</locale>
           </locales>
         </configuration>

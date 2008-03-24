@@ -33,6 +33,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -152,11 +153,11 @@ public class DefaultMavenResourcesFiltering
 
         if ( mavenResourcesExecution.getEncoding() == null || mavenResourcesExecution.getEncoding().length() < 1 )
         {
-            getLogger().info( "Using default encoding to copy filtered resources." );
+            getLogger().info( "Using platform encoding (" + ReaderFactory.FILE_ENCODING + " actually) to copy filtered resources." );
         }
         else
         {
-            getLogger().info( "Using '" + mavenResourcesExecution.getEncoding() + "' to copy filtered resources." );
+            getLogger().info( "Using '" + mavenResourcesExecution.getEncoding() + "' encoding to copy filtered resources." );
         }
         
         for ( Iterator i = mavenResourcesExecution.getResources().iterator(); i.hasNext(); )

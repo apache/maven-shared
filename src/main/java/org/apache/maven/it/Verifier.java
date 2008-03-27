@@ -229,6 +229,33 @@ public class Verifier
         }
     }
 
+    /**
+     * Throws an exception if the text is not present in the log.
+     * @param text
+     * @throws VerificationException
+     */
+    public void verifyTextInLog( String text )
+        throws VerificationException
+    {
+        List lines;
+        lines = loadFile( getBasedir(), LOG_FILENAME, false );
+
+        boolean result = false;
+        for ( Iterator i = lines.iterator(); i.hasNext(); )
+        {
+            String line = (String) i.next();
+            if ( line.indexOf( text ) >= 0)
+            {
+                result = true;
+                break;
+            }
+        }
+        if (!result)
+        {
+            throw new VerificationException( "Text not found in log: " + text );
+        }
+}
+    
     public Properties loadProperties( String filename )
         throws VerificationException
     {

@@ -182,6 +182,18 @@ public class MavenCommandLineBuilder
         {
             cli.addEnvironment( "JAVA_HOME", request.getJavaHome().getAbsolutePath() );
         }
+        
+        if ( request.getMavenOpts() != null )
+        {
+            cli.addEnvironment( "MAVEN_OPTS", request.getMavenOpts() );
+        }
+        
+        for (Iterator iterator = request.getShellEnvironments().keySet().iterator();iterator.hasNext();)
+        {
+            String key = (String) iterator.next();
+            String value = (String) request.getShellEnvironments().get( key );
+            cli.addEnvironment( key, value );
+        }
     }
 
     protected void setProfiles( InvocationRequest request, Commandline cli )

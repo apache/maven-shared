@@ -22,6 +22,7 @@ package org.apache.maven.shared.invoker;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -74,6 +75,10 @@ public interface InvocationRequest
     String getGlobalChecksumPolicy();
 
     List getProfiles();
+    
+    Map getShellEnvironments();
+    
+    String getMavenOpts();
 
     // ----------------------------------------------------------------------
     // Reactor Failure Mode
@@ -142,4 +147,8 @@ public interface InvocationRequest
     InvocationRequest setNonPluginUpdates( boolean nonPluginUpdates);
     
     InvocationRequest setRecursive( boolean recursive );
+    
+    InvocationRequest addShellEnvironment( String name, String value );
+
+    InvocationRequest setMavenOpts( String mavenOpts );
 }

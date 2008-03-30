@@ -21,7 +21,10 @@ package org.apache.maven.shared.invoker;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class DefaultInvocationRequest
@@ -50,6 +53,8 @@ public class DefaultInvocationRequest
     private File javaHome;
     private List profiles;
     private boolean nonPluginUpdates;
+    private Map shellEnvironments;
+    private String mavenOpts;
 
     public InvocationRequest activateReactor( String[] includes, String[] excludes )
     {
@@ -303,4 +308,29 @@ public class DefaultInvocationRequest
         return this;
     }
 
+    public InvocationRequest addShellEnvironment( String name, String value )
+    {
+        if (this.shellEnvironmentInherited)
+        {
+            this.shellEnvironments = new HashMap();
+        }
+        this.shellEnvironments.put( name, value );
+        return this;
+    }
+
+    public Map getShellEnvironments()
+    {
+        return shellEnvironments == null ? Collections.EMPTY_MAP : shellEnvironments;
+    }
+
+    public String getMavenOpts()
+    {
+        return mavenOpts;
+    }
+
+    public InvocationRequest setMavenOpts( String mavenOpts )
+    {
+        this.mavenOpts = mavenOpts;
+        return this;
+    }
 }

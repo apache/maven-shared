@@ -22,6 +22,7 @@ import org.codehaus.plexus.PlexusTestCase;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Collections;
 
 public class DefaultRepositoryAssemblerTest
@@ -71,7 +72,7 @@ public class DefaultRepositoryAssemblerTest
         ClassLoader cloader = Thread.currentThread().getContextClassLoader();
         URL res = cloader.getResource( "projects/" + projectResource );
 
-        File projectFile = new File( res.getPath() ).getAbsoluteFile();
+        File projectFile = new File( URLDecoder.decode( res.getPath(), "UTF-8" ) ).getAbsoluteFile();
 
         if ( preCacheParent )
         {
@@ -119,7 +120,7 @@ public class DefaultRepositoryAssemblerTest
         ClassLoader cloader = Thread.currentThread().getContextClassLoader();
         URL res = cloader.getResource( "marker.txt" );
 
-        File markerFile = new File( res.getPath() );
+        File markerFile = new File( URLDecoder.decode( res.getPath(), "UTF-8" ) );
         markerFile = markerFile.getCanonicalFile();
 
         File repoDir = new File( markerFile.getParentFile(), "remote-repository" );

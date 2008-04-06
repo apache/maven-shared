@@ -22,6 +22,7 @@ package org.apache.maven.shared.model.fileset.util;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -211,7 +212,7 @@ public class FileSetUtilsTest
             Assert.fail( "Source directory for test: " + directoryName + " cannot be found." );
         }
 
-        File sourceDir = new File( sourceResource.getPath() );
+        File sourceDir = new File( URLDecoder.decode( sourceResource.getPath(), "UTF-8" ) );
 
         String basedir = System.getProperty( "basedir", System.getProperty( "user.dir" ) );
         String testBase = System.getProperty( "testBase", "target/test-directories" );

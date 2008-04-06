@@ -23,7 +23,9 @@ import junit.framework.AssertionFailedError;
 import org.codehaus.plexus.PlexusTestCase;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,9 +40,11 @@ public abstract class AbstractJarAnalyzerTestCase
     extends PlexusTestCase
 {
     public File getSampleJar( String filename )
-        throws MalformedURLException
+        throws MalformedURLException, UnsupportedEncodingException
     {
-        return new File( getClass().getResource( "/jars/" + filename ).getPath() );
+        String path = getClass().getResource( "/jars/" + filename ).getPath();
+        // URLDecoder.decode necessary for JDK 1.5+, where spaces are escaped to %20
+        return new File( URLDecoder.decode( path, "UTF-8" ) );
     }
 
     public void assertNotContainsRegex( String msg, String regex, Collection coll )

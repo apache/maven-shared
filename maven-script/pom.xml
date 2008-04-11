@@ -24,7 +24,7 @@ under the License.
   <parent>
     <artifactId>maven-shared-components</artifactId>
     <groupId>org.apache.maven.shared</groupId>
-    <version>8</version>
+    <version>9</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.maven</groupId>

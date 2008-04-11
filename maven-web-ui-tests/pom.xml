@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>7</version>
+    <version>9</version>
   </parent>
   <artifactId>maven-web-ui-tests</artifactId>
   <name>Maven Shared Web UI tests</name>

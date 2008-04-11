@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>8</version>
+    <version>9</version>
   </parent>
 
   <artifactId>maven-shared-io</artifactId>
@@ -106,15 +106,4 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-io</developerConnection>
     <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-shared-io</url>
   </scm>
-
-  <distributionManagement>
-    <snapshotRepository>
-      <id>apache.snapshots</id>
-      <url>scp://people.apache.org/www/people.apache.org/repo/m2-snapshot-repository</url>
-    </snapshotRepository>
-    <repository>
-      <id>apache</id>
-      <url>scp://people.apache.org/www/people.apache.org/repo/m2-ibiblio-rsync-repository</url>
-    </repository>
-  </distributionManagement>
 </project>

@@ -34,7 +34,7 @@ import org.apache.maven.project.MavenProject;
 public class DefaultMavenRuntime implements MavenRuntime
 {
     // MavenRuntime methods ---------------------------------------------------
-    
+
     /**
      * {@inheritDoc}
      */
@@ -58,7 +58,7 @@ public class DefaultMavenRuntime implements MavenRuntime
 
         return visitor.getProjects();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -94,7 +94,7 @@ public class DefaultMavenRuntime implements MavenRuntime
 
         return visitor.getSortedProjects();
     }
-    
+
     // private methods --------------------------------------------------------
 
     /**

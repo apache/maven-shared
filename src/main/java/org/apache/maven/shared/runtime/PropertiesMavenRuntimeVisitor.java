@@ -120,12 +120,12 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
         Properties properties = new Properties();
 
         InputStream in = null;
-        
+
         try
         {
             URLConnection connection = url.openConnection();
             connection.setUseCaches( false );
-            
+
             in = connection.getInputStream();
 
             properties.load( in );

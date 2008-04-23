@@ -41,7 +41,7 @@ import org.codehaus.plexus.util.IOUtil;
 public final class MavenRuntimeVisitorUtils
 {
     // constants --------------------------------------------------------------
-    
+
     /**
      * The path to Maven's metadata directory.
      */
@@ -57,17 +57,17 @@ public final class MavenRuntimeVisitorUtils
      * The path elements of a Maven project XML file, where <code>null</code> is a wildcard.
      */
     private static final String[] XML_PATH_TOKENS = new String[] { "META-INF", "maven", null, null, "pom.xml" };
-    
+
     /**
      * The path element index of a Maven project properties/XML file that contains the project group id.
      */
     private static final int GROUP_ID_TOKEN_INDEX = 2;
-    
+
     /**
      * The path element index of a Maven project properties/XML file that contains the project artifact id.
      */
     private static final int ARTIFACT_ID_TOKEN_INDEX = 3;
-    
+
     // constructors -----------------------------------------------------------
 
     /**
@@ -104,7 +104,7 @@ public final class MavenRuntimeVisitorUtils
             throw new MavenRuntimeException( "Cannot obtain Maven metadata from class loader: " + classLoader,
                                              exception );
         }
-        
+
         Set visitedProjectProperties = new HashSet();
         Set visitedProjectXML = new HashSet();
 
@@ -115,7 +115,7 @@ public final class MavenRuntimeVisitorUtils
             acceptURL( url, visitor, visitedProjectProperties, visitedProjectXML );
         }
     }
-    
+
     /**
      * Invokes the specified visitor on the specified class's Maven project.
      * 
@@ -141,9 +141,9 @@ public final class MavenRuntimeVisitorUtils
             throw new MavenRuntimeException( "Cannot obtain URL for class: " + klass.getName(), exception );
         }
     }
-    
+
     // private methods --------------------------------------------------------
-    
+
     /**
      * Invokes the specified visitor on all Maven projects found within the specified Maven metadata URL.
      * 
@@ -196,16 +196,16 @@ public final class MavenRuntimeVisitorUtils
                                    Set visitedProjectXML ) throws MavenRuntimeException
     {
         JarInputStream in = null;
-        
+
         try
         {
             URLConnection connection = url.openConnection();
             connection.setUseCaches( false );
-            
+
             in = new JarInputStream( connection.getInputStream() );
 
             JarEntry entry;
-            
+
             while ( ( entry = in.getNextJarEntry() ) != null )
             {
                 acceptJarEntry( url, entry, visitor, visitedProjectProperties, visitedProjectXML );
@@ -220,7 +220,7 @@ public final class MavenRuntimeVisitorUtils
             IOUtil.close( in );
         }
     }
-    
+
     /**
      * Invokes the specified visitor on the specified Jar entry if it corresponds to a Maven project XML or properties
      * file.
@@ -246,27 +246,27 @@ public final class MavenRuntimeVisitorUtils
 
         try
         {
-            URL url = new URL("jar:" + jarURL + "!/" + entry.getName());
-            
+            URL url = new URL( "jar:" + jarURL + "!/" + entry.getName() );
+
             if ( isProjectPropertiesPath( name ) )
             {
-                String projectId = getProjectId(name);
-                
+                String projectId = getProjectId( name );
+
                 if ( !visitedProjectProperties.contains( projectId ) )
                 {
                     visitor.visitProjectProperties( url );
-                    
+
                     visitedProjectProperties.add( projectId );
                 }
             }
             else if ( isProjectXMLPath( name ) )
             {
-                String projectId = getProjectId(name);
-                
+                String projectId = getProjectId( name );
+
                 if ( !visitedProjectXML.contains( projectId ) )
                 {
                     visitor.visitProjectXML( url );
-                    
+
                     visitedProjectXML.add( projectId );
                 }
             }
@@ -276,7 +276,7 @@ public final class MavenRuntimeVisitorUtils
             throw new MavenRuntimeException( "Cannot read jar entry", exception );
         }
     }
-    
+
     /**
      * Gets the underlying Jar file URL for the specified Jar entry URL.
      * 
@@ -304,7 +304,7 @@ public final class MavenRuntimeVisitorUtils
 
         return new URL( path );
     }
-    
+
     /**
      * Gets a unique project identifier for the specified Maven project properties/XML file.
      * 
@@ -315,10 +315,10 @@ public final class MavenRuntimeVisitorUtils
     private static String getProjectId( String path )
     {
         String[] tokens = path.split( "/" );
-        
+
         String groupId = tokens[GROUP_ID_TOKEN_INDEX];
         String artifactId = tokens[ARTIFACT_ID_TOKEN_INDEX];
-        
+
         return groupId + ":" + artifactId;
     }
 

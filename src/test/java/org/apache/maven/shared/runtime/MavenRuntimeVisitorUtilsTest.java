@@ -39,13 +39,13 @@ import org.easymock.IMocksControl;
 public class MavenRuntimeVisitorUtilsTest extends TestCase
 {
     // fields -----------------------------------------------------------------
-    
+
     private IMocksControl mockVisitorControl;
-    
+
     private MavenRuntimeVisitor mockVisitor;
-    
+
     // TestCase methods -------------------------------------------------------
-    
+
     /**
      * {@inheritDoc}
      */
@@ -53,10 +53,10 @@ public class MavenRuntimeVisitorUtilsTest extends TestCase
     {
         mockVisitorControl = EasyMock.createStrictControl();
         mockVisitor = (MavenRuntimeVisitor) mockVisitorControl.createMock( MavenRuntimeVisitor.class );
-        
+
         mockVisitorControl.replay();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -64,38 +64,38 @@ public class MavenRuntimeVisitorUtilsTest extends TestCase
     {
         mockVisitorControl.verify();
     }
-    
+
     // tests ------------------------------------------------------------------
-    
+
     public void testWithEmptyJar() throws IOException, MavenRuntimeException
     {
         accept( createTempFile( "file", ".jar" ) );
     }
-    
+
     public void testWithUnknownFileExtension() throws IOException, MavenRuntimeException
     {
         accept( createTempFile( "file", ".unknown" ) );
     }
-    
+
     // private methods -------------------------------------------------------
-    
+
     private URL createTempFile( String prefix, String suffix ) throws IOException
     {
         File file = File.createTempFile( prefix, suffix );
         file.deleteOnExit();
-        
+
         return file.toURI().toURL();
     }
-    
+
     private void accept( URL url ) throws MavenRuntimeException
     {
-        accept( new URL[] {url} );
+        accept( new URL[] { url } );
     }
-    
+
     private void accept( URL[] urls ) throws MavenRuntimeException
     {
-        ClassLoader classLoader = new URLClassLoader(urls, null);
- 
+        ClassLoader classLoader = new URLClassLoader( urls, null );
+
         MavenRuntimeVisitorUtils.accept( classLoader, mockVisitor );
     }
 }

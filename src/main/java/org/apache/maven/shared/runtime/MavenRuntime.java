@@ -50,7 +50,7 @@ public interface MavenRuntime
      *             if an error occurred introspecting the Maven runtime environment
      */
     MavenProjectProperties getProjectProperties( Class klass ) throws MavenRuntimeException;
-    
+
     /**
      * Obtains a list of simple properties for each Maven project running within the specified class loader.
      * 
@@ -62,7 +62,7 @@ public interface MavenRuntime
      *             if an error occurred introspecting the Maven runtime environment
      */
     List getProjectsProperties( ClassLoader classLoader ) throws MavenRuntimeException;
-    
+
     /**
      * Gets the specified class's Maven project.
      * 

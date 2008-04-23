@@ -135,14 +135,14 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
         MavenXpp3Reader reader = new MavenXpp3Reader();
 
         InputStream in = null;
-        
+
         try
         {
             URLConnection connection = url.openConnection();
             connection.setUseCaches( false );
-            
+
             in = connection.getInputStream();
-            
+
             Model model = reader.read( ReaderFactory.newXmlReader( in ) );
 
             return new MavenProject( model );

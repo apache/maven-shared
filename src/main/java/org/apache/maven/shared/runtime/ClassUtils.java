@@ -33,14 +33,14 @@ import org.codehaus.plexus.util.StringUtils;
 final class ClassUtils
 {
     // constructors -----------------------------------------------------------
-    
+
     private ClassUtils()
     {
         // private constructor for utility class
     }
 
     // public methods ---------------------------------------------------------
-    
+
     /**
      * Gets a URL to the specified class's default package. For example, if the class <code>foo.Bar</code> is
      * supplied, then a URL to the directory above <code>foo</code> is returned.

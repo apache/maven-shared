@@ -158,8 +158,8 @@ public class MavenProjectProperties implements Serializable
             && version.equals( info.getVersion() );
     }
 
-    /*
-     * @see java.lang.Object#toString()
+    /**
+     * {@inheritDoc}
      */
     public String toString()
     {

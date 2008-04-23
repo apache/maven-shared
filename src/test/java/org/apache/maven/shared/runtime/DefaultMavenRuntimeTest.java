@@ -249,7 +249,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
             "org.apache.maven.shared.runtime.tests:testMultipleJars3:1.0"
         }, properties );
     }
-    
+
     public void testGetProjectsPropertiesWithMultipleVersions()
         throws TestToolsException, MavenRuntimeException, IOException
     {
@@ -583,7 +583,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", projects );
     }
-    
+
     // getSortedProjects tests ------------------------------------------------
 
     public void testGetSortedProjectsWithSingleJar()
@@ -790,12 +790,12 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         return new DelegatingClassLoader( urls, parent, childDelegation );
     }
-    
+
     private void close( URLClassLoader classLoader ) throws IOException
     {
         IOException[] exceptions = ClassLoaderUtil.releaseLoader( classLoader, new Vector() );
-        
-        if (exceptions.length > 0)
+
+        if ( exceptions.length > 0 )
         {
             throw exceptions[0];
         }
@@ -832,7 +832,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         assertEquals( "Artifact id", artifactId, properties.getArtifactId() );
         assertEquals( "Version", version, properties.getVersion() );
     }
-    
+
     private void assertMavenProjects( String id, List projects )
     {
         assertMavenProjects( new String[] { id }, projects );
@@ -858,7 +858,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     private void assertMavenProject( String groupId, String artifactId, String version, MavenProject project )
     {
         assertNotNull( "Project is null", project );
-        
+
         assertEquals( "Group id", groupId, project.getGroupId() );
         assertEquals( "Artifact id", artifactId, project.getArtifactId() );
         assertEquals( "Version", version, project.getVersion() );

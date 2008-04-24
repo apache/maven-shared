@@ -19,6 +19,7 @@ package org.apache.maven.doxia.tools;
  * under the License.
  */
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -192,12 +193,12 @@ public class DefaultSiteTool
      */
     protected String getNormalizedPath( String path )
     {
-        String normalized = null;
-        if ( path != null )
+        String normalized = FilenameUtils.normalize( path );
+        if ( normalized == null )
         {
-            normalized = FileUtils.normalize( path.replace( '\\', '/' ) );
+            normalized = path;
         }
-        return ( normalized == null ) ? path : normalized;
+        return ( normalized == null ) ? null : normalized.replace( '\\', '/' );
     }
 
     /** {@inheritDoc} */

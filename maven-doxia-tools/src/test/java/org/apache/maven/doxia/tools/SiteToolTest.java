@@ -174,6 +174,8 @@ public class SiteToolTest
         assertEquals( ".." + File.separator + ".." + File.separator + ".." + File.separator + "project-parent",
                       tool.getRelativePath( "Z:\\dir\\project\\project-module-1\\..\\project-parent",
                                             "Z:\\dir\\project\\project-module-1\\src\\site" ) );
+
+        assertEquals( ".." + File.separator + "foo", tool.getRelativePath( "../../foo/foo", "../../foo/bar" ) );
     }
 
     /**

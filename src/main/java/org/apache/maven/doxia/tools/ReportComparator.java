@@ -30,16 +30,26 @@ import java.util.Locale;
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id$
- * @todo move to reporting API?
- * @todo allow reports to define their order in some other way?
+ * @TODO move to reporting API?
+ * @TODO allow reports to define their order in some other way?
  */
 public class ReportComparator
     implements Comparator
 {
+    /** the local */
     private final Locale locale;
 
+    /**
+     * Default constructor.
+     *
+     * @param locale not null
+     */
     public ReportComparator( Locale locale )
     {
+        if ( locale == null )
+        {
+            throw new IllegalArgumentException( "locale should be defined" );
+        }
         this.locale = locale;
     }
 

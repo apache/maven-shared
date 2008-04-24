@@ -185,6 +185,11 @@ public class DefaultSiteTool
         return getSkinArtifactFromRepository( localRepository, remoteArtifactRepositories, new DecorationModel() );
     }
 
+    /**
+     * @param path could be null.
+     * @return the path normalized, i.e. by eliminating "/../" and "/./" in the path.
+     * @see FileUtils#normalize(String)
+     */
     protected String getNormalizedPath( String path )
     {
         String normalized = null;
@@ -1012,7 +1017,8 @@ public class DefaultSiteTool
         String variant = "";
 
         StringTokenizer tokenizer = new StringTokenizer( localeCode, "_" );
-        if ( tokenizer.countTokens() > 3 )
+        final int maxTokens = 3;
+        if ( tokenizer.countTokens() > maxTokens )
         {
             if ( getLogger().isWarnEnabled() )
             {
@@ -1041,6 +1047,16 @@ public class DefaultSiteTool
     // Private methods
     // ----------------------------------------------------------------------
 
+    /**
+     * @param project not null
+     * @param localRepository not null
+     * @param repositories not null
+     * @param locale not null
+     * @return the resolved site descriptor
+     * @throws IOException if any
+     * @throws ArtifactResolutionException if any
+     * @throws ArtifactNotFoundException if any
+     */
     private File resolveSiteDescriptor( MavenProject project, ArtifactRepository localRepository, List repositories,
                                         Locale locale )
         throws IOException, ArtifactResolutionException, ArtifactNotFoundException
@@ -1112,6 +1128,19 @@ public class DefaultSiteTool
         return result;
     }
 
+    /**
+     * @param project not null
+     * @param reactorProjects not null
+     * @param localRepository not null
+     * @param repositories not null
+     * @param siteDirectory not null
+     * @param locale not null
+     * @param origProps not null
+     * @param inputEncoding not null
+     * @param outputEncoding not null
+     * @return the decoration model depending the locale
+     * @throws SiteToolException if any
+     */
     private DecorationModel getDecorationModel( MavenProject project, List reactorProjects,
                                                 ArtifactRepository localRepository, List repositories,
                                                 String siteDirectory, Locale locale, Map origProps,
@@ -1193,6 +1222,11 @@ public class DefaultSiteTool
         return decoration;
     }
 
+    /**
+     * @param siteDescriptorContent not null
+     * @return the decoration model object
+     * @throws SiteToolException if any
+     */
     private DecorationModel readDecorationModel( String siteDescriptorContent )
         throws SiteToolException
     {
@@ -1212,6 +1246,11 @@ public class DefaultSiteTool
         return decoration;
     }
 
+    /**
+     * @param project not null
+     * @param reactorProjects not null
+     * @param menu not null
+     */
     private void populateModulesMenuItemsFromReactorProjects( MavenProject project, List reactorProjects, Menu menu )
     {
         if ( reactorProjects != null && reactorProjects.size() > 1 )
@@ -1234,6 +1273,11 @@ public class DefaultSiteTool
         }
     }
 
+    /**
+     * @param project not null
+     * @param models not null
+     * @param menu not null
+     */
     private void populateModulesMenuItemsFromModels( MavenProject project, List models, Menu menu )
     {
         if ( models != null && models.size() > 1 )
@@ -1252,6 +1296,13 @@ public class DefaultSiteTool
         }
     }
 
+    /**
+     * @param project not null
+     * @param menu not null
+     * @param name not null
+     * @param href could be null
+     * @param defaultHref not null
+     */
     private void appendMenuItem( MavenProject project, Menu menu, String name, String href, String defaultHref )
     {
         String selectedHref = href;
@@ -1281,6 +1332,13 @@ public class DefaultSiteTool
         menu.addItem( item );
     }
 
+    /**
+     * @param name not null
+     * @param href not null
+     * @param categoryReports not null
+     * @param locale not null
+     * @return the menu item object
+     */
     private MenuItem createCategoryMenu( String name, String href, List categoryReports, Locale locale )
     {
         MenuItem item = new MenuItem();
@@ -1306,7 +1364,7 @@ public class DefaultSiteTool
     /**
      * Convenience method.
      *
-     * @param list
+     * @param list could be null
      * @return true if the list is <code>null</code> or empty
      */
     private static boolean isEmptyList( List list )

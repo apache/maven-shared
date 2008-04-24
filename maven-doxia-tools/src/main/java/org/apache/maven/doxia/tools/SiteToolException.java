@@ -35,8 +35,8 @@ public class SiteToolException
      * Construct a new <code>SiteToolException</code> exception wrapping an underlying <code>Exception</code>
      * and providing a <code>message</code>.
      *
-     * @param message
-     * @param cause
+     * @param message could be null
+     * @param cause could be null
      */
     public SiteToolException( String message, Exception cause )
     {
@@ -47,8 +47,8 @@ public class SiteToolException
      * Construct a new <code>SiteToolException</code> exception wrapping an underlying <code>Throwable</code>
      * and providing a <code>message</code>.
      *
-     * @param message
-     * @param cause
+     * @param message could be null
+     * @param cause could be null
      */
     public SiteToolException( String message, Throwable cause )
     {
@@ -58,7 +58,7 @@ public class SiteToolException
     /**
      * Construct a new <code>SiteToolException</code> exception providing a <code>message</code>.
      *
-     * @param message
+     * @param message could be null
      */
     public SiteToolException( String message )
     {

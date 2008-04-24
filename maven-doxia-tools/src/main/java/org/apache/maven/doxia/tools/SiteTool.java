@@ -27,7 +27,6 @@ import java.util.Map;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.doxia.site.decoration.DecorationModel;
-import org.apache.maven.doxia.site.decoration.Skin;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -63,7 +62,7 @@ public interface SiteTool
 
     /**
      * Get the default skin artifact for a project from one of the repositories.
-     * 
+     *
      * @param localRepository the Maven local repository, not null.
      * @param remoteArtifactRepositories the Maven remote repositories, not null.
      * @return the default <code>Skin</code> artifact from a given project and a local repository
@@ -75,8 +74,8 @@ public interface SiteTool
         throws SiteToolException;
 
     /**
-     * Calculate the relative path between two URL:s or between two files.
-     * 
+     * Calculate the relative path between two URLs or between two files.
+     *
      * For example:
      * <dl>
      * <dt>to = "http://maven.apache.org" and from = "http://maven.apache.org"</dt>
@@ -90,8 +89,8 @@ public interface SiteTool
      * </dl>
      * <b>Note</b>: The file separator depends on the system.
      *
-     * @param to
-     * @param from
+     * @param to the <code>to</code> url of file as string
+     * @param from the <code>from</code> url of file as string
      * @return a relative path from <code>from</code> to <code>to</code>.
      */
     String getRelativePath( String to, String from );
@@ -126,7 +125,7 @@ public interface SiteTool
 
     /**
      * Get a decoration model for a project.
-     * 
+     *
      * @param project the Maven project, not null.
      * @param reactorProjects the Maven reactor projects, not null.
      * @param localRepository the Maven local repository, not null.
@@ -219,7 +218,7 @@ public interface SiteTool
 
     /**
      * Populate the modules menu part of the decoration model.
-     * 
+     *
      * @param project a Maven project, not null.
      * @param reactorProjects the Maven reactor projects, not null.
      * @param localRepository the Maven local repository, not null.

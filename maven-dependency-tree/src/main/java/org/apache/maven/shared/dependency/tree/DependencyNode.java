@@ -774,11 +774,12 @@ public class DependencyNode
     {
         int hashCode = 1;
         
-        hashCode = hashCode * 31 + nullHashCode( getParent() );
         hashCode = hashCode * 31 + getArtifact().hashCode();
-        
         // DefaultArtifact.hashCode does not consider scope
         hashCode = hashCode * 31 + nullHashCode( getArtifact().getScope() );
+
+        // TODO: use parent's artifact to prevent recursion - how can we improve this?
+        hashCode = hashCode * 31 + nullHashCode( nullGetArtifact( getParent() ) );
         
         hashCode = hashCode * 31 + getChildren().hashCode();
         hashCode = hashCode * 31 + getState();
@@ -805,11 +806,12 @@ public class DependencyNode
         {
             DependencyNode node = (DependencyNode) object;
 
-            // TODO: no parent.equals() to prevent recursion
             equal = getArtifact().equals( node.getArtifact() );
-            
             // DefaultArtifact.hashCode does not consider scope
             equal &= nullEquals( getArtifact().getScope(), node.getArtifact().getScope() );
+            
+            // TODO: use parent's artifact to prevent recursion - how can we improve this?
+            equal &= nullEquals( nullGetArtifact( getParent() ), nullGetArtifact( node.getParent() ) );
             
             equal &= getChildren().equals( node.getChildren() );
             equal &= getState() == node.getState();
@@ -884,5 +886,17 @@ public class DependencyNode
     private boolean nullEquals( Object a, Object b )
     {
         return ( a == null ? b == null : a.equals( b ) );
+    }
+    
+    /**
+     * Gets the artifact for the specified node.
+     * 
+     * @param node
+     *            the dependency node, possibly <code>null</code>
+     * @return the node's artifact, or <code>null</code> if the specified node was <code>null</code>
+     */
+    private static Artifact nullGetArtifact( DependencyNode node )
+    {
+        return ( node != null ) ? node.getArtifact() : null;
     }
 }

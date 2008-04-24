@@ -806,39 +806,41 @@ public class DefaultSiteTool
 
         Menu menu = decorationModel.getMenuRef( "parent" );
 
-        if ( menu != null )
+        if ( menu == null )
         {
-            if ( !keepInheritedRefs || !menu.isInheritAsRef() )
+            return;
+        }
+
+        if ( !keepInheritedRefs || !menu.isInheritAsRef() )
+        {
+            String parentUrl = parentProject.getUrl();
+
+            if ( parentUrl != null )
             {
-                String parentUrl = parentProject.getUrl();
-
-                if ( parentUrl != null )
+                if ( parentUrl.endsWith( "/" ) )
                 {
-                    if ( parentUrl.endsWith( "/" ) )
-                    {
-                        parentUrl += "index.html";
-                    }
-                    else
-                    {
-                        parentUrl += "/index.html";
-                    }
-
-                    parentUrl = getRelativePath( parentUrl, project.getUrl() );
-
-                    if ( menu.getName() == null )
-                    {
-                        menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.parentproject" ) );
-                    }
-
-                    MenuItem item = new MenuItem();
-                    item.setName( parentProject.getName() );
-                    item.setHref( parentUrl );
-                    menu.addItem( item );
+                    parentUrl += "index.html";
                 }
                 else
                 {
-                    decorationModel.removeMenuRef( "parent" );
+                    parentUrl += "/index.html";
                 }
+
+                parentUrl = getRelativePath( parentUrl, project.getUrl() );
+
+                if ( menu.getName() == null )
+                {
+                    menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.parentproject" ) );
+                }
+
+                MenuItem item = new MenuItem();
+                item.setName( parentProject.getName() );
+                item.setHref( parentUrl );
+                menu.addItem( item );
+            }
+            else
+            {
+                decorationModel.removeMenuRef( "parent" );
             }
         }
     }
@@ -872,63 +874,65 @@ public class DefaultSiteTool
 
         Menu menu = decorationModel.getMenuRef( "modules" );
 
-        if ( menu != null )
+        if ( menu == null )
         {
-            if ( !keepInheritedRefs || !menu.isInheritAsRef() )
+            return;
+        }
+
+        if ( !keepInheritedRefs || !menu.isInheritAsRef() )
+        {
+            // we require child modules and reactors to process module menu
+            if ( project.getModules().size() > 0 )
             {
-                // we require child modules and reactors to process module menu
-                if ( project.getModules().size() > 0 )
+                List projects = reactorProjects;
+
+                if ( menu.getName() == null )
                 {
-                    List projects = reactorProjects;
+                    menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.projectmodules" ) );
+                }
 
-                    if ( menu.getName() == null )
+                if ( projects.size() == 1 )
+                {
+                    getLogger().debug( "Attempting to load module information from local filesystem" );
+
+                    // Not running reactor - search for the projects manually
+                    List models = new ArrayList( project.getModules().size() );
+                    for ( Iterator i = project.getModules().iterator(); i.hasNext(); )
                     {
-                        menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.projectmodules" ) );
-                    }
-
-                    if ( projects.size() == 1 )
-                    {
-                        getLogger().debug( "Attempting to load module information from local filesystem" );
-
-                        // Not running reactor - search for the projects manually
-                        List models = new ArrayList( project.getModules().size() );
-                        for ( Iterator i = project.getModules().iterator(); i.hasNext(); )
+                        String module = (String) i.next();
+                        Model model;
+                        File f = new File( project.getBasedir(), module + "/pom.xml" );
+                        if ( f.exists() )
                         {
-                            String module = (String) i.next();
-                            Model model;
-                            File f = new File( project.getBasedir(), module + "/pom.xml" );
-                            if ( f.exists() )
+                            try
                             {
-                                try
-                                {
-                                    model = mavenProjectBuilder.build( f, localRepository, null ).getModel();
-                                }
-                                catch ( ProjectBuildingException e )
-                                {
-                                    throw new SiteToolException( "Unable to read local module-POM", e );
-                                }
+                                model = mavenProjectBuilder.build( f, localRepository, null ).getModel();
                             }
-                            else
+                            catch ( ProjectBuildingException e )
                             {
-                                getLogger().warn( "No filesystem module-POM available" );
-
-                                model = new Model();
-                                model.setName( module );
-                                model.setUrl( module );
+                                throw new SiteToolException( "Unable to read local module-POM", e );
                             }
-                            models.add( model );
                         }
-                        populateModulesMenuItemsFromModels( project, models, menu );
+                        else
+                        {
+                            getLogger().warn( "No filesystem module-POM available" );
+
+                            model = new Model();
+                            model.setName( module );
+                            model.setUrl( module );
+                        }
+                        models.add( model );
                     }
-                    else
-                    {
-                        populateModulesMenuItemsFromReactorProjects( project, reactorProjects, menu );
-                    }
+                    populateModulesMenuItemsFromModels( project, models, menu );
                 }
                 else
                 {
-                    decorationModel.removeMenuRef( "modules" );
+                    populateModulesMenuItemsFromReactorProjects( project, reactorProjects, menu );
                 }
+            }
+            else
+            {
+                decorationModel.removeMenuRef( "modules" );
             }
         }
     }
@@ -960,30 +964,29 @@ public class DefaultSiteTool
                     }
 
                     // Default bundles are in English
-                    if ( !locale.getLanguage().equals( DEFAULT_LOCALE.getLanguage() ) )
+                    if ( !locale.getLanguage().equals( DEFAULT_LOCALE.getLanguage() )
+                        && !i18n.getBundle( "site-tool", locale ).getLocale().getLanguage().equals(
+                                                                                                    locale
+                                                                                                        .getLanguage() ) )
                     {
-                        if ( !i18n.getBundle( "site-tool", locale ).getLocale().getLanguage().equals(
-                            locale.getLanguage() ) )
+                        StringBuffer sb = new StringBuffer();
+
+                        sb.append( "The locale '" ).append( locale ).append( "' (" );
+                        sb.append( locale.getDisplayName( Locale.ENGLISH ) );
+                        sb.append( ") is not currently support by Maven - IGNORING. " );
+                        sb.append( "\n" );
+                        sb.append( "Contribution are welcome and greatly appreciated! " );
+                        sb.append( "\n" );
+                        sb.append( "If you want to contribute a new translation, please visit " );
+                        sb.append( "http://maven.apache.org/plugins/maven-site-plugin/i18n.html " );
+                        sb.append( "for detailed instructions." );
+
+                        if ( getLogger().isWarnEnabled() )
                         {
-                            StringBuffer sb = new StringBuffer();
-
-                            sb.append( "The locale '" ).append( locale ).append( "' (" );
-                            sb.append( locale.getDisplayName( Locale.ENGLISH ) );
-                            sb.append( ") is not currently support by Maven - IGNORING. " );
-                            sb.append( "\n" );
-                            sb.append( "Contribution are welcome and greatly appreciated! " );
-                            sb.append( "\n" );
-                            sb.append( "If you want to contribute a new translation, please visit " );
-                            sb.append( "http://maven.apache.org/plugins/maven-site-plugin/i18n.html " );
-                            sb.append( "for detailed instructions." );
-
-                            if ( getLogger().isWarnEnabled() )
-                            {
-                                getLogger().warn( sb.toString() );
-                            }
-
-                            continue;
+                            getLogger().warn( sb.toString() );
                         }
+
+                        continue;
                     }
 
                     localesList.add( locale );

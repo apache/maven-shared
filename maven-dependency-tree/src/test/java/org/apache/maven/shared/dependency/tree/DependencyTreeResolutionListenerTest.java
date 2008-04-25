@@ -41,8 +41,8 @@ public class DependencyTreeResolutionListenerTest extends AbstractDependencyNode
 
     // TestCase methods -------------------------------------------------------
 
-    /*
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * {@inheritDoc}
      */
     protected void setUp() throws Exception
     {
@@ -395,9 +395,8 @@ public class DependencyTreeResolutionListenerTest extends AbstractDependencyNode
 
     // protected methods ------------------------------------------------------
 
-    /*
-     * @see org.apache.maven.shared.dependency.tree.AbstractDependencyNodeTest#createArtifact(java.lang.String,
-     *      java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     protected Artifact createArtifact( String groupId, String artifactId, String type, String version, String scope )
     {

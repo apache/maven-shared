@@ -72,8 +72,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
 
     // TestCase methods -------------------------------------------------------
 
-    /*
-     * @see org.codehaus.plexus.PlexusTestCase#setUp()
+    /**
+     * {@inheritDoc}
      */
     protected void setUp() throws Exception
     {
@@ -89,8 +89,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
         artifactCollector = (ArtifactCollector) lookup( ArtifactCollector.class.getName() );
     }
 
-    /*
-     * @see org.codehaus.plexus.PlexusTestCase#tearDown()
+    /**
+     * {@inheritDoc}
      */
     protected void tearDown() throws Exception
     {

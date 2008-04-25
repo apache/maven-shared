@@ -47,8 +47,8 @@ public class ArtifactDependencyNodeFilterTest extends MockObjectTestCase
 
     // TestCase methods -------------------------------------------------------
 
-    /*
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * {@inheritDoc}
      */
     protected void setUp() throws Exception
     {

@@ -53,8 +53,8 @@ public class CollectingDependencyNodeVisitor implements DependencyNodeVisitor
 
     // DependencyNodeVisitor methods ------------------------------------------
 
-    /*
-     * @see org.apache.maven.shared.dependency.tree.traversal.DependencyNodeVisitor#visit(org.apache.maven.shared.dependency.tree.DependencyNode)
+    /**
+     * {@inheritDoc}
      */
     public boolean visit( DependencyNode node )
     {
@@ -64,8 +64,8 @@ public class CollectingDependencyNodeVisitor implements DependencyNodeVisitor
         return true;
     }
 
-    /*
-     * @see org.apache.maven.shared.dependency.tree.traversal.DependencyNodeVisitor#endVisit(org.apache.maven.shared.dependency.tree.DependencyNode)
+    /**
+     * {@inheritDoc}
      */
     public boolean endVisit( DependencyNode node )
     {

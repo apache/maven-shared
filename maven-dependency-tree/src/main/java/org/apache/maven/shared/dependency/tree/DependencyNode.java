@@ -766,12 +766,13 @@ public class DependencyNode
     
     // Object methods ---------------------------------------------------------
 
-    /*
-     * @see java.lang.Object#hashCode()
-     * @TODO probably better using commons-lang HashCodeBuilder
+    /**
+     * {@inheritDoc}
      */
     public int hashCode()
     {
+        // TODO: probably better using commons-lang HashCodeBuilder
+        
         int hashCode = 1;
         
         hashCode = hashCode * 31 + getArtifact().hashCode();
@@ -794,12 +795,13 @@ public class DependencyNode
         return hashCode;
     }
 
-    /*
-     * @see java.lang.Object#equals(java.lang.Object)
-     * @TODO probably better using commons-lang EqualsBuilder
+    /**
+     * {@inheritDoc}
      */
     public boolean equals( Object object )
     {
+        // TODO: probably better using commons-lang EqualsBuilder
+        
         boolean equal;
 
         if ( object instanceof DependencyNode )

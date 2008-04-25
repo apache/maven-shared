@@ -53,6 +53,8 @@ public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements 
     // DependencyTreeBuilder methods ------------------------------------------
 
     /**
+     * {@inheritDoc}
+     * 
      * @deprecated
      */
     public DependencyTree buildDependencyTree( MavenProject project, ArtifactRepository repository,
@@ -67,12 +69,8 @@ public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements 
         return new DependencyTree( rootNode, collectingVisitor.getNodes() );
     }
     
-    /*
-     * @see org.apache.maven.shared.dependency.tree.DependencyTreeBuilder#buildDependencyTree(org.apache.maven.project.MavenProject,
-     *      org.apache.maven.artifact.repository.ArtifactRepository, org.apache.maven.artifact.factory.ArtifactFactory,
-     *      org.apache.maven.artifact.metadata.ArtifactMetadataSource,
-     *      org.apache.maven.artifact.resolver.filter.ArtifactFilter,
-     *      org.apache.maven.artifact.resolver.ArtifactCollector)
+    /**
+     * {@inheritDoc}
      */
     public DependencyNode buildDependencyTree( MavenProject project, ArtifactRepository repository,
                                                ArtifactFactory factory, ArtifactMetadataSource metadataSource,

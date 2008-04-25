@@ -66,9 +66,8 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
 
     // ArtifactMetadataSource methods -----------------------------------------
 
-    /*
-     * @see org.apache.maven.artifact.metadata.ArtifactMetadataSource#retrieve(org.apache.maven.artifact.Artifact,
-     *      org.apache.maven.artifact.repository.ArtifactRepository, java.util.List)
+    /**
+     * {@inheritDoc}
      */
     public ResolutionGroup retrieve( Artifact artifact, ArtifactRepository localRepository, List remoteRepositories )
         throws ArtifactMetadataRetrievalException
@@ -84,9 +83,8 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
         return resolution;
     }
 
-    /*
-     * @see org.apache.maven.artifact.metadata.ArtifactMetadataSource#retrieveAvailableVersions(org.apache.maven.artifact.Artifact,
-     *      org.apache.maven.artifact.repository.ArtifactRepository, java.util.List)
+    /**
+     * {@inheritDoc}
      */
     public List retrieveAvailableVersions( Artifact artifact, ArtifactRepository localRepository,
                                            List remoteRepositories ) throws ArtifactMetadataRetrievalException

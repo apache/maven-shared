@@ -46,8 +46,8 @@ public class AndDependencyNodeFilterTest extends AbstractDependencyNodeFilterTes
 
     // TestCase methods -------------------------------------------------------
 
-    /*
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * {@inheritDoc}
      */
     protected void setUp() throws Exception
     {

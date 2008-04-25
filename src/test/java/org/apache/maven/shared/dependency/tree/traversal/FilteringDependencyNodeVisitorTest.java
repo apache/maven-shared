@@ -46,8 +46,8 @@ public class FilteringDependencyNodeVisitorTest extends AbstractDependencyNodeFi
 
     // TestCase methods -------------------------------------------------------
 
-    /*
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * {@inheritDoc}
      */
     protected void setUp() throws Exception
     {

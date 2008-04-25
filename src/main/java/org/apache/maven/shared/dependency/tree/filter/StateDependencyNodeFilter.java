@@ -68,8 +68,8 @@ public class StateDependencyNodeFilter implements DependencyNodeFilter
 
     // DependencyNodeFilter methods -------------------------------------------
 
-    /*
-     * @see org.apache.maven.shared.dependency.tree.filter.DependencyNodeFilter#accept(org.apache.maven.shared.dependency.tree.DependencyNode)
+    /**
+     * {@inheritDoc}
      */
     public boolean accept( DependencyNode node )
     {

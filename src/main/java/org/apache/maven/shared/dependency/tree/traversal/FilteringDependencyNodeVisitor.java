@@ -62,8 +62,8 @@ public class FilteringDependencyNodeVisitor implements DependencyNodeVisitor
 
     // DependencyNodeVisitor methods ------------------------------------------
 
-    /*
-     * @see org.apache.maven.shared.dependency.tree.DependencyNodeVisitor#visit(org.apache.maven.shared.dependency.tree.DependencyNode)
+    /**
+     * {@inheritDoc}
      */
     public boolean visit( DependencyNode node )
     {
@@ -81,8 +81,8 @@ public class FilteringDependencyNodeVisitor implements DependencyNodeVisitor
         return visit;
     }
 
-    /*
-     * @see org.apache.maven.shared.dependency.tree.DependencyNodeVisitor#endVisit(org.apache.maven.shared.dependency.tree.DependencyNode)
+    /**
+     * {@inheritDoc}
      */
     public boolean endVisit( DependencyNode node )
     {

@@ -52,11 +52,8 @@ public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements 
     
     // DependencyTreeBuilder methods ------------------------------------------
 
-    /*
-     * @see org.apache.maven.shared.dependency.tree.DependencyTreeBuilder#buildDependencyTree(org.apache.maven.project.MavenProject,
-     *      org.apache.maven.artifact.repository.ArtifactRepository, org.apache.maven.artifact.factory.ArtifactFactory,
-     *      org.apache.maven.artifact.metadata.ArtifactMetadataSource,
-     *      org.apache.maven.artifact.resolver.ArtifactCollector)
+    /**
+     * @deprecated
      */
     public DependencyTree buildDependencyTree( MavenProject project, ArtifactRepository repository,
                                                ArtifactFactory factory, ArtifactMetadataSource metadataSource,

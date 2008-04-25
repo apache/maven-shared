@@ -453,6 +453,53 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
         assertDependencyTree( expectedRootNode, project );
     }
 
+    // TODO: see MNG-3548
+    /**
+     * Tests building a tree for a project with a dependency that is duplicated and the version is also fixed in 
+     * dependency management:
+     * 
+     * <pre>
+     * g:p:t:1
+     * \- g:a:t:1
+     *    +- g:b:t:1
+     *    |  \- (g:c:t:2 - version managed from 1; omitted for duplicate)
+     *    \- g:c:t:2 (version managed from 1)
+     * </pre>
+     * 
+     * @throws DependencyTreeBuilderException
+     */
+    /*
+    public void testProjectWithManagedTransitiveDependencyVersionAndDuplicate() throws DependencyTreeBuilderException
+    {
+        Artifact projectArtifact = createArtifact( "g:p:t:1" );
+        Artifact childArtifact = createArtifact( "g:a:t:1" );
+        Artifact grandchildArtifact = createArtifact( "g:b:t:1" );
+        Artifact farthestTransitiveArtifact = createArtifact( "g:c:t:1" );
+        Artifact nearestTransitiveArtifact = createArtifact( "g:c:t:1" );
+        Artifact managedTransitiveArtifact = createArtifact( "g:c:t:2" );
+        addArtifactMetadata( childArtifact, new Artifact[] { grandchildArtifact, nearestTransitiveArtifact } );
+        addArtifactMetadata( grandchildArtifact, farthestTransitiveArtifact );
+
+        MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } );
+        setManagedVersionMap( project, Collections.singleton( managedTransitiveArtifact ) );
+
+        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
+        DependencyNode childArtifactNode = createNode( "g:a:t:1" );
+        expectedRootNode.addChild( childArtifactNode );
+        DependencyNode grandchildArtifactNode = createNode( "g:b:t:2" );
+        childArtifactNode.addChild( grandchildArtifactNode );
+        DependencyNode managedTransitiveArtifactNode = createNode( "g:c:t:2" );
+        managedTransitiveArtifactNode.setPremanagedVersion( "1" );
+        childArtifactNode.addChild( managedTransitiveArtifactNode );
+        DependencyNode omittedManagedTransitiveArtifactNode = createNode( "g:c:t:2" );
+        omittedManagedTransitiveArtifactNode.setPremanagedVersion( "1" );
+        omittedManagedTransitiveArtifactNode.omitForConflict( managedTransitiveArtifact );
+        grandchildArtifactNode.addChild( omittedManagedTransitiveArtifactNode );
+
+        assertDependencyTree( expectedRootNode, project );
+    }
+    */
+
     /**
      * Tests building a tree for a project with one transitive dependency whose scope is fixed in dependency management:
      * 

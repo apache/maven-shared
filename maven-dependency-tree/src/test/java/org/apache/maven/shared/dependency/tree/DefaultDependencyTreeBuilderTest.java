@@ -611,8 +611,11 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      * g:p:t:1
      * \- g:a:t:1
      * </pre>
+     * 
+     * @throws InvalidVersionSpecificationException 
+     * @throws DependencyTreeBuilderException 
      */
-    public void testProjectWithVersionRange() throws Exception
+    public void testProjectWithVersionRange() throws InvalidVersionSpecificationException, DependencyTreeBuilderException
     {
         String range = "[1,2)";
         Artifact projectArtifact = createArtifact( "g:p:t:1" );

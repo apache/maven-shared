@@ -24,7 +24,7 @@ import java.util.NoSuchElementException;
 import java.util.Stack;
 
 /**
- * {@link Iterator} for {@link DependencyTree} implementing a traversal from leaves to root.
+ * {@link Iterator} for {@link DependencyNode} implementing a traversal from leaves to root.
  * 
  * TODO {@link #DependencyTreeInverseIterator(DependencyNode)} is costly,
  * a better implementation would move the cost to {@link #next()}

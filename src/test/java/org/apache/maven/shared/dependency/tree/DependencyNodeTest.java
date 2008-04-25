@@ -218,6 +218,9 @@ public class DependencyNodeTest
         assertNull( node5.getParent() );
     }
     
+    /**
+     * @deprecated
+     */
     public void testGetDepth()
     {
         assertEquals( 0, rootNode.getDepth() );

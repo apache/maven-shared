@@ -25,7 +25,7 @@ import java.util.NoSuchElementException;
 import java.util.Stack;
 
 /**
- * {@link Iterator} for {@link DependencyTree} implementing a preoder traversal.
+ * {@link Iterator} for {@link DependencyNode} implementing a preoder traversal.
  * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @version $Id$

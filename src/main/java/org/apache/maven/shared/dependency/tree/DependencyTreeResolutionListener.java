@@ -100,16 +100,16 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
 
     // ResolutionListener methods ---------------------------------------------
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListener#testArtifact(org.apache.maven.artifact.Artifact)
+    /**
+     * {@inheritDoc}
      */
     public void testArtifact( Artifact artifact )
     {
         log( "testArtifact: artifact=" + artifact );
     }
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListener#startProcessChildren(org.apache.maven.artifact.Artifact)
+    /**
+     * {@inheritDoc}
      */
     public void startProcessChildren( Artifact artifact )
     {
@@ -124,8 +124,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         parentNodes.push( currentNode );
     }
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListener#endProcessChildren(org.apache.maven.artifact.Artifact)
+    /**
+     * {@inheritDoc}
      */
     public void endProcessChildren( Artifact artifact )
     {
@@ -145,8 +145,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         }
     }
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListener#includeArtifact(org.apache.maven.artifact.Artifact)
+    /**
+     * {@inheritDoc}
      */
     public void includeArtifact( Artifact artifact )
     {
@@ -170,9 +170,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         }
     }
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListener#omitForNearer(org.apache.maven.artifact.Artifact,
-     *      org.apache.maven.artifact.Artifact)
+    /**
+     * {@inheritDoc}
      */
     public void omitForNearer( Artifact omitted, Artifact kept )
     {
@@ -217,9 +216,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         }
     }
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListener#updateScope(org.apache.maven.artifact.Artifact,
-     *      java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public void updateScope( Artifact artifact, String scope )
     {
@@ -236,9 +234,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         node.setOriginalScope( artifact.getScope() );
     }
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListener#manageArtifact(org.apache.maven.artifact.Artifact,
-     *      org.apache.maven.artifact.Artifact)
+    /**
+     * {@inheritDoc}
      */
     public void manageArtifact( Artifact artifact, Artifact replacement )
     {
@@ -257,8 +254,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         }
     }
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListener#omitForCycle(org.apache.maven.artifact.Artifact)
+    /**
+     * {@inheritDoc}
      */
     public void omitForCycle( Artifact artifact )
     {
@@ -272,9 +269,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         }
     }
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListener#updateScopeCurrentPom(org.apache.maven.artifact.Artifact,
-     *      java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public void updateScopeCurrentPom( Artifact artifact, String scopeIgnored )
     {
@@ -292,8 +288,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         node.setFailedUpdateScope( scopeIgnored );
     }
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListener#selectVersionFromRange(org.apache.maven.artifact.Artifact)
+    /**
+     * {@inheritDoc}
      */
     public void selectVersionFromRange( Artifact artifact )
     {
@@ -313,9 +309,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         node.setAvailableVersions( artifact.getAvailableVersions() );
     }
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListener#restrictRange(org.apache.maven.artifact.Artifact,
-     *      org.apache.maven.artifact.Artifact, org.apache.maven.artifact.versioning.VersionRange)
+    /**
+     * {@inheritDoc}
      */
     public void restrictRange( Artifact artifact, Artifact replacement, VersionRange versionRange )
     {
@@ -326,9 +321,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
     
     // ResolutionListenerForDepMgmt methods -----------------------------------
     
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListenerForDepMgmt#manageArtifactVersion(org.apache.maven.artifact.Artifact,
-     *      org.apache.maven.artifact.Artifact)
+    /**
+     * {@inheritDoc}
      */
     public void manageArtifactVersion( Artifact artifact, Artifact replacement )
     {
@@ -348,9 +342,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
         }
     }
 
-    /*
-     * @see org.apache.maven.artifact.resolver.ResolutionListenerForDepMgmt#manageArtifactScope(org.apache.maven.artifact.Artifact,
-     *      org.apache.maven.artifact.Artifact)
+    /**
+     * {@inheritDoc}
      */
     public void manageArtifactScope( Artifact artifact, Artifact replacement )
     {

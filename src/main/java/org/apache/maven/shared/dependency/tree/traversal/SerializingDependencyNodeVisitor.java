@@ -143,8 +143,8 @@ public class SerializingDependencyNodeVisitor implements DependencyNodeVisitor
 
     // DependencyNodeVisitor methods ------------------------------------------
 
-    /*
-     * @see org.apache.maven.shared.dependency.tree.traversal.DependencyNodeVisitor#visit(org.apache.maven.shared.dependency.tree.DependencyNode)
+    /**
+     * {@inheritDoc}
      */
     public boolean visit( DependencyNode node )
     {
@@ -157,8 +157,8 @@ public class SerializingDependencyNodeVisitor implements DependencyNodeVisitor
         return true;
     }
 
-    /*
-     * @see org.apache.maven.shared.dependency.tree.traversal.DependencyNodeVisitor#endVisit(org.apache.maven.shared.dependency.tree.DependencyNode)
+    /**
+     * {@inheritDoc}
      */
     public boolean endVisit( DependencyNode node )
     {

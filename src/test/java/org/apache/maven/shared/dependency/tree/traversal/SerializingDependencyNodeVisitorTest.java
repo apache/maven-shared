@@ -45,8 +45,8 @@ public class SerializingDependencyNodeVisitorTest extends AbstractDependencyNode
 
     // TestCase methods -------------------------------------------------------
 
-    /*
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * {@inheritDoc}
      */
     protected void setUp() throws Exception
     {

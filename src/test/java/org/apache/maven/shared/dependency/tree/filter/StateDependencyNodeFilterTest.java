@@ -48,8 +48,8 @@ public class StateDependencyNodeFilterTest extends TestCase
 
     // TestCase methods -------------------------------------------------------
 
-    /*
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * {@inheritDoc}
      */
     protected void setUp() throws Exception
     {

@@ -45,8 +45,8 @@ public class AncestorOrSelfDependencyNodeFilterTest extends AbstractDependencyNo
 
     // TestCase methods -------------------------------------------------------
 
-    /*
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * {@inheritDoc}
      */
     protected void setUp() throws Exception
     {

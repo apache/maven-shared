@@ -62,6 +62,7 @@
     <module>maven-osgi</module>
     <module>maven-reporting-impl</module>
     <module>maven-repository-builder</module>
+    <module>maven-runtime</module>
     <module>maven-script</module>
     <module>maven-shared-io</module>
     <module>maven-shared-jar</module>

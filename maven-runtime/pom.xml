@@ -31,6 +31,11 @@
   <packaging>jar</packaging>
   <version>1.0-alpha-1-SNAPSHOT</version>
   <name>Maven Runtime</name>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-runtime</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-runtime</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-runtime</url>
+  </scm>
   <build>
     <plugins>
       <plugin>

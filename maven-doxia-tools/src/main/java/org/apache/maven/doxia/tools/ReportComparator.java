@@ -30,8 +30,8 @@ import java.util.Locale;
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id$
- * @TODO move to reporting API?
- * @TODO allow reports to define their order in some other way?
+ * @todo move to reporting API?
+ * @todo allow reports to define their order in some other way?
  */
 public class ReportComparator
     implements Comparator

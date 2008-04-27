@@ -189,7 +189,7 @@ public class DefaultSiteTool
     /**
      * @param path could be null.
      * @return the path normalized, i.e. by eliminating "/../" and "/./" in the path.
-     * @see FileUtils#normalize(String)
+     * @see FilenameUtils#normalize(String)
      */
     protected String getNormalizedPath( String path )
     {

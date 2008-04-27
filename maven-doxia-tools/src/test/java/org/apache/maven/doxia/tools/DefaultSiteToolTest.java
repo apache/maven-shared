@@ -48,18 +48,16 @@ public class DefaultSiteToolTest
     public void testGetNormalizedPath()
         throws Exception
     {
-        DefaultSiteTool tool = new DefaultSiteTool();
-
-        assertEquals( null, tool.getNormalizedPath( null ) );
-        assertEquals( "", tool.getNormalizedPath( "" ) );
-        assertEquals( "foo", tool.getNormalizedPath( "foo" ) );
-        assertEquals( "foo/bar", tool.getNormalizedPath( "foo/bar" ) );
-        assertEquals( "foo/bar", tool.getNormalizedPath( "foo\\bar" ) );
-        assertEquals( "foo/bar", tool.getNormalizedPath( "foo/./bar" ) );
-        assertEquals( "bar", tool.getNormalizedPath( "foo/../bar" ) );
-        assertEquals( "foo", tool.getNormalizedPath( "./foo" ) );
-        assertEquals( "../foo", tool.getNormalizedPath( "../foo" ) );
-        assertEquals( "../../foo", tool.getNormalizedPath( "../../foo" ) );
+        assertEquals( null, DefaultSiteTool.getNormalizedPath( null ) );
+        assertEquals( "", DefaultSiteTool.getNormalizedPath( "" ) );
+        assertEquals( "foo", DefaultSiteTool.getNormalizedPath( "foo" ) );
+        assertEquals( "foo/bar", DefaultSiteTool.getNormalizedPath( "foo/bar" ) );
+        assertEquals( "foo/bar", DefaultSiteTool.getNormalizedPath( "foo\\bar" ) );
+        assertEquals( "foo/bar", DefaultSiteTool.getNormalizedPath( "foo/./bar" ) );
+        assertEquals( "bar", DefaultSiteTool.getNormalizedPath( "foo/../bar" ) );
+        assertEquals( "foo", DefaultSiteTool.getNormalizedPath( "./foo" ) );
+        assertEquals( "../foo", DefaultSiteTool.getNormalizedPath( "../foo" ) );
+        assertEquals( "../../foo", DefaultSiteTool.getNormalizedPath( "../../foo" ) );
     }
 
 }

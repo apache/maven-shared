@@ -42,7 +42,6 @@ import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.reporting.MavenReport;
 import org.codehaus.plexus.i18n.I18N;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
@@ -184,21 +183,6 @@ public class DefaultSiteTool
         throws SiteToolException
     {
         return getSkinArtifactFromRepository( localRepository, remoteArtifactRepositories, new DecorationModel() );
-    }
-
-    /**
-     * @param path could be null.
-     * @return the path normalized, i.e. by eliminating "/../" and "/./" in the path.
-     * @see FilenameUtils#normalize(String)
-     */
-    protected String getNormalizedPath( String path )
-    {
-        String normalized = FilenameUtils.normalize( path );
-        if ( normalized == null )
-        {
-            normalized = path;
-        }
-        return ( normalized == null ) ? null : normalized.replace( '\\', '/' );
     }
 
     /** {@inheritDoc} */
@@ -1047,6 +1031,25 @@ public class DefaultSiteTool
     }
 
     // ----------------------------------------------------------------------
+    // Protected methods
+    // ----------------------------------------------------------------------
+
+    /**
+     * @param path could be null.
+     * @return the path normalized, i.e. by eliminating "/../" and "/./" in the path.
+     * @see FilenameUtils#normalize(String)
+     */
+    protected static String getNormalizedPath( String path )
+    {
+        String normalized = FilenameUtils.normalize( path );
+        if ( normalized == null )
+        {
+            normalized = path;
+        }
+        return ( normalized == null ) ? null : normalized.replace( '\\', '/' );
+    }
+
+    // ----------------------------------------------------------------------
     // Private methods
     // ----------------------------------------------------------------------
 
@@ -1363,6 +1366,10 @@ public class DefaultSiteTool
 
         return item;
     }
+
+    // ----------------------------------------------------------------------
+    // static methods
+    // ----------------------------------------------------------------------
 
     /**
      * Convenience method.

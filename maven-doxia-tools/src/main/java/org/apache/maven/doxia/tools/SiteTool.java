@@ -42,7 +42,8 @@ public interface SiteTool
     String ROLE = SiteTool.class.getName();
 
     /**
-     * The locale by default for all default bundles.
+     * The locale by default for all default bundles
+     * @see Locale#ENGLISH
      */
     Locale DEFAULT_LOCALE = Locale.ENGLISH;
 

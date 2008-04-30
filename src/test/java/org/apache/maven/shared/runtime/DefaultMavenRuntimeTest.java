@@ -53,6 +53,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     private BuildTool buildTool;
 
     private MavenRuntime mavenRuntime;
+    
+    private static boolean initialized = false;
 
     // TestCase methods -------------------------------------------------------
 
@@ -67,15 +69,25 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         buildTool = (BuildTool) lookup( BuildTool.ROLE );
 
         mavenRuntime = (MavenRuntime) lookup( MavenRuntime.ROLE );
+        
+        if ( !initialized )
+        {
+            packageProject( "testSingleJar/pom.xml" );
+            packageProject( "testSingleJar2/pom.xml" );
+            packageProject( "testMultipleJars/project1/pom.xml" );
+            packageProject( "testMultipleJars/project2/pom.xml" );
+            packageProject( "testMultipleJars/project3/pom.xml" );
+            packageProject( "testDependentJars/pom.xml" );
+
+            initialized = true;
+        }
     }
 
     // getProjectProperties tests ---------------------------------------------
 
     public void testGetProjectPropertiesWithDefaultPackageClass()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-
         File jar = getPackage( "testSingleJar/pom.xml" );
 
         URLClassLoader classLoader = newClassLoader( jar );
@@ -90,10 +102,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectPropertiesWithPackagedClass()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-
         File jar = getPackage( "testSingleJar/pom.xml" );
 
         URLClassLoader classLoader = newClassLoader( jar );
@@ -108,10 +118,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectPropertiesWithSubPackagedClass()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-
         File jar = getPackage( "testSingleJar/pom.xml" );
 
         URLClassLoader classLoader = newClassLoader( jar );
@@ -126,11 +134,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectPropertiesWithMultipleVersions()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -146,11 +151,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectPropertiesWithMultipleVersionsReversed()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -166,11 +168,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectPropertiesWithParentDelegation()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -188,11 +187,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectPropertiesWithChildDelegation()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -212,10 +208,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     // getProjectsProperties tests --------------------------------------------
 
     public void testGetProjectsPropertiesWithSingleJar()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-
         File jar = getPackage( "testSingleJar/pom.xml" );
 
         URLClassLoader classLoader = newClassLoader( jar );
@@ -228,12 +222,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectsPropertiesWithMultipleJars()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testMultipleJars/project1/pom.xml" );
-        packageProject( "testMultipleJars/project2/pom.xml" );
-        packageProject( "testMultipleJars/project3/pom.xml" );
-
         File jar1 = getPackage( "testMultipleJars/project1/pom.xml" );
         File jar2 = getPackage( "testMultipleJars/project2/pom.xml" );
         File jar3 = getPackage( "testMultipleJars/project3/pom.xml" );
@@ -252,11 +242,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectsPropertiesWithMultipleVersions()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -270,11 +257,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectsPropertiesWithMultipleVersionsReversed()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -288,11 +272,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectsPropertiesWithParentDelegation()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -308,11 +289,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectsPropertiesWithChildDelegation()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -330,10 +308,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     // getProject tests -------------------------------------------------------
 
     public void testGetProjectWithDefaultPackageClass()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-
         File jar = getPackage( "testSingleJar/pom.xml" );
 
         URLClassLoader classLoader = newClassLoader( jar );
@@ -348,10 +324,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectWithPackagedClass()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-
         File jar = getPackage( "testSingleJar/pom.xml" );
 
         URLClassLoader classLoader = newClassLoader( jar );
@@ -366,10 +340,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectWithSubPackagedClass()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-
         File jar = getPackage( "testSingleJar/pom.xml" );
 
         URLClassLoader classLoader = newClassLoader( jar );
@@ -384,11 +356,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectWithMultipleVersions()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -404,11 +373,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectWithMultipleVersionsReversed()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -424,11 +390,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectWithParentDelegation()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -446,11 +409,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectWithChildDelegation()
-        throws TestToolsException, ClassNotFoundException, MavenRuntimeException, IOException
+        throws ClassNotFoundException, MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -470,10 +430,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     // getProjects tests ------------------------------------------------------
 
     public void testGetProjectsWithSingleJar()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-
         File jar = getPackage( "testSingleJar/pom.xml" );
 
         URLClassLoader classLoader = newClassLoader( jar );
@@ -486,12 +444,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectsWithMultipleJars()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testMultipleJars/project1/pom.xml" );
-        packageProject( "testMultipleJars/project2/pom.xml" );
-        packageProject( "testMultipleJars/project3/pom.xml" );
-
         File jar1 = getPackage( "testMultipleJars/project1/pom.xml" );
         File jar2 = getPackage( "testMultipleJars/project2/pom.xml" );
         File jar3 = getPackage( "testMultipleJars/project3/pom.xml" );
@@ -510,11 +464,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectsWithMultipleVersions()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -528,11 +479,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectsWithMultipleVersionsReversed()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -546,11 +494,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectsWithParentDelegation()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -566,11 +511,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetProjectsWithChildDelegation()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -588,10 +530,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     // getSortedProjects tests ------------------------------------------------
 
     public void testGetSortedProjectsWithSingleJar()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-
         File jar = getPackage( "testSingleJar/pom.xml" );
 
         URLClassLoader classLoader = newClassLoader( jar );
@@ -604,12 +544,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetSortedProjectsWithMultipleJars()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testMultipleJars/project1/pom.xml" );
-        packageProject( "testMultipleJars/project2/pom.xml" );
-        packageProject( "testMultipleJars/project3/pom.xml" );
-
         File jar1 = getPackage( "testMultipleJars/project1/pom.xml" );
         File jar2 = getPackage( "testMultipleJars/project2/pom.xml" );
         File jar3 = getPackage( "testMultipleJars/project3/pom.xml" );
@@ -628,10 +564,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetSortedProjectsWithDependentJars()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testDependentJars/pom.xml" );
-
         File jar1 = getPackage( "testDependentJars/project1/pom.xml" );
         File jar2 = getPackage( "testDependentJars/project2/pom.xml" );
         File jar3 = getPackage( "testDependentJars/project3/pom.xml" );
@@ -650,11 +584,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetSortedProjectsWithMultipleVersions()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -668,11 +599,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetSortedProjectsWithMultipleVersionsReversed()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -686,11 +614,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetSortedProjectsWithParentDelegation()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -706,11 +631,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     }
 
     public void testGetSortedProjectsWithChildDelegation()
-        throws TestToolsException, MavenRuntimeException, IOException
+        throws MavenRuntimeException, IOException
     {
-        packageProject( "testSingleJar/pom.xml" );
-        packageProject( "testSingleJar2/pom.xml" );
-
         File jar1 = getPackage( "testSingleJar/pom.xml" );
         File jar2 = getPackage( "testSingleJar2/pom.xml" );
 
@@ -729,6 +651,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
     private void packageProject( String pomPath ) throws TestToolsException
     {
+        System.out.println("Building test project " + pomPath);
+        
         File pom = getTestFile( "target/test-classes/", pomPath );
         Properties properties = new Properties();
         List<String> goals = Arrays.asList( new String[] { "clean", "package" } );

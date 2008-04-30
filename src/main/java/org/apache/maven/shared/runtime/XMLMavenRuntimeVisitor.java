@@ -50,7 +50,7 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * A list of the collected <code>MavenProject</code>s.
      */
-    private final List projects;
+    private final List<MavenProject> projects;
 
     // constructors -----------------------------------------------------------
 
@@ -59,7 +59,7 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
      */
     public XMLMavenRuntimeVisitor()
     {
-        projects = new ArrayList();
+        projects = new ArrayList<MavenProject>();
     }
 
     // MavenRuntimeVisitor methods --------------------------------------------
@@ -89,7 +89,7 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
      * 
      * @return an unmodifiable list of the collected <code>MavenProject</code>s
      */
-    public List getProjects()
+    public List<MavenProject> getProjects()
     {
         return Collections.unmodifiableList( projects );
     }
@@ -101,13 +101,13 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
      * @throws MavenRuntimeException
      *             if an error occurred ordering the projects
      */
-    public List getSortedProjects() throws MavenRuntimeException
+    public List<MavenProject> getSortedProjects() throws MavenRuntimeException
     {
         try
         {
             ProjectSorter projectSorter = new ProjectSorter( projects );
 
-            return projectSorter.getSortedProjects();
+            return genericList( projectSorter.getSortedProjects(), MavenProject.class );
         }
         catch ( CycleDetectedException exception )
         {
@@ -159,5 +159,28 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
         {
             IOUtil.close( in );
         }
+    }
+    
+    /**
+     * Converts the specified raw list to a generic list of a specified type by explicitly casting each element.
+     * 
+     * @param <T>
+     *            the type of the required generic list
+     * @param list
+     *            the raw type
+     * @param type
+     *            the class that represents the type of the required generic list
+     * @return the generic list
+     */
+    private static <T> List<T> genericList(List<?> list, Class<T> type)
+    {
+        List<T> genericList = new ArrayList<T>();
+        
+        for (Object element : list)
+        {
+            genericList.add( type.cast( element ) );
+        }
+        
+        return genericList;
     }
 }

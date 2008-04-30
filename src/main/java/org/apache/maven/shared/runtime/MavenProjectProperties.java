@@ -130,6 +130,7 @@ public class MavenProjectProperties implements Serializable
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode()
     {
         int hashCode = groupId.hashCode();
@@ -144,6 +145,7 @@ public class MavenProjectProperties implements Serializable
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean equals( Object object )
     {
         if ( !( object instanceof MavenProjectProperties ) )
@@ -161,6 +163,7 @@ public class MavenProjectProperties implements Serializable
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString()
     {
         StringBuffer buffer = new StringBuffer();

@@ -49,7 +49,7 @@ public interface MavenRuntime
      * @throws MavenRuntimeException
      *             if an error occurred introspecting the Maven runtime environment
      */
-    MavenProjectProperties getProjectProperties( Class klass ) throws MavenRuntimeException;
+    MavenProjectProperties getProjectProperties( Class<?> klass ) throws MavenRuntimeException;
 
     /**
      * Obtains a list of simple properties for each Maven project running within the specified class loader.
@@ -61,7 +61,7 @@ public interface MavenRuntime
      * @throws MavenRuntimeException
      *             if an error occurred introspecting the Maven runtime environment
      */
-    List getProjectsProperties( ClassLoader classLoader ) throws MavenRuntimeException;
+    List<MavenProjectProperties> getProjectsProperties( ClassLoader classLoader ) throws MavenRuntimeException;
 
     /**
      * Gets the specified class's Maven project.
@@ -72,7 +72,7 @@ public interface MavenRuntime
      * @throws MavenRuntimeException
      *             if an error occurred introspecting the Maven runtime environment
      */
-    MavenProject getProject( Class klass ) throws MavenRuntimeException;
+    MavenProject getProject( Class<?> klass ) throws MavenRuntimeException;
 
     /**
      * Obtains a list of Maven projects running within the specified class loader.
@@ -83,7 +83,7 @@ public interface MavenRuntime
      * @throws MavenRuntimeException
      *             if an error occurred introspecting the Maven runtime environment
      */
-    List getProjects( ClassLoader classLoader ) throws MavenRuntimeException;
+    List<MavenProject> getProjects( ClassLoader classLoader ) throws MavenRuntimeException;
 
     /**
      * Obtains a list of Maven projects running within the specified class loader ordered by their dependencies.
@@ -95,5 +95,5 @@ public interface MavenRuntime
      * @throws MavenRuntimeException
      *             if an error occurred introspecting the Maven runtime environment
      */
-    List getSortedProjects( ClassLoader classLoader ) throws MavenRuntimeException;
+    List<MavenProject> getSortedProjects( ClassLoader classLoader ) throws MavenRuntimeException;
 }

@@ -93,7 +93,7 @@ public final class MavenRuntimeVisitorUtils
     public static void accept( ClassLoader classLoader, MavenRuntimeVisitor visitor )
         throws MavenRuntimeException
     {
-        Enumeration urls;
+        Enumeration<URL> urls;
 
         try
         {
@@ -105,12 +105,12 @@ public final class MavenRuntimeVisitorUtils
                                              exception );
         }
 
-        Set visitedProjectProperties = new HashSet();
-        Set visitedProjectXML = new HashSet();
+        Set<String> visitedProjectProperties = new HashSet<String>();
+        Set<String> visitedProjectXML = new HashSet<String>();
 
         while ( urls.hasMoreElements() )
         {
-            URL url = (URL) urls.nextElement();
+            URL url = urls.nextElement();
 
             acceptURL( url, visitor, visitedProjectProperties, visitedProjectXML );
         }
@@ -126,7 +126,7 @@ public final class MavenRuntimeVisitorUtils
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    public static void accept( Class klass, MavenRuntimeVisitor visitor )
+    public static void accept( Class<?> klass, MavenRuntimeVisitor visitor )
         throws MavenRuntimeException
     {
         try
@@ -134,7 +134,7 @@ public final class MavenRuntimeVisitorUtils
             URL baseURL = ClassUtils.getBaseURL( klass );
             URL url = new URL( baseURL, MAVEN_PATH );
 
-            acceptURL( url, visitor, new HashSet(), new HashSet() );
+            acceptURL( url, visitor, new HashSet<String>(), new HashSet<String>() );
         }
         catch ( MalformedURLException exception )
         {
@@ -158,8 +158,8 @@ public final class MavenRuntimeVisitorUtils
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private static void acceptURL( URL url, MavenRuntimeVisitor visitor, Set visitedProjectProperties,
-                                   Set visitedProjectXML ) throws MavenRuntimeException
+    private static void acceptURL( URL url, MavenRuntimeVisitor visitor, Set<String> visitedProjectProperties,
+                                   Set<String> visitedProjectXML ) throws MavenRuntimeException
     {
         if ( "jar".equals( url.getProtocol() ) )
         {
@@ -192,8 +192,8 @@ public final class MavenRuntimeVisitorUtils
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private static void acceptJar( URL url, MavenRuntimeVisitor visitor, Set visitedProjectProperties,
-                                   Set visitedProjectXML ) throws MavenRuntimeException
+    private static void acceptJar( URL url, MavenRuntimeVisitor visitor, Set<String> visitedProjectProperties,
+                                   Set<String> visitedProjectXML ) throws MavenRuntimeException
     {
         JarInputStream in = null;
 
@@ -239,7 +239,7 @@ public final class MavenRuntimeVisitorUtils
      *             if an error occurs visiting the projects
      */
     private static void acceptJarEntry( URL jarURL, JarEntry entry, MavenRuntimeVisitor visitor,
-                                        Set visitedProjectProperties, Set visitedProjectXML )
+                                        Set<String> visitedProjectProperties, Set<String> visitedProjectXML )
         throws MavenRuntimeException
     {
         String name = entry.getName();

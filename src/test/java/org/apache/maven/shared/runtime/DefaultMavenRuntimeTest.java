@@ -59,6 +59,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void setUp() throws Exception
     {
         super.setUp();
@@ -79,7 +80,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( jar );
 
-        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+        Class<?> klass = classLoader.loadClass( "DefaultPackageClass" );
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
@@ -97,7 +98,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( jar );
 
-        Class klass = classLoader.loadClass( "a.PackagedClass" );
+        Class<?> klass = classLoader.loadClass( "a.PackagedClass" );
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
@@ -115,7 +116,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( jar );
 
-        Class klass = classLoader.loadClass( "a.b.SubPackagedClass" );
+        Class<?> klass = classLoader.loadClass( "a.b.SubPackagedClass" );
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
@@ -135,7 +136,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2 } );
 
-        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+        Class<?> klass = classLoader.loadClass( "DefaultPackageClass" );
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
@@ -155,7 +156,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
 
-        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+        Class<?> klass = classLoader.loadClass( "DefaultPackageClass" );
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
@@ -176,7 +177,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader1 = newClassLoader( jar1 );
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1 );
 
-        Class klass = classLoader2.loadClass( "DefaultPackageClass" );
+        Class<?> klass = classLoader2.loadClass( "DefaultPackageClass" );
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
@@ -198,7 +199,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader1 = newClassLoader( jar1 );
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
 
-        Class klass = classLoader2.loadClass( "DefaultPackageClass" );
+        Class<?> klass = classLoader2.loadClass( "DefaultPackageClass" );
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
@@ -219,7 +220,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( jar );
 
-        List properties = mavenRuntime.getProjectsProperties( classLoader );
+        List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader );
 
         close( classLoader );
 
@@ -239,7 +240,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
 
-        List properties = mavenRuntime.getProjectsProperties( classLoader );
+        List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader );
 
         close( classLoader );
 
@@ -261,7 +262,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2 } );
 
-        List properties = mavenRuntime.getProjectsProperties( classLoader );
+        List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader );
 
         close( classLoader );
 
@@ -279,7 +280,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
 
-        List properties = mavenRuntime.getProjectsProperties( classLoader );
+        List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader );
 
         close( classLoader );
 
@@ -298,7 +299,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader1 = newClassLoader( jar1 );
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1 );
 
-        List properties = mavenRuntime.getProjectsProperties( classLoader2 );
+        List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader2 );
 
         close( classLoader1 );
         close( classLoader2 );
@@ -318,7 +319,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader1 = newClassLoader( jar1 );
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
 
-        List properties = mavenRuntime.getProjectsProperties( classLoader2 );
+        List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader2 );
 
         close( classLoader1 );
         close( classLoader2 );
@@ -337,7 +338,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( jar );
 
-        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+        Class<?> klass = classLoader.loadClass( "DefaultPackageClass" );
 
         MavenProject project = mavenRuntime.getProject( klass );
 
@@ -355,7 +356,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( jar );
 
-        Class klass = classLoader.loadClass( "a.PackagedClass" );
+        Class<?> klass = classLoader.loadClass( "a.PackagedClass" );
 
         MavenProject project = mavenRuntime.getProject( klass );
 
@@ -373,7 +374,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( jar );
 
-        Class klass = classLoader.loadClass( "a.b.SubPackagedClass" );
+        Class<?> klass = classLoader.loadClass( "a.b.SubPackagedClass" );
 
         MavenProject project = mavenRuntime.getProject( klass );
 
@@ -393,7 +394,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2 } );
 
-        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+        Class<?> klass = classLoader.loadClass( "DefaultPackageClass" );
 
         MavenProject project = mavenRuntime.getProject( klass );
 
@@ -413,7 +414,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
 
-        Class klass = classLoader.loadClass( "DefaultPackageClass" );
+        Class<?> klass = classLoader.loadClass( "DefaultPackageClass" );
 
         MavenProject project = mavenRuntime.getProject( klass );
 
@@ -434,7 +435,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader1 = newClassLoader( jar1 );
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1 );
 
-        Class klass = classLoader2.loadClass( "DefaultPackageClass" );
+        Class<?> klass = classLoader2.loadClass( "DefaultPackageClass" );
 
         MavenProject project = mavenRuntime.getProject( klass );
 
@@ -456,7 +457,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader1 = newClassLoader( jar1 );
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
 
-        Class klass = classLoader2.loadClass( "DefaultPackageClass" );
+        Class<?> klass = classLoader2.loadClass( "DefaultPackageClass" );
 
         MavenProject project = mavenRuntime.getProject( klass );
 
@@ -477,7 +478,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( jar );
 
-        List projects = mavenRuntime.getProjects( classLoader );
+        List<MavenProject> projects = mavenRuntime.getProjects( classLoader );
 
         close( classLoader );
 
@@ -497,7 +498,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
 
-        List projects = mavenRuntime.getProjects( classLoader );
+        List<MavenProject> projects = mavenRuntime.getProjects( classLoader );
 
         close( classLoader );
 
@@ -519,7 +520,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2 } );
 
-        List projects = mavenRuntime.getProjects( classLoader );
+        List<MavenProject> projects = mavenRuntime.getProjects( classLoader );
 
         close( classLoader );
 
@@ -537,7 +538,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
 
-        List projects = mavenRuntime.getProjects( classLoader );
+        List<MavenProject> projects = mavenRuntime.getProjects( classLoader );
 
         close( classLoader );
 
@@ -556,7 +557,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader1 = newClassLoader( jar1 );
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1 );
 
-        List projects = mavenRuntime.getProjects( classLoader2 );
+        List<MavenProject> projects = mavenRuntime.getProjects( classLoader2 );
 
         close( classLoader1 );
         close( classLoader2 );
@@ -576,7 +577,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader1 = newClassLoader( jar1 );
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
 
-        List projects = mavenRuntime.getProjects( classLoader2 );
+        List<MavenProject> projects = mavenRuntime.getProjects( classLoader2 );
 
         close( classLoader1 );
         close( classLoader2 );
@@ -595,7 +596,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( jar );
 
-        List projects = mavenRuntime.getSortedProjects( classLoader );
+        List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader );
 
         close( classLoader );
 
@@ -615,7 +616,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
 
-        List projects = mavenRuntime.getSortedProjects( classLoader );
+        List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader );
 
         close( classLoader );
 
@@ -637,7 +638,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
 
-        List projects = mavenRuntime.getSortedProjects( classLoader );
+        List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader );
 
         close( classLoader );
 
@@ -659,7 +660,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2 } );
 
-        List projects = mavenRuntime.getSortedProjects( classLoader );
+        List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader );
 
         close( classLoader );
 
@@ -677,7 +678,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
 
-        List projects = mavenRuntime.getSortedProjects( classLoader );
+        List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader );
 
         close( classLoader );
 
@@ -696,7 +697,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader1 = newClassLoader( jar1 );
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1 );
 
-        List projects = mavenRuntime.getSortedProjects( classLoader2 );
+        List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader2 );
 
         close( classLoader1 );
         close( classLoader2 );
@@ -716,7 +717,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader1 = newClassLoader( jar1 );
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
 
-        List projects = mavenRuntime.getSortedProjects( classLoader2 );
+        List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader2 );
 
         close( classLoader1 );
         close( classLoader2 );
@@ -730,7 +731,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
     {
         File pom = getTestFile( "target/test-classes/", pomPath );
         Properties properties = new Properties();
-        List goals = Arrays.asList( new String[] { "clean", "package" } );
+        List<String> goals = Arrays.asList( new String[] { "clean", "package" } );
         File log = new File( pom.getParentFile(), "build.log" );
 
         InvocationResult result = buildTool.executeMaven( pom, properties, goals, log );
@@ -793,7 +794,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
     private void close( URLClassLoader classLoader ) throws IOException
     {
-        IOException[] exceptions = ClassLoaderUtil.releaseLoader( classLoader, new Vector() );
+        IOException[] exceptions = ClassLoaderUtil.releaseLoader( classLoader, new Vector<String>() );
 
         if ( exceptions.length > 0 )
         {
@@ -801,18 +802,18 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         }
     }
 
-    private void assertMavenProjectProperties( String id, List propertiesList )
+    private void assertMavenProjectProperties( String id, List<MavenProjectProperties> propertiesList )
     {
         assertMavenProjectProperties( new String[] { id }, propertiesList );
     }
 
-    private void assertMavenProjectProperties( String[] ids, List propertiesList )
+    private void assertMavenProjectProperties( String[] ids, List<MavenProjectProperties> propertiesList )
     {
         assertEquals( "Number of project properties", ids.length, propertiesList.size() );
 
         for ( int i = 0; i < ids.length; i++ )
         {
-            assertMavenProjectProperties( ids[i], (MavenProjectProperties) propertiesList.get( i ) );
+            assertMavenProjectProperties( ids[i], propertiesList.get( i ) );
         }
     }
 
@@ -833,18 +834,18 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         assertEquals( "Version", version, properties.getVersion() );
     }
 
-    private void assertMavenProjects( String id, List projects )
+    private void assertMavenProjects( String id, List<MavenProject> projects )
     {
         assertMavenProjects( new String[] { id }, projects );
     }
 
-    private void assertMavenProjects( String[] ids, List projects )
+    private void assertMavenProjects( String[] ids, List<MavenProject> projects )
     {
         assertEquals( "Number of projects", ids.length, projects.size() );
 
         for ( int i = 0; i < ids.length; i++ )
         {
-            assertMavenProject( ids[i], (MavenProject) projects.get( i ) );
+            assertMavenProject( ids[i], projects.get( i ) );
         }
     }
 

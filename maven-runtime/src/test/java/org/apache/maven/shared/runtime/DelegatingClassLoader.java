@@ -62,9 +62,10 @@ public class DelegatingClassLoader extends URLClassLoader
     /**
      * {@inheritDoc}
      */
-    public Class loadClass( String name ) throws ClassNotFoundException
+    @Override
+    public Class<?> loadClass( String name ) throws ClassNotFoundException
     {
-        Class klass;
+        Class<?> klass;
 
         if ( childDelegating )
         {
@@ -96,6 +97,7 @@ public class DelegatingClassLoader extends URLClassLoader
     /**
      * {@inheritDoc}
      */
+    @Override
     public URL getResource( String name )
     {
         URL url;
@@ -120,9 +122,10 @@ public class DelegatingClassLoader extends URLClassLoader
     /**
      * {@inheritDoc}
      */
-    public Enumeration getResources( String name ) throws IOException
+    @Override
+    public Enumeration<URL> getResources( String name ) throws IOException
     {
-        Enumeration urls;
+        Enumeration<URL> urls;
 
         if ( childDelegating )
         {
@@ -130,9 +133,9 @@ public class DelegatingClassLoader extends URLClassLoader
 
             if ( getParent() != null )
             {
-                Enumeration parentURLs = getParent().getResources( name );
+                Enumeration<URL> parentURLs = getParent().getResources( name );
 
-                urls = new CompoundEnumeration( urls, parentURLs );
+                urls = new CompoundEnumeration<URL>( urls, parentURLs );
             }
         }
         else

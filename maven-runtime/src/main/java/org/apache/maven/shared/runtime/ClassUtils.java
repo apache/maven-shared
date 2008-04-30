@@ -51,7 +51,7 @@ final class ClassUtils
      * @throws MalformedURLException
      *             if the base URL cannot be determined
      */
-    public static URL getBaseURL( Class klass )
+    public static URL getBaseURL( Class<?> klass )
         throws MalformedURLException
     {
         URL url = getURL( klass );
@@ -71,7 +71,7 @@ final class ClassUtils
      *            the class to obtain the URL for
      * @return a URL to the class, or <code>null</code> if it cannot be found
      */
-    public static URL getURL( Class klass )
+    public static URL getURL( Class<?> klass )
     {
         ClassLoader classLoader = klass.getClassLoader();
 

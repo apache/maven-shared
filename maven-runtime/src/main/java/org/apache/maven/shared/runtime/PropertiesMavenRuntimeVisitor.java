@@ -60,7 +60,7 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * A list of the collected <code>MavenProjectProperties</code>.
      */
-    private final List projects;
+    private final List<MavenProjectProperties> projects;
 
     // constructors -----------------------------------------------------------
 
@@ -69,7 +69,7 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
      */
     public PropertiesMavenRuntimeVisitor()
     {
-        projects = new ArrayList();
+        projects = new ArrayList<MavenProjectProperties>();
     }
 
     // MavenRuntimeVisitor methods --------------------------------------------
@@ -99,7 +99,7 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
      * 
      * @return a list of the collected <code>MavenProjectProperties</code>
      */
-    public List getProjects()
+    public List<MavenProjectProperties> getProjects()
     {
         return Collections.unmodifiableList( projects );
     }

@@ -31,10 +31,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -66,6 +62,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import junit.framework.Assert;
 
@@ -106,6 +106,8 @@ public class Verifier
 
     private boolean forkJvm = true;
 
+    private String defaultMavenHome;
+
     public Verifier( String basedir, String settingsFile )
         throws VerificationException
     {
@@ -139,6 +141,21 @@ public class Verifier
         }
 
         findLocalRepo( settingsFile );
+        findDefaultMavenHome();
+    }
+
+    private void findDefaultMavenHome()
+        throws VerificationException
+    {
+        try
+        {
+            Properties envVars = CommandLineUtils.getSystemEnvVars();
+            defaultMavenHome = envVars.getProperty( "M2_HOME" );
+        }
+        catch ( IOException e )
+        {
+            throw new VerificationException( "Cannot read system environment variables.", e );
+        }
     }
 
     public Verifier( String basedir )
@@ -255,7 +272,7 @@ public class Verifier
             throw new VerificationException( "Text not found in log: " + text );
         }
 }
-    
+
     public Properties loadProperties( String filename )
         throws VerificationException
     {
@@ -896,7 +913,7 @@ public class Verifier
         }
         else
         {
-            mavenHome = System.getenv( "M2_HOME" );
+            mavenHome = defaultMavenHome;
 
             if ( mavenHome != null )
             {
@@ -946,7 +963,7 @@ public class Verifier
 
                 cli.addEnvironment( key, (String) envVars.get( key ) );
 
-       /* What was the point of this? It doesn't work on windows.      
+       /* What was the point of this? It doesn't work on windows.
         *   try
                 {
                     FileUtils.fileWrite( "/tmp/foo.txt", "setting envar[ " + key + " = " + envVars.get( key ) );
@@ -1113,12 +1130,12 @@ public class Verifier
 
         if ( mavenHome == null )
         {
-            mavenHome = System.getenv( "M2_HOME" );
+            mavenHome = defaultMavenHome;
         }
 
         if ( mavenHome == null )
         {
-            mavenHome = System.getProperty( "user.home" ) + "/local/maven-2.1-SNAPSHOT";
+            mavenHome = System.getProperty( "user.home" ) + "/local/apache-maven-2.1-SNAPSHOT";
         }
 
         File coreDir = new File( mavenHome, "core/boot" );
@@ -1228,13 +1245,21 @@ public class Verifier
                 System.setOut( oldOut );
                 System.setErr( oldErr );
                 if ( oldCwConf == null )
+                {
                     System.getProperties().remove( "classworlds.conf" );
+                }
                 else
+                {
                     System.setProperty( "classworlds.conf", oldCwConf );
+                }
                 if ( oldMavenHome == null )
+                {
                     System.getProperties().remove( "maven.home" );
+                }
                 else
+                {
                     System.setProperty( "maven.home", oldMavenHome );
+                }
                 Thread.currentThread().setContextClassLoader( oldCl );
                 System.setSecurityManager( oldSm );
             }
@@ -1674,8 +1699,8 @@ public class Verifier
 
         public void reset()
         {
-            this.currentBody = null;
-            this.localRepository = null;
+            currentBody = null;
+            localRepository = null;
         }
     }
 

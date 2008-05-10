@@ -166,7 +166,7 @@ public class DefaultMavenFileFilter
             for ( Iterator iterator = propertiesFilePaths.iterator(); iterator.hasNext(); )
             {
                 String filterFile = (String) iterator.next();
-                if (StringUtils.isEmpty( filterFile ))
+                if ( StringUtils.isEmpty( filterFile ) )
                 {
                     // skip empty file name
                     continue;

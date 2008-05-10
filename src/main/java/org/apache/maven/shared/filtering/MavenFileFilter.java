@@ -20,7 +20,6 @@ package org.apache.maven.shared.filtering;
  */
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.maven.execution.MavenSession;
@@ -43,7 +42,7 @@ public interface MavenFileFilter
      * @param filtering enable or not filering
      * @param mavenProject the mavenproject
      * @param filters {@link List} of String which are path to a Property file
-     * @throws IOException 
+     * @throws MavenFilteringException 
      */
     void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject, List filters,
                           boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )

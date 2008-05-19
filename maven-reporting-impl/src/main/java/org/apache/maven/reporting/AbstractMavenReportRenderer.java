@@ -378,7 +378,8 @@ public abstract class AbstractMavenReportRenderer
     /**
      * Convenience method to wrap a link in the current sink.
      *
-     * @param paragraph the link to add, could be null.
+     * @param href the link to add, cannot be null.
+     * @param name the link name.
      * @see #text(String)
      * @see Sink#link(String)
      * @see Sink#link_()

@@ -51,6 +51,8 @@ public abstract class AbstractMavenReport
 
     /**
      * This method should be never called - all reports are rendered by Maven site-plugin's
+     *
+     * @throws MojoExecutionException always
      * @see org.apache.maven.plugins.site.ReportDocumentRender
      * @see org.apache.maven.plugin.Mojo#execute()
      */
@@ -78,6 +80,9 @@ public abstract class AbstractMavenReport
     /**
      * Generate a report.
      *
+     * @param aSink
+     * @param aLocale
+     * @throws MavenReportException
      * @see org.apache.maven.reporting.MavenReport#generate(org.apache.maven.doxia.sink.Sink, java.util.Locale)
      * @deprecated using {@link #generate(Sink, SinkFactory, Locale)} instead of
      */

@@ -135,7 +135,7 @@ public class DelegatingClassLoader extends URLClassLoader
             {
                 Enumeration<URL> parentURLs = getParent().getResources( name );
 
-                urls = new CompoundEnumeration<URL>( urls, parentURLs );
+                urls = new CompositeEnumeration<URL>( urls, parentURLs );
             }
         }
         else

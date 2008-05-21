@@ -30,7 +30,7 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
 /**
- * Tests <code>MavenRuntimeVisitorUtils</code>.
+ * Tests {@code MavenRuntimeVisitorUtils}.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$

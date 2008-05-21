@@ -37,7 +37,7 @@ public class MavenRuntimeException extends Exception
     // constructors -----------------------------------------------------------
 
     /**
-     * Creates a new <code>MavenRuntimeException</code> with the specified detail message.
+     * Creates a new {@code MavenRuntimeException} with the specified detail message.
      * 
      * @param message
      *            the detail message
@@ -48,7 +48,7 @@ public class MavenRuntimeException extends Exception
     }
 
     /**
-     * Creates a new <code>MavenRuntimeException</code> with the specified detail message and cause.
+     * Creates a new {@code MavenRuntimeException} with the specified detail message and cause.
      * 
      * @param message
      *            the detail message

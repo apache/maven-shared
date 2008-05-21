@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Default implementation of <code>MavenRuntime</code>.
+ * Default implementation of {@code MavenRuntime}.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
@@ -98,13 +98,13 @@ public class DefaultMavenRuntime implements MavenRuntime
     // private methods --------------------------------------------------------
 
     /**
-     * Gets the first element in the specified list or <code>null</code> if it is empty.
+     * Gets the first element in the specified list or {@code null} if it is empty.
      * 
      * @param <T>
      *            the type of the specified list
      * @param list
      *            the list to examine
-     * @return the first item in the list, or <code>null</code> if it is empty
+     * @return the first item in the list, or {@code null} if it is empty
      */
     private static <T> T first( List<T> list )
     {

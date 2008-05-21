@@ -22,7 +22,7 @@ package org.apache.maven.shared.runtime;
 import junit.framework.TestCase;
 
 /**
- * Tests <code>MavenProjectProperties</code>.
+ * Tests {@code MavenProjectProperties}.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$

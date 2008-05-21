@@ -172,6 +172,6 @@
   </reporting>
 
   <properties>
-    <doxia-sitetools.version>1.0-alpha-10</doxia-sitetools.version>
+    <doxia-sitetools.version>1.0-alpha-11</doxia-sitetools.version>
   </properties>
 </project>

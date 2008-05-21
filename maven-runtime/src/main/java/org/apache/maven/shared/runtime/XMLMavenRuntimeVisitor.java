@@ -43,7 +43,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
  */
-public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
+class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
 {
     // fields -----------------------------------------------------------------
 

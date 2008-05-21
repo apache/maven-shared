@@ -36,7 +36,7 @@ import org.codehaus.plexus.util.IOUtil;
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
  */
-public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
+class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
 {
     // constants --------------------------------------------------------------
 

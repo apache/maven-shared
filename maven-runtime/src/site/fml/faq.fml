@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faqs id="FAQ" title="Frequently Asked Questions">
+
+  <part id="General">
+  
+    <faq id="question1">
+      <question>Why is Maven Runtime returning no information when introspecting?</question>
+      <answer>
+        <p>
+          This may be for one of the following reasons:
+          <ul>
+            <li>
+              Maven Runtime is being run within an IDE.  This is because the Maven descriptor files created by Maven 
+              Archiver are not present, and these files are used to obtain Maven project metadata.  Maven Runtime
+              will return the correct information when run within the project's normal packaging.
+            </li>
+            <li>
+              Maven Archiver has been configured to not generate Maven descriptors.  If the
+              <a href="http://maven.apache.org/shared/maven-archiver/index.html#class_archive">addMavenDescriptor</a>
+              configuration parameter has been set to <code>false</code>, then Maven Runtime will not be able to access
+              project's Maven metadata at runtime.  This parameter must be set to <code>true</code> in order to use
+              Maven Runtime.
+            </li>
+          </ul>
+        </p>
+      </answer>
+    </faq>
+    
+    <faq id="question2">
+      <question>Why is Maven Runtime returning the wrong project for a given class?</question>
+      <answer>
+        <p>
+          This can happen if multiple Maven descriptors are present relative to the class.  Typically this occurs when
+          multiple Maven projects are merged into a single archive.  For example, when using 
+          <a href="http://maven.apache.org/plugins/maven-assembly-plugin/">Maven Assembly Plugin's</a>
+          <a href="http://maven.apache.org/plugins/maven-assembly-plugin/descriptor-refs.html#jar-with-dependencies">jar-with-dependencies</a>.           
+        </p>
+      </answer>
+    </faq>
+    
+  </part>
+  
+</faqs>

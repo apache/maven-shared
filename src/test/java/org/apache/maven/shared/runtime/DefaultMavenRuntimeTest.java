@@ -28,7 +28,6 @@ import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.maven.project.MavenProject;
@@ -36,8 +35,6 @@ import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.test.plugin.BuildTool;
 import org.apache.maven.shared.test.plugin.TestToolsException;
 import org.codehaus.plexus.PlexusTestCase;
-
-import com.sun.appserv.ClassLoaderUtil;
 
 /**
  * Tests {@code DefaultMavenRuntime}.
@@ -96,8 +93,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
-        close( classLoader );
-
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
 
@@ -112,8 +107,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
-        close( classLoader );
-
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
 
@@ -127,8 +120,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         Class<?> klass = classLoader.loadClass( "a.b.SubPackagedClass" );
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
-
-        close( classLoader );
 
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
@@ -145,8 +136,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
-        close( classLoader );
-
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
 
@@ -161,8 +150,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         Class<?> klass = classLoader.loadClass( "DefaultPackageClass" );
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
-
-        close( classLoader );
 
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", properties );
     }
@@ -180,9 +167,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
-        close( classLoader1 );
-        close( classLoader2 );
-
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
 
@@ -199,9 +183,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         MavenProjectProperties properties = mavenRuntime.getProjectProperties( klass );
 
-        close( classLoader1 );
-        close( classLoader2 );
-
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", properties );
     }
 
@@ -216,8 +197,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader );
 
-        close( classLoader );
-
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
 
@@ -231,8 +210,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
 
         List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader );
-
-        close( classLoader );
 
         assertMavenProjectProperties( new String[] {
             "org.apache.maven.shared.runtime.tests:testMultipleJars1:1.0",
@@ -251,8 +228,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader );
 
-        close( classLoader );
-
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
 
@@ -265,8 +240,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
 
         List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader );
-
-        close( classLoader );
 
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", properties );
     }
@@ -282,9 +255,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader2 );
 
-        close( classLoader1 );
-        close( classLoader2 );
-
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
     }
 
@@ -298,9 +268,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
 
         List<MavenProjectProperties> properties = mavenRuntime.getProjectsProperties( classLoader2 );
-
-        close( classLoader1 );
-        close( classLoader2 );
 
         assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", properties );
     }
@@ -318,8 +285,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         MavenProject project = mavenRuntime.getProject( klass );
 
-        close( classLoader );
-
         assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
     }
 
@@ -334,8 +299,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         MavenProject project = mavenRuntime.getProject( klass );
 
-        close( classLoader );
-
         assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
     }
 
@@ -349,8 +312,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         Class<?> klass = classLoader.loadClass( "a.b.SubPackagedClass" );
 
         MavenProject project = mavenRuntime.getProject( klass );
-
-        close( classLoader );
 
         assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
     }
@@ -367,8 +328,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         MavenProject project = mavenRuntime.getProject( klass );
 
-        close( classLoader );
-
         assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
     }
 
@@ -383,8 +342,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         Class<?> klass = classLoader.loadClass( "DefaultPackageClass" );
 
         MavenProject project = mavenRuntime.getProject( klass );
-
-        close( classLoader );
 
         assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", project );
     }
@@ -402,9 +359,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         MavenProject project = mavenRuntime.getProject( klass );
 
-        close( classLoader1 );
-        close( classLoader2 );
-
         assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
     }
 
@@ -421,9 +375,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         MavenProject project = mavenRuntime.getProject( klass );
 
-        close( classLoader1 );
-        close( classLoader2 );
-
         assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", project );
     }
 
@@ -438,8 +389,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         List<MavenProject> projects = mavenRuntime.getProjects( classLoader );
 
-        close( classLoader );
-
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
     }
 
@@ -453,8 +402,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
 
         List<MavenProject> projects = mavenRuntime.getProjects( classLoader );
-
-        close( classLoader );
 
         assertMavenProjects( new String[] {
             "org.apache.maven.shared.runtime.tests:testMultipleJars1:1.0",
@@ -473,8 +420,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         List<MavenProject> projects = mavenRuntime.getProjects( classLoader );
 
-        close( classLoader );
-
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
     }
 
@@ -487,8 +432,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
 
         List<MavenProject> projects = mavenRuntime.getProjects( classLoader );
-
-        close( classLoader );
 
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", projects );
     }
@@ -504,9 +447,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         List<MavenProject> projects = mavenRuntime.getProjects( classLoader2 );
 
-        close( classLoader1 );
-        close( classLoader2 );
-
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
     }
 
@@ -520,9 +460,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
 
         List<MavenProject> projects = mavenRuntime.getProjects( classLoader2 );
-
-        close( classLoader1 );
-        close( classLoader2 );
 
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", projects );
     }
@@ -538,8 +475,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader );
 
-        close( classLoader );
-
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
     }
 
@@ -553,8 +488,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
 
         List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader );
-
-        close( classLoader );
 
         assertMavenProjects( new String[] {
             "org.apache.maven.shared.runtime.tests:testMultipleJars1:1.0",
@@ -574,8 +507,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader );
 
-        close( classLoader );
-
         assertMavenProjects( new String[] {
             "org.apache.maven.shared.runtime.tests:testDependentJars3:1.0",
             "org.apache.maven.shared.runtime.tests:testDependentJars1:1.0",
@@ -593,8 +524,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader );
 
-        close( classLoader );
-
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
     }
 
@@ -607,8 +536,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader = newClassLoader( new File[] { jar2, jar1 } );
 
         List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader );
-
-        close( classLoader );
 
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", projects );
     }
@@ -624,9 +551,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
         List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader2 );
 
-        close( classLoader1 );
-        close( classLoader2 );
-
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", projects );
     }
 
@@ -640,9 +564,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         URLClassLoader classLoader2 = newClassLoader( jar2, classLoader1, true );
 
         List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader2 );
-
-        close( classLoader1 );
-        close( classLoader2 );
 
         assertMavenProjects( "org.apache.maven.shared.runtime.tests:testSingleJar:2.0", projects );
     }
@@ -714,16 +635,6 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         }
 
         return new DelegatingClassLoader( urls, parent, childDelegation );
-    }
-
-    private void close( URLClassLoader classLoader ) throws IOException
-    {
-        IOException[] exceptions = ClassLoaderUtil.releaseLoader( classLoader, new Vector<String>() );
-
-        if ( exceptions.length > 0 )
-        {
-            throw exceptions[0];
-        }
     }
 
     private void assertMavenProjectProperties( String id, List<MavenProjectProperties> propertiesList )

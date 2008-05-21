@@ -38,7 +38,7 @@ import org.codehaus.plexus.util.IOUtil;
  * @version $Id$
  * @see MavenRuntimeVisitor
  */
-public final class MavenRuntimeVisitorUtils
+final class MavenRuntimeVisitorUtils
 {
     // constants --------------------------------------------------------------
 
@@ -48,13 +48,13 @@ public final class MavenRuntimeVisitorUtils
     private static final String MAVEN_PATH = "META-INF/maven";
 
     /**
-     * The path elements of a Maven project properties file, where <code>null</code> is a wildcard.
+     * The path elements of a Maven project properties file, where {@code null} is a wildcard.
      */
     private static final String[] PROPERTIES_PATH_TOKENS =
         new String[] { "META-INF", "maven", null, null, "pom.properties" };
 
     /**
-     * The path elements of a Maven project XML file, where <code>null</code> is a wildcard.
+     * The path elements of a Maven project XML file, where {@code null} is a wildcard.
      */
     private static final String[] XML_PATH_TOKENS = new String[] { "META-INF", "maven", null, null, "pom.xml" };
 
@@ -71,11 +71,11 @@ public final class MavenRuntimeVisitorUtils
     // constructors -----------------------------------------------------------
 
     /**
-     * <code>MavenRuntimeVisitorUtils</code> is not intended to be instantiated.
+     * {@code MavenRuntimeVisitorUtils} is not intended to be instantiated.
      */
     private MavenRuntimeVisitorUtils()
     {
-        // private constructor for utility class
+        throw new AssertionError();
     }
 
     // public methods ---------------------------------------------------------
@@ -93,7 +93,7 @@ public final class MavenRuntimeVisitorUtils
     public static void accept( ClassLoader classLoader, MavenRuntimeVisitor visitor )
         throws MavenRuntimeException
     {
-        Enumeration urls;
+        Enumeration<URL> urls;
 
         try
         {
@@ -105,12 +105,12 @@ public final class MavenRuntimeVisitorUtils
                                              exception );
         }
 
-        Set visitedProjectProperties = new HashSet();
-        Set visitedProjectXML = new HashSet();
+        Set<String> visitedProjectProperties = new HashSet<String>();
+        Set<String> visitedProjectXML = new HashSet<String>();
 
         while ( urls.hasMoreElements() )
         {
-            URL url = (URL) urls.nextElement();
+            URL url = urls.nextElement();
 
             acceptURL( url, visitor, visitedProjectProperties, visitedProjectXML );
         }
@@ -126,7 +126,7 @@ public final class MavenRuntimeVisitorUtils
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    public static void accept( Class klass, MavenRuntimeVisitor visitor )
+    public static void accept( Class<?> klass, MavenRuntimeVisitor visitor )
         throws MavenRuntimeException
     {
         try
@@ -134,7 +134,7 @@ public final class MavenRuntimeVisitorUtils
             URL baseURL = ClassUtils.getBaseURL( klass );
             URL url = new URL( baseURL, MAVEN_PATH );
 
-            acceptURL( url, visitor, new HashSet(), new HashSet() );
+            acceptURL( url, visitor, new HashSet<String>(), new HashSet<String>() );
         }
         catch ( MalformedURLException exception )
         {
@@ -158,8 +158,8 @@ public final class MavenRuntimeVisitorUtils
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private static void acceptURL( URL url, MavenRuntimeVisitor visitor, Set visitedProjectProperties,
-                                   Set visitedProjectXML ) throws MavenRuntimeException
+    private static void acceptURL( URL url, MavenRuntimeVisitor visitor, Set<String> visitedProjectProperties,
+                                   Set<String> visitedProjectXML ) throws MavenRuntimeException
     {
         if ( "jar".equals( url.getProtocol() ) )
         {
@@ -192,8 +192,8 @@ public final class MavenRuntimeVisitorUtils
      * @throws MavenRuntimeException
      *             if an error occurs visiting the projects
      */
-    private static void acceptJar( URL url, MavenRuntimeVisitor visitor, Set visitedProjectProperties,
-                                   Set visitedProjectXML ) throws MavenRuntimeException
+    private static void acceptJar( URL url, MavenRuntimeVisitor visitor, Set<String> visitedProjectProperties,
+                                   Set<String> visitedProjectXML ) throws MavenRuntimeException
     {
         JarInputStream in = null;
 
@@ -239,7 +239,7 @@ public final class MavenRuntimeVisitorUtils
      *             if an error occurs visiting the projects
      */
     private static void acceptJarEntry( URL jarURL, JarEntry entry, MavenRuntimeVisitor visitor,
-                                        Set visitedProjectProperties, Set visitedProjectXML )
+                                        Set<String> visitedProjectProperties, Set<String> visitedProjectXML )
         throws MavenRuntimeException
     {
         String name = entry.getName();
@@ -327,7 +327,7 @@ public final class MavenRuntimeVisitorUtils
      * 
      * @param path
      *            the path to examine
-     * @return <code>true</code> if the specified path represents a Maven project properties file
+     * @return {@code true} if the specified path represents a Maven project properties file
      */
     private static boolean isProjectPropertiesPath( String path )
     {
@@ -339,7 +339,7 @@ public final class MavenRuntimeVisitorUtils
      * 
      * @param path
      *            the path to examine
-     * @return <code>true</code> if the specified path represents a Maven project XML file
+     * @return {@code true} if the specified path represents a Maven project XML file
      */
     private static boolean isProjectXMLPath( String path )
     {
@@ -350,11 +350,11 @@ public final class MavenRuntimeVisitorUtils
      * Gets whether the specified string arrays are equal, with wildcard support.
      * 
      * @param matchTokens
-     *            the string tokens to match, where <code>null</code> represents a wildcard
+     *            the string tokens to match, where {@code null} represents a wildcard
      * @param tokens
      *            the string tokens to test
-     * @return <code>true</code> if the <code>tokens</code> array equals the <code>matchTokens</code>, treating
-     *         any <code>null</code> <code>matchTokens</code> values as wildcards
+     * @return {@code true} if the {@code tokens} array equals the {@code matchTokens}, treating any {@code null}
+     *         {@code matchTokens} values as wildcards
      */
     private static boolean matches( String[] matchTokens, String[] tokens )
     {

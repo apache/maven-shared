@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Default implementation of <code>MavenRuntime</code>.
+ * Default implementation of {@code MavenRuntime}.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
@@ -38,19 +38,19 @@ public class DefaultMavenRuntime implements MavenRuntime
     /**
      * {@inheritDoc}
      */
-    public MavenProjectProperties getProjectProperties( Class klass ) throws MavenRuntimeException
+    public MavenProjectProperties getProjectProperties( Class<?> klass ) throws MavenRuntimeException
     {
         PropertiesMavenRuntimeVisitor visitor = new PropertiesMavenRuntimeVisitor();
 
         MavenRuntimeVisitorUtils.accept( klass, visitor );
 
-        return (MavenProjectProperties) first( visitor.getProjects() );
+        return first( visitor.getProjects() );
     }
 
     /**
      * {@inheritDoc}
      */
-    public List getProjectsProperties( ClassLoader classLoader ) throws MavenRuntimeException
+    public List<MavenProjectProperties> getProjectsProperties( ClassLoader classLoader ) throws MavenRuntimeException
     {
         PropertiesMavenRuntimeVisitor visitor = new PropertiesMavenRuntimeVisitor();
 
@@ -62,19 +62,19 @@ public class DefaultMavenRuntime implements MavenRuntime
     /**
      * {@inheritDoc}
      */
-    public MavenProject getProject( Class klass ) throws MavenRuntimeException
+    public MavenProject getProject( Class<?> klass ) throws MavenRuntimeException
     {
         XMLMavenRuntimeVisitor visitor = new XMLMavenRuntimeVisitor();
 
         MavenRuntimeVisitorUtils.accept( klass, visitor );
 
-        return (MavenProject) first( visitor.getProjects() );
+        return first( visitor.getProjects() );
     }
 
     /**
      * {@inheritDoc}
      */
-    public List getProjects( ClassLoader classLoader ) throws MavenRuntimeException
+    public List<MavenProject> getProjects( ClassLoader classLoader ) throws MavenRuntimeException
     {
         XMLMavenRuntimeVisitor visitor = new XMLMavenRuntimeVisitor();
 
@@ -86,7 +86,7 @@ public class DefaultMavenRuntime implements MavenRuntime
     /**
      * {@inheritDoc}
      */
-    public List getSortedProjects( ClassLoader classLoader ) throws MavenRuntimeException
+    public List<MavenProject> getSortedProjects( ClassLoader classLoader ) throws MavenRuntimeException
     {
         XMLMavenRuntimeVisitor visitor = new XMLMavenRuntimeVisitor();
 
@@ -98,13 +98,15 @@ public class DefaultMavenRuntime implements MavenRuntime
     // private methods --------------------------------------------------------
 
     /**
-     * Gets the first element in the specified list or <code>null</code> if it is empty.
+     * Gets the first element in the specified list or {@code null} if it is empty.
      * 
+     * @param <T>
+     *            the type of the specified list
      * @param list
      *            the list to examine
-     * @return the first item in the list, or <code>null</code> if it is empty
+     * @return the first item in the list, or {@code null} if it is empty
      */
-    private Object first( List list )
+    private static <T> T first( List<T> list )
     {
         return !list.isEmpty() ? list.get( 0 ) : null;
     }

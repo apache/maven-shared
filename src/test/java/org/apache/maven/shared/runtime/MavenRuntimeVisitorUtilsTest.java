@@ -30,7 +30,7 @@ import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
 /**
- * Tests <code>MavenRuntimeVisitorUtils</code>.
+ * Tests {@code MavenRuntimeVisitorUtils}.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
@@ -49,10 +49,11 @@ public class MavenRuntimeVisitorUtilsTest extends TestCase
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void setUp() throws Exception
     {
         mockVisitorControl = EasyMock.createStrictControl();
-        mockVisitor = (MavenRuntimeVisitor) mockVisitorControl.createMock( MavenRuntimeVisitor.class );
+        mockVisitor = mockVisitorControl.createMock( MavenRuntimeVisitor.class );
 
         mockVisitorControl.replay();
     }
@@ -60,6 +61,7 @@ public class MavenRuntimeVisitorUtilsTest extends TestCase
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void tearDown() throws Exception
     {
         mockVisitorControl.verify();

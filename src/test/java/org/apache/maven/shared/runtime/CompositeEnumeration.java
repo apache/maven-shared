@@ -19,41 +19,30 @@ package org.apache.maven.shared.runtime;
  * under the License.
  */
 
-import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
- * Enumeration that spans a series of other enumerations.
+ * Enumeration that spans two other enumerations.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
+ * @param <T>
+ *            the element type of this enumeration
  */
-public class CompoundEnumeration implements Enumeration
+public class CompositeEnumeration<T> implements Enumeration<T>
 {
     // fields -------------------------------------------------------------
 
-    private final Iterator enumerations;
+    private final Enumeration<T> enumeration1;
 
-    private Enumeration enumeration;
+    private final Enumeration<T> enumeration2;
 
     // constructors -------------------------------------------------------
 
-    public CompoundEnumeration( Enumeration enumeration1, Enumeration enumeration2 )
+    public CompositeEnumeration( Enumeration<T> enumeration1, Enumeration<T> enumeration2 )
     {
-        this( new Enumeration[] { enumeration1, enumeration2 } );
-    }
-
-    public CompoundEnumeration( Enumeration[] enumerations )
-    {
-        this( Arrays.asList( enumerations ) );
-    }
-
-    public CompoundEnumeration( List enumerations )
-    {
-        this.enumerations = enumerations.iterator();
+        this.enumeration1 = enumeration1;
+        this.enumeration2 = enumeration2;
     }
 
     // Enumeration methods ------------------------------------------------
@@ -63,29 +52,23 @@ public class CompoundEnumeration implements Enumeration
      */
     public boolean hasMoreElements()
     {
-        return ( enumeration != null && enumeration.hasMoreElements() ) || enumerations.hasNext();
+        return enumeration1.hasMoreElements() || enumeration2.hasMoreElements();
     }
 
     /**
      * {@inheritDoc}
      */
-    public Object nextElement()
+    public T nextElement()
     {
-        Object element;
+        T element;
 
-        if ( enumeration != null && enumeration.hasMoreElements() )
+        if ( enumeration1.hasMoreElements() )
         {
-            element = enumeration.nextElement();
-        }
-        else if ( enumerations.hasNext() )
-        {
-            enumeration = (Enumeration) enumerations.next();
-
-            element = enumeration.nextElement();
+            element = enumeration1.nextElement();
         }
         else
         {
-            throw new NoSuchElementException();
+            element = enumeration2.nextElement();
         }
 
         return element;

@@ -1,0 +1,60 @@
+ ------
+ Introspecting a class
+ ------
+ Mark Hobson
+ <markhobson@gmail.com>
+ ------
+ 19 May 2008
+ ------
+
+
+Introspecting a class
+
+ Maven Runtime can introspect a class to obtain its related Maven project's metadata.
+ 
+ Note that this relies on the Maven descriptor files being unique relative to the class being introspected.  For
+ example, this is true within a jar produced by the
+ {{{http://maven.apache.org/plugins/maven-jar-plugin/}Maven Jar Plugin}}, and also within a jar inside a war.  This does
+ not hold within a jar built by 
+ {{{http://maven.apache.org/plugins/maven-assembly-plugin/}Maven Assembly Plugin's}}
+ {{{http://maven.apache.org/plugins/maven-assembly-plugin/descriptor-refs.html#jar-with-dependencies}jar-with-dependencies}}
+ descriptor, since there are multiple Maven descriptors relative to a given class, resulting in an ambiguity.
+ 
+* Using project properties
+
+ To obtain a <<<{{{../apidocs/org/apache/maven/shared/runtime/MavenProjectProperties.html}MavenProjectProperties}}>>>
+ instance for a class's Maven project:
+
+---
+/**
+ * @component
+ */
+private MavenRuntime runtime;
+
+public void processProject() throws MavenRuntimeException
+{
+    MavenProjectProperties project = runtime.getProjectProperties( MyClass.class );
+    
+    // process project
+}
+---
+
+* Using project XML
+
+ To obtain a 
+ <<<{{{http://maven.apache.org/ref/current/maven-project/apidocs/org/apache/maven/project/MavenProject.html}MavenProject}}>>>
+ instance for a class's Maven project:
+
+---
+/**
+ * @component
+ */
+private MavenRuntime runtime;
+
+public void processProject() throws MavenRuntimeException
+{
+    MavenProject project = runtime.getProject( MyClass.class );
+    
+    // process project
+}
+---

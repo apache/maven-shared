@@ -36,7 +36,7 @@ import org.codehaus.plexus.util.IOUtil;
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
  */
-public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
+class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
 {
     // constants --------------------------------------------------------------
 
@@ -58,18 +58,18 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
     // fields -----------------------------------------------------------------
 
     /**
-     * A list of the collected <code>MavenProjectProperties</code>.
+     * A list of the collected project properties.
      */
-    private final List projects;
+    private final List<MavenProjectProperties> projects;
 
     // constructors -----------------------------------------------------------
 
     /**
-     * Creates a new <code>PropertiesMavenRuntimeVisitor</code>.
+     * Creates a new {@code PropertiesMavenRuntimeVisitor}.
      */
     public PropertiesMavenRuntimeVisitor()
     {
-        projects = new ArrayList();
+        projects = new ArrayList<MavenProjectProperties>();
     }
 
     // MavenRuntimeVisitor methods --------------------------------------------
@@ -97,9 +97,9 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * Gets the collected Maven project properties.
      * 
-     * @return a list of the collected <code>MavenProjectProperties</code>
+     * @return a list of the collected project properties
      */
-    public List getProjects()
+    public List<MavenProjectProperties> getProjects()
     {
         return Collections.unmodifiableList( projects );
     }
@@ -107,11 +107,11 @@ public class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
     // private methods --------------------------------------------------------
 
     /**
-     * Parses the specified Maven project properties into a <code>MavenProjectProperties</code> object.
+     * Parses the specified Maven project properties into a {@code MavenProjectProperties} object.
      * 
      * @param url
      *            a URL to the Maven project properties
-     * @return a <code>MavenProjectProperties</code> object that represents the properties
+     * @return a {@code MavenProjectProperties} object that represents the properties
      * @throws MavenRuntimeException
      *             if an error occurs parsing the properties
      */

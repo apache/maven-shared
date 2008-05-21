@@ -34,16 +34,19 @@ final class ClassUtils
 {
     // constructors -----------------------------------------------------------
 
+    /**
+     * {@code ClassUtils} is not intended to be instantiated.
+     */
     private ClassUtils()
     {
-        // private constructor for utility class
+        throw new AssertionError();
     }
 
     // public methods ---------------------------------------------------------
 
     /**
-     * Gets a URL to the specified class's default package. For example, if the class <code>foo.Bar</code> is
-     * supplied, then a URL to the directory above <code>foo</code> is returned.
+     * Gets a URL to the specified class's default package. For example, if the class {@code foo.Bar} is supplied, then
+     * a URL to the directory above {@code foo} is returned.
      * 
      * @param klass
      *            the class to obtain the base URL for
@@ -51,7 +54,7 @@ final class ClassUtils
      * @throws MalformedURLException
      *             if the base URL cannot be determined
      */
-    public static URL getBaseURL( Class klass )
+    public static URL getBaseURL( Class<?> klass )
         throws MalformedURLException
     {
         URL url = getURL( klass );
@@ -69,9 +72,9 @@ final class ClassUtils
      * 
      * @param klass
      *            the class to obtain the URL for
-     * @return a URL to the class, or <code>null</code> if it cannot be found
+     * @return a URL to the class, or {@code null} if it cannot be found
      */
-    public static URL getURL( Class klass )
+    public static URL getURL( Class<?> klass )
     {
         ClassLoader classLoader = klass.getClassLoader();
 

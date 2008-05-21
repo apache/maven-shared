@@ -1,0 +1,35 @@
+ ------
+ Usage
+ ------
+ Mark Hobson
+ <markhobson@gmail.com>
+ ------
+ 19 May 2008
+ ------
+
+
+Usage
+
+ Maven Runtime allows introspection of Maven project metadata at runtime.  The main entry point is the
+ {{{apidocs/org/apache/maven/shared/runtime/MavenRuntime.html}MavenRuntime}} Plexus component.  The following example 
+ describes the basic usage of the component:
+
+---
+/**
+ * @component
+ */
+private MavenRuntime runtime;
+
+public void printProjects() throws MavenRuntimeException
+{
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    
+    for ( MavenProjectProperties properties : runtime.getProjectsProperties( classLoader ) )
+    {
+        System.out.println( properties );
+    }
+}
+---
+
+ This method will display the group id, artifact id and version of every Maven project within the current thread's
+ context class loader.

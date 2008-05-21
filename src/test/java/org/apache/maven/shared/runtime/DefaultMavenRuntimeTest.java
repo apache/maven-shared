@@ -40,7 +40,7 @@ import org.codehaus.plexus.PlexusTestCase;
 import com.sun.appserv.ClassLoaderUtil;
 
 /**
- * Tests <code>DefaultMavenRuntime</code>.
+ * Tests {@code DefaultMavenRuntime}.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$

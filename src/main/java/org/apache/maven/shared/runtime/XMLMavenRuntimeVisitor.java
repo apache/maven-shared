@@ -48,14 +48,14 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
     // fields -----------------------------------------------------------------
 
     /**
-     * A list of the collected <code>MavenProject</code>s.
+     * A list of the collected Maven projects.
      */
     private final List<MavenProject> projects;
 
     // constructors -----------------------------------------------------------
 
     /**
-     * Creates a new <code>XMLMavenRuntimeVisitor</code>.
+     * Creates a new {@code XMLMavenRuntimeVisitor}.
      */
     public XMLMavenRuntimeVisitor()
     {
@@ -87,7 +87,7 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * Gets the collected Maven projects.
      * 
-     * @return an unmodifiable list of the collected <code>MavenProject</code>s
+     * @return an unmodifiable list of the collected Maven projects
      */
     public List<MavenProject> getProjects()
     {
@@ -97,7 +97,7 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * Gets the collected Maven projects ordered by dependencies.
      * 
-     * @return an unmodifiable list of the collected <code>MavenProject</code>s ordered by dependencies
+     * @return an unmodifiable list of the collected Maven projects ordered by dependencies
      * @throws MavenRuntimeException
      *             if an error occurred ordering the projects
      */
@@ -122,11 +122,11 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
     // private methods --------------------------------------------------------
 
     /**
-     * Parses the specified Maven project XML into a <code>MavenProject</code> object.
+     * Parses the specified Maven project XML into a {@code MavenProject} object.
      * 
      * @param url
      *            a URL to the Maven project XML
-     * @return a <code>MavenProject</code> object that represents the XML
+     * @return a {@code MavenProject} object that represents the XML
      * @throws MavenRuntimeException
      *             if an error occurs parsing the XML
      */
@@ -172,15 +172,15 @@ public class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
      *            the class that represents the type of the required generic list
      * @return the generic list
      */
-    private static <T> List<T> genericList(List<?> list, Class<T> type)
+    private static <T> List<T> genericList( List<?> list, Class<T> type )
     {
         List<T> genericList = new ArrayList<T>();
-        
-        for (Object element : list)
+
+        for ( Object element : list )
         {
             genericList.add( type.cast( element ) );
         }
-        
+
         return genericList;
     }
 }

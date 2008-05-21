@@ -48,13 +48,13 @@ public final class MavenRuntimeVisitorUtils
     private static final String MAVEN_PATH = "META-INF/maven";
 
     /**
-     * The path elements of a Maven project properties file, where <code>null</code> is a wildcard.
+     * The path elements of a Maven project properties file, where {@code null} is a wildcard.
      */
     private static final String[] PROPERTIES_PATH_TOKENS =
         new String[] { "META-INF", "maven", null, null, "pom.properties" };
 
     /**
-     * The path elements of a Maven project XML file, where <code>null</code> is a wildcard.
+     * The path elements of a Maven project XML file, where {@code null} is a wildcard.
      */
     private static final String[] XML_PATH_TOKENS = new String[] { "META-INF", "maven", null, null, "pom.xml" };
 
@@ -71,11 +71,11 @@ public final class MavenRuntimeVisitorUtils
     // constructors -----------------------------------------------------------
 
     /**
-     * <code>MavenRuntimeVisitorUtils</code> is not intended to be instantiated.
+     * {@code MavenRuntimeVisitorUtils} is not intended to be instantiated.
      */
     private MavenRuntimeVisitorUtils()
     {
-        // private constructor for utility class
+        throw new AssertionError();
     }
 
     // public methods ---------------------------------------------------------
@@ -327,7 +327,7 @@ public final class MavenRuntimeVisitorUtils
      * 
      * @param path
      *            the path to examine
-     * @return <code>true</code> if the specified path represents a Maven project properties file
+     * @return {@code true} if the specified path represents a Maven project properties file
      */
     private static boolean isProjectPropertiesPath( String path )
     {
@@ -339,7 +339,7 @@ public final class MavenRuntimeVisitorUtils
      * 
      * @param path
      *            the path to examine
-     * @return <code>true</code> if the specified path represents a Maven project XML file
+     * @return {@code true} if the specified path represents a Maven project XML file
      */
     private static boolean isProjectXMLPath( String path )
     {
@@ -350,11 +350,11 @@ public final class MavenRuntimeVisitorUtils
      * Gets whether the specified string arrays are equal, with wildcard support.
      * 
      * @param matchTokens
-     *            the string tokens to match, where <code>null</code> represents a wildcard
+     *            the string tokens to match, where {@code null} represents a wildcard
      * @param tokens
      *            the string tokens to test
-     * @return <code>true</code> if the <code>tokens</code> array equals the <code>matchTokens</code>, treating
-     *         any <code>null</code> <code>matchTokens</code> values as wildcards
+     * @return {@code true} if the {@code tokens} array equals the {@code matchTokens}, treating any {@code null}
+     *         {@code matchTokens} values as wildcards
      */
     private static boolean matches( String[] matchTokens, String[] tokens )
     {

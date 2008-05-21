@@ -38,7 +38,7 @@ import org.codehaus.plexus.util.IOUtil;
  * @version $Id$
  * @see MavenRuntimeVisitor
  */
-public final class MavenRuntimeVisitorUtils
+final class MavenRuntimeVisitorUtils
 {
     // constants --------------------------------------------------------------
 

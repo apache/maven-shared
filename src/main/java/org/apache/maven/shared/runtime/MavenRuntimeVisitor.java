@@ -27,7 +27,7 @@ import java.net.URL;
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
  */
-public interface MavenRuntimeVisitor
+interface MavenRuntimeVisitor
 {
     /**
      * Visits the specified Maven project properties.

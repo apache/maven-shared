@@ -299,14 +299,38 @@ public class FileSetManager
 
             if ( file.exists() )
             {
-                if ( file.isDirectory() && ( fileSet.isFollowSymlinks() || !isSymlink( file ) ) )
+                if ( file.isDirectory() )
                 {
-                    if ( verbose && messages != null )
+                    if ( fileSet.isFollowSymlinks() || !isSymlink( file ) )
                     {
-                        messages.addInfoMessage( "Deleting directory: " + file ).flush();
+                        if ( verbose && messages != null )
+                        {
+                            messages.addInfoMessage( "Deleting directory: " + file ).flush();
+                        }
+    
+                        removeDir( file, fileSet.isFollowSymlinks(), throwsError, warnMessages );
                     }
+                    else
+                    { // delete a symlink to a directory without follow
+                        if ( verbose && messages != null )
+                        {
+                            messages.addInfoMessage( "Deleting symlink to directory: " + file ).flush();
+                        }
+    
+                        if ( !file.delete() )
+                        {
+                            String message = "Unable to delete symlink " + file.getAbsolutePath();
+                            if ( throwsError )
+                            {
+                                throw new IOException( message );
+                            }
 
-                    removeDir( file, fileSet.isFollowSymlinks(), throwsError, warnMessages );
+                            if ( !warnMessages.contains( message ) )
+                            {
+                                warnMessages.add( message );
+                            }
+                        }
+                    }
                 }
                 else
                 {

@@ -40,7 +40,7 @@ import org.apache.maven.project.artifact.InvalidDependencyVersionException;
  * This filter will exclude everything that is not a dependency of the selected artifact.
  * 
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
- * @version $Id: TransitivityFilter.java 607996 2008-01-02 04:01:32Z brianf $
+ * @version $Id$
  */
 public class ArtifactTransitivityFilter
     extends AbstractArtifactsFilter

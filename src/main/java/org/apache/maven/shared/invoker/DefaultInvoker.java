@@ -39,12 +39,14 @@ public class DefaultInvoker
 {
     
     public static final String ROLE_HINT = "default";
-    
+
+    private static final InvokerLogger DEFAULT_LOGGER = new SystemOutLogger();
+
     private static final InvocationOutputHandler DEFAULT_OUTPUT_HANDLER = new SystemOutHandler();
 
     private File localRepositoryDirectory;
 
-    private InvokerLogger logger;
+    private InvokerLogger logger = DEFAULT_LOGGER;
 
     private File workingDirectory;
 
@@ -118,12 +120,16 @@ public class DefaultInvoker
         InputStream inputStream = request.getInputStream( this.inputStream );
         InvocationOutputHandler outputHandler = request.getOutputHandler( this.outputHandler );
         InvocationOutputHandler errorHandler = request.getErrorHandler( this.errorHandler );
-        
+
+        if ( getLogger().isDebugEnabled() )
+        {
+            getLogger().debug( "Executing: " + cli );
+        }
         if ( request.isInteractive() )
         {
             if ( inputStream == null )
             {
-                logger.warn( "Maven will be executed in interactive mode, but no input stream has been configured for this MavenInvoker instance." );
+                getLogger().warn( "Maven will be executed in interactive mode, but no input stream has been configured for this MavenInvoker instance." );
                 
                 result = CommandLineUtils.executeCommandLine( cli, outputHandler, errorHandler );
             }
@@ -136,7 +142,7 @@ public class DefaultInvoker
         {
             if ( inputStream != null )
             {
-                logger.info( "Executing in offline mode. The configured input stream will be ignored." );
+                getLogger().info( "Executing in offline mode. The configured input stream will be ignored." );
             }
             
             result = CommandLineUtils.executeCommandLine( cli, outputHandler, errorHandler );

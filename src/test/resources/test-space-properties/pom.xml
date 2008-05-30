@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.maven.shared.invoker</groupId>
+  <artifactId>test-space-properties</artifactId>
+  <packaging>jar</packaging>
+  <version>1</version>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.1</version>
+        <configuration>
+          <tasks>
+            <property name="prop0" value="${key}"/>
+            <echo>${prop0}</echo>
+            <property name="prop1" value="${key with spaces}"/>
+            <echo>${prop1}</echo>
+            <fail message="System property 'key' got messed up during forking: '${prop0}'">
+              <condition>
+                <not>
+                  <equals arg1="${prop0}" arg2="value with spaces"/>
+                </not>
+              </condition>
+            </fail>
+            <fail message="System property 'key with spaces' got messed up during forking: '${prop1}'">
+              <condition>
+                <not>
+                  <equals arg1="${prop1}" arg2="value"/>
+                </not>
+              </condition>
+            </fail>
+          </tasks>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

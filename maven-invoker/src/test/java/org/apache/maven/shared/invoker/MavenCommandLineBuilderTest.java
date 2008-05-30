@@ -155,7 +155,7 @@ public class MavenCommandLineBuilderTest
         File tmpDir = getTempDir();
 
         File lrd = new File( tmpDir, "workdir" ).getCanonicalFile();
-        File glrd = new File( tmpDir, "global/workdir" ).getCanonicalFile();
+        File glrd = new File( tmpDir, "global-workdir" ).getCanonicalFile();
 
         lrd.mkdirs();
         glrd.mkdirs();
@@ -228,7 +228,7 @@ public class MavenCommandLineBuilderTest
         File tmpDir = getTempDir();
 
         File wd = new File( tmpDir, "workdir" );
-        File gwd = new File( tmpDir, "global/workdir" );
+        File gwd = new File( tmpDir, "global-workdir" );
 
         wd.mkdirs();
         gwd.mkdirs();

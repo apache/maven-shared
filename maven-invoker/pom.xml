@@ -50,6 +50,7 @@ under the License.
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
           <systemProperties>
             <!-- required for maven-invoker to locate Maven installation -->
             <property>

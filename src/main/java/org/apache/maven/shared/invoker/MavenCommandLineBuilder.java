@@ -141,7 +141,7 @@ public class MavenCommandLineBuilder
             }
 
             cli.createArgument().setValue( "-s" );
-            cli.createArgument().setValue( wrapStringWithQuotes( userSettingsFile.getPath() ) );
+            cli.createArgument().setValue( userSettingsFile.getPath() );
         }
     }
 
@@ -230,7 +230,8 @@ public class MavenCommandLineBuilder
                 String key = (String) entry.getKey();
                 String value = (String) entry.getValue();
 
-                cli.createArgument().setValue( "-D" + wrapStringWithQuotes( key ) + "=" + wrapStringWithQuotes(value) );
+                cli.createArgument().setValue( "-D" );
+                cli.createArgument().setValue( key + '=' + value );
             }
         }
     }
@@ -289,7 +290,8 @@ public class MavenCommandLineBuilder
                 logger
                     .debug( "Specified POM file is not named \'pom.xml\'. Using the \'-f\' command-line option to accommodate non-standard filename..." );
 
-                cli.createArgument().setLine( "-f " + wrapStringWithQuotes(pom.getName()) );
+                cli.createArgument().setValue( "-f" );
+                cli.createArgument().setValue( pom.getName() );
             }
         }
     }
@@ -316,7 +318,7 @@ public class MavenCommandLineBuilder
         {
             workingDirectory = new File( System.getProperty( "user.dir" ) );
         }
-        else if ( !workingDirectory.isDirectory() )
+        else if ( workingDirectory.isFile() )
         {
             logger
                 .warn( "Specified base directory (" + workingDirectory + ") is a file. Using its parent directory..." );
@@ -356,7 +358,8 @@ public class MavenCommandLineBuilder
                     + "\' is NOT a directory." );
             }
 
-            cli.createArgument().setValue( "-Dmaven.repo.local=" + wrapStringWithQuotes(localRepositoryDirectory.getPath()) );
+            cli.createArgument().setValue( "-D" );
+            cli.createArgument().setValue( "maven.repo.local=" + localRepositoryDirectory.getPath() );
         }
     }
 
@@ -497,6 +500,7 @@ public class MavenCommandLineBuilder
      *
      * @param path string to wrap if containing spaces
      * @return quote wrapped string
+     * @deprecated Quoting of command line arguments should be left to the Commandline from plexus-utils.
      */
     public String wrapStringWithQuotes( String path )
     {

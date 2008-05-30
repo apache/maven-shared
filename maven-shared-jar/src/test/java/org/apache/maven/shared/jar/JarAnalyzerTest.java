@@ -75,10 +75,10 @@ public class JarAnalyzerTest
     {
         try
         {
-            jarAnalyzer = new JarAnalyzer( new File( "foo-bar.jar" ) );
+            jarAnalyzer = new JarAnalyzer( new File( "foo-bar-this-should-not-exist.jar" ) );
             fail( "Should not have succeeded to get the missing JAR" );
         }
-        catch ( ZipException e )
+        catch ( IOException e )
         {
             assertTrue( true );
         }

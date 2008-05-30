@@ -50,6 +50,13 @@ under the License.
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <systemProperties>
+            <!-- required for maven-invoker to locate Maven installation -->
+            <property>
+              <name>maven.home</name>
+              <value>${maven.home}</value>
+            </property>
+          </systemProperties>
           <excludes>
             <exclude>test-build-should*/**</exclude>
           </excludes>

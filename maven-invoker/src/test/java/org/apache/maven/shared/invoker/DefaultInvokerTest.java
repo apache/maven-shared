@@ -42,8 +42,7 @@ public class DefaultInvokerTest
     {
         File basedir = getBasedirForBuild();
 
-        Invoker invoker = new DefaultInvoker();
-        invoker.setMavenHome( findMavenHome() );
+        Invoker invoker = newInvoker();
 
         Properties props = new Properties();
 //        props.put( "key with spaces", "value with spaces" );
@@ -70,8 +69,7 @@ public class DefaultInvokerTest
     {
         File basedir = getBasedirForBuild();
 
-        Invoker invoker = new DefaultInvoker();
-        invoker.setMavenHome( findMavenHome() );
+        Invoker invoker = newInvoker();
 
         InvocationRequest request = new DefaultInvocationRequest();
         request.setBaseDirectory( basedir );
@@ -87,6 +85,124 @@ public class DefaultInvokerTest
         InvocationResult result = invoker.execute( request );
 
         assertEquals( 1, result.getExitCode() );
+    }
+
+    public void testSpacePom()
+        throws Exception
+    {
+        logTestStart();
+
+        File basedir = getBasedirForBuild();
+
+        Invoker invoker = newInvoker();
+
+        InvocationRequest request = new DefaultInvocationRequest();
+        request.setBaseDirectory( basedir );
+
+        request.setPomFileName( "pom with spaces.xml" );
+
+        request.setDebug( true );
+
+        List goals = new ArrayList();
+        goals.add( "clean" );
+
+        request.setGoals( goals );
+
+        InvocationResult result = invoker.execute( request );
+
+        assertEquals( 0, result.getExitCode() );
+    }
+
+    public void testSpaceSettings()
+        throws Exception
+    {
+        logTestStart();
+
+        File basedir = getBasedirForBuild();
+
+        Invoker invoker = newInvoker();
+
+        InvocationRequest request = new DefaultInvocationRequest();
+        request.setBaseDirectory( basedir );
+
+        request.setUserSettingsFile( new File( basedir, "settings with spaces.xml" ) );
+
+        request.setDebug( true );
+
+        List goals = new ArrayList();
+        goals.add( "validate" );
+
+        request.setGoals( goals );
+
+        InvocationResult result = invoker.execute( request );
+
+        assertEquals( 0, result.getExitCode() );
+    }
+
+    public void testSpaceLocalRepo()
+        throws Exception
+    {
+        logTestStart();
+
+        File basedir = getBasedirForBuild();
+
+        Invoker invoker = newInvoker();
+
+        InvocationRequest request = new DefaultInvocationRequest();
+        request.setBaseDirectory( basedir );
+
+        request.setLocalRepositoryDirectory( new File( basedir, "repo with spaces" ) );
+
+        request.setDebug( true );
+
+        List goals = new ArrayList();
+        goals.add( "validate" );
+
+        request.setGoals( goals );
+
+        InvocationResult result = invoker.execute( request );
+
+        assertEquals( 0, result.getExitCode() );
+    }
+
+    public void testSpaceProperties()
+        throws Exception
+    {
+        logTestStart();
+
+        File basedir = getBasedirForBuild();
+
+        Invoker invoker = newInvoker();
+
+        InvocationRequest request = new DefaultInvocationRequest();
+        request.setBaseDirectory( basedir );
+
+        Properties props = new Properties();
+        props.setProperty( "key", "value with spaces" );
+        props.setProperty( "key with spaces", "value" );
+        request.setProperties( props );
+
+        request.setDebug( true );
+
+        List goals = new ArrayList();
+        goals.add( "validate" );
+
+        request.setGoals( goals );
+
+        InvocationResult result = invoker.execute( request );
+
+        assertEquals( 0, result.getExitCode() );
+    }
+
+    private Invoker newInvoker()
+        throws IOException
+    {
+        Invoker invoker = new DefaultInvoker();
+        invoker.setMavenHome( findMavenHome() );
+        InvokerLogger logger = new SystemOutLogger();
+        logger.setThreshold( InvokerLogger.DEBUG );
+        invoker.setLogger( logger );
+        return invoker;
     }
 
     private File findMavenHome()
@@ -125,6 +241,15 @@ public class DefaultInvokerTest
         }
 
         return new File( new URI( dirResource.toString() ).getPath() );
+    }
+
+    // this is just a debugging helper for separating unit test output...
+    private void logTestStart()
+    {
+        NullPointerException npe = new NullPointerException();
+        StackTraceElement element = npe.getStackTrace()[1];
+
+        System.out.println( "Starting: " + element.getMethodName() );
     }
 
 }

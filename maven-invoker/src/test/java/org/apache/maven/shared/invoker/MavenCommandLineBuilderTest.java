@@ -123,7 +123,7 @@ public class MavenCommandLineBuilderTest
 
         tcb.setEnvironmentPaths( new DefaultInvocationRequest(), cli );
 
-        assertArgumentsPresent( Collections.singleton( "-Dmaven.repo.local=" + tcb.wrapStringWithQuotes( lrd.getPath()) ), cli );
+        assertArgumentsPresent( Collections.singleton( "maven.repo.local=" + lrd.getPath() ), cli );
     }
 
     public void testShouldSetLocalRepoLocationFromRequest()
@@ -144,7 +144,7 @@ public class MavenCommandLineBuilderTest
 
         tcb.setEnvironmentPaths( new DefaultInvocationRequest().setLocalRepositoryDirectory( lrd ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "-Dmaven.repo.local=" + tcb.wrapStringWithQuotes(lrd.getPath()) ), cli );
+        assertArgumentsPresent( Collections.singleton( "maven.repo.local=" + lrd.getPath() ), cli );
     }
 
     public void testRequestProvidedLocalRepoLocationShouldOverrideGlobal()
@@ -170,7 +170,7 @@ public class MavenCommandLineBuilderTest
 
         tcb.setEnvironmentPaths( new DefaultInvocationRequest().setLocalRepositoryDirectory( lrd ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "-Dmaven.repo.local=" + tcb.wrapStringWithQuotes( lrd.getPath()) ), cli );
+        assertArgumentsPresent( Collections.singleton( "maven.repo.local=" + lrd.getPath() ), cli );
     }
 
     public void testShouldSetWorkingDirectoryGlobally()
@@ -713,7 +713,7 @@ public class MavenCommandLineBuilderTest
 
         Set args = new HashSet();
         args.add( "-s" );
-        args.add( tcb.wrapStringWithQuotes( settingsFile.getCanonicalPath()) );
+        args.add( settingsFile.getCanonicalPath() );
 
         assertArgumentsPresent( args, cli );
     }
@@ -731,7 +731,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setProperties( new DefaultInvocationRequest().setProperties( properties ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "-Dkey=value" ), cli );
+        assertArgumentsPresent( Collections.singleton( "key=value" ), cli );
     }
 
     public void testShouldSpecifyCustomPropertyWithSpacesInValueFromRequest()
@@ -747,7 +747,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setProperties( new DefaultInvocationRequest().setProperties( properties ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "-Dkey=\"value with spaces\"" ), cli );
+        assertArgumentsPresent( Collections.singleton( "key=value with spaces" ), cli );
     }
 
     public void testShouldSpecifyCustomPropertyWithSpacesInKeyFromRequest()
@@ -763,7 +763,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setProperties( new DefaultInvocationRequest().setProperties( properties ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "-D\"key with spaces\"=\"value with spaces\"" ), cli );
+        assertArgumentsPresent( Collections.singleton( "key with spaces=value with spaces" ), cli );
     }
 
     public void testShouldSpecifySingleGoalFromRequest()
@@ -828,7 +828,7 @@ public class MavenCommandLineBuilderTest
         // this is REALLY bad practice, but since it's just a test...
         properties.setProperty( "maven.tests.skip", "true" );
 
-        expectedArgs.add( "-Dmaven.tests.skip=true" );
+        expectedArgs.add( "maven.tests.skip=true" );
 
         request.setProperties( properties );
 
@@ -967,10 +967,10 @@ public class MavenCommandLineBuilderTest
     // this is just a debugging helper for separating unit test output...
     private void logTestStart()
     {
-//        NullPointerException npe = new NullPointerException();
-//        StackTraceElement element = npe.getStackTrace()[1];
-//
-//        System.out.println( "Starting: " + element.getMethodName() );
+        NullPointerException npe = new NullPointerException();
+        StackTraceElement element = npe.getStackTrace()[1];
+
+        System.out.println( "Starting: " + element.getMethodName() );
     }
 
     private void assertArgumentsPresentInOrder( List expected, Commandline cli )

@@ -21,16 +21,32 @@ package org.apache.maven.shared.invoker;
 
 import org.codehaus.plexus.util.cli.CommandLineException;
 
+/**
+ * Describes the result of a Maven invocation.
+ * 
+ * @version $Id$
+ */
 public final class DefaultInvocationResult
     implements InvocationResult
 {
 
+    /**
+     * The exception that prevented to execute the command line, will be <code>null</code> if Maven could be
+     * successfully started.
+     */
     private CommandLineException executionException;
 
+    /**
+     * The exit code reported by the Maven invocation.
+     */
     private int exitCode = Integer.MIN_VALUE;
 
+    /**
+     * Creates a new invocation result
+     */
     DefaultInvocationResult()
     {
+        // hide constructor
     }
 
     public int getExitCode()
@@ -43,11 +59,21 @@ public final class DefaultInvocationResult
         return executionException;
     }
 
+    /**
+     * Sets the exit code reported by the Maven invocation.
+     * 
+     * @param exitCode The exit code reported by the Maven invocation.
+     */
     void setExitCode( int exitCode )
     {
         this.exitCode = exitCode;
     }
 
+    /**
+     * Sets the exception that prevented to execute the command line.
+     * 
+     * @param executionException The exception that prevented to execute the command line, may be <code>null</code>.
+     */
     void setExecutionException( CommandLineException executionException )
     {
         this.executionException = executionException;

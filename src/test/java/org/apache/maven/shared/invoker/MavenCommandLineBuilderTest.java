@@ -80,6 +80,7 @@ public class MavenCommandLineBuilderTest
         }
         catch ( IllegalArgumentException e )
         {
+            assertTrue( true );
         }
     }
 
@@ -103,6 +104,7 @@ public class MavenCommandLineBuilderTest
         }
         catch ( IllegalArgumentException e )
         {
+            assertTrue( true );
         }
     }
 
@@ -125,7 +127,7 @@ public class MavenCommandLineBuilderTest
 
         tcb.setEnvironmentPaths( newRequest(), cli );
 
-        assertArgumentsPresent( Collections.singleton( "maven.repo.local=" + lrd.getPath() ), cli );
+        assertArgumentsPresentInOrder( new String[] { "-D", "maven.repo.local=" + lrd.getPath() }, cli );
     }
 
     public void testShouldSetLocalRepoLocationFromRequest()
@@ -146,7 +148,7 @@ public class MavenCommandLineBuilderTest
 
         tcb.setEnvironmentPaths( newRequest().setLocalRepositoryDirectory( lrd ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "maven.repo.local=" + lrd.getPath() ), cli );
+        assertArgumentsPresentInOrder( new String[] { "-D", "maven.repo.local=" + lrd.getPath() }, cli );
     }
 
     public void testRequestProvidedLocalRepoLocationShouldOverrideGlobal()
@@ -172,7 +174,7 @@ public class MavenCommandLineBuilderTest
 
         tcb.setEnvironmentPaths( newRequest().setLocalRepositoryDirectory( lrd ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "maven.repo.local=" + lrd.getPath() ), cli );
+        assertArgumentsPresentInOrder( new String[] { "-D", "maven.repo.local=" + lrd.getPath() }, cli );
     }
 
     public void testShouldSetWorkingDirectoryGlobally()
@@ -278,7 +280,7 @@ public class MavenCommandLineBuilderTest
             binDir.mkdirs();
             toDelete.add( appDir );
 
-            if ( Os.isFamily( "windows" ) )
+            if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
             {
                 createDummyFile( binDir, "mvn.bat" );
             }
@@ -338,7 +340,7 @@ public class MavenCommandLineBuilderTest
         toDelete.add( base );
 
         File check;
-        if ( Os.isFamily( "windows" ) )
+        if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
         {
             check = createDummyFile( dummyMavenHomeBin, "mvn.bat" );
         }
@@ -727,7 +729,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setProperties( newRequest().setProperties( properties ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "key=value" ), cli );
+        assertArgumentsPresentInOrder( new String[] { "-D", "key=value" }, cli );
     }
 
     public void testShouldSpecifyCustomPropertyWithSpacesInValueFromRequest()
@@ -743,7 +745,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setProperties( newRequest().setProperties( properties ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "key=value with spaces" ), cli );
+        assertArgumentsPresentInOrder( new String[] { "-D", "key=value with spaces" }, cli );
     }
 
     public void testShouldSpecifyCustomPropertyWithSpacesInKeyFromRequest()
@@ -759,7 +761,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setProperties( newRequest().setProperties( properties ), cli );
 
-        assertArgumentsPresent( Collections.singleton( "key with spaces=value with spaces" ), cli );
+        assertArgumentsPresentInOrder( new String[] { "-D", "key with spaces=value with spaces" }, cli );
     }
 
     public void testShouldSpecifySingleGoalFromRequest()
@@ -849,7 +851,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( goals, commandline );
 
         File mavenFile;
-        if ( Os.isFamily( "windows" ) )
+        if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
         {
             mavenFile = new File( mavenDir, "bin/mvn.bat" );
         }
@@ -869,7 +871,7 @@ public class MavenCommandLineBuilderTest
         throws Exception
     {
         logTestStart();
-        File mavenDir = setupTempMavenHomeIfMissing();
+        setupTempMavenHomeIfMissing();
 
         InvocationRequest request = newRequest();
 
@@ -910,7 +912,7 @@ public class MavenCommandLineBuilderTest
     public void testShouldInsertActivatedProfiles()
         throws Exception
     {
-        File mavenDir = setupTempMavenHomeIfMissing();
+        setupTempMavenHomeIfMissing();
 
         String profile1 = "profile-1";
         String profile2 = "profile-2";
@@ -927,7 +929,7 @@ public class MavenCommandLineBuilderTest
 
         Commandline commandline = commandLineBuilder.build( request );
 
-        assertArgumentsPresent( Collections.singleton( "-P" + profile1 + "," + profile2 ), commandline );
+        assertArgumentsPresentInOrder( new String[] { "-P", profile1 + "," + profile2 }, commandline );
     }
 
     public void setUp()
@@ -969,6 +971,11 @@ public class MavenCommandLineBuilderTest
         StackTraceElement element = npe.getStackTrace()[1];
 
         System.out.println( "Starting: " + element.getMethodName() );
+    }
+
+    private void assertArgumentsPresentInOrder( String[] expected, Commandline cli )
+    {
+        assertArgumentsPresentInOrder( Arrays.asList( expected ), cli );
     }
 
     private void assertArgumentsPresentInOrder( List expected, Commandline cli )

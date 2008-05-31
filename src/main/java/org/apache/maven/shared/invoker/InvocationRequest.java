@@ -30,6 +30,7 @@ import java.util.Properties;
  */
 public interface InvocationRequest
 {
+
     boolean isInteractive();
 
     boolean isOffline();
@@ -45,7 +46,7 @@ public interface InvocationRequest
     boolean isShellEnvironmentInherited();
 
     boolean isNonPluginUpdates();
-    
+
     String getFailureBehavior();
 
     File getLocalRepositoryDirectory( File defaultDirectory );
@@ -75,9 +76,9 @@ public interface InvocationRequest
     String getGlobalChecksumPolicy();
 
     List getProfiles();
-    
+
     Map getShellEnvironments();
-    
+
     String getMavenOpts();
 
     // ----------------------------------------------------------------------
@@ -143,12 +144,13 @@ public interface InvocationRequest
     InvocationRequest setUserSettingsFile( File userSettings );
 
     InvocationRequest setGlobalChecksumPolicy( String globalChecksumPolicy );
-    
-    InvocationRequest setNonPluginUpdates( boolean nonPluginUpdates);
-    
+
+    InvocationRequest setNonPluginUpdates( boolean nonPluginUpdates );
+
     InvocationRequest setRecursive( boolean recursive );
-    
+
     InvocationRequest addShellEnvironment( String name, String value );
 
     InvocationRequest setMavenOpts( String mavenOpts );
+
 }

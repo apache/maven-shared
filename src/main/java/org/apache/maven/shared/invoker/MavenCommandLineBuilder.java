@@ -36,6 +36,7 @@ import org.codehaus.plexus.util.cli.Commandline;
  */
 public class MavenCommandLineBuilder
 {
+
     private static final InvokerLogger DEFAULT_LOGGER = new SystemOutLogger();
 
     private InvokerLogger logger = DEFAULT_LOGGER;
@@ -47,7 +48,7 @@ public class MavenCommandLineBuilder
     private File mavenHome;
 
     private File mvnCommand;
-    
+
     private Properties systemEnvVars;
 
     public Commandline build( InvocationRequest request )
@@ -103,7 +104,7 @@ public class MavenCommandLineBuilder
     }
 
     protected void checkRequiredState()
-      throws IOException
+        throws IOException
     {
         if ( logger == null )
         {
@@ -111,8 +112,8 @@ public class MavenCommandLineBuilder
         }
 
         if ( ( mavenHome == null ) && ( System.getProperty( "maven.home" ) == null ) )
-            // can be restored with 1.5
-            //&& ( System.getenv( "M2_HOME" ) != null ) )
+        // can be restored with 1.5
+        // && ( System.getenv( "M2_HOME" ) != null ) )
         {
             if ( !getSystemEnvVars().containsKey( "M2_HOME" ) )
             {
@@ -168,9 +169,9 @@ public class MavenCommandLineBuilder
                 }
                 else
                 {
-                    IllegalStateException error = new IllegalStateException(
-                                                                             "Unknown error retrieving shell environment variables. Reason: "
-                                                                                 + e.getMessage() );
+                    IllegalStateException error =
+                        new IllegalStateException( "Unknown error retrieving shell environment variables. Reason: "
+                            + e.getMessage() );
                     error.initCause( e );
 
                     throw error;
@@ -182,13 +183,13 @@ public class MavenCommandLineBuilder
         {
             cli.addEnvironment( "JAVA_HOME", request.getJavaHome().getAbsolutePath() );
         }
-        
+
         if ( request.getMavenOpts() != null )
         {
             cli.addEnvironment( "MAVEN_OPTS", request.getMavenOpts() );
         }
-        
-        for (Iterator iterator = request.getShellEnvironments().keySet().iterator();iterator.hasNext();)
+
+        for ( Iterator iterator = request.getShellEnvironments().keySet().iterator(); iterator.hasNext(); )
         {
             String key = (String) iterator.next();
             String value = (String) request.getShellEnvironments().get( key );
@@ -287,8 +288,8 @@ public class MavenCommandLineBuilder
 
             if ( !"pom.xml".equals( pom.getName() ) )
             {
-                logger
-                    .debug( "Specified POM file is not named \'pom.xml\'. Using the \'-f\' command-line option to accommodate non-standard filename..." );
+                logger.debug( "Specified POM file is not named \'pom.xml\'. "
+                    + "Using the \'-f\' command-line option to accommodate non-standard filename..." );
 
                 cli.createArgument().setValue( "-f" );
                 cli.createArgument().setValue( pom.getName() );
@@ -320,8 +321,7 @@ public class MavenCommandLineBuilder
         }
         else if ( workingDirectory.isFile() )
         {
-            logger
-                .warn( "Specified base directory (" + workingDirectory + ") is a file. Using its parent directory..." );
+            logger.warn( "Specified base directory (" + workingDirectory + ") is a file. Using its parent directory..." );
 
             workingDirectory = workingDirectory.getParentFile();
         }
@@ -424,7 +424,7 @@ public class MavenCommandLineBuilder
         {
             cli.createArgument().setLine( "-c" );
         }
-        if (request.isNonPluginUpdates())
+        if ( request.isNonPluginUpdates() )
         {
             cli.createArgument().setLine( "-npu" );
         }
@@ -495,9 +495,8 @@ public class MavenCommandLineBuilder
     }
 
     /**
-     * Wraps a path with quotes to handle paths with spaces. If no spaces are found,
-     * the original string is returned.
-     *
+     * Wraps a path with quotes to handle paths with spaces. If no spaces are found, the original string is returned.
+     * 
      * @param path string to wrap if containing spaces
      * @return quote wrapped string
      * @deprecated Quoting of command line arguments should be left to the Commandline from plexus-utils.
@@ -513,7 +512,7 @@ public class MavenCommandLineBuilder
             return path;
         }
     }
-    
+
     private Properties getSystemEnvVars()
         throws IOException
     {
@@ -564,4 +563,5 @@ public class MavenCommandLineBuilder
     {
         this.workingDirectory = workingDirectory;
     }
+
 }

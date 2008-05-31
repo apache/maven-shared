@@ -32,28 +32,51 @@ public class DefaultInvocationRequest
 {
 
     private File basedir;
+
     private boolean debug;
+
     private InvocationOutputHandler errorHandler;
+
     private String failureBehavior;
+
     private List goals;
+
     private InputStream inputStream;
+
     private boolean interactive;
+
     private File localRepository;
+
     private boolean offline;
+
     private boolean recursive = true;
+
     private InvocationOutputHandler outputHandler;
+
     private File pomFile;
+
     private Properties properties;
+
     private boolean showErrors;
+
     private boolean updateSnapshots;
+
     private boolean shellEnvironmentInherited = true;
+
     private File userSettings;
+
     private String globalChecksumPolicy;
+
     private String pomFilename;
+
     private File javaHome;
+
     private List profiles;
+
     private boolean nonPluginUpdates;
+
     private Map shellEnvironments;
+
     private String mavenOpts;
 
     public InvocationRequest activateReactor( String[] includes, String[] excludes )
@@ -238,7 +261,7 @@ public class DefaultInvocationRequest
 
     public InvocationRequest setShellEnvironmentInherited( boolean shellEnvironmentInherited )
     {
-        this.shellEnvironmentInherited  = shellEnvironmentInherited;
+        this.shellEnvironmentInherited = shellEnvironmentInherited;
         return this;
     }
 
@@ -310,7 +333,7 @@ public class DefaultInvocationRequest
 
     public InvocationRequest addShellEnvironment( String name, String value )
     {
-        if (this.shellEnvironmentInherited)
+        if ( this.shellEnvironmentInherited )
         {
             this.shellEnvironments = new HashMap();
         }
@@ -333,4 +356,5 @@ public class DefaultInvocationRequest
         this.mavenOpts = mavenOpts;
         return this;
     }
+
 }

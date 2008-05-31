@@ -27,17 +27,15 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 
 /**
- * Class intended to be used by clients who wish to invoke a forked Maven 
- * process from their applications
- *
- * @author jdcasey
+ * Class intended to be used by clients who wish to invoke a forked Maven process from their applications
  * 
+ * @author jdcasey
  * @plexus.component role="org.apache.maven.shared.invoker.Invoker" role-hint="default"
  */
 public class DefaultInvoker
     implements Invoker
 {
-    
+
     public static final String ROLE_HINT = "default";
 
     private static final InvokerLogger DEFAULT_LOGGER = new SystemOutLogger();
@@ -62,31 +60,31 @@ public class DefaultInvoker
         throws MavenInvocationException
     {
         MavenCommandLineBuilder cliBuilder = new MavenCommandLineBuilder();
-        
+
         InvokerLogger logger = getLogger();
         if ( logger != null )
         {
             cliBuilder.setLogger( getLogger() );
         }
-        
+
         File localRepo = getLocalRepositoryDirectory();
         if ( localRepo != null )
         {
             cliBuilder.setLocalRepositoryDirectory( getLocalRepositoryDirectory() );
         }
-        
+
         File mavenHome = getMavenHome();
         if ( mavenHome != null )
         {
             cliBuilder.setMavenHome( getMavenHome() );
         }
-        
+
         File workingDirectory = getWorkingDirectory();
         if ( workingDirectory != null )
         {
             cliBuilder.setWorkingDirectory( getWorkingDirectory() );
         }
-        
+
         Commandline cli;
         try
         {
@@ -96,27 +94,28 @@ public class DefaultInvoker
         {
             throw new MavenInvocationException( "Error configuring command-line. Reason: " + e.getMessage(), e );
         }
-        
+
         DefaultInvocationResult result = new DefaultInvocationResult();
-        
+
         try
         {
             int exitCode = executeCommandLine( cli, request );
-            
+
             result.setExitCode( exitCode );
         }
         catch ( CommandLineException e )
         {
             result.setExecutionException( e );
         }
-        
+
         return result;
     }
 
-    private int executeCommandLine( Commandline cli, InvocationRequest request ) throws CommandLineException
+    private int executeCommandLine( Commandline cli, InvocationRequest request )
+        throws CommandLineException
     {
         int result = Integer.MIN_VALUE;
-        
+
         InputStream inputStream = request.getInputStream( this.inputStream );
         InvocationOutputHandler outputHandler = request.getOutputHandler( this.outputHandler );
         InvocationOutputHandler errorHandler = request.getErrorHandler( this.errorHandler );
@@ -129,8 +128,10 @@ public class DefaultInvoker
         {
             if ( inputStream == null )
             {
-                getLogger().warn( "Maven will be executed in interactive mode, but no input stream has been configured for this MavenInvoker instance." );
-                
+                getLogger().warn(
+                                  "Maven will be executed in interactive mode"
+                                      + ", but no input stream has been configured for this MavenInvoker instance." );
+
                 result = CommandLineUtils.executeCommandLine( cli, outputHandler, errorHandler );
             }
             else
@@ -144,13 +145,12 @@ public class DefaultInvoker
             {
                 getLogger().info( "Executing in offline mode. The configured input stream will be ignored." );
             }
-            
+
             result = CommandLineUtils.executeCommandLine( cli, outputHandler, errorHandler );
         }
-        
+
         return result;
     }
-
 
     public File getLocalRepositoryDirectory()
     {
@@ -184,16 +184,16 @@ public class DefaultInvoker
         this.workingDirectory = workingDirectory;
         return this;
     }
-    
+
     public File getMavenHome()
     {
         return mavenHome;
     }
-    
+
     public Invoker setMavenHome( File mavenHome )
     {
         this.mavenHome = mavenHome;
-        
+
         return this;
     }
 
@@ -214,4 +214,5 @@ public class DefaultInvoker
         this.outputHandler = outputHandler;
         return this;
     }
+
 }

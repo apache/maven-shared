@@ -118,6 +118,38 @@ under the License.
           </reportSet>
         </reportSets>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <quiet>true</quiet>
+          <links>
+            <link>http://java.sun.com/javase/6/docs/api/</link>
+          </links>
+          <tags>
+            <tag>
+              <name>plexus.component</name>
+              <placement>Xt</placement>
+            </tag>
+            <tag>
+              <name>plexus.configuration</name>
+              <placement>Xf</placement>
+            </tag>
+            <tag>
+              <name>plexus.requirement</name>
+              <placement>Xf</placement>
+            </tag>
+          </tags>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>javadoc</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
     </plugins>
   </reporting>
   <scm>

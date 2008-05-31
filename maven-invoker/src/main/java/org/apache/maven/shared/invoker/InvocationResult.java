@@ -22,13 +22,28 @@ package org.apache.maven.shared.invoker;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
 /**
+ * Describes the result of a Maven invocation.
+ * 
  * @author jdcasey
+ * @version $Id$
  */
 public interface InvocationResult
 {
 
+    /**
+     * Gets the exception that possibly occurred during the execution of the command line.
+     * 
+     * @return The exception that prevented to invoke Maven or <code>null</code> if the command line was successfully
+     *         processed by the operating system.
+     */
     CommandLineException getExecutionException();
 
+    /**
+     * Gets the exit code from the Maven invocation. A non-zero value indicates a build failure. <strong>Note:</strong>
+     * This value is undefined if {@link #getExecutionException()} reports an exception.
+     * 
+     * @return The exit code from the Maven invocation.
+     */
     int getExitCode();
 
 }

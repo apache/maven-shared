@@ -25,7 +25,7 @@ import java.io.StringWriter;
 public class SystemOutLogger
     implements InvokerLogger
 {
-    
+
     private int threshold = INFO;
 
     public void debug( String message )
@@ -40,67 +40,67 @@ public class SystemOutLogger
             // don't log when it doesn't match your threshold.
             return;
         }
-        
+
         if ( message == null && error == null )
         {
             // don't log when there's nothing to log.
             return;
         }
-        
+
         StringBuffer buffer = new StringBuffer();
-        
+
         switch ( level )
         {
-            case( DEBUG ) :
+            case ( DEBUG ):
             {
                 buffer.append( "[DEBUG]" );
                 break;
             }
-            case( INFO ) :
+            case ( INFO ):
             {
                 buffer.append( "[INFO]" );
                 break;
             }
-            case( WARN ) :
+            case ( WARN ):
             {
                 buffer.append( "[WARN]" );
                 break;
             }
-            case( ERROR ) :
+            case ( ERROR ):
             {
                 buffer.append( "[ERROR]" );
                 break;
             }
-            case( FATAL ) :
+            case ( FATAL ):
             {
                 buffer.append( "[FATAL]" );
                 break;
             }
         }
-        
+
         buffer.append( ' ' );
-        
+
         if ( message != null )
         {
             buffer.append( message );
         }
-        
+
         if ( error != null )
         {
             StringWriter writer = new StringWriter();
             PrintWriter pWriter = new PrintWriter( writer );
-            
+
             error.printStackTrace( pWriter );
-            
+
             if ( message != null )
             {
                 buffer.append( '\n' );
             }
-            
+
             buffer.append( "Error:\n" );
             buffer.append( writer.toString() );
         }
-        
+
         System.out.println( buffer.toString() );
     }
 

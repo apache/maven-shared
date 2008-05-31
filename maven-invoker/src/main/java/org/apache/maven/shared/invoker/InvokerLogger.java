@@ -25,12 +25,17 @@ package org.apache.maven.shared.invoker;
  */
 public interface InvokerLogger
 {
+
     public static final int DEBUG = 4;
+
     public static final int INFO = 3;
+
     public static final int WARN = 2;
+
     public static final int ERROR = 1;
+
     public static final int FATAL = 0;
-    
+
     void debug( String message );
 
     void debug( String message, Throwable throwable );
@@ -64,4 +69,5 @@ public interface InvokerLogger
     void setThreshold( int threshold );
 
     int getThreshold();
+
 }

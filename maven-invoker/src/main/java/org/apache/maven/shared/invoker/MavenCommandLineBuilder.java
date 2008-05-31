@@ -203,7 +203,8 @@ public class MavenCommandLineBuilder
 
         if ( ( profiles != null ) && !profiles.isEmpty() )
         {
-            cli.createArgument().setLine( "-P" + StringUtils.join( profiles.iterator(), "," ) );
+            cli.createArgument().setValue( "-P" );
+            cli.createArgument().setValue( StringUtils.join( profiles.iterator(), "," ) );
         }
 
     }
@@ -372,11 +373,11 @@ public class MavenCommandLineBuilder
         {
             if ( InvocationRequest.REACTOR_FAIL_AT_END.equals( failureBehavior ) )
             {
-                cli.createArgument().setLine( "-fae" );
+                cli.createArgument().setValue( "-fae" );
             }
             else if ( InvocationRequest.REACTOR_FAIL_NEVER.equals( failureBehavior ) )
             {
-                cli.createArgument().setLine( "-fn" );
+                cli.createArgument().setValue( "-fn" );
             }
         }
 
@@ -387,46 +388,46 @@ public class MavenCommandLineBuilder
     {
         if ( !request.isInteractive() )
         {
-            cli.createArgument().setLine( "-B" );
+            cli.createArgument().setValue( "-B" );
         }
 
         if ( request.isOffline() )
         {
-            cli.createArgument().setLine( "-o" );
+            cli.createArgument().setValue( "-o" );
         }
 
         if ( request.isUpdateSnapshots() )
         {
-            cli.createArgument().setLine( "-U" );
+            cli.createArgument().setValue( "-U" );
         }
 
         if ( !request.isRecursive() )
         {
-            cli.createArgument().setLine( "-N" );
+            cli.createArgument().setValue( "-N" );
         }
 
         if ( request.isDebug() )
         {
-            cli.createArgument().setLine( "-X" );
+            cli.createArgument().setValue( "-X" );
         }
         // this is superceded by -X, if it exists.
         else if ( request.isShowErrors() )
         {
-            cli.createArgument().setLine( "-e" );
+            cli.createArgument().setValue( "-e" );
         }
 
         String checksumPolicy = request.getGlobalChecksumPolicy();
         if ( InvocationRequest.CHECKSUM_POLICY_FAIL.equals( checksumPolicy ) )
         {
-            cli.createArgument().setLine( "-C" );
+            cli.createArgument().setValue( "-C" );
         }
         else if ( InvocationRequest.CHECKSUM_POLICY_WARN.equals( checksumPolicy ) )
         {
-            cli.createArgument().setLine( "-c" );
+            cli.createArgument().setValue( "-c" );
         }
         if ( request.isNonPluginUpdates() )
         {
-            cli.createArgument().setLine( "-npu" );
+            cli.createArgument().setValue( "-npu" );
         }
     }
 

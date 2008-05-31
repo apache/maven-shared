@@ -25,6 +25,7 @@
   <body>
     <release version="2.0.9" date="2008-??-??">
       <action type="fix" dev="bentmann" issue="MSHARED-21">Spaces are incorrectly handled on command line</action>
+      <action type="add" dev="bentmann">Added new classes PrintStreamLogger and PrintStreamHandler</action>
     </release>
     <release version="2.0.8" date="2008-05-17">
       <action type="add" dev="olamy" issue="MINVOKER-27">Allow to set MAVEN_OPTS when invoking Maven</action>

@@ -19,17 +19,36 @@ package org.apache.maven.shared.invoker;
  * under the License.
  */
 
+/**
+ * Signals an error during the construction of the command line used to invoke Maven, e.g. illegal invocation arguments.
+ * This should not be confused with a failure of the invoked Maven build itself which will be reported by means of a
+ * non-zero exit code.
+ * 
+ * @see InvocationResult#getExitCode()
+ * @version $Id$
+ */
 public class MavenInvocationException
     extends Exception
 {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new exception using the specified detail message and cause.
+     * 
+     * @param message The detail message for this exception, may be <code>null</code>.
+     * @param cause The nested exception, may be <code>null</code>.
+     */
     public MavenInvocationException( String message, Throwable cause )
     {
         super( message, cause );
     }
 
+    /**
+     * Creates a new exception using the specified detail message.
+     * 
+     * @param message The detail message for this exception, may be <code>null</code>.
+     */
     public MavenInvocationException( String message )
     {
         super( message );

@@ -19,17 +19,33 @@ package org.apache.maven.shared.invoker;
  * under the License.
  */
 
+/**
+ * Signals an error during the construction of the command line used to invoke Maven.
+ * 
+ * @version $Id$
+ */
 public class CommandLineConfigurationException
     extends Exception
 {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Creates a new exception using the specified detail message and cause.
+     * 
+     * @param message The detail message for this exception, may be <code>null</code>.
+     * @param cause The nested exception, may be <code>null</code>.
+     */
     public CommandLineConfigurationException( String message, Throwable cause )
     {
         super( message, cause );
     }
 
+    /**
+     * Creates a new exception using the specified detail message.
+     * 
+     * @param message The detail message for this exception, may be <code>null</code>.
+     */
     public CommandLineConfigurationException( String message )
     {
         super( message );

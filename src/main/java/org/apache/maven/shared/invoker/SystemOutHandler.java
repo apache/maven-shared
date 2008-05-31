@@ -27,6 +27,7 @@ public class SystemOutHandler
 
     public SystemOutHandler()
     {
+        this( false );
     }
 
     public SystemOutHandler( boolean alwaysFlush )

@@ -40,6 +40,7 @@ import java.util.Set;
 public class MavenCommandLineBuilderTest
     extends TestCase
 {
+
     private List toDelete = new ArrayList();
 
     private Properties sysProps;
@@ -50,13 +51,14 @@ public class MavenCommandLineBuilderTest
         String test = "noSpacesInHere";
 
         assertSame( test, tcb.wrapStringWithQuotes( test ) );
-        assertEquals("noSpacesInHere",tcb.wrapStringWithQuotes( test ));
+        assertEquals( "noSpacesInHere", tcb.wrapStringWithQuotes( test ) );
 
         test = "bunch of spaces in here";
         assertNotSame( test, tcb.wrapStringWithQuotes( test ) );
-        assertEquals("\"bunch of spaces in here\"",tcb.wrapStringWithQuotes( test ));
+        assertEquals( "\"bunch of spaces in here\"", tcb.wrapStringWithQuotes( test ) );
 
     }
+
     public void testShouldFailToSetLocalRepoLocationGloballyWhenItIsAFile()
         throws IOException
     {
@@ -458,8 +460,9 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb.setReactorBehavior( new DefaultInvocationRequest()
-            .setFailureBehavior( InvocationRequest.REACTOR_FAIL_AT_END ), cli );
+        tcb.setReactorBehavior(
+                                new DefaultInvocationRequest().setFailureBehavior( InvocationRequest.REACTOR_FAIL_AT_END ),
+                                cli );
 
         assertArgumentsPresent( Collections.singleton( "-fae" ), cli );
     }
@@ -471,8 +474,9 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb.setReactorBehavior( new DefaultInvocationRequest()
-            .setFailureBehavior( InvocationRequest.REACTOR_FAIL_NEVER ), cli );
+        tcb.setReactorBehavior(
+                                new DefaultInvocationRequest().setFailureBehavior( InvocationRequest.REACTOR_FAIL_NEVER ),
+                                cli );
 
         assertArgumentsPresent( Collections.singleton( "-fn" ), cli );
     }
@@ -484,9 +488,9 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb
-            .setReactorBehavior( new DefaultInvocationRequest()
-                .setFailureBehavior( InvocationRequest.REACTOR_FAIL_FAST ), cli );
+        tcb.setReactorBehavior(
+                                new DefaultInvocationRequest().setFailureBehavior( InvocationRequest.REACTOR_FAIL_FAST ),
+                                cli );
 
         Set banned = new HashSet();
         banned.add( "-fae" );
@@ -674,8 +678,8 @@ public class MavenCommandLineBuilderTest
 
         Commandline cli = new Commandline();
 
-        InvocationRequest req = new DefaultInvocationRequest().setBaseDirectory( projectDir )
-            .setPomFileName( "non-standard-pom.xml" );
+        InvocationRequest req =
+            new DefaultInvocationRequest().setBaseDirectory( projectDir ).setPomFileName( "non-standard-pom.xml" );
 
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setEnvironmentPaths( req, cli );
@@ -735,7 +739,7 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldSpecifyCustomPropertyWithSpacesInValueFromRequest()
-    throws IOException
+        throws IOException
     {
         logTestStart();
 
@@ -751,7 +755,7 @@ public class MavenCommandLineBuilderTest
     }
 
     public void testShouldSpecifyCustomPropertyWithSpacesInKeyFromRequest()
-    throws IOException
+        throws IOException
     {
         logTestStart();
 
@@ -869,7 +873,9 @@ public class MavenCommandLineBuilderTest
         assertEquals( projectDir.getCanonicalPath(), commandline.getWorkingDirectory().getCanonicalPath() );
     }
 
-    public void testShouldSetEnvVar_MAVEN_TERMINATE_CMD() throws Exception {
+    public void testShouldSetEnvVar_MAVEN_TERMINATE_CMD()
+        throws Exception
+    {
         logTestStart();
         File mavenDir = setupTempMavenHomeIfMissing();
 
@@ -899,12 +905,13 @@ public class MavenCommandLineBuilderTest
         for ( int i = 0; i < environmentVariables.length; i++ )
         {
             String envVar = environmentVariables[i];
-            if (envVar.startsWith( "MAVEN_TERMINATE_CMD=" )) {
+            if ( envVar.startsWith( "MAVEN_TERMINATE_CMD=" ) )
+            {
                 envVarMavenTerminateCmd = envVar;
                 break;
             }
         }
-        assertEquals( "MAVEN_TERMINATE_CMD=on", envVarMavenTerminateCmd);
+        assertEquals( "MAVEN_TERMINATE_CMD=on", envVarMavenTerminateCmd );
 
     }
 
@@ -925,7 +932,6 @@ public class MavenCommandLineBuilderTest
         request.setProfiles( profiles );
 
         MavenCommandLineBuilder commandLineBuilder = new MavenCommandLineBuilder();
-
 
         Commandline commandline = commandLineBuilder.build( request );
 
@@ -979,11 +985,12 @@ public class MavenCommandLineBuilderTest
 
         int expectedCounter = 0;
 
-//        System.out.println( "Command-line has " + arguments.length + " arguments." );
+        // System.out.println( "Command-line has " + arguments.length + " arguments." );
 
         for ( int i = 0; i < arguments.length; i++ )
         {
-//            System.out.println( "Checking argument: " + arguments[i] + " against: " + expected.get( expectedCounter ) );
+            // System.out.println( "Checking argument: " + arguments[i] + " against: " + expected.get( expectedCounter )
+            // );
 
             if ( arguments[i].equals( expected.get( expectedCounter ) ) )
             {
@@ -1000,8 +1007,8 @@ public class MavenCommandLineBuilderTest
         String[] argv = cli.getArguments();
         List args = Arrays.asList( argv );
 
-//        System.out.println( "Command-line: " + cli );
-//        System.out.println( "Arguments: " + args );
+        // System.out.println( "Command-line: " + cli );
+        // System.out.println( "Arguments: " + args );
 
         for ( Iterator it = requiredArgs.iterator(); it.hasNext(); )
         {
@@ -1049,7 +1056,7 @@ public class MavenCommandLineBuilderTest
         extends MavenCommandLineBuilder
     {
         public void checkRequiredState()
-          throws IOException
+            throws IOException
         {
             super.checkRequiredState();
         }
@@ -1108,4 +1115,5 @@ public class MavenCommandLineBuilderTest
     {
         return new File( System.getProperty( "java.io.tmpdir" ) ).getCanonicalFile();
     }
+
 }

@@ -22,9 +22,9 @@ package org.apache.maven.shared.invoker;
 public class SystemOutHandler
     implements InvocationOutputHandler
 {
-    
+
     private boolean alwaysFlush;
-    
+
     public SystemOutHandler()
     {
     }
@@ -44,7 +44,7 @@ public class SystemOutHandler
         {
             System.out.println( line );
         }
-        
+
         if ( alwaysFlush )
         {
             System.out.flush();

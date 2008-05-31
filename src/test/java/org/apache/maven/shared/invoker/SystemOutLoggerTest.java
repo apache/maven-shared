@@ -26,9 +26,10 @@ import junit.framework.TestCase;
 public class SystemOutLoggerTest
     extends TestCase
 {
-    
-    private static final Throwable EXCEPTION = new MalformedURLException( "This is meant to happen. It's part of the test." );
-    
+
+    private static final Throwable EXCEPTION =
+        new MalformedURLException( "This is meant to happen. It's part of the test." );
+
     private static final String MESSAGE = "This is a test message.";
 
     public void testDebugWithMessageOnly()
@@ -36,13 +37,13 @@ public class SystemOutLoggerTest
         logTestStart();
         new SystemOutLogger().debug( MESSAGE );
     }
-    
+
     public void testDebugWithMessageAndError()
     {
         logTestStart();
         new SystemOutLogger().debug( MESSAGE, EXCEPTION );
     }
-    
+
     public void testDebugWithNullMessageAndNoError()
     {
         logTestStart();
@@ -66,13 +67,13 @@ public class SystemOutLoggerTest
         logTestStart();
         new SystemOutLogger().info( MESSAGE );
     }
-    
+
     public void testInfoWithMessageAndError()
     {
         logTestStart();
         new SystemOutLogger().info( MESSAGE, EXCEPTION );
     }
-    
+
     public void testInfoWithNullMessageAndNoError()
     {
         logTestStart();
@@ -96,13 +97,13 @@ public class SystemOutLoggerTest
         logTestStart();
         new SystemOutLogger().warn( MESSAGE );
     }
-    
+
     public void testWarnWithMessageAndError()
     {
         logTestStart();
         new SystemOutLogger().warn( MESSAGE, EXCEPTION );
     }
-    
+
     public void testWarnWithNullMessageAndNoError()
     {
         logTestStart();
@@ -126,13 +127,13 @@ public class SystemOutLoggerTest
         logTestStart();
         new SystemOutLogger().error( MESSAGE );
     }
-    
+
     public void testErrorWithMessageAndError()
     {
         logTestStart();
         new SystemOutLogger().error( MESSAGE, EXCEPTION );
     }
-    
+
     public void testErrorWithNullMessageAndNoError()
     {
         logTestStart();
@@ -156,13 +157,13 @@ public class SystemOutLoggerTest
         logTestStart();
         new SystemOutLogger().fatalError( MESSAGE );
     }
-    
+
     public void testFatalErrorWithMessageAndError()
     {
         logTestStart();
         new SystemOutLogger().fatalError( MESSAGE, EXCEPTION );
     }
-    
+
     public void testFatalErrorWithNullMessageAndNoError()
     {
         logTestStart();
@@ -249,4 +250,5 @@ public class SystemOutLoggerTest
 
         System.out.println( "Starting: " + element.getMethodName() );
     }
+
 }

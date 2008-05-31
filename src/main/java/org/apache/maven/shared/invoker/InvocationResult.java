@@ -22,13 +22,13 @@ package org.apache.maven.shared.invoker;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
 /**
- *
  * @author jdcasey
  */
 public interface InvocationResult
 {
+
     CommandLineException getExecutionException();
 
     int getExitCode();
-    
+
 }

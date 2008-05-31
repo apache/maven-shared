@@ -19,37 +19,31 @@ package org.apache.maven.shared.invoker;
  * under the License.
  */
 
+/**
+ * Offers an output handler that writes to {@link System#out}.
+ * 
+ * @version $Id$
+ */
 public class SystemOutHandler
-    implements InvocationOutputHandler
+    extends PrintStreamHandler
 {
 
-    private boolean alwaysFlush;
-
+    /**
+     * Creates a new output handler.
+     */
     public SystemOutHandler()
     {
         this( false );
     }
 
+    /**
+     * Creates a new output handler.
+     * 
+     * @param alwaysFlush A flag whether the print stream should be flushed after each line.
+     */
     public SystemOutHandler( boolean alwaysFlush )
     {
-        this.alwaysFlush = alwaysFlush;
-    }
-
-    public void consumeLine( String line )
-    {
-        if ( line == null )
-        {
-            System.out.println();
-        }
-        else
-        {
-            System.out.println( line );
-        }
-
-        if ( alwaysFlush )
-        {
-            System.out.flush();
-        }
+        super( System.out, alwaysFlush );
     }
 
 }

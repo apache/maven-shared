@@ -181,6 +181,66 @@ public class SystemOutLoggerTest
         new SystemOutLogger().fatalError( MESSAGE, null );
     }
 
+    public void testDefaultThresholdInfo()
+    {
+        assertEquals( InvokerLogger.INFO, new SystemOutLogger().getThreshold() );
+    }
+
+    public void testThresholdDebug()
+    {
+        InvokerLogger logger = new SystemOutLogger();
+        logger.setThreshold( InvokerLogger.DEBUG );
+        assertTrue( logger.isDebugEnabled() );
+        assertTrue( logger.isInfoEnabled() );
+        assertTrue( logger.isWarnEnabled() );
+        assertTrue( logger.isErrorEnabled() );
+        assertTrue( logger.isFatalErrorEnabled() );
+    }
+
+    public void testThresholdInfo()
+    {
+        InvokerLogger logger = new SystemOutLogger();
+        logger.setThreshold( InvokerLogger.INFO );
+        assertFalse( logger.isDebugEnabled() );
+        assertTrue( logger.isInfoEnabled() );
+        assertTrue( logger.isWarnEnabled() );
+        assertTrue( logger.isErrorEnabled() );
+        assertTrue( logger.isFatalErrorEnabled() );
+    }
+
+    public void testThresholdWarn()
+    {
+        InvokerLogger logger = new SystemOutLogger();
+        logger.setThreshold( InvokerLogger.WARN );
+        assertFalse( logger.isDebugEnabled() );
+        assertFalse( logger.isInfoEnabled() );
+        assertTrue( logger.isWarnEnabled() );
+        assertTrue( logger.isErrorEnabled() );
+        assertTrue( logger.isFatalErrorEnabled() );
+    }
+
+    public void testThresholdError()
+    {
+        InvokerLogger logger = new SystemOutLogger();
+        logger.setThreshold( InvokerLogger.ERROR );
+        assertFalse( logger.isDebugEnabled() );
+        assertFalse( logger.isInfoEnabled() );
+        assertFalse( logger.isWarnEnabled() );
+        assertTrue( logger.isErrorEnabled() );
+        assertTrue( logger.isFatalErrorEnabled() );
+    }
+
+    public void testThresholdFatal()
+    {
+        InvokerLogger logger = new SystemOutLogger();
+        logger.setThreshold( InvokerLogger.FATAL );
+        assertFalse( logger.isDebugEnabled() );
+        assertFalse( logger.isInfoEnabled() );
+        assertFalse( logger.isWarnEnabled() );
+        assertFalse( logger.isErrorEnabled() );
+        assertTrue( logger.isFatalErrorEnabled() );
+    }
+
     // this is just a debugging helper for separating unit test output...
     private void logTestStart()
     {

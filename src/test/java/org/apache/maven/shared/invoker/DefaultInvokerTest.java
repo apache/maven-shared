@@ -44,12 +44,8 @@ public class DefaultInvokerTest
 
         Invoker invoker = newInvoker();
 
-        Properties props = new Properties();
-//        props.put( "key with spaces", "value with spaces" );
-
         InvocationRequest request = new DefaultInvocationRequest();
         request.setBaseDirectory( basedir );
-        request.setProperties( props );
 
         request.setDebug( true );
 

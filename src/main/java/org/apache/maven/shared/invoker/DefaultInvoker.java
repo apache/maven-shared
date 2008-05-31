@@ -143,7 +143,7 @@ public class DefaultInvoker
         {
             if ( inputStream != null )
             {
-                getLogger().info( "Executing in offline mode. The configured input stream will be ignored." );
+                getLogger().info( "Executing in batch mode. The configured input stream will be ignored." );
             }
 
             result = CommandLineUtils.executeCommandLine( cli, outputHandler, errorHandler );
@@ -170,7 +170,7 @@ public class DefaultInvoker
 
     public Invoker setLogger( InvokerLogger logger )
     {
-        this.logger = logger;
+        this.logger = ( logger != null ) ? logger : DEFAULT_LOGGER;
         return this;
     }
 

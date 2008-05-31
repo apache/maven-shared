@@ -27,6 +27,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Specifies the parameters used to control a Maven invocation.
+ * 
+ * @version $Id$
+ */
 public class DefaultInvocationRequest
     implements InvocationRequest
 {
@@ -37,7 +42,7 @@ public class DefaultInvocationRequest
 
     private InvocationOutputHandler errorHandler;
 
-    private String failureBehavior;
+    private String failureBehavior = REACTOR_FAIL_FAST;
 
     private List goals;
 

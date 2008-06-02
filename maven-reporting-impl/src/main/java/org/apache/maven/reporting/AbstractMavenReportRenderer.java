@@ -21,7 +21,10 @@ package org.apache.maven.reporting;
 
 import org.apache.commons.validator.EmailValidator;
 import org.apache.commons.validator.UrlValidator;
+
+import org.apache.maven.doxia.parser.Parser;
 import org.apache.maven.doxia.sink.Sink;
+
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
@@ -219,6 +222,7 @@ public abstract class AbstractMavenReportRenderer
     protected void startTable()
     {
         sink.table();
+        sink.tableRows( new int[] {Parser.JUSTIFY_LEFT}, false );
     }
 
     /**
@@ -228,6 +232,7 @@ public abstract class AbstractMavenReportRenderer
      */
     protected void endTable()
     {
+        sink.tableRows_();
         sink.table_();
     }
 

@@ -68,7 +68,7 @@ public abstract class AbstractMavenReport
      * @param aSink the sink to use for the generation.
      * @param aLocale the wanted locale to generate the report, could be null.
      * @throws MavenReportException if any
-     * @deprecated using {@link #generate(Sink, SinkFactory, Locale)} instead of
+     * @deprecated use {@link #generate(Sink, SinkFactory, Locale)} instead.
      */
     public void generate( org.codehaus.doxia.sink.Sink aSink, Locale aLocale )
         throws MavenReportException
@@ -84,7 +84,7 @@ public abstract class AbstractMavenReport
      * @param aLocale
      * @throws MavenReportException
      * @see org.apache.maven.reporting.MavenReport#generate(org.apache.maven.doxia.sink.Sink, java.util.Locale)
-     * @deprecated using {@link #generate(Sink, SinkFactory, Locale)} instead of
+     * @deprecated use {@link #generate(Sink, SinkFactory, Locale)} instead.
      */
     public void generate( Sink aSink, Locale aLocale )
         throws MavenReportException

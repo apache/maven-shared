@@ -92,7 +92,7 @@ public class SiteToolTest
         SiteTool tool = (SiteTool) lookup( SiteTool.ROLE );
         assertNotNull( tool );
 
-        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub();
+        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub( "site-tool-test" );
         assertNotNull( tool.getDefaultSkinArtifact( getLocalRepo(), project.getRemoteArtifactRepositories() ) );
     }
 
@@ -105,7 +105,7 @@ public class SiteToolTest
         SiteTool tool = (SiteTool) lookup( SiteTool.ROLE );
         assertNotNull( tool );
 
-        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub();
+        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub( "site-tool-test" );
         DecorationModel decorationModel = new DecorationModel();
         Skin skin = new Skin();
         skin.setGroupId( "org.apache.maven.skins" );
@@ -187,7 +187,7 @@ public class SiteToolTest
         SiteTool tool = (SiteTool) lookup( SiteTool.ROLE );
         assertNotNull( tool );
 
-        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub();
+        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub( "site-tool-test" );
         assertEquals( tool.getSiteDescriptorFromBasedir( null, project.getBasedir(), null ).toString(),
             project.getBasedir() + File.separator + "src" + File.separator + "site" + File.separator + "site.xml" );
         assertEquals( tool.getSiteDescriptorFromBasedir( null, project.getBasedir(), Locale.ENGLISH ).toString(),
@@ -206,7 +206,7 @@ public class SiteToolTest
         SiteTool tool = (SiteTool) lookup( SiteTool.ROLE );
         assertNotNull( tool );
 
-        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub();
+        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub( "site-tool-test" );
         project.setGroupId( "org.apache.maven" );
         project.setArtifactId( "maven-site" );
         project.setVersion( "1.0" );
@@ -228,7 +228,7 @@ public class SiteToolTest
         SiteTool tool = (SiteTool) lookup( SiteTool.ROLE );
         assertNotNull( tool );
 
-        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub();
+        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub( "site-tool-test" );
         project.setGroupId( "org.apache.maven" );
         project.setArtifactId( "maven-site" );
         project.setVersion( "1.0" );
@@ -249,4 +249,24 @@ public class SiteToolTest
         assertEquals( "images/maven-logo-2.gif", model.getBannerRight().getSrc() );
         assertNull( model.getBannerRight().getHref() );
     }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetDefaultDecorationModel()
+        throws Exception
+    {
+        SiteTool tool = (SiteTool) lookup( SiteTool.ROLE );
+        assertNotNull( tool );
+
+        SiteToolMavenProjectStub project = new SiteToolMavenProjectStub( "no-site-test" );
+        String siteDirectory = "src/site";
+        List reactorProjects = new ArrayList();
+
+        DecorationModel model =
+            tool.getDecorationModel( project, reactorProjects, getLocalRepo(), project.getRemoteArtifactRepositories(),
+                                     siteDirectory, Locale.getDefault(), "UTF-8", "UTF-8" );
+        assertNotNull( model );
+    }
+
 }

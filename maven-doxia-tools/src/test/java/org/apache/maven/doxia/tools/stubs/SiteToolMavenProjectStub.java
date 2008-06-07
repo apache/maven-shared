@@ -44,8 +44,10 @@ public class SiteToolMavenProjectStub
 
     private File basedir;
 
-    public SiteToolMavenProjectStub()
+    public SiteToolMavenProjectStub( String projectName )
     {
+        basedir = new File( super.getBasedir() + "/src/test/resources/unit/" + projectName );
+
         MavenXpp3Reader pomReader = new MavenXpp3Reader();
         Model model = null;
 
@@ -59,8 +61,6 @@ public class SiteToolMavenProjectStub
             throw new RuntimeException( e );
         }
 
-        basedir = new File( super.getBasedir() + "/src/test/resources/unit/site-tool-test" );
-
         setGroupId( model.getGroupId() );
         setArtifactId( model.getArtifactId() );
         setVersion( model.getVersion() );
@@ -70,11 +70,11 @@ public class SiteToolMavenProjectStub
 
         build = new Build();
         build.setFinalName( model.getArtifactId() );
-        build.setDirectory( super.getBasedir() + "/target/test/unit/site-tool-test/target" );
+        build.setDirectory( super.getBasedir() + "/target/test/unit/" + projectName + "/target" );
         build.setSourceDirectory( getBasedir() + "/src/main/java" );
-        build.setOutputDirectory( super.getBasedir() + "/target/test/unit/site-tool-test/target/classes" );
+        build.setOutputDirectory( build.getDirectory() + "/classes" );
         build.setTestSourceDirectory( getBasedir() + "/src/test/java" );
-        build.setTestOutputDirectory( super.getBasedir() + "/target/test/unit/site-tool-test/target/test-classes" );
+        build.setTestOutputDirectory( build.getDirectory() + "/test-classes" );
 
         List compileSourceRoots = new ArrayList();
         compileSourceRoots.add( getBasedir() + "/src/main/java" );

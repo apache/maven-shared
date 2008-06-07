@@ -519,8 +519,8 @@ public class DefaultSiteTool
             try
             {
                 // Note the default is not a super class - it is used when nothing else is found
-                Reader reader = ReaderFactory.newXmlReader( getClass().getResourceAsStream( "/default-site.xml" ) );
-                siteDescriptorContent = IOUtil.toString( reader );
+                siteDescriptorContent =
+                    IOUtil.toString( getClass().getResourceAsStream( "/default-site.xml" ), "UTF-8" );
             }
             catch ( IOException e )
             {

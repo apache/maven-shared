@@ -68,7 +68,7 @@ public interface SiteTool
      * @param remoteArtifactRepositories the Maven remote repositories, not null.
      * @return the default <code>Skin</code> artifact from a given project and a local repository
      * @throws SiteToolException if any
-     * @see Skin#getDefaultSkin()
+     * @see org.apache.maven.doxia.site.decoration.Skin#getDefaultSkin()
      * @see #getSkinArtifactFromRepository(ArtifactRepository, List, DecorationModel)
      */
     Artifact getDefaultSkinArtifact( ArtifactRepository localRepository, List remoteArtifactRepositories )

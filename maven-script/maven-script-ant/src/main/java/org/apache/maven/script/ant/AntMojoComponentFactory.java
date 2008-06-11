@@ -19,8 +19,8 @@ package org.apache.maven.script.ant;
  * under the License.
  */
 
-import org.codehaus.classworlds.ClassRealm;
 import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.factory.ComponentInstantiationException;
 import org.codehaus.plexus.component.factory.ant.AntComponentFactory;
 import org.codehaus.plexus.component.factory.ant.AntScriptInvoker;

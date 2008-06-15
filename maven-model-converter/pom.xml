@@ -29,6 +29,33 @@
   <name>Maven Model Converter</name>
   <description>Converts between version 3.0.0 and version 4.0.0 models.</description>
 
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/13272</url>
+  </issueManagement>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-model-converter</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-model-converter</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-model-converter</url>
+  </scm>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -62,26 +89,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>descriptor</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-
-  <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-model-converter</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-model-converter</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-model-converter</url>
-  </scm>
 </project>

@@ -53,13 +53,13 @@ public class PCCJalopy
                                        Properties projectProperties )
         throws ProjectConverterException
     {
-        addConfigurationChild( configuration, projectProperties, "maven.jalopy.fileFormat", "fileFormat" );
-
         addConfigurationChild( configuration, projectProperties, "maven.jalopy.style", "convention" );
 
-        addConfigurationChild( configuration, projectProperties, "maven.jalopy.history", "history" );
-
         addConfigurationChild( configuration, projectProperties, "maven.jalopy.failOnError", "failOnError" );
+
+        addConfigurationChild( configuration, projectProperties, "maven.jalopy.fileFormat", "fileFormat" );
+
+        addConfigurationChild( configuration, projectProperties, "maven.jalopy.history", "history" );
 
         addConfigurationChild( configuration, projectProperties, "maven.jalopy.src.filesetExclude", "srcExcludesPattern" );
 

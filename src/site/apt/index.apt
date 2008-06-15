@@ -32,9 +32,9 @@ Maven Model Converter
   This shared component is used to convert Maven POMs between version 3
   (used by Maven 1.x) and version 4 (used by Maven 2.0). It is used by
   {{{http://maven.apache.org/plugins/maven-one-plugin/}maven-one-plugin}} and
-  {{{http://maven.apache.org/archiva/}Archiva}}.
+  {{{http://archiva.apache.org/}Archiva}}.
 
-  Apart from the main conversion of the different elements in the pom, there
+  Apart from the main conversion of the different elements in the POM, there
   are a couple of extensions to handle plugins and their configurations.
   Which plugins are avaliable and how they are configured is not specified in
   the xml schema for version 4 POMs. The schema only has generic definitions

@@ -3,7 +3,7 @@
  ------
  Olivier Lamy
  ------
- 2008-02-18
+ 2008-07-21
  ------
 
  ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -68,6 +68,7 @@ mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
   You must use the other methods from the MavenResourcesFiltering component and construct your own List of FilterWrapper.
   The following example add the interpolation for the Token @ @ with using values coming from reflection with the Maven Project.
+  NOTE : the component maven-filtering use the plexus-interpolation component
 
 +-----+
 
@@ -75,16 +76,22 @@ Create your FilterWrapper.
 
 FileUtils.FilterWrapper filterWrapper = new FileUtils.FilterWrapper()
 {
-    public Reader getReader( Reader reader )
-    {
-        ReflectionProperties reflectionProperties = new ReflectionProperties( mavenProject, true );
-        return new InterpolationFilterReader( reader, reflectionProperties, "@", "@" );
-    }
+  public Reader getReader( Reader reader )
+  {
+      Interpolator propertiesInterpolator = new RegexBasedInterpolator(  "\\@", "(.+?)\\@" );
+      propertiesInterpolator.addValueSource( valueSource );
+      return new InterpolatorFilterReader( reader, propertiesInterpolator, "@", "@" );
+  }
 };
 
 Create your MavenResourcesExecution instance and add a new filterWrapper.
 
-mavenResourcesExecution.addFilterWrapper( filterWrapper ); 
+mavenResourcesExecution.addFilterWrapper( filterWrapper );
+
+Or with the helper method :
+
+mavenResourcesExecution.addFilerWrapper( new MavenProjectValueSource( mavenProject, true ), "\\@", "(.+?)\\@", "@", "@" );
+ 
 If the mavenResourcesExecution.useDefaultFilterWrappers is set to true default FilterWrapper will be added first. 
 
 here you can apply filtering on your resources.

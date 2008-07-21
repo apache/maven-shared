@@ -22,19 +22,15 @@ package org.apache.maven.shared.filtering;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Resource;
-import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.InterpolationFilterReader;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -140,24 +136,26 @@ public class DefaultMavenResourcesFilteringTest
         throws Exception
     {
         assertEquals( 7, outputDirectory.listFiles().length );
-        Properties result = PropertyUtils.loadPropertyFile( new File( outputDirectory,
-                                                                      "empty-maven-resources-filtering.txt" ), null );
+        Properties result = new Properties();
+        result.load( new FileInputStream( new File( outputDirectory, "empty-maven-resources-filtering.txt" ) ) );
+
         assertTrue( result.isEmpty() );
 
-        result = PropertyUtils.loadPropertyFile( new File( outputDirectory, "maven-resources-filtering.txt" ), null );
+        result = new Properties();
+        result.load( new FileInputStream( new File( outputDirectory, "maven-resources-filtering.txt" ) ) );
         assertFalse( result.isEmpty() );
 
         assertEquals( "1.0", result.get( "version" ) );
         assertEquals( "org.apache", result.get( "groupId" ) );
         assertEquals( "bar", result.get( "foo" ) );
-        // FIXME this can fail with a windows path
-        String base = result.getProperty( "base" );
 
         assertEquals( "@@", result.getProperty( "emptyexpression" ) );
         assertEquals( "${}", result.getProperty( "emptyexpression2" ) );
+        assertEquals( System.getProperty( "user.dir" ), result.getProperty( "userDir" ) );
         assertEquals( System.getProperty( "java.version" ), result.getProperty( "javaVersion" ) );
 
         assertEquals( baseDir.toString(), result.get( "base" ) );
+        assertEquals( new File( baseDir.toString() ).getPath(), new File( result.getProperty( "base" ) ).getPath() );
 
         File imageFile = new File( outputDirectory, "happy_duke.gif" );
         assertTrue( imageFile.exists() );
@@ -196,20 +194,12 @@ public class DefaultMavenResourcesFilteringTest
 
         List nonFilteredFileExtensions = Collections.singletonList( "gif" );
 
-        FileUtils.FilterWrapper filterWrapper = new FileUtils.FilterWrapper()
-        {
-            public Reader getReader( Reader reader )
-            {
-                ReflectionProperties reflectionProperties = new ReflectionProperties( mavenProject, true );
-                return new InterpolationFilterReader( reader, reflectionProperties, "@", "@" );
-            }
-        };
-
         MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, outputDirectory,
                                                                                        mavenProject, null, null,
                                                                                        nonFilteredFileExtensions,
                                                                                        new StubMavenSession() );
-        mavenResourcesExecution.addFilterWrapper( filterWrapper );
+
+        mavenResourcesExecution.addFilerWrapper( new MavenProjectValueSource( mavenProject, true ), "\\@", "(.+?)\\@", "@", "@" );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
         Properties result = PropertyUtils

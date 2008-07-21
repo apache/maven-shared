@@ -38,7 +38,6 @@ public class TestReflectionProperties
     public void testSimpleFiltering()
         throws Exception
     {
-        Properties allProperties = System.getProperties();
         FileInputStream readFileInputStream = null;
         try
         {
@@ -72,7 +71,6 @@ public class TestReflectionProperties
             {
                 readFileInputStream.close();
             }
-            System.setProperties( allProperties );
         }
 
     }
@@ -80,7 +78,6 @@ public class TestReflectionProperties
     public void testSimpleNonFiltering()
         throws Exception
     {
-        Properties allProperties = System.getProperties();
         FileInputStream readFileInputStream = null;
         try
         {
@@ -114,7 +111,6 @@ public class TestReflectionProperties
             {
                 readFileInputStream.close();
             }
-            System.setProperties( allProperties );
         }
 
     }    

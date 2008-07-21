@@ -74,6 +74,7 @@ public interface MavenFileFilter
      * @return {@link List} of FileUtils.FilterWrapper 
      * 
      */
-    List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath, MavenSession mavenSession )
+    List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath,
+                                   MavenSession mavenSession )
         throws MavenFilteringException;
 }

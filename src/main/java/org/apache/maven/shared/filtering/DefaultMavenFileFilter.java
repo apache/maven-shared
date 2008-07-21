@@ -30,8 +30,11 @@ import java.util.Properties;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.interpolation.Interpolator;
+import org.codehaus.plexus.interpolation.InterpolatorFilterReader;
+import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
+import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.InterpolationFilterReader;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -123,12 +126,19 @@ public class DefaultMavenFileFilter
         
         List defaultFilterWrappers = new ArrayList( 3 );
 
+        final ValueSource propertiesValueSource = new PropertiesEscapingBackSlahValueSource(
+                                                                                             escapedBackslashesInFilePath,
+                                                                                             filterProperties );
+        
         // support ${token}
+
         FileUtils.FilterWrapper one = new FileUtils.FilterWrapper()
         {
             public Reader getReader( Reader reader )
             {
-                return new InterpolationFilterReader( reader, filterProperties, "${", "}" );
+                Interpolator propertiesInterpolator = new RegexBasedInterpolator();
+                propertiesInterpolator.addValueSource( propertiesValueSource  );                
+                return new InterpolatorFilterReader( reader, propertiesInterpolator );
             }
         };
         defaultFilterWrappers.add( one );
@@ -138,22 +148,41 @@ public class DefaultMavenFileFilter
         {
             public Reader getReader( Reader reader )
             {
-                return new InterpolationFilterReader( reader, filterProperties, "@", "@" );
+                final Interpolator propertiesInterpolatorAtRegex = new RegexBasedInterpolator("\\@", "(.+?)\\@");
+                propertiesInterpolatorAtRegex.addValueSource( propertiesValueSource );                
+                return new InterpolatorFilterReader( reader, propertiesInterpolatorAtRegex, "@", "@" );
             }
         };
         defaultFilterWrappers.add( second );
+        
         // support ${token} with mavenProject reflection
         FileUtils.FilterWrapper third = new FileUtils.FilterWrapper()
         {
             public Reader getReader( Reader reader )
             {
-                ReflectionProperties reflectionProperties = new ReflectionProperties( mavenProject,
-                                                                                      escapedBackslashesInFilePath );
-                return new InterpolationFilterReader( reader, reflectionProperties, "${", "}" );
+                Interpolator mavenProjectInterpolator = new RegexBasedInterpolator();
+                 
+                ValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
+                mavenProjectInterpolator.addValueSource( valueSource );
+                return new InterpolatorFilterReader( reader, mavenProjectInterpolator );
             }
         };
-
         defaultFilterWrappers.add( third );
+        
+        // support @token@ with mavenProject reflection
+        FileUtils.FilterWrapper fourth = new FileUtils.FilterWrapper()
+        {
+            public Reader getReader( Reader reader )
+            {
+                Interpolator mavenProjectInterpolator = new RegexBasedInterpolator("\\@", "(.+?)\\@");
+                 
+                ValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
+                mavenProjectInterpolator.addValueSource( valueSource );
+                return new InterpolatorFilterReader( reader, mavenProjectInterpolator, "@", "@" );
+            }
+        };        
+
+        defaultFilterWrappers.add( fourth );
 
         return defaultFilterWrappers;
     }

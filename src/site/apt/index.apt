@@ -48,6 +48,8 @@ Maven Filtering Component
     
     * interpolation with token $\{ \} and values from mavenProject interpolation
     
+    * interpolation with token @ @ and values from mavenProject interpolation
+    
     []
     
     The values (Properties object) used for interpolation are loaded with the following order :

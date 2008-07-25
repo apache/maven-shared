@@ -40,54 +40,30 @@ import org.apache.maven.it.util.cli.WriterStreamConsumer;
  * @author Jason van Zyl
  */
 public class DefaultInvoker
+    implements Invoker
 {
     private static final String LOG_FILENAME = "log.txt";
-
     public String localRepo;
-
-    private final String basedir;
-
     private final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-
     private final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
-
     private PrintStream originalOut;
-
     private PrintStream originalErr;
-
     private List cliOptions = new ArrayList();
-
     private Properties systemProperties = new Properties();
-
-    private Properties verifierProperties = new Properties();
-
     private boolean autoclean = true;
-
     private boolean debug;
-
     private String defaultMavenHome;
 
-    public DefaultInvoker( String basedir )
-    {
-        this.basedir = basedir;
-    }
-
-    public void executeGoal( String goal )
+    public void executeGoal( String goal, String basedir )
         throws VerificationException
     {
-        executeGoal( goal, Collections.EMPTY_MAP );
+        executeGoal( goal, basedir, Collections.EMPTY_MAP );
     }
 
-    public void executeGoal( String goal, Map envVars )
+    public void executeGoal( String goal, String basedir, Map envVars )
         throws VerificationException
     {
-        executeGoals( Arrays.asList( new String[] { goal } ), envVars );
-    }
-
-    public void executeGoals( List goals )
-        throws VerificationException
-    {
-        executeGoals( goals, Collections.EMPTY_MAP );
+        executeGoals( Arrays.asList( new String[] { goal } ), basedir, envVars );
     }
 
     public String getExecutable()
@@ -123,7 +99,7 @@ public class DefaultInvoker
         }
     }
 
-    public void executeGoals( List goals, Map envVars )
+    public void executeGoals( List goals, String basedir, Map envVars )
         throws VerificationException
     {
         if ( goals.size() == 0 )
@@ -142,7 +118,7 @@ public class DefaultInvoker
 
         int ret;
 
-        File logFile = new File( getBasedir(), LOG_FILENAME );
+        File logFile = new File( basedir, LOG_FILENAME );
         try
         {
             Commandline cli = createCommandLine();
@@ -159,13 +135,13 @@ public class DefaultInvoker
                 cli.addEnvironment( "JAVA_HOME", System.getProperty( "java.home" ) );
             }
 
-            cli.setWorkingDirectory( getBasedir() );
+            cli.setWorkingDirectory( basedir );
 
             for ( Iterator it = cliOptions.iterator(); it.hasNext(); )
             {
                 String key = String.valueOf( it.next() );
 
-                String resolvedArg = resolveCommandLineArg( key );
+                String resolvedArg = resolveCommandLineArg( key, basedir );
 
                 cli.createArgument().setLine( resolvedArg );
             }
@@ -180,15 +156,6 @@ public class DefaultInvoker
             {
                 String key = (String) i.next();
                 cli.createArgument().setLine( "-D" + key + "=" + systemProperties.getProperty( key ) );
-            }
-
-            boolean useMavenRepoLocal = Boolean.valueOf( verifierProperties.getProperty( "use.mavenRepoLocal", "true" ) ).booleanValue();
-
-            if ( useMavenRepoLocal )
-            {
-                // Note: Make sure that the repo is surrounded by quotes as it can possibly have
-                // spaces in its path.
-                cli.createArgument().setLine( "-Dmaven.repo.local=" + "\"" + localRepo + "\"" );
             }
 
             for ( Iterator i = allGoals.iterator(); i.hasNext(); )
@@ -261,9 +228,9 @@ public class DefaultInvoker
         }
     }
 
-    private String resolveCommandLineArg( String key )
+    private String resolveCommandLineArg( String key, String basedir )
     {
-        String result = key.replaceAll( "\\$\\{basedir\\}", getBasedir() );
+        String result = key.replaceAll( "\\$\\{basedir\\}", basedir );
         if ( result.indexOf( "\\\\" ) >= 0 )
         {
             result = result.replaceAll( "\\\\", "\\" );
@@ -293,11 +260,6 @@ public class DefaultInvoker
         this.systemProperties = systemProperties;
     }
 
-    public Properties getVerifierProperties()
-    {
-        return verifierProperties;
-    }
-
     public boolean isAutoclean()
     {
         return autoclean;
@@ -306,10 +268,5 @@ public class DefaultInvoker
     public void setAutoclean( boolean autoclean )
     {
         this.autoclean = autoclean;
-    }
-
-    public String getBasedir()
-    {
-        return basedir;
     }
 }

@@ -1,22 +1,18 @@
 package org.apache.maven.it;
 
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License. You may obtain a
+ * copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 import java.io.BufferedReader;
@@ -25,18 +21,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
@@ -48,11 +43,7 @@ import javax.xml.parsers.SAXParserFactory;
 import junit.framework.Assert;
 
 import org.apache.maven.it.util.FileUtils;
-import org.apache.maven.it.util.cli.CommandLineException;
 import org.apache.maven.it.util.cli.CommandLineUtils;
-import org.apache.maven.it.util.cli.Commandline;
-import org.apache.maven.it.util.cli.StreamConsumer;
-import org.apache.maven.it.util.cli.WriterStreamConsumer;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -67,31 +58,38 @@ import org.xml.sax.helpers.DefaultHandler;
 public class Verifier
 {
     private static final String LOG_FILENAME = "log.txt";
-
     public String localRepo;
-
     private final String basedir;
-
     private final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-
     private final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
-
     private PrintStream originalOut;
-
     private PrintStream originalErr;
-
     private List cliOptions = new ArrayList();
-
     private Properties systemProperties = new Properties();
-
     private Properties verifierProperties = new Properties();
-
     private boolean autoclean = true;
-
     // TODO: needs to be configurable
     private static String localRepoLayout = "default";
 
     private boolean debug;
+
+    // Execution
+
+    Invoker invoker = new DefaultInvoker();
+    
+    public void executeGoal( String goal )
+        throws VerificationException
+    {
+        invoker.executeGoal( goal, basedir );
+    }
+
+    public void executeGoal( String goal, Map envars )
+        throws VerificationException
+    {
+        invoker.executeGoal( goal, basedir, envars );
+    }
+
+    //
 
     public Verifier( String basedir, String settingsFile )
         throws VerificationException
@@ -157,49 +155,6 @@ public class Verifier
         }
     }
 
-    public void displayStreamBuffers()
-    {
-        String out = outStream.toString();
-
-        if ( out != null && out.trim().length() > 0 )
-        {
-            System.out.println( "----- Standard Out -----" );
-
-            System.out.println( out );
-        }
-
-        String err = errStream.toString();
-
-        if ( err != null && err.trim().length() > 0 )
-        {
-            System.err.println( "----- Standard Error -----" );
-
-            System.err.println( err );
-        }
-    }
-
-    // ----------------------------------------------------------------------
-    //
-    // ----------------------------------------------------------------------
-
-    public void verify( boolean chokeOnErrorOutput )
-        throws VerificationException
-    {
-        List lines = loadFile( getBasedir(), "expected-results.txt", false );
-
-        for ( Iterator i = lines.iterator(); i.hasNext(); )
-        {
-            String line = (String) i.next();
-
-            verifyExpectedResult( line );
-        }
-
-        if ( chokeOnErrorOutput )
-        {
-            verifyErrorFreeLog();
-        }
-    }
-
     public void verifyErrorFreeLog()
         throws VerificationException
     {
@@ -220,6 +175,7 @@ public class Verifier
 
     /**
      * Throws an exception if the text is not present in the log.
+     * 
      * @param text
      * @throws VerificationException
      */
@@ -233,43 +189,16 @@ public class Verifier
         for ( Iterator i = lines.iterator(); i.hasNext(); )
         {
             String line = (String) i.next();
-            if ( line.indexOf( text ) >= 0)
+            if ( line.indexOf( text ) >= 0 )
             {
                 result = true;
                 break;
             }
         }
-        if (!result)
+        if ( !result )
         {
             throw new VerificationException( "Text not found in log: " + text );
         }
-}
-
-    public Properties loadProperties( String filename )
-        throws VerificationException
-    {
-        Properties properties = new Properties();
-
-        FileInputStream fis;
-        try
-        {
-            File propertiesFile = new File( getBasedir(), filename );
-            if ( propertiesFile.exists() )
-            {
-                fis = new FileInputStream( propertiesFile );
-                properties.load( fis );
-            }
-        }
-        catch ( FileNotFoundException e )
-        {
-            throw new VerificationException( "Error reading properties file", e );
-        }
-        catch ( IOException e )
-        {
-            throw new VerificationException( "Error reading properties file", e );
-        }
-
-        return properties;
     }
 
     public List loadFile( String basedir, String filename, boolean hasCommand )
@@ -467,131 +396,6 @@ public class Verifier
         return files;
     }
 
-    public void executeHook( String filename )
-        throws VerificationException
-    {
-        try
-        {
-            File f = new File( getBasedir(), filename );
-
-            if ( !f.exists() )
-            {
-                return;
-            }
-
-            List lines = loadFile( f, true );
-
-            for ( Iterator i = lines.iterator(); i.hasNext(); )
-            {
-                String line = resolveCommandLineArg( (String) i.next() );
-
-                executeCommand( line );
-            }
-        }
-        catch ( VerificationException e )
-        {
-            throw e;
-        }
-        catch ( Exception e )
-        {
-            throw new VerificationException( e );
-        }
-    }
-
-    private void executeCommand( String line )
-        throws VerificationException
-    {
-        int index = line.indexOf( " " );
-
-        String cmd;
-
-        String args = null;
-
-        if ( index >= 0 )
-        {
-            cmd = line.substring( 0, index );
-
-            args = line.substring( index + 1 );
-        }
-        else
-        {
-            cmd = line;
-        }
-
-        if ( "rm".equals( cmd ) )
-        {
-            System.out.println( "Removing file: " + args );
-
-            File f = new File( args );
-
-            if ( f.exists() && !f.delete() )
-            {
-                throw new VerificationException( "Error removing file - delete failed" );
-            }
-        }
-        else if ( "rmdir".equals( cmd ) )
-        {
-            System.out.println( "Removing directory: " + args );
-
-            try
-            {
-                File f = new File( args );
-
-                FileUtils.deleteDirectory( f );
-            }
-            catch ( IOException e )
-            {
-                throw new VerificationException( "Error removing directory - delete failed" );
-            }
-        }
-        else if ( "svn".equals( cmd ) )
-        {
-            launchSubversion( line, getBasedir() );
-        }
-        else
-        {
-            throw new VerificationException( "unknown command: " + cmd );
-        }
-    }
-
-    public static void launchSubversion( String line, String basedir )
-        throws VerificationException
-    {
-        try
-        {
-            Commandline cli = new Commandline( line );
-
-            cli.setWorkingDirectory( basedir );
-
-            Writer logWriter = new FileWriter( new File( basedir, LOG_FILENAME ) );
-
-            StreamConsumer out = new WriterStreamConsumer( logWriter );
-
-            StreamConsumer err = new WriterStreamConsumer( logWriter );
-
-            System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
-
-            int ret = CommandLineUtils.executeCommandLine( cli, out, err );
-
-            logWriter.close();
-
-            if ( ret > 0 )
-            {
-                System.err.println( "Exit code: " + ret );
-
-                throw new VerificationException();
-            }
-        }
-        catch ( CommandLineException e )
-        {
-            throw new VerificationException( e );
-        }
-        catch ( IOException e )
-        {
-            throw new VerificationException( e );
-        }
-    }
-
     private static String retrieveLocalRepo( String settingsXmlPath )
         throws VerificationException
     {
@@ -651,9 +455,9 @@ public class Verifier
     }
 
     /**
-     * Check that given file's content matches an regular expression. Note this method also checks that the file exists
-     * and is readable.
-     *
+     * Check that given file's content matches an regular expression. Note this method also checks
+     * that the file exists and is readable.
+     * 
      * @param file the file to check.
      * @param regex a regular expression.
      * @see Pattern
@@ -712,19 +516,6 @@ public class Verifier
     public void assertArtifactNotPresent( String org, String name, String version, String ext )
     {
         verifyArtifactPresence( false, org, name, version, ext );
-    }
-
-    private void verifyExpectedResult( String line )
-        throws VerificationException
-    {
-        boolean wanted = true;
-        if ( line.startsWith( "!" ) )
-        {
-            line = line.substring( 1 );
-            wanted = false;
-        }
-
-        verifyExpectedResult( line, wanted );
     }
 
     private void verifyExpectedResult( String line, boolean wanted )
@@ -821,8 +612,7 @@ public class Verifier
 
                     if ( !found && wanted )
                     {
-                        throw new VerificationException(
-                            "Expected file pattern was not found: " + expectedFile.getPath() );
+                        throw new VerificationException( "Expected file pattern was not found: " + expectedFile.getPath() );
                     }
                     else if ( found && !wanted )
                     {
@@ -848,18 +638,6 @@ public class Verifier
                 }
             }
         }
-    }
- 
-    private String resolveCommandLineArg( String key )
-    {
-        String result = key.replaceAll( "\\$\\{basedir\\}", getBasedir() );
-        if ( result.indexOf( "\\\\" ) >= 0 )
-        {
-            result = result.replaceAll( "\\\\", "\\" );
-        }
-        result = result.replaceAll( "\\/\\/", "\\/" );
-
-        return result;
     }
 
     private void findLocalRepo( String settingsFile )
@@ -950,8 +728,7 @@ public class Verifier
 
         private final void printParseError( String type, SAXParseException spe )
         {
-            System.err.println(
-                type + " [line " + spe.getLineNumber() + ", row " + spe.getColumnNumber() + "]: " + spe.getMessage() );
+            System.err.println( type + " [line " + spe.getLineNumber() + ", row " + spe.getColumnNumber() + "]: " + spe.getMessage() );
         }
 
         public String getLocalRepository()
@@ -976,8 +753,7 @@ public class Verifier
                 }
                 else
                 {
-                    throw new SAXException(
-                        "Invalid mavenProfile entry. Missing one or more " + "fields: {localRepository}." );
+                    throw new SAXException( "Invalid mavenProfile entry. Missing one or more " + "fields: {localRepository}." );
                 }
             }
 
@@ -1041,4 +817,3 @@ public class Verifier
         return basedir;
     }
 }
-

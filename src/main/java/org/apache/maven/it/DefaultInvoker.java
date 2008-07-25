@@ -97,8 +97,7 @@ public class DefaultInvoker
         // OS name: "mac os x" version: "10.5.4" arch: "x86_64" family: "mac"
         
         String version = StringUtils.split( writer.toString(), separator )[0];
-        version = version.substring( version.indexOf( ":" ) + 1 );
-        System.out.println( "'" + version + "'" );
+        version = version.substring( version.indexOf( ":" ) + 2 );
         
         if ( version == null )
         {

@@ -62,13 +62,10 @@ public class Verifier
     private static final String LOG_FILENAME = "log.txt";
     public String localRepo;
     private final String basedir;
-
     private final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
     private PrintStream originalOut;
     private PrintStream originalErr;
-
-    private List cliOptions = new ArrayList();
     private Properties systemProperties = new Properties();
     private Properties verifierProperties = new Properties();
     private boolean autoclean = true;
@@ -85,6 +82,12 @@ public class Verifier
         throws VerificationException
     {
         invoker.executeGoal( goal, basedir );
+    }
+
+    public void executeGoal( String goal, List cliOptions )
+        throws VerificationException
+    {
+        invoker.executeGoal( goal, basedir, cliOptions );
     }
 
     public void executeGoal( String goal, Map envars )
@@ -785,16 +788,6 @@ public class Verifier
             currentBody = null;
             localRepository = null;
         }
-    }
-
-    public List getCliOptions()
-    {
-        return cliOptions;
-    }
-
-    public void setCliOptions( List cliOptions )
-    {
-        this.cliOptions = cliOptions;
     }
 
     public Properties getSystemProperties()

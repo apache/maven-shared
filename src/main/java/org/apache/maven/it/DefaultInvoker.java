@@ -24,11 +24,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 import org.apache.maven.it.util.FileUtils;
 import org.apache.maven.it.util.StringUtils;
@@ -49,33 +46,105 @@ public class DefaultInvoker
     private final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
     private PrintStream originalOut;
-    private PrintStream originalErr;
-    private List cliOptions = new ArrayList();
-    private Properties systemProperties = new Properties();
     private boolean autoclean = true;
     private boolean debug;
     private String defaultMavenHome;
 
-    public void executeGoal( String goal, String basedir )
+    public void invoke( InvocationRequest request )
         throws VerificationException
     {
-        executeGoals( Arrays.asList( StringUtils.split( goal, "," ) ), basedir, Collections.EMPTY_MAP );
+        List goals = Arrays.asList( StringUtils.split( request.getGoals(), ","  ) );        
+        
+        if ( goals.size() == 0 )
+        {
+            throw new VerificationException( "No goals specified" );
+        }
+
+        List allGoals = new ArrayList();
+
+        if ( autoclean )
+        {
+            allGoals.add( "clean:clean" );
+        }
+
+        allGoals.addAll( goals );
+
+        int ret;
+
+        File logFile = new File( request.getBasedir(), LOG_FILENAME );
+        try
+        {
+            Commandline cli = createCommandLine();
+
+            for ( Iterator i = request.getEnvars().keySet().iterator(); i.hasNext(); )
+            {
+                String key = (String) i.next();
+
+                cli.addEnvironment( key, (String) request.getEnvars().get( key ) );
+            }
+
+            if ( request.getEnvars().get( "JAVA_HOME" ) == null )
+            {
+                cli.addEnvironment( "JAVA_HOME", System.getProperty( "java.home" ) );
+            }
+
+            cli.setWorkingDirectory( request.getBasedir() );
+
+            for ( Iterator it = request.getCliOptions().iterator(); it.hasNext(); )
+            {
+                String key = String.valueOf( it.next() );
+
+                String resolvedArg = resolveCommandLineArg( key, request.getBasedir() );
+
+                cli.createArgument().setLine( resolvedArg );
+            }
+
+            cli.createArgument().setValue( "-e" );
+
+            cli.createArgument().setValue( "--no-plugin-registry" );
+
+            cli.createArgument().setValue( "--batch-mode" );
+
+            for ( Iterator i = request.getSystemProperties().keySet().iterator(); i.hasNext(); )
+            {
+                String key = (String) i.next();
+                cli.createArgument().setLine( "-D" + key + "=" + request.getSystemProperties().getProperty( key ) );
+            }
+
+            for ( Iterator i = allGoals.iterator(); i.hasNext(); )
+            {
+                cli.createArgument().setValue( (String) i.next() );
+            }
+
+            // System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
+
+            ret = runCommandLine( System.getProperty( "maven.home" ), cli, logFile );
+        }
+        catch ( CommandLineException e )
+        {
+            throw new VerificationException( e );
+        }
+        catch ( IOException e )
+        {
+            throw new VerificationException( e );
+        }
+
+        if ( ret > 0 )
+        {
+            System.err.println( "Exit code: " + ret );
+
+            throw new VerificationException( "Exit code was non-zero: " + ret + "; log = \n" + getLogContents( logFile ) );
+        }
     }
 
-    public void executeGoal( String goal, String basedir, Map envVars )
-        throws VerificationException
-    {
-        executeGoals( Arrays.asList( StringUtils.split( goal, "," ) ), basedir, envVars );
-    }
-
-    public String getMavenVersion() 
+    public String getMavenVersion()
         throws VerificationException
     {
         Commandline cmd = createCommandLine();
         cmd.addArguments( new String[] { "--version" } );
 
         Writer writer = new StringWriter();
-        
+
         try
         {
             runCommandLine( System.getProperty( "maven.home" ), cmd, writer );
@@ -89,16 +158,16 @@ public class DefaultInvoker
             throw new VerificationException( "IO Error communicating with commandline " + cmd.toString(), e );
         }
 
-        String separator = System.getProperty( "line.separator" );        
-        
+        String separator = System.getProperty( "line.separator" );
+
         // Maven version: 2.1-SNAPSHOT
         // Java version: 1.6.0_05
         // Default locale: en_US, platform encoding: MacRoman
         // OS name: "mac os x" version: "10.5.4" arch: "x86_64" family: "mac"
-        
+
         String version = StringUtils.split( writer.toString(), separator )[0];
         version = version.substring( version.indexOf( ":" ) + 2 );
-        
+
         if ( version == null )
         {
             throw new VerificationException( "Illegal maven output: String 'Maven version: ' not found in the following output: " + writer.toString() );
@@ -136,91 +205,6 @@ public class DefaultInvoker
             {
                 return "mvn";
             }
-        }
-    }
-
-    public void executeGoals( List goals, String basedir, Map envVars )
-        throws VerificationException
-    {
-        if ( goals.size() == 0 )
-        {
-            throw new VerificationException( "No goals specified" );
-        }
-
-        List allGoals = new ArrayList();
-
-        if ( autoclean )
-        {
-            allGoals.add( "clean:clean" );
-        }
-
-        allGoals.addAll( goals );
-
-        int ret;
-
-        File logFile = new File( basedir, LOG_FILENAME );
-        try
-        {
-            Commandline cli = createCommandLine();
-
-            for ( Iterator i = envVars.keySet().iterator(); i.hasNext(); )
-            {
-                String key = (String) i.next();
-
-                cli.addEnvironment( key, (String) envVars.get( key ) );
-            }
-
-            if ( envVars.get( "JAVA_HOME" ) == null )
-            {
-                cli.addEnvironment( "JAVA_HOME", System.getProperty( "java.home" ) );
-            }
-
-            cli.setWorkingDirectory( basedir );
-
-            for ( Iterator it = cliOptions.iterator(); it.hasNext(); )
-            {
-                String key = String.valueOf( it.next() );
-
-                String resolvedArg = resolveCommandLineArg( key, basedir );
-
-                cli.createArgument().setLine( resolvedArg );
-            }
-
-            cli.createArgument().setValue( "-e" );
-
-            cli.createArgument().setValue( "--no-plugin-registry" );
-
-            cli.createArgument().setValue( "--batch-mode" );
-
-            for ( Iterator i = systemProperties.keySet().iterator(); i.hasNext(); )
-            {
-                String key = (String) i.next();
-                cli.createArgument().setLine( "-D" + key + "=" + systemProperties.getProperty( key ) );
-            }
-
-            for ( Iterator i = allGoals.iterator(); i.hasNext(); )
-            {
-                cli.createArgument().setValue( (String) i.next() );
-            }
-
-            // System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
-
-            ret = runCommandLine( System.getProperty( "maven.home" ), cli, logFile );
-        }
-        catch ( CommandLineException e )
-        {
-            throw new VerificationException( e );
-        }
-        catch ( IOException e )
-        {
-            throw new VerificationException( e );
-        }
-
-        if ( ret > 0 )
-        {
-            System.err.println( "Exit code: " + ret );
-
-            throw new VerificationException( "Exit code was non-zero: " + ret + "; log = \n" + getLogContents( logFile ) );
         }
     }
 
@@ -284,26 +268,6 @@ public class DefaultInvoker
         result = result.replaceAll( "\\/\\/", "\\/" );
 
         return result;
-    }
-
-    public List getCliOptions()
-    {
-        return cliOptions;
-    }
-
-    public void setCliOptions( List cliOptions )
-    {
-        this.cliOptions = cliOptions;
-    }
-
-    public Properties getSystemProperties()
-    {
-        return systemProperties;
-    }
-
-    public void setSystemProperties( Properties systemProperties )
-    {
-        this.systemProperties = systemProperties;
     }
 
     public boolean isAutoclean()

@@ -27,7 +27,7 @@ import java.io.IOException;
 
 /**
  * @author Dennis Lundberg
- * @version $Id: PCCPmdTest.java 661727 2008-05-30 14:21:49Z bentmann $
+ * @version $Id$
  */
 public class PCCJalopyTest
     extends AbstractPCCTest

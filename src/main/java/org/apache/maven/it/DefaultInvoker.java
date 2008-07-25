@@ -38,9 +38,6 @@ import org.apache.maven.it.util.cli.WriterStreamConsumer;
 
 /**
  * @author Jason van Zyl
- * @author <a href="mailto:brett@apache.org">Brett Porter</a>
- * @version $Id$
- * @noinspection UseOfSystemOutOrSystemErr,RefusedBequest
  */
 public class DefaultInvoker
 {

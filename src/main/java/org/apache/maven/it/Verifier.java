@@ -93,10 +93,6 @@ public class Verifier
 
     private boolean debug;
 
-    private boolean forkJvm = true;
-
-    private String defaultMavenHome;
-
     public Verifier( String basedir, String settingsFile )
         throws VerificationException
     {
@@ -106,17 +102,9 @@ public class Verifier
     public Verifier( String basedir, String settingsFile, boolean debug )
         throws VerificationException
     {
-        this( basedir, settingsFile, debug, true );
-    }
-
-    public Verifier( String basedir, String settingsFile, boolean debug, boolean forkJvm )
-        throws VerificationException
-    {
         this.basedir = basedir;
 
         this.debug = debug;
-
-        this.forkJvm = forkJvm;
 
         if ( !debug )
         {
@@ -139,7 +127,7 @@ public class Verifier
         try
         {
             Properties envVars = CommandLineUtils.getSystemEnvVars();
-            defaultMavenHome = envVars.getProperty( "M2_HOME" );
+            envVars.getProperty( "M2_HOME" );
         }
         catch ( IOException e )
         {
@@ -157,11 +145,6 @@ public class Verifier
         throws VerificationException
     {
         this( basedir, null, debug );
-    }
-
-    public void setLocalRepo( String localRepo )
-    {
-        this.localRepo = localRepo;
     }
 
     public void resetStreams()

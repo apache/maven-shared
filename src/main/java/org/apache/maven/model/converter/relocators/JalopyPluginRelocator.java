@@ -23,7 +23,7 @@ package org.apache.maven.model.converter.relocators;
  * A <code>PluginRelocator</code> for the Jalopy plugin.
  *
  * @author Dennis Lundberg
- * @version $Id: JdependPluginRelocator.java 661727 2008-05-30 14:21:49Z bentmann $
+ * @version $Id$
  * @plexus.component role="org.apache.maven.model.converter.relocators.PluginRelocator"
  * role-hint="jalopy"
  */

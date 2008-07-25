@@ -31,7 +31,7 @@ import java.util.StringTokenizer;
  * @plexus.component role="org.apache.maven.model.converter.plugins.PluginConfigurationConverter" role-hint="jalopy"
  *
  * @author Dennis Lundberg
- * @version $Id: PCCPmd.java 661727 2008-05-30 14:21:49Z bentmann $
+ * @version $Id$
  */
 public class PCCJalopy
     extends AbstractPluginConfigurationConverter

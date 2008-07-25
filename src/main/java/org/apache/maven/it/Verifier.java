@@ -66,10 +66,7 @@ public class Verifier
     private final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
     private PrintStream originalOut;
     private PrintStream originalErr;
-    private Properties systemProperties = new Properties();
-    private Properties verifierProperties = new Properties();
     private boolean autoclean = true;
-    // TODO: needs to be configurable
     private static String localRepoLayout = "default";
 
     private boolean debug;
@@ -81,21 +78,30 @@ public class Verifier
     public void executeGoal( String goal )
         throws VerificationException
     {
-        invoker.executeGoal( goal, basedir );
+        InvocationRequest r = new DefaultInvocationRequest().setGoals( goal ).setBasedir( basedir );
+        invoker.invoke( r );
     }
 
     public void executeGoal( String goal, List cliOptions )
         throws VerificationException
     {
-        invoker.executeGoal( goal, basedir, cliOptions );
+        InvocationRequest r = new DefaultInvocationRequest().setGoals( goal ).setBasedir( basedir ).setCliOptions( cliOptions );
+        invoker.invoke( r );
     }
 
     public void executeGoal( String goal, Map envars )
         throws VerificationException
     {
-        invoker.executeGoal( goal, basedir, envars );
+        InvocationRequest r = new DefaultInvocationRequest().setGoals( goal ).setBasedir( basedir ).setEnvars( envars );
+        invoker.invoke( r );
     }
 
+    public void invoke( InvocationRequest request )
+        throws VerificationException
+    {
+        invoker.invoke( request );
+    }
+    
     public String getMavenVersion()
         throws VerificationException
     {
@@ -788,26 +794,6 @@ public class Verifier
             currentBody = null;
             localRepository = null;
         }
-    }
-
-    public Properties getSystemProperties()
-    {
-        return systemProperties;
-    }
-
-    public void setSystemProperties( Properties systemProperties )
-    {
-        this.systemProperties = systemProperties;
-    }
-
-    public Properties getVerifierProperties()
-    {
-        return verifierProperties;
-    }
-
-    public void setVerifierProperties( Properties verifierProperties )
-    {
-        this.verifierProperties = verifierProperties;
     }
 
     public boolean isAutoclean()

@@ -51,19 +51,23 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * @author Jason van Zyl
- * @author <a href="mailto:brett@apache.org">Brett Porter</a>
- * @version $Id$
- * @noinspection UseOfSystemOutOrSystemErr,RefusedBequest
+ * @todo pass in what's necessary to invoker
+ * @todo separate out verifier
+ * @todo separate out tools
+ * @todo create embedder invoker
+ * @todo find better way to pass in maven version
  */
 public class Verifier
 {
     private static final String LOG_FILENAME = "log.txt";
     public String localRepo;
     private final String basedir;
+
     private final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
     private PrintStream originalOut;
     private PrintStream originalErr;
+
     private List cliOptions = new ArrayList();
     private Properties systemProperties = new Properties();
     private Properties verifierProperties = new Properties();
@@ -76,7 +80,7 @@ public class Verifier
     // Execution
 
     Invoker invoker = new DefaultInvoker();
-    
+
     public void executeGoal( String goal )
         throws VerificationException
     {
@@ -87,6 +91,17 @@ public class Verifier
         throws VerificationException
     {
         invoker.executeGoal( goal, basedir, envars );
+    }
+
+    public String getMavenVersion()
+        throws VerificationException
+    {
+        return invoker.getMavenVersion();
+    }
+
+    public String getExecutable()
+    {
+        return invoker.getExecutable();
     }
 
     //

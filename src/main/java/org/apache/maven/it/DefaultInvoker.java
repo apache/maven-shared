@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.maven.it.util.FileUtils;
+import org.apache.maven.it.util.StringUtils;
 import org.apache.maven.it.util.cli.CommandLineException;
 import org.apache.maven.it.util.cli.CommandLineUtils;
 import org.apache.maven.it.util.cli.Commandline;
@@ -57,20 +59,59 @@ public class DefaultInvoker
     public void executeGoal( String goal, String basedir )
         throws VerificationException
     {
-        executeGoal( goal, basedir, Collections.EMPTY_MAP );
+        executeGoals( Arrays.asList( StringUtils.split( goal, "," ) ), basedir, Collections.EMPTY_MAP );
     }
 
     public void executeGoal( String goal, String basedir, Map envVars )
         throws VerificationException
     {
-        executeGoals( Arrays.asList( new String[] { goal } ), basedir, envVars );
+        executeGoals( Arrays.asList( StringUtils.split( goal, "," ) ), basedir, envVars );
+    }
+
+    public String getMavenVersion() 
+        throws VerificationException
+    {
+        Commandline cmd = createCommandLine();
+        cmd.addArguments( new String[] { "--version" } );
+
+        Writer writer = new StringWriter();
+        
+        try
+        {
+            runCommandLine( System.getProperty( "maven.home" ), cmd, writer );
+        }
+        catch ( CommandLineException e )
+        {
+            throw new VerificationException( "Error running commandline " + cmd.toString(), e );
+        }
+        catch ( IOException e )
+        {
+            throw new VerificationException( "IO Error communicating with commandline " + cmd.toString(), e );
+        }
+
+        String separator = System.getProperty( "line.separator" );        
+        
+        // Maven version: 2.1-SNAPSHOT
+        // Java version: 1.6.0_05
+        // Default locale: en_US, platform encoding: MacRoman
+        // OS name: "mac os x" version: "10.5.4" arch: "x86_64" family: "mac"
+        
+        String version = StringUtils.split( writer.toString(), separator )[0];
+        version = version.substring( version.indexOf( ":" ) + 1 );
+        System.out.println( "'" + version + "'" );
+        
+        if ( version == null )
+        {
+            throw new VerificationException( "Illegal maven output: String 'Maven version: ' not found in the following output: " + writer.toString() );
+        }
+        else
+        {
+            return version;
+        }
     }
 
     public String getExecutable()
     {
-        // Use a strategy for finding the maven executable, John has a simple method like this
-        // but a little strategy + chain of command would be nicer.
-
         String mavenHome = System.getProperty( "maven.home" );
 
         if ( mavenHome != null )
@@ -196,11 +237,9 @@ public class DefaultInvoker
         return cmd;
     }
 
-    private int runCommandLine( String mavenHome, Commandline cli, File logFile )
+    private int runCommandLine( String mavenHome, Commandline cli, Writer logWriter )
         throws CommandLineException, IOException
     {
-        Writer logWriter = new FileWriter( logFile );
-
         StreamConsumer out = new WriterStreamConsumer( logWriter );
 
         StreamConsumer err = new WriterStreamConsumer( logWriter );
@@ -213,6 +252,14 @@ public class DefaultInvoker
         {
             logWriter.close();
         }
+    }
+
+    private int runCommandLine( String mavenHome, Commandline cli, File logFile )
+        throws CommandLineException, IOException
+    {
+        Writer logWriter = new FileWriter( logFile );
+
+        return runCommandLine( mavenHome, cli, logWriter );
     }
 
     private static String getLogContents( File logFile )

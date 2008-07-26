@@ -40,8 +40,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import junit.framework.Assert;
 
-import org.apache.maven.it.util.FileUtils;
 import org.apache.maven.it.util.cli.CommandLineUtils;
+import org.codehaus.plexus.util.FileUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -62,25 +62,11 @@ public class IntegrationTestRunner
     private final String basedir;
     private static String localRepoLayout = "default";
 
-    // Constructors
-
     public IntegrationTestRunner( String basedir )
         throws IntegrationTestException
     {
-        this( basedir, null, false );
-    }
-
-    public IntegrationTestRunner( String basedir, boolean debug )
-        throws IntegrationTestException
-    {
-        this( basedir, null, debug );
-    }
-
-    public IntegrationTestRunner( String basedir, String settingsFile, boolean debug )
-        throws IntegrationTestException
-    {
         this.basedir = basedir;
-        findLocalRepo( settingsFile );
+        findLocalRepo( null );
         findDefaultMavenHome();
     }
 

@@ -16,7 +16,6 @@ package org.apache.maven.it;
  */
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,7 +23,6 @@ import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -62,14 +60,38 @@ public class Verifier
     private static final String LOG_FILENAME = "log.txt";
     public String localRepo;
     private final String basedir;
-    private final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
-    private PrintStream originalOut;
-    private PrintStream originalErr;
-    private boolean autoclean = true;
     private static String localRepoLayout = "default";
-
     private boolean debug;
+
+    // Constructors
+
+    public Verifier( String basedir )
+        throws VerificationException
+    {
+        this( basedir, null );
+    }
+
+    public Verifier( String basedir, boolean debug )
+        throws VerificationException
+    {
+        this( basedir, null, debug );
+    }
+
+    public Verifier( String basedir, String settingsFile )
+        throws VerificationException
+    {
+        this( basedir, settingsFile, false );
+    }
+
+    public Verifier( String basedir, String settingsFile, boolean debug )
+        throws VerificationException
+    {
+        this.basedir = basedir;
+        this.debug = debug;
+
+        findLocalRepo( settingsFile );
+        findDefaultMavenHome();
+    }
 
     // Execution
 
@@ -101,7 +123,7 @@ public class Verifier
     {
         invoker.invoke( request );
     }
-    
+
     public String getMavenVersion()
         throws VerificationException
     {
@@ -114,34 +136,6 @@ public class Verifier
     }
 
     //
-
-    public Verifier( String basedir, String settingsFile )
-        throws VerificationException
-    {
-        this( basedir, settingsFile, false );
-    }
-
-    public Verifier( String basedir, String settingsFile, boolean debug )
-        throws VerificationException
-    {
-        this.basedir = basedir;
-
-        this.debug = debug;
-
-        if ( !debug )
-        {
-            originalOut = System.out;
-
-            System.setOut( new PrintStream( outStream ) );
-
-            originalErr = System.err;
-
-            System.setErr( new PrintStream( errStream ) );
-        }
-
-        findLocalRepo( settingsFile );
-        findDefaultMavenHome();
-    }
 
     private void findDefaultMavenHome()
         throws VerificationException
@@ -157,26 +151,8 @@ public class Verifier
         }
     }
 
-    public Verifier( String basedir )
-        throws VerificationException
-    {
-        this( basedir, null );
-    }
-
-    public Verifier( String basedir, boolean debug )
-        throws VerificationException
-    {
-        this( basedir, null, debug );
-    }
-
     public void resetStreams()
     {
-        if ( !debug )
-        {
-            System.setOut( originalOut );
-
-            System.setErr( originalErr );
-        }
     }
 
     public void verifyErrorFreeLog()
@@ -433,7 +409,6 @@ public class Verifier
 
         if ( settingsXmlPath != null )
         {
-            System.out.println( "Using settings from " + settingsXmlPath );
             userXml = new File( settingsXmlPath );
         }
         else
@@ -794,16 +769,6 @@ public class Verifier
             currentBody = null;
             localRepository = null;
         }
-    }
-
-    public boolean isAutoclean()
-    {
-        return autoclean;
-    }
-
-    public void setAutoclean( boolean autoclean )
-    {
-        this.autoclean = autoclean;
     }
 
     public String getBasedir()

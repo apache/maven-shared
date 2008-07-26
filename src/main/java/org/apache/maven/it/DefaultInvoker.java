@@ -15,7 +15,6 @@ package org.apache.maven.it;
  * the License.
  */
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,9 +42,6 @@ public class DefaultInvoker
 {
     private static final String LOG_FILENAME = "log.txt";
     public String localRepo;
-    private final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
-    private PrintStream originalOut;
     private boolean autoclean = true;
     private boolean debug;
     private String defaultMavenHome;
@@ -53,6 +49,8 @@ public class DefaultInvoker
     public void invoke( InvocationRequest request )
         throws VerificationException
     {
+        System.out.println( "------> " + request.getGoals() ) ;
+        
         List goals = Arrays.asList( StringUtils.split( request.getGoals(), ","  ) );        
         
         if ( goals.size() == 0 )
@@ -94,9 +92,7 @@ public class DefaultInvoker
             {
                 String key = String.valueOf( it.next() );
 
-                String resolvedArg = resolveCommandLineArg( key, request.getBasedir() );
-
-                cli.createArgument().setLine( resolvedArg );
+                cli.createArgument().setLine( key );
             }
 
             cli.createArgument().setValue( "-e" );
@@ -113,10 +109,14 @@ public class DefaultInvoker
 
             for ( Iterator i = allGoals.iterator(); i.hasNext(); )
             {
-                cli.createArgument().setValue( (String) i.next() );
+                String argument = (String) i.next();
+                System.out.println(argument);
+                cli.createArgument().setValue( argument.trim() );
             }
 
-            // System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
+            FileUtils.fileWrite( "/tmp/data.txt", Commandline.toString( cli.getCommandline() ) );
+            
+            System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
 
             ret = runCommandLine( System.getProperty( "maven.home" ), cli, logFile );
         }
@@ -256,18 +256,6 @@ public class DefaultInvoker
             // ignore
             return "(Error reading log contents: " + e.getMessage() + ")";
         }
-    }
-
-    private String resolveCommandLineArg( String key, String basedir )
-    {
-        String result = key.replaceAll( "\\$\\{basedir\\}", basedir );
-        if ( result.indexOf( "\\\\" ) >= 0 )
-        {
-            result = result.replaceAll( "\\\\", "\\" );
-        }
-        result = result.replaceAll( "\\/\\/", "\\/" );
-
-        return result;
     }
 
     public boolean isAutoclean()

@@ -1,3 +1,5 @@
+package org.apache.maven.shared.filtering;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.shared.filtering;
 
 import java.io.File;
 import java.io.Reader;
@@ -24,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.Interpolator;
 import org.codehaus.plexus.interpolation.InterpolatorFilterReader;

@@ -1,7 +1,5 @@
 package org.apache.maven.shared.filtering;
 
-import org.codehaus.plexus.util.StringUtils;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,6 +19,8 @@ import org.codehaus.plexus.util.StringUtils;
  * under the License.
  */
 
+import org.codehaus.plexus.util.StringUtils;
+
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @since 21 juil. 2008
@@ -39,14 +39,10 @@ public class FilteringUtils
     
     public static final String escapeWindowsPath( String val )
     {
-        if ( !StringUtils.isEmpty( val ) )
+        if ( !StringUtils.isEmpty( val ) && val.indexOf( ":\\" ) == 1 )
         {
-            // Check if it's a windows path
-            if ( val.indexOf( ":\\" ) == 1 )
-            {
-                val = StringUtils.replace( (String) val, "\\", "\\\\" );
-                val = StringUtils.replace( (String) val, ":", "\\:" );
-            }
+            val = StringUtils.replace( (String) val, "\\", "\\\\" );
+            val = StringUtils.replace( (String) val, ":", "\\:" );
         }
         return val;
     }

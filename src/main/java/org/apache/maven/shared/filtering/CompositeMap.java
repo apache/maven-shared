@@ -54,7 +54,7 @@ public class CompositeMap
     /**
      * @param maps an orderer {@link List} of {@link Map}
      * @param useSystemProperties using or not the System Properties
-     * @param systemPropertiesFirst if with get( key ) the systemProperties must wins (the internal ordered {@link List} 
+     * @param systemPropertiesFirst if with get( key ) the sysProps must wins (the internal ordered {@link List} 
      *        will have in first the System Properties)
      */
     public CompositeMap( List /*Map*/maps, boolean useSystemProperties, boolean systemPropertiesFirst )

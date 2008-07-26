@@ -33,13 +33,13 @@ public class PropertiesEscapingBackSlahValueSource
 {
 
     private boolean escapedBackslashesInFilePath;
-    
+
     private Properties properties;
-    
+
     /**
      * 
      */
-    public PropertiesEscapingBackSlahValueSource(boolean escapedBackslashesInFilePath, Properties properties)
+    public PropertiesEscapingBackSlahValueSource( boolean escapedBackslashesInFilePath, Properties properties )
     {
         this.escapedBackslashesInFilePath = escapedBackslashesInFilePath;
         this.properties = properties == null ? new Properties() : properties;

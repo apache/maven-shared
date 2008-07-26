@@ -53,7 +53,8 @@ public class DefaultMavenFileFilter
                           boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )
         throws MavenFilteringException
     {
-        List filterWrappers = getDefaultFilterWrappers( mavenProject, filters, escapedBackslashesInFilePath, mavenSession );
+        List filterWrappers = getDefaultFilterWrappers( mavenProject, filters, escapedBackslashesInFilePath,
+                                                        mavenSession );
         copyFile( from, to, filtering, filterWrappers, encoding );
     }
 
@@ -126,9 +127,8 @@ public class DefaultMavenFileFilter
         
         List defaultFilterWrappers = new ArrayList( 3 );
 
-        final ValueSource propertiesValueSource = new PropertiesEscapingBackSlahValueSource(
-                                                                                             escapedBackslashesInFilePath,
-                                                                                             filterProperties );
+        final ValueSource propertiesValueSource = 
+            new PropertiesEscapingBackSlahValueSource( escapedBackslashesInFilePath, filterProperties );
         
         // support ${token}
 
@@ -148,7 +148,7 @@ public class DefaultMavenFileFilter
         {
             public Reader getReader( Reader reader )
             {
-                final Interpolator propertiesInterpolatorAtRegex = new RegexBasedInterpolator("\\@", "(.+?)\\@");
+                final Interpolator propertiesInterpolatorAtRegex = new RegexBasedInterpolator( "\\@", "(.+?)\\@" );
                 propertiesInterpolatorAtRegex.addValueSource( propertiesValueSource );                
                 return new InterpolatorFilterReader( reader, propertiesInterpolatorAtRegex, "@", "@" );
             }
@@ -174,7 +174,7 @@ public class DefaultMavenFileFilter
         {
             public Reader getReader( Reader reader )
             {
-                Interpolator mavenProjectInterpolator = new RegexBasedInterpolator("\\@", "(.+?)\\@");
+                Interpolator mavenProjectInterpolator = new RegexBasedInterpolator( "\\@", "(.+?)\\@" );
                  
                 ValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
                 mavenProjectInterpolator.addValueSource( valueSource );

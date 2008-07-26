@@ -153,11 +153,15 @@ public class DefaultMavenResourcesFiltering
 
         if ( mavenResourcesExecution.getEncoding() == null || mavenResourcesExecution.getEncoding().length() < 1 )
         {
-            getLogger().info( "Using platform encoding (" + ReaderFactory.FILE_ENCODING + " actually) to copy filtered resources." );
+            getLogger().info(
+                              "Using platform encoding (" + ReaderFactory.FILE_ENCODING
+                                  + " actually) to copy filtered resources." );
         }
         else
         {
-            getLogger().info( "Using '" + mavenResourcesExecution.getEncoding() + "' encoding to copy filtered resources." );
+            getLogger().info(
+                              "Using '" + mavenResourcesExecution.getEncoding()
+                                  + "' encoding to copy filtered resources." );
         }
         
         for ( Iterator i = mavenResourcesExecution.getResources().iterator(); i.hasNext(); )
@@ -183,12 +187,10 @@ public class DefaultMavenResourcesFiltering
             // this part is required in case the user specified "../something" as destination
             // see MNG-1345
             File outputDirectory = mavenResourcesExecution.getOutputDirectory();
-            if ( !outputDirectory.exists() )
+            if ( !outputDirectory.exists() && !outputDirectory.mkdirs() )
             {
-                if ( !outputDirectory.mkdirs() )
-                {
-                    throw new MavenFilteringException( "Cannot create resource output directory: " + outputDirectory );
-                }
+                throw new MavenFilteringException( "Cannot create resource output directory: " + outputDirectory );
+
             }
 
             DirectoryScanner scanner = new DirectoryScanner();

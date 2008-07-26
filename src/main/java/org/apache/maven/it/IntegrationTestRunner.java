@@ -40,8 +40,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import junit.framework.Assert;
 
-import org.apache.maven.it.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;

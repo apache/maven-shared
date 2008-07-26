@@ -25,13 +25,13 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.maven.it.util.cli.CommandLineException;
-import org.apache.maven.it.util.cli.CommandLineUtils;
-import org.apache.maven.it.util.cli.Commandline;
-import org.apache.maven.it.util.cli.StreamConsumer;
-import org.apache.maven.it.util.cli.WriterStreamConsumer;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.cli.CommandLineException;
+import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.codehaus.plexus.util.cli.Commandline;
+import org.codehaus.plexus.util.cli.StreamConsumer;
+import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 
 /**
  * @author Jason van Zyl

@@ -60,4 +60,9 @@ under the License.
       </plugin>
     </plugins>
   </build>
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-model</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-model</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-shared-model</url>
+  </scm>
 </project>

@@ -55,40 +55,31 @@ import org.xml.sax.helpers.DefaultHandler;
  * @todo create embedder invoker
  * @todo find better way to pass in maven version
  */
-public class Verifier
+public class IntegrationTestRunner
 {
     private static final String LOG_FILENAME = "log.txt";
     public String localRepo;
     private final String basedir;
     private static String localRepoLayout = "default";
-    private boolean debug;
 
     // Constructors
 
-    public Verifier( String basedir )
-        throws VerificationException
+    public IntegrationTestRunner( String basedir )
+        throws IntegrationTestException
     {
-        this( basedir, null );
+        this( basedir, null, false );
     }
 
-    public Verifier( String basedir, boolean debug )
-        throws VerificationException
+    public IntegrationTestRunner( String basedir, boolean debug )
+        throws IntegrationTestException
     {
         this( basedir, null, debug );
     }
 
-    public Verifier( String basedir, String settingsFile )
-        throws VerificationException
-    {
-        this( basedir, settingsFile, false );
-    }
-
-    public Verifier( String basedir, String settingsFile, boolean debug )
-        throws VerificationException
+    public IntegrationTestRunner( String basedir, String settingsFile, boolean debug )
+        throws IntegrationTestException
     {
         this.basedir = basedir;
-        this.debug = debug;
-
         findLocalRepo( settingsFile );
         findDefaultMavenHome();
     }
@@ -98,34 +89,34 @@ public class Verifier
     Invoker invoker = new DefaultInvoker();
 
     public void executeGoal( String goal )
-        throws VerificationException
+        throws IntegrationTestException
     {
         InvocationRequest r = new DefaultInvocationRequest().setGoals( goal ).setBasedir( basedir );
         invoker.invoke( r );
     }
 
     public void executeGoal( String goal, List cliOptions )
-        throws VerificationException
+        throws IntegrationTestException
     {
         InvocationRequest r = new DefaultInvocationRequest().setGoals( goal ).setBasedir( basedir ).setCliOptions( cliOptions );
         invoker.invoke( r );
     }
 
     public void executeGoal( String goal, Map envars )
-        throws VerificationException
+        throws IntegrationTestException
     {
         InvocationRequest r = new DefaultInvocationRequest().setGoals( goal ).setBasedir( basedir ).setEnvars( envars );
         invoker.invoke( r );
     }
 
     public void invoke( InvocationRequest request )
-        throws VerificationException
+        throws IntegrationTestException
     {
         invoker.invoke( request );
     }
 
     public String getMavenVersion()
-        throws VerificationException
+        throws IntegrationTestException
     {
         return invoker.getMavenVersion();
     }
@@ -138,7 +129,7 @@ public class Verifier
     //
 
     private void findDefaultMavenHome()
-        throws VerificationException
+        throws IntegrationTestException
     {
         try
         {
@@ -147,7 +138,7 @@ public class Verifier
         }
         catch ( IOException e )
         {
-            throw new VerificationException( "Cannot read system environment variables.", e );
+            throw new IntegrationTestException( "Cannot read system environment variables.", e );
         }
     }
 
@@ -156,7 +147,7 @@ public class Verifier
     }
 
     public void verifyErrorFreeLog()
-        throws VerificationException
+        throws IntegrationTestException
     {
         List lines;
         lines = loadFile( getBasedir(), LOG_FILENAME, false );
@@ -168,7 +159,7 @@ public class Verifier
             // A hack to keep stupid velocity resource loader errors from triggering failure
             if ( line.indexOf( "[ERROR]" ) >= 0 && line.indexOf( "VM_global_library.vm" ) == -1 )
             {
-                throw new VerificationException( "Error in execution: " + line );
+                throw new IntegrationTestException( "Error in execution: " + line );
             }
         }
     }
@@ -177,10 +168,10 @@ public class Verifier
      * Throws an exception if the text is not present in the log.
      * 
      * @param text
-     * @throws VerificationException
+     * @throws IntegrationTestException
      */
     public void verifyTextInLog( String text )
-        throws VerificationException
+        throws IntegrationTestException
     {
         List lines;
         lines = loadFile( getBasedir(), LOG_FILENAME, false );
@@ -197,18 +188,18 @@ public class Verifier
         }
         if ( !result )
         {
-            throw new VerificationException( "Text not found in log: " + text );
+            throw new IntegrationTestException( "Text not found in log: " + text );
         }
     }
 
     public List loadFile( String basedir, String filename, boolean hasCommand )
-        throws VerificationException
+        throws IntegrationTestException
     {
         return loadFile( new File( basedir, filename ), hasCommand );
     }
 
     public List loadFile( File file, boolean hasCommand )
-        throws VerificationException
+        throws IntegrationTestException
     {
         List lines = new ArrayList();
 
@@ -235,11 +226,11 @@ public class Verifier
             }
             catch ( FileNotFoundException e )
             {
-                throw new VerificationException( e );
+                throw new IntegrationTestException( e );
             }
             catch ( IOException e )
             {
-                throw new VerificationException( e );
+                throw new IntegrationTestException( e );
             }
         }
 
@@ -397,7 +388,7 @@ public class Verifier
     }
 
     private static String retrieveLocalRepo( String settingsXmlPath )
-        throws VerificationException
+        throws IntegrationTestException
     {
         UserModelReader userModelReader = new UserModelReader();
 
@@ -447,7 +438,7 @@ public class Verifier
         {
             verifyExpectedResult( file, true );
         }
-        catch ( VerificationException e )
+        catch ( IntegrationTestException e )
         {
             Assert.fail( e.getMessage() );
         }
@@ -484,7 +475,7 @@ public class Verifier
         {
             verifyExpectedResult( file, false );
         }
-        catch ( VerificationException e )
+        catch ( IntegrationTestException e )
         {
             Assert.fail( e.getMessage() );
         }
@@ -500,7 +491,7 @@ public class Verifier
             {
                 verifyExpectedResult( fileName, wanted );
             }
-            catch ( VerificationException e )
+            catch ( IntegrationTestException e )
             {
                 Assert.fail( e.getMessage() );
             }
@@ -518,7 +509,7 @@ public class Verifier
     }
 
     private void verifyExpectedResult( String line, boolean wanted )
-        throws VerificationException
+        throws IntegrationTestException
     {
         if ( line.indexOf( "!/" ) > 0 )
         {
@@ -535,24 +526,24 @@ public class Verifier
                 {
                     if ( wanted )
                     {
-                        throw new VerificationException( "Expected JAR resource was not found: " + line );
+                        throw new IntegrationTestException( "Expected JAR resource was not found: " + line );
                     }
                 }
                 else
                 {
                     if ( !wanted )
                     {
-                        throw new VerificationException( "Unwanted JAR resource was found: " + line );
+                        throw new IntegrationTestException( "Unwanted JAR resource was found: " + line );
                     }
                 }
             }
             catch ( MalformedURLException e )
             {
-                throw new VerificationException( "Error looking for JAR resource", e );
+                throw new IntegrationTestException( "Error looking for JAR resource", e );
             }
             catch ( IOException e )
             {
-                throw new VerificationException( "Error looking for JAR resource", e );
+                throw new IntegrationTestException( "Error looking for JAR resource", e );
             }
             finally
             {
@@ -586,7 +577,7 @@ public class Verifier
                 {
                     if ( wanted )
                     {
-                        throw new VerificationException( "Expected file pattern was not found: " + expectedFile.getPath() );
+                        throw new IntegrationTestException( "Expected file pattern was not found: " + expectedFile.getPath() );
                     }
                 }
                 else
@@ -611,11 +602,11 @@ public class Verifier
 
                     if ( !found && wanted )
                     {
-                        throw new VerificationException( "Expected file pattern was not found: " + expectedFile.getPath() );
+                        throw new IntegrationTestException( "Expected file pattern was not found: " + expectedFile.getPath() );
                     }
                     else if ( found && !wanted )
                     {
-                        throw new VerificationException( "Unwanted file pattern was found: " + expectedFile.getPath() );
+                        throw new IntegrationTestException( "Unwanted file pattern was found: " + expectedFile.getPath() );
                     }
                 }
             }
@@ -625,14 +616,14 @@ public class Verifier
                 {
                     if ( wanted )
                     {
-                        throw new VerificationException( "Expected file was not found: " + expectedFile.getPath() );
+                        throw new IntegrationTestException( "Expected file was not found: " + expectedFile.getPath() );
                     }
                 }
                 else
                 {
                     if ( !wanted )
                     {
-                        throw new VerificationException( "Unwanted file was found: " + expectedFile.getPath() );
+                        throw new IntegrationTestException( "Unwanted file was found: " + expectedFile.getPath() );
                     }
                 }
             }
@@ -640,7 +631,7 @@ public class Verifier
     }
 
     private void findLocalRepo( String settingsFile )
-        throws VerificationException
+        throws IntegrationTestException
     {
         if ( localRepo == null )
         {
@@ -680,7 +671,7 @@ public class Verifier
         private StringBuffer currentBody = new StringBuffer();
 
         public void parse( File file )
-            throws VerificationException
+            throws IntegrationTestException
         {
             try
             {
@@ -694,19 +685,19 @@ public class Verifier
             }
             catch ( FileNotFoundException e )
             {
-                throw new VerificationException( e );
+                throw new IntegrationTestException( e );
             }
             catch ( IOException e )
             {
-                throw new VerificationException( e );
+                throw new IntegrationTestException( e );
             }
             catch ( ParserConfigurationException e )
             {
-                throw new VerificationException( e );
+                throw new IntegrationTestException( e );
             }
             catch ( SAXException e )
             {
-                throw new VerificationException( e );
+                throw new IntegrationTestException( e );
             }
         }
 

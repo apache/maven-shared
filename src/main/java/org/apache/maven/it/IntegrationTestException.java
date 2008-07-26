@@ -23,24 +23,24 @@ package org.apache.maven.it;
  * @author Jason van Zyl
  * @version $Id$
  */
-public class VerificationException
+public class IntegrationTestException
     extends Exception
 {
-    public VerificationException()
+    public IntegrationTestException()
     {
     }
 
-    public VerificationException( String message )
+    public IntegrationTestException( String message )
     {
         super( message );
     }
 
-    public VerificationException( Throwable cause )
+    public IntegrationTestException( Throwable cause )
     {
         super( cause );
     }
 
-    public VerificationException( String message, Throwable cause )
+    public IntegrationTestException( String message, Throwable cause )
     {
         super( message, cause );
     }

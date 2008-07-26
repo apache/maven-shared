@@ -18,7 +18,6 @@ package org.apache.maven.it;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -42,25 +41,22 @@ public class DefaultInvoker
 {
     private static final String LOG_FILENAME = "log.txt";
     public String localRepo;
-    private boolean autoclean = true;
     private boolean debug;
     private String defaultMavenHome;
 
     public void invoke( InvocationRequest request )
-        throws VerificationException
-    {
-        System.out.println( "------> " + request.getGoals() ) ;
-        
+        throws IntegrationTestException
+    {        
         List goals = Arrays.asList( StringUtils.split( request.getGoals(), ","  ) );        
         
         if ( goals.size() == 0 )
         {
-            throw new VerificationException( "No goals specified" );
+            throw new IntegrationTestException( "No goals specified" );
         }
 
         List allGoals = new ArrayList();
 
-        if ( autoclean )
+        if ( request.getAutoclean() )
         {
             allGoals.add( "clean:clean" );
         }
@@ -110,35 +106,32 @@ public class DefaultInvoker
             for ( Iterator i = allGoals.iterator(); i.hasNext(); )
             {
                 String argument = (String) i.next();
-                System.out.println(argument);
                 cli.createArgument().setValue( argument.trim() );
             }
 
-            FileUtils.fileWrite( "/tmp/data.txt", Commandline.toString( cli.getCommandline() ) );
+            //System.out.println( "Command: " + Commandline.toString( cli.getArguments() ) );
             
-            System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
-
             ret = runCommandLine( System.getProperty( "maven.home" ), cli, logFile );
         }
         catch ( CommandLineException e )
         {
-            throw new VerificationException( e );
+            throw new IntegrationTestException( e );
         }
         catch ( IOException e )
         {
-            throw new VerificationException( e );
+            throw new IntegrationTestException( e );
         }
 
         if ( ret > 0 )
         {
             System.err.println( "Exit code: " + ret );
 
-            throw new VerificationException( "Exit code was non-zero: " + ret + "; log = \n" + getLogContents( logFile ) );
+            throw new IntegrationTestException( "Exit code was non-zero: " + ret + "; log = \n" + getLogContents( logFile ) );
         }
     }
 
     public String getMavenVersion()
-        throws VerificationException
+        throws IntegrationTestException
     {
         Commandline cmd = createCommandLine();
         cmd.addArguments( new String[] { "--version" } );
@@ -151,11 +144,11 @@ public class DefaultInvoker
         }
         catch ( CommandLineException e )
         {
-            throw new VerificationException( "Error running commandline " + cmd.toString(), e );
+            throw new IntegrationTestException( "Error running commandline " + cmd.toString(), e );
         }
         catch ( IOException e )
         {
-            throw new VerificationException( "IO Error communicating with commandline " + cmd.toString(), e );
+            throw new IntegrationTestException( "IO Error communicating with commandline " + cmd.toString(), e );
         }
 
         String separator = System.getProperty( "line.separator" );
@@ -170,7 +163,7 @@ public class DefaultInvoker
 
         if ( version == null )
         {
-            throw new VerificationException( "Illegal maven output: String 'Maven version: ' not found in the following output: " + writer.toString() );
+            throw new IntegrationTestException( "Illegal maven output: String 'Maven version: ' not found in the following output: " + writer.toString() );
         }
         else
         {
@@ -256,15 +249,5 @@ public class DefaultInvoker
             // ignore
             return "(Error reading log contents: " + e.getMessage() + ")";
         }
-    }
-
-    public boolean isAutoclean()
-    {
-        return autoclean;
-    }
-
-    public void setAutoclean( boolean autoclean )
-    {
-        this.autoclean = autoclean;
     }
 }

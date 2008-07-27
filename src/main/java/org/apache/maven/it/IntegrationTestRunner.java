@@ -61,18 +61,22 @@ public class IntegrationTestRunner
     public String localRepo;
     private final String basedir;
     private static String localRepoLayout = "default";
+    private Invoker invoker;
+
+    public IntegrationTestRunner( File basedir )
+        throws IntegrationTestException
+    {
+        this( basedir.getAbsolutePath() );
+    }
 
     public IntegrationTestRunner( String basedir )
         throws IntegrationTestException
-    {
+    {        
         this.basedir = basedir;
         findLocalRepo( null );
         findDefaultMavenHome();
+        invoker = new DefaultInvoker();
     }
-
-    // Execution
-
-    Invoker invoker = new DefaultInvoker();
 
     public void executeGoal( String goal )
         throws IntegrationTestException

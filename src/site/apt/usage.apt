@@ -67,8 +67,8 @@ mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 * Adding new filtering Token
 
   You must use the other methods from the MavenResourcesFiltering component and construct your own List of FilterWrapper.
-  The following example add the interpolation for the Token @ @ with using values coming from reflection with the Maven Project.
-  NOTE : the component maven-filtering use the plexus-interpolation component
+  The following example add the interpolation for the Token @ @ with using values coming from reflection with the Maven Project.\
+  NOTE : the component maven-filtering use the {{{http://plexus.codehaus.org/plexus-components/plexus-interpolation/}plexus-interpolation component}}.
 
 +-----+
 

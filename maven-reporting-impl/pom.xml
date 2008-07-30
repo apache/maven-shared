@@ -59,7 +59,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.maven.doxia</groupId>
-      <artifactId>doxia-core</artifactId>
+      <artifactId>doxia-sink-api</artifactId>
       <version>${doxiaVersion}</version>
     </dependency>
     <dependency>
@@ -73,14 +73,20 @@
       <version>2.0.4</version>
     </dependency>
     <dependency>
-      <groupId>oro</groupId>
-      <artifactId>oro</artifactId>
-      <version>2.0.7</version>
-    </dependency>
-    <dependency>
       <groupId>org.apache.maven.reporting</groupId>
       <artifactId>maven-reporting-api</artifactId>
       <version>2.0.10-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>1.1</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.2</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit-addons</groupId>

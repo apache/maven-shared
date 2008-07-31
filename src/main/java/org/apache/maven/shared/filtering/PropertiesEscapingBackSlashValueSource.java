@@ -27,7 +27,7 @@ import org.codehaus.plexus.interpolation.ValueSource;
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @version $Id$
  */
-public class PropertiesEscapingBackSlahValueSource
+public class PropertiesEscapingBackSlashValueSource
     implements ValueSource
 {
 
@@ -38,7 +38,7 @@ public class PropertiesEscapingBackSlahValueSource
     /**
      * 
      */
-    public PropertiesEscapingBackSlahValueSource( boolean escapedBackslashesInFilePath, Properties properties )
+    public PropertiesEscapingBackSlashValueSource( boolean escapedBackslashesInFilePath, Properties properties )
     {
         this.escapedBackslashesInFilePath = escapedBackslashesInFilePath;
         this.properties = properties == null ? new Properties() : properties;

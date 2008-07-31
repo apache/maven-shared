@@ -127,7 +127,7 @@ public class DefaultMavenFileFilter
         List defaultFilterWrappers = new ArrayList( 3 );
 
         final ValueSource propertiesValueSource = 
-            new PropertiesEscapingBackSlahValueSource( escapedBackslashesInFilePath, filterProperties );
+            new PropertiesEscapingBackSlashValueSource( escapedBackslashesInFilePath, filterProperties );
         
         // support ${token}
 

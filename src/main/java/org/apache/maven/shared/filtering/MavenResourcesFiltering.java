@@ -27,7 +27,6 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 28 janv. 08
  * @version $Id$
  */
 public interface MavenResourcesFiltering

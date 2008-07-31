@@ -36,13 +36,12 @@ import org.codehaus.plexus.util.FileUtils.FilterWrapper;
 /**
  * A bean to configure a resources filtering execution
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 27 févr. 2008
  * @version $Id$
  */
 public class MavenResourcesExecution
 {
 
-    /** @see Resource  */
+    /** @see org.apache.maven.model.Resource  */
     private List resources;
 
     private File outputDirectory;
@@ -107,7 +106,7 @@ public class MavenResourcesExecution
 
     
     /**
-     * @return List of {@link Resource}
+     * @return List of {@link org.apache.maven.model.Resource}
      */
     public List getResources()
     {
@@ -115,7 +114,7 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @param resources List of {@link Resource}
+     * @param resources List of {@link org.apache.maven.model.Resource}
      */
     public void setResources( List resources )
     {
@@ -206,7 +205,7 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @param interpolators List of {@link FilterWrapper}
+     * @param filterWrappers List of {@link FilterWrapper}
      */
     public void setFilterWrappers( List filterWrappers )
     {

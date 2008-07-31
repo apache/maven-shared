@@ -30,7 +30,6 @@ import java.util.Set;
  * A Map composed with some others (optional adding SystemProperties and envvar)
  * The get Method look in the Map list to return the corresponding value
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 15 janv. 08
  * @version $Id$
  */
 public class CompositeMap
@@ -44,7 +43,7 @@ public class CompositeMap
     /**
      * 
      * @param maps
-     * @throws IOException if getting envvars failed
+     * @throws java.io.IOException if getting envvars failed
      */
     public CompositeMap( List /* Map */maps )
     {

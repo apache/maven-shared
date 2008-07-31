@@ -27,7 +27,6 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 22 janv. 08
  * @version $Id$
  */
 public interface MavenFileFilter
@@ -35,7 +34,7 @@ public interface MavenFileFilter
     
     /**
      * Will copy a file with some filtering using defaultFilterWrappers 
-     * @see #getDefaultFilterWrappers(MavenProject, List, boolean)
+     * @see #getDefaultFilterWrappers(MavenProject, List, boolean, MavenSession)
      * 
      * @param from file to copy/filter
      * @param to destination file

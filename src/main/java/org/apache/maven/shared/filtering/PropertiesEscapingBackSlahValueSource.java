@@ -25,7 +25,6 @@ import org.codehaus.plexus.interpolation.ValueSource;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 21 juil. 2008
  * @version $Id$
  */
 public class PropertiesEscapingBackSlahValueSource

@@ -34,15 +34,20 @@
   <artifactId>maven-filtering</artifactId>
   <packaging>jar</packaging>
   <version>1.0-beta-1-SNAPSHOT</version>
-	
+
   <name>Maven Files Filtering</name>
-	
+
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/13380</url>
+  </issueManagement>
+
   <scm>
     <connection>scm:svn:https://svn.apache.org/repos/asf/maven/sandbox/trunk/shared/maven-filtering</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/sandbox/trunk/shared/maven-filtering</developerConnection>
     <url>http://svn.apache.org/viewcvs.cgi/maven/sandbox/trunk/shared/maven-filtering</url>
-  </scm>	
-	
+  </scm>
+
   <build>
     <plugins>
       <plugin>
@@ -63,7 +68,7 @@
       </plugin>
     </plugins>
   </build>
-	
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -86,5 +91,4 @@
       <version>1.2</version>
     </dependency>
   </dependencies>
- 
 </project>

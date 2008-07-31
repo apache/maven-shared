@@ -39,7 +39,7 @@ Maven Filtering Component Basic Usage
   
 +-----+
 
-  Apply filtering on your resources List (see {{{../index.html}Reference}} to see the default FilterWrappers used).
+  Apply filtering on your resources List (see {{{./index.html}Reference}} to see the default FilterWrappers used).
 
 +-----+
 

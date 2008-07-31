@@ -1,5 +1,5 @@
  ------
- Basic Usage
+ Usage
  ------
  Olivier Lamy
  ------
@@ -23,11 +23,11 @@
  ~~ specific language governing permissions and limitations
  ~~ under the License.
 
-Maven Filtering Component Basic Usage
+Usage
 
 * Filtering a List of org.apache.maven.model.Resource. 
   
-  Lookup the component in your Mojo
+  Lookup the component in your Mojo:
   
 +-----+
   
@@ -39,7 +39,7 @@ Maven Filtering Component Basic Usage
   
 +-----+
 
-  Apply filtering on your resources List (see {{{./index.html}Reference}} to see the default FilterWrappers used).
+  Apply filtering on your resources List (see {{{./index.html}Reference}} to see the default FilterWrappers that are used).
 
 +-----+
 
@@ -66,9 +66,10 @@ mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
 * Adding new filtering Token
 
-  You must use the other methods from the MavenResourcesFiltering component and construct your own List of FilterWrapper.
-  The following example add the interpolation for the Token @ @ with using values coming from reflection with the Maven Project.\
-  NOTE: the component maven-filtering use the {{{http://plexus.codehaus.org/plexus-components/plexus-interpolation/}plexus-interpolation component}}.
+  You must use the other methods from the <<<MavenResourcesFiltering>>> component and construct your own List of FilterWrapper.
+  The following example add the interpolation for the Token @ @ with using values coming from reflection with the Maven Project.
+
+  <<Note:>> The component maven-filtering uses the {{{http://plexus.codehaus.org/plexus-components/plexus-interpolation/}plexus-interpolation component}}.
 
 +-----+
 

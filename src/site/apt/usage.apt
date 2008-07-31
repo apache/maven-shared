@@ -43,19 +43,19 @@ Maven Filtering Component Basic Usage
 
 +-----+
 
-resources : List of org.apache.maven.model.Resource
+resources: List of org.apache.maven.model.Resource
 
-outputDirectory : base output directory for Resource.targetPath
+outputDirectory: base output directory for Resource.targetPath
 
-mavenProject : a mavenProject 
+mavenProject: a mavenProject 
 
-encoding : output encoding for filtered files (can be null platform default will be used)
+encoding: output encoding for filtered files (can be null platform default will be used)
 
-filtersFile : List of String pointed to a properties file 
+filtersFile: List of String pointed to a properties file 
 
-nonFilteredFileExtensions : is a List of String which file extensions to not apply filtering (default List contains jpg,jpeg,gif,bmp,png)
+nonFilteredFileExtensions: is a List of String which file extensions to not apply filtering (default List contains jpg,jpeg,gif,bmp,png)
 
-mavenSession : executionProperties will be used for file filtering
+mavenSession: executionProperties will be used for file filtering
 
 MavenResourcesExecution mavenResourcesExecution = 
   new MavenResourcesExecution ( resources, outputDirectory, mavenProject, encoding, filtersFile, nonFilteredFileExtensions, mavenSession );
@@ -68,7 +68,7 @@ mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
   You must use the other methods from the MavenResourcesFiltering component and construct your own List of FilterWrapper.
   The following example add the interpolation for the Token @ @ with using values coming from reflection with the Maven Project.\
-  NOTE : the component maven-filtering use the {{{http://plexus.codehaus.org/plexus-components/plexus-interpolation/}plexus-interpolation component}}.
+  NOTE: the component maven-filtering use the {{{http://plexus.codehaus.org/plexus-components/plexus-interpolation/}plexus-interpolation component}}.
 
 +-----+
 
@@ -88,7 +88,7 @@ Create your MavenResourcesExecution instance and add a new filterWrapper.
 
 mavenResourcesExecution.addFilterWrapper( filterWrapper );
 
-Or with the helper method :
+Or with the helper method:
 
 mavenResourcesExecution.addFilerWrapper( new MavenProjectValueSource( mavenProject, true ), "\\@", "(.+?)\\@", "@", "@" );
  

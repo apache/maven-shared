@@ -35,12 +35,12 @@ Maven Filtering Component
   
   The method without the filterWrappers parameter will interpolate the files using the default List of FileUtils.FilterWrapper (see above). 
   
-  The component will not filtering some predefined file extensions (jpg,jpeg,gif,bmp,png). Note : you can easily add extra file extensions.
+  The component will not filtering some predefined file extensions (jpg,jpeg,gif,bmp,png). Note: you can easily add extra file extensions.
 
 * Component MavenFileFilter
 
   This component has a method which returns the default FileUtils.FilterWrapper.
-  This are :
+  This are:
   
     * interpolation with token $\{ \} and values from filters, project.filters, project.build.filters, pom.properties and mavenSession.executionProperties
     
@@ -52,7 +52,7 @@ Maven Filtering Component
     
     []
     
-    The values (Properties object) used for interpolation are loaded with the following order :
+    The values (Properties object) used for interpolation are loaded with the following order:
    
     * List of properties file ( the method has a parameter which accept a List of String -> path properties files )
    
@@ -66,7 +66,7 @@ Maven Filtering Component
     
     []
     
-    <<NOTE>> : As it's a Properties object, last defined key/value pair wins . 
+    <<NOTE>>: As it's a Properties object, last defined key/value pair wins . 
     
-    <<NOTE>> : When building the global Properties object and reading the properties files defined the different filters, 
+    <<NOTE>>: When building the global Properties object and reading the properties files defined the different filters, 
     interpolation with the token $\{ \} is supported for this filters with a limited properties values coming from pom.properties and mavenSession.executionProperties (last wins too)

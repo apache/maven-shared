@@ -21,7 +21,6 @@ package org.apache.maven.shared.filtering;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 22 janv. 08
  * @version $Id$
  */
 public class MavenFilteringException

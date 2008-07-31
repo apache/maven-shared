@@ -38,7 +38,6 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 28 janv. 08
  * @version $Id$
  * 
  * @plexus.component role="org.apache.maven.shared.filtering.MavenResourcesFiltering" 

@@ -104,6 +104,6 @@
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-io</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-io</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-shared-io</url>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-io</url>
   </scm>
 </project>

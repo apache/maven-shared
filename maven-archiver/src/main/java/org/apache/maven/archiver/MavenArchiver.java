@@ -81,6 +81,33 @@ public class MavenArchiver
             }
         }
 
+        // any custom manifest sections in the archive configuration manifest?
+        if ( !config.isManifestSectionsEmpty() )
+        {
+            List sections = config.getManifestSections();
+            for ( Iterator iter = sections.iterator(); iter.hasNext(); )
+            {
+                ManifestSection section = (ManifestSection) iter.next();
+                Manifest.Section theSection = new Manifest.Section();
+                theSection.setName( section.getName() );
+
+                if ( !section.isManifestEntriesEmpty() )
+                {
+                    Map sectionEntries = section.getManifestEntries();
+                    Set keys = sectionEntries.keySet();
+                    for ( Iterator it = keys.iterator(); it.hasNext(); )
+                    {
+                        String key = (String) it.next();
+                        String value = (String) sectionEntries.get( key );
+                        Manifest.Attribute attr = new Manifest.Attribute( key, value );
+                        theSection.addConfiguredAttribute( attr );
+                    }
+                }
+
+                manifest.addConfiguredSection( theSection );
+            }
+        }
+
         return manifest;
     }
 
@@ -363,33 +390,6 @@ public class MavenArchiver
         }
 
         Manifest manifest = getManifest( workingProject, archiveConfiguration );
-
-        // any custom manifest sections in the archive configuration manifest?
-        if ( !archiveConfiguration.isManifestSectionsEmpty() )
-        {
-            List sections = archiveConfiguration.getManifestSections();
-            for ( Iterator iter = sections.iterator(); iter.hasNext(); )
-            {
-                ManifestSection section = (ManifestSection) iter.next();
-                Manifest.Section theSection = new Manifest.Section();
-                theSection.setName( section.getName() );
-
-                if ( !section.isManifestEntriesEmpty() )
-                {
-                    Map entries = section.getManifestEntries();
-                    Set keys = entries.keySet();
-                    for ( Iterator it = keys.iterator(); it.hasNext(); )
-                    {
-                        String key = (String) it.next();
-                        String value = (String) entries.get( key );
-                        Manifest.Attribute attr = new Manifest.Attribute( key, value );
-                        theSection.addConfiguredAttribute( attr );
-                    }
-                }
-
-                manifest.addConfiguredSection( theSection );
-            }
-        }
 
         // Configure the jar
         archiver.addConfiguredManifest( manifest );

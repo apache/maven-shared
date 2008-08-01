@@ -22,12 +22,7 @@ package org.apache.maven.shared.model;
 import org.apache.maven.shared.model.impl.DefaultModelDataSource;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -79,20 +74,23 @@ public final class ModelTransformerContext
      * @param domainModels           the domain model list to transform
      * @param fromModelTransformer   transformer that transforms from specified domain models to canonical data model
      * @param toModelTransformer     transformer that transforms from canonical data model to returned domain model
-     * @param interpolatorProperties properties to use during interpolation.
-     * @return processed domain model
+     * @param importModels
+     * @param interpolatorProperties properties to use during interpolation. @return processed domain model
      * @throws IOException if there was a problem with the transform
      */
-    public DomainModel transform( List<DomainModel> domainModels, ModelTransformer fromModelTransformer,
-                                  ModelTransformer toModelTransformer,
-                                  Collection<InterpolatorProperty> interpolatorProperties )
+    public DomainModel transform(List<DomainModel> domainModels, ModelTransformer fromModelTransformer,
+                                 ModelTransformer toModelTransformer,
+                                 Collection<ImportModel> importModels, Collection<InterpolatorProperty> interpolatorProperties)
         throws IOException
     {
         List<InterpolatorProperty> properties = new ArrayList<InterpolatorProperty>( interpolatorProperties );
 
+        List<ModelProperty> transformedProperties =
+                importModelProperties(importModels, fromModelTransformer.transformToModelProperties( domainModels ));
+
         String baseUriForModel = fromModelTransformer.getBaseUri();
         List<ModelProperty> modelProperties =
-            sort( fromModelTransformer.transformToModelProperties( domainModels ), baseUriForModel );
+            sort( transformedProperties, baseUriForModel );
         ModelDataSource modelDataSource = new DefaultModelDataSource();
         modelDataSource.init( modelProperties, factories );
 
@@ -210,7 +208,24 @@ public final class ModelTransformerContext
                                   ModelTransformer toModelTransformer )
         throws IOException
     {
-        return this.transform( domainModels, fromModelTransformer, toModelTransformer, systemInterpolatorProperties );
+        return this.transform( domainModels, fromModelTransformer, toModelTransformer, null, systemInterpolatorProperties );
+    }
+
+    private static List<ModelProperty> importModelProperties(Collection<ImportModel> importModels,
+                                                             List<ModelProperty> modelProperties) {
+        List<ModelProperty> properties = new ArrayList<ModelProperty>();
+        for(ModelProperty mp: modelProperties) {
+            if(mp.getUri().endsWith("importModel")) {
+                for(ImportModel im : importModels) {
+                    if(im.getId().equals(mp.getValue())) {
+                        properties.addAll(im.getModelProperties());
+                    }
+                }
+            } else {
+                properties.add(mp);
+            }
+        }
+        return properties;
     }
 
     /**

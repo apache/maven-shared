@@ -37,6 +37,6 @@
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-verifier</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-verifier</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-verifier</url>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-verifier</url>
   </scm>
 </project>

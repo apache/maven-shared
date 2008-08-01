@@ -155,6 +155,6 @@ under the License.
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-invoker</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-invoker</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-invoker</url>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-invoker</url>
   </scm>
 </project>

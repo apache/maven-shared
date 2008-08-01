@@ -48,6 +48,6 @@
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-archiver</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-archiver</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-archiver</url>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-archiver</url>
   </scm>
 </project>

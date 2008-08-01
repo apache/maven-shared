@@ -11,7 +11,7 @@
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-common-artifact-filters</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-common-artifact-filters</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-common-artifact-filters</url>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-common-artifact-filters</url>
   </scm>
   <dependencies>
     <dependency>

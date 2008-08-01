@@ -33,6 +33,6 @@
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-app-configuration</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-app-configuration</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-app-configuration</url>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-app-configuration</url>
   </scm>
 </project>

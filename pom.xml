@@ -28,10 +28,16 @@
   <artifactId>maven-archiver</artifactId>
   <name>Maven Archiver</name>
   <version>2.4-SNAPSHOT</version>
+
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/13268</url>
+  </issueManagement>
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-archiver</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-archiver</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-archiver</url>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-archiver</url>
   </scm>
   <build>
     <plugins>

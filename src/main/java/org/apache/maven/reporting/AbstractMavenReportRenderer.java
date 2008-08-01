@@ -220,8 +220,23 @@ public abstract class AbstractMavenReportRenderer
      */
     protected void startTable()
     {
+        startTable( new int[] {Sink.JUSTIFY_LEFT}, false );
+    }
+
+    /**
+     * Convenience method to wrap the table start in the current sink.
+     *
+     * @param justification the justification of table cells.
+     * @param grid whether to draw a grid around cells.
+     *
+     * @see Sink#table()
+     * @see Sink#tableRows(int[],boolean)
+     * @since 2.1
+     */
+    protected void startTable( int[] justification, boolean grid )
+    {
         sink.table();
-        sink.tableRows( new int[] {Sink.JUSTIFY_LEFT}, false );
+        sink.tableRows( justification, grid );
     }
 
     /**

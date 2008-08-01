@@ -441,7 +441,35 @@ public class MavenArchiverTest
             }
         }
     }
-    
+
+    /**
+     * Test to make sure that manifest sections are present in the manifest prior to the archive has been created.
+     */
+    public void testManifestSections()
+        throws Exception
+    {
+        MavenArchiver archiver = new MavenArchiver();
+
+        MavenProject project = getDummyProject();
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+
+        ManifestSection manifestSection = new ManifestSection();
+        manifestSection.setName( "SectionOne" );
+        manifestSection.addManifestEntry( "key", "value" );
+        List manifestSections = new ArrayList();
+        manifestSections.add( manifestSection );
+        config.setManifestSections( manifestSections );
+
+        Manifest manifest = archiver.getManifest( project, config );
+
+        Manifest.Section section = manifest.getSection( "SectionOne" );
+        assertNotNull( "The section is not present in the manifest as it should be.",  section );
+
+        Manifest.Attribute attribute = section.getAttribute( "key" );
+        assertNotNull( "The attribute we are looking for is not present in the section.", attribute );
+        assertEquals( "The value of the attribute is wrong.", "value", attribute.getValue() );
+    }
+
     public void testDefaultClassPathValue()
         throws Exception
     {

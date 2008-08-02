@@ -322,7 +322,8 @@ public class MavenCommandLineBuilder
         }
         else if ( workingDirectory.isFile() )
         {
-            logger.warn( "Specified base directory (" + workingDirectory + ") is a file. Using its parent directory..." );
+            logger.warn( "Specified base directory (" + workingDirectory + ") is a file."
+                + " Using its parent directory..." );
 
             workingDirectory = workingDirectory.getParentFile();
         }

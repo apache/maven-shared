@@ -50,41 +50,6 @@ invoker.execute( request );
   for the project defined at <<</path/to/pom.xml>>>. If the build fails, we will
   remain blissfully ignorant...
   
-* Configuring the Maven Home Directory
-
-  You can use the method <<<Invoker.setMavenHome()>>> to specify which Maven executable it should use.
-  If you don't provide an explicit value for this setting, the <<<Invoker>>> will automatically try to detect
-  a Maven installation by evaluating the system property <<<maven.home>>> and the environment variable <<<M2_HOME>>>.
-
-  <<Note:>> If you use the invocation API in tests run by the {{{../../plugins/maven-surefire-plugin}Maven Surefire Plugin}},
-  you need to tell Surefire to pass the system property <<<maven.home>>> to the tests in order for the automatic Maven
-  detection to work:
-
-+---+
-<project>
-  ...
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.4.3</version>
-        <configuration>
-          <systemProperties>
-            <property>
-              <name>maven.home</name>
-              <value>${maven.home}</value>
-            </property>
-          </systemProperties>
-        </configuration>
-      </plugin>
-    </plugins>
-    ...
-  </build>
-  ...
-</project>
-+---+
-
 * Checking the Exit Code
 
   If we wanted to detect a build failure in the above example, we could simply
@@ -159,5 +124,40 @@ public void publishSite( File siteDirectory ) throws PublishException
   invoker instance (it's configured, we may as well reuse it), and the same set
   of goals per build. We can actually accommodate a fairly complex configuration
   of the Invoker without adding complexity to the <<<publishSite>>> method in this manner.
+
+* Configuring the Maven Home Directory
+
+  You can use the method <<<Invoker.setMavenHome()>>> to specify which Maven executable it should use.
+  If you don't provide an explicit value for this setting, the <<<Invoker>>> will automatically try to detect
+  a Maven installation by evaluating the system property <<<maven.home>>> and the environment variable <<<M2_HOME>>>.
+
+  <<Note:>> If you use the invocation API in tests run by the {{{../../plugins/maven-surefire-plugin}Maven Surefire Plugin}},
+  you need to tell Surefire to pass the system property <<<maven.home>>> to the tests in order for the automatic Maven
+  detection to work:
+
++---+
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.4.3</version>
+        <configuration>
+          <systemProperties>
+            <property>
+              <name>maven.home</name>
+              <value>${maven.home}</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+    ...
+  </build>
+  ...
+</project>
++---+
 
 

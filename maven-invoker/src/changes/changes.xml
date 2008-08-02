@@ -23,7 +23,7 @@
     <author email="olamy@apache.org">Olivier Lamy</author>
   </properties>
   <body>
-    <release version="2.0.9" date="2008-??-??">
+    <release version="2.0.9" date="2008-08-06">
       <action type="fix" dev="bentmann" issue="MSHARED-21">Spaces are incorrectly handled on command line</action>
       <action type="add" dev="bentmann">Added new classes PrintStreamLogger and PrintStreamHandler</action>
     </release>

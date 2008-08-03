@@ -1,0 +1,102 @@
+ ------
+ Usage
+ ------
+ Olivier Lamy
+ ------
+ 2008-07-21
+ ------
+
+ ~~ Licensed to the Apache Software Foundation (ASF) under one
+ ~~ or more contributor license agreements.  See the NOTICE file
+ ~~ distributed with this work for additional information
+ ~~ regarding copyright ownership.  The ASF licenses this file
+ ~~ to you under the Apache License, Version 2.0 (the
+ ~~ "License"); you may not use this file except in compliance
+ ~~ with the License.  You may obtain a copy of the License at
+ ~~
+ ~~   http://www.apache.org/licenses/LICENSE-2.0
+ ~~
+ ~~ Unless required by applicable law or agreed to in writing,
+ ~~ software distributed under the License is distributed on an
+ ~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~~ KIND, either express or implied.  See the License for the
+ ~~ specific language governing permissions and limitations
+ ~~ under the License.
+
+Usage
+
+* Filtering a List of org.apache.maven.model.Resource. 
+  
+  Lookup the component in your Mojo:
+  
++-----+
+  
+    /**
+     * @component role="org.apache.maven.shared.filtering.MavenResourcesFiltering" role-hint="default"
+     * @required
+     */    
+    private MavenResourcesFiltering mavenResourcesFiltering;
+  
++-----+
+
+  Apply filtering on your resources List (see {{{./index.html}Reference}} to see the default FilterWrappers that are used).
+
++-----+
+
+resources: List of org.apache.maven.model.Resource
+
+outputDirectory: base output directory for Resource.targetPath
+
+mavenProject: a mavenProject 
+
+encoding: output encoding for filtered files (can be null platform default will be used)
+
+filtersFile: List of String pointed to a properties file 
+
+nonFilteredFileExtensions: is a List of String which file extensions to not apply filtering (default List contains jpg,jpeg,gif,bmp,png)
+
+mavenSession: executionProperties will be used for file filtering
+
+MavenResourcesExecution mavenResourcesExecution = 
+  new MavenResourcesExecution ( resources, outputDirectory, mavenProject, encoding, filtersFile, nonFilteredFileExtensions, mavenSession );
+
+mavenResourcesFiltering.filterResources( mavenResourcesExecution );
+
++-----+
+
+* Adding new filtering Token
+
+  You must use the other methods from the <<<MavenResourcesFiltering>>> component and construct your own List of FilterWrapper.
+  The following example add the interpolation for the Token @ @ with using values coming from reflection with the Maven Project.
+
+  <<Note:>> The component maven-filtering uses the {{{http://plexus.codehaus.org/plexus-components/plexus-interpolation/}plexus-interpolation component}}.
+
++-----+
+
+Create your FilterWrapper.
+
+FileUtils.FilterWrapper filterWrapper = new FileUtils.FilterWrapper()
+{
+  public Reader getReader( Reader reader )
+  {
+      Interpolator propertiesInterpolator = new RegexBasedInterpolator(  "\\@", "(.+?)\\@" );
+      propertiesInterpolator.addValueSource( valueSource );
+      return new InterpolatorFilterReader( reader, propertiesInterpolator, "@", "@" );
+  }
+};
+
+Create your MavenResourcesExecution instance and add a new filterWrapper.
+
+mavenResourcesExecution.addFilterWrapper( filterWrapper );
+
+Or with the helper method:
+
+mavenResourcesExecution.addFilerWrapper( new MavenProjectValueSource( mavenProject, true ), "\\@", "(.+?)\\@", "@", "@" );
+ 
+If the mavenResourcesExecution.useDefaultFilterWrappers is set to true default FilterWrapper will be added first. 
+
+here you can apply filtering on your resources.
+
+mavenResourcesFiltering.filterResources( mavenResourcesExecution );
+
++-----+

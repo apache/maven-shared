@@ -37,8 +37,9 @@ public interface MavenResourcesFiltering
      * @param outputDirectory parent destination directory
      * @param mavenProject the maven project
      * @param encoding encoding to use for writing files
-     * @param fileFilters {@link List} of String which are path to a Property file 
+     * @param fileFilters {@link List} of String which are path to a Property file
      * @param nonFilteredFileExtensions {@link List} of String for non filtered file extensions
+     * @param mavenSession Can include executionProperties that will be used for filtering
      * @throws MavenFilteringException
      */
     void filterResources( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
@@ -56,22 +57,22 @@ public interface MavenResourcesFiltering
      */
     void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers,
                           File resourcesBaseDirectory, List nonFilteredFileExtensions )
-        throws MavenFilteringException;    
-    
+        throws MavenFilteringException;
+
     /**
      * return the List of the non filtered extensions (jpg,jpeg,gif,bmp,png)
      * @return {@link List} of {@link String}
      */
     List getDefaultNonFilteredFileExtensions();
-    
+
     /**
      * @param fileName the file name
-     * @param userNonFilteredFileExtensions an extra list of file extensions 
-     * @return true if filtering can be apply to the file (means extensions.lowerCase is in the 
+     * @param userNonFilteredFileExtensions an extra list of file extensions
+     * @return true if filtering can be apply to the file (means extensions.lowerCase is in the
      *         default List or in the user defined extension List)
      */
     boolean filteredFileExtension( String fileName, List userNonFilteredFileExtensions );
-    
+
     /**
      * @param mavenResourcesExecution
      * @throws MavenFilteringException

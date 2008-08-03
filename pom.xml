@@ -57,6 +57,7 @@
     <module>maven-dependency-tree</module>
     <module>maven-downloader</module>
     <module>maven-doxia-tools</module>
+    <module>maven-filtering</module>
     <module>maven-invoker</module>
     <module>maven-model-converter</module>
     <module>maven-osgi</module>
@@ -84,6 +85,12 @@
           <artifactId>maven-release-plugin</artifactId>
           <configuration>
             <tagBase>https://svn.apache.org/repos/asf/maven/shared/tags</tagBase>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-site-plugin</artifactId>
+          <configuration>
+            <stagingSiteURL>scp://people.apache.org/www/maven.apache.org/shared/${project.artifactId}-${project.version}</stagingSiteURL>
           </configuration>
         </plugin>
       </plugins>

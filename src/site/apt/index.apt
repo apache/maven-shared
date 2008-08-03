@@ -1,5 +1,5 @@
  ------
- Reference
+ Introduction
  ------
  Olivier Lamy
  ------
@@ -23,50 +23,54 @@
  ~~ specific language governing permissions and limitations
  ~~ under the License.
 
-Maven Filtering Components
+Maven Filtering
 
-  These Plexus components have been built with the filtering process/code coming from the maven-resources-plugin.
-  
-  The goal is to provide a common way for all plugins which needs to filter resources. 
-  
-* Component MavenResourcesFiltering
+  These Plexus components have been built from the filtering process/code in Maven Resources Plugin.
 
-  This component will apply filtering on a <<<List>>> of <<<org.apache.maven.model.Resource>>>. 
-  
-  The method without the <<<filterWrappers>>> parameter will interpolate the files using the default <<<List>>> of <<<FileUtils.FilterWrapper>>> (see below). 
-  
-  The component will not filter some predefined file extensions (jpg, jpeg, gif, bmp, png). Note: you can easily add extra file extensions.
+  The goal is to provide a shared component for all plugins which needs to filter resources.
 
-* Component MavenFileFilter
+* MavenResourcesFiltering
+
+  This component will apply filtering on a <<<List>>> of <<<org.apache.maven.model.Resource>>>.
+
+  If you want to use the default <<<List>>> of <<<FileUtils.FilterWrapper>>> (see below)
+  you should use the method without the <<<filterWrappers>>> parameter.
+
+  The component will not filter a predefined set of file extensions (jpg, jpeg, gif, bmp, png).
+  Note: you can easily add extra file extensions.
+
+* MavenFileFilter
 
   This component has a method which returns the default <<<FileUtils.FilterWrapper>>>.
   These are:
-  
-    * interpolation with token $\{ \} and values from filters, project.filters, project.build.filters, pom.properties and mavenSession.executionProperties
-    
-    * interpolation with token @ @ and values from filters, project.filters, project.build.filters, pom.properties and mavenSession.executionProperties
-    
+
+    * interpolation with token $\{ \} and values from properties files, project.build.filters, project.properties
+      and mavenSession.executionProperties
+
+    * interpolation with token @ @ and values from properties files, project.build.filters, project.properties
+      and mavenSession.executionProperties
+
     * interpolation with token $\{ \} and values from mavenProject interpolation
-    
+
     * interpolation with token @ @ and values from mavenProject interpolation
-    
+
     []
-    
-    The values (Properties object) used for interpolation are loaded with the following order:
-   
-    * List of properties files (the method has a parameter which accept a <<<List>>> of String -> path properties files)
-   
-    * pom.filters
-    
-    * pom.build.filters
-    
-    * pom.properties
-    
-    * mavenSession.executionProperties
-    
+
+    The values used for interpolation are stored in a <<<Properties>>> object
+    and are loaded in the following order:
+
+    * A <<<List>>> of properties files, provided as a parameter to the method
+
+    * Filters defined in the <<<\<build\>>>>/<<<\<filters\>>>> section of the POM
+
+    * Properties defined in the <<<\<properties\>>>> section of the POM
+
+    * The <<<executionProperties>>> from the current <<<MavenSession>>>
+
     []
-    
+
     <<Note>>: As it's a <<<Properties>>> object, the last defined key/value pair wins.
-    
-    <<Note>>: When building the global <<<Properties>>> object and reading the properties files defined the different filters, 
-    interpolation with the token $\{ \} is supported for this filters with a limited properties values coming from pom.properties and mavenSession.executionProperties (last wins too).
+
+    <<Note>>: When building the <<<Properties>>> object and reading the properties files defining the different filters,
+    interpolation with the token $\{ \} is supported for these filters with limited properties values coming from
+    project.properties and mavenSession.executionProperties. The last wins here too.

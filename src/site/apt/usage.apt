@@ -25,78 +25,76 @@
 
 Usage
 
-* Filtering a List of org.apache.maven.model.Resource. 
-  
+* Filter a List of org.apache.maven.model.Resource
+
   Lookup the component in your Mojo:
-  
+
 +-----+
-  
     /**
-     * @component role="org.apache.maven.shared.filtering.MavenResourcesFiltering" role-hint="default"
+     * @component role="org.apache.maven.shared.filtering.MavenResourcesFiltering"
+     *            role-hint="default"
      * @required
-     */    
+     */
     private MavenResourcesFiltering mavenResourcesFiltering;
-  
 +-----+
 
-  Apply filtering on your resources List (see {{{./index.html}Reference}} to see the default FilterWrappers that are used).
+  Apply filtering on your <<<List>>> of resources, see {{{./index.html}Introduction}} to see the default FilterWrappers
+  that are used.
 
 +-----+
+        MavenResourcesExecution mavenResourcesExecution =
+            new MavenResourcesExecution ( resources, outputDirectory, mavenProject,
+                                          encoding, fileFilters,
+                                          nonFilteredFileExtensions, mavenSession );
 
-resources: List of org.apache.maven.model.Resource
-
-outputDirectory: base output directory for Resource.targetPath
-
-mavenProject: a mavenProject 
-
-encoding: output encoding for filtered files (can be null platform default will be used)
-
-filtersFile: List of String pointed to a properties file 
-
-nonFilteredFileExtensions: is a List of String which file extensions to not apply filtering (default List contains jpg,jpeg,gif,bmp,png)
-
-mavenSession: executionProperties will be used for file filtering
-
-MavenResourcesExecution mavenResourcesExecution = 
-  new MavenResourcesExecution ( resources, outputDirectory, mavenProject, encoding, filtersFile, nonFilteredFileExtensions, mavenSession );
-
-mavenResourcesFiltering.filterResources( mavenResourcesExecution );
-
+        mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 +-----+
 
-* Adding new filtering Token
+* Add a new filtering token
 
-  You must use the other methods from the <<<MavenResourcesFiltering>>> component and construct your own List of FilterWrapper.
-  The following example add the interpolation for the Token @ @ with using values coming from reflection with the Maven Project.
-
-  <<Note:>> The component maven-filtering uses the {{{http://plexus.codehaus.org/plexus-components/plexus-interpolation/}plexus-interpolation component}}.
-
-+-----+
-
-Create your FilterWrapper.
-
-FileUtils.FilterWrapper filterWrapper = new FileUtils.FilterWrapper()
-{
-  public Reader getReader( Reader reader )
-  {
-      Interpolator propertiesInterpolator = new RegexBasedInterpolator(  "\\@", "(.+?)\\@" );
-      propertiesInterpolator.addValueSource( valueSource );
-      return new InterpolatorFilterReader( reader, propertiesInterpolator, "@", "@" );
-  }
-};
-
-Create your MavenResourcesExecution instance and add a new filterWrapper.
-
-mavenResourcesExecution.addFilterWrapper( filterWrapper );
-
-Or with the helper method:
-
-mavenResourcesExecution.addFilerWrapper( new MavenProjectValueSource( mavenProject, true ), "\\@", "(.+?)\\@", "@", "@" );
- 
-If the mavenResourcesExecution.useDefaultFilterWrappers is set to true default FilterWrapper will be added first. 
-
-here you can apply filtering on your resources.
-
-mavenResourcesFiltering.filterResources( mavenResourcesExecution );
+  You must use the other methods from the <<<MavenResourcesFiltering>>> component and construct your own List of
+  FilterWrappers. The following example adds interpolation for the Token @ @ using values coming from reflection
+  with the Maven Project.
 
 +-----+
+        // Create your FilterWrapper
+        FileUtils.FilterWrapper filterWrapper = new FileUtils.FilterWrapper()
+        {
+          public Reader getReader( Reader reader )
+          {
+              Interpolator propertiesInterpolator =
+                  new RegexBasedInterpolator(  "\\@", "(.+?)\\@" );
+              ValueSource valueSource = new MavenProjectValueSource( mavenProject,
+                                                                     true );
+              propertiesInterpolator.addValueSource( valueSource );
+              return new InterpolatorFilterReader( reader,
+                                                   propertiesInterpolator,
+                                                   "@", "@" );
+          }
+        };
+
+        // Add the new filterWrapper to your MavenResourcesExecution instance
+        mavenResourcesExecution.addFilterWrapper( filterWrapper );
++-----+
+
+  There is a helper method to simplify this. Here's how you would use it to do what we did above:
+
++-----+
+        mavenResourcesExecution.addFilerWrapper( new MavenProjectValueSource( mavenProject,
+                                                                              true ),
+                                                 "\\@", "(.+?)\\@", "@", "@" );
++-----+
+
+  <<Note:>> If the <<<mavenResourcesExecution.useDefaultFilterWrappers>>> is set to <<<true>>>,
+  the default FilterWrappers will be added first.
+
+  Now it's time to filter the resources:
+
++-----+
+        // Apply filtering on your resources
+        mavenResourcesFiltering.filterResources( mavenResourcesExecution );
++-----+
+
+  <<Note:>> maven-filtering uses the
+  {{{http://plexus.codehaus.org/plexus-components/plexus-interpolation/}plexus-interpolation component}}.
+

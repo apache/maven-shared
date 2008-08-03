@@ -40,8 +40,8 @@ import org.codehaus.plexus.util.StringUtils;
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @version $Id$
- * 
- * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter" 
+ *
+ * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter"
  *                   role-hint="default"
  */
 public class DefaultMavenFileFilter
@@ -85,18 +85,18 @@ public class DefaultMavenFileFilter
                                           final boolean escapedBackslashesInFilePath, MavenSession mavenSession )
         throws MavenFilteringException
     {
-        
+
         // here we build some properties which will be used to read some properties files
         // to interpolate the expression ${ }  in this properties file
 
         // Take a copy of filterProperties to ensure that evaluated filterTokens are not propagated
         // to subsequent filter files. NB this replicates current behaviour and seems to make sense.
-        
+
         final Properties baseProps = new Properties();
 
         // Project properties
         baseProps.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
-            .getProperties() );    
+            .getProperties() );
         // TODO this is NPE free but do we consider this as normal
         // or do we have to throw an MavenFilteringException with mavenSession cannot be null
         if ( mavenSession != null )
@@ -104,39 +104,36 @@ public class DefaultMavenFileFilter
             // execution properties wins
             baseProps.putAll( mavenSession.getExecutionProperties() );
         }
-        
-        // now we build properties to use for resources interpolation
-        
-        final Properties filterProperties = new Properties();
-        
-        loadProperties( filterProperties, filters, baseProps );
 
-        loadProperties( filterProperties, mavenProject.getFilters(), baseProps );
+        // now we build properties to use for resources interpolation
+
+        final Properties filterProperties = new Properties();
+
+        loadProperties( filterProperties, filters, baseProps );
 
         loadProperties( filterProperties, mavenProject.getBuild().getFilters(), baseProps );
 
         // Project properties
         filterProperties.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
-            .getProperties() );     
+            .getProperties() );
         if ( mavenSession != null )
         {
             // execution properties wins
             filterProperties.putAll( mavenSession.getExecutionProperties() );
         }
-        
+
         List defaultFilterWrappers = new ArrayList( 3 );
 
-        final ValueSource propertiesValueSource = 
+        final ValueSource propertiesValueSource =
             new PropertiesEscapingBackSlashValueSource( escapedBackslashesInFilePath, filterProperties );
-        
-        // support ${token}
 
+        // support ${token}
         FileUtils.FilterWrapper one = new FileUtils.FilterWrapper()
         {
             public Reader getReader( Reader reader )
             {
                 Interpolator propertiesInterpolator = new RegexBasedInterpolator();
-                propertiesInterpolator.addValueSource( propertiesValueSource  );                
+                propertiesInterpolator.addValueSource( propertiesValueSource  );
                 return new InterpolatorFilterReader( reader, propertiesInterpolator );
             }
         };
@@ -148,39 +145,38 @@ public class DefaultMavenFileFilter
             public Reader getReader( Reader reader )
             {
                 final Interpolator propertiesInterpolatorAtRegex = new RegexBasedInterpolator( "\\@", "(.+?)\\@" );
-                propertiesInterpolatorAtRegex.addValueSource( propertiesValueSource );                
+                propertiesInterpolatorAtRegex.addValueSource( propertiesValueSource );
                 return new InterpolatorFilterReader( reader, propertiesInterpolatorAtRegex, "@", "@" );
             }
         };
         defaultFilterWrappers.add( second );
-        
+
         // support ${token} with mavenProject reflection
         FileUtils.FilterWrapper third = new FileUtils.FilterWrapper()
         {
             public Reader getReader( Reader reader )
             {
                 Interpolator mavenProjectInterpolator = new RegexBasedInterpolator();
-                 
+
                 ValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
                 mavenProjectInterpolator.addValueSource( valueSource );
                 return new InterpolatorFilterReader( reader, mavenProjectInterpolator );
             }
         };
         defaultFilterWrappers.add( third );
-        
+
         // support @token@ with mavenProject reflection
         FileUtils.FilterWrapper fourth = new FileUtils.FilterWrapper()
         {
             public Reader getReader( Reader reader )
             {
                 Interpolator mavenProjectInterpolator = new RegexBasedInterpolator( "\\@", "(.+?)\\@" );
-                 
+
                 ValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
                 mavenProjectInterpolator.addValueSource( valueSource );
                 return new InterpolatorFilterReader( reader, mavenProjectInterpolator, "@", "@" );
             }
-        };        
-
+        };
         defaultFilterWrappers.add( fourth );
 
         return defaultFilterWrappers;
@@ -201,7 +197,7 @@ public class DefaultMavenFileFilter
                 }
                 try
                 {
-                    // TODO new File should be new File(mavenProject.getBasedir(), filterfile ) ? 
+                    // TODO new File should be new File(mavenProject.getBasedir(), filterfile ) ?
                     Properties properties = PropertyUtils.loadPropertyFile( new File( filterFile ), baseProps );
                     filterProperties.putAll( properties );
                 }

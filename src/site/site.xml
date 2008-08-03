@@ -20,7 +20,7 @@ under the License.
 <project>
   <body>
     <menu name="Overview">
-      <item name="Reference" href="index.html"/>
+      <item name="Introduction" href="index.html"/>
       <item name="Usage" href="usage.html"/>
     </menu>
   </body>

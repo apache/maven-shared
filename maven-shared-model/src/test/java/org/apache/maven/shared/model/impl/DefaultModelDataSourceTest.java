@@ -45,6 +45,88 @@ public class DefaultModelDataSourceTest
     }
 
     @Test
+    public void mergeModelContainersSetWithAppendChild() {
+        ModelProperty dup0 = new ModelProperty( "http://apache.org/maven/project", null );
+        ModelProperty dup1 = new ModelProperty( "http://apache.org/maven/project/build", null );
+        ModelProperty dup2 = new ModelProperty( "http://apache.org/maven/project/build/pluginManagement", null );
+        ModelProperty dup3 =
+            new ModelProperty( "http://apache.org/maven/project/build/pluginManagement/plugins#collection", null );
+        ModelProperty dup4 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin", null );
+        ModelProperty dup5 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/configuration#set", null );
+        ModelProperty dup6 = new ModelProperty( "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList#property/combine.children", "append" );
+        ModelProperty dup6a = new ModelProperty( "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList#property/combine.children/a", "x" );
+        ModelProperty dup7 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/version", "1.1" );
+        ModelProperty dup8 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin", null );
+        ModelProperty dup9 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/configuration#set", null );
+        ModelProperty dup10 = new ModelProperty( "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList#property/combine.children", "append" );
+        ModelProperty dup10a = new ModelProperty( "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList#property/combine.children/b", "y" );
+        ModelProperty dup11 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/version", "1.1" );
+
+        List<ModelProperty> modelProperties = Arrays.asList( dup0, dup1, dup2, dup3, dup4, dup5, dup6, dup6a, dup7, dup8,
+                                                             dup9, dup10, dup10a, dup11 );
+        DummyModelContainerFactory factory = new DummyModelContainerFactory();
+
+        DefaultModelDataSource datasource = new DefaultModelDataSource();
+        datasource.init( modelProperties, factories );
+
+        List<ModelProperty> mps = datasource.mergeModelContainers(
+            factory.create( new ArrayList<ModelProperty>( modelProperties.subList( 4, 9 ) ) ),
+            factory.create( new ArrayList<ModelProperty>( modelProperties.subList( 9, 13 ) ) ) );
+        for(ModelProperty mp : mps) {
+            System.out.println(mp);
+        }
+    }
+
+
+    @Test
+    public void mergeModelContainersSet() {
+        ModelProperty dup0 = new ModelProperty( "http://apache.org/maven/project", null );
+        ModelProperty dup1 = new ModelProperty( "http://apache.org/maven/project/build", null );
+        ModelProperty dup2 = new ModelProperty( "http://apache.org/maven/project/build/pluginManagement", null );
+        ModelProperty dup3 =
+            new ModelProperty( "http://apache.org/maven/project/build/pluginManagement/plugins#collection", null );
+        ModelProperty dup4 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin", null );
+        ModelProperty dup5 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/configuration#set", null );
+        ModelProperty dup6 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/configuration#set/jdk",
+            "1.5" );
+        ModelProperty dup7 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/version", "1.1" );
+        ModelProperty dup8 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin", null );
+        ModelProperty dup9 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/configuration#set", null );
+        ModelProperty dup10 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/configuration#set/jdk",
+            "1.4" );
+        ModelProperty dup11 = new ModelProperty(
+            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/version", "1.1" );
+
+        List<ModelProperty> modelProperties = Arrays.asList( dup0, dup1, dup2, dup3, dup4, dup5, dup6, dup7, dup8,
+                                                             dup9, dup10, dup11 );
+        DummyModelContainerFactory factory = new DummyModelContainerFactory();
+
+        DefaultModelDataSource datasource = new DefaultModelDataSource();
+        datasource.init( modelProperties, factories );
+
+        List<ModelProperty> mps = datasource.mergeModelContainers(
+            factory.create( new ArrayList<ModelProperty>( modelProperties.subList( 4, 8 ) ) ),
+            factory.create( new ArrayList<ModelProperty>( modelProperties.subList( 8, 11 ) ) ) );
+                for(ModelProperty mp : mps) {
+            System.out.println(mp);
+        }
+        assertFalse(mps.contains(dup10));
+    }
+
+    @Test
     public void mergeModelContainersCollectionsOfCollections()
         throws IOException
     {
@@ -53,28 +135,19 @@ public class DefaultModelDataSourceTest
             new ModelProperty( "http://apache.org/maven/project/build", null ),
             new ModelProperty( "http://apache.org/maven/project/build/pluginManagement", null ),
             new ModelProperty( "http://apache.org/maven/project/build/pluginManagement/plugins#collection", null ),
-
-            new ModelProperty( "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin",
-                               null ), new ModelProperty(
-            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/version", "2.0.2" ),
-                                       new ModelProperty(
-                                           "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/artifactId",
-                                           "maven-compiler-plugin" ), new ModelProperty(
-            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/groupId",
-            "org.apache.maven.plugins" ),
-
-                                                                      new ModelProperty(
-                                                                          "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/dependencies#collection",
-                                                                          null ), new ModelProperty(
-            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/dependencies#collection/dependency",
-            null ), new ModelProperty(
+            new ModelProperty( "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin", null ),
+            new ModelProperty( "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/version", "2.0.2" ),
+            new ModelProperty( "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/artifactId", "maven-compiler-plugin" ),
+            new ModelProperty( "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/groupId", "org.apache.maven.plugins" ),
+            new ModelProperty( "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/dependencies#collection", null ),
+            new ModelProperty( "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/dependencies#collection/dependency", null ),
+            new ModelProperty(
             "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/dependencies#collection/dependency/groupId",
             "gid1" ), new ModelProperty(
             "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/dependencies#collection/dependency/artifactId",
             "art1" ), new ModelProperty(
             "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/dependencies#collection/dependency/version",
             "2.0" ),
-
                       new ModelProperty(
                           "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin", null ),
                       new ModelProperty(

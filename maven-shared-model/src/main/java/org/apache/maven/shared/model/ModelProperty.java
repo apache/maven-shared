@@ -177,7 +177,7 @@ public final class ModelProperty
      */
     public InterpolatorProperty asInterpolatorProperty( String baseUri )
     {
-        if ( uri.contains( "#collection" ) || value == null )
+        if ( uri.contains( "#collection" ) || uri.contains("#set") || value == null )
         {
             return null;
         }

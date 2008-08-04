@@ -125,6 +125,11 @@ public final class ModelMarshaller
                             tagName = tagName + "#collection";
                             uri.addTag( xmlStreamReader.getName().getLocalPart() + "#collection" );
                         }
+                        else if(collections.contains( tagName + "#set" ))
+                        {
+                            tagName = tagName + "#set";
+                            uri.addTag( xmlStreamReader.getName().getLocalPart() + "#set" );
+                        }
                         else
                         {
                             uri.addTag( xmlStreamReader.getName().getLocalPart() );
@@ -288,7 +293,8 @@ public final class ModelMarshaller
      */
     private static List<String> getTagNamesFromUri( int basePosition, String uri )
     {
-        return Arrays.asList( uri.substring( basePosition ).replaceAll( "#collection", "" ).split( "/" ) );
+        return Arrays.asList( uri.substring( basePosition ).replaceAll( "#collection", "" )
+                .replaceAll("#set", "").split( "/" ) );
     }
 
     /**

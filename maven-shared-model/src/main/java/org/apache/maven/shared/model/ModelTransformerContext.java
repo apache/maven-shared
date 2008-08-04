@@ -259,7 +259,7 @@ public final class ModelTransformerContext
                 processedProperties.add( p );
                 position.add( 0, uri );
             }
-            else if ( !position.contains( uri ) || parentUri.contains( "#collection" ) )
+            else if ( !position.contains( uri ) || parentUri.contains( "#collection" ) || parentUri.contains( "#set" ) )
             {
                 int pst = position.indexOf( parentUri ) + 1;
                 processedProperties.add( pst, p );

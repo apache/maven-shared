@@ -362,12 +362,14 @@ public final class DefaultModelDataSource
             String subUri = p.getUri().substring( baseUri.length(), modelPropertyLength );
 
             if ( !uris.contains( p.getUri() ) || ( subUri.contains( "#collection" ) &&
-                !subUri.endsWith( "#collection" ) ) &&
-                ( !combineChildrenUris.contains( p.getUri() ) || p.getUri().endsWith( "#property/combine.children" ) ) )
+                (!subUri.endsWith( "#collection" ) && !subUri.endsWith("#set")) &&
+                ( !combineChildrenUris.contains( p.getUri() ) || p.getUri().endsWith( "#property/combine.children" ) ) ) )
             {
+
                 processedProperties.add( findLastIndexOfParent( p, processedProperties ) + 1, p );
                 uris.add( p.getUri() );
             }
+            //if parentUri ends in set and uri is contained don't include it
         }
         return processedProperties;
     }

@@ -1005,7 +1005,7 @@ public class Verifier
             }
 
             boolean useMavenRepoLocal =
-                Boolean.valueOf( verifierProperties.getProperty( "use.mavenRepoLocal", "true" ) ).booleanValue();
+                Boolean.valueOf( verifierProperties.getProperty( "use.mavenRepoLocal", "false" ) ).booleanValue();
 
             if ( useMavenRepoLocal )
             {

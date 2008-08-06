@@ -67,6 +67,34 @@ public final class ModelTransformerContext
     }
 
     /**
+     * Transforms the specified model properties using the specified transformers.
+     *
+     * @param modelProperties
+     * @param modelPropertyTransformers
+     * @return transformed model properties
+     */
+    public static List<ModelProperty> transformModelProperties(List<ModelProperty> modelProperties,
+                                                        List<ModelPropertyTransformer> modelPropertyTransformers)
+    {
+        if(modelProperties == null) {
+            throw new IllegalArgumentException("modelProperties: null");
+        }
+        if(modelPropertyTransformers == null) {
+            throw new IllegalArgumentException("modelPropertyTransformers: null");
+        }
+        List<ModelProperty> properties = new ArrayList<ModelProperty>(modelProperties);
+        List<ModelPropertyTransformer> transformers = new ArrayList<ModelPropertyTransformer>(modelPropertyTransformers);
+        for(ModelPropertyTransformer mpt : transformers) {
+            properties = sort(mpt.transform(sort(properties, mpt.getBaseUri())), mpt.getBaseUri());
+            if(transformers.indexOf(mpt) == transformers.size() - 1) {
+                properties = sort(sort(properties, mpt.getBaseUri()), mpt.getBaseUri());
+            }
+        }
+
+        return properties;
+    }
+
+    /**
      * Transforms and interpolates specified hierarchical list of domain models (inheritence) to target domain model.
      * Unlike ModelTransformerContext#transform(java.util.List, ModelTransformer, ModelTransformer), this method requires
      * the user to add interpolator properties. It's intended to be used by IDEs.
@@ -239,7 +267,7 @@ public final class ModelTransformerContext
      * @param baseUri    the base URI of every model property
      * @return sorted list of model properties
      */
-    protected List<ModelProperty> sort( List<ModelProperty> properties, String baseUri )
+    protected static List<ModelProperty> sort( List<ModelProperty> properties, String baseUri )
     {
         if ( properties == null )
         {

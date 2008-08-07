@@ -70,7 +70,11 @@
     <module>maven-shared-monitor</module>
     <module>maven-verifier</module>
     <module>maven-web-ui-tests</module>
-    <modlue>maven-shared-model</modlue>
+    <!--
+           Uses jdk 1.5
+            <modlue>maven-shared-model</modlue>
+            
+            -->
   </modules>
 
   <scm>

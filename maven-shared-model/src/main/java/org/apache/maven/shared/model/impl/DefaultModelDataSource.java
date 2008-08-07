@@ -82,7 +82,7 @@ public final class DefaultModelDataSource
         {
             throw new IllegalArgumentException( "b: null or b.properties: empty" );
         }
-
+        /*
         if ( !modelProperties.containsAll( a.getProperties() ) )
         {
             List<ModelProperty> unknownProperties = new ArrayList<ModelProperty>();
@@ -114,7 +114,7 @@ public final class DefaultModelDataSource
             System.out.println( sb );
             throw new DataSourceException( "ModelContainer 'a' contains elements not within datasource" );
         }
-
+        */
         if ( a.equals( b ) || b.getProperties().size() == 0 )
         {
             return a;

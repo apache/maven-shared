@@ -70,6 +70,7 @@
     <module>maven-shared-monitor</module>
     <module>maven-verifier</module>
     <module>maven-web-ui-tests</module>
+    <modlue>maven-shared-model</modlue>
   </modules>
 
   <scm>

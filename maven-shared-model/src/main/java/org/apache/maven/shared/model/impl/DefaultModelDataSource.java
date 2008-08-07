@@ -121,6 +121,10 @@ public final class DefaultModelDataSource
         }
 
         int startIndex = modelProperties.indexOf( b.getProperties().get( 0 ) );
+        if(startIndex == -1)
+        {
+            startIndex = modelProperties.indexOf( a.getProperties().get( 0 ) );
+        }
         delete( a );
         delete( b );
 
@@ -130,6 +134,7 @@ public final class DefaultModelDataSource
         {
             startIndex = 0;
         }
+
         modelProperties.addAll( startIndex, joinedProperties );
 
         List<ModelProperty> deletedProperties = new ArrayList<ModelProperty>();

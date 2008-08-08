@@ -30,9 +30,9 @@ public interface ModelContainerFactory
 {
 
     /**
-     * Returns collection of URIs asscociated with this factory.
+     * Returns collection of URIs associated with this factory.
      *
-     * @return collection of URIs asscociated with this factory
+     * @return collection of URIs associated with this factory
      */
     Collection<String> getUris();
 

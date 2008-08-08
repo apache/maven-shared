@@ -63,7 +63,14 @@ public final class ModelTransformerContext
      */
     public ModelTransformerContext( Collection<ModelContainerFactory> factories )
     {
-        this.factories = ( factories == null ) ? Collections.EMPTY_LIST : factories;
+        if ( factories == null )
+        {
+            this.factories = Collections.emptyList();
+        }
+        else
+        {
+            this.factories = factories;
+        }
     }
 
     /**

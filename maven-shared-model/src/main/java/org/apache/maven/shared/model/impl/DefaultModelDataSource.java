@@ -82,7 +82,7 @@ public final class DefaultModelDataSource
         {
             throw new IllegalArgumentException( "b: null or b.properties: empty" );
         }
-
+        /*
         if ( !modelProperties.containsAll( a.getProperties() ) )
         {
             List<ModelProperty> unknownProperties = new ArrayList<ModelProperty>();
@@ -114,13 +114,17 @@ public final class DefaultModelDataSource
             System.out.println( sb );
             throw new DataSourceException( "ModelContainer 'a' contains elements not within datasource" );
         }
-
+        */
         if ( a.equals( b ) || b.getProperties().size() == 0 )
         {
             return a;
         }
 
         int startIndex = modelProperties.indexOf( b.getProperties().get( 0 ) );
+        if(startIndex == -1)
+        {
+            startIndex = modelProperties.indexOf( a.getProperties().get( 0 ) );
+        }
         delete( a );
         delete( b );
 
@@ -130,6 +134,7 @@ public final class DefaultModelDataSource
         {
             startIndex = 0;
         }
+
         modelProperties.addAll( startIndex, joinedProperties );
 
         List<ModelProperty> deletedProperties = new ArrayList<ModelProperty>();

@@ -30,7 +30,7 @@ public interface ModelDataSource
 
     /**
      * Join model properties of the specified container a with the specified container b. Any elements of model container
-     * a must take precendence over model container b. All elements of model container A must exist in the data source;
+     * a must take precedence over model container b. All elements of model container A must exist in the data source;
      * elements of model container b may or may not exist.
      *
      * @param a model container with precedence

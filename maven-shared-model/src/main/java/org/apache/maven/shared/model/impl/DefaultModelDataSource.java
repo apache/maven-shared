@@ -187,7 +187,7 @@ public final class DefaultModelDataSource
 
         if ( modelProperties.isEmpty() )
         {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
         ModelContainerFactory factory = modelContainerFactoryMap.get( uri );

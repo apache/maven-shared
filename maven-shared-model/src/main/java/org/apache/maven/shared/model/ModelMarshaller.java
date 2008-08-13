@@ -72,7 +72,7 @@ public final class ModelMarshaller
 
         if ( collections == null )
         {
-            collections = Collections.EMPTY_SET;
+            collections = Collections.emptySet();
         }
 
         List<ModelProperty> modelProperties = new ArrayList<ModelProperty>();

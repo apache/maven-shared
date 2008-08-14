@@ -429,6 +429,44 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( Collections.singleton( "-X" ), cli );
         assertArgumentsNotPresent( Collections.singleton( "-e" ), cli );
     }
+    
+    public void testActivateReactor()
+    {
+        logTestStart();
+        
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        Commandline cli = new Commandline();
+
+        tcb.setReactorBehavior( newRequest().activateReactor( null, null ), cli );
+
+        assertArgumentsPresent( Collections.singleton( "-r" ), cli );
+
+        
+    }
+    
+    public void testActivateReactorIncludesExcludes()
+    {
+        logTestStart();
+        
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        Commandline cli = new Commandline();
+
+        String[] includes = new String[] {"foo", "bar"};
+        String[] excludes = new String[] {"baz", "quz"};
+        
+        tcb.setReactorBehavior( newRequest().activateReactor( includes, excludes ), cli );
+        
+        Set args = new HashSet();
+        args.add( "-r" );
+        args.add( "-D" );
+        args.add( "maven.reactor.includes=foo,bar" );
+        args.add( "maven.reactor.excludes=baz,quz" );
+
+        assertArgumentsPresent( args, cli );
+
+
+        
+    }
 
     public void testShouldSetStrictChecksumPolityFlagFromRequest()
     {

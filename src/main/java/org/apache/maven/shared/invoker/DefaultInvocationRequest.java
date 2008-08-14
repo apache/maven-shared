@@ -83,10 +83,17 @@ public class DefaultInvocationRequest
     private Map shellEnvironments;
 
     private String mavenOpts;
+    
+    private boolean activatedReactor;
+
+    private String[] activatedReactorIncludes, activatedReactorExcludes;
 
     public InvocationRequest activateReactor( String[] includes, String[] excludes )
     {
-        throw new UnsupportedOperationException( "Not implemented yet." );
+        activatedReactor = true;
+        activatedReactorIncludes = includes;
+        activatedReactorExcludes = excludes;
+        return this;
     }
 
     public File getBaseDirectory()
@@ -360,6 +367,21 @@ public class DefaultInvocationRequest
     {
         this.mavenOpts = mavenOpts;
         return this;
+    }
+    
+    public boolean isActivatedReactor()
+    {
+        return activatedReactor;
+    }
+
+    public String[] getActivatedReactorIncludes()
+    {
+        return activatedReactorIncludes;
+    }
+
+    public String[] getActivatedReactorExcludes()
+    {
+        return activatedReactorExcludes;
     }
 
 }

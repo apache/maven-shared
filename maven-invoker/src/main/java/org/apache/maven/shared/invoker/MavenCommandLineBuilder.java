@@ -382,7 +382,22 @@ public class MavenCommandLineBuilder
             }
         }
 
-        // TODO: Setup forced-reactor args, if supplied.
+        if ( request.isActivatedReactor() )
+        {
+            cli.createArgument().setValue( "-r" );
+            String[] includes = request.getActivatedReactorIncludes();
+            String[] excludes = request.getActivatedReactorExcludes();
+            if ( includes != null )
+            {
+                cli.createArgument().setValue( "-D" );
+                cli.createArgument().setValue( "maven.reactor.includes=" + StringUtils.join( includes, "," ) );
+            }
+            if ( excludes != null )
+            {
+                cli.createArgument().setValue( "-D" );
+                cli.createArgument().setValue( "maven.reactor.excludes=" + StringUtils.join( excludes, "," ) );
+            }
+        }
     }
 
     protected void setFlags( InvocationRequest request, Commandline cli )

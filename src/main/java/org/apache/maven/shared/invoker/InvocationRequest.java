@@ -67,6 +67,25 @@ public interface InvocationRequest
     boolean isRecursive();
 
     /**
+     * Gets whether Maven should search subdirectories to build a dynamic reactor
+     * @return <code>true</code> if we should search subdirectories, <code>false</code> otherwise
+     */
+    public boolean isActivatedReactor();
+
+    /**
+     * Gets the list of subdirectory patterns to search
+     * @return list of subdirectory patterns to search, or <code>null</code> in which case defaults should be used
+     */
+    public String[] getActivatedReactorIncludes();
+
+    /**
+     * Gets the list of subdirectory patterns to exclude from search
+     * @return list of subdirectory patterns to exclude search, or <code>null</code> in which case nothing should be excluded
+     */
+    public String[] getActivatedReactorExcludes();
+
+
+    /**
      * Gets the debug mode of the Maven invocation. By default, Maven is executed in normal mode.
      * 
      * @return <code>true</code> if Maven should be executed in debug mode, <code>false</code> if the normal mode
@@ -320,6 +339,12 @@ public interface InvocationRequest
      */
     InvocationRequest setFailureBehavior( String failureBehavior );
 
+    /**
+     * Dynamically constructs a reactor using the subdirectories of the current directory
+     * @param includes a list of filename patterns to include, or null, in which case the default is &#x2a;/pom.xml
+     * @param excludes a list of filename patterns to exclude, or null, in which case nothing is excluded
+     * @return This invocation request
+     */
     InvocationRequest activateReactor( String[] includes, String[] excludes );
 
     /**

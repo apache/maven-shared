@@ -33,6 +33,12 @@
 
   <name>Maven Dependency Tree</name>
 
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-dependency-tree/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-dependency-tree/</developerConnection>
+    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-dependency-tree/</url>
+  </scm>
+
   <build>
     <plugins>
       <plugin>

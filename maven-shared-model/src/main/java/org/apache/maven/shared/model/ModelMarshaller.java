@@ -77,6 +77,8 @@ public final class ModelMarshaller
 
         List<ModelProperty> modelProperties = new ArrayList<ModelProperty>();
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
+        xmlInputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, "false");
+
         Uri uri = new Uri( baseUri );
         String tagName = baseUri;
         String tagValue = null;
@@ -86,6 +88,7 @@ public final class ModelMarshaller
         try
         {
             xmlStreamReader = xmlInputFactory.createXMLStreamReader( inputStream );
+            
             Map<String, String> attributes = new HashMap<String, String>();
             for ( ; ; xmlStreamReader.next() )
             {

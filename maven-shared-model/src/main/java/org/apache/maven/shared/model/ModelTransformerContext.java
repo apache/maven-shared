@@ -89,6 +89,7 @@ public final class ModelTransformerContext
         if(modelPropertyTransformers == null) {
             throw new IllegalArgumentException("modelPropertyTransformers: null");
         }
+        
         List<ModelProperty> properties = new ArrayList<ModelProperty>(modelProperties);
         List<ModelPropertyTransformer> transformers = new ArrayList<ModelPropertyTransformer>(modelPropertyTransformers);
         for(ModelPropertyTransformer mpt : transformers) {
@@ -123,9 +124,20 @@ public final class ModelTransformerContext
         List<ModelProperty> transformedProperties =
                 importModelProperties(importModels, fromModelTransformer.transformToModelProperties( domainModels ));
 
+        List<ModelProperty> emptyTags = new ArrayList<ModelProperty>();
+        for(ModelProperty mp: transformedProperties)
+        {
+            if(isEmptyTag(mp, transformedProperties))
+            {    
+                emptyTags.add(mp);
+            }
+        }
+        transformedProperties.removeAll(emptyTags);
+
         String baseUriForModel = fromModelTransformer.getBaseUri();
         List<ModelProperty> modelProperties =
             sort( transformedProperties, baseUriForModel );
+
         ModelDataSource modelDataSource = new DefaultModelDataSource();
         modelDataSource.init( modelProperties, factories );
 
@@ -218,7 +230,7 @@ public final class ModelTransformerContext
         try
         {
             DomainModel domainModel = toModelTransformer.transformToDomainModel( mps );
-            //domainModel.setEventHistory(modelDataSource.getEventHistory());
+            domainModel.setEventHistory(modelDataSource.getEventHistory());
             return domainModel;
         }
         catch ( IOException e )
@@ -302,5 +314,22 @@ public final class ModelTransformerContext
             }
         }
         return processedProperties;
+    }
+    
+    private static boolean isEmptyTag(ModelProperty modelProperty, List<ModelProperty> modelProperties)
+    {
+        if(modelProperty.getValue() != null)
+        {
+            return modelProperty.getValue().trim().equals("");
+        }
+
+        String uri = modelProperty.getUri();
+        for(ModelProperty mp: modelProperties) {
+            if(mp.getUri().startsWith(uri))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

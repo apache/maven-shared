@@ -128,7 +128,7 @@ public final class ModelTransformerContext
         for(ModelProperty mp: transformedProperties)
         {
             if(isEmptyTag(mp, transformedProperties))
-            {    
+            {   System.out.println("Removing tag: " + mp); 
                 emptyTags.add(mp);
             }
         }
@@ -331,6 +331,15 @@ public final class ModelTransformerContext
     {
         if(modelProperty.getValue() != null)
         {
+            int index = modelProperties.indexOf(modelProperty);
+            if(index + 1 < modelProperties.size())
+            {
+                String peekPropertyUri = modelProperties.get(index + 1).getUri();
+                if(peekPropertyUri.contains("#property") && peekPropertyUri.startsWith(modelProperty.getUri()) )
+                {
+                    return false;
+                }
+            }
             return modelProperty.getValue().trim().equals("");
         }
 

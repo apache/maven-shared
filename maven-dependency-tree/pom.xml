@@ -38,6 +38,10 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-dependency-tree/</developerConnection>
     <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-dependency-tree/</url>
   </scm>
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/13264</url>
+  </issueManagement>
 
   <build>
     <plugins>

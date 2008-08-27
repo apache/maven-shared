@@ -256,33 +256,47 @@ public final class ModelMarshaller
             }
             String tag = tagNames.get( tagNames.size() - 1 );
 
-            ModelProperty attribute = null;
-            int peekIndex = modelProperties.indexOf( mp ) + 1;
-            if ( peekIndex <= modelProperties.size() - 1 )
+            List<ModelProperty> attributes = new ArrayList<ModelProperty>();
+            for(int peekIndex = modelProperties.indexOf( mp ) + 1; peekIndex < modelProperties.size(); peekIndex++)
             {
-                ModelProperty peekProperty = modelProperties.get( peekIndex );
-                if ( peekProperty.getUri().contains( "#property" ) )
+                //int peekIndex = modelProperties.indexOf( mp ) + i;
+                if ( peekIndex <= modelProperties.size() - 1 )
                 {
-                    attribute = peekProperty;
+                    ModelProperty peekProperty = modelProperties.get( peekIndex );
+                    if ( peekProperty.getUri().contains( "#property" ) )
+                    {
+                        attributes.add(peekProperty);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    break;
                 }
             }
 
-            sb.append( toStartTag( tag, attribute ) );
+            sb.append( toStartTag( tag, attributes ) );
             if ( mp.getResolvedValue() != null )
             {
                 sb.append( mp.getResolvedValue() );
                 sb.append( toEndTag( tag ) );
                 n = 2;
             }
-            else if(attribute != null)
+            else if(!attributes.isEmpty())
             {
-                int pi = modelProperties.indexOf( mp ) + 2;
+                int pi = modelProperties.indexOf( mp ) + attributes.size() + 1;
                 if ( pi <= modelProperties.size() - 1 )
                 {
                     ModelProperty peekProperty = modelProperties.get( pi );
                     if ( !peekProperty.getUri().startsWith(mp.getUri()) )
                     {
-                        sb.append( mp.getResolvedValue() );
+                        if( mp.getResolvedValue() != null )
+                        {
+                            sb.append( mp.getResolvedValue() );
+                        }
                         sb.append( toEndTag( tag ) );
                         n = 2;
                     }
@@ -319,18 +333,21 @@ public final class ModelMarshaller
      * Returns the XML formatted start tag for the specified value and the specified attribute.
      *
      * @param value     the value to use for the start tag
-     * @param attribute the attribute to use in constructing of start tag
+     * @param attributes the attribute to use in constructing of start tag
      * @return the XML formatted start tag for the specified value and the specified attribute
      */
-    private static String toStartTag( String value, ModelProperty attribute )
+    private static String toStartTag( String value, List<ModelProperty> attributes )
     {
         StringBuffer sb = new StringBuffer(); //TODO: Support more than one attribute
         sb.append( "\r\n<" ).append( value );
-        if ( attribute != null )
+        if ( attributes != null )
         {
-            sb.append( " " ).append(
-                attribute.getUri().substring( attribute.getUri().indexOf( "#property/" ) + 10 ) ).append( "=\"" )
-                .append( attribute.getValue() ).append( "\" " );
+            for(ModelProperty attribute : attributes)
+            {
+                sb.append( " " ).append(
+                    attribute.getUri().substring( attribute.getUri().indexOf( "#property/" ) + 10 ) ).append( "=\"" )
+                    .append( attribute.getValue() ).append( "\" " );
+            }
         }
         sb.append( ">" );
         return sb.toString();

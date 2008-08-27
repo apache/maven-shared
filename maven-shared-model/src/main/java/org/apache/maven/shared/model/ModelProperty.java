@@ -85,7 +85,22 @@ public final class ModelProperty
                 unresolvedExpressions.add( matcher.group( 0 ) );
             }
         }
-        depth = uri.split( "/" ).length;
+
+        String uriWithoutProperty;
+        int index =  uri.lastIndexOf( "/" );
+        if(index > -1) {
+            uriWithoutProperty = uri.substring( 0, uri.lastIndexOf( "/" ) );
+            if(uriWithoutProperty.endsWith("#property"))
+            {
+                uriWithoutProperty = uriWithoutProperty.substring( 0, uriWithoutProperty.lastIndexOf( "/" ) );
+            }
+        }
+        else
+        {
+            uriWithoutProperty = uri;
+        }
+
+        depth = uriWithoutProperty.split( "/" ).length;
     }
 
     /**

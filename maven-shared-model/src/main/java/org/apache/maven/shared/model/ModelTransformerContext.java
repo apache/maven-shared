@@ -299,7 +299,13 @@ public final class ModelTransformerContext
         for ( ModelProperty p : properties )
         {
             String uri = p.getUri();
-            String parentUri = uri.substring( 0, uri.lastIndexOf( "/" ) ).replaceAll( "#property", "" );
+            String parentUri = uri.substring( 0, uri.lastIndexOf( "/" ) );
+            if(parentUri.endsWith("#property") && !parentUri.substring( 0, parentUri.lastIndexOf( "/" )).equals(baseUri))
+            {
+                parentUri = parentUri.substring( 0, parentUri.lastIndexOf( "/" ) );
+            }
+            parentUri = parentUri.replaceAll("#property", "");
+
             if ( !projectIsContained && uri.equals( baseUri ) )
             {
                 projectIsContained = true;
@@ -309,6 +315,11 @@ public final class ModelTransformerContext
             else if ( !position.contains( uri ) || parentUri.contains( "#collection" ) || parentUri.contains( "#set" ) )
             {
                 int pst = position.indexOf( parentUri ) + 1;
+                if(pst == 0 && !uri.equals(properties.get(0).getUri()) )
+                {
+                    throw new IllegalArgumentException("Could not locate parent: Parent URI = " + parentUri
+                            + ": Child - " + p.toString());
+                }
                 processedProperties.add( pst, p );
                 position.add( pst, uri );
             }

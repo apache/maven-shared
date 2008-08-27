@@ -30,7 +30,6 @@ import java.util.*;
  */
 public final class ModelTransformerContext
 {
-
     /**
      * Factories to use for construction of model containers
      */
@@ -128,7 +127,7 @@ public final class ModelTransformerContext
         for(ModelProperty mp: transformedProperties)
         {
             if(isEmptyTag(mp, transformedProperties))
-            {   System.out.println("Removing tag: " + mp); 
+            {
                 emptyTags.add(mp);
             }
         }

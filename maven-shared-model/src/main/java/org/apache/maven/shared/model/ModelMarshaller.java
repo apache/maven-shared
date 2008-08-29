@@ -78,6 +78,7 @@ public final class ModelMarshaller
         List<ModelProperty> modelProperties = new ArrayList<ModelProperty>();
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         xmlInputFactory.setProperty(XMLInputFactory.IS_REPLACING_ENTITY_REFERENCES, "false");
+        xmlInputFactory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, "false");
 
         Uri uri = new Uri( baseUri );
         String tagName = baseUri;
@@ -259,7 +260,6 @@ public final class ModelMarshaller
             List<ModelProperty> attributes = new ArrayList<ModelProperty>();
             for(int peekIndex = modelProperties.indexOf( mp ) + 1; peekIndex < modelProperties.size(); peekIndex++)
             {
-                //int peekIndex = modelProperties.indexOf( mp ) + i;
                 if ( peekIndex <= modelProperties.size() - 1 )
                 {
                     ModelProperty peekProperty = modelProperties.get( peekIndex );

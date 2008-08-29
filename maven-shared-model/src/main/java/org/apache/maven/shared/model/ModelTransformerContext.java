@@ -123,15 +123,7 @@ public final class ModelTransformerContext
         List<ModelProperty> transformedProperties =
                 importModelProperties(importModels, fromModelTransformer.transformToModelProperties( domainModels ));
 
-        List<ModelProperty> emptyTags = new ArrayList<ModelProperty>();
-        for(ModelProperty mp: transformedProperties)
-        {
-            if(isEmptyTag(mp, transformedProperties))
-            {
-                emptyTags.add(mp);
-            }
-        }
-        transformedProperties.removeAll(emptyTags);
+        transformedProperties.removeAll(findEmptyTags(transformedProperties));
 
         String baseUriForModel = fromModelTransformer.getBaseUri();
         List<ModelProperty> modelProperties =
@@ -325,6 +317,23 @@ public final class ModelTransformerContext
         }
         return processedProperties;
     }
+
+    private List<ModelProperty> findEmptyTags(List<ModelProperty> modelProperties)
+    {
+        List<ModelProperty> props = new ArrayList<ModelProperty>(modelProperties);
+        List<ModelProperty> emptyTags = new ArrayList<ModelProperty>();
+        for(ModelProperty mp: props)
+        {
+            if(isEmptyTag(mp, props))
+            {
+                emptyTags.add(mp);
+                props.remove(mp);
+                emptyTags.addAll(findEmptyTags(props));
+                break;
+            }
+        }
+        return emptyTags;
+    }
     
     private static boolean isEmptyTag(ModelProperty modelProperty, List<ModelProperty> modelProperties)
     {
@@ -344,7 +353,7 @@ public final class ModelTransformerContext
 
         String uri = modelProperty.getUri();
         for(ModelProperty mp: modelProperties) {
-            if(mp.getUri().startsWith(uri))
+            if(mp.getUri().startsWith(uri) && !mp.equals(modelProperty))
             {
                 return false;
             }

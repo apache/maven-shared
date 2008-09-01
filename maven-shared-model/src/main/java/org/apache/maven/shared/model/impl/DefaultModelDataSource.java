@@ -246,10 +246,6 @@ public final class DefaultModelDataSource
                 }
                 case END_TAG:
                 {
-                    if ( !i.hasNext() )
-                    {
-                        tmp.add( mp );
-                    }
                     modelContainers.add( factory.create( tmp ) );
                     tmp.clear();
                     state = NO_TAG;

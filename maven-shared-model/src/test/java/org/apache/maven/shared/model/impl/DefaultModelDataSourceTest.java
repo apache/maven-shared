@@ -48,39 +48,44 @@ public class DefaultModelDataSourceTest
     public void mergeModelContainersSetWithAppendChild() {
         ModelProperty dup0 = new ModelProperty( "http://apache.org/maven/project", null );
         ModelProperty dup1 = new ModelProperty( "http://apache.org/maven/project/build", null );
-        ModelProperty dup2 = new ModelProperty( "http://apache.org/maven/project/build/pluginManagement", null );
-        ModelProperty dup3 =
-            new ModelProperty( "http://apache.org/maven/project/build/pluginManagement/plugins#collection", null );
+        ModelProperty dup2 =
+            new ModelProperty( "http://apache.org/maven/project/build/plugins#collection", null );
+        ModelProperty dup3 = new ModelProperty(
+            "http://apache.org/maven/project/build/plugins#collection/plugin", null );
         ModelProperty dup4 = new ModelProperty(
-            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin", null );
-        ModelProperty dup5 = new ModelProperty(
-            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/configuration#set", null );
+            "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set", null );
+          ModelProperty dup5 = new ModelProperty(
+            "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList", null );
         ModelProperty dup6 = new ModelProperty( "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList#property/combine.children", "append" );
         ModelProperty dup6a = new ModelProperty( "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList#property/combine.children/a", "x" );
         ModelProperty dup7 = new ModelProperty(
-            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/version", "1.1" );
+            "http://apache.org/maven/project/build/plugins#collection/plugin/version", "1.1" );
         ModelProperty dup8 = new ModelProperty(
-            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin", null );
+            "http://apache.org/maven/project/build/plugins#collection/plugin", null );
         ModelProperty dup9 = new ModelProperty(
-            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/configuration#set", null );
-        ModelProperty dup10 = new ModelProperty( "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList#property/combine.children", "append" );
-        ModelProperty dup10a = new ModelProperty( "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList#property/combine.children/b", "y" );
-        ModelProperty dup11 = new ModelProperty(
-            "http://apache.org/maven/project/build/pluginManagement/plugins#collection/plugin/version", "1.1" );
+            "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set", null );
+        ModelProperty dup10 = new ModelProperty(
+            "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList", null );
+        ModelProperty dup11 = new ModelProperty( "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList#property/combine.children", "append" );
+        ModelProperty dup11a = new ModelProperty( "http://apache.org/maven/project/build/plugins#collection/plugin/configuration#set/myList#property/combine.children/b", "y" );
+        ModelProperty dup12 = new ModelProperty(
+            "http://apache.org/maven/project/build/plugins#collection/plugin/version", "1.1" );
 
         List<ModelProperty> modelProperties = Arrays.asList( dup0, dup1, dup2, dup3, dup4, dup5, dup6, dup6a, dup7, dup8,
-                                                             dup9, dup10, dup10a, dup11 );
+                                                             dup9, dup10, dup11, dup11a, dup12 );
         DummyModelContainerFactory factory = new DummyModelContainerFactory();
 
         DefaultModelDataSource datasource = new DefaultModelDataSource();
         datasource.init( modelProperties, factories );
 
         List<ModelProperty> mps = datasource.mergeModelContainers(
-            factory.create( new ArrayList<ModelProperty>( modelProperties.subList( 4, 9 ) ) ),
-            factory.create( new ArrayList<ModelProperty>( modelProperties.subList( 9, 13 ) ) ) );
+            factory.create( new ArrayList<ModelProperty>( modelProperties.subList( 3, 9 ) ) ),
+            factory.create( new ArrayList<ModelProperty>( modelProperties.subList( 9, 14 ) ) ) );
         for(ModelProperty mp : mps) {
             System.out.println(mp);
         }
+        assertTrue(mps.contains(dup6a));
+        assertTrue(mps.contains(dup11a));
     }
 
 

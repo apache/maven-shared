@@ -129,11 +129,11 @@ public final class DefaultModelDataSource
         delete( b );
 
         List<ModelProperty> joinedProperties = mergeModelContainers( a, b );
-
         if ( modelProperties.size() == 0 )
         {
             startIndex = 0;
         }
+        joinedProperties = sort(joinedProperties, findBaseUriFrom(joinedProperties));
 
         modelProperties.addAll( startIndex, joinedProperties );
 
@@ -525,4 +525,49 @@ public final class DefaultModelDataSource
             return sb.toString();
         }
     }
+
+    private static List<ModelProperty> sort( List<ModelProperty> properties, String baseUri )
+    {
+        if ( properties == null )
+        {
+            throw new IllegalArgumentException( "properties" );
+        }
+        LinkedList<ModelProperty> processedProperties = new LinkedList<ModelProperty>();
+        List<String> position = new ArrayList<String>();
+        boolean projectIsContained = false;
+
+        for ( ModelProperty p : properties )
+        {
+            String uri = p.getUri();
+            String parentUri = uri.substring( 0, uri.lastIndexOf( "/" ) );
+            parentUri = parentUri.replaceAll("#property", "");
+
+            if ( !projectIsContained && uri.equals( baseUri ) )
+            {
+                projectIsContained = true;
+                processedProperties.add( p );
+                position.add( 0, uri );
+            }
+            else if ( !position.contains( uri ) || parentUri.contains( "#collection" ) || parentUri.contains( "#set" ) )
+            {
+                int pst = position.indexOf( parentUri ) + 1;
+                processedProperties.add( pst, p );
+                position.add( pst, uri );
+            }
+        }
+        return processedProperties;
+    }
+
+        private static String findBaseUriFrom(List<ModelProperty> modelProperties)
+        {
+            String baseUri = null;
+            for(ModelProperty mp : modelProperties)
+            {
+                if(baseUri == null || mp.getUri().length() < baseUri.length())
+                {
+                    baseUri = mp.getUri();
+                }
+            }
+            return baseUri;
+        }
 }

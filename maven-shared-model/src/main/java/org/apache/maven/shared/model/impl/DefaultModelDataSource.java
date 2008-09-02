@@ -362,9 +362,9 @@ public final class DefaultModelDataSource
             }
 
            String subUri = p.getUri().substring( baseUri.length(), modelPropertyLength );
-            if ( !uris.contains( p.getUri() ) || ( subUri.contains( "#collection" ) &&
-                (!subUri.endsWith( "#collection" ) && !subUri.endsWith("#set")) &&
-                ( !combineChildrenUris.contains( p.getUri() ) || p.getUri().endsWith( "#property/combine.children" ) ) ) )
+            if ( !uris.contains( p.getUri() ) || ( (subUri.contains( "#collection" ) || subUri.contains("#set")) &&
+                (!subUri.endsWith( "#collection" ) && !subUri.endsWith("#set")) && !isParentASet(subUri) && combineChildrenRule(p, combineChildrenUris) )
+               )
             {
                     processedProperties.add( findLastIndexOfParent( p, processedProperties ) + 1, p );
                     uris.add( p.getUri() );
@@ -372,6 +372,18 @@ public final class DefaultModelDataSource
             //if parentUri ends in set and uri is contained don't include it
         }
         return processedProperties;
+    }
+
+    private static boolean combineChildrenRule(ModelProperty mp,  List<String> combineChildrenUris) {
+        return  !combineChildrenUris.contains( mp.getUri() ) || mp.getUri().endsWith( "#property/combine.children" ) ;
+    }
+
+    private static boolean isParentASet(String uri)
+    {
+        String x = uri.replaceAll("#property", "").replaceAll("/combine.children", "");
+        String parentUri = (x.lastIndexOf( "/" ) > 0)
+                ? x.substring( 0, x.lastIndexOf( "/" ) ) : "";
+        return parentUri.endsWith("#set");
     }
 
     /**

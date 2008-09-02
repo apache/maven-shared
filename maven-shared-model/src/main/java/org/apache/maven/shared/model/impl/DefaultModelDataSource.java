@@ -246,6 +246,10 @@ public final class DefaultModelDataSource
                 }
                 case END_TAG:
                 {
+                    if ( !i.hasNext() && mp.getUri().startsWith(uri))
+                    {
+                        tmp.add( mp );
+                    }
                     modelContainers.add( factory.create( tmp ) );
                     tmp.clear();
                     state = NO_TAG;

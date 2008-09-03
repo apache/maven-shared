@@ -371,17 +371,25 @@ public class FileSetManager
     private boolean isSymlink( File file )
         throws IOException
     {
-        File parent = file.getParentFile();
-        File canonicalFile = file.getCanonicalFile();
-
+        File fileInCanonicalParent = null;
+        File parentDir = file.getParentFile();
+        if ( parentDir == null )
+        {
+            fileInCanonicalParent = file;
+        }
+        else
+        {
+            fileInCanonicalParent = new File( parentDir.getCanonicalPath(), file.getName() );
+        }
         if ( messages != null && messages.isDebugEnabled() )
         {
-            messages.addDebugMessage( "Checking for symlink:\nParent file's canonical path: "
-                + parent.getCanonicalPath() + "\nMy canonical path: " + canonicalFile.getPath() ).flush();
+            messages.addDebugMessage(
+                                      "Checking for symlink:\nFile's canonical path: "
+                                          + fileInCanonicalParent.getCanonicalPath()
+                                          + "\nFile's absolute path with canonical parent: "
+                                          + fileInCanonicalParent.getPath() ).flush();
         }
-        return parent != null
-            && ( !canonicalFile.getName().equals( file.getName() ) || !canonicalFile.getPath()
-                .startsWith( parent.getCanonicalPath() ) );
+        return !fileInCanonicalParent.getCanonicalFile().equals( fileInCanonicalParent.getAbsoluteFile() );
     }
 
     private Set findDeletablePaths( FileSet fileSet )

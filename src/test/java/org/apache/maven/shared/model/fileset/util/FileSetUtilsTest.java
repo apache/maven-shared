@@ -168,6 +168,34 @@ public class FileSetUtilsTest
     }
 
     /**
+     * @throws Exception if any
+     */
+    public void testDeleteDanglingSymlink()
+        throws Exception
+    {
+        File directory = setupTestDirectory( "testDeleteDanglingSymlink" );
+        File targetFile = new File( directory, "test.txt" );
+        File linkFile = new File( directory, "symlink" );
+
+        if ( !createSymlink( targetFile, linkFile ) )
+        {
+            // symlinks apparently not supported, skip test
+            return;
+        }
+        targetFile.delete();
+
+        FileSet set = new FileSet();
+        set.setDirectory( directory.getPath() );
+        set.addInclude( "**" );
+
+        FileSetManager fileSetManager = new FileSetManager();
+
+        fileSetManager.delete( set );
+
+        Assert.assertFalse( "directory still exists", directory.exists() );
+    }
+
+    /**
      * @param from
      * @param to
      * @return
@@ -184,9 +212,9 @@ public class FileSetUtilsTest
 
         Commandline cli = new Commandline();
         cli.setExecutable( "ln" );
-        cli.createArgument().setLine( "-s" );
-        cli.createArgument().setLine( from.getPath() );
-        cli.createArgument().setLine( to.getPath() );
+        cli.createArg().setLine( "-s" );
+        cli.createArg().setLine( from.getPath() );
+        cli.createArg().setLine( to.getPath() );
 
         int result = cli.execute().waitFor();
 

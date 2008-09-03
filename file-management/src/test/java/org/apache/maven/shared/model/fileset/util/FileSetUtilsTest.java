@@ -94,7 +94,7 @@ public class FileSetUtilsTest
         throws IOException, InterruptedException, CommandLineException
     {
         File directory = setupTestDirectory( "testIncludesDontFollowSymlinks" );
-        File subdir = new File( directory, "linked-to-self" );
+        File subdir = new File( directory, directory.getName() );
 
         if ( !createSymlink( directory, subdir ) )
         {
@@ -124,7 +124,7 @@ public class FileSetUtilsTest
         throws IOException, InterruptedException, CommandLineException
     {
         File directory = setupTestDirectory( "testDeleteDontFollowSymlinks" );
-        File subdir = new File( directory, "linked-to-self" );
+        File subdir = new File( directory, directory.getName() );
 
         if ( !createSymlink( directory, subdir ) )
         {
@@ -136,7 +136,7 @@ public class FileSetUtilsTest
         FileSet set = new FileSet();
         set.setDirectory( directory.getPath() );
         set.addInclude( "**/included.txt" );
-        set.addInclude( "**/linked-to-self" );
+        set.addInclude( "**/" + subdir.getName() );
         set.setFollowSymlinks( false );
 
         FileSetManager fileSetManager = new FileSetManager();

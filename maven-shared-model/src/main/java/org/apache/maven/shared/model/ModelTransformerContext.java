@@ -123,8 +123,6 @@ public final class ModelTransformerContext
         List<ModelProperty> transformedProperties =
                 importModelProperties(importModels, fromModelTransformer.transformToModelProperties( domainModels ));
 
-        transformedProperties.removeAll(findEmptyTags(transformedProperties));
-
         String baseUriForModel = fromModelTransformer.getBaseUri();
         List<ModelProperty> modelProperties =
             sort( transformedProperties, baseUriForModel );
@@ -312,48 +310,5 @@ public final class ModelTransformerContext
             }
         }
         return processedProperties;
-    }
-
-    private List<ModelProperty> findEmptyTags(List<ModelProperty> modelProperties)
-    {
-        List<ModelProperty> props = new ArrayList<ModelProperty>(modelProperties);
-        List<ModelProperty> emptyTags = new ArrayList<ModelProperty>();
-        for(ModelProperty mp: props)
-        {
-            if(isEmptyTag(mp, props))
-            {
-                emptyTags.add(mp);
-                props.remove(mp);
-                emptyTags.addAll(findEmptyTags(props));
-                break;
-            }
-        }
-        return emptyTags;
-    }
-    
-    private static boolean isEmptyTag(ModelProperty modelProperty, List<ModelProperty> modelProperties)
-    {
-        if(modelProperty.getValue() != null)
-        {
-            int index = modelProperties.indexOf(modelProperty);
-            if(index + 1 < modelProperties.size())
-            {
-                String peekPropertyUri = modelProperties.get(index + 1).getUri();
-                if(peekPropertyUri.contains("#property") && peekPropertyUri.startsWith(modelProperty.getUri()) )
-                {
-                    return false;
-                }
-            }
-            return modelProperty.getValue().trim().equals("");
-        }
-
-        String uri = modelProperty.getUri();
-        for(ModelProperty mp: modelProperties) {
-            if(mp.getUri().startsWith(uri) && !mp.equals(modelProperty))
-            {
-                return false;
-            }
-        }
-        return true;
     }
 }

@@ -127,6 +127,7 @@ public final class ModelTransformerContext
         List<ModelProperty> modelProperties =
             sort( transformedProperties, baseUriForModel );
 
+        modelProperties = determineLeafNodes(modelProperties);
         ModelDataSource modelDataSource = new DefaultModelDataSource();
         modelDataSource.init( modelProperties, factories );
 
@@ -302,6 +303,10 @@ public final class ModelTransformerContext
                         ? (position.indexOf( parentUri.replaceAll("#property", "") ) + 1) : (position.indexOf( parentUri ) + 1);
                 if(pst == 0 && !uri.equals(properties.get(0).getUri()) )
                 {
+                    for(ModelProperty mp : properties)
+                    {
+                        System.out.println(mp);
+                    }
                     throw new IllegalArgumentException("Could not locate parent: Parent URI = " + parentUri
                             + ": Child - " + p.toString());
                 }
@@ -310,5 +315,39 @@ public final class ModelTransformerContext
             }
         }
         return processedProperties;
+    }
+
+    private static List<ModelProperty> determineLeafNodes(List<ModelProperty> modelProperties)
+    {
+        List<ModelProperty> mps = new ArrayList<ModelProperty>();
+        for(ModelProperty mp : modelProperties)
+        {
+            if(mp.getValue() != null && mp.getValue().trim().equals("") && isLeafNode( mp, modelProperties) )
+            {
+                mps.add( new ModelProperty(mp.getUri(), null) );
+            }
+            else
+            {
+                mps.add(mp);
+            }
+        }
+        return mps;
+    }
+
+    private static boolean isLeafNode(ModelProperty modelProperty, List<ModelProperty> modelProperties)
+    {
+        for(int i = modelProperties.indexOf(modelProperty); i < modelProperties.size() - 1 ; i++)
+        {
+            ModelProperty peekProperty = modelProperties.get( i + 1 );
+            if(modelProperty.isParentOf( peekProperty ) && !peekProperty.getUri().contains( "#property") )
+            {
+                return true;
+            }
+            else if(!modelProperty.isParentOf( peekProperty ) )
+            {
+                return modelProperty.getDepth() < peekProperty.getDepth();
+            }
+        }
+        return true;
     }
 }

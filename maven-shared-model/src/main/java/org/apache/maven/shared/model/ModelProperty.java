@@ -90,7 +90,7 @@ public final class ModelProperty
         int index =  uri.lastIndexOf( "/" );
         if(index > -1) {
             uriWithoutProperty = uri.substring( 0, uri.lastIndexOf( "/" ) );
-            if(uriWithoutProperty.endsWith("#property"))
+            if(uriWithoutProperty.endsWith("#property") || uriWithoutProperty.endsWith("combine.children") )
             {
                 uriWithoutProperty = uriWithoutProperty.substring( 0, uriWithoutProperty.lastIndexOf( "/" ) );
             }

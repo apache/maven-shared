@@ -538,7 +538,7 @@ public final class DefaultModelDataSource
         }
     }
 
-    private static List<ModelProperty> sort( List<ModelProperty> properties, String baseUri )
+    protected static List<ModelProperty> sort( List<ModelProperty> properties, String baseUri )
     {
         if ( properties == null )
         {
@@ -552,7 +552,6 @@ public final class DefaultModelDataSource
         {
             String uri = p.getUri();
             String parentUri = uri.substring( 0, uri.lastIndexOf( "/" ) );
-            parentUri = parentUri.replaceAll("#property", "");
 
             if ( !projectIsContained && uri.equals( baseUri ) )
             {
@@ -562,7 +561,8 @@ public final class DefaultModelDataSource
             }
             else if ( !position.contains( uri ) || parentUri.contains( "#collection" ) || parentUri.contains( "#set" ) )
             {
-                int pst = position.indexOf( parentUri ) + 1;
+                int pst = (parentUri.endsWith("#property"))
+                        ? (position.indexOf( parentUri.replaceAll("#property", "") ) + 1) : (position.indexOf( parentUri ) + 1);
                 processedProperties.add( pst, p );
                 position.add( pst, uri );
             }

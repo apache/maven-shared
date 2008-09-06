@@ -147,7 +147,7 @@ public class DefaultMavenFileFilter
         {
             public Reader getReader( Reader reader )
             {
-                Interpolator propertiesInterpolator = new RegexBasedInterpolator();
+                Interpolator propertiesInterpolator = new RegexBasedInterpolator( true );
                 propertiesInterpolator.addValueSource( propertiesValueSource  );
                 return new InterpolatorFilterReader( reader, propertiesInterpolator );
             }
@@ -159,7 +159,8 @@ public class DefaultMavenFileFilter
         {
             public Reader getReader( Reader reader )
             {
-                final Interpolator propertiesInterpolatorAtRegex = new RegexBasedInterpolator( "\\@", "(.+?)\\@" );
+                final RegexBasedInterpolator propertiesInterpolatorAtRegex = new RegexBasedInterpolator( "\\@", "(.+?)\\@" );
+                propertiesInterpolatorAtRegex.setReusePatterns( true );
                 propertiesInterpolatorAtRegex.addValueSource( propertiesValueSource );
                 return new InterpolatorFilterReader( reader, propertiesInterpolatorAtRegex, "@", "@" );
             }
@@ -171,7 +172,7 @@ public class DefaultMavenFileFilter
         {
             public Reader getReader( Reader reader )
             {
-                Interpolator mavenProjectInterpolator = new RegexBasedInterpolator();
+                Interpolator mavenProjectInterpolator = new RegexBasedInterpolator( true );
 
                 ValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
                 mavenProjectInterpolator.addValueSource( valueSource );
@@ -185,8 +186,8 @@ public class DefaultMavenFileFilter
         {
             public Reader getReader( Reader reader )
             {
-                Interpolator mavenProjectInterpolator = new RegexBasedInterpolator( "\\@", "(.+?)\\@" );
-
+                RegexBasedInterpolator mavenProjectInterpolator = new RegexBasedInterpolator( "\\@", "(.+?)\\@" );
+                mavenProjectInterpolator.setReusePatterns( true );
                 ValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
                 mavenProjectInterpolator.addValueSource( valueSource );
                 return new InterpolatorFilterReader( reader, mavenProjectInterpolator, "@", "@" );

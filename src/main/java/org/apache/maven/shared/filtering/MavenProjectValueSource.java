@@ -39,6 +39,8 @@ public class MavenProjectValueSource
     private MavenProject project;
 
     private boolean escapedBackslashesInFilePath;
+    
+    private MavenResourcesExecution mavenResourcesExecution;
 
     public MavenProjectValueSource( MavenProject mavenProject  ) 
     {
@@ -47,13 +49,24 @@ public class MavenProjectValueSource
     
     public MavenProjectValueSource( MavenProject mavenProject, boolean escapedBackslashesInFilePath ) 
     {
-       super();
 
        project = mavenProject;
 
        this.escapedBackslashesInFilePath = escapedBackslashesInFilePath;
     }
+
     
+    public MavenProjectValueSource( MavenProject mavenProject, boolean escapedBackslashesInFilePath,
+                                    MavenResourcesExecution mavenResourcesExecution )
+    {
+        super();
+
+        project = mavenProject;
+
+        this.escapedBackslashesInFilePath = escapedBackslashesInFilePath;
+
+        this.mavenResourcesExecution = mavenResourcesExecution;
+    }
 
     public Object getValue( String expression )
     {
@@ -65,7 +78,7 @@ public class MavenProjectValueSource
         Object value = null;
         try 
         {
-            value = ReflectionValueExtractor.evaluate( "" + expression, project );
+            value = ReflectionValueExtractor.evaluate( "" + expression, project, IsProjectExpression( expression ) );
 
             if ( escapedBackslashesInFilePath && value != null
                 && "java.lang.String".equals( value.getClass().getName() ) )
@@ -87,4 +100,18 @@ public class MavenProjectValueSource
         } 
         return value;
     }    
+    
+    private boolean IsProjectExpression( String key )
+    {
+        if ( StringUtils.isEmpty( key ) )
+        {
+            return false;
+        }
+        if ( mavenResourcesExecution != null )
+        {
+            return mavenResourcesExecution.getProjectStartExpressions().contains( key );
+        }
+        // we use default values here
+        return ( key.startsWith( "project." ) || key.startsWith( "pom." ) );
+    }
 }

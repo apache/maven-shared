@@ -109,7 +109,15 @@ public class DefaultMavenResourcesFiltering
         {
             nonFilteredFileExtensions.addAll( userNonFilteredFileExtensions );
         }
-        return !nonFilteredFileExtensions.contains( StringUtils.lowerCase( FileUtils.extension( fileName ) ) );
+        boolean filteredFileExtension = !nonFilteredFileExtensions.contains( StringUtils.lowerCase( FileUtils
+            .extension( fileName ) ) );
+        if ( getLogger().isDebugEnabled() )
+        {
+            getLogger().debug(
+                               "file " + fileName + " has a" + ( filteredFileExtension ? " " : " non " )
+                                   + "filtered file extension" );
+        }
+        return filteredFileExtension;
     }
 
     public List getDefaultNonFilteredFileExtensions()

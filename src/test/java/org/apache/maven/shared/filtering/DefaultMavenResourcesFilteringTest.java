@@ -29,6 +29,7 @@ import java.util.Properties;
 
 import org.apache.maven.model.Resource;
 import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.logging.LoggerManager;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -54,6 +55,8 @@ public class DefaultMavenResourcesFilteringTest
             FileUtils.forceDelete( outputDirectory );
         }
         outputDirectory.mkdirs();
+        LoggerManager loggerManager = (LoggerManager) lookup( LoggerManager.ROLE );
+        loggerManager.setThreshold( 0 );
     }
 
     public void testSimpleFiltering()

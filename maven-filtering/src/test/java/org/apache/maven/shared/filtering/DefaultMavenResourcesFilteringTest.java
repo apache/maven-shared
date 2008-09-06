@@ -148,7 +148,8 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals( "1.0", result.get( "version" ) );
         assertEquals( "org.apache", result.get( "groupId" ) );
         assertEquals( "bar", result.get( "foo" ) );
-
+        assertEquals( "${foo.version}", result.get( "fooVersion" ) );
+        
         assertEquals( "@@", result.getProperty( "emptyexpression" ) );
         assertEquals( "${}", result.getProperty( "emptyexpression2" ) );
         assertEquals( System.getProperty( "user.dir" ), result.getProperty( "userDir" ) );

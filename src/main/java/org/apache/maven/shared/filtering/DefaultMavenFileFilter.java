@@ -34,6 +34,7 @@ import org.codehaus.plexus.interpolation.Interpolator;
 import org.codehaus.plexus.interpolation.InterpolatorFilterReader;
 import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -45,6 +46,7 @@ import org.codehaus.plexus.util.StringUtils;
  *                   role-hint="default"
  */
 public class DefaultMavenFileFilter
+    extends AbstractLogEnabled
     implements MavenFileFilter
 {
 
@@ -60,17 +62,25 @@ public class DefaultMavenFileFilter
     public void copyFile( File from, File to, boolean filtering, List filterWrappers, String encoding )
         throws MavenFilteringException
     {
-
+        
         try
         {
             if ( filtering )
             {
+                if ( getLogger().isDebugEnabled() )
+                {
+                    getLogger().debug( "filering " + from.getPath() + " to " + to.getPath() );
+                }
                 FileUtils.FilterWrapper[] wrappers = (FileUtils.FilterWrapper[]) filterWrappers
                     .toArray( new FileUtils.FilterWrapper[filterWrappers.size()] );
                 FileUtils.copyFile( from, to, encoding, wrappers );
             }
             else
             {
+                if ( getLogger().isDebugEnabled() )
+                {
+                    getLogger().debug( "copy " + from.getPath() + " to " + to.getPath() );
+                }
                 FileUtils.copyFile( from, to, encoding, new FileUtils.FilterWrapper[0] );
             }
         }
@@ -124,6 +134,11 @@ public class DefaultMavenFileFilter
 
         List defaultFilterWrappers = new ArrayList( 3 );
 
+        if (getLogger().isDebugEnabled())
+        {
+            getLogger().debug( "properties used " + filterProperties );
+        }
+        
         final ValueSource propertiesValueSource =
             new PropertiesEscapingBackSlashValueSource( escapedBackslashesInFilePath, filterProperties );
 

@@ -26,3 +26,4 @@ emptyexpression=@@
 emptyexpression2=${}
 javaVersion=${java.version}
 pomName=@pom.name@
+fooVersion=${foo.version}

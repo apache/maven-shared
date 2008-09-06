@@ -62,10 +62,18 @@ public class MavenResourcesExecution
 
     private boolean useDefaultFilterWrappers = false;
     
+    /** 
+     * List of String considered as expressions which contains values in the project/pom : pom project
+     * default value will be pom and project.
+     * 
+     */
+    private List projectStartExpressions = new ArrayList();
+    
     
     public MavenResourcesExecution()
     {
-        // nothing here just add an empty constructor for java bean convention
+        projectStartExpressions.add( "pom" );
+        projectStartExpressions.add( "project" );
     }
     
     /**
@@ -81,6 +89,7 @@ public class MavenResourcesExecution
     public MavenResourcesExecution( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
                                     List fileFilters, List nonFilteredFileExtensions, MavenSession mavenSession )
     {
+        this();
         this.resources = resources;
         this.outputDirectory = outputDirectory;
         this.mavenProject = mavenProject;
@@ -95,6 +104,7 @@ public class MavenResourcesExecution
     public MavenResourcesExecution( List resources, File outputDirectory, String encoding, List filterWrappers,
                                     File resourcesBaseDirectory, List nonFilteredFileExtensions )
     {
+        this();
         this.resources = resources;
         this.outputDirectory = outputDirectory;
         this.encoding = encoding;
@@ -272,6 +282,16 @@ public class MavenResourcesExecution
     public void setUseDefaultFilterWrappers( boolean useDefaultFilterWrappers )
     {
         this.useDefaultFilterWrappers = useDefaultFilterWrappers;
+    }
+
+    public List getProjectStartExpressions()
+    {
+        return projectStartExpressions;
+    }
+
+    public void setProjectStartExpressions( List projectStartExpressions )
+    {
+        this.projectStartExpressions = projectStartExpressions;
     }
    
 }

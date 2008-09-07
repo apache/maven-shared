@@ -135,8 +135,6 @@ public class FileSetManager
 
     /**
      * Create a new manager instance with an empty messages. Verbose flag is set to false.
-     *
-     * @param log The mojo log instance
      */
     public FileSetManager()
     {
@@ -452,32 +450,7 @@ public class FileSetManager
             excludes.removeAll( notSymlinks );
         }
 
-        for ( int i = 0; i < excludedDirs.length; i++ )
-        {
-            String path = excludedDirs[i];
-
-            File excluded = new File( path );
-
-            String parentPath = excluded.getParent();
-
-            while ( parentPath != null )
-            {
-                if ( messages != null && messages.isDebugEnabled() )
-                {
-                    messages.addDebugMessage( "Verifying path: " + parentPath
-                        + " is not present; contains file which is excluded." ).flush();
-                }
-
-                boolean removed = includes.remove( parentPath );
-
-                if ( removed && messages != null && messages.isDebugEnabled() )
-                {
-                    messages.addDebugMessage( "Path: " + parentPath + " was removed from delete list." ).flush();
-                }
-
-                parentPath = new File( parentPath ).getParent();
-            }
-        }
+        excludeParentDirectoriesOfExcludedPaths( excludedDirs, includes );
 
         includes.addAll( linksForDeletion );
 
@@ -537,46 +510,48 @@ public class FileSetManager
             excludes.removeAll( notSymlinks );
         }
 
-        for ( int i = 0; i < excludedFiles.length; i++ )
+        excludeParentDirectoriesOfExcludedPaths( excludedFiles, includes );
+
+        includes.addAll( linksForDeletion );
+
+        return includes;
+    }
+
+    /**
+     * Removes all parent directories of the already excluded files/directories from the given set of deletable
+     * directories. I.e. if "subdir/excluded.txt" should not be deleted, "subdir" should be excluded from deletion, too.
+     * 
+     * @param excludedPaths The relative paths of the files/directories which are excluded from deletion, must not be
+     *            <code>null</code>.
+     * @param deletablePaths The relative paths to files/directories which are scheduled for deletion, must not be
+     *            <code>null</code>.
+     */
+    private void excludeParentDirectoriesOfExcludedPaths( String excludedPaths[], Set deletablePaths )
+    {
+        for ( int i = 0; i < excludedPaths.length; i++ )
         {
-            String path = excludedFiles[i];
+            String path = excludedPaths[i];
 
-            File excluded = new File( path );
-
-            String parentPath = excluded.getParent();
+            String parentPath = new File( path ).getParent();
 
             while ( parentPath != null )
             {
                 if ( messages != null && messages.isDebugEnabled() )
                 {
-                    messages.addDebugMessage( "Verifying path: " + parentPath
+                    messages.addDebugMessage( "Verifying path " + parentPath
                         + " is not present; contains file which is excluded." ).flush();
                 }
 
-                boolean removed = includes.remove( parentPath );
+                boolean removed = deletablePaths.remove( parentPath );
 
                 if ( removed && messages != null && messages.isDebugEnabled() )
                 {
-                    messages.addDebugMessage( "Path: " + parentPath + " was removed from delete list." ).flush();
+                    messages.addDebugMessage( "Path " + parentPath + " was removed from delete list." ).flush();
                 }
 
                 parentPath = new File( parentPath ).getParent();
             }
         }
-
-        includes.addAll( linksForDeletion );
-
-        // for ( Iterator it = includes.iterator(); it.hasNext(); )
-        // {
-        // String path = (String) it.next();
-        //
-        // if ( includes.contains( new File( path ).getParent() ) )
-        // {
-        // it.remove();
-        // }
-        // }
-
-        return includes;
     }
 
     /**

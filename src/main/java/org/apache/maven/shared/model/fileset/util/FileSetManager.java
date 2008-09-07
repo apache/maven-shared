@@ -552,6 +552,22 @@ public class FileSetManager
                 parentPath = new File( parentPath ).getParent();
             }
         }
+
+        if ( excludedPaths.length > 0 )
+        {
+            if ( messages != null && messages.isDebugEnabled() )
+            {
+                messages.addDebugMessage( "Verifying path " + "."
+                    + " is not present; contains file which is excluded." ).flush();
+            }
+
+            boolean removed = deletablePaths.remove( "" );
+
+            if ( removed && messages != null && messages.isDebugEnabled() )
+            {
+                messages.addDebugMessage( "Path " + "." + " was removed from delete list." ).flush();
+            }
+        }
     }
 
     /**

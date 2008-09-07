@@ -196,6 +196,46 @@ public class FileSetUtilsTest
     }
 
     /**
+     * @throws Exception if any
+     */
+    public void testDeleteExcludeParentOfExcludedFile()
+        throws Exception
+    {
+        File directory = setupTestDirectory( "testDeleteExcludeParentOfExcludedFile" );
+
+        FileSet set = new FileSet();
+        set.setDirectory( directory.getPath() );
+        set.addExclude( "*excluded*" );
+        set.setFollowSymlinks( true );
+
+        FileSetManager fileSetManager = new FileSetManager();
+
+        fileSetManager.delete( set );
+
+        Assert.assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
+    }
+
+    /**
+     * @throws Exception if any
+     */
+    public void testDeleteExcludeParentOfExcludedDir()
+        throws Exception
+    {
+        File directory = setupTestDirectory( "testDeleteExcludeParentOfExcludedDir" );
+
+        FileSet set = new FileSet();
+        set.setDirectory( directory.getPath() );
+        set.addExclude( "*excluded*" );
+        set.setFollowSymlinks( true );
+
+        FileSetManager fileSetManager = new FileSetManager();
+
+        fileSetManager.delete( set );
+
+        Assert.assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
+    }
+
+    /**
      * @param from
      * @param to
      * @return

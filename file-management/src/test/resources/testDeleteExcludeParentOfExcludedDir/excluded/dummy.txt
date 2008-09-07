@@ -1,0 +1,1 @@
+Empty directories are apparently excluded by the Resources Plugin, so we use this little dummy file as a workaround.

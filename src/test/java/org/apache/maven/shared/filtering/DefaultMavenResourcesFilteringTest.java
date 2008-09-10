@@ -1,22 +1,18 @@
 package org.apache.maven.shared.filtering;
 
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License. You may obtain a
+ * copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  */
 
 import java.io.File;
@@ -33,19 +29,19 @@ import org.codehaus.plexus.logging.LoggerManager;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
-/**
+/*
  * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * 
  * @since 28 janv. 08
+ * 
  * @version $Id$
  */
 public class DefaultMavenResourcesFilteringTest
     extends PlexusTestCase
 {
 
-    File outputDirectory = new File(getBasedir(), "target/DefaultMavenResourcesFilteringTest");
-    
+    File outputDirectory = new File( getBasedir(), "target/DefaultMavenResourcesFilteringTest" );
 
-    
     protected void setUp()
         throws Exception
     {
@@ -152,7 +148,7 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals( "org.apache", result.get( "groupId" ) );
         assertEquals( "bar", result.get( "foo" ) );
         assertEquals( "${foo.version}", result.get( "fooVersion" ) );
-        
+
         assertEquals( "@@", result.getProperty( "emptyexpression" ) );
         assertEquals( "${}", result.getProperty( "emptyexpression2" ) );
         assertEquals( System.getProperty( "user.dir" ), result.getProperty( "userDir" ) );
@@ -208,7 +204,8 @@ public class DefaultMavenResourcesFilteringTest
                                                                                        nonFilteredFileExtensions,
                                                                                        new StubMavenSession() );
 
-        mavenResourcesExecution.addFilerWrapper( new MavenProjectValueSource( mavenProject, true ), "\\@", "(.+?)\\@", "@", "@" );
+        mavenResourcesExecution.addFilerWrapperWithEscaping( new MavenProjectValueSource( mavenProject, true ), "@",
+                                                             "@", null );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
         Properties result = PropertyUtils
             .loadPropertyFile( new File( outputDirectory, "maven-resources-filtering.txt" ), null );
@@ -320,13 +317,13 @@ public class DefaultMavenResourcesFilteringTest
                                                                                        Collections.EMPTY_LIST,
                                                                                        new StubMavenSession() );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
-        
+
         File[] files = outputDirectory.listFiles();
         assertEquals( 1, files.length );
         assertEquals( "includefile.txt", files[0].getName() );
-        
-    }    
-    
+
+    }
+
     public void testIncludeOneFileAndDirectory()
         throws Exception
     {
@@ -367,8 +364,8 @@ public class DefaultMavenResourcesFilteringTest
         includeFile = new File( new File( outputDirectory, "includedir" ), "include.txt" );
         assertTrue( includeFile.exists() );
 
-    }    
-    
+    }
+
     public void testExcludeOneFile()
         throws Exception
     {
@@ -414,6 +411,6 @@ public class DefaultMavenResourcesFilteringTest
 
         File excludeDir = new File( outputDirectory, "excludedir" );
         assertFalse( excludeDir.exists() );
-    }      
-    
+    }
+
 }

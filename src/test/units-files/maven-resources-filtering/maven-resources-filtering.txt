@@ -27,3 +27,6 @@ emptyexpression2=${}
 javaVersion=${java.version}
 pomName=@pom.name@
 fooVersion=${foo.version}
+
+escapeJavaVersion=\${java.version}
+escapeuserDir=\@user.dir@

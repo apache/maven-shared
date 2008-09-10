@@ -170,6 +170,8 @@ public class DefaultMavenFileFilter
                                                                                                   propertiesInterpolator );
                 interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
                 interpolatorFilterReader.setEscapeString( escapeString );
+                // first try it must be preserved
+                interpolatorFilterReader.setPreserveEscapeString( true );
                 return interpolatorFilterReader;
             }
         };
@@ -190,6 +192,7 @@ public class DefaultMavenFileFilter
                                                                                                   "@", "@" );
                 interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
                 interpolatorFilterReader.setEscapeString( escapeString );
+                interpolatorFilterReader.setPreserveEscapeString( true );
                 return interpolatorFilterReader;
             }
         };

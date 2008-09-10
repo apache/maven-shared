@@ -427,7 +427,7 @@ public class FileSetManager
                     .addInfoMessage( "Adding symbolic link dirs which were previously excluded to the list being deleted." ).flush();
             }
 
-            // we need to see which entries were excluded because they're symlinks...
+            // we need to see which entries were only excluded because they're symlinks...
             scanner.setFollowSymlinks( true );
             scanner.scan();
 
@@ -437,17 +437,17 @@ public class FileSetManager
                 messages.addDebugMessage( "Marked for preserve (with followSymlinks == false): " + excludes ).flush();
             }
 
-            List notSymlinks = Arrays.asList( scanner.getIncludedDirectories() );
+            List includedDirsAndSymlinks = Arrays.asList( scanner.getIncludedDirectories() );
 
             linksForDeletion.addAll( excludes );
-            linksForDeletion.retainAll( notSymlinks );
+            linksForDeletion.retainAll( includedDirsAndSymlinks );
 
             if ( messages != null && messages.isDebugEnabled() )
             {
                 messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): " + linksForDeletion ).flush();
             }
 
-            excludes.removeAll( notSymlinks );
+            excludes.removeAll( includedDirsAndSymlinks );
         }
 
         excludeParentDirectoriesOfExcludedPaths( excludedDirs, includes );
@@ -487,7 +487,7 @@ public class FileSetManager
                     .addInfoMessage( "Adding symbolic link files which were previously excluded to the list being deleted." ).flush();
             }
 
-            // we need to see which entries were excluded because they're symlinks...
+            // we need to see which entries were only excluded because they're symlinks...
             scanner.setFollowSymlinks( true );
             scanner.scan();
 
@@ -497,17 +497,17 @@ public class FileSetManager
                 messages.addDebugMessage( "Marked for preserve (with followSymlinks == false): " + excludes ).flush();
             }
 
-            List notSymlinks = Arrays.asList( scanner.getExcludedFiles() );
+            List includedFilesAndSymlinks = Arrays.asList( scanner.getIncludedFiles() );
 
             linksForDeletion.addAll( excludes );
-            linksForDeletion.retainAll( notSymlinks );
+            linksForDeletion.retainAll( includedFilesAndSymlinks );
 
             if ( messages != null && messages.isDebugEnabled() )
             {
                 messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): " + linksForDeletion ).flush();
             }
 
-            excludes.removeAll( notSymlinks );
+            excludes.removeAll( includedFilesAndSymlinks );
         }
 
         excludeParentDirectoriesOfExcludedPaths( excludedFiles, includes );

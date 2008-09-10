@@ -93,7 +93,7 @@ public class DefaultMavenResourcesFilteringTest
         mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, null, filtersFile,
                                                  nonFilteredFileExtensions, new StubMavenSession() );
 
-        assertFiltering( baseDir, initialImageFile );
+        assertFiltering( baseDir, initialImageFile, false );
     }
 
     public void testWithMavenResourcesExecution()
@@ -130,12 +130,12 @@ public class DefaultMavenResourcesFilteringTest
                                                                                        mavenProject, null, filtersFile,
                                                                                        nonFilteredFileExtensions,
                                                                                        new StubMavenSession() );
-
+        mavenResourcesExecution.setEscapeString( "\\" );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
-        assertFiltering( baseDir, initialImageFile );
+        assertFiltering( baseDir, initialImageFile, true );
     }
 
-    private void assertFiltering( File baseDir, File initialImageFile )
+    private void assertFiltering( File baseDir, File initialImageFile, boolean escapeTest )
         throws Exception
     {
         assertEquals( 7, outputDirectory.listFiles().length );
@@ -158,9 +158,11 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals( System.getProperty( "user.dir" ), result.getProperty( "userDir" ) );
         assertEquals( System.getProperty( "java.version" ), result.getProperty( "javaVersion" ) );
 
-        assertEquals("${java.version}", result.getProperty( "escapeJavaVersion" ));
-        assertEquals("@user.dir@", result.getProperty( "escapeuserDir" ));
-        
+        if ( escapeTest )
+        {
+            assertEquals( "${java.version}", result.getProperty( "escapeJavaVersion" ) );
+            assertEquals( "@user.dir@", result.getProperty( "escapeuserDir" ) );
+        }
         assertEquals( baseDir.toString(), result.get( "base" ) );
         assertEquals( new File( baseDir.toString() ).getPath(), new File( result.getProperty( "base" ) ).getPath() );
 
@@ -208,12 +210,11 @@ public class DefaultMavenResourcesFilteringTest
 
         mavenResourcesExecution.addFilerWrapper( new MavenProjectValueSource( mavenProject, true ), "\\@", "(.+?)\\@", "@", "@" );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
-
         Properties result = PropertyUtils
             .loadPropertyFile( new File( outputDirectory, "maven-resources-filtering.txt" ), null );
         assertFalse( result.isEmpty() );
         assertEquals( mavenProject.getName(), result.get( "pomName" ) );
-        assertFiltering( baseDir, initialImageFile );
+        assertFiltering( baseDir, initialImageFile, false );
     }
 
     public void testNoFiltering()

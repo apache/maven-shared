@@ -155,8 +155,7 @@ public class DefaultMavenFileFilter
         final ValueSource propertiesValueSource =
             new PropertiesEscapingBackSlashValueSource( escapedBackslashesInFilePath, filterProperties );
 
-        final String escapeString = mavenResourcesExecution == null ? MavenResourcesExecution.DEFAULT_ESCAPE_STRING
-                                                                   : mavenResourcesExecution.getEscapeString(); 
+        final String escapeString = mavenResourcesExecution == null ? null : mavenResourcesExecution.getEscapeString(); 
         
         
         // support ${token}

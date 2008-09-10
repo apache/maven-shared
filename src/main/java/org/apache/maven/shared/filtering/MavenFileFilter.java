@@ -67,7 +67,7 @@ public interface MavenFileFilter
      *   <li>interpolate with token ${} and values from mavenProject interpolation.</li>
      *   <li>interpolation with token @ @ and values from mavenProject interpolation</li>
      * </ul>
-     * <b>default escape characters will be \</b>
+     * <b>this method si now deprecated and no escape mechanism will be use</b>
      * @deprecated use {@link #getDefaultFilterWrappers(MavenProject, List, boolean, MavenSession, MavenResourcesExecution)}
      * @param mavenProject
      * @param filters {@link List} of properties file

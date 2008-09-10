@@ -29,6 +29,7 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.Interpolator;
 import org.codehaus.plexus.interpolation.InterpolatorFilterReader;
 import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
+import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.FileUtils.FilterWrapper;
@@ -40,9 +41,7 @@ import org.codehaus.plexus.util.FileUtils.FilterWrapper;
  */
 public class MavenResourcesExecution
 {
-
-    public static final String DEFAULT_ESCAPE_STRING = "\\";
-    
+   
     /** @see org.apache.maven.model.Resource  */
     private List resources;
 
@@ -73,9 +72,8 @@ public class MavenResourcesExecution
     
     /**
      * String which will escape interpolation mechanism : foo \${foo.bar} -> foo ${foo.bar}
-     * by default it will be {@value #DEFAULT_ESCAPE_STRING}
      */
-    private String escapeString = DEFAULT_ESCAPE_STRING;
+    private String escapeString;
     
     
     public MavenResourcesExecution()
@@ -257,6 +255,14 @@ public class MavenResourcesExecution
         } );
     }
 
+    /**
+     * @param valueSource
+     * @param startRegExp
+     * @param endRegExp
+     * @param startToken
+     * @param endToken
+     * @deprecated this doesn't support escaping
+     */
     public void addFilerWrapper( final ValueSource valueSource, final String startRegExp, final String endRegExp,
                                  final String startToken, final String endToken )
     {
@@ -269,7 +275,31 @@ public class MavenResourcesExecution
                 return new InterpolatorFilterReader( reader, propertiesInterpolator, startToken, endToken );
             }
         } );
-    }    
+    }  
+    
+    /**
+     * @param valueSource
+     * @param startRegExp
+     * @param endRegExp
+     * @param startToken
+     * @param endToken
+     * @since 1.0-beta-2
+     * @param escapeString
+     */
+    public void addFilerWrapperWithEscaping( final ValueSource valueSource, final String startRegExp, final String endRegExp,
+                                 final String startToken, final String endToken, final String escapeString )
+    {
+        addFilterWrapper( new FileUtils.FilterWrapper()
+        {
+            public Reader getReader( Reader reader )
+            {
+                StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( startRegExp, endRegExp );
+                propertiesInterpolator.addValueSource( valueSource );
+                propertiesInterpolator.setEscapeString( escapeString );
+                return new InterpolatorFilterReader( reader, propertiesInterpolator, startToken, endToken );
+            }
+        } );
+    }      
     
     
     public File getResourcesBaseDirectory()

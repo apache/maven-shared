@@ -261,7 +261,7 @@ public class MavenResourcesExecution
      * @param endRegExp
      * @param startToken
      * @param endToken
-     * @deprecated this doesn't support escaping
+     * @deprecated this doesn't support escaping use {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String)}
      */
     public void addFilerWrapper( final ValueSource valueSource, final String startRegExp, final String endRegExp,
                                  final String startToken, final String endToken )
@@ -279,24 +279,27 @@ public class MavenResourcesExecution
     
     /**
      * @param valueSource
-     * @param startRegExp
-     * @param endRegExp
-     * @param startToken
-     * @param endToken
+     * @param startExp start token like ${
+     * @param endExp endToken }
      * @since 1.0-beta-2
      * @param escapeString
      */
-    public void addFilerWrapperWithEscaping( final ValueSource valueSource, final String startRegExp, final String endRegExp,
-                                 final String startToken, final String endToken, final String escapeString )
+    public void addFilerWrapperWithEscaping( final ValueSource valueSource, final String startExp, final String endExp,
+                                             final String escapeString )
     {
         addFilterWrapper( new FileUtils.FilterWrapper()
         {
             public Reader getReader( Reader reader )
             {
-                StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( startRegExp, endRegExp );
+                StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( startExp, endExp );
                 propertiesInterpolator.addValueSource( valueSource );
                 propertiesInterpolator.setEscapeString( escapeString );
-                return new InterpolatorFilterReader( reader, propertiesInterpolator, startToken, endToken );
+                InterpolatorFilterReader interpolatorFilterReader = new InterpolatorFilterReader(
+                                                                                                  reader,
+                                                                                                  propertiesInterpolator,
+                                                                                                  startExp, endExp );
+                interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
+                return interpolatorFilterReader;
             }
         } );
     }      

@@ -20,6 +20,8 @@ package org.apache.maven.shared.filtering;
  */
 
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.ValueSource;
@@ -113,5 +115,16 @@ public class MavenProjectValueSource
         }
         // we use default values here
         return ( key.startsWith( "project." ) || key.startsWith( "pom." ) );
+    }
+
+    public void clearFeedback()
+    {
+        // nothing here
+    }
+
+    public List getFeedback()
+    {
+        // nothing here only NPE free
+        return Collections.EMPTY_LIST;
     }
 }

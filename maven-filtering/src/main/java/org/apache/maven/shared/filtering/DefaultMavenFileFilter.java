@@ -30,9 +30,8 @@ import java.util.Properties;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.interpolation.Interpolator;
 import org.codehaus.plexus.interpolation.InterpolatorFilterReader;
-import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
+import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.FileUtils;
@@ -91,11 +90,25 @@ public class DefaultMavenFileFilter
 
     }
 
+    /** 
+     * @see org.apache.maven.shared.filtering.MavenFileFilter#getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession)
+     */
     public List getDefaultFilterWrappers( final MavenProject mavenProject, List filters,
                                           final boolean escapedBackslashesInFilePath, MavenSession mavenSession )
         throws MavenFilteringException
     {
+        return getDefaultFilterWrappers( mavenProject, filters, escapedBackslashesInFilePath, mavenSession, null );
+    }
 
+    
+    
+    
+    public List getDefaultFilterWrappers( final MavenProject mavenProject, List filters,
+                                          final boolean escapedBackslashesInFilePath, MavenSession mavenSession,
+                                          MavenResourcesExecution mavenResourcesExecution )
+        throws MavenFilteringException
+    {
+        
         // here we build some properties which will be used to read some properties files
         // to interpolate the expression ${ }  in this properties file
 
@@ -142,14 +155,23 @@ public class DefaultMavenFileFilter
         final ValueSource propertiesValueSource =
             new PropertiesEscapingBackSlashValueSource( escapedBackslashesInFilePath, filterProperties );
 
+        final String escapeString = mavenResourcesExecution == null ? MavenResourcesExecution.DEFAULT_ESCAPE_STRING
+                                                                   : mavenResourcesExecution.getEscapeString(); 
+        
+        
         // support ${token}
         FileUtils.FilterWrapper one = new FileUtils.FilterWrapper()
         {
             public Reader getReader( Reader reader )
             {
-                Interpolator propertiesInterpolator = new RegexBasedInterpolator( true );
-                propertiesInterpolator.addValueSource( propertiesValueSource  );
-                return new InterpolatorFilterReader( reader, propertiesInterpolator );
+                StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator();
+                propertiesInterpolator.addValueSource( propertiesValueSource );
+                propertiesInterpolator.setEscapeString( escapeString );
+                InterpolatorFilterReader interpolatorFilterReader = new InterpolatorFilterReader( reader,
+                                                                                                  propertiesInterpolator );
+                interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
+                interpolatorFilterReader.setEscapeString( escapeString );
+                return interpolatorFilterReader;
             }
         };
         defaultFilterWrappers.add( one );
@@ -159,10 +181,17 @@ public class DefaultMavenFileFilter
         {
             public Reader getReader( Reader reader )
             {
-                final RegexBasedInterpolator propertiesInterpolatorAtRegex = new RegexBasedInterpolator( "\\@", "(.+?)\\@" );
-                propertiesInterpolatorAtRegex.setReusePatterns( true );
-                propertiesInterpolatorAtRegex.addValueSource( propertiesValueSource );
-                return new InterpolatorFilterReader( reader, propertiesInterpolatorAtRegex, "@", "@" );
+                StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( "@",
+                                                                                                         "@" );
+                propertiesInterpolator.addValueSource( propertiesValueSource );
+                propertiesInterpolator.setEscapeString( escapeString );
+                InterpolatorFilterReader interpolatorFilterReader = new InterpolatorFilterReader(
+                                                                                                  reader,
+                                                                                                  propertiesInterpolator,
+                                                                                                  "@", "@" );
+                interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
+                interpolatorFilterReader.setEscapeString( escapeString );
+                return interpolatorFilterReader;
             }
         };
         defaultFilterWrappers.add( second );
@@ -172,11 +201,16 @@ public class DefaultMavenFileFilter
         {
             public Reader getReader( Reader reader )
             {
-                Interpolator mavenProjectInterpolator = new RegexBasedInterpolator( true );
+                StringSearchInterpolator mavenProjectInterpolator = new StringSearchInterpolator();
 
                 ValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
                 mavenProjectInterpolator.addValueSource( valueSource );
-                return new InterpolatorFilterReader( reader, mavenProjectInterpolator );
+                mavenProjectInterpolator.setEscapeString( escapeString );
+                InterpolatorFilterReader interpolatorFilterReader = new InterpolatorFilterReader( reader,
+                                                                                                  mavenProjectInterpolator );
+                interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
+                interpolatorFilterReader.setEscapeString( escapeString );
+                return interpolatorFilterReader;
             }
         };
         defaultFilterWrappers.add( third );
@@ -186,11 +220,17 @@ public class DefaultMavenFileFilter
         {
             public Reader getReader( Reader reader )
             {
-                RegexBasedInterpolator mavenProjectInterpolator = new RegexBasedInterpolator( "\\@", "(.+?)\\@" );
-                mavenProjectInterpolator.setReusePatterns( true );
+                StringSearchInterpolator mavenProjectInterpolator = new StringSearchInterpolator( "@", "@" );
                 ValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
                 mavenProjectInterpolator.addValueSource( valueSource );
-                return new InterpolatorFilterReader( reader, mavenProjectInterpolator, "@", "@" );
+                mavenProjectInterpolator.setEscapeString( escapeString );
+                InterpolatorFilterReader interpolatorFilterReader = new InterpolatorFilterReader(
+                                                                                                  reader,
+                                                                                                  mavenProjectInterpolator,
+                                                                                                  "@", "@" );
+                interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
+                interpolatorFilterReader.setEscapeString( escapeString );
+                return interpolatorFilterReader;
             }
         };
         defaultFilterWrappers.add( fourth );

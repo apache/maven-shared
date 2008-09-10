@@ -41,6 +41,8 @@ import org.codehaus.plexus.util.FileUtils.FilterWrapper;
 public class MavenResourcesExecution
 {
 
+    public static final String DEFAULT_ESCAPE_STRING = "\\";
+    
     /** @see org.apache.maven.model.Resource  */
     private List resources;
 
@@ -68,6 +70,12 @@ public class MavenResourcesExecution
      * 
      */
     private List projectStartExpressions = new ArrayList();
+    
+    /**
+     * String which will escape interpolation mechanism : foo \${foo.bar} -> foo ${foo.bar}
+     * by default it will be {@value #DEFAULT_ESCAPE_STRING}
+     */
+    private String escapeString = DEFAULT_ESCAPE_STRING;
     
     
     public MavenResourcesExecution()
@@ -292,6 +300,16 @@ public class MavenResourcesExecution
     public void setProjectStartExpressions( List projectStartExpressions )
     {
         this.projectStartExpressions = projectStartExpressions;
+    }
+
+    public String getEscapeString()
+    {
+        return escapeString;
+    }
+
+    public void setEscapeString( String escapeString )
+    {
+        this.escapeString = escapeString;
     }
    
 }

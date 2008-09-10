@@ -158,6 +158,9 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals( System.getProperty( "user.dir" ), result.getProperty( "userDir" ) );
         assertEquals( System.getProperty( "java.version" ), result.getProperty( "javaVersion" ) );
 
+        assertEquals("${java.version}", result.getProperty( "escapeJavaVersion" ));
+        assertEquals("@user.dir@", result.getProperty( "escapeuserDir" ));
+        
         assertEquals( baseDir.toString(), result.get( "base" ) );
         assertEquals( new File( baseDir.toString() ).getPath(), new File( result.getProperty( "base" ) ).getPath() );
 

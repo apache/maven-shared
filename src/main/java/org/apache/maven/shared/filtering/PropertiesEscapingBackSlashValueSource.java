@@ -19,6 +19,8 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 import org.codehaus.plexus.interpolation.ValueSource;
@@ -51,6 +53,17 @@ public class PropertiesEscapingBackSlashValueSource
     {
         String value = properties.getProperty( expression );
         return escapedBackslashesInFilePath ? FilteringUtils.escapeWindowsPath( value ) : value;
+    }
+    
+    public void clearFeedback()
+    {
+        // nothing here
+    }
+
+    public List getFeedback()
+    {
+        // nothing here only NPE free
+        return Collections.EMPTY_LIST;
     }
 
 }

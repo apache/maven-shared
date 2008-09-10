@@ -65,8 +65,10 @@ public interface MavenFileFilter
      *   <li>interpolate with token ${} and values from sysProps, project.properties, filters and project filters.</li>
      *   <li>interpolate with token @ @ and values from sysProps, project.properties, filters and project filters.</li>
      *   <li>interpolate with token ${} and values from mavenProject interpolation.</li>
+     *   <li>interpolation with token @ @ and values from mavenProject interpolation</li>
      * </ul>
-     * 
+     * <b>default escape characters will be \</b>
+     * @deprecated use {@link #getDefaultFilterWrappers(MavenProject, List, boolean, MavenSession, MavenResourcesExecution)}
      * @param mavenProject
      * @param filters {@link List} of properties file
      * 
@@ -76,4 +78,18 @@ public interface MavenFileFilter
     List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath,
                                    MavenSession mavenSession )
         throws MavenFilteringException;
+    
+    /**
+     * @since 1.0-beta-2
+     * @param mavenProject
+     * @param filters
+     * @param escapedBackslashesInFilePath
+     * @param mavenSession
+     * @param mavenResourcesExecution
+     * @return
+     * @throws MavenFilteringException
+     */
+    List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath,
+                                   MavenSession mavenSession, MavenResourcesExecution mavenResourcesExecution )
+        throws MavenFilteringException;    
 }

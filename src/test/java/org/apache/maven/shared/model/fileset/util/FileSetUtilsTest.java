@@ -236,6 +236,50 @@ public class FileSetUtilsTest
     }
 
     /**
+     * @throws Exception if any
+     */
+    public void testDeleteExcludeFollowSymlinks()
+        throws Exception
+    {
+        File directory = setupTestDirectory( "testDeleteExcludeFollowSymlinks" );
+
+        FileSet set = new FileSet();
+        set.setDirectory( directory.getPath() );
+        set.addExclude( "*excluded*" );
+        set.setFollowSymlinks( true );
+
+        FileSetManager fileSetManager = new FileSetManager();
+
+        fileSetManager.delete( set );
+
+        Assert.assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
+        Assert.assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
+        Assert.assertFalse( "included file has not been deleted", new File( directory, "included.txt" ).exists() );
+    }
+
+    /**
+     * @throws Exception if any
+     */
+    public void testDeleteExcludeDontFollowSymlinks()
+        throws Exception
+    {
+        File directory = setupTestDirectory( "testDeleteExcludeDontFollowSymlinks" );
+
+        FileSet set = new FileSet();
+        set.setDirectory( directory.getPath() );
+        set.addExclude( "*excluded*" );
+        set.setFollowSymlinks( false );
+
+        FileSetManager fileSetManager = new FileSetManager();
+
+        fileSetManager.delete( set );
+
+        Assert.assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
+        Assert.assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
+        Assert.assertFalse( "included file has not been deleted", new File( directory, "included.txt" ).exists() );
+    }
+
+    /**
      * @param from
      * @param to
      * @return

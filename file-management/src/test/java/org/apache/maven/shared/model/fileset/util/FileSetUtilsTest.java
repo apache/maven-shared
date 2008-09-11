@@ -280,29 +280,55 @@ public class FileSetUtilsTest
     }
 
     /**
-     * @param from
-     * @param to
+     * @throws Exception if any
+     */
+    public void testDeleteDontFollowSymlinksButDeleteThem()
+        throws Exception
+    {
+        File directory = setupTestDirectory( "testDeleteDontFollowSymlinksButDeleteThem" );
+
+        createSymlink( new File( directory, "excluded" ), new File( directory, "dir0/dirlink" ) );
+        createSymlink( new File( directory, "excluded.txt" ), new File( directory, "dir1/filelink" ) );
+
+        FileSet set = new FileSet();
+        set.setDirectory( directory.getPath() );
+        set.addExclude( "*excluded*" );
+        set.setFollowSymlinks( false );
+
+        FileSetManager fileSetManager = new FileSetManager();
+
+        fileSetManager.delete( set );
+
+        Assert.assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
+        Assert.assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
+        Assert.assertFalse( "included directory has not been deleted", new File( directory, "dir0" ).exists() );
+        Assert.assertFalse( "included directory has not been deleted", new File( directory, "dir1" ).exists() );
+    }
+
+    /**
+     * @param target The target file/directory of the symlink, must not be <code>null</code>.
+     * @param link The link to create, must not be <code>null</code>.
      * @return
      * @throws InterruptedException
      * @throws CommandLineException
      */
-    private boolean createSymlink( File from, File to )
+    private boolean createSymlink( File target, File link )
         throws InterruptedException, CommandLineException
     {
-        if ( to.exists() )
+        if ( link.exists() )
         {
-            to.delete();
+            link.delete();
         }
 
         Commandline cli = new Commandline();
         cli.setExecutable( "ln" );
-        cli.createArg().setLine( "-s" );
-        cli.createArg().setLine( from.getPath() );
-        cli.createArg().setLine( to.getPath() );
+        cli.createArg().setValue( "-s" );
+        cli.createArg().setValue( target.getPath() );
+        cli.createArg().setValue( link.getPath() );
 
         int result = cli.execute().waitFor();
 
-        linkFiles.add( to );
+        linkFiles.add( link );
 
         return result == 0;
     }

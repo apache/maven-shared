@@ -287,6 +287,8 @@ public class FileSetUtilsTest
     {
         File directory = setupTestDirectory( "testDeleteDontFollowSymlinksButDeleteThem" );
 
+        createSymlink( new File( directory, "excluded" ), new File( directory, "dirlink" ) );
+        createSymlink( new File( directory, "excluded.txt" ), new File( directory, "filelink" ) );
         createSymlink( new File( directory, "excluded" ), new File( directory, "dir0/dirlink" ) );
         createSymlink( new File( directory, "excluded.txt" ), new File( directory, "dir1/filelink" ) );
 
@@ -301,6 +303,8 @@ public class FileSetUtilsTest
 
         Assert.assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
         Assert.assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
+        Assert.assertFalse( "included dirlink has not been deleted", new File( directory, "dirlink" ).exists() );
+        Assert.assertFalse( "included filelink has not been deleted", new File( directory, "filelink" ).exists() );
         Assert.assertFalse( "included directory has not been deleted", new File( directory, "dir0" ).exists() );
         Assert.assertFalse( "included directory has not been deleted", new File( directory, "dir1" ).exists() );
     }

@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -450,7 +451,7 @@ public class FileSetManager
             excludes.removeAll( includedDirsAndSymlinks );
         }
 
-        excludeParentDirectoriesOfExcludedPaths( excludedDirs, includes );
+        excludeParentDirectoriesOfExcludedPaths( excludes, includes );
 
         includes.addAll( linksForDeletion );
 
@@ -510,7 +511,7 @@ public class FileSetManager
             excludes.removeAll( includedFilesAndSymlinks );
         }
 
-        excludeParentDirectoriesOfExcludedPaths( excludedFiles, includes );
+        excludeParentDirectoriesOfExcludedPaths( excludes, includes );
 
         includes.addAll( linksForDeletion );
 
@@ -526,11 +527,11 @@ public class FileSetManager
      * @param deletablePaths The relative paths to files/directories which are scheduled for deletion, must not be
      *            <code>null</code>.
      */
-    private void excludeParentDirectoriesOfExcludedPaths( String excludedPaths[], Set deletablePaths )
+    private void excludeParentDirectoriesOfExcludedPaths( Collection excludedPaths, Set deletablePaths )
     {
-        for ( int i = 0; i < excludedPaths.length; i++ )
+        for ( Iterator it = excludedPaths.iterator(); it.hasNext(); )
         {
-            String path = excludedPaths[i];
+            String path = (String) it.next();
 
             String parentPath = new File( path ).getParent();
 
@@ -553,7 +554,7 @@ public class FileSetManager
             }
         }
 
-        if ( excludedPaths.length > 0 )
+        if ( !excludedPaths.isEmpty() )
         {
             if ( messages != null && messages.isDebugEnabled() )
             {

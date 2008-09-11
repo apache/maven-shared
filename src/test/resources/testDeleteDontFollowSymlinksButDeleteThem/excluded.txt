@@ -1,0 +1,1 @@
+Serves as the target for a symlink and should not be deleted.

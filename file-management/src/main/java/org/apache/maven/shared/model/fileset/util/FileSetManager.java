@@ -413,12 +413,9 @@ public class FileSetManager
             return Collections.EMPTY_SET;
         }
 
-        String[] includedDirs = scanner.getIncludedDirectories();
-        String[] excludedDirs = scanner.getExcludedDirectories();
-
-        Set includes = new HashSet( Arrays.asList( includedDirs ) );
-        List excludes = new ArrayList( Arrays.asList( excludedDirs ) );
-        List linksForDeletion = new ArrayList();
+        Set includes = new HashSet( Arrays.asList( scanner.getIncludedDirectories() ) );
+        Collection excludes = new ArrayList( Arrays.asList( scanner.getExcludedDirectories() ) );
+        Collection linksForDeletion = new ArrayList();
 
         if ( !fileSet.isFollowSymlinks() )
         {
@@ -472,13 +469,10 @@ public class FileSetManager
             return deletableDirectories;
         }
 
-        String[] includedFiles = scanner.getIncludedFiles();
-        String[] excludedFiles = scanner.getExcludedFiles();
-
         Set includes = deletableDirectories;
-        includes.addAll( Arrays.asList( includedFiles ) );
-        List excludes = new ArrayList( Arrays.asList( excludedFiles ) );
-        List linksForDeletion = new ArrayList();
+        includes.addAll( Arrays.asList( scanner.getIncludedFiles() ) );
+        Collection excludes = new ArrayList( Arrays.asList( scanner.getExcludedFiles() ) );
+        Collection linksForDeletion = new ArrayList();
 
         if ( !fileSet.isFollowSymlinks() )
         {

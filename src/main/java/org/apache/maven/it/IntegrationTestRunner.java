@@ -78,7 +78,7 @@ public class IntegrationTestRunner
         invoker = new DefaultInvoker();
     }
 
-    public void executeGoal( String goal )
+    public void invoke( String goal )
         throws IntegrationTestException
     {
         InvocationRequest r = new DefaultInvocationRequest().setGoals( goal ).setBasedir( basedir );

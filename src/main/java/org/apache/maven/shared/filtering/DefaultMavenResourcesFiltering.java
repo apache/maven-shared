@@ -239,8 +239,14 @@ public class DefaultMavenResourcesFiltering
 
                 File source = new File( resourceDirectory, name );
 
-                File destinationFile = new File( outputDirectory, destination );
+                //File destinationFile = new File( outputDirectory, destination );
 
+                File destinationFile = new File( destination );
+                if ( !destinationFile.isAbsolute() )
+                {
+                    destinationFile = new File( outputDirectory, destination );
+                }                
+                
                 if ( !destinationFile.getParentFile().exists() )
                 {
                     destinationFile.getParentFile().mkdirs();

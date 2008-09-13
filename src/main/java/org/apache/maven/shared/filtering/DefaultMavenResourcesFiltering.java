@@ -174,6 +174,23 @@ public class DefaultMavenResourcesFiltering
         for ( Iterator i = mavenResourcesExecution.getResources().iterator(); i.hasNext(); )
         {
             Resource resource = (Resource) i.next();
+            
+            if (getLogger().isDebugEnabled())
+            {
+                String ls = System.getProperty( "line.separator" );
+                StringBuffer debugMessage = new StringBuffer( "resource with targetPath " + resource.getTargetPath() )
+                    .append( ls );
+                debugMessage.append( "directory " + resource.getDirectory() ).append( ls );
+                debugMessage.append(
+                                     "excludes "
+                                         + ( resource.getExcludes() == null ? " empty " : resource.getExcludes()
+                                             .toString() ) ).append( ls );
+                debugMessage.append(
+                                    "includes "
+                                        + ( resource.getIncludes() == null ? " empty " : resource.getIncludes()
+                                            .toString() ) );            
+                getLogger().debug( debugMessage.toString() );
+            }
 
             String targetPath = resource.getTargetPath();
 

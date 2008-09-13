@@ -28,6 +28,10 @@ Maven Filtering
   These Plexus components have been built from the filtering process/code in Maven Resources Plugin.
 
   The goal is to provide a shared component for all plugins which needs to filter resources.
+  
+* What's New in 1.0-beta-2
+
+  TO WRITE
 
 * MavenResourcesFiltering
 

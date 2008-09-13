@@ -66,15 +66,22 @@ public class MavenResourcesExecution
     /** 
      * List of String considered as expressions which contains values in the project/pom : pom project
      * default value will be pom and project.
-     * 
+     * @since 1.0-beta-2
      */
     private List projectStartExpressions = new ArrayList();
     
     /**
      * String which will escape interpolation mechanism : foo \${foo.bar} -> foo ${foo.bar}
+     * @since 1.0-beta-2
      */
     private String escapeString;
     
+    /**
+     * Overwrite existing files even if the destination files are newer.
+     * <b>false by default</b>
+     * @since 1.0-beta-2
+     */
+    private boolean overwrite = false;
     
     public MavenResourcesExecution()
     {
@@ -325,24 +332,58 @@ public class MavenResourcesExecution
         this.useDefaultFilterWrappers = useDefaultFilterWrappers;
     }
 
+    /**
+     * @return
+     * @since 1.0-beta-2
+     */
     public List getProjectStartExpressions()
     {
         return projectStartExpressions;
     }
 
+    /**
+     * @param projectStartExpressions
+     * @since 1.0-beta-2
+     */
     public void setProjectStartExpressions( List projectStartExpressions )
     {
         this.projectStartExpressions = projectStartExpressions;
     }
 
+    /**
+     * @return
+     * @since 1.0-beta-2
+     */
     public String getEscapeString()
     {
         return escapeString;
     }
 
+    /**
+     * @param escapeString
+     * @since 1.0-beta-2
+     */
     public void setEscapeString( String escapeString )
     {
         this.escapeString = escapeString;
+    }
+
+    /**
+     * @return
+     * @since 1.0-beta-2
+     */
+    public boolean isOverwrite()
+    {
+        return overwrite;
+    }
+
+    /**
+     * @param overwrite
+     * @since 1.0-beta-2
+     */
+    public void setOverwrite( boolean overwrite )
+    {
+        this.overwrite = overwrite;
     }
    
 }

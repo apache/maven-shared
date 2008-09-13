@@ -57,6 +57,20 @@ public interface MavenFileFilter
     void copyFile( File from, final File to, boolean filtering, List filterWrappers, String encoding )
         throws MavenFilteringException;
 
+    
+    /**
+     * @param from
+     * @param to
+     * @param filtering
+     * @param filterWrappers
+     * @param encoding
+     * @param overwrite 
+     * @since 1.0-beta-2
+     * @throws MavenFilteringException
+     */
+    void copyFile( File from, final File to, boolean filtering, List filterWrappers, String encoding, boolean overwrite )
+        throws MavenFilteringException;    
+    
     /**
      * 
      * Will return the default FileUtils.FilterWrappers

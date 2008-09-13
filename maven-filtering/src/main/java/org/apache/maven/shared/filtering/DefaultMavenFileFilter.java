@@ -61,7 +61,15 @@ public class DefaultMavenFileFilter
     public void copyFile( File from, File to, boolean filtering, List filterWrappers, String encoding )
         throws MavenFilteringException
     {
-        
+        // overwrite forced to false to preserve backward comp
+        copyFile( from, to, filtering, filterWrappers, encoding, false );
+    }
+
+    
+    
+    public void copyFile( File from, File to, boolean filtering, List filterWrappers, String encoding, boolean overwrite )
+        throws MavenFilteringException
+    {
         try
         {
             if ( filtering )
@@ -80,14 +88,14 @@ public class DefaultMavenFileFilter
                 {
                     getLogger().debug( "copy " + from.getPath() + " to " + to.getPath() );
                 }
-                FileUtils.copyFile( from, to, encoding, new FileUtils.FilterWrapper[0] );
+                FileUtils.copyFile( from, to, encoding, new FileUtils.FilterWrapper[0], overwrite );
             }
         }
         catch ( IOException e )
         {
             throw new MavenFilteringException( e.getMessage(), e );
         }
-
+        
     }
 
     /** 

@@ -101,22 +101,8 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-interpolation</artifactId>
-      <version>1.6-SNAPSHOT</version>
+      <version>1.6</version>
     </dependency>
   </dependencies>
-  
-  <!-- remove when plexus-interpolation 1.6 released -->
-  <repositories>
-    <repository>
-      <id>snapshots.codehaus</id>
-      <url>http://snapshots.repository.codehaus.org/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
   
 </project>

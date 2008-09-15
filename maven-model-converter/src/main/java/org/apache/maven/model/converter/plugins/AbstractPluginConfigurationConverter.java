@@ -31,6 +31,7 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -157,6 +158,11 @@ public abstract class AbstractPluginConfigurationConverter
 
                 plugin.setConfiguration( configuration );
 
+                if ( getReportSets() != null && !getReportSets().isEmpty() )
+                {
+                    plugin.setReportSets( getReportSets() );
+                }
+
                 if ( addPlugin )
                 {
                     if ( v4Model.getReporting() == null )
@@ -174,6 +180,18 @@ public abstract class AbstractPluginConfigurationConverter
     protected abstract void buildConfiguration( Xpp3Dom configuration, org.apache.maven.model.v3_0_0.Model v3Model,
                                                 Properties projectProperties )
         throws ProjectConverterException;
+
+
+    /**
+     * Get the report sets for this plugin. Override this method if the
+     * plugin you are converting needs report sets.
+     *
+     * @return This default implementation simply returns an empty list
+     */
+    protected List getReportSets()
+    {
+        return Collections.EMPTY_LIST;
+    }
 
     private void sendInfoMessage( String message )
     {

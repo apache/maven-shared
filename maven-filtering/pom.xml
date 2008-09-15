@@ -96,7 +96,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>1.5.5</version>
+      <version>1.5.7-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -104,5 +104,19 @@
       <version>1.6</version>
     </dependency>
   </dependencies>
+  
+  <!-- remove when plexus-utils 1.5.7 released -->
+  <repositories>
+    <repository>
+      <id>snapshots.codehaus</id>
+        <url>http://snapshots.repository.codehaus.org/</url>
+        <releases>
+          <enabled>false</enabled>
+        </releases>
+        <snapshots>
+          <enabled>true</enabled>
+        </snapshots>
+      </repository>
+    </repositories>
   
 </project>

@@ -83,6 +83,12 @@ public class MavenResourcesExecution
      */
     private boolean overwrite = false;
     
+    /**
+     * Copy any empty directories included in the Ressources
+     * @since 1.0-beta-2
+     */
+    private boolean includeEmptyDirs = false;
+    
     public MavenResourcesExecution()
     {
         projectStartExpressions.add( "pom" );
@@ -384,6 +390,24 @@ public class MavenResourcesExecution
     public void setOverwrite( boolean overwrite )
     {
         this.overwrite = overwrite;
+    }
+
+    /**
+     * @return
+     * @since 1.0-beta-2
+     */
+    public boolean isIncludeEmptyDirs()
+    {
+        return includeEmptyDirs;
+    }
+
+    /**
+     * @param includeEmptyDirs
+     * @since 1.0-beta-2
+     */
+    public void setIncludeEmptyDirs( boolean includeEmptyDirs )
+    {
+        this.includeEmptyDirs = includeEmptyDirs;
     }
    
 }

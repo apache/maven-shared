@@ -20,6 +20,7 @@ package org.apache.maven.shared.filtering;
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -220,22 +221,42 @@ public class DefaultMavenResourcesFiltering
             DirectoryScanner scanner = new DirectoryScanner();
 
             scanner.setBasedir( resourceDirectory );
+            String[] includes = null;
             if ( resource.getIncludes() != null && !resource.getIncludes().isEmpty() )
             {
-                scanner.setIncludes( (String[]) resource.getIncludes().toArray( EMPTY_STRING_ARRAY ) );
+                includes = (String[]) resource.getIncludes().toArray( EMPTY_STRING_ARRAY ) ;
             }
             else
             {
-                scanner.setIncludes( DEFAULT_INCLUDES );
+                includes = DEFAULT_INCLUDES;
             }
-
+            scanner.setIncludes( includes );
+            
+            String[] excludes = null;
             if ( resource.getExcludes() != null && !resource.getExcludes().isEmpty() )
             {
-                scanner.setExcludes( (String[]) resource.getExcludes().toArray( EMPTY_STRING_ARRAY ) );
+                excludes = (String[]) resource.getExcludes().toArray( EMPTY_STRING_ARRAY );
+                scanner.setExcludes( excludes );
             }
 
             scanner.addDefaultExcludes();
             scanner.scan();
+            
+            if (mavenResourcesExecution.isIncludeEmptyDirs())
+            {
+                try
+                {
+                    FileUtils.copyDirectoryStructure( resourceDirectory, targetPath == null ? outputDirectory
+                                                                                           : new File( outputDirectory,
+                                                                                                       targetPath ),
+                                                      includes, excludes );
+                }
+                catch ( IOException e )
+                {
+                    throw new MavenFilteringException( "Cannot copy directory structure from "
+                        + resourceDirectory.getPath() + " to " + outputDirectory.getPath() );
+                }
+            }
 
             List includedFiles = Arrays.asList( scanner.getIncludedFiles() );
 

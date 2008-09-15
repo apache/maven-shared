@@ -19,9 +19,12 @@ package org.apache.maven.model.converter.plugins;
  * under the License.
  */
 
+import org.apache.maven.model.ReportSet;
 import org.apache.maven.model.converter.ProjectConverterException;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -54,5 +57,16 @@ public class PCCChanges
     {
         addConfigurationChild( configuration, projectProperties, "maven.changes.issue.template", "issueLinkTemplate" );
         addConfigurationChild( configuration, "xmlPath", "${basedir}/xdocs/changes.xml" );
+    }
+
+    protected List getReportSets()
+    {
+        List reportSets = new ArrayList();
+
+        ReportSet reportSet = new ReportSet();
+        reportSet.addReport( "changes-report" );
+        reportSets.add( reportSet );
+
+        return reportSets;
     }
 }

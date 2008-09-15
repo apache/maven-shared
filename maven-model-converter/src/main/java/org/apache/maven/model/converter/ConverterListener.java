@@ -21,6 +21,9 @@ package org.apache.maven.model.converter;
 
 import java.io.File;
 
+/**
+ * Classes that wants to listen in on the POM conversion process should implement this interface.
+ */
 public interface ConverterListener
 {
     void debug( String message );

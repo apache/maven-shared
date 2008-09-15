@@ -31,7 +31,8 @@ import java.util.Properties;
 /**
  * @author Fabrizio Giustina
  * @version $Id$
- * @plexus.component role="org.apache.maven.model.converter.plugins.PluginConfigurationConverter" role-hint="multiproject"
+ * @plexus.component role="org.apache.maven.model.converter.plugins.PluginConfigurationConverter"
+ *                   role-hint="multiproject"
  */
 public class PCCMultiproject
     implements PluginConfigurationConverter

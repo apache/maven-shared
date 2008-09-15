@@ -286,12 +286,14 @@ public class PomV3ToV4Translator
 
                     StringBuffer info = new StringBuffer();
 
-                    info.append( "Using some derived information for report: \'" ).append( reportName ).append( "\'.\n" )
+                    info.append( "Using some derived information for report: \'" ).append( reportName )
+                        .append( "\'.\n" )
                         .append( "\to groupId: \'" ).append( reportPlugin.getGroupId() ).append( "\'\n" )
                         .append( "\to artifactId: \'" ).append( reportName ).append( "\'\n" )
                         .append( "\to goal: \'report\'\n" )
                         .append( "\n" )
-                        .append( "These values were extracted using the v3 report naming convention, but may be wrong." );
+                        .append( "These values were extracted using the v3 report naming convention," )
+                        .append( " but may be wrong." );
 
                     warnings.add( info.toString() );
 
@@ -428,7 +430,8 @@ public class PomV3ToV4Translator
             if ( StringUtils.isEmpty( siteDirectory ) )
             {
                 throw new PomTranslationException( pomKey.groupId(), pomKey.artifactId(), pomKey.version(),
-                                                   "Missing 'siteDirectory': Both siteAddress and siteDirectory must be set at the same time." );
+                                                   "Missing 'siteDirectory': Both siteAddress and siteDirectory must be"
+                                                       + " set at the same time." );
             }
 
             site = new Site();
@@ -475,7 +478,8 @@ public class PomV3ToV4Translator
             if ( StringUtils.isEmpty( distributionDirectory ) )
             {
                 throw new PomTranslationException( pomKey.groupId(), pomKey.artifactId(), pomKey.version(),
-                                                   "Missing 'distributionDirectory': must be set is 'distributionSite' is set." );
+                                                   "Missing 'distributionDirectory': must be set if 'distributionSite'"
+                                                       + "is set." );
             }
 
             repository = new DeploymentRepository();

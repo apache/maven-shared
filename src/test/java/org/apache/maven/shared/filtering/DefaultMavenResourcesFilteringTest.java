@@ -502,5 +502,65 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals( 1, files.length );
         assertEquals( "includefile.txt", files[0].getName() );
     }    
+
+    public void testEmptyDirectories()
+        throws Exception
+    {
+        File baseDir = new File( "c:\\foo\\bar" );
+        StubMavenProject mavenProject = new StubMavenProject( baseDir );
+        mavenProject.setVersion( "1.0" );
+        mavenProject.setGroupId( "org.apache" );
+        mavenProject.setName( "test project" );
+
+        MavenResourcesFiltering mavenResourcesFiltering = (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class
+            .getName() );
+
+
+        List resources = new ArrayList();
+        resources.add( new Resource()
+        {
+            {
+                setDirectory( getBasedir() + "/src/test/units-files/includeEmptyDirs" );
+            }
+        } );
+        MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, outputDirectory,
+                                                                                       mavenProject, null, Collections.EMPTY_LIST,
+                                                                                       Collections.EMPTY_LIST,
+                                                                                       new StubMavenSession() );
+        mavenResourcesExecution.setIncludeEmptyDirs( true );
+        mavenResourcesFiltering.filterResources( mavenResourcesExecution );
+        
+        File[] childs = outputDirectory.listFiles();
+        assertEquals( 3, childs.length );
+        
+        for ( int i = 0, size = childs.length; i < size; i++ )
+        {
+            File file = childs[i];
+            if ( file.getName().endsWith( "dir1" ) || file.getName().endsWith( "empty-directory" )
+                || file.getName().endsWith( "empty-directory-child" ) )
+            {
+                if ( file.getName().endsWith( "dir1" ) )
+                {
+                    assertEquals( 1, file.list().length );
+                    assertTrue( file.listFiles()[0].getName().endsWith( "foo.txt" ) );
+                }
+                if ( file.getName().endsWith( "empty-directory" ) )
+                {
+                    assertEquals( 0, file.list().length );
+                }
+                if ( file.getName().endsWith( "empty-directory-child" ) )
+                {
+                    assertEquals( 1, file.list().length );
+                    assertTrue( file.listFiles()[0].isDirectory() );
+                    assertEquals( 0, file.listFiles()[0].listFiles().length );
+                }
+            }
+            else
+            {
+                fail( "unknow child file found " + file.getName() );
+            }
+        }
+    }    
+    
     
 }

@@ -23,7 +23,6 @@ import org.apache.maven.model.converter.ProjectConverterException;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.util.Properties;
-import java.util.StringTokenizer;
 
 /**
  * A <code>PluginConfigurationConverter</code> for the Castor plugin.
@@ -55,7 +54,7 @@ public class PCCCastor
     {
         addConfigurationChild( configuration, projectProperties, "maven.castor.dest", "dest" );
 
-        // The Maven 1 plugin specifies a directory but the Maven 2 plugin wants a file 
+        // The Maven 1 plugin specifies a directory but the Maven 2 plugin wants a file
         String value = projectProperties.getProperty( "maven.castor.properties.dir" );
         if ( value != null )
         {

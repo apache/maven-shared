@@ -23,7 +23,6 @@ import org.apache.maven.model.converter.ProjectConverterException;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.util.Properties;
-import java.util.StringTokenizer;
 
 /**
  * A <code>PluginConfigurationConverter</code> for the Jalopy plugin.
@@ -61,12 +60,16 @@ public class PCCJalopy
 
         addConfigurationChild( configuration, projectProperties, "maven.jalopy.history", "history" );
 
-        addConfigurationChild( configuration, projectProperties, "maven.jalopy.src.filesetExclude", "srcExcludesPattern" );
+        addConfigurationChild( configuration, projectProperties, "maven.jalopy.src.filesetExclude",
+                               "srcExcludesPattern" );
 
-        addConfigurationChild( configuration, projectProperties, "maven.jalopy.src.filesetInclude", "srcIncludesPattern" );
+        addConfigurationChild( configuration, projectProperties, "maven.jalopy.src.filesetInclude",
+                               "srcIncludesPattern" );
 
-        addConfigurationChild( configuration, projectProperties, "maven.jalopy.test.filesetExclude", "testExcludesPattern" );
+        addConfigurationChild( configuration, projectProperties, "maven.jalopy.test.filesetExclude",
+                               "testExcludesPattern" );
 
-        addConfigurationChild( configuration, projectProperties, "maven.jalopy.test.filesetInclude", "testIncludesPattern" );
+        addConfigurationChild( configuration, projectProperties, "maven.jalopy.test.filesetInclude",
+                               "testIncludesPattern" );
     }
 }

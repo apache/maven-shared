@@ -84,7 +84,7 @@ public class MavenResourcesExecution
     private boolean overwrite = false;
     
     /**
-     * Copy any empty directories included in the Ressources
+     * Copy any empty directories included in the Resources.
      * @since 1.0-beta-2
      */
     private boolean includeEmptyDirs = false;

@@ -246,7 +246,7 @@ public class DefaultMavenResourcesFiltering
             {
                 try
                 {
-                    FileUtils.copyDirectoryStructure( resourceDirectory, targetPath == null ? outputDirectory
+                    FileUtils.copyDirectoryLayout( resourceDirectory, targetPath == null ? outputDirectory
                                                                                            : new File( outputDirectory,
                                                                                                        targetPath ),
                                                       includes, excludes );

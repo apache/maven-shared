@@ -97,8 +97,9 @@ public class PatternIncludesArtifactFilterTest
         tck.testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent( false );
     }
 
-    public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild()
-    {
-        tck.testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild( false );
-    }
+    // See comment in TCK.
+//    public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild()
+//    {
+//        tck.testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild( false );
+//    }
 }

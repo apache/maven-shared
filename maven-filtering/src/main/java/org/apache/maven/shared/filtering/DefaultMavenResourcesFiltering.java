@@ -161,9 +161,9 @@ public class DefaultMavenResourcesFiltering
 
         if ( mavenResourcesExecution.getEncoding() == null || mavenResourcesExecution.getEncoding().length() < 1 )
         {
-            getLogger().info(
+            getLogger().warn(
                               "Using platform encoding (" + ReaderFactory.FILE_ENCODING
-                                  + " actually) to copy filtered resources." );
+                                  + " actually) to copy filtered resources, i.e. build is platform dependent!" );
         }
         else
         {

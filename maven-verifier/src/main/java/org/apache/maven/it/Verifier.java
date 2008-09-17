@@ -981,6 +981,8 @@ public class Verifier
                 cli.addEnvironment( "JAVA_HOME", System.getProperty( "java.home" ) );
             }
 
+            cli.addEnvironment( "MAVEN_TERMINATE_CMD", "on" );
+
             cli.setWorkingDirectory( getBasedir() );
 
             for ( Iterator it = cliOptions.iterator(); it.hasNext(); )

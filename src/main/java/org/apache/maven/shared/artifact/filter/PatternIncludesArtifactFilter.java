@@ -164,35 +164,24 @@ public class PatternIncludesArtifactFilter
 
     private boolean matchAgainst( String value, List patterns, boolean regionMatch )
     {
+        patternLoop:
         for ( Iterator i = patterns.iterator(); i.hasNext(); )
         {
             // TODO: what about wildcards? Just specifying groups? versions?
             String pattern = (String) i.next();
 
             // don't allow wildcards in region-matched searches...i.e. in transitive dependencies.
-            if ( regionMatch && ( pattern.indexOf( '*' ) > -1 ) )
-            {
-                continue;
-            }
+//            if ( regionMatch && ( pattern.indexOf( '*' ) > -1 ) )
+//            {
+//                continue;
+//            }
 
-            if ( regionMatch )
+            if ( value.equals( pattern ) )
             {
-                if ( value.indexOf( pattern ) > -1 )
-                {
-                    patternsTriggered.add( pattern );
-                    return true;
-                }
+                patternsTriggered.add( pattern );
+                return true;
             }
-            else
-            {
-                if ( value.equals( pattern ) )
-                {
-                    patternsTriggered.add( pattern );
-                    return true;
-                }
-            }
-
-            if ( pattern.indexOf( '*' ) > -1 )
+            else if ( pattern.indexOf( '*' ) > -1 )
             {
                 String[] subPatterns = pattern.split( "\\*" );
                 int[] idxes = new int[subPatterns.length];
@@ -200,6 +189,10 @@ public class PatternIncludesArtifactFilter
                 for ( int j = 0; j < subPatterns.length; j++ )
                 {
                     String subPattern = subPatterns[j];
+                    if ( subPattern.endsWith( "*" ) )
+                    {
+                        subPattern = subPattern.substring( 0, subPattern.length() - 1 );
+                    }
 
                     if ( ( subPattern == null ) || ( subPattern.length() < 1 ) )
                     {
@@ -212,13 +205,19 @@ public class PatternIncludesArtifactFilter
 
                     idxes[j] = value.indexOf( subPattern, lastIdx );
 
-                    if ( idxes[j] >= 0 )
+                    if ( idxes[j] < 0 )
                     {
                     	patternsTriggered.add( pattern );
-                        return true;
+                        continue patternLoop;
                     }
                 }
-
+                
+                return true;
+            }
+            else if ( regionMatch && value.indexOf( pattern ) > -1 )
+            {
+                patternsTriggered.add( pattern );
+                return true;
             }
         }
 

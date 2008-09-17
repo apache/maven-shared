@@ -344,40 +344,41 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild(
-                                                                                                           boolean reverse )
-    {
-        String groupId = "group";
-        String artifactId = "artifact";
-
-        String otherGroup = "otherGroup";
-        String otherArtifact = "otherArtifact";
-        String otherType = "ejb";
-
-        String depTrailItem = otherGroup + ":" + otherArtifact + ":" + otherType + ":version";
-        List depTrail = Collections.singletonList( depTrailItem );
-        List patterns = Collections.singletonList( "!*:ejb:*" );
-
-        ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId, "jar", depTrail );
-        ArtifactMockAndControl otherMac = new ArtifactMockAndControl( otherGroup, otherArtifact, otherType, null );
-
-        mockManager.replayAll();
-
-        ArtifactFilter filter = createFilter( patterns, true );
-
-        if ( reverse )
-        {
-            assertTrue( filter.include( otherMac.artifact ) );
-            assertFalse( filter.include( mac.artifact ) );
-        }
-        else
-        {
-            assertFalse( filter.include( otherMac.artifact ) );
-            assertTrue( filter.include( mac.artifact ) );
-        }
-
-        mockManager.verifyAll();
-    }
+    // FIXME: Not sure what this is even trying to test.
+//    public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild(
+//                                                                                                           boolean reverse )
+//    {
+//        String groupId = "group";
+//        String artifactId = "artifact";
+//
+//        String otherGroup = "otherGroup";
+//        String otherArtifact = "otherArtifact";
+//        String otherType = "ejb";
+//
+//        String depTrailItem = otherGroup + ":" + otherArtifact + ":" + otherType + ":version";
+//        List depTrail = Collections.singletonList( depTrailItem );
+//        List patterns = Collections.singletonList( "!*:ejb:*" );
+//
+//        ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId, "jar", depTrail );
+//        ArtifactMockAndControl otherMac = new ArtifactMockAndControl( otherGroup, otherArtifact, otherType, null );
+//
+//        mockManager.replayAll();
+//
+//        ArtifactFilter filter = createFilter( patterns, true );
+//
+//        if ( reverse )
+//        {
+//            assertTrue( filter.include( otherMac.artifact ) );
+//            assertFalse( filter.include( mac.artifact ) );
+//        }
+//        else
+//        {
+//            assertFalse( filter.include( otherMac.artifact ) );
+//            assertFalse( filter.include( mac.artifact ) );
+//        }
+//
+//        mockManager.verifyAll();
+//    }
 
     private final class ArtifactMockAndControl
     {

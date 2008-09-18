@@ -1006,6 +1006,12 @@ public class Verifier
                 cli.createArgument().setLine( "-D" + key + "=" + systemProperties.getProperty( key ) );
             }
 
+            /*
+             * NOTE: Unless explicitly requested by the caller, the forked builds should use the current local
+             * repository. Otherwise, the forked builds would in principle leave the sandbox environment which has been
+             * setup for the current build. In particular, using "maven.repo.local" will make sure the forked builds use
+             * the same local repo as the parent build even if a custom user settings is provided.
+             */
             boolean useMavenRepoLocal =
                 Boolean.valueOf( verifierProperties.getProperty( "use.mavenRepoLocal", "true" ) ).booleanValue();
 

@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>9</version>
+    <version>10-SNAPSHOT</version>
   </parent>
 
   <prerequisites>
@@ -96,7 +96,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>1.5.7-SNAPSHOT</version>
+      <version>1.5.6</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -104,19 +104,5 @@
       <version>1.6</version>
     </dependency>
   </dependencies>
-  
-  <!-- remove when plexus-utils 1.5.7 released -->
-  <repositories>
-    <repository>
-      <id>snapshots.codehaus</id>
-        <url>http://snapshots.repository.codehaus.org/</url>
-        <releases>
-          <enabled>false</enabled>
-        </releases>
-        <snapshots>
-          <enabled>true</enabled>
-        </snapshots>
-      </repository>
-    </repositories>
   
 </project>

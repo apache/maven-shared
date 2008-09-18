@@ -29,9 +29,29 @@ Maven Filtering
 
   The goal is to provide a shared component for all plugins which needs to filter resources.
   
-* What's New in 1.0-beta-2
+* What's New in 1.0-beta-2 (All of this new features are configurable with the MavenResourcesExecution bean)
 
-  TO WRITE
+** Release Note
+
+  The release note is available {{{http://jira.codehaus.org/secure/ReleaseNote.jspa?version=14488&styleName=Html&projectId=11761&Create=Create}here}}.
+
+** Pom interpolation
+  
+  {{{http://jira.codehaus.org/browse/MSHARED-60}[MSHARED-60]}} something like $\{foo.url\} was interpolated to the value of pom url.
+  Now pom values will interpolated <<<only>>> with expressions starting with pom or project (it's configurable).\
+  This means before something like $\{foo.version\} or $\{version\} was interpolated with the current pom version. 
+  <<Now it won't interpolated to a pom value.>>
+  
+** Escaping Interpolation 
+
+  {{{http://jira.codehaus.org/browse/MSHARED-51}[MSHARED-51]}} It's possible now to define a String which will escape interpolation.\
+  \$\{java.home\} will be interpolated to $\{java.home\}
+
+** targetPath accepts now absolute paths too
+
+** overwrite parameter
+
+  {{{http://jira.codehaus.org/browse/MSHARED-67}[MSHARED-67]}} Add a new parameter to force file copy even if the destination file is newer.
 
 * MavenResourcesFiltering
 

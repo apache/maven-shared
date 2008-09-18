@@ -205,7 +205,7 @@ public class DefaultMavenResourcesFiltering
 
             if ( !resourceDirectory.exists() )
             {
-                // TODO how to log here ?
+                getLogger().info( "skip non existing resourceDirectory " + resourceDirectory.getPath() );
                 continue;
             }
 
@@ -242,14 +242,13 @@ public class DefaultMavenResourcesFiltering
             scanner.addDefaultExcludes();
             scanner.scan();
             
-            if (mavenResourcesExecution.isIncludeEmptyDirs())
+            if ( mavenResourcesExecution.isIncludeEmptyDirs() )
             {
                 try
                 {
-                    FileUtils.copyDirectoryLayout( resourceDirectory, targetPath == null ? outputDirectory
-                                                                                           : new File( outputDirectory,
-                                                                                                       targetPath ),
-                                                      includes, excludes );
+                    File targetDirectory = targetPath == null ? outputDirectory
+                                                             : new File( outputDirectory, targetPath );
+                    copyDirectoryLayout( resourceDirectory, targetDirectory, scanner );
                 }
                 catch ( IOException e )
                 {
@@ -299,6 +298,47 @@ public class DefaultMavenResourcesFiltering
             }
         }
 
+    }
+    
+    private void copyDirectoryLayout( File sourceDirectory, File destinationDirectory, DirectoryScanner scanner )
+        throws IOException
+    {
+        if ( sourceDirectory == null )
+        {
+            throw new IOException( "source directory can't be null." );
+        }
+
+        if ( destinationDirectory == null )
+        {
+            throw new IOException( "destination directory can't be null." );
+        }
+
+        if ( sourceDirectory.equals( destinationDirectory ) )
+        {
+            throw new IOException( "source and destination are the same directory." );
+        }
+
+        if ( !sourceDirectory.exists() )
+        {
+            throw new IOException( "Source directory doesn't exists (" + sourceDirectory.getAbsolutePath() + ")." );
+        }
+
+        List includedDirectories = Arrays.asList( scanner.getIncludedDirectories() );
+
+        for ( Iterator i = includedDirectories.iterator(); i.hasNext(); )
+        {
+            String name = (String) i.next();
+
+            File source = new File( sourceDirectory, name );
+
+            if ( source.equals( sourceDirectory ) )
+            {
+                continue;
+            }
+
+            File destination = new File( destinationDirectory, name );
+            destination.mkdirs();
+        }
     }
     
     

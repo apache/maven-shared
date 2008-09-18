@@ -80,7 +80,7 @@ public class MavenProjectValueSource
         Object value = null;
         try 
         {
-            value = ReflectionValueExtractor.evaluate( "" + expression, project, IsProjectExpression( expression ) );
+            value = ReflectionValueExtractor.evaluate( "" + expression, project, isProjectExpression( expression ) );
 
             if ( escapedBackslashesInFilePath && value != null
                 && "java.lang.String".equals( value.getClass().getName() ) )
@@ -103,7 +103,7 @@ public class MavenProjectValueSource
         return value;
     }    
     
-    private boolean IsProjectExpression( String key )
+    private boolean isProjectExpression( String key )
     {
         if ( StringUtils.isEmpty( key ) )
         {

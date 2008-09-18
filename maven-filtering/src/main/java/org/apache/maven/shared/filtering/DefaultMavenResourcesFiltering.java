@@ -176,7 +176,7 @@ public class DefaultMavenResourcesFiltering
         {
             Resource resource = (Resource) i.next();
             
-            if (getLogger().isDebugEnabled())
+            if ( getLogger().isDebugEnabled() )
             {
                 String ls = System.getProperty( "line.separator" );
                 StringBuffer debugMessage = new StringBuffer( "resource with targetPath " + resource.getTargetPath() )
@@ -186,10 +186,8 @@ public class DefaultMavenResourcesFiltering
                                      "excludes "
                                          + ( resource.getExcludes() == null ? " empty " : resource.getExcludes()
                                              .toString() ) ).append( ls );
-                debugMessage.append(
-                                    "includes "
-                                        + ( resource.getIncludes() == null ? " empty " : resource.getIncludes()
-                                            .toString() ) );            
+                debugMessage.append( "includes "
+                    + ( resource.getIncludes() == null ? " empty " : resource.getIncludes().toString() ) );
                 getLogger().debug( debugMessage.toString() );
             }
 

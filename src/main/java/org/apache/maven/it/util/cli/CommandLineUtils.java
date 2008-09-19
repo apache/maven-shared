@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -198,7 +199,7 @@ public abstract class CommandLineUtils
 
         Runtime r = Runtime.getRuntime();
 
-        String os = System.getProperty( "os.name" ).toLowerCase();
+        String os = System.getProperty( "os.name" ).toLowerCase( Locale.ENGLISH );
 
         //If this is windows set the shell to command.com or cmd.exe with correct arguments.
         if ( os.indexOf( "windows" ) != -1 )

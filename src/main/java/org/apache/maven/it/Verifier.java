@@ -106,7 +106,7 @@ public class Verifier
 
     private boolean forkJvm = true;
 
-    private String defaultMavenHome;
+    private static String defaultMavenHome;
 
     public Verifier( String basedir, String settingsFile )
         throws VerificationException
@@ -147,14 +147,17 @@ public class Verifier
     private void findDefaultMavenHome()
         throws VerificationException
     {
-        try
+        if ( defaultMavenHome == null )
         {
-            Properties envVars = CommandLineUtils.getSystemEnvVars();
-            defaultMavenHome = envVars.getProperty( "M2_HOME" );
-        }
-        catch ( IOException e )
-        {
-            throw new VerificationException( "Cannot read system environment variables.", e );
+            try
+            {
+                Properties envVars = CommandLineUtils.getSystemEnvVars();
+                defaultMavenHome = envVars.getProperty( "M2_HOME" );
+            }
+            catch ( IOException e )
+            {
+                throw new VerificationException( "Cannot read system environment variables.", e );
+            }
         }
     }
 
@@ -905,7 +908,7 @@ public class Verifier
         // Use a strategy for finding the maven executable, John has a simple method like this
         // but a little strategy + chain of command would be nicer.
 
-        String mavenHome = System.getProperty( "maven.home" );
+        String mavenHome = System.getProperty( "maven.home", defaultMavenHome );
 
         if ( mavenHome != null )
         {
@@ -913,13 +916,6 @@ public class Verifier
         }
         else
         {
-            mavenHome = defaultMavenHome;
-
-            if ( mavenHome != null )
-            {
-                return mavenHome + "/bin/mvn";
-            }
-
             File f = new File( System.getProperty( "user.home" ), "m2/bin/mvn" );
 
             if ( f.exists() )
@@ -1190,7 +1186,6 @@ public class Verifier
                 return status;
             }
         }
-        ;
 
         try
         {

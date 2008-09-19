@@ -18,16 +18,29 @@
  */
 package org.apache.maven.shared.artifact.filter;
 
-import junit.framework.TestCase;
-
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.shared.tools.easymock.MockManager;
+import org.codehaus.plexus.PlexusTestCase;
 import org.easymock.MockControl;
 
 public class ScopeArtifactFilterTest
-    extends TestCase
+    extends PlexusTestCase
 {
+    
+    public void testExcludedArtifactWithRangeShouldNotCauseNPE()
+        throws Exception
+    {
+        ArtifactFactory factory = (ArtifactFactory) lookup( ArtifactFactory.ROLE );
+        
+        Artifact excluded = factory.createDependencyArtifact( "group", "artifact", VersionRange.createFromVersionSpec( "[1.2.3]" ), "jar", null, Artifact.SCOPE_PROVIDED );
+        
+        ArtifactFilter filter = new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME );
+        
+        assertFalse( filter.include( excluded ) );
+    }
 
     private MockManager mockManager = new MockManager();
 
@@ -148,31 +161,21 @@ public class ScopeArtifactFilterTest
 
         MockControl control;
 
-        private final String scope;
-
         ArtifactMockAndControl( String scope )
         {
-            this.scope = scope;
-
             control = MockControl.createControl( Artifact.class );
             mockManager.add( control );
 
             artifact = (Artifact) control.getMock();
 
-            enableGetScope();
-            enableGetId();
-        }
-
-        void enableGetScope()
-        {
             artifact.getScope();
-            control.setReturnValue( scope, MockControl.ONE_OR_MORE );
-        }
-
-        void enableGetId()
-        {
+            control.setReturnValue( scope, MockControl.ZERO_OR_MORE );
+            
             artifact.getId();
             control.setReturnValue( "group:artifact:type:version", MockControl.ZERO_OR_MORE );
+            
+            artifact.getVersionRange();
+            control.setReturnValue( null, MockControl.ZERO_OR_MORE );
         }
     }
 

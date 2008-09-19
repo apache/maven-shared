@@ -139,7 +139,19 @@ public class ScopeArtifactFilter
 
         if ( !result )
         {
-            filteredArtifactIds.add( artifact.getId() );
+            // We have to be very careful with artifacts that have ranges, 
+            // because artifact.getId() will throw a NPE if a range is specified.
+            String id;
+            if ( artifact.getVersionRange() != null )
+            {
+                id = artifact.getDependencyConflictId() + ":" + artifact.getVersionRange();
+            }
+            else
+            {
+                id = artifact.getId();
+            }
+            
+            filteredArtifactIds.add( id );
         }
 
         return result;

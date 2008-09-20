@@ -1148,18 +1148,18 @@ public class FileUtils
     public static void forceDelete( final File file )
         throws IOException
     {
-        if ( !file.exists() )
-        {
-            return;
-        }
-
         if ( file.isDirectory() )
         {
             deleteDirectory( file );
         }
         else
         {
-            if ( !deleteFile( file ) )
+            /*
+             * NOTE: Always try to delete the file even if it appears to be non-existent. This will ensure that a
+             * symlink whose target does not exist is deleted, too.
+             */
+            boolean filePresent = file.getCanonicalFile().exists();
+            if ( !deleteFile( file ) && filePresent )
             {
                 final String message = "File " + file + " unable to be deleted.";
                 throw new IOException( message );
@@ -1182,7 +1182,7 @@ public class FileUtils
 
         if ( !file.delete() )
         {
-            if ( System.getProperty( "os.name" ).toLowerCase().indexOf( "windows" ) > -1 )
+            if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
             {
                 System.gc();
             }
@@ -1363,6 +1363,12 @@ public class FileUtils
         IOException exception = null;
 
         final File[] files = directory.listFiles();
+
+        if ( files == null )
+        {
+            return;
+        }
+
         for ( int i = 0; i < files.length; i++ )
         {
             final File file = files[i];

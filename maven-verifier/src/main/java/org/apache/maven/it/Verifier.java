@@ -669,6 +669,19 @@ public class Verifier
         }
     }
 
+    /**
+     * Deletes the specified directory.
+     * 
+     * @param path The path to the directory to delete, relative to the base directory, must not be <code>null</code>.
+     * @throws IOException If the directory could not be deleted.
+     * @since 1.2
+     */
+    public void deleteDirectory( String path )
+        throws IOException
+    {
+        FileUtils.deleteDirectory( new File( getBasedir(), path ) );
+    }
+
     public void assertFilePresent( String file )
     {
         try

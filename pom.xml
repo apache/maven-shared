@@ -31,7 +31,7 @@ under the License.
 
   <groupId>org.apache.maven.shared</groupId>
   <artifactId>maven-shared-components</artifactId>
-  <version>10-SNAPSHOT</version>
+  <version>10</version>
   <packaging>pom</packaging>
 
   <name>Maven Shared Components</name>
@@ -111,6 +111,7 @@ under the License.
     </mailingList>
   </mailingLists>
 
+<!--
   <modules>
     <module>file-management</module>
     <module>maven-ant</module>
@@ -134,16 +135,19 @@ under the License.
     <module>maven-shared-monitor</module>
     <module>maven-verifier</module>
     <module>maven-web-ui-tests</module>
+-->
     <!--
     Uses jdk 1.5
     <module>maven-shared-model</module>
     -->
+<!--
   </modules>
+-->
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-10</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-10</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-shared-components-10</url>
   </scm>
   <issueManagement>
     <system>jira</system>

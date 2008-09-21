@@ -111,6 +111,7 @@ under the License.
     </mailingList>
   </mailingLists>
 
+<!--
   <modules>
     <module>file-management</module>
     <module>maven-ant</module>
@@ -134,11 +135,14 @@ under the License.
     <module>maven-shared-monitor</module>
     <module>maven-verifier</module>
     <module>maven-web-ui-tests</module>
+-->
     <!--
     Uses jdk 1.5
     <module>maven-shared-model</module>
     -->
+<!--
   </modules>
+-->
 
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>

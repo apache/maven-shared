@@ -31,7 +31,6 @@ import org.codehaus.plexus.interpolation.Interpolator;
 import org.codehaus.plexus.interpolation.PrefixAwareRecursionInterceptor;
 import org.codehaus.plexus.interpolation.PrefixedObjectValueSource;
 import org.codehaus.plexus.interpolation.PrefixedPropertiesValueSource;
-import org.codehaus.plexus.interpolation.PrefixedValueSourceWrapper;
 import org.codehaus.plexus.interpolation.RecursionInterceptor;
 import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
@@ -53,6 +52,13 @@ import java.util.Set;
  */
 public class MavenArchiver
 {
+    
+    public static final String SIMPLE_LAYOUT = "${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}";
+
+    public static final String REPOSITORY_LAYOUT = "${artifact.groupIdPath}/${artifact.artifactId}/" +
+    		"${artifact.baseVersion}/${artifact.artifactId}-" +
+    		"${artifact.version}${dashClassifier?}.${artifact.extension}";
+    
     private static final List ARTIFACT_EXPRESSION_PREFIXES;
     
     static
@@ -206,38 +212,12 @@ public class MavenArchiver
                     classpath.append( classpathPrefix );
                     
                     // NOTE: If the artifact or layout type (from config) is null, give up and use the file name by itself.
-                    if ( artifact == null || layoutType == null
-                        || ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_SIMPLE.equals( layoutType ) )
+                    if ( artifact == null || layoutType == null )
                     {
                         classpath.append( f.getName() );
                     }
-                    else if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_REPOSITORY.equals( layoutType ) )
+                    else
                     {
-                        // we use layout /$groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
-                        // here we must find the Artifact in the project Artifacts to generate the maven layout
-                        StringBuffer classpathElement = new StringBuffer();
-                        if ( !StringUtils.isEmpty( artifact.getGroupId() ) )
-                        {
-                            classpathElement.append( artifact.getGroupId().replace( '.', '/' ) ).append( '/' );
-                        }
-                        classpathElement.append( artifact.getArtifactId() ).append( '/' );
-                        classpathElement.append( artifact.getVersion() ).append( '/' );
-                        classpathElement.append( f.getName() );
-                        classpath.append( classpathElement );
-                    }
-                    else if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM.equals( layoutType ) )
-                    {
-                        if ( layout == null )
-                        {
-                            throw new ManifestException(
-                                                         ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM
-                                                             + " layout type was declared, but custom layout expression was not specified. Check your <archive><manifest><customLayout/> element." );
-                        }
-                        
-                        // FIXME: This query method SHOULD NOT affect the internal
-                        // state of the artifact version, but it does.
-                        artifact.isSnapshot();
-                        
                         List valueSources = new ArrayList();
                         valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact, true ) );
                         valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact == null ? null : artifact.getArtifactHandler(), true ) );
@@ -245,6 +225,13 @@ public class MavenArchiver
                         Properties extraExpressions = new Properties();
                         if ( artifact != null )
                         {
+                            // FIXME: This query method SHOULD NOT affect the internal
+                            // state of the artifact version, but it does.
+                            if ( !artifact.isSnapshot() )
+                            {
+                                extraExpressions.setProperty( "baseVersion", artifact.getVersion() );
+                            }
+                            
                             extraExpressions.setProperty( "groupIdPath", artifact.getGroupId().replace( '.', '/' ) );
                             if ( artifact.getClassifier() != null )
                             {
@@ -266,9 +253,35 @@ public class MavenArchiver
                         }
                         
                         RecursionInterceptor recursionInterceptor = new PrefixAwareRecursionInterceptor( ARTIFACT_EXPRESSION_PREFIXES );
+                        
                         try
                         {
-                            classpath.append( interpolator.interpolate( layout, recursionInterceptor ) );
+                            if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_SIMPLE.equals( layoutType ) )
+                            {
+                                classpath.append( interpolator.interpolate( SIMPLE_LAYOUT, recursionInterceptor ) );
+                            }
+                            else if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_REPOSITORY.equals( layoutType ) )
+                            {
+                                // we use layout /$groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
+                                // here we must find the Artifact in the project Artifacts to generate the maven layout
+                                classpath.append( interpolator.interpolate( REPOSITORY_LAYOUT, recursionInterceptor ) );
+                            }
+                            else if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM.equals( layoutType ) )
+                            {
+                                if ( layout == null )
+                                {
+                                    throw new ManifestException(
+                                                                 ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM
+                                                                     + " layout type was declared, but custom layout expression was not specified. Check your <archive><manifest><customLayout/> element." );
+                                }
+                                
+                                classpath.append( interpolator.interpolate( layout, recursionInterceptor ) );
+                            }
+                            else
+                            {
+                                throw new ManifestException( "Unknown classpath layout type: '" + layoutType
+                                    + "'. Check your <archive><manifest><layoutType/> element." );
+                            }
                         }
                         catch ( InterpolationException e )
                         {
@@ -287,11 +300,6 @@ public class MavenArchiver
                                 interpolator.removeValuesSource( vs );
                             }
                         }
-                    }
-                    else
-                    {
-                        throw new ManifestException( "Unknown classpath layout type: '" + layoutType
-                            + "'. Check your <archive><manifest><layoutType/> element." );
                     }
                 }
             }

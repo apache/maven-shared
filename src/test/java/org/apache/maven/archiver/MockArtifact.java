@@ -56,6 +56,8 @@ class MockArtifact
     
     private ArtifactHandler artifactHandler;
 
+    private boolean snapshot;
+
     public String getGroupId()
     {
         return groupId;
@@ -74,6 +76,13 @@ class MockArtifact
     public void setVersion( String string )
     {
         this.version = string;
+    }
+    
+    public void setSnapshotVersion( String snapshotVersion, String baseVersion )
+    {
+        snapshot = true;
+        version = snapshotVersion;
+        this.baseVersion = baseVersion;
     }
 
     public String getScope()
@@ -218,8 +227,7 @@ class MockArtifact
 
     public boolean isSnapshot()
     {
-        // TODO
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return snapshot;
     }
 
     public void setResolved( boolean b )

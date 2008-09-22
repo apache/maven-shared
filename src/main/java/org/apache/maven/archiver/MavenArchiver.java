@@ -26,14 +26,25 @@ import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.Manifest;
 import org.codehaus.plexus.archiver.jar.ManifestException;
+import org.codehaus.plexus.interpolation.InterpolationException;
+import org.codehaus.plexus.interpolation.Interpolator;
+import org.codehaus.plexus.interpolation.PrefixAwareRecursionInterceptor;
+import org.codehaus.plexus.interpolation.PrefixedObjectValueSource;
+import org.codehaus.plexus.interpolation.PrefixedPropertiesValueSource;
+import org.codehaus.plexus.interpolation.PrefixedValueSourceWrapper;
+import org.codehaus.plexus.interpolation.RecursionInterceptor;
+import org.codehaus.plexus.interpolation.StringSearchInterpolator;
+import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -42,6 +53,16 @@ import java.util.Set;
  */
 public class MavenArchiver
 {
+    private static final List ARTIFACT_EXPRESSION_PREFIXES;
+    
+    static
+    {
+        List artifactExpressionPrefixes = new ArrayList();
+        artifactExpressionPrefixes.add( "artifact." );
+        
+        ARTIFACT_EXPRESSION_PREFIXES = artifactExpressionPrefixes;
+    }
+
     private JarArchiver archiver;
 
     private File archiveFile;
@@ -166,26 +187,34 @@ public class MavenArchiver
             
             List artifacts = project.getRuntimeClasspathElements();
             String classpathPrefix = config.getClasspathPrefix();
+            String layoutType = config.getClasspathLayoutType();
+            String layout = config.getCustomClasspathLayout();
+            
+            Interpolator interpolator = new StringSearchInterpolator();
 
             for ( Iterator iter = artifacts.iterator(); iter.hasNext(); )
             {
                 File f = new File( (String) iter.next() );
-                if ( f.isFile() )
+                if ( f.getAbsoluteFile().isFile() )
                 {
+                    Artifact artifact = findArtifactWithFile( project.getArtifacts(), f );
+                    
                     if ( classpath.length() > 0 )
                     {
                         classpath.append( " " );
                     }
                     classpath.append( classpathPrefix );
-                    if ( !config.isClasspathMavenRepositoryLayout() )
+                    
+                    // NOTE: If the artifact or layout type (from config) is null, give up and use the file name by itself.
+                    if ( artifact == null || layoutType == null
+                        || ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_SIMPLE.equals( layoutType ) )
                     {
                         classpath.append( f.getName() );
                     }
-                    else
+                    else if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_REPOSITORY.equals( layoutType ) )
                     {
                         // we use layout /$groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
                         // here we must find the Artifact in the project Artifacts to generate the maven layout
-                        Artifact artifact = findArtifactWithFile( project.getArtifacts(), f );
                         StringBuffer classpathElement = new StringBuffer();
                         if ( !StringUtils.isEmpty( artifact.getGroupId() ) )
                         {
@@ -196,13 +225,77 @@ public class MavenArchiver
                         classpathElement.append( f.getName() );
                         classpath.append( classpathElement );
                     }
+                    else if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM.equals( layoutType ) )
+                    {
+                        if ( layout == null )
+                        {
+                            throw new ManifestException(
+                                                         ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM
+                                                             + " layout type was declared, but custom layout expression was not specified. Check your <archive><manifest><customLayout/> element." );
+                        }
+                        
+                        // FIXME: This query method SHOULD NOT affect the internal
+                        // state of the artifact version, but it does.
+                        artifact.isSnapshot();
+                        
+                        List valueSources = new ArrayList();
+                        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact, true ) );
+                        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact == null ? null : artifact.getArtifactHandler(), true ) );
+                        
+                        Properties extraExpressions = new Properties();
+                        if ( artifact != null )
+                        {
+                            extraExpressions.setProperty( "groupIdPath", artifact.getGroupId().replace( '.', '/' ) );
+                            if ( artifact.getClassifier() != null )
+                            {
+                                extraExpressions.setProperty( "dashClassifier", "-" + artifact.getClassifier() );
+                                extraExpressions.setProperty( "dashClassifier?", "-" + artifact.getClassifier() );
+                            }
+                            else
+                            {
+                                extraExpressions.setProperty( "dashClassifier", "" );
+                                extraExpressions.setProperty( "dashClassifier?", "" );
+                            }
+                        }
+                        valueSources.add( new PrefixedPropertiesValueSource( ARTIFACT_EXPRESSION_PREFIXES, extraExpressions, true ) );
+                        
+                        for ( Iterator it = valueSources.iterator(); it.hasNext(); )
+                        {
+                            ValueSource vs = (ValueSource) it.next();
+                            interpolator.addValueSource( vs );
+                        }
+                        
+                        RecursionInterceptor recursionInterceptor = new PrefixAwareRecursionInterceptor( ARTIFACT_EXPRESSION_PREFIXES );
+                        try
+                        {
+                            classpath.append( interpolator.interpolate( layout, recursionInterceptor ) );
+                        }
+                        catch ( InterpolationException e )
+                        {
+                            ManifestException error =
+                                new ManifestException( "Error interpolating artifact path for classpath entry: "
+                                    + e.getMessage() );
+                            
+                            error.initCause( e );
+                            throw error;
+                        }
+                        finally
+                        {
+                            for ( Iterator it = valueSources.iterator(); it.hasNext(); )
+                            {
+                                ValueSource vs = (ValueSource) it.next();
+                                interpolator.removeValuesSource( vs );
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new ManifestException( "Unknown classpath layout type: '" + layoutType
+                            + "'. Check your <archive><manifest><layoutType/> element." );
+                    }
                 }
-
             }
 
-            
-            
-            
             if ( classpath.length() > 0 )
             {
                 // Class-Path is special and should be added to manifest even if

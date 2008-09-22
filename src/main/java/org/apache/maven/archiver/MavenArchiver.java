@@ -59,6 +59,12 @@ public class MavenArchiver
     		"${artifact.baseVersion}/${artifact.artifactId}-" +
     		"${artifact.version}${dashClassifier?}.${artifact.extension}";
     
+    public static final String SIMPLE_LAYOUT_NONUNIQUE = "${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
+
+    public static final String REPOSITORY_LAYOUT_NONUNIQUE = "${artifact.groupIdPath}/${artifact.artifactId}/" +
+            "${artifact.baseVersion}/${artifact.artifactId}-" +
+            "${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
+    
     private static final List ARTIFACT_EXPRESSION_PREFIXES;
     
     static
@@ -258,13 +264,27 @@ public class MavenArchiver
                         {
                             if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_SIMPLE.equals( layoutType ) )
                             {
-                                classpath.append( interpolator.interpolate( SIMPLE_LAYOUT, recursionInterceptor ) );
+                                if ( config.isUseUniqueVersions() )
+                                {
+                                    classpath.append( interpolator.interpolate( SIMPLE_LAYOUT, recursionInterceptor ) );
+                                }
+                                else
+                                {
+                                    classpath.append( interpolator.interpolate( SIMPLE_LAYOUT_NONUNIQUE, recursionInterceptor ) );
+                                }
                             }
                             else if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_REPOSITORY.equals( layoutType ) )
                             {
                                 // we use layout /$groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
                                 // here we must find the Artifact in the project Artifacts to generate the maven layout
-                                classpath.append( interpolator.interpolate( REPOSITORY_LAYOUT, recursionInterceptor ) );
+                                if ( config.isUseUniqueVersions() )
+                                {
+                                    classpath.append( interpolator.interpolate( REPOSITORY_LAYOUT, recursionInterceptor ) );
+                                }
+                                else
+                                {
+                                    classpath.append( interpolator.interpolate( REPOSITORY_LAYOUT_NONUNIQUE, recursionInterceptor ) );
+                                }
                             }
                             else if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM.equals( layoutType ) )
                             {

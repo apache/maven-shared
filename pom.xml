@@ -88,6 +88,11 @@
       <version>3.8.2</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.codehaus.plexus</groupId>
+    	<artifactId>plexus-interpolation</artifactId>
+    	<version>1.5</version>
+    </dependency>
   </dependencies>
   <reporting>
     <plugins>

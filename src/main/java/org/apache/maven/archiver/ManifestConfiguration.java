@@ -1,5 +1,8 @@
 package org.apache.maven.archiver;
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.handler.ArtifactHandler;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -28,6 +31,12 @@ package org.apache.maven.archiver;
  */
 public class ManifestConfiguration
 {
+    public static final String CLASSPATH_LAYOUT_TYPE_SIMPLE = "simple";
+
+    public static final String CLASSPATH_LAYOUT_TYPE_REPOSITORY = "repository";
+
+    public static final String CLASSPATH_LAYOUT_TYPE_CUSTOM = "custom";
+
     private String mainClass;
 
     private String packageName;
@@ -60,8 +69,13 @@ public class ManifestConfiguration
      * Maven 2 repository layout:
      * $groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
      * @since 2.3
+     * @deprecated Use {@link ManifestConfiguration#classpathLayoutType} instead.
      */
     private boolean classpathMavenRepositoryLayout = false;
+    
+    private String classpathLayoutType = CLASSPATH_LAYOUT_TYPE_SIMPLE;
+    
+    private String customClasspathLayout;
 
     public String getMainClass()
     {
@@ -93,6 +107,10 @@ public class ManifestConfiguration
         return addExtensions;
     }
 
+    /**
+     * @deprecated Use {@link ManifestConfiguration#getClasspathLayoutType()}, and compare to
+     * CLASSPATH_LAYOUT_TYPE_SIMPLE or CLASSPATH_LAYOUT_TYPE_REPOSITORY, also declared in {@link ManifestConfiguration}.
+     */
     public boolean isClasspathMavenRepositoryLayout()
     {
         return classpathMavenRepositoryLayout;
@@ -118,6 +136,11 @@ public class ManifestConfiguration
         this.addExtensions = addExtensions;
     }
 
+    /**
+     * @deprecated Use {@link ManifestConfiguration#setClasspathLayoutType(String)}, and use
+     * CLASSPATH_LAYOUT_TYPE_SIMPLE, CLASSPATH_LAYOUT_TYPE_CUSTOM, or CLASSPATH_LAYOUT_TYPE_REPOSITORY, 
+     * also declared in {@link ManifestConfiguration}.
+     */
     public void setClasspathMavenRepositoryLayout( boolean classpathMavenRepositoryLayout )
     {
         this.classpathMavenRepositoryLayout = classpathMavenRepositoryLayout;
@@ -148,5 +171,65 @@ public class ManifestConfiguration
         }
 
         return cpp;
+    }
+
+    /**
+     * Return the type of layout to use when formatting classpath entries.
+     * Default is taken from the constant CLASSPATH_LAYOUT_TYPE_SIMPLE, declared 
+     * in this class, which has a value of 'simple'. Other values are: 'repository'
+     * (CLASSPATH_LAYOUT_TYPE_REPOSITORY, or the same as a maven classpath layout),
+     * and 'custom' (CLASSPATH_LAYOUT_TYPE_CUSTOM).
+     * <br/>
+     * <b>NOTE:</b> If you specify a type of 'custom' you MUST set {@link ManifestConfiguration#setCustomClasspathLayout(String)}.
+     */
+    public String getClasspathLayoutType()
+    {
+        return CLASSPATH_LAYOUT_TYPE_SIMPLE.equals( classpathLayoutType ) && classpathMavenRepositoryLayout ? CLASSPATH_LAYOUT_TYPE_REPOSITORY
+                        : classpathLayoutType;
+    }
+
+    /**
+     * Set the type of layout to use when formatting classpath entries.
+     * Should be one of: 'simple' (CLASSPATH_LAYOUT_TYPE_SIMPLE), 'repository'
+     * (CLASSPATH_LAYOUT_TYPE_REPOSITORY, or the same as a maven classpath layout),
+     * and 'custom' (CLASSPATH_LAYOUT_TYPE_CUSTOM). The constant names noted here
+     * are defined in the {@link ManifestConfiguration} class.
+     * <br/>
+     * <b>NOTE:</b> If you specify a type of 'custom' you MUST set {@link ManifestConfiguration#setCustomClasspathLayout(String)}.
+     */
+    public void setClasspathLayoutType( String classpathLayoutType )
+    {
+        this.classpathLayoutType = classpathLayoutType;
+    }
+
+    /**
+     * Retrieve the layout expression for use when the layout type set in {@link ManifestConfiguration#setClasspathLayoutType(String)}
+     * has the value 'custom'. <b>The default value is null.</b>
+     * Expressions will be evaluated against the following ordered list of classpath-related objects:
+     * <ol>
+     *   <li>The current {@link Artifact} instance, if one exists.</li>
+     *   <li>The current {@link ArtifactHandler} instance from the artifact above.</li>
+     * </ol>
+     * <br/>
+     * <b>NOTE:</b> If you specify a layout type of 'custom' you MUST set this layout expression.
+     */
+    public String getCustomClasspathLayout()
+    {
+        return customClasspathLayout;
+    }
+
+    /**
+     * Set the layout expression for use when the layout type set in {@link ManifestConfiguration#setClasspathLayoutType(String)}
+     * has the value 'custom'. Expressions will be evaluated against the following ordered list of classpath-related objects:
+     * <ol>
+     *   <li>The current {@link Artifact} instance, if one exists.</li>
+     *   <li>The current {@link ArtifactHandler} instance from the artifact above.</li>
+     * </ol>
+     * <br/>
+     * <b>NOTE:</b> If you specify a layout type of 'custom' you MUST set this layout expression.
+     */
+    public void setCustomClasspathLayout( String customClasspathLayout )
+    {
+        this.customClasspathLayout = customClasspathLayout;
     }
 }

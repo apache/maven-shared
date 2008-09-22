@@ -76,6 +76,8 @@ public class ManifestConfiguration
     private String classpathLayoutType = CLASSPATH_LAYOUT_TYPE_SIMPLE;
     
     private String customClasspathLayout;
+    
+    private boolean useUniqueVersions = true;
 
     public String getMainClass()
     {
@@ -231,5 +233,35 @@ public class ManifestConfiguration
     public void setCustomClasspathLayout( String customClasspathLayout )
     {
         this.customClasspathLayout = customClasspathLayout;
+    }
+
+    /**
+     * Retrieve the flag for whether snapshot artifacts should be added to the 
+     * classpath using the timestamp/buildnumber version (the default, when this
+     * flag is true), or using the generic -SNAPSHOT version (when the flag is
+     * false).
+     * <br/>
+     * <b>NOTE:</b> If the snapshot was installed locally, this flag will not 
+     * have an effect on that artifact's inclusion, since it will have the same
+     * version either way (i.e. -SNAPSHOT naming).
+     */
+    public boolean isUseUniqueVersions()
+    {
+        return useUniqueVersions;
+    }
+
+    /**
+     * Set the flag for whether snapshot artifacts should be added to the 
+     * classpath using the timestamp/buildnumber version (the default, when this
+     * flag is true), or using the generic -SNAPSHOT version (when the flag is
+     * false).
+     * <br/>
+     * <b>NOTE:</b> If the snapshot was installed locally, this flag will not 
+     * have an effect on that artifact's inclusion, since it will have the same
+     * version either way (i.e. -SNAPSHOT naming).
+     */
+    public void setUseUniqueVersions( boolean useUniqueVersions )
+    {
+        this.useUniqueVersions = useUniqueVersions;
     }
 }

@@ -21,7 +21,7 @@ under the License.
   <parent>
     <artifactId>maven-shared-components</artifactId>
     <groupId>org.apache.maven.shared</groupId>
-    <version>9</version>
+    <version>10</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>maven-common-artifact-filters</artifactId>

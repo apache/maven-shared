@@ -25,8 +25,25 @@
 
 Set Up The Classpath
 
+* {Contents}
 
-* Add A Class-Path Entry To The Manifest
+  * {{{#Add}Add A Class-Path Entry To The Manifest}}
+  
+  * {{{#Make}Make The Jar Executable}}
+  
+  * {{{#Prefix}Altering The Classpath: Defining a Classpath Directory Prefix}}
+  
+  * {{{#Repository}Altering The Classpath: Using a Maven Repository-Style Classpath}}
+  
+  * {{{#Custom}Altering The Classpath: Using a Custom Classpath Format}}
+  
+  * {{{#Snapshot}Handling Snapshot Versions}}
+  
+  []
+
+* {Add} A Class-Path Entry To The Manifest
+
+ \[{{{#Contents}Top}}\]
 
  Maven Archiver can add the classpath of your project to the manifest. This is
  done with the <<<\<addClasspath\>>>> configuration element.
@@ -80,7 +97,9 @@ Class-Path: plexus-utils-1.1.jar commons-lang-2.1.jar
 +-----+
 
 
-* Make The Jar Executable
+* {Make} The Jar Executable
+
+  \[{{{#Contents}Top}}\]
 
  If you want to create an executable jar file, you need to configure Maven
  Archiver accordingly. You need to tell it which main class to use. This is
@@ -139,7 +158,9 @@ Class-Path: plexus-utils-1.1.jar commons-lang-2.1.jar
 +-----+
 
 
-* Altering The Classpath: Defining a Classpath Directory Prefix
+* Altering The Classpath: Defining a Classpath Directory {Prefix}
+
+  \[{{{#Contents}Top}}\]
 
  Sometimes it is useful to be able to alter the classpath, for example when
  {{{http://maven.apache.org/plugins/maven-war-plugin/examples/skinny-wars.html}creating skinny war-files}}.
@@ -186,7 +207,9 @@ Class-Path: plexus-utils-1.1.jar commons-lang-2.1.jar
 Class-Path: lib/plexus-utils-1.1.jar lib/commons-lang-2.1.jar
 +-----+
 
-* Altering The Classpath: Using a Maven Repository-Style Classpath
+* Altering The Classpath: Using a Maven {Repository}-Style Classpath
+
+  \[{{{#Contents}Top}}\]
 
   <(Since: 2.3, see below)>
 
@@ -246,7 +269,9 @@ Class-Path: lib/plexus-utils-1.1.jar lib/commons-lang-2.1.jar
 Class-Path: lib/org/codehaus/plexus/plexus-utils/1.1/plexus-utils-1.1.jar lib/commons-lang/commons-lang/2.1/commons-lang-2.1.jar
 +-----+
 
-* Altering The Classpath: Using a Custom Classpath Format
+* Altering The Classpath: Using a {Custom} Classpath Format
+
+  \[{{{#Contents}Top}}\]
 
   <(Since: 2.4)>
 
@@ -328,7 +353,12 @@ Class-Path: lib/org/codehaus/plexus/plexus-utils/1.1/plexus-utils-1.1.jar lib/co
 Class-Path: WEB-INF/lib/org/codehaus/plexus/plexus-utils-1.1.jar WEB-INF/lib/commons-lang/commons-lang-2.1.jar
 +-----+
 
-** Forcing the use of -SNAPSHOT in classpath archive versions
+
+* Handling {Snapshot} Versions
+
+  \[{{{#Contents}Top}}\]
+
+  <(Since 2.4)>
 
   Depending on how you construct your archive, you may have the ability to specify whether 
   snapshot dependency archives are included with the version suffix <<<'-SNAPSHOT'>>>, or
@@ -336,10 +366,46 @@ Class-Path: WEB-INF/lib/org/codehaus/plexus/plexus-utils-1.1.jar WEB-INF/lib/com
   the {{{http://maven.apache.org/plugins/maven-assembly-plugin}Assembly Plugin}} allows
   you to make this decision in the <<<\<outputFileNameMapping\>>>> element of its 
   <<<\<dependencySet>>>> descriptor section.
-    
+  
+** Forcing the use of -SNAPSHOT versions when using the simple (default) or repository classpath layout
+
+  To force the use of <<<'-SNAPSHOT'>>> version naming, simply disable the <<<\<useUniqueVersions\>>>>
+  configuration element, like this:
+  
++-----+
+<useUniqueVersions>false</useUniqueVersions>
++-----+
+
+** Forcing the use of -SNAPSHOT versions with custom layouts
+
   To force the use of <<<'-SNAPSHOT'>>> version naming, simply replace <<<'${artifact.version}'>>>
-  with <<<'${artifact.baseVersion}'>>> in the example above, so it looks like this:
+  with <<<'${artifact.baseVersion}'>>> in the custom layout example above, so it looks like this:
   
 +-----+
 <customClasspathLayout>WEB-INF/lib/${artifact.groupIdPath}/${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}</customClasspathLayout>
++-----+
+
+  The full example configuration would look like this:
+  
++-----+
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+         <artifactId>maven-war-plugin</artifactId>
+         <configuration>
+           <archive>
+             <manifest>
+               <addClasspath>true</addClasspath>
+               <classpathLayoutType>custom</classpathLayoutType>
+               <customClasspathLayout>WEB-INF/lib/${artifact.groupIdPath}/${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}</customClasspathLayout>
+             </manifest>
+           </archive>
+         </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  ...
+</project>
 +-----+

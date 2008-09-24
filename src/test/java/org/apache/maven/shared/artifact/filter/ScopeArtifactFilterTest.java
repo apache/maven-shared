@@ -44,6 +44,149 @@ public class ScopeArtifactFilterTest
 
     private MockManager mockManager = new MockManager();
 
+    public void testNullScopeDisabled()
+    {
+        ScopeArtifactFilter filter = new ScopeArtifactFilter();
+        filter.setIncludeNullScope( false );
+        
+        verifyExcluded( filter, null );
+    }
+
+    public void testFineGrained_IncludeOnlyScopesThatWereEnabled_TestScope()
+    {
+        ScopeArtifactFilter filter = new ScopeArtifactFilter();
+        filter.setIncludeTestScope( true );
+        
+        verifyExcluded( filter, Artifact.SCOPE_COMPILE );
+        verifyExcluded( filter, Artifact.SCOPE_PROVIDED );
+        verifyExcluded( filter, Artifact.SCOPE_RUNTIME );
+        verifyExcluded( filter, Artifact.SCOPE_SYSTEM );
+        verifyIncluded( filter, Artifact.SCOPE_TEST );
+        verifyIncluded( filter, null );
+    }
+
+    public void testFineGrained_IncludeOnlyScopesThatWereEnabled_CompileScope()
+    {
+        ScopeArtifactFilter filter = new ScopeArtifactFilter();
+        filter.setIncludeCompileScope( true );
+        
+        verifyIncluded( filter, Artifact.SCOPE_COMPILE );
+        verifyExcluded( filter, Artifact.SCOPE_PROVIDED );
+        verifyExcluded( filter, Artifact.SCOPE_RUNTIME );
+        verifyExcluded( filter, Artifact.SCOPE_SYSTEM );
+        verifyExcluded( filter, Artifact.SCOPE_TEST );
+        verifyIncluded( filter, null );
+    }
+
+    public void testFineGrained_IncludeOnlyScopesThatWereEnabled_RuntimeScope()
+    {
+        ScopeArtifactFilter filter = new ScopeArtifactFilter();
+        filter.setIncludeRuntimeScope( true );
+        
+        verifyExcluded( filter, Artifact.SCOPE_COMPILE );
+        verifyExcluded( filter, Artifact.SCOPE_PROVIDED );
+        verifyIncluded( filter, Artifact.SCOPE_RUNTIME );
+        verifyExcluded( filter, Artifact.SCOPE_SYSTEM );
+        verifyExcluded( filter, Artifact.SCOPE_TEST );
+        verifyIncluded( filter, null );
+    }
+
+    public void testFineGrained_IncludeOnlyScopesThatWereEnabled_ProvidedScope()
+    {
+        ScopeArtifactFilter filter = new ScopeArtifactFilter();
+        filter.setIncludeProvidedScope( true );
+        
+        verifyExcluded( filter, Artifact.SCOPE_COMPILE );
+        verifyIncluded( filter, Artifact.SCOPE_PROVIDED );
+        verifyExcluded( filter, Artifact.SCOPE_RUNTIME );
+        verifyExcluded( filter, Artifact.SCOPE_SYSTEM );
+        verifyExcluded( filter, Artifact.SCOPE_TEST );
+        verifyIncluded( filter, null );
+    }
+
+    public void testFineGrained_IncludeOnlyScopesThatWereEnabled_SystemScope()
+    {
+        ScopeArtifactFilter filter = new ScopeArtifactFilter();
+        filter.setIncludeSystemScope( true );
+        
+        verifyExcluded( filter, Artifact.SCOPE_COMPILE );
+        verifyExcluded( filter, Artifact.SCOPE_PROVIDED );
+        verifyExcluded( filter, Artifact.SCOPE_RUNTIME );
+        verifyIncluded( filter, Artifact.SCOPE_SYSTEM );
+        verifyExcluded( filter, Artifact.SCOPE_TEST );
+        verifyIncluded( filter, null );
+    }
+
+    public void testFineGrained_IncludeOnlyScopesThatWereEnabled_ProvidedAndRuntimeScopes()
+    {
+        ScopeArtifactFilter filter = new ScopeArtifactFilter();
+        filter.setIncludeRuntimeScope( true );
+        filter.setIncludeProvidedScope( true );
+        
+        verifyExcluded( filter, Artifact.SCOPE_COMPILE );
+        verifyIncluded( filter, Artifact.SCOPE_PROVIDED );
+        verifyIncluded( filter, Artifact.SCOPE_RUNTIME );
+        verifyExcluded( filter, Artifact.SCOPE_SYSTEM );
+        verifyExcluded( filter, Artifact.SCOPE_TEST );
+        verifyIncluded( filter, null );
+    }
+
+    public void testFineGrained_IncludeOnlyScopesThatWereEnabled_SystemAndRuntimeScopes()
+    {
+        ScopeArtifactFilter filter = new ScopeArtifactFilter();
+        filter.setIncludeRuntimeScope( true );
+        filter.setIncludeSystemScope( true );
+        
+        verifyExcluded( filter, Artifact.SCOPE_COMPILE );
+        verifyExcluded( filter, Artifact.SCOPE_PROVIDED );
+        verifyIncluded( filter, Artifact.SCOPE_RUNTIME );
+        verifyIncluded( filter, Artifact.SCOPE_SYSTEM );
+        verifyExcluded( filter, Artifact.SCOPE_TEST );
+        verifyIncluded( filter, null );
+    }
+
+    public void testFineGrainedWithImplications_CompileScopeShouldIncludeOnlyArtifactsWithNullSystemProvidedOrCompileScopes()
+    {
+        ScopeArtifactFilter filter = new ScopeArtifactFilter();
+        filter.setIncludeCompileScopeWithImplications( true );
+
+        verifyIncluded( filter, null );
+        verifyIncluded( filter, Artifact.SCOPE_COMPILE );
+        verifyIncluded( filter, Artifact.SCOPE_PROVIDED );
+        verifyIncluded( filter, Artifact.SCOPE_SYSTEM );
+
+        verifyExcluded( filter, Artifact.SCOPE_RUNTIME );
+        verifyExcluded( filter, Artifact.SCOPE_TEST );
+    }
+
+    public void testFineGrainedWithImplications_RuntimeScopeShouldIncludeOnlyArtifactsWithNullRuntimeOrCompileScopes()
+    {
+        ScopeArtifactFilter filter = new ScopeArtifactFilter();
+        filter.setIncludeRuntimeScopeWithImplications( true );
+
+        verifyIncluded( filter, null );
+        verifyIncluded( filter, Artifact.SCOPE_COMPILE );
+        verifyIncluded( filter, Artifact.SCOPE_RUNTIME );
+
+        verifyExcluded( filter, Artifact.SCOPE_PROVIDED );
+        verifyExcluded( filter, Artifact.SCOPE_SYSTEM );
+        verifyExcluded( filter, Artifact.SCOPE_TEST );
+    }
+
+    public void testFineGrainedWithImplications_TestScopeShouldIncludeAllScopes()
+    {
+        ScopeArtifactFilter filter = new ScopeArtifactFilter();
+        filter.setIncludeTestScopeWithImplications( true );
+
+        verifyIncluded( filter, null );
+        verifyIncluded( filter, Artifact.SCOPE_COMPILE );
+        verifyIncluded( filter, Artifact.SCOPE_RUNTIME );
+
+        verifyIncluded( filter, Artifact.SCOPE_PROVIDED );
+        verifyIncluded( filter, Artifact.SCOPE_SYSTEM );
+        verifyIncluded( filter, Artifact.SCOPE_TEST );
+    }
+    
     public void testScopesShouldIncludeArtifactWithSameScope()
     {
         verifyIncluded( Artifact.SCOPE_COMPILE, Artifact.SCOPE_COMPILE );
@@ -51,7 +194,7 @@ public class ScopeArtifactFilterTest
         verifyIncluded( Artifact.SCOPE_RUNTIME, Artifact.SCOPE_RUNTIME );
         verifyIncluded( Artifact.SCOPE_SYSTEM, Artifact.SCOPE_SYSTEM );
         verifyIncluded( Artifact.SCOPE_TEST, Artifact.SCOPE_TEST );
-        verifyIncluded( null, null );
+        verifyIncluded( (String) null, null );
     }
 
     public void testCompileScopeShouldIncludeOnlyArtifactsWithNullSystemProvidedOrCompileScopes()
@@ -147,6 +290,36 @@ public class ScopeArtifactFilterTest
         ArtifactFilter filter = new ScopeArtifactFilter( filterScope );
 
         assertFalse( "Artifact scope: " + artifactScope + " NOT excluded using filter scope: " + filterScope, filter
+            .include( mac.artifact ) );
+
+        mockManager.verifyAll();
+
+        // enable multiple calls to this method within a single test.
+        mockManager.clear();
+    }
+
+    private void verifyIncluded( ScopeArtifactFilter filter, String artifactScope )
+    {
+        ArtifactMockAndControl mac = new ArtifactMockAndControl( artifactScope );
+
+        mockManager.replayAll();
+
+        assertTrue( "Artifact scope: " + artifactScope + " SHOULD BE included", filter
+            .include( mac.artifact ) );
+
+        mockManager.verifyAll();
+
+        // enable multiple calls to this method within a single test.
+        mockManager.clear();
+    }
+
+    private void verifyExcluded( ScopeArtifactFilter filter, String artifactScope )
+    {
+        ArtifactMockAndControl mac = new ArtifactMockAndControl( artifactScope );
+
+        mockManager.replayAll();
+
+        assertFalse( "Artifact scope: " + artifactScope + " SHOULD BE excluded", filter
             .include( mac.artifact ) );
 
         mockManager.verifyAll();

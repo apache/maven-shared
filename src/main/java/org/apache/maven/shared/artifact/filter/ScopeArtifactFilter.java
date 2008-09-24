@@ -28,20 +28,30 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.codehaus.plexus.logging.Logger;
 
 /**
- * TODO: include in maven-artifact in future
+ * {@link ArtifactFilter} implementation that selects artifacts based on their
+ * scopes.
+ * <br/>
+ * <b>NOTE:</b> None of the fine-grained scopes imply other scopes when enabled;
+ * when fine-grained scope control is used, each scope must be enabled separately,
+ * UNLESS the corresponding XXXWithImplications() method is used to enable that
+ * scope.
  */
 public class ScopeArtifactFilter
     implements ArtifactFilter, StatisticsReportingArtifactFilter
 {
-    private final boolean compileScope;
+    private boolean includeCompileScope;
 
-    private final boolean runtimeScope;
+    private boolean includeRuntimeScope;
 
-    private final boolean testScope;
+    private boolean includeTestScope;
 
-    private final boolean providedScope;
+    private boolean includeProvidedScope;
 
-    private final boolean systemScope;
+    private boolean includeSystemScope;
+    
+    private boolean includeNullScope = true;
+    
+    private boolean nullScopeHit = false;
 
     private boolean compileScopeHit = false;
 
@@ -54,93 +64,86 @@ public class ScopeArtifactFilter
     private boolean systemScopeHit = false;
 
     private List filteredArtifactIds = new ArrayList();
+    
+    /**
+     * Constructor that is meant to be used with fine-grained manipulation to 
+     * enable/disable specific scopes using the associated mutator methods.
+     */
+    public ScopeArtifactFilter()
+    {
+        // don't enable anything by default.
+        this( null );
+    }
 
+    /**
+     * Constructor that uses the implied nature of Maven scopes to determine which
+     * artifacts to include. For instance, 'test' scope implies compile, provided, and runtime,
+     * while 'runtime' scope implies only compile.
+     */
     public ScopeArtifactFilter( String scope )
     {
         if ( DefaultArtifact.SCOPE_COMPILE.equals( scope ) )
         {
-            systemScope = true;
-            providedScope = true;
-            compileScope = true;
-            runtimeScope = false;
-            testScope = false;
+            setIncludeCompileScopeWithImplications( true );
         }
         else if ( DefaultArtifact.SCOPE_RUNTIME.equals( scope ) )
         {
-            systemScope = false;
-            providedScope = false;
-            compileScope = true;
-            runtimeScope = true;
-            testScope = false;
+            setIncludeRuntimeScopeWithImplications( true );
         }
         else if ( DefaultArtifact.SCOPE_TEST.equals( scope ) )
         {
-            systemScope = true;
-            providedScope = true;
-            compileScope = true;
-            runtimeScope = true;
-            testScope = true;
+            setIncludeTestScopeWithImplications( true );
         }
         else if ( DefaultArtifact.SCOPE_PROVIDED.equals( scope ) )
         {
-            systemScope = false;
-            providedScope = true;
-            compileScope = false;
-            runtimeScope = false;
-            testScope = false;
+            setIncludeProvidedScope( true );
         }
         else if ( DefaultArtifact.SCOPE_SYSTEM.equals( scope ) )
         {
-            systemScope = true;
-            providedScope = false;
-            compileScope = false;
-            runtimeScope = false;
-            testScope = false;
-        }
-        else
-        {
-            systemScope = false;
-            providedScope = false;
-            compileScope = false;
-            runtimeScope = false;
-            testScope = false;
+            setIncludeSystemScope( true );
         }
     }
 
     public boolean include( Artifact artifact )
     {
         boolean result = true;
-
-        if ( Artifact.SCOPE_COMPILE.equals( artifact.getScope() ) )
+        
+        if ( artifact.getScope() == null )
+        {
+            nullScopeHit = true;
+            result = includeNullScope;
+        }
+        else if ( Artifact.SCOPE_COMPILE.equals( artifact.getScope() ) )
         {
             compileScopeHit = true;
-            result = compileScope;
+            result = includeCompileScope;
         }
         else if ( Artifact.SCOPE_RUNTIME.equals( artifact.getScope() ) )
         {
             runtimeScopeHit = true;
-            result = runtimeScope;
+            result = includeRuntimeScope;
         }
         else if ( Artifact.SCOPE_TEST.equals( artifact.getScope() ) )
         {
             testScopeHit = true;
-            result = testScope;
+            result = includeTestScope;
         }
         else if ( Artifact.SCOPE_PROVIDED.equals( artifact.getScope() ) )
         {
             providedScopeHit = true;
-            result = providedScope;
+            result = includeProvidedScope;
         }
         else if ( Artifact.SCOPE_SYSTEM.equals( artifact.getScope() ) )
         {
             systemScopeHit = true;
-            result = systemScope;
+            result = includeSystemScope;
         }
 
         if ( !result )
         {
             // We have to be very careful with artifacts that have ranges, 
-            // because artifact.getId() will throw a NPE if a range is specified.
+            // because DefaultArtifact.getId() as of <= 2.1.0-M1 will throw a NPE 
+            // if a range is specified.
             String id;
             if ( artifact.getVersionRange() != null )
             {
@@ -159,8 +162,8 @@ public class ScopeArtifactFilter
 
     public String toString()
     {
-        return "Scope filter [compile=" + compileScope + ", runtime=" + runtimeScope + ", test=" + testScope
-            + ", provided=" + providedScope + ", system=" + systemScope + "]";
+        return "Scope filter [null-scope=" + includeNullScope + ", compile=" + includeCompileScope + ", runtime=" + includeRuntimeScope + ", test=" + includeTestScope
+            + ", provided=" + includeProvidedScope + ", system=" + includeSystemScope + "]";
     }
 
     public void reportFilteredArtifacts( Logger logger )
@@ -187,6 +190,11 @@ public class ScopeArtifactFilter
             StringBuffer buffer = new StringBuffer();
 
             boolean report = false;
+            if ( !nullScopeHit )
+            {
+                buffer.append( "\no [Null Scope]" );
+                report = true;
+            }
             if ( !compileScopeHit )
             {
                 buffer.append( "\no Compile" );
@@ -224,6 +232,10 @@ public class ScopeArtifactFilter
     {
         boolean report = false;
 
+        if ( !nullScopeHit )
+        {
+            report = true;
+        }
         if ( !compileScopeHit )
         {
             report = true;
@@ -246,5 +258,146 @@ public class ScopeArtifactFilter
         }
 
         return report;
+    }
+    
+    public boolean isIncludeCompileScope()
+    {
+        return includeCompileScope;
+    }
+
+    public ScopeArtifactFilter setIncludeCompileScope( boolean includeCompileScope )
+    {
+        this.includeCompileScope = includeCompileScope;
+        
+        return this;
+    }
+
+    public boolean isIncludeRuntimeScope()
+    {
+        return includeRuntimeScope;
+    }
+
+    public ScopeArtifactFilter setIncludeRuntimeScope( boolean includeRuntimeScope )
+    {
+        this.includeRuntimeScope = includeRuntimeScope;
+        
+        return this;
+    }
+
+    public boolean isIncludeTestScope()
+    {
+        return includeTestScope;
+    }
+
+    public ScopeArtifactFilter setIncludeTestScope( boolean includeTestScope )
+    {
+        this.includeTestScope = includeTestScope;
+        
+        return this;
+    }
+
+    public boolean isIncludeProvidedScope()
+    {
+        return includeProvidedScope;
+    }
+
+    public ScopeArtifactFilter setIncludeProvidedScope( boolean includeProvidedScope )
+    {
+        this.includeProvidedScope = includeProvidedScope;
+        
+        return this;
+    }
+
+    public boolean isIncludeSystemScope()
+    {
+        return includeSystemScope;
+    }
+
+    public ScopeArtifactFilter setIncludeSystemScope( boolean includeSystemScope )
+    {
+        this.includeSystemScope = includeSystemScope;
+        
+        return this;
+    }
+    
+    /**
+     * Manages the following scopes:
+     * 
+     * <ul>
+     *   <li>system</li>
+     *   <li>provided</li>
+     *   <li>compile</li>
+     * </ul>
+     */
+    public ScopeArtifactFilter setIncludeCompileScopeWithImplications( boolean enabled )
+    {
+        includeSystemScope = enabled;
+        includeProvidedScope = enabled;
+        includeCompileScope = enabled;
+        
+        return this;
+    }
+    
+    /**
+     * Manages the following scopes:
+     * 
+     * <ul>
+     *   <li>compile</li>
+     *   <li>runtime</li>
+     * </ul>
+     */
+    public ScopeArtifactFilter setIncludeRuntimeScopeWithImplications( boolean enabled )
+    {
+        includeCompileScope = enabled;
+        includeRuntimeScope = enabled;
+        
+        return this;
+    }
+
+    /**
+     * Manages the following scopes:
+     * 
+     * <ul>
+     *   <li>system</li>
+     *   <li>provided</li>
+     *   <li>compile</li>
+     *   <li>runtime</li>
+     *   <li>test</li>
+     * </ul>
+     */
+    public ScopeArtifactFilter setIncludeTestScopeWithImplications( boolean enabled )
+    {
+        includeSystemScope = enabled;
+        includeProvidedScope = enabled;
+        includeCompileScope = enabled;
+        includeRuntimeScope = enabled;
+        includeTestScope = enabled;
+        
+        return this;
+    }
+    
+    /**
+     * Determine whether artifacts that have a null scope are included or excluded.
+     */
+    public ScopeArtifactFilter setIncludeNullScope( boolean enable )
+    {
+        includeNullScope = enable;
+        
+        return this;
+    }
+    
+    /**
+     * Reset hit counts and tracking of filtered artifacts, BUT NOT ENABLED SCOPES.
+     */
+    public ScopeArtifactFilter reset()
+    {
+        compileScopeHit = false;
+        runtimeScopeHit = false;
+        testScopeHit = false;
+        providedScopeHit = false;
+        systemScopeHit = false;
+        filteredArtifactIds.clear();
+        
+        return this;
     }
 }

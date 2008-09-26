@@ -20,6 +20,7 @@ package org.apache.maven.it;
  */
 
 import org.apache.maven.it.util.FileUtils;
+import org.apache.maven.it.util.IOUtil;
 import org.apache.maven.it.util.StringUtils;
 import org.apache.maven.it.util.cli.CommandLineException;
 import org.apache.maven.it.util.cli.CommandLineUtils;
@@ -42,6 +43,7 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
@@ -301,6 +303,52 @@ public class Verifier
         }
 
         return properties;
+    }
+
+    /**
+     * Loads the (non-empty) lines of the specified text file.
+     * 
+     * @param filename The path to the text file to load, relative to the base directory, must not be <code>null</code>.
+     * @param encoding The character encoding of the file, may be <code>null</code> or empty to use the platform default
+     *            encoding.
+     * @return The list of (non-empty) lines from the text file, can be empty but never <code>null</code>.
+     * @throws IOException If the file could not be loaded.
+     * @since 1.2
+     */
+    public List loadLines( String filename, String encoding )
+        throws IOException
+    {
+        List lines = new ArrayList();
+
+        File file = new File( getBasedir(), filename );
+
+        BufferedReader reader = null;
+        try
+        {
+            if ( StringUtils.isNotEmpty( encoding ) )
+            {
+                reader = new BufferedReader( new InputStreamReader( new FileInputStream( file ), encoding ) );
+            }
+            else
+            {
+                reader = new BufferedReader( new FileReader( file ) );
+            }
+
+            String line;
+            while ( ( line = reader.readLine() ) != null )
+            {
+                if ( line.length() > 0 )
+                {
+                    lines.add( line );
+                }
+            }
+        }
+        finally
+        {
+            IOUtil.close( reader );
+        }
+
+        return lines;
     }
 
     public List loadFile( String basedir, String filename, boolean hasCommand )

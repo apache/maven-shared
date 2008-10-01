@@ -1002,7 +1002,10 @@ public class Verifier
 
         if ( autoclean )
         {
-            allGoals.add( "clean:clean" );
+            /*
+             * NOTE: Neither test lifecycle binding nor prefix resolution here but call the goal directly.
+             */
+            allGoals.add( "org.apache.maven.plugins:maven-clean-plugin:clean" );
         }
 
         allGoals.addAll( goals );

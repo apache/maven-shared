@@ -40,7 +40,7 @@ Maven Filtering
   {{{http://jira.codehaus.org/browse/MSHARED-60}[MSHARED-60]}} something like $\{foo.url\} was interpolated to the value of pom url.
   Now pom values will interpolated <<<only>>> with expressions starting with pom or project (it's configurable).\
   This means before something like $\{foo.version\} or $\{version\} was interpolated with the current pom version. 
-  <<Now it won't interpolated to a pom value.>>
+  <<Now it won't be interpolated with a pom value.>>
   
 ** Escaping Interpolation 
 

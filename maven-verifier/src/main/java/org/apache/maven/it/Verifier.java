@@ -60,6 +60,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -1141,14 +1142,22 @@ public class Verifier
         String version = null;
 
         List logLines = loadFile( log, false );
+        log.delete();
 
         for ( Iterator it = logLines.iterator(); version == null && it.hasNext(); )
         {
             String line = (String) it.next();
 
-            if ( line.startsWith( "Maven version: " ) )
+            final String MAVEN_VERSION = "Maven version: ";
+
+            // look out for "Maven version: 3.0-SNAPSHOT built on unknown"
+            if ( line.regionMatches( true, 0, MAVEN_VERSION, 0, MAVEN_VERSION.length() ) )
             {
-                version = line.substring( "Maven version: ".length() );
+                version = line.substring( MAVEN_VERSION.length() ).trim();
+                if ( version.indexOf( ' ' ) >= 0 )
+                {
+                    version = version.substring( 0, version.indexOf( ' ' ) );
+                }
             }
         }
 

@@ -275,23 +275,36 @@ public class FileUtils
     public static String fileRead( File file )
         throws IOException
     {
+        return fileRead( file, null );
+    }
+
+    public static String fileRead( File file, String encoding )
+        throws IOException
+    {
         StringBuffer buf = new StringBuffer();
 
-        FileInputStream in = null;
+        Reader reader = null;
 
         try
         {
-            in = new FileInputStream( file );
-            int count;
-            byte[] b = new byte[512];
-            while ( ( count = in.read( b ) ) > 0 )  // blocking read
+            if ( encoding != null && encoding.length() > 0 )
             {
-                buf.append( new String( b, 0, count ) );
+                reader = new InputStreamReader( new FileInputStream( file ), encoding );
+            }
+            else
+            {
+                reader = new InputStreamReader( new FileInputStream( file ) );
+            }
+            int count;
+            char[] b = new char[512];
+            while ( ( count = reader.read( b ) ) > 0 ) // blocking read
+            {
+                buf.append( b, 0, count );
             }
         }
         finally
         {
-            IOUtil.close( in );
+            IOUtil.close( reader );
         }
 
         return buf.toString();

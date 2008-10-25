@@ -60,7 +60,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -545,6 +544,56 @@ public class Verifier
         addMetadataToList( dir, false, files, null );
         addMetadataToList( dir.getParentFile(), false, files, null );
         return files;
+    }
+
+    /**
+     * Gets the path to the local artifact metadata. Note that the method does not check whether the returned path
+     * actually points to existing metadata.
+     * 
+     * @param gid The group id, must not be <code>null</code>.
+     * @param aid The artifact id, must not be <code>null</code>.
+     * @param version The artifact version, must not be <code>null</code>.
+     * @return The (absolute) path to the local artifact metadata, never <code>null</code>.
+     */
+    public String getArtifactMetadataPath( String gid, String aid, String version )
+    {
+        StringBuffer buffer = new StringBuffer( 256 );
+
+        buffer.append( localRepo );
+        buffer.append( '/' );
+
+        if ( "default".equals( localRepoLayout ) )
+        {
+            buffer.append( gid.replace( '.', '/' ) );
+            buffer.append( '/' );
+            buffer.append( aid );
+            buffer.append( '/' );
+            if ( version != null )
+            {
+                buffer.append( version );
+                buffer.append( '/' );
+            }
+            buffer.append( "maven-metadata-local.xml" );
+        }
+        else
+        {
+            throw new IllegalStateException( "Unsupported repository layout: " + localRepoLayout );
+        }
+
+        return buffer.toString();
+    }
+
+    /**
+     * Gets the path to the local artifact metadata. Note that the method does not check whether the returned path
+     * actually points to existing metadata.
+     * 
+     * @param gid The group id, must not be <code>null</code>.
+     * @param aid The artifact id, must not be <code>null</code>.
+     * @return The (absolute) path to the local artifact metadata, never <code>null</code>.
+     */
+    public String getArtifactMetadataPath( String gid, String aid )
+    {
+        return getArtifactMetadataPath( gid, aid, null );
     }
 
     public void executeHook( String filename )

@@ -768,6 +768,33 @@ public class Verifier
     }
 
     /**
+     * Deletes all artifacts in the specified group id from the local repository.
+     * 
+     * @param gid The group id whose artifacts should be deleted, must not be <code>null</code>.
+     * @throws IOException If the artifacts could not be deleted.
+     * @since 1.2
+     */
+    public void deleteArtifacts( String gid )
+        throws IOException
+    {
+        String path;
+        if ( "default".equals( localRepoLayout ) )
+        {
+            path = gid.replace( '.', '/' );
+        }
+        else if ( "legacy".equals( localRepoLayout ) )
+        {
+            path = gid;
+        }
+        else
+        {
+            throw new IllegalStateException( "Unsupported repository layout: " + localRepoLayout );
+        }
+
+        FileUtils.deleteDirectory( new File( localRepo, path ) );
+    }
+
+    /**
      * Deletes the specified directory.
      * 
      * @param path The path to the directory to delete, relative to the base directory, must not be <code>null</code>.

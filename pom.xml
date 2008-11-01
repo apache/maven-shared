@@ -31,6 +31,7 @@
   <name>Maven Reporting Implementation</name>
 
   <properties>
+    <mavenVersion>2.0.10-SNAPSHOT</mavenVersion>
     <doxiaVersion>1.0-beta-1-SNAPSHOT</doxiaVersion>
   </properties>
 
@@ -49,7 +50,7 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>
-      <version>2.0.4</version>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>commons-validator</groupId>
@@ -69,17 +70,17 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>2.0.4</version>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.reporting</groupId>
       <artifactId>maven-reporting-api</artifactId>
-      <version>2.0.10-SNAPSHOT</version>
+      <version>${mavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>1.1</version>
+      <version>1.5.6</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -100,4 +101,21 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-reporting-impl</developerConnection>
     <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-reporting-impl</url>
   </scm>
+
+  <profiles>
+    <profile>
+      <id>reporting</id>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>clirr-maven-plugin</artifactId>
+            <configuration>
+              <comparisonVersion>2.0.4.1</comparisonVersion>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+  </profiles>
 </project>

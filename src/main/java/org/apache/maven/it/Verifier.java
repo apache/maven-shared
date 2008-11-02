@@ -108,6 +108,8 @@ public class Verifier
 
     private boolean forkJvm = true;
 
+    private String logFileName = LOG_FILENAME;
+
     private static String defaultMavenHome;
 
     public Verifier( String basedir, String settingsFile )
@@ -237,7 +239,7 @@ public class Verifier
         throws VerificationException
     {
         List lines;
-        lines = loadFile( getBasedir(), LOG_FILENAME, false );
+        lines = loadFile( getBasedir(), getLogFileName(), false );
 
         for ( Iterator i = lines.iterator(); i.hasNext(); )
         {
@@ -260,7 +262,7 @@ public class Verifier
         throws VerificationException
     {
         List lines;
-        lines = loadFile( getBasedir(), LOG_FILENAME, false );
+        lines = loadFile( getBasedir(), getLogFileName(), false );
 
         boolean result = false;
         for ( Iterator i = lines.iterator(); i.hasNext(); )
@@ -1089,7 +1091,7 @@ public class Verifier
 
         int ret;
 
-        File logFile = new File( getBasedir(), LOG_FILENAME );
+        File logFile = new File( getBasedir(), getLogFileName() );
         try
         {
             Commandline cli = createCommandLine();
@@ -1495,7 +1497,7 @@ public class Verifier
         System.out.println( "Log file contents:" );
         try
         {
-            BufferedReader reader = new BufferedReader( new FileReader( new File( getBasedir(), LOG_FILENAME ) ) );
+            BufferedReader reader = new BufferedReader( new FileReader( new File( getBasedir(), getLogFileName() ) ) );
             String line = reader.readLine();
             while ( line != null )
             {
@@ -1900,5 +1902,32 @@ public class Verifier
     {
         return basedir;
     }
-}
 
+    /**
+     * Gets the name of the file used to log build output.
+     * 
+     * @return The name of the log file, relative to the base directory, never <code>null</code>.
+     * @since 1.2
+     */
+    public String getLogFileName()
+    {
+        return this.logFileName;
+    }
+
+    /**
+     * Sets the name of the file used to log build output.
+     * 
+     * @param logFileName The name of the log file, relative to the base directory, must not be empty or
+     *            <code>null</code>.
+     * @since 1.2
+     */
+    public void setLogFileName( String logFileName )
+    {
+        if ( StringUtils.isEmpty( logFileName ) )
+        {
+            throw new IllegalArgumentException( "log file name unspecified" );
+        }
+        this.logFileName = logFileName;
+    }
+
+}

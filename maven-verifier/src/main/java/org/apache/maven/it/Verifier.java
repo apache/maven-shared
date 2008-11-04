@@ -809,6 +809,67 @@ public class Verifier
         FileUtils.deleteDirectory( new File( getBasedir(), path ) );
     }
 
+    /**
+     * Filters a text file by replacing some user-defined tokens.
+     * 
+     * @param srcPath The path to the input file, relative to the base directory, must not be <code>null</code>.
+     * @param dstPath The path to the output file, relative to the base directory and possibly equal to the input file,
+     *            must not be <code>null</code>.
+     * @param fileEncoding The file encoding to use, may be <code>null</code> or empty to use the platform's default
+     *            encoding.
+     * @param filterProperties The mapping from tokens to replacement values, must not be <code>null</code>.
+     * @return The path to the filtered output file, never <code>null</code>.
+     * @throws IOException If the file could not be filtered.
+     * @since 1.2
+     */
+    public File filterFile( String srcPath, String dstPath, String fileEncoding, Map filterProperties )
+        throws IOException
+    {
+        File srcFile = new File( getBasedir(), srcPath );
+        String data = FileUtils.fileRead( srcFile, fileEncoding );
+
+        for ( Iterator it = filterProperties.keySet().iterator(); it.hasNext(); )
+        {
+            String token = (String) it.next();
+            String value = String.valueOf( filterProperties.get( token ) );
+            data = StringUtils.replace( data, token, value );
+        }
+
+        File dstFile = new File( getBasedir(), dstPath );
+        FileUtils.fileWrite( dstFile.getPath(), data );
+
+        return dstFile;
+    }
+
+    /**
+     * Gets a new copy of the default filter properties. These default filter properties map the tokens "@basedir@" and
+     * "@baseurl@" to the test's base directory and its base <code>file:</code> URL, respectively.
+     * 
+     * @return The (modifiable) map with the default filter properties, never <code>null</code>.
+     * @since 1.2
+     */
+    public Properties newDefaultFilterProperties()
+    {
+        Properties filterProperties = new Properties();
+
+        String basedir = new File( getBasedir() ).getAbsolutePath();
+        filterProperties.put( "@basedir@", basedir );
+
+        /*
+         * NOTE: Maven fails to properly handle percent-encoded "file:" URLs (WAGON-111) so don't use File.toURI() here
+         * and just do it the simple way.
+         */
+        String baseurl = basedir;
+        if ( !baseurl.startsWith( "/" ) )
+        {
+            baseurl = '/' + baseurl;
+        }
+        baseurl = "file://" + baseurl.replace( '\\', '/' );
+        filterProperties.put( "@baseurl@", baseurl );
+
+        return filterProperties;
+    }
+
     public void assertFilePresent( String file )
     {
         try

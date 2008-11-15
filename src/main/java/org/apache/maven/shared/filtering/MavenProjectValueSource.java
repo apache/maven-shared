@@ -43,33 +43,43 @@ public class MavenProjectValueSource
     private boolean escapedBackslashesInFilePath;
     
     private MavenResourcesExecution mavenResourcesExecution;
-
-    public MavenProjectValueSource( MavenProject mavenProject  ) 
-    {
-       this( mavenProject, false );
-    }    
     
-    public MavenProjectValueSource( MavenProject mavenProject, boolean escapedBackslashesInFilePath ) 
+    /** 
+     * @since 1.0-beta-3
+     */
+    private ValueSource propertiesValueSource;
+
+    public MavenProjectValueSource( MavenProject mavenProject )
     {
-
-       project = mavenProject;
-
-       this.escapedBackslashesInFilePath = escapedBackslashesInFilePath;
+        this( mavenProject, false );
     }
 
-    
+    public MavenProjectValueSource( MavenProject mavenProject, boolean escapedBackslashesInFilePath )
+    {
+        this( mavenProject, escapedBackslashesInFilePath, null );
+    }
+
     public MavenProjectValueSource( MavenProject mavenProject, boolean escapedBackslashesInFilePath,
                                     MavenResourcesExecution mavenResourcesExecution )
     {
-        super();
+        this(mavenProject, escapedBackslashesInFilePath, mavenResourcesExecution, null);
+    }
 
-        project = mavenProject;
+    /** 
+     * @since 1.0-beta-3
+     */    
+    public MavenProjectValueSource( MavenProject mavenProject, boolean escapedBackslashesInFilePath,
+                                    MavenResourcesExecution mavenResourcesExecution, ValueSource propertiesValueSource )
+    {
+        this.project = mavenProject;
 
         this.escapedBackslashesInFilePath = escapedBackslashesInFilePath;
 
         this.mavenResourcesExecution = mavenResourcesExecution;
+        
+        this.propertiesValueSource = propertiesValueSource;
     }
-
+    
     public Object getValue( String expression )
     {
         if ( expression == null || StringUtils.isEmpty( expression.toString() ) )
@@ -77,7 +87,18 @@ public class MavenProjectValueSource
             return null;
         }
         
+        
         Object value = null;
+        
+        if ( propertiesValueSource != null )
+        {
+            value = propertiesValueSource.getValue( expression );
+            if (value != null)
+            {
+                return value;
+            }
+        }
+        
         try 
         {
             value = ReflectionValueExtractor.evaluate( "" + expression, project, isProjectExpression( expression ) );
@@ -127,4 +148,16 @@ public class MavenProjectValueSource
         // nothing here only NPE free
         return Collections.EMPTY_LIST;
     }
+
+    public ValueSource getPropertiesValueSource()
+    {
+        return propertiesValueSource;
+    }
+
+    public void setPropertiesValueSource( ValueSource propertiesValueSource )
+    {
+        this.propertiesValueSource = propertiesValueSource;
+    }
+
+    
 }

@@ -51,6 +51,15 @@ public class StubMavenProject
         this.properties = properties;
     }
 
+    public void addProperty(String key, String value)
+    {
+        if (this.properties == null)
+        {
+            this.properties = new Properties();
+        }
+        this.properties.put( key, value );
+    }
+    
     public File getBasedir()
     {
         return basedir;

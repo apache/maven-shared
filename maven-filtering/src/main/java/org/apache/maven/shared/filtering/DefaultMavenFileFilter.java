@@ -172,13 +172,13 @@ public class DefaultMavenFileFilter
             public Reader getReader( Reader reader )
             {
                 StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator();
-                propertiesInterpolator.addValueSource( propertiesValueSource );
+                MavenProjectValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
+                valueSource.setPropertiesValueSource( propertiesValueSource );
+                propertiesInterpolator.addValueSource( valueSource );
                 propertiesInterpolator.setEscapeString( escapeString );
                 InterpolatorFilterReader filterReader = new InterpolatorFilterReader( reader, propertiesInterpolator );
                 filterReader.setInterpolateWithPrefixPattern( false );
                 filterReader.setEscapeString( escapeString );
-                // first try it must be preserved
-                filterReader.setPreserveEscapeString( true );
                 return filterReader;
             }
         };
@@ -190,53 +190,18 @@ public class DefaultMavenFileFilter
             public Reader getReader( Reader reader )
             {
                 StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( "@", "@" );
-                propertiesInterpolator.addValueSource( propertiesValueSource );
+                MavenProjectValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
+                valueSource.setPropertiesValueSource( propertiesValueSource );
+                propertiesInterpolator.addValueSource( valueSource );
                 propertiesInterpolator.setEscapeString( escapeString );
                 InterpolatorFilterReader filterReader = new InterpolatorFilterReader( reader, propertiesInterpolator,
                                                                                       "@", "@" );
                 filterReader.setInterpolateWithPrefixPattern( false );
                 filterReader.setEscapeString( escapeString );
-                filterReader.setPreserveEscapeString( true );
                 return filterReader;
             }
         };
         defaultFilterWrappers.add( second );
-
-        // support ${token} with mavenProject reflection
-        FileUtils.FilterWrapper third = new FileUtils.FilterWrapper()
-        {
-            public Reader getReader( Reader reader )
-            {
-                StringSearchInterpolator mavenProjectInterpolator = new StringSearchInterpolator();
-
-                ValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
-                mavenProjectInterpolator.addValueSource( valueSource );
-                mavenProjectInterpolator.setEscapeString( escapeString );
-                InterpolatorFilterReader filterReader = new InterpolatorFilterReader( reader, mavenProjectInterpolator );
-                filterReader.setInterpolateWithPrefixPattern( false );
-                filterReader.setEscapeString( escapeString );
-                return filterReader;
-            }
-        };
-        defaultFilterWrappers.add( third );
-
-        // support @token@ with mavenProject reflection
-        FileUtils.FilterWrapper fourth = new FileUtils.FilterWrapper()
-        {
-            public Reader getReader( Reader reader )
-            {
-                StringSearchInterpolator mavenProjectInterpolator = new StringSearchInterpolator( "@", "@" );
-                ValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
-                mavenProjectInterpolator.addValueSource( valueSource );
-                mavenProjectInterpolator.setEscapeString( escapeString );
-                InterpolatorFilterReader filterReader = new InterpolatorFilterReader( reader, mavenProjectInterpolator,
-                                                                                      "@", "@" );
-                filterReader.setInterpolateWithPrefixPattern( false );
-                filterReader.setEscapeString( escapeString );
-                return filterReader;
-            }
-        };
-        defaultFilterWrappers.add( fourth );
 
         return defaultFilterWrappers;
     }

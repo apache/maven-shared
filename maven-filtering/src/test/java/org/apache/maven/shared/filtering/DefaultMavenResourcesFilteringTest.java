@@ -562,5 +562,62 @@ public class DefaultMavenResourcesFilteringTest
         }
     }    
     
+    /**
+     * unit test for MSHARED-81 : http://jira.codehaus.org/browse/MSHARED-81
+     */
+    public void testMSHARED81()
+        throws Exception
+    {
+        StubMavenProject mavenProject = new StubMavenProject( new File( "/foo/bar" ) );
+        
+        mavenProject.setVersion( "1.0" );
+
+        mavenProject.addProperty( "escaped","this is escaped");
+        mavenProject.addProperty( "escaped.at","this is escaped.at");
+        mavenProject.addProperty( "foo","this is foo");
+        mavenProject.addProperty( "bar","this is bar");
+        
+        MavenResourcesFiltering mavenResourcesFiltering = (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class
+            .getName() );
+
+        List resources = new ArrayList();
+        resources.add( new Resource()
+        {
+            {
+                setDirectory( getBasedir() + "/src/test/units-files/MSHARED-81/resources" );
+                setFiltering( false );
+            }
+        } );
+        resources.add( new Resource()
+        {
+            {
+                setDirectory( getBasedir() + "/src/test/units-files/MSHARED-81/filtered" );
+                setFiltering( true );
+            }
+        } );
+        File output = new File( outputDirectory, "MSHARED-81" );
+        MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, output, mavenProject,
+                                                                                       null, Collections.EMPTY_LIST,
+                                                                                       Collections.EMPTY_LIST,
+                                                                                       new StubMavenSession() );
+        mavenResourcesExecution.setIncludeEmptyDirs( true );
+        mavenResourcesExecution.setEscapeString( "\\" );
+        mavenResourcesFiltering.filterResources( mavenResourcesExecution );
+
+        Properties filteredResult = PropertyUtils.loadPropertyFile( new File( output, "filtered.properties" ), null );
+
+        Properties expectedFilteredResult = PropertyUtils.loadPropertyFile( new File( getBasedir()
+            + "/src/test/units-files/MSHARED-81", "expected-filtered.properties" ), null );
+
+        assertTrue( filteredResult.equals( expectedFilteredResult ) );
+
+        Properties nonFilteredResult = PropertyUtils.loadPropertyFile( new File( output, "unfiltered.properties" ),
+                                                                       null );
+
+        Properties expectedNonFilteredResult = PropertyUtils.loadPropertyFile( new File( getBasedir()
+            + "/src/test/units-files/MSHARED-81/resources", "unfiltered.properties" ), null );
+
+        assertTrue( nonFilteredResult.equals( expectedNonFilteredResult ) );
+    }        
     
 }

@@ -5,7 +5,7 @@ import java.util.Collection;
 
 public interface ModelEventListener {
 
-    public void fire(List<ModelContainer> modelContainers);
+    public void fire(List<ModelContainer> modelContainers) throws DataSourceException ;
 
     List<String> getUris();
     

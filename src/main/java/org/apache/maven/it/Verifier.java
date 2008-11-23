@@ -246,11 +246,32 @@ public class Verifier
             String line = (String) i.next();
 
             // A hack to keep stupid velocity resource loader errors from triggering failure
-            if ( line.indexOf( "[ERROR]" ) >= 0 && line.indexOf( "VM_global_library.vm" ) == -1 )
+            if ( line.indexOf( "[ERROR]" ) >= 0 && !isVelocityError( line ) )
             {
                 throw new VerificationException( "Error in execution: " + line );
             }
         }
+    }
+
+    /**
+     * Checks whether the specified line is just an error message from Velocity. Especially old versions of Doxia employ
+     * a very noisy Velocity instance.
+     * 
+     * @param line The log line to check, must not be <code>null</code>.
+     * @return <code>true</code> if the line appears to be a Velocity error, <code>false</code> otherwise.
+     */
+    private static boolean isVelocityError( String line )
+    {
+        if ( line.indexOf( "VM_global_library.vm" ) >= 0 )
+        {
+            return true;
+        }
+        if ( line.indexOf( "VM #" ) >= 0 && line.indexOf( "macro" ) >= 0 )
+        {
+            // [ERROR] VM #displayTree: error : too few arguments to macro. Wanted 2 got 0
+            return true;
+        }
+        return false;
     }
 
     /**

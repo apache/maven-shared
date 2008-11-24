@@ -1,6 +1,7 @@
 package org.apache.maven.shared.model;
 
 import java.util.List;
+import java.io.IOException;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -29,7 +30,7 @@ import java.util.List;
 public interface DomainModel
 {
 
-    List<ModelProperty> getModelProperties();
+    List<ModelProperty> getModelProperties() throws IOException;
     
     /**
      * Returns event history of joins and deletes used in constructing this domain model.

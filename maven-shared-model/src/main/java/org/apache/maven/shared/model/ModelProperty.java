@@ -239,6 +239,11 @@ public final class ModelProperty
         return resolved;
     }
 
+    public String toCode() {
+        String val = (value != null) ? "\"" + value + "\"" : null;
+        return "mpz.add(new ModelProperty(\"" + uri + "\", " + val +"));";
+    }
+
     public String toString()
     {
         return "Uri = " + uri + ", Value = " + value + ", Resolved Value = " + resolvedValue + ", Hash = " +

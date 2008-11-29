@@ -26,7 +26,7 @@ import java.util.List;
  * Provides services for joining, deleting and querying model containers.
  */
 public interface ModelDataSource
-{   
+{
     /**
      * Join model properties of the specified container a with the specified container b. Any elements of model container
      * a must take precedence over model container b. All elements of model container A must exist in the data source;
@@ -77,4 +77,6 @@ public interface ModelDataSource
      * @return history of all joins and deletes
      */
     String getEventHistory();
+
+    void insertModelPropertiesAfter(ModelProperty insertAfter, List<ModelProperty> modelProperties);
 }

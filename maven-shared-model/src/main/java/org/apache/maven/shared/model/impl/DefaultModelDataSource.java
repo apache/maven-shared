@@ -335,6 +335,11 @@ public final class DefaultModelDataSource
         return sb.toString();
     }
 
+    public void insertModelPropertiesAfter(ModelProperty insertAfter, List<ModelProperty> mps)
+    {
+        modelProperties.addAll(modelProperties.indexOf(insertAfter) + 1, mps);
+    }
+
     /**
      * Removes duplicate model properties from the containers and return list.
      *
@@ -369,8 +374,14 @@ public final class DefaultModelDataSource
                 throw new IllegalArgumentException(
                     "Base URI is longer than model property uri: Base URI = " + baseUri + ", ModelProperty = " + p );
             }
+            String subUri = p.getUri().substring( baseUri.length(), modelPropertyLength );
 
-           String subUri = p.getUri().substring( baseUri.length(), modelPropertyLength );
+            //MAVEN_SPECIFIC WORK AROUND
+            if(p.getUri().endsWith("goals#collection")) {
+                    processedProperties.add( findLastIndexOfParent( p, processedProperties ) + 1, p );
+                    uris.add( p.getUri() );
+            }
+
             if ( !uris.contains( p.getUri() ) || ( (subUri.contains( "#collection" ) || subUri.contains("#set")) &&
                 (!subUri.endsWith( "#collection" ) && !subUri.endsWith("#set")) && !isParentASet(subUri) && combineChildrenRule(p, combineChildrenUris) )
                )

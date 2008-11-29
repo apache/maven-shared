@@ -19,12 +19,7 @@ package org.apache.maven.shared.model.impl;
  * under the License.
  */
 
-import org.apache.maven.shared.model.DataSourceException;
-import org.apache.maven.shared.model.ModelContainer;
-import org.apache.maven.shared.model.ModelContainerAction;
-import org.apache.maven.shared.model.ModelContainerFactory;
-import org.apache.maven.shared.model.ModelDataSource;
-import org.apache.maven.shared.model.ModelProperty;
+import org.apache.maven.shared.model.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -42,6 +37,48 @@ public class DefaultModelDataSourceTest
     static
     {
         factories.add( new DummyModelContainerFactory() );
+    }
+
+     @Test
+    public void verifyQueryDoesNotModifyURI() throws IOException {
+        List<ModelProperty> mp = new ArrayList<ModelProperty>();
+        mp.add(new ModelProperty(ProjectUri.xUri, null));
+        mp.add(new ModelProperty(ProjectUri.Build.xUri, null));
+        mp.add(new ModelProperty(ProjectUri.Build.PluginManagement.xUri, null));
+        mp.add(new ModelProperty(ProjectUri.Build.PluginManagement.Plugins.xUri, null));
+
+        List<ModelProperty> pluginProperties = new ArrayList<ModelProperty>();
+        pluginProperties.add(new ModelProperty(ProjectUri.Build.PluginManagement.Plugins.Plugin.xUri, null));
+
+        pluginProperties.add(new ModelProperty(ProjectUri.Build.PluginManagement.Plugins.Plugin.Executions.xUri, null));
+        pluginProperties.add(new ModelProperty(ProjectUri.Build.PluginManagement.Plugins.Plugin.Executions.Execution.xUri, null));
+        pluginProperties.add(new ModelProperty(ProjectUri.Build.PluginManagement.Plugins.Plugin.Executions.Execution.id, "site-docs"));
+        pluginProperties.add(new ModelProperty(ProjectUri.Build.PluginManagement.Plugins.Plugin.Executions.Execution.phase, "phase"));
+        pluginProperties.add(new ModelProperty(ProjectUri.Build.PluginManagement.Plugins.Plugin.Executions.Execution.Goals.xURI, null));
+        pluginProperties.add(new ModelProperty(ProjectUri.Build.PluginManagement.Plugins.Plugin.Executions.Execution.Goals.goal, "xdoc"));
+        pluginProperties.add(new ModelProperty(ProjectUri.Build.PluginManagement.Plugins.Plugin.Executions.Execution.Goals.goal, "xsd"));
+
+         List<ModelProperty> init = new ArrayList<ModelProperty>();
+         init.addAll(mp);
+         init.addAll(pluginProperties);
+         
+        DefaultModelDataSource datasource = new DefaultModelDataSource();
+        datasource.init( init, factories );
+
+        List<ModelContainer> containers = datasource.queryFor(ProjectUri.Build.PluginManagement.Plugins.Plugin.Executions.Execution.xUri);
+        assertTrue(containsUri(ProjectUri.Build.PluginManagement.Plugins.Plugin.Executions.Execution.Goals.xURI, containers));
+     }
+
+    private static boolean containsUri(String a,  List<ModelContainer> containers) {
+         for(ModelContainer mc : containers) {
+             for(ModelProperty mps : mc.getProperties()) {
+                if(mps.getUri().equals(a))
+                {
+                    return true;
+                }
+             }
+         }
+        return false;
     }
 
     @Test
@@ -460,7 +497,7 @@ public class DefaultModelDataSourceTest
 
         public Collection<String> getUris()
         {
-            return Arrays.asList( "container-marker" );
+            return Arrays.asList( "container-marker", ProjectUri.Build.PluginManagement.Plugins.Plugin.Executions.Execution.xUri );
         }
 
         public ModelContainer create( final List<ModelProperty> modelProperties )

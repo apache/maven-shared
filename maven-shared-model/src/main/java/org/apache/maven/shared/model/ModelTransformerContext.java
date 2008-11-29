@@ -33,7 +33,7 @@ public final class ModelTransformerContext
     /**
      * Factories to use for construction of model containers
      */
-    private final Collection<ModelContainerFactory> factories;
+    private final Collection<? extends ModelContainerFactory> factories;
 
     /**
      * List of system and environmental properties to use during interpolation
@@ -63,7 +63,7 @@ public final class ModelTransformerContext
      *
      * @param factories model container factories. Value may be null.
      */
-    public ModelTransformerContext( Collection<ModelContainerFactory> factories )
+    public ModelTransformerContext( Collection<? extends ModelContainerFactory> factories )
     {
         if ( factories == null )
         {
@@ -180,7 +180,7 @@ public final class ModelTransformerContext
      * @return transformed model properties
      */
     public static List<ModelProperty> transformModelProperties(List<ModelProperty> modelProperties,
-                                                        List<ModelPropertyTransformer> modelPropertyTransformers)
+                                                        List<? extends ModelPropertyTransformer> modelPropertyTransformers)
     {
         if(modelProperties == null) {
             throw new IllegalArgumentException("modelProperties: null");
@@ -213,12 +213,12 @@ public final class ModelTransformerContext
      * @param interpolatorProperties properties to use during interpolation. @return processed domain model
      * @throws IOException if there was a problem with the transform
      */
-    public DomainModel transform(List<DomainModel> domainModels,
+    public DomainModel transform(List<? extends DomainModel> domainModels,
                                  ModelTransformer fromModelTransformer,
                                  ModelTransformer toModelTransformer,
-                                 Collection<ImportModel> importModels,
+                                 Collection<? extends ImportModel> importModels,
                                  List<InterpolatorProperty> interpolatorProperties,
-                                 List<ModelEventListener> eventListeners)
+                                 List<? extends ModelEventListener> eventListeners)
         throws IOException
     {
 
@@ -331,14 +331,14 @@ public final class ModelTransformerContext
      * @return processed domain model
      * @throws IOException if there was a problem with the transform
      */
-    public DomainModel transform( List<DomainModel> domainModels, ModelTransformer fromModelTransformer,
+    public DomainModel transform( List<? extends DomainModel> domainModels, ModelTransformer fromModelTransformer,
                                   ModelTransformer toModelTransformer )
         throws IOException
     {
         return this.transform( domainModels, fromModelTransformer, toModelTransformer, null, systemInterpolatorProperties, null );
     }
 
-    private static List<ModelProperty> importModelProperties(Collection<ImportModel> importModels,
+    private static List<ModelProperty> importModelProperties(Collection<? extends ImportModel> importModels,
                                                              List<ModelProperty> modelProperties) {
         List<ModelProperty> properties = new ArrayList<ModelProperty>();
         for(ModelProperty mp: modelProperties) {

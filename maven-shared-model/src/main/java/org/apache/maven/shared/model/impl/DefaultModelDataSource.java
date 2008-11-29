@@ -278,7 +278,7 @@ public final class DefaultModelDataSource
     /**
      * @see ModelDataSource#init(java.util.List, java.util.Collection)
      */
-    public void init( List<ModelProperty> modelProperties, Collection<ModelContainerFactory> modelContainerFactories )
+    public void init( List<ModelProperty> modelProperties, Collection<? extends ModelContainerFactory> modelContainerFactories )
     {
         if ( modelProperties == null )
         {

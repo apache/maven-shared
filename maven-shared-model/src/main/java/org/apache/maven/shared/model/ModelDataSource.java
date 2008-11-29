@@ -69,7 +69,7 @@ public interface ModelDataSource
      *
      * @param modelProperties the model properties that back the data source
      */
-    void init( List<ModelProperty> modelProperties, Collection<ModelContainerFactory> modelContainerFactories );
+    void init( List<ModelProperty> modelProperties, Collection<? extends ModelContainerFactory> modelContainerFactories );
 
     /**
      * Return history of all joins and deletes

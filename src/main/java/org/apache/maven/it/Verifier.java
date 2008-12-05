@@ -857,7 +857,7 @@ public class Verifier
         }
 
         File dstFile = new File( getBasedir(), dstPath );
-        FileUtils.fileWrite( dstFile.getPath(), data );
+        FileUtils.fileWrite( dstFile.getPath(), fileEncoding, data );
 
         return dstFile;
     }

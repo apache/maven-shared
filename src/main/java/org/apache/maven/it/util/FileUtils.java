@@ -340,11 +340,31 @@ public class FileUtils
     public static void fileWrite( String fileName, String data )
         throws IOException
     {
+        fileWrite( fileName, null, data );
+    }
+
+    /**
+     * Writes data to a file. The file will be created if it does not exist.
+     * 
+     * @param fileName The name of the file to write.
+     * @param encoding The encoding of the file.
+     * @param data The content to write to the file.
+     */
+    public static void fileWrite( String fileName, String encoding, String data )
+        throws IOException
+    {
         FileOutputStream out = null;
         try
         {
             out = new FileOutputStream( fileName );
-            out.write( data.getBytes() );
+            if ( encoding != null && encoding.length() > 0 )
+            {
+                out.write( data.getBytes( encoding ) );
+            }
+            else
+            {
+                out.write( data.getBytes() );
+            }
         }
         finally
         {

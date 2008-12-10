@@ -1036,7 +1036,8 @@ public class Verifier
         {
             File expectedFile = new File( line );
 
-            if ( !expectedFile.isAbsolute() && !line.startsWith( "/" ) )
+            // NOTE: On Windows, a path with a leading (back-)slash is relative to the current drive
+            if ( !expectedFile.isAbsolute() && !expectedFile.getPath().startsWith( File.separator ) )
             {
                 expectedFile = new File( getBasedir(), line );
             }

@@ -1218,8 +1218,6 @@ public class Verifier
 
             cli.createArgument().setValue( "-e" );
 
-            cli.createArgument().setValue( "--no-plugin-registry" );
-
             cli.createArgument().setValue( "--batch-mode" );
 
             for ( Iterator i = systemProperties.keySet().iterator(); i.hasNext(); )

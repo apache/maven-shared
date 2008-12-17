@@ -27,7 +27,7 @@
   <groupId>org.apache.maven</groupId>
   <artifactId>maven-archiver</artifactId>
   <name>Maven Archiver</name>
-  <version>2.4-SNAPSHOT</version>
+  <version>2.4</version>
 
   <issueManagement>
     <system>jira</system>
@@ -35,9 +35,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-archiver</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-archiver</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-archiver</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-archiver-2.4</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-archiver-2.4</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-archiver-2.4</url>
   </scm>
   <dependencies>
     <dependency>

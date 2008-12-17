@@ -26,11 +26,11 @@ under the License.
   <modelVersion>4.0.0</modelVersion>
   <artifactId>maven-common-artifact-filters</artifactId>
   <name>Maven Common Artifact Filters</name>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-common-artifact-filters-1.1</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-common-artifact-filters-1.1</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-common-artifact-filters-1.1</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-common-artifact-filters</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-common-artifact-filters</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-common-artifact-filters</url>
   </scm>
   <dependencies>
     <dependency>

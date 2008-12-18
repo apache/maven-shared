@@ -1318,6 +1318,18 @@ public class Verifier
                     version = version.substring( 0, version.indexOf( ' ' ) );
                 }
             }
+
+            final String NEW_MAVEN_VERSION = "Apache Maven ";
+
+            // look out for "Apache Maven 2.1.0-M2-SNAPSHOT (rXXXXXX; date)"
+            if ( line.regionMatches( true, 0, NEW_MAVEN_VERSION, 0, NEW_MAVEN_VERSION.length() ) )
+            {
+                version = line.substring( NEW_MAVEN_VERSION.length() ).trim();
+                if ( version.indexOf( ' ' ) >= 0 )
+                {
+                    version = version.substring( 0, version.indexOf( ' ' ) );
+                }
+            }
         }
 
         if ( version == null )

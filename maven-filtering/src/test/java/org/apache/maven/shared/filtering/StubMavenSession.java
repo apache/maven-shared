@@ -31,14 +31,28 @@ import org.apache.maven.execution.MavenSession;
 public class StubMavenSession
     extends MavenSession
 {
+
+    private Properties executionProperties;
+
     public StubMavenSession()
     {
+        this( null );
+    }
+
+    public StubMavenSession( Properties executionProperties )
+    {
         super( null, null, null, null, null, null, null, null, null );
+        this.executionProperties = new Properties();
+        if ( executionProperties != null )
+        {
+            this.executionProperties.putAll( executionProperties );
+        }
+        this.executionProperties.putAll( System.getProperties() );
     }
 
     public Properties getExecutionProperties()
     {
-        return System.getProperties();
+        return this.executionProperties;
     }
 
 }

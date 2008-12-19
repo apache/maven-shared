@@ -44,7 +44,8 @@ public class TestReflectionProperties
             MavenProject mavenProject = new MavenProject();
             mavenProject.setVersion( "1.0" );
             mavenProject.setGroupId( "org.apache" );
-            System.setProperty( "foo", "bar" );
+            Properties executionProperties = new Properties();
+            executionProperties.setProperty( "foo", "bar" );
             MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
 
             File from = new File( getBasedir() + "/src/test/units-files/reflection-test.properties" );
@@ -55,7 +56,8 @@ public class TestReflectionProperties
                 to.delete();
             }            
             
-            mavenFileFilter.copyFile( from, to, true, mavenProject, null, false, null, new StubMavenSession() );
+            mavenFileFilter.copyFile( from, to, true, mavenProject, null, false, null,
+                                      new StubMavenSession( executionProperties ) );
 
             Properties reading = new Properties();
             readFileInputStream = new FileInputStream( to );
@@ -84,7 +86,8 @@ public class TestReflectionProperties
             MavenProject mavenProject = new MavenProject();
             mavenProject.setVersion( "1.0" );
             mavenProject.setGroupId( "org.apache" );
-            System.setProperty( "foo", "bar" );
+            Properties executionProperties = new Properties();
+            executionProperties.setProperty( "foo", "bar" );
             MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
 
             File from = new File( getBasedir() + "/src/test/units-files/reflection-test.properties" );
@@ -95,7 +98,8 @@ public class TestReflectionProperties
                 to.delete();
             }
             
-            mavenFileFilter.copyFile( from, to, false, mavenProject, null, false, null, new StubMavenSession() );
+            mavenFileFilter.copyFile( from, to, false, mavenProject, null, false, null,
+                                      new StubMavenSession( executionProperties ) );
 
             Properties reading = new Properties();
             readFileInputStream = new FileInputStream( to );

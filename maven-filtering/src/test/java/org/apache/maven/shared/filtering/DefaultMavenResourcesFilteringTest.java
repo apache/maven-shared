@@ -137,12 +137,30 @@ public class DefaultMavenResourcesFilteringTest
     {
         assertEquals( 7, outputDirectory.listFiles().length );
         Properties result = new Properties();
-        result.load( new FileInputStream( new File( outputDirectory, "empty-maven-resources-filtering.txt" ) ) );
+        FileInputStream in = null;
+        try
+        {
+            in = new FileInputStream( new File( outputDirectory, "empty-maven-resources-filtering.txt" ) );
+            result.load( in );
+        }
+        finally
+        {
+            IOUtil.close( in );
+        }
 
         assertTrue( result.isEmpty() );
 
         result = new Properties();
-        result.load( new FileInputStream( new File( outputDirectory, "maven-resources-filtering.txt" ) ) );
+        in = null;
+        try
+        {
+            in = new FileInputStream( new File( outputDirectory, "maven-resources-filtering.txt" ) );
+            result.load( in );
+        }
+        finally
+        {
+            IOUtil.close( in );
+        }
         assertFalse( result.isEmpty() );
 
         assertEquals( "1.0", result.get( "version" ) );
@@ -261,10 +279,13 @@ public class DefaultMavenResourcesFilteringTest
         {
             return false;
         }
-        FileInputStream expectedIn = new FileInputStream( expected );
-        FileInputStream currentIn = new FileInputStream( current );
+        FileInputStream expectedIn = null;
+        FileInputStream currentIn = null;
         try
         {
+            expectedIn = new FileInputStream( expected );
+            currentIn = new FileInputStream( current );
+
             byte[] expectedBuffer = IOUtil.toByteArray( expectedIn );
 
             byte[] currentBuffer = IOUtil.toByteArray( currentIn );
@@ -282,8 +303,8 @@ public class DefaultMavenResourcesFilteringTest
         }
         finally
         {
-            expectedIn.close();
-            currentIn.close();
+            IOUtil.close( expectedIn );
+            IOUtil.close( currentIn );
         }
         return true;
     }

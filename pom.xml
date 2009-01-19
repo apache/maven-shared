@@ -33,7 +33,7 @@
 
   <properties>
     <mavenVersion>2.0.10-SNAPSHOT</mavenVersion>
-    <doxiaVersion>1.0-beta-1-SNAPSHOT</doxiaVersion>
+    <doxiaVersion>1.1-SNAPSHOT</doxiaVersion>
   </properties>
 
   <developers>

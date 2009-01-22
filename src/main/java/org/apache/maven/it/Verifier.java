@@ -1172,12 +1172,13 @@ public class Verifier
 
         allGoals.addAll( goals );
 
+        Commandline cli = null;
         int ret;
 
         File logFile = new File( getBasedir(), getLogFileName() );
         try
         {
-            Commandline cli = createCommandLine();
+            cli = createCommandLine();
 
             for ( Iterator i = envVars.keySet().iterator(); i.hasNext(); )
             {
@@ -1253,7 +1254,7 @@ public class Verifier
         }
         catch ( CommandLineException e )
         {
-            throw new VerificationException( e );
+            throw new VerificationException( "Failed to execute Maven: " + cli, e );
         }
         catch ( IOException e )
         {
@@ -1264,8 +1265,8 @@ public class Verifier
         {
             System.err.println( "Exit code: " + ret );
 
-            throw new VerificationException(
-                "Exit code was non-zero: " + ret + "; log = \n" + getLogContents( logFile ) );
+            throw new VerificationException( "Exit code was non-zero: " + ret + "; command line and log = \n" + cli
+                + "\n" + getLogContents( logFile ) );
         }
     }
 

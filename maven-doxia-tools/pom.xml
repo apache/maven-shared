@@ -51,7 +51,7 @@
   </issueManagement>
 
   <properties>
-    <doxia-sitetools.version>1.0-alpha-11</doxia-sitetools.version>
+    <doxia-sitetools.version>1.0-SNAPSHOT</doxia-sitetools.version>
     <mavenVersion>2.0.6</mavenVersion>
   </properties>
 

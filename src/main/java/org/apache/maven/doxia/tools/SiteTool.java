@@ -48,7 +48,7 @@ public interface SiteTool
     Locale DEFAULT_LOCALE = Locale.ENGLISH;
 
     /**
-     * Get a site descriptor defined in the decoration from one of the repositories.
+     * Get a skin artifact from one of the repositories.
      *
      * @param localRepository the Maven local repository, not null.
      * @param remoteArtifactRepositories the Maven remote repositories, not null.
@@ -146,7 +146,7 @@ public interface SiteTool
         throws SiteToolException;
 
     /**
-     * Populate the report menu part of the decoration model.
+     * Populate the reports menu part of the decoration model.
      *
      * @param decorationModel the Doxia DecorationModel, not null.
      * @param locale the locale used for the i18n in DecorationModel. If null, using the default locale in the jvm.
@@ -155,7 +155,7 @@ public interface SiteTool
     void populateReportsMenu( DecorationModel decorationModel, Locale locale, Map categories );
 
     /**
-     * Interpolating several expressions in the site descriptor content. Actually, the expressions could be in
+     * Interpolating several expressions in the site descriptor content. Actually, the expressions can be in
      * the project, the environment variables and the specific properties like <code>encoding</code>.
      * <p/>
      * For instance:

@@ -532,6 +532,14 @@ public class DefaultSiteTool
 
             decorationModel = readDecorationModel( siteDescriptorContent );
         }
+
+        MavenProject parentProject = getParentProject( project, reactorProjects, localRepository );
+
+        if ( parentProject != null )
+        {
+            populateProjectParentMenu( decorationModel, locale, project, parentProject, true );
+        }
+
         populateModules( project, reactorProjects, localRepository, decorationModel, locale, true );
 
         if ( decorationModel.getBannerLeft() == null )
@@ -1215,10 +1223,6 @@ public class DefaultSiteTool
                                                     parentProject.getUrl() == null ? project.getUrl() : parentProject
                                                         .getUrl() );
             }
-            if ( decoration != null )
-            {
-                populateProjectParentMenu( decoration, locale, project, parentProject, true );
-            }
         }
         if ( decoration != null && decoration.getSkin() != null )
         {
@@ -1253,30 +1257,110 @@ public class DefaultSiteTool
     }
 
     /**
-     * @param project not null
+     * @param project         not null
      * @param reactorProjects not null
-     * @param menu not null
+     * @param menu            not null
      */
     private void populateModulesMenuItemsFromReactorProjects( MavenProject project, List reactorProjects, Menu menu )
     {
-        if ( reactorProjects != null && reactorProjects.size() > 1 )
+        Iterator iterator = getModuleProjects( project, reactorProjects, 1 ).iterator();
+        while ( iterator.hasNext() )
         {
-            Iterator reactorItr = reactorProjects.iterator();
+            MavenProject moduleProject = (MavenProject) iterator.next();
 
-            while ( reactorItr.hasNext() )
+            appendMenuItem( project, menu, moduleProject.getName(), moduleProject.getUrl(),
+                            moduleProject.getArtifactId() );
+        }
+    }
+
+    /**
+     * Return all the projects that are modules, or modules of modules, of the specified project found within the
+     * reactor.
+     * <p/>
+     * The levels parameter controls how many descendent levels of modules are returned. With levels equal
+     * to 1, only the immediate modules of the specified project are returned.
+     * <p/>
+     * If levels equals 2 it returns those modules' modules as well.
+     * <p/>
+     * If levels equals -1 it returns the entire module hierarchy beneath the specified project. Note that this is
+     * simply the equivalent to the entire reactor if the specified project is the root execution project.
+     *
+     * @param project         the project to search under
+     * @param reactorProjects The projects in the reactor
+     * @param levels          the number of descendent levels to return
+     * @return the list of module projects.
+     */
+    private List getModuleProjects( final MavenProject project, final List reactorProjects, final int levels )
+    {
+        List moduleProjects = new ArrayList();
+
+        boolean infinite = ( levels == -1 );
+
+        if ( ( reactorProjects != null ) && ( infinite || levels > 0 ) )
+        {
+            Iterator iterator = reactorProjects.iterator();
+            while ( iterator.hasNext() )
             {
-                MavenProject reactorProject = (MavenProject) reactorItr.next();
+                MavenProject reactorProject = (MavenProject) iterator.next();
 
-                if ( reactorProject != null && reactorProject.getParent() != null
-                    && project.getArtifactId().equals( reactorProject.getParent().getArtifactId() ) )
+                if ( isModuleOfProject( project, reactorProject ) )
                 {
-                    String reactorUrl = reactorProject.getUrl();
-                    String name = reactorProject.getName();
+                    moduleProjects.add( reactorProject );
 
-                    appendMenuItem( project, menu, name, reactorUrl, reactorProject.getArtifactId() );
+                    // recurse to find the modules of this project
+                    moduleProjects.addAll(
+                        getModuleProjects( reactorProject, reactorProjects, infinite ? levels : levels - 1 ) );
                 }
             }
         }
+
+        return moduleProjects;
+    }
+
+    /**
+     * Return <code>true</code> if the supplied potentialModule project is a module of the specified parentProject.
+     *
+     * @param parentProject   the parent project.
+     * @param potentialModule the potential module project.
+     * @return true if the potentialModule is indeed a module of the specified parent project.
+     */
+    private boolean isModuleOfProject( MavenProject parentProject, MavenProject potentialModule )
+    {
+        boolean result = false;
+
+        List modules = parentProject.getModules();
+
+        if ( modules != null && parentProject != potentialModule )
+        {
+            File parentBaseDir = parentProject.getBasedir();
+
+            Iterator iterator = modules.iterator();
+            while ( iterator.hasNext() )
+            {
+                String module = (String) iterator.next();
+
+                File moduleBaseDir = new File( parentBaseDir, module );
+
+                try
+                {
+                    String lhs = potentialModule.getBasedir().getCanonicalPath();
+                    String rhs = moduleBaseDir.getCanonicalPath();
+
+                    if ( lhs.equals( rhs ) )
+                    {
+                        result = true;
+                        break;
+                    }
+                }
+                catch ( IOException e )
+                {
+                    getLogger().error(
+                        "Error encountered when trying to resolve canonical module paths: " + e.getMessage() );
+                }
+            }
+        }
+
+        return result;
     }
 
     /**

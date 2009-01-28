@@ -537,10 +537,10 @@ public class DefaultSiteTool
 
         if ( parentProject != null )
         {
-            populateProjectParentMenu( decorationModel, locale, project, parentProject, true );
+            populateParentMenu( decorationModel, locale, project, parentProject, true );
         }
 
-        populateModules( project, reactorProjects, localRepository, decorationModel, locale, true );
+        populateModulesMenu( project, reactorProjects, localRepository, decorationModel, locale, true );
 
         if ( decorationModel.getBannerLeft() == null )
         {
@@ -776,8 +776,8 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public void populateProjectParentMenu( DecorationModel decorationModel, Locale locale, MavenProject project,
-                                           MavenProject parentProject, boolean keepInheritedRefs )
+    public void populateParentMenu( DecorationModel decorationModel, Locale locale, MavenProject project,
+                                    MavenProject parentProject, boolean keepInheritedRefs )
     {
         if ( decorationModel == null )
         {
@@ -838,9 +838,30 @@ public class DefaultSiteTool
         }
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * @deprecated Please use {@link #populateParentMenu(DecorationModel, Locale, MavenProject, MavenProject, boolean)} instead
+     */
+    public void populateProjectParentMenu( DecorationModel decorationModel, Locale locale, MavenProject project,
+                                           MavenProject parentProject, boolean keepInheritedRefs )
+    {
+        populateParentMenu( decorationModel, locale, project, parentProject, keepInheritedRefs );
+    }
+
+    /**
+     * {@inheritDoc}
+     * @deprecated Please use {@link #populateModulesMenu(MavenProject, List, ArtifactRepository, DecorationModel, Locale, boolean)} instead
+     */
     public void populateModules( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
                                  DecorationModel decorationModel, Locale locale, boolean keepInheritedRefs )
+        throws SiteToolException
+    {
+        populateModulesMenu( project, reactorProjects, localRepository, decorationModel, locale, keepInheritedRefs );
+    }
+
+    /** {@inheritDoc} */
+    public void populateModulesMenu( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
+                                     DecorationModel decorationModel, Locale locale, boolean keepInheritedRefs )
         throws SiteToolException
     {
         if ( project == null )

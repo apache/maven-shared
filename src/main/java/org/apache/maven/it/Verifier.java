@@ -306,14 +306,20 @@ public class Verifier
     {
         Properties properties = new Properties();
 
-        FileInputStream fis;
         try
         {
             File propertiesFile = new File( getBasedir(), filename );
             if ( propertiesFile.exists() )
             {
-                fis = new FileInputStream( propertiesFile );
-                properties.load( fis );
+                FileInputStream fis = new FileInputStream( propertiesFile );
+                try
+                {
+                    properties.load( fis );
+                }
+                finally
+                {
+                    fis.close();
+                }
             }
         }
         catch ( FileNotFoundException e )

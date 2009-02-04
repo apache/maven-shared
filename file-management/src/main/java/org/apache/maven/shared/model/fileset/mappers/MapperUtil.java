@@ -33,7 +33,7 @@ import java.util.Properties;
  */
 public final class MapperUtil
 {
-    private static final String MAPPER_PROPERTIES = "mapper.properties";
+    private static final String MAPPER_PROPERTIES = "mappers.properties";
 
     private static Properties implementations;
 
@@ -67,6 +67,7 @@ public final class MapperUtil
                 try
                 {
                     props.load( stream );
+                    implementations = props;
                 }
                 catch ( IOException e )
                 {

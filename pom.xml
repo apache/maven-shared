@@ -172,6 +172,7 @@
             <locale>sv</locale>
             <locale>tr</locale>
             <locale>zh_CN</locale>
+            <locale>zh_TW</locale>
           </locales>
         </configuration>
       </plugin>

@@ -1230,7 +1230,8 @@ public class Verifier
             for ( Iterator i = systemProperties.keySet().iterator(); i.hasNext(); )
             {
                 String key = (String) i.next();
-                cli.createArgument().setLine( "-D" + key + "=" + systemProperties.getProperty( key ) );
+                String value = systemProperties.getProperty( key );
+                cli.createArgument().setValue( "-D" + key + "=" + value );
             }
 
             /*
@@ -1244,9 +1245,7 @@ public class Verifier
 
             if ( useMavenRepoLocal )
             {
-                // Note: Make sure that the repo is surrounded by quotes as it can possibly have
-                // spaces in its path.
-                cli.createArgument().setLine( "-Dmaven.repo.local=" + "\"" + localRepo + "\"" );
+                cli.createArgument().setValue( "-Dmaven.repo.local=" + localRepo );
             }
 
             for ( Iterator i = allGoals.iterator(); i.hasNext(); )

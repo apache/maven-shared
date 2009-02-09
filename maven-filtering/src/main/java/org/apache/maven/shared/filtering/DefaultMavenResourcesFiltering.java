@@ -29,12 +29,13 @@ import java.util.List;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.build.incremental.BuildContext;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.codehaus.plexus.util.DirectoryScanner;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.ReaderFactory;
+import org.codehaus.plexus.util.Scanner;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -54,7 +55,10 @@ public class DefaultMavenResourcesFiltering
     private static final String[] DEFAULT_INCLUDES = {"**/**"};
     
     private List defaultNonFilteredFileExtensions;
-    
+
+    /** @plexus.requirement */
+    private BuildContext buildContext;
+
     // ------------------------------------------------
     //  Plexus lifecycle
     // ------------------------------------------------
@@ -216,30 +220,12 @@ public class DefaultMavenResourcesFiltering
 
             }
 
-            DirectoryScanner scanner = new DirectoryScanner();
+            Scanner scanner = buildContext.newScanner( resourceDirectory, buildContext.hasDelta( mavenResourcesExecution.getFileFilters() ) );
 
-            scanner.setBasedir( resourceDirectory );
-            String[] includes = null;
-            if ( resource.getIncludes() != null && !resource.getIncludes().isEmpty() )
-            {
-                includes = (String[]) resource.getIncludes().toArray( EMPTY_STRING_ARRAY ) ;
-            }
-            else
-            {
-                includes = DEFAULT_INCLUDES;
-            }
-            scanner.setIncludes( includes );
-            
-            String[] excludes = null;
-            if ( resource.getExcludes() != null && !resource.getExcludes().isEmpty() )
-            {
-                excludes = (String[]) resource.getExcludes().toArray( EMPTY_STRING_ARRAY );
-                scanner.setExcludes( excludes );
-            }
+            setupScanner(resource, scanner);
 
-            scanner.addDefaultExcludes();
             scanner.scan();
-            
+
             if ( mavenResourcesExecution.isIncludeEmptyDirs() )
             {
                 try
@@ -265,27 +251,11 @@ public class DefaultMavenResourcesFiltering
             {
                 String name = (String) j.next();
 
-                String destination = name;
-
-                if ( targetPath != null )
-                {
-                    destination = targetPath + "/" + name;
-                }
-
                 File source = new File( resourceDirectory, name );
 
                 //File destinationFile = new File( outputDirectory, destination );
 
-                File destinationFile = new File( destination );
-                if ( !destinationFile.isAbsolute() )
-                {
-                    destinationFile = new File( outputDirectory, destination );
-                }                
-                
-                if ( !destinationFile.getParentFile().exists() )
-                {
-                    destinationFile.getParentFile().mkdirs();
-                }
+                File destinationFile = getDestinationFile(outputDirectory, targetPath, name);
                 
                 boolean filteredExt = filteredFileExtension( source.getName(), mavenResourcesExecution
                     .getNonFilteredFileExtensions() );
@@ -294,11 +264,77 @@ public class DefaultMavenResourcesFiltering
                                           mavenResourcesExecution.getFilterWrappers(), mavenResourcesExecution
                                               .getEncoding(), mavenResourcesExecution.isOverwrite() );
             }
+
+            // deal with deleted source files
+
+            scanner = buildContext.newDeleteScanner( resourceDirectory );
+            
+            setupScanner(resource, scanner);
+            
+            scanner.scan();
+
+            List deletedFiles = Arrays.asList( scanner.getIncludedFiles() );
+
+            for ( Iterator j = deletedFiles.iterator(); j.hasNext(); )
+            {
+                String name = (String) j.next();
+
+                File destinationFile = getDestinationFile(outputDirectory, targetPath, name);
+                
+                destinationFile.delete();
+                
+                buildContext.refresh( destinationFile );
+            }
+
         }
 
     }
+
+    private File getDestinationFile(File outputDirectory, String targetPath, String name) {
+      String destination = name;
+
+      if ( targetPath != null )
+      {
+          destination = targetPath + "/" + name;
+      }
+
+      File destinationFile = new File( destination );
+      if ( !destinationFile.isAbsolute() )
+      {
+          destinationFile = new File( outputDirectory, destination );
+      }                
+      
+      if ( !destinationFile.getParentFile().exists() )
+      {
+          destinationFile.getParentFile().mkdirs();
+      }
+      return destinationFile;
+    }
+
+    private String[] setupScanner(Resource resource, Scanner scanner) {
+      String[] includes = null;
+      if ( resource.getIncludes() != null && !resource.getIncludes().isEmpty() )
+      {
+          includes = (String[]) resource.getIncludes().toArray( EMPTY_STRING_ARRAY ) ;
+      }
+      else
+      {
+          includes = DEFAULT_INCLUDES;
+      }
+      scanner.setIncludes( includes );
+      
+      String[] excludes = null;
+      if ( resource.getExcludes() != null && !resource.getExcludes().isEmpty() )
+      {
+          excludes = (String[]) resource.getExcludes().toArray( EMPTY_STRING_ARRAY );
+          scanner.setExcludes( excludes );
+      }
+
+      scanner.addDefaultExcludes();
+      return includes;
+    }
     
-    private void copyDirectoryLayout( File sourceDirectory, File destinationDirectory, DirectoryScanner scanner )
+    private void copyDirectoryLayout( File sourceDirectory, File destinationDirectory, Scanner scanner )
         throws IOException
     {
         if ( sourceDirectory == null )
@@ -338,6 +374,4 @@ public class DefaultMavenResourcesFiltering
             destination.mkdirs();
         }
     }
-    
-    
 }

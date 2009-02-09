@@ -30,6 +30,7 @@ import java.util.Properties;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.build.incremental.BuildContext;
 import org.codehaus.plexus.interpolation.InterpolatorFilterReader;
 import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
@@ -48,6 +49,9 @@ public class DefaultMavenFileFilter
     extends AbstractLogEnabled
     implements MavenFileFilter
 {
+
+    /** @plexus.requirement */
+    private BuildContext buildContext;
 
     public void copyFile( File from, File to, boolean filtering, MavenProject mavenProject, List filters,
                           boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )
@@ -90,6 +94,8 @@ public class DefaultMavenFileFilter
                 }
                 FileUtils.copyFile( from, to, encoding, new FileUtils.FilterWrapper[0], overwrite );
             }
+
+            buildContext.refresh( to );
         }
         catch ( IOException e )
         {

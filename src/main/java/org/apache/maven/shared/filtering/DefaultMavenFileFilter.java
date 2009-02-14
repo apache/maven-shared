@@ -106,6 +106,7 @@ public class DefaultMavenFileFilter
 
     /** 
      * @see org.apache.maven.shared.filtering.MavenFileFilter#getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession)
+     * @deprecated
      */
     public List getDefaultFilterWrappers( final MavenProject mavenProject, List filters,
                                           final boolean escapedBackslashesInFilePath, MavenSession mavenSession )

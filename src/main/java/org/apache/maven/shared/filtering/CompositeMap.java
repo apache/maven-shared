@@ -43,7 +43,6 @@ public class CompositeMap
     /**
      * 
      * @param maps
-     * @throws java.io.IOException if getting envvars failed
      */
     public CompositeMap( List /* Map */maps )
     {

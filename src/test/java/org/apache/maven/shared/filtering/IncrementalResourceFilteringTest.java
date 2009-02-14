@@ -23,7 +23,7 @@ public class IncrementalResourceFilteringTest
 
     File outputDirectory = new File( getBasedir(), "target/IncrementalResourceFilteringTest" );
 
-    String unitDirectory = getBasedir() + "/src/test/units-files/incremental";
+    File unitDirectory = new File( getBasedir(), "src/test/units-files/incremental" );
 
     protected void setUp()
         throws Exception
@@ -49,7 +49,7 @@ public class IncrementalResourceFilteringTest
         HashSet changedFiles = new HashSet();
         changedFiles.add( "file01.txt" );
 
-        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( new File(unitDirectory), changedFiles, new HashMap() );
+        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, changedFiles, new HashMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
 
         filter( "notime" );
@@ -62,7 +62,7 @@ public class IncrementalResourceFilteringTest
         HashSet deletedFiles = new HashSet();
         deletedFiles.add( "file01.txt" );
 
-        ctx = new TestIncrementalBuildContext( new File(unitDirectory), new HashSet(), changedFiles, new HashMap() );
+        ctx = new TestIncrementalBuildContext( unitDirectory, new HashSet(), changedFiles, new HashMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
 
         filter( "moretime" );
@@ -82,7 +82,7 @@ public class IncrementalResourceFilteringTest
         // all files are reprocessed after content of filters changes 
         HashSet changedFiles = new HashSet();
         changedFiles.add( "filters.txt" );
-        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( new File(unitDirectory),  changedFiles, new HashMap() );
+        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, changedFiles, new HashMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
 
         filter( "notime" );
@@ -103,7 +103,7 @@ public class IncrementalResourceFilteringTest
         // all files are reprocessed after content of filters changes 
         HashSet deletedFiles = new HashSet();
         deletedFiles.add( "filters.txt" );
-        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( new File(unitDirectory), new HashSet(), deletedFiles, new HashMap() );
+        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, new HashSet(), deletedFiles, new HashMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
 
         filter( "notime" );
@@ -148,7 +148,7 @@ public class IncrementalResourceFilteringTest
         MavenResourcesFiltering mavenResourcesFiltering =
             (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class.getName() );
 
-        String unitFilesDir = unitDirectory + "/files";
+        String unitFilesDir = new File( unitDirectory, "files" ).getPath();
 
         Resource resource = new Resource();
         List resources = new ArrayList();
@@ -157,7 +157,7 @@ public class IncrementalResourceFilteringTest
         resource.setFiltering( true );
 
         List filtersFile = new ArrayList();
-        filtersFile.add( unitDirectory + "/filters.txt" );
+        filtersFile.add( new File( unitDirectory, "filters.txt" ).getPath() );
 
         mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
                                                  new ArrayList(), new StubMavenSession() );

@@ -152,7 +152,7 @@ public final class PropertyUtils
      * test = ${test}.
      * @param k
      * @param p
-     * @return 
+     * @return The filtered property value.
      */
     private static String getPropertyValue( String k, Properties p )
     {

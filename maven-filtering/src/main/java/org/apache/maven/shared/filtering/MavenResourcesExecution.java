@@ -226,7 +226,7 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @return List of {@link FilterWrapper}
+     * @return List of {@link FileUtils.FilterWrapper}
      */
     public List getFilterWrappers()
     {
@@ -234,7 +234,7 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @param filterWrappers List of {@link FilterWrapper}
+     * @param filterWrappers List of {@link FileUtils.FilterWrapper}
      */
     public void setFilterWrappers( List filterWrappers )
     {
@@ -251,7 +251,7 @@ public class MavenResourcesExecution
     }
     
     /**
-     * Helper to add {@link FilterWrapper}, will {@link RegexBasedInterpolator} with default regex Exp ${ } 
+     * Helper to add {@link FileUtils.FilterWrapper}, will {@link RegexBasedInterpolator} with default regex Exp ${ } 
      * and InterpolatorFilterReader with defaultTokens ${ }
      * @param valueSource 
      */

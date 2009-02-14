@@ -100,7 +100,7 @@ public interface MavenFileFilter
      * @param escapedBackslashesInFilePath
      * @param mavenSession
      * @param mavenResourcesExecution
-     * @return
+     * @return {@link List} of FileUtils.FilterWrapper 
      * @throws MavenFilteringException
      */
     List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath,

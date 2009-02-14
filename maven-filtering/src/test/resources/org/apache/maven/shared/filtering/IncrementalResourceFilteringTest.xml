@@ -1,0 +1,9 @@
+<component-set>
+  <components>
+    <component>
+      <role>org.sonatype.plexus.build.incremental.BuildContext</role>
+      <role-hint>default</role-hint>
+      <implementation>org.sonatype.plexus.build.incremental.ThreadBuildContext</implementation>
+    </component>
+  </components>
+</component-set>

@@ -266,7 +266,7 @@ public class DefaultSiteTool
         // share the common protocol and domain info and we are left
         // with their URI information
 
-        // normalise the path delimters
+        // normalise the path delimiters
 
         toPath = new File( toPath ).getPath();
         fromPath = new File( fromPath ).getPath();
@@ -374,7 +374,7 @@ public class DefaultSiteTool
             relativePath += File.separatorChar;
         }
 
-        // add fwd fills for whatevers left of to.
+        // add fwd fills for whatever's left of to.
         while ( toTokeniser.hasMoreTokens() )
         {
             relativePath += toTokeniser.nextToken();

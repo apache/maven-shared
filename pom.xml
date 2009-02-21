@@ -19,6 +19,7 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
@@ -28,13 +29,9 @@
   <groupId>org.apache.maven.reporting</groupId>
   <artifactId>maven-reporting-impl</artifactId>
   <version>2.1-SNAPSHOT</version>
+
   <name>Maven Reporting Implementation</name>
   <description>Abstract classes to manage report generation.</description>
-
-  <properties>
-    <mavenVersion>2.0.10-SNAPSHOT</mavenVersion>
-    <doxiaVersion>1.1-SNAPSHOT</doxiaVersion>
-  </properties>
 
   <developers>
     <developer>
@@ -47,6 +44,18 @@
       <timezone>-5</timezone>
     </developer>
   </developers>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-reporting-impl</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-reporting-impl</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-reporting-impl</url>
+  </scm>
+
+  <properties>
+    <mavenVersion>2.0.10-SNAPSHOT</mavenVersion>
+    <doxiaVersion>1.1-SNAPSHOT</doxiaVersion>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -96,12 +105,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-reporting-impl</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-reporting-impl</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-reporting-impl</url>
-  </scm>
 
   <profiles>
     <profile>

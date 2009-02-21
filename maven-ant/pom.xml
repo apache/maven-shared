@@ -18,16 +18,20 @@ specific language governing permissions and limitations
 under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <artifactId>maven-shared-components</artifactId>
-    <groupId>org.apache.maven.shared</groupId>    
+    <groupId>org.apache.maven.shared</groupId>
     <version>11</version>
-  </parent>            
-  <modelVersion>4.0.0</modelVersion>
+  </parent>
+
   <artifactId>maven-ant</artifactId>
-  <name>Maven Ant</name>
   <version>1.0-SNAPSHOT</version>
+
+  <name>Maven Ant</name>
   <description>Runs ant scripts embedded in the POM</description>
+
   <developers>
     <developer>
       <id>kenney</id>
@@ -38,14 +42,21 @@ under the License.
       <id>jvanzyl</id>
       <name>Jason van Zyl</name>
       <email>jvanzyl@apache.org</email>
-    </developer>    
+    </developer>
   </developers>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-ant</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-ant</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-ant</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-container-default</artifactId>
       <version>1.0-alpha-13</version>
-    </dependency>  
+    </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>
@@ -68,10 +79,5 @@ under the License.
       <version>1.6.5</version>
     </dependency>
   </dependencies>
-  <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-ant</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-ant</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-ant</url>
-  </scm>
 </project>
 

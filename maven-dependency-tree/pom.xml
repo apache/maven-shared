@@ -18,6 +18,7 @@
   under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.apache.maven.shared</groupId>
@@ -25,13 +26,12 @@
     <version>11</version>
   </parent>
 
-  <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.maven.shared</groupId>
   <artifactId>maven-dependency-tree</artifactId>
-  <packaging>jar</packaging>
   <version>1.3-SNAPSHOT</version>
 
   <name>Maven Dependency Tree</name>
+  <description>A tree-based API for resolution of Maven project dependencies</description>
 
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-dependency-tree/</connection>
@@ -43,22 +43,15 @@
     <url>http://jira.codehaus.org/browse/MSHARED/component/13264</url>
   </issueManagement>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>descriptor</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-artifact</artifactId>
+        <version>2.0.9</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -78,13 +71,20 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-artifact</artifactId>
-        <version>2.0.9</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

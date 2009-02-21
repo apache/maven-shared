@@ -19,14 +19,24 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
     <version>11</version>
   </parent>
+
   <artifactId>maven-web-ui-tests</artifactId>
-  <name>Maven Shared Web UI tests</name>
   <version>1.0-SNAPSHOT</version>
+
+  <name>Maven Shared Web UI tests</name>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-web-ui-tests</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-web-ui-tests</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-web-ui-tests</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -49,6 +59,7 @@
       <version>0.8.1</version>
     </dependency>
   </dependencies>
+
   <repositories>
     <repository>
       <id>openqa</id>
@@ -63,9 +74,4 @@
       </releases>
     </repository>
   </repositories>
-  <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-web-ui-tests</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-web-ui-tests</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-web-ui-tests</url>
-  </scm>
 </project>

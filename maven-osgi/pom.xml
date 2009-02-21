@@ -20,7 +20,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>11-SNAPSHOT</version>
+    <version>11</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>

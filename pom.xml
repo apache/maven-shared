@@ -19,14 +19,23 @@ under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
     <version>11</version>
   </parent>
+
   <artifactId>maven-repository-builder</artifactId>
   <version>1.0-alpha-3-SNAPSHOT</version>
+
   <name>Maven Repository Builder</name>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-repository-builder</url>
+  </scm>
 
   <dependencies>
     <dependency>
@@ -80,6 +89,7 @@ under the License.
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -105,9 +115,4 @@ under the License.
       </plugin>
     </plugins>
   </build>
-  <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-repository-builder</url>
-  </scm>
 </project>

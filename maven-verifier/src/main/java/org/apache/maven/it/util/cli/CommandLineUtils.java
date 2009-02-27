@@ -43,6 +43,8 @@ public abstract class CommandLineUtils
 {
     private static Map processes = Collections.synchronizedMap( new HashMap() );
 
+    private static Properties envVars;
+
     static
     {
         Runtime.getRuntime().addShutdownHook( new Thread( "CommandlineUtil shutdown" )
@@ -73,7 +75,7 @@ public abstract class CommandLineUtils
 
         public void consumeLine( String line )
         {
-            string.append( line + ls );
+            string.append( line ).append( ls );
         }
 
         public String getOutput()
@@ -179,7 +181,14 @@ public abstract class CommandLineUtils
     public static Properties getSystemEnvVars()
         throws IOException
     {
-        return getSystemEnvVars( true );
+        if ( envVars == null )
+        {
+            envVars = getSystemEnvVars( true );
+        }
+
+        Properties props = new Properties();
+        props.putAll( envVars );
+        return props;
     }
 
     /**

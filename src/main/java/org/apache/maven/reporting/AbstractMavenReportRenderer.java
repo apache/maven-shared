@@ -23,6 +23,7 @@ import org.apache.commons.validator.EmailValidator;
 import org.apache.commons.validator.UrlValidator;
 
 import org.apache.maven.doxia.sink.Sink;
+import org.apache.maven.doxia.util.HtmlTools;
 
 import org.codehaus.plexus.util.StringUtils;
 
@@ -88,7 +89,7 @@ public abstract class AbstractMavenReportRenderer
     // ----------------------------------------------------------------------
 
     /**
-     * Convenience method to wrap section creation in the current sink.
+     * Convenience method to wrap section creation in the current sink. An anchor will be add for the name.
      *
      * @param name the name of this section, could be null.
      * @see #text(String)
@@ -111,6 +112,9 @@ public abstract class AbstractMavenReportRenderer
     protected void startSection( String name )
     {
         section = section + 1;
+
+        sink.anchor( HtmlTools.encodeId( name ) );
+        sink.anchor_();
 
         switch ( section )
         {

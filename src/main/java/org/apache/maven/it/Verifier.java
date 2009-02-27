@@ -110,7 +110,7 @@ public class Verifier
 
     private String logFileName = LOG_FILENAME;
 
-    private static String defaultMavenHome;
+    private String defaultMavenHome;
 
     public Verifier( String basedir, String settingsFile )
         throws VerificationException
@@ -151,6 +151,8 @@ public class Verifier
     private void findDefaultMavenHome()
         throws VerificationException
     {
+        defaultMavenHome = System.getProperty( "maven.home" );
+
         if ( defaultMavenHome == null )
         {
             try
@@ -1137,7 +1139,7 @@ public class Verifier
         // Use a strategy for finding the maven executable, John has a simple method like this
         // but a little strategy + chain of command would be nicer.
 
-        String mavenHome = System.getProperty( "maven.home", defaultMavenHome );
+        String mavenHome = defaultMavenHome;
 
         if ( mavenHome != null )
         {
@@ -1255,7 +1257,7 @@ public class Verifier
 
            // System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
 
-            ret = runCommandLine( System.getProperty( "maven.home" ), cli, logFile );
+            ret = runCommandLine( cli, logFile );
         }
         catch ( CommandLineException e )
         {
@@ -1293,7 +1295,7 @@ public class Verifier
 
         try
         {
-            runCommandLine( System.getProperty( "maven.home" ), cmd, log );
+            runCommandLine( cmd, log );
         }
         catch ( CommandLineException e )
         {
@@ -1361,7 +1363,7 @@ public class Verifier
         return cmd;
     }
 
-    private int runCommandLine( String mavenHome, Commandline cli, File logFile )
+    private int runCommandLine( Commandline cli, File logFile )
         throws CommandLineException, IOException
     {
         if ( forkJvm )
@@ -1382,10 +1384,7 @@ public class Verifier
             }
         }
 
-        if ( mavenHome == null )
-        {
-            mavenHome = defaultMavenHome;
-        }
+        String mavenHome = defaultMavenHome;
 
         if ( mavenHome == null )
         {

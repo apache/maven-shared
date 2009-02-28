@@ -41,7 +41,7 @@ Using Maven File Management API In A MOJO
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>file-management</artifactId>
-      <version>1.2</version>
+      <version>1.2.1</version>
     </dependency>
     ...
   </dependencies>
@@ -67,7 +67,7 @@ public class MyMojo
      *
      * @parameter
      */
-    private List filesets;
+    private FileSet[] filesets;
 
     /**
      * A specific <code>fileSet</code> rule to select files and directories.

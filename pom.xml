@@ -52,7 +52,7 @@
   </scm>
 
   <properties>
-    <mavenVersion>2.0.10-SNAPSHOT</mavenVersion>
+    <mavenVersion>2.0.10</mavenVersion>
     <doxiaVersion>1.1-SNAPSHOT</doxiaVersion>
   </properties>
 

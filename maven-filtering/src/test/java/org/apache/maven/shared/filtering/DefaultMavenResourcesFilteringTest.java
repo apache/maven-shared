@@ -171,8 +171,16 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals( "@@", result.getProperty( "emptyexpression" ) );
         assertEquals( "${}", result.getProperty( "emptyexpression2" ) );
         assertEquals( System.getProperty( "user.dir" ), result.getProperty( "userDir" ) );
+        String userDir = result.getProperty( "userDir" );
+        assertTrue( new File ( userDir ).exists() );
+        assertEquals( new File ( System.getProperty( "user.dir" ) ), new File ( userDir ));
         assertEquals( System.getProperty( "java.version" ), result.getProperty( "javaVersion" ) );
 
+        String userHome = result.getProperty( "userHome" );
+        
+        assertTrue( new File ( userHome ).exists() );
+        assertEquals( new File ( System.getProperty( "user.home" ) ), new File ( userHome ));
+        
         if ( escapeTest )
         {
             assertEquals( "${java.version}", result.getProperty( "escapeJavaVersion" ) );

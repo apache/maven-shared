@@ -41,7 +41,7 @@ public class FilteringUtils
         if ( !StringUtils.isEmpty( val ) && val.indexOf( ":\\" ) == 1 )
         {
             val = StringUtils.replace( val, "\\", "\\\\" );
-            val = StringUtils.replace( val, ":", "\\:" );
+            //val = StringUtils.replace( val, ":", "\\:" );
         }
         return val;
     }

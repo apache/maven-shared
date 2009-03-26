@@ -90,5 +90,14 @@ public class DefaultMavenFileFilterTest
         assertEquals( "older file", properties.getProperty( "version" ) );
 
     }    
+    
+    public void testNullSafeDefaultFilterWrappers() throws Exception 
+    {
+    	MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+    	
+    	mavenFileFilter.getDefaultFilterWrappers(null, null, false, null, null);
+    	
+    	//shouldn't fail
+    }
 
 }

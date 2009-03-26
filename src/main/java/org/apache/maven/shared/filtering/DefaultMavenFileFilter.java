@@ -133,8 +133,11 @@ public class DefaultMavenFileFilter
         final Properties baseProps = new Properties();
 
         // Project properties
-        baseProps.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
-            .getProperties() );
+        if(mavenProject != null) 
+        {
+            baseProps.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
+                    .getProperties() );
+        }
         // TODO this is NPE free but do we consider this as normal
         // or do we have to throw an MavenFilteringException with mavenSession cannot be null
         if ( mavenSession != null )
@@ -149,11 +152,14 @@ public class DefaultMavenFileFilter
 
         loadProperties( filterProperties, filters, baseProps );
 
-        loadProperties( filterProperties, mavenProject.getBuild().getFilters(), baseProps );
+        if(mavenProject != null) 
+        {
+            loadProperties( filterProperties, mavenProject.getBuild().getFilters(), baseProps );
 
-        // Project properties
-        filterProperties.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
-            .getProperties() );
+	        // Project properties
+	        filterProperties.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
+	            .getProperties() );
+        }
         if ( mavenSession != null )
         {
             // execution properties wins

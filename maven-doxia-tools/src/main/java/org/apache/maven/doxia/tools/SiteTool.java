@@ -225,7 +225,8 @@ public interface SiteTool
      * @param project a Maven project, not null.
      * @param parentProject a Maven parent project, not null.
      * @param keepInheritedRefs used for inherited references.
-     * @deprecated Please use {@link #populateParentMenu(DecorationModel, Locale, MavenProject, MavenProject, boolean)} instead
+     * @deprecated Please use
+     *      {@link #populateParentMenu(DecorationModel, Locale, MavenProject, MavenProject, boolean)} instead
      */
     void populateProjectParentMenu( DecorationModel decorationModel, Locale locale, MavenProject project,
                                     MavenProject parentProject, boolean keepInheritedRefs );
@@ -240,7 +241,9 @@ public interface SiteTool
      * @param locale the locale used for the i18n in DecorationModel. If null, using the default locale in the jvm.
      * @param keepInheritedRefs used for inherited references.
      * @throws SiteToolException if any
-     * @deprecated Please use {@link #populateModulesMenu(MavenProject, List, ArtifactRepository, DecorationModel, Locale, boolean)} instead
+     * @deprecated Please use
+     *      {@link #populateModulesMenu(MavenProject, List, ArtifactRepository, DecorationModel, Locale, boolean)}
+     *      instead
      */
     void populateModules( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
                           DecorationModel decorationModel, Locale locale, boolean keepInheritedRefs )

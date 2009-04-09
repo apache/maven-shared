@@ -211,7 +211,7 @@ public class DefaultSiteTool
         {
             try
             {
-                toUrl = new File( getNormalizedPath( to ) ).toURL();
+                toUrl = new File( getNormalizedPath( to ) ).toURI().toURL();
             }
             catch ( MalformedURLException e1 )
             {
@@ -227,7 +227,7 @@ public class DefaultSiteTool
         {
             try
             {
-                fromUrl = new File( getNormalizedPath( from ) ).toURL();
+                fromUrl = new File( getNormalizedPath( from ) ).toURI().toURL();
             }
             catch ( MalformedURLException e1 )
             {
@@ -424,7 +424,7 @@ public class DefaultSiteTool
 
     /** {@inheritDoc} */
     public File getSiteDescriptorFromRepository( MavenProject project, ArtifactRepository localRepository,
-                                                 List remoteArtifactRepositories, Locale locale )
+                                                 List repositories, Locale locale )
         throws SiteToolException
     {
         if ( project == null )
@@ -435,7 +435,7 @@ public class DefaultSiteTool
         {
             throw new IllegalArgumentException( "The parameter 'localRepository' can not be null" );
         }
-        if ( remoteArtifactRepositories == null )
+        if ( repositories == null )
         {
             throw new IllegalArgumentException( "The parameter 'remoteArtifactRepositories' can not be null" );
         }
@@ -447,7 +447,7 @@ public class DefaultSiteTool
 
         try
         {
-            return resolveSiteDescriptor( project, localRepository, remoteArtifactRepositories, locale );
+            return resolveSiteDescriptor( project, localRepository, repositories, locale );
         }
         catch ( ArtifactNotFoundException e )
         {
@@ -619,7 +619,7 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public String getInterpolatedSiteDescriptorContent( Map props, MavenProject project, String siteDescriptorContent,
+    public String getInterpolatedSiteDescriptorContent( Map props, MavenProject aProject, String siteDescriptorContent,
                                                         String inputEncoding, String outputEncoding )
         throws SiteToolException
     {
@@ -627,7 +627,7 @@ public class DefaultSiteTool
         {
             throw new IllegalArgumentException( "The parameter 'props' can not be null" );
         }
-        if ( project == null )
+        if ( aProject == null )
         {
             throw new IllegalArgumentException( "The parameter 'project' can not be null" );
         }
@@ -668,9 +668,9 @@ public class DefaultSiteTool
                                          e );
         }
 
-        interpolator.addValueSource( new ObjectBasedValueSource( project ) );
+        interpolator.addValueSource( new ObjectBasedValueSource( aProject ) );
 
-        interpolator.addValueSource( new MapBasedValueSource( project.getProperties() ) );
+        interpolator.addValueSource( new MapBasedValueSource( aProject.getProperties() ) );
 
         siteDescriptorContent = interpolator.interpolate( siteDescriptorContent, "project" );
 
@@ -688,10 +688,10 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public MavenProject getParentProject( MavenProject project, List reactorProjects,
+    public MavenProject getParentProject( MavenProject aProject, List reactorProjects,
                                           ArtifactRepository localRepository )
     {
-        if ( project == null )
+        if ( aProject == null )
         {
             throw new IllegalArgumentException( "The parameter 'project' can not be null" );
         }
@@ -706,7 +706,7 @@ public class DefaultSiteTool
 
         MavenProject parentProject = null;
 
-        MavenProject origParent = project.getParent();
+        MavenProject origParent = aProject.getParent();
         if ( origParent != null )
         {
             Iterator reactorItr = reactorProjects.iterator();
@@ -724,11 +724,11 @@ public class DefaultSiteTool
                 }
             }
 
-            if ( parentProject == null && project.getBasedir() != null )
+            if ( parentProject == null && aProject.getBasedir() != null )
             {
                 try
                 {
-                    File pomFile = new File( project.getBasedir(), project.getModel().getParent().getRelativePath() );
+                    File pomFile = new File( aProject.getBasedir(), aProject.getModel().getParent().getRelativePath() );
 
                     if ( pomFile.isDirectory() )
                     {
@@ -755,7 +755,7 @@ public class DefaultSiteTool
             {
                 try
                 {
-                    parentProject = mavenProjectBuilder.buildFromRepository( project.getParentArtifact(), project
+                    parentProject = mavenProjectBuilder.buildFromRepository( aProject.getParentArtifact(), aProject
                         .getRemoteArtifactRepositories(), localRepository );
                     getLogger().info( "Parent project loaded from repository." );
                 }
@@ -840,7 +840,8 @@ public class DefaultSiteTool
 
     /**
      * {@inheritDoc}
-     * @deprecated Please use {@link #populateParentMenu(DecorationModel, Locale, MavenProject, MavenProject, boolean)} instead
+     * @deprecated Please use
+     *      {@link #populateParentMenu(DecorationModel, Locale, MavenProject, MavenProject, boolean)} instead
      */
     public void populateProjectParentMenu( DecorationModel decorationModel, Locale locale, MavenProject project,
                                            MavenProject parentProject, boolean keepInheritedRefs )
@@ -850,7 +851,9 @@ public class DefaultSiteTool
 
     /**
      * {@inheritDoc}
-     * @deprecated Please use {@link #populateModulesMenu(MavenProject, List, ArtifactRepository, DecorationModel, Locale, boolean)} instead
+     * @deprecated Please use
+     *      {@link #populateModulesMenu(MavenProject, List, ArtifactRepository, DecorationModel, Locale, boolean)}
+     *      instead
      */
     public void populateModules( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
                                  DecorationModel decorationModel, Locale locale, boolean keepInheritedRefs )

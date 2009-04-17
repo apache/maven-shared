@@ -197,6 +197,7 @@ public abstract class AbstractArtifactFeatureFilter
      */
     protected boolean compareFeatures( String lhs, String rhs )
     {
-        return ( lhs.equals( rhs ) );
+        // If lhs is null, check that rhs is null. Otherwise check if strings are equal.
+        return ( lhs == null ? rhs == null : lhs.equals( rhs ) );
     }
 }

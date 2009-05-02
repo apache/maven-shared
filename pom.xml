@@ -9,7 +9,7 @@
   <groupId>org.apache.maven.reporting</groupId>
   <name>Maven Reporting Implementation</name>
   <version>2.0.4.2-SNAPSHOT</version>
-  
+
   <developers>
     <developer>
       <id>vsiveton</id>
@@ -52,6 +52,12 @@
       <artifactId>doxia-site-renderer</artifactId>
       <version>1.0-alpha-10</version>
     </dependency>
+    <dependency>
+      <groupId>junit-addons</groupId>
+      <artifactId>junit-addons</artifactId>
+      <version>1.4</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <scm>
@@ -59,5 +65,5 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/branches/maven-reporting-impl-2.0.4.1-dev</developerConnection>
     <url>http://svn.apache.org/viewcvs.cgi/maven/shared/branches/maven-reporting-impl-2.0.4.1-dev</url>
   </scm>
-  
+
 </project>

@@ -100,6 +100,7 @@ public class AbstractMavenReportRendererTest extends TestCase
         checkPattern( "project''s info", new String[] { "project'", null, "s info", null } );
         checkPattern( "it''s a question of {chance, http://en.wikipedia.org/wiki/Chance}",
                       new String[] { "it'", null, "s a question of ", null, "chance", "http://en.wikipedia.org/wiki/Chance" } );
+        checkPattern( "{s'inscrire,mail@mail.com}", new String[] { "s'inscrire", "mail@mail.com" } );
 
         // throwing an IllegalArgumentException in case of unmatched quote would avoid the following:
         checkPattern( "it's a question of {chance, http://en.wikipedia.org/wiki/Chance}",

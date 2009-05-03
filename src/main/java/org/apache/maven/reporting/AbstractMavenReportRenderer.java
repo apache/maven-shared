@@ -693,7 +693,7 @@ public abstract class AbstractMavenReportRenderer
         {
             char ch = text.charAt( i );
 
-            if ( ch == '\'' && !inQuote )
+            if ( ch == '\'' && !inQuote && braceStack == 0 )
             {
                 // handle: ''
                 if ( i + 1 < text.length() && text.charAt( i + 1 ) == '\'' )

@@ -76,9 +76,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-    	<groupId>org.codehaus.plexus</groupId>
-    	<artifactId>plexus-interpolation</artifactId>
-    	<version>1.6</version>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-interpolation</artifactId>
+      <version>1.6</version>
     </dependency>
   </dependencies>
 

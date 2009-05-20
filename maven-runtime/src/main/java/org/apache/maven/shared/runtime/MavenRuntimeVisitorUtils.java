@@ -142,6 +142,37 @@ final class MavenRuntimeVisitorUtils
         }
     }
 
+    /**
+     * Invokes the specified visitor on the specified URL's Maven project.
+     * 
+     * @param url
+     *            the URL to introspect
+     * @param visitor
+     *            the visitor to invoke
+     * @throws MavenRuntimeException
+     *             if an error occurs visiting the projects
+     */
+    public static void accept( URL url, MavenRuntimeVisitor visitor )
+        throws MavenRuntimeException
+    {
+        try
+        {
+            if ("jar".equals( url.getProtocol() ))
+            {
+                url = getJarFileURL( url );
+            }
+            
+            URL baseURL = getJarEntryURL( url, "" );
+            URL mavenURL = new URL( baseURL, MAVEN_PATH );
+
+            acceptURL( mavenURL, visitor, new HashSet<String>(), new HashSet<String>() );
+        }
+        catch ( MalformedURLException exception )
+        {
+            throw new MavenRuntimeException( "Cannot obtain URL for Jar: " + url, exception );
+        }
+    }
+
     // private methods --------------------------------------------------------
 
     /**
@@ -246,7 +277,7 @@ final class MavenRuntimeVisitorUtils
 
         try
         {
-            URL url = new URL( "jar:" + jarURL + "!/" + entry.getName() );
+            URL url = getJarEntryURL( jarURL, entry.getName() );
 
             if ( isProjectPropertiesPath( name ) )
             {
@@ -303,6 +334,11 @@ final class MavenRuntimeVisitorUtils
         }
 
         return new URL( path );
+    }
+    
+    private static URL getJarEntryURL( URL jarURL, String entryName ) throws MalformedURLException
+    {
+        return new URL( "jar:" + jarURL + "!/" + entryName );
     }
 
     /**

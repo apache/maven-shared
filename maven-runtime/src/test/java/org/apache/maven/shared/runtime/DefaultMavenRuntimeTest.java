@@ -82,6 +82,42 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
     // getProjectProperties tests ---------------------------------------------
 
+    public void testGetProjectPropertiesWithFileUrl()
+        throws MavenRuntimeException, IOException
+    {
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URL url = jar.toURI().toURL();
+
+        MavenProjectProperties properties = mavenRuntime.getProjectProperties( url );
+
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
+    }
+
+    public void testGetProjectPropertiesWithJarUrl()
+        throws MavenRuntimeException, IOException
+    {
+        File jar = getPackage( "testSingleJar/pom.xml" );
+        
+        URL url = new URL( "jar:" + jar.toURI().toURL() + "!/" );
+        
+        MavenProjectProperties properties = mavenRuntime.getProjectProperties( url );
+        
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
+    }
+    
+    public void testGetProjectPropertiesWithJarEntryUrl()
+        throws MavenRuntimeException, IOException
+    {
+        File jar = getPackage( "testSingleJar/pom.xml" );
+        
+        URL url = new URL( "jar:" + jar.toURI().toURL() + "!/a/PackagedClass.class" );
+        
+        MavenProjectProperties properties = mavenRuntime.getProjectProperties( url );
+        
+        assertMavenProjectProperties( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", properties );
+    }
+    
     public void testGetProjectPropertiesWithDefaultPackageClass()
         throws ClassNotFoundException, MavenRuntimeException, IOException
     {
@@ -274,6 +310,42 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
 
     // getProject tests -------------------------------------------------------
 
+    public void testGetProjectWithFileUrl()
+        throws MavenRuntimeException, IOException
+    {
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URL url = jar.toURI().toURL();
+
+        MavenProject project = mavenRuntime.getProject( url );
+
+        assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
+    }
+
+    public void testGetProjectWithJarUrl()
+        throws MavenRuntimeException, IOException
+    {
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URL url = new URL( "jar:" + jar.toURI().toURL() + "!/" );
+
+        MavenProject project = mavenRuntime.getProject( url );
+
+        assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
+    }
+    
+    public void testGetProjectWithJarEntryUrl()
+        throws MavenRuntimeException, IOException
+    {
+        File jar = getPackage( "testSingleJar/pom.xml" );
+
+        URL url = new URL( "jar:" + jar.toURI().toURL() + "!/a/PackagedClass.class" );
+
+        MavenProject project = mavenRuntime.getProject( url );
+
+        assertMavenProject( "org.apache.maven.shared.runtime.tests:testSingleJar:1.0", project );
+    }
+    
     public void testGetProjectWithDefaultPackageClass()
         throws ClassNotFoundException, MavenRuntimeException, IOException
     {

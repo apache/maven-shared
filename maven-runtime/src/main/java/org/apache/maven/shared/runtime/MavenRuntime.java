@@ -19,6 +19,7 @@ package org.apache.maven.shared.runtime;
  * under the License.
  */
 
+import java.net.URL;
 import java.util.List;
 
 import org.apache.maven.project.MavenProject;
@@ -41,6 +42,17 @@ public interface MavenRuntime
     // public methods ---------------------------------------------------------
 
     /**
+     * Gets the properties for the specified URL's Maven project.
+     * 
+     * @param url
+     *            the URL to introspect
+     * @return the project properties for the specified URL's Maven project
+     * @throws MavenRuntimeException
+     *             if an error occurred introspecting the Maven runtime environment
+     */
+    MavenProjectProperties getProjectProperties( URL url ) throws MavenRuntimeException;
+    
+    /**
      * Gets the properties for the specified class's Maven project.
      * 
      * @param klass
@@ -62,6 +74,17 @@ public interface MavenRuntime
      */
     List<MavenProjectProperties> getProjectsProperties( ClassLoader classLoader ) throws MavenRuntimeException;
 
+    /**
+     * Gets the specified URL's Maven project.
+     * 
+     * @param url
+     *            the URL to introspect
+     * @return the specified URL's Maven project
+     * @throws MavenRuntimeException
+     *             if an error occurred introspecting the Maven runtime environment
+     */
+    MavenProject getProject( URL url ) throws MavenRuntimeException;
+    
     /**
      * Gets the specified class's Maven project.
      * 

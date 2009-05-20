@@ -19,6 +19,7 @@ package org.apache.maven.shared.runtime;
  * under the License.
  */
 
+import java.net.URL;
 import java.util.List;
 
 import org.apache.maven.project.MavenProject;
@@ -34,6 +35,18 @@ import org.apache.maven.project.MavenProject;
 public class DefaultMavenRuntime implements MavenRuntime
 {
     // MavenRuntime methods ---------------------------------------------------
+
+    /**
+     * {@inheritDoc}
+     */
+    public MavenProjectProperties getProjectProperties( URL url ) throws MavenRuntimeException
+    {
+        PropertiesMavenRuntimeVisitor visitor = new PropertiesMavenRuntimeVisitor();
+
+        MavenRuntimeVisitorUtils.accept( url, visitor );
+
+        return first( visitor.getProjects() );
+    }
 
     /**
      * {@inheritDoc}
@@ -57,6 +70,18 @@ public class DefaultMavenRuntime implements MavenRuntime
         MavenRuntimeVisitorUtils.accept( classLoader, visitor );
 
         return visitor.getProjects();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public MavenProject getProject( URL url ) throws MavenRuntimeException
+    {
+        XMLMavenRuntimeVisitor visitor = new XMLMavenRuntimeVisitor();
+        
+        MavenRuntimeVisitorUtils.accept( url, visitor );
+        
+        return first( visitor.getProjects() );
     }
 
     /**

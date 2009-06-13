@@ -111,6 +111,9 @@ public class Verifier
     private String logFileName = LOG_FILENAME;
 
     private String defaultMavenHome;
+    
+    // will launch mvn with --debug 
+    private boolean mavenDebug = false;
 
     public Verifier( String basedir, String settingsFile )
         throws VerificationException
@@ -1228,6 +1231,11 @@ public class Verifier
             cli.createArgument().setValue( "-e" );
 
             cli.createArgument().setValue( "--batch-mode" );
+            
+            if ( this.mavenDebug )
+            {
+                cli.createArgument().setValue( "--debug" );
+            }
 
             for ( Iterator i = systemProperties.keySet().iterator(); i.hasNext(); )
             {
@@ -2031,6 +2039,16 @@ public class Verifier
     public void setDebug( boolean debug )
     {
         this.debug = debug;
+    }
+
+    public boolean isMavenDebug()
+    {
+        return mavenDebug;
+    }
+
+    public void setMavenDebug( boolean mavenDebug )
+    {
+        this.mavenDebug = mavenDebug;
     }
 
 }

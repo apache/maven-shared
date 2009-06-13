@@ -2028,4 +2028,9 @@ public class Verifier
         this.logFileName = logFileName;
     }
 
+    public void setDebug( boolean debug )
+    {
+        this.debug = debug;
+    }
+
 }

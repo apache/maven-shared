@@ -842,6 +842,20 @@ public class Verifier
     }
 
     /**
+     * Writes a text file with the specified contents. The contents will be encoded using UTF-8.
+     * 
+     * @param path The path to the file, relative to the base directory, must not be <code>null</code>.
+     * @param contents The contents to write, must not be <code>null</code>.
+     * @throws IOException If the file could not be written.
+     * @since 1.2
+     */
+    public void writeFile( String path, String contents )
+        throws IOException
+    {
+        FileUtils.fileWrite( new File( getBasedir(), path ).getAbsolutePath(), "UTF-8", contents );
+    }
+
+    /**
      * Filters a text file by replacing some user-defined tokens.
      * 
      * @param srcPath The path to the input file, relative to the base directory, must not be <code>null</code>.

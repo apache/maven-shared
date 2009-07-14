@@ -666,8 +666,8 @@ public abstract class AbstractMavenReportRenderer
     }
 
     /**
-     * The method parses a text an apply the given pattern <code>{text, url}</code> to create
-     * a map of text/href.
+     * The method parses a text and applies the given pattern <code>{text, url}</code> to create
+     * a list of text/href.
      *
      * @param text a text with or without the pattern <code>{text, url}</code>
      * @return a map of text/href

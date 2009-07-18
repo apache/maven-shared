@@ -21,14 +21,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>maven-shared-components</artifactId>
     <groupId>org.apache.maven.shared</groupId>
+    <artifactId>maven-shared-components</artifactId>
     <version>11</version>
   </parent>
 
   <groupId>org.apache.maven.reporting</groupId>
   <artifactId>maven-reporting-impl</artifactId>
-  <version>2.0.4.2-SNAPSHOT</version>
+  <version>2.0.4.2</version>
 
   <name>Maven Reporting Implementation</name>
   <description>Abstract classes to manage report generation.</description>
@@ -46,10 +46,15 @@
   </developers>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/branches/maven-reporting-impl-2.0.4.x</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/branches/maven-reporting-impl-2.0.4.x</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/branches/maven-reporting-impl-2.0.4.x</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-reporting-impl-2.0.4.2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-reporting-impl-2.0.4.2</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-reporting-impl-2.0.4.2</url>
   </scm>
+
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/13274</url>
+  </issueManagement>
 
   <properties>
     <mavenVersion>2.0.4</mavenVersion>
@@ -94,5 +99,53 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.2-beta-4</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <!-- Using this plugin configuration to produce a buildable project source distro,
+                 per the discussion on members@ASF regarding what constitutes a valid release.
+            -->
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>make-project-src-distro</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <descriptors>
+                   <descriptor>src/main/assembly/source-release.xml</descriptor>
+                  </descriptors>
+                  <tarLongFileMode>gnu</tarLongFileMode>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

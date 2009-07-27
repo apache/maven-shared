@@ -90,7 +90,7 @@ public class DefaultMavenResourcesFilteringTest
         mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
                                                  nonFilteredFileExtensions, new StubMavenSession() );
 
-        assertFiltering( baseDir, initialImageFile, false );
+        assertFiltering( baseDir, initialImageFile, false, false );
     }
 
     public void testWithMavenResourcesExecution()
@@ -128,10 +128,52 @@ public class DefaultMavenResourcesFilteringTest
                                          nonFilteredFileExtensions, new StubMavenSession() );
         mavenResourcesExecution.setEscapeString( "\\" );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
-        assertFiltering( baseDir, initialImageFile, true );
+        assertFiltering( baseDir, initialImageFile, true, false );
     }
 
-    private void assertFiltering( File baseDir, File initialImageFile, boolean escapeTest )
+    public void testWithMavenResourcesExecutionWithAdditionnalProperties()
+        throws Exception
+    {
+        File baseDir = new File( "c:\\foo\\bar" );
+        StubMavenProject mavenProject = new StubMavenProject( baseDir );
+        mavenProject.setVersion( "1.0" );
+        mavenProject.setGroupId( "org.apache" );
+        mavenProject.setName( "test project" );
+
+        Properties projectProperties = new Properties();
+        projectProperties.put( "foo", "bar" );
+        projectProperties.put( "java.version", "zloug" );
+        mavenProject.setProperties( projectProperties );
+        MavenResourcesFiltering mavenResourcesFiltering =
+            (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class.getName() );
+
+        String unitFilesDir = getBasedir() + "/src/test/units-files/maven-resources-filtering";
+        File initialImageFile = new File( unitFilesDir, "happy_duke.gif" );
+
+        Resource resource = new Resource();
+        List resources = new ArrayList();
+        resources.add( resource );
+        resource.setDirectory( unitFilesDir );
+        resource.setFiltering( true );
+
+        List filtersFile = new ArrayList();
+        filtersFile.add( getBasedir()
+            + "/src/test/units-files/maven-resources-filtering/empty-maven-resources-filtering.txt" );
+
+        List nonFilteredFileExtensions = Collections.singletonList( "gif" );
+        Properties additionnalProperties = new Properties();
+        additionnalProperties.put( "greatDate", "1973-06-14" );
+        additionnalProperties.put( "pom.version", "99.00" );
+        MavenResourcesExecution mavenResourcesExecution =
+            new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
+                                         nonFilteredFileExtensions, new StubMavenSession() );
+        mavenResourcesExecution.setAdditionnalProperies( additionnalProperties );
+        mavenResourcesExecution.setEscapeString( "\\" );
+        mavenResourcesFiltering.filterResources( mavenResourcesExecution );
+        assertFiltering( baseDir, initialImageFile, true, true );
+    }
+
+    private void assertFiltering( File baseDir, File initialImageFile, boolean escapeTest, boolean additionnalProperties )
         throws Exception
     {
         assertEquals( 7, outputDirectory.listFiles().length );
@@ -162,7 +204,15 @@ public class DefaultMavenResourcesFilteringTest
         }
         assertFalse( result.isEmpty() );
 
-        assertEquals( "1.0", result.get( "version" ) );
+        if ( additionnalProperties )
+        {
+            assertEquals( "1973-06-14", result.getProperty( "goodDate" ) );
+            assertEquals( "99.00", result.get( "version" ) );
+        }
+        else
+        {
+            assertEquals( "1.0", result.get( "version" ) );
+        }
         assertEquals( "org.apache", result.get( "groupId" ) );
         assertEquals( "bar", result.get( "foo" ) );
         assertEquals( "${foo.version}", result.get( "fooVersion" ) );
@@ -236,7 +286,7 @@ public class DefaultMavenResourcesFilteringTest
             PropertyUtils.loadPropertyFile( new File( outputDirectory, "maven-resources-filtering.txt" ), null );
         assertFalse( result.isEmpty() );
         assertEquals( mavenProject.getName(), result.get( "pomName" ) );
-        assertFiltering( baseDir, initialImageFile, false );
+        assertFiltering( baseDir, initialImageFile, false, false );
     }
 
     public void testNoFiltering()

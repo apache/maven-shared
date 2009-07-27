@@ -32,3 +32,5 @@ escapeJavaVersion=\${java.version}
 escapeuserDir=\@user.dir@
 
 userHome=${user.home}
+
+goodDate=${greatDate}

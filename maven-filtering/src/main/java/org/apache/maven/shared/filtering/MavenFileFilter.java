@@ -21,6 +21,7 @@ package org.apache.maven.shared.filtering;
 
 import java.io.File;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
@@ -45,6 +46,14 @@ public interface MavenFileFilter
      */
     void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject, List filters,
                           boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )
+        throws MavenFilteringException;
+    
+    /**
+     * @since 1.0-beta-3
+     * @param mavenFileFilterRequest
+     * @throws MavenFilteringException
+     */
+    void copyFile( MavenFileFilterRequest mavenFileFilterRequest )
         throws MavenFilteringException;
 
     /**
@@ -105,5 +114,21 @@ public interface MavenFileFilter
      */
     List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath,
                                    MavenSession mavenSession, MavenResourcesExecution mavenResourcesExecution )
-        throws MavenFilteringException;    
+        throws MavenFilteringException;
+    
+    /**
+     * @since 1.0-beta-3
+     * @param mavenProject
+     * @param filters
+     * @param escapedBackslashesInFilePath
+     * @param mavenSession
+     * @param mavenResourcesExecution
+     * @param additionnalProperties properties which can override ones calculated from maven
+     * @return {@link List} of FileUtils.FilterWrapper 
+     * @throws MavenFilteringException
+     */    
+    List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath,
+                                   MavenSession mavenSession, MavenResourcesExecution mavenResourcesExecution,
+                                   Properties additionnalProperties )
+        throws MavenFilteringException;
 }

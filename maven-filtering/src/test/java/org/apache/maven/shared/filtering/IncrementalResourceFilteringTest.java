@@ -56,7 +56,7 @@ public class IncrementalResourceFilteringTest
         assertTime( "notime", "file01.txt" );
         assertTime( "time", "file02.txt" ); // this one is unchanged
 
-        assertTrue( ctx.getRefreshFiles().contains( new File(outputDirectory, "file01.txt") ) );
+        assertTrue( ctx.getRefreshFiles().contains( new File( outputDirectory, "file01.txt" ) ) );
 
         // one file is expected to be deleted
         HashSet deletedFiles = new HashSet();
@@ -69,7 +69,7 @@ public class IncrementalResourceFilteringTest
         assertFalse( new File( outputDirectory, "file01.txt" ).exists() );
         assertTime( "time", "file02.txt" ); // this one is unchanged
 
-        assertTrue( ctx.getRefreshFiles().contains( new File(outputDirectory, "file01.txt") ) );
+        assertTrue( ctx.getRefreshFiles().contains( new File( outputDirectory, "file01.txt" ) ) );
 
     }
 
@@ -79,7 +79,7 @@ public class IncrementalResourceFilteringTest
         // run full build first
         filter( "time" );
 
-        // all files are reprocessed after content of filters changes 
+        // all files are reprocessed after content of filters changes
         HashSet changedFiles = new HashSet();
         changedFiles.add( "filters.txt" );
         TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, changedFiles, new HashMap() );
@@ -89,9 +89,9 @@ public class IncrementalResourceFilteringTest
         assertTime( "notime", "file01.txt" );
         assertTime( "notime", "file02.txt" );
 
-        assertTrue( ctx.getRefreshFiles().contains( new File(outputDirectory, "file01.txt") ) );
-        assertTrue( ctx.getRefreshFiles().contains( new File(outputDirectory, "file02.txt") ) );
-        
+        assertTrue( ctx.getRefreshFiles().contains( new File( outputDirectory, "file01.txt" ) ) );
+        assertTrue( ctx.getRefreshFiles().contains( new File( outputDirectory, "file02.txt" ) ) );
+
     }
 
     public void testFilterDeleted()
@@ -100,18 +100,19 @@ public class IncrementalResourceFilteringTest
         // run full build first
         filter( "time" );
 
-        // all files are reprocessed after content of filters changes 
+        // all files are reprocessed after content of filters changes
         HashSet deletedFiles = new HashSet();
         deletedFiles.add( "filters.txt" );
-        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, new HashSet(), deletedFiles, new HashMap() );
+        TestIncrementalBuildContext ctx =
+            new TestIncrementalBuildContext( unitDirectory, new HashSet(), deletedFiles, new HashMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
 
         filter( "notime" );
         assertTime( "notime", "file01.txt" );
         assertTime( "notime", "file02.txt" );
 
-        assertTrue( ctx.getRefreshFiles().contains( new File(outputDirectory, "file01.txt") ) );
-        assertTrue( ctx.getRefreshFiles().contains( new File(outputDirectory, "file02.txt") ) );
+        assertTrue( ctx.getRefreshFiles().contains( new File( outputDirectory, "file01.txt" ) ) );
+        assertTrue( ctx.getRefreshFiles().contains( new File( outputDirectory, "file02.txt" ) ) );
     }
 
     private void assertTime( String time, String relpath )

@@ -33,13 +33,13 @@ public class DefaultMavenFileFilterTest
     extends PlexusTestCase
 {
     
-    File to = new File(getBasedir(), "target/reflection-test.properties");
-    
+    File to = new File( getBasedir(), "target/reflection-test.properties" );
+
     protected void setUp()
         throws Exception
     {
         super.setUp();
-        if (to.exists())
+        if ( to.exists() )
         {
             FileUtils.forceDelete( to );
         }
@@ -67,7 +67,7 @@ public class DefaultMavenFileFilterTest
         assertEquals( "${pom.version}", properties.getProperty( "version" ) );
 
     }
-    
+
     public void testOverwriteFile()
         throws Exception
     {
@@ -89,15 +89,16 @@ public class DefaultMavenFileFilterTest
         Properties properties = PropertyUtils.loadPropertyFile( to, null );
         assertEquals( "older file", properties.getProperty( "version" ) );
 
-    }    
-    
-    public void testNullSafeDefaultFilterWrappers() throws Exception 
+    }
+
+    public void testNullSafeDefaultFilterWrappers()
+        throws Exception
     {
-    	MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
-    	
-    	mavenFileFilter.getDefaultFilterWrappers(null, null, false, null, null);
-    	
-    	//shouldn't fail
+        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+
+        mavenFileFilter.getDefaultFilterWrappers( null, null, false, null, null );
+
+        // shouldn't fail
     }
 
 }

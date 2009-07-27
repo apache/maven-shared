@@ -34,8 +34,6 @@ public class PropertyUtilsTest
     extends PlexusTestCase
 {
     private static File testDirectory = new File( getBasedir(), "target/test-classes/" );
-    
-    
 
     public void testBasic()
         throws Exception
@@ -99,7 +97,7 @@ public class PropertyUtilsTest
             // exception ok
         }
     }
-    
+
     public void testloadpropertiesFile()
         throws Exception
     {
@@ -112,5 +110,5 @@ public class PropertyUtilsTest
         assertEquals( "${foo}", interpolated.get( "foo" ) );
         assertEquals( "realVersion", interpolated.get( "bar" ) );
         assertEquals( "none filtered", interpolated.get( "none" ) );
-    }    
+    }
 }

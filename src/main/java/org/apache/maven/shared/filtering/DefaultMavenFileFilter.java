@@ -58,9 +58,24 @@ public class DefaultMavenFileFilter
         throws MavenFilteringException
     {
         List filterWrappers = getDefaultFilterWrappers( mavenProject, filters, escapedBackslashesInFilePath,
-                                                        mavenSession );
+                                                        mavenSession, null );
         copyFile( from, to, filtering, filterWrappers, encoding );
     }
+    
+    
+    public void copyFile( MavenFileFilterRequest mavenFileFilterRequest )
+        throws MavenFilteringException
+    {
+        List filterWrappers =
+            getDefaultFilterWrappers( mavenFileFilterRequest.getMavenProject(), mavenFileFilterRequest.getFilters(),
+                                      mavenFileFilterRequest.isEscapedBackslashesInFilePath(),
+                                      mavenFileFilterRequest.getMavenSession(), null,
+                                      mavenFileFilterRequest.getAdditionnalProperties() );
+        copyFile( mavenFileFilterRequest.getFrom(), mavenFileFilterRequest.getTo(),
+                  mavenFileFilterRequest.isFiltering(), filterWrappers, mavenFileFilterRequest.getEncoding() );
+    }
+
+
 
     public void copyFile( File from, File to, boolean filtering, List filterWrappers, String encoding )
         throws MavenFilteringException
@@ -123,9 +138,20 @@ public class DefaultMavenFileFilter
                                           MavenResourcesExecution mavenResourcesExecution )
         throws MavenFilteringException
     {
-        
+
+        return getDefaultFilterWrappers( mavenProject, filters, escapedBackslashesInFilePath, mavenSession,
+                                         mavenResourcesExecution, null );
+
+    }
+    
+    public List getDefaultFilterWrappers( final MavenProject mavenProject, List filters,
+                                          final boolean escapedBackslashesInFilePath, MavenSession mavenSession,
+                                          MavenResourcesExecution mavenResourcesExecution,  Properties additionnalProperties )
+        throws MavenFilteringException
+    {
+
         // here we build some properties which will be used to read some properties files
-        // to interpolate the expression ${ }  in this properties file
+        // to interpolate the expression ${ } in this properties file
 
         // Take a copy of filterProperties to ensure that evaluated filterTokens are not propagated
         // to subsequent filter files. NB this replicates current behaviour and seems to make sense.
@@ -133,10 +159,10 @@ public class DefaultMavenFileFilter
         final Properties baseProps = new Properties();
 
         // Project properties
-        if(mavenProject != null) 
+        if ( mavenProject != null )
         {
-            baseProps.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
-                    .getProperties() );
+            baseProps.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP
+                            : mavenProject.getProperties() );
         }
         // TODO this is NPE free but do we consider this as normal
         // or do we have to throw an MavenFilteringException with mavenSession cannot be null
@@ -152,13 +178,13 @@ public class DefaultMavenFileFilter
 
         loadProperties( filterProperties, filters, baseProps );
 
-        if(mavenProject != null) 
+        if ( mavenProject != null )
         {
             loadProperties( filterProperties, mavenProject.getBuild().getFilters(), baseProps );
 
-	        // Project properties
-	        filterProperties.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP : mavenProject
-	            .getProperties() );
+            // Project properties
+            filterProperties.putAll( mavenProject.getProperties() == null ? Collections.EMPTY_MAP
+                            : mavenProject.getProperties() );
         }
         if ( mavenSession != null )
         {
@@ -166,26 +192,32 @@ public class DefaultMavenFileFilter
             filterProperties.putAll( mavenSession.getExecutionProperties() );
         }
 
+        if ( additionnalProperties != null )
+        {
+            // additionnal properties wins
+            filterProperties.putAll( additionnalProperties );
+        }
+        
         List defaultFilterWrappers = new ArrayList( 3 );
 
         if ( getLogger().isDebugEnabled() )
         {
             getLogger().debug( "properties used " + filterProperties );
         }
-        
+
         final ValueSource propertiesValueSource =
             new PropertiesEscapingBackSlashValueSource( escapedBackslashesInFilePath, filterProperties );
 
-        final String escapeString = mavenResourcesExecution == null ? null : mavenResourcesExecution.getEscapeString(); 
-        
-        
+        final String escapeString = mavenResourcesExecution == null ? null : mavenResourcesExecution.getEscapeString();
+
         // support ${token}
         FileUtils.FilterWrapper one = new FileUtils.FilterWrapper()
         {
             public Reader getReader( Reader reader )
             {
                 StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator();
-                MavenProjectValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
+                MavenProjectValueSource valueSource =
+                    new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
                 valueSource.setPropertiesValueSource( propertiesValueSource );
                 propertiesInterpolator.addValueSource( valueSource );
                 propertiesInterpolator.setEscapeString( escapeString );
@@ -203,12 +235,13 @@ public class DefaultMavenFileFilter
             public Reader getReader( Reader reader )
             {
                 StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( "@", "@" );
-                MavenProjectValueSource valueSource = new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
+                MavenProjectValueSource valueSource =
+                    new MavenProjectValueSource( mavenProject, escapedBackslashesInFilePath );
                 valueSource.setPropertiesValueSource( propertiesValueSource );
                 propertiesInterpolator.addValueSource( valueSource );
                 propertiesInterpolator.setEscapeString( escapeString );
-                InterpolatorFilterReader filterReader = new InterpolatorFilterReader( reader, propertiesInterpolator,
-                                                                                      "@", "@" );
+                InterpolatorFilterReader filterReader =
+                    new InterpolatorFilterReader( reader, propertiesInterpolator, "@", "@" );
                 filterReader.setInterpolateWithPrefixPattern( false );
                 filterReader.setEscapeString( escapeString );
                 return filterReader;
@@ -217,9 +250,9 @@ public class DefaultMavenFileFilter
         defaultFilterWrappers.add( second );
 
         return defaultFilterWrappers;
-    }
+    }    
 
-    private void loadProperties( Properties filterProperties, List /*String*/propertiesFilePaths, Properties baseProps )
+    private void loadProperties( Properties filterProperties, List /* String */propertiesFilePaths, Properties baseProps )
         throws MavenFilteringException
     {
         if ( propertiesFilePaths != null )

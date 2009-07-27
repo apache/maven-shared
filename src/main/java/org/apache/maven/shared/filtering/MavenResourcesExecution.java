@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
@@ -57,6 +58,7 @@ public class MavenResourcesExecution
 
     private MavenSession mavenSession;
 
+    /** @see FileUtils.FilterWrapper */
     private List filterWrappers;
 
     private File resourcesBaseDirectory;
@@ -88,6 +90,12 @@ public class MavenResourcesExecution
      * @since 1.0-beta-2
      */
     private boolean includeEmptyDirs = false;
+    
+    /**
+     * 
+     * @since 1.0-beta-3
+     */
+    private Properties additionnalProperies;
     
     public MavenResourcesExecution()
     {
@@ -408,6 +416,16 @@ public class MavenResourcesExecution
     public void setIncludeEmptyDirs( boolean includeEmptyDirs )
     {
         this.includeEmptyDirs = includeEmptyDirs;
+    }
+
+    public Properties getAdditionnalProperies()
+    {
+        return additionnalProperies;
+    }
+
+    public void setAdditionnalProperies( Properties additionnalProperies )
+    {
+        this.additionnalProperies = additionnalProperies;
     }
    
 }

@@ -29,7 +29,6 @@ import java.util.List;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
-import org.sonatype.plexus.build.incremental.BuildContext;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -37,6 +36,7 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.Scanner;
 import org.codehaus.plexus.util.StringUtils;
+import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -156,10 +156,13 @@ public class DefaultMavenResourcesFiltering
             {
                 filterWrappers.addAll( mavenResourcesExecution.getFilterWrappers() );
             }
-            filterWrappers.addAll( mavenFileFilter.getDefaultFilterWrappers( mavenResourcesExecution.getMavenProject(),
+            filterWrappers.addAll( mavenFileFilter.getDefaultFilterWrappers(
+                                                                             mavenResourcesExecution.getMavenProject(),
                                                                              mavenResourcesExecution.getFileFilters(),
-                                                                             true, mavenResourcesExecution
-                                                                                 .getMavenSession(), mavenResourcesExecution ) );
+                                                                             true,
+                                                                             mavenResourcesExecution.getMavenSession(),
+                                                                             mavenResourcesExecution,
+                                                                             mavenResourcesExecution.getAdditionnalProperies() ) );
             mavenResourcesExecution.setFilterWrappers( filterWrappers );
         }
 

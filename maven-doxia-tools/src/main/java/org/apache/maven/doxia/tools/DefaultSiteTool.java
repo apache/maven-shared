@@ -820,21 +820,24 @@ public class DefaultSiteTool
                 }
 
                 parentUrl = getRelativePath( parentUrl, project.getUrl() );
-
-                if ( menu.getName() == null )
-                {
-                    menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.parentproject" ) );
-                }
-
-                MenuItem item = new MenuItem();
-                item.setName( parentProject.getName() );
-                item.setHref( parentUrl );
-                menu.addItem( item );
             }
             else
             {
-                decorationModel.removeMenuRef( "parent" );
+                // parent has no url, assume relative path is given by site structure
+                String parentPath = parentProject.getBasedir().getAbsolutePath();
+                String projectPath = project.getBasedir().getAbsolutePath();
+                parentUrl = getRelativePath( parentPath, projectPath ) + "/index.html";
             }
+
+            if ( menu.getName() == null )
+            {
+                menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.parentproject" ) );
+            }
+
+            MenuItem item = new MenuItem();
+            item.setName( parentProject.getName() );
+            item.setHref( parentUrl );
+            menu.addItem( item );
         }
     }
 

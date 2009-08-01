@@ -1242,15 +1242,14 @@ public class DefaultSiteTool
 
             if ( decoration == null )
             {
-                decoration = parent;
+                // we have no site descriptor: merge the parent into an empty one
+                decoration = new DecorationModel();
             }
-            else
-            {
-                assembler.assembleModelInheritance( project.getName(), decoration, parent, project.getUrl(),
-                                                    parentProject.getUrl() == null ? project.getUrl() : parentProject
-                                                        .getUrl() );
-            }
+
+            assembler.assembleModelInheritance( project.getName(), decoration, parent, project.getUrl(),
+                        parentProject.getUrl() == null ? project.getUrl() : parentProject.getUrl() );
         }
+
         if ( decoration != null && decoration.getSkin() != null )
         {
             getLogger().debug( "Skin used: " + decoration.getSkin() );

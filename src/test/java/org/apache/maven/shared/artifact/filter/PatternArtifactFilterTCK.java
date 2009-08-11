@@ -390,6 +390,8 @@ public abstract class PatternArtifactFilterTCK
 
         String artifactId;
 
+        String version;
+        
         List dependencyTrail;
 
         String type;
@@ -412,7 +414,7 @@ public abstract class PatternArtifactFilterTCK
             artifact = (Artifact) control.getMock();
 
             enableGetDependencyConflictId();
-            enableGetGroupIdAndArtifactId();
+            enableGetGroupIdArtifactIdAndVersion();
             enableGetId();
 
             if ( dependencyTrail != null )
@@ -449,13 +451,17 @@ public abstract class PatternArtifactFilterTCK
             control.setReturnValue( groupId + ":" + artifactId + ":" + type, MockControl.ONE_OR_MORE );
         }
 
-        void enableGetGroupIdAndArtifactId()
+        void enableGetGroupIdArtifactIdAndVersion() 
         {
             artifact.getGroupId();
             control.setReturnValue( groupId, MockControl.ONE_OR_MORE );
 
             artifact.getArtifactId();
             control.setReturnValue( artifactId, MockControl.ONE_OR_MORE );
+
+            artifact.getVersion();
+            control.setReturnValue( version , MockControl.ZERO_OR_MORE );
+            
         }
     }
 

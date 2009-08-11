@@ -79,8 +79,7 @@ public class ProjectTransitivityFilter
         while ( iterator.hasNext() )
         {
             Artifact dependency = (Artifact) iterator.next();
-            if ( dependency.getGroupId().equals( artifact.getGroupId() ) &&
-                dependency.getArtifactId().equals( artifact.getArtifactId() ) )
+            if ( dependency.equals( artifact ) )
             {
                 result = true;
                 break;

@@ -21,6 +21,9 @@ package org.apache.maven.shared.artifact.filter;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
 
 import java.util.Iterator;
 import java.util.List;
@@ -171,6 +174,11 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
 
             matches = token.startsWith( prefix );
         }
+        // support versions range 
+        else if ( pattern.startsWith( "[" ) || pattern.startsWith( "(" ))
+        {
+        	matches = isVersionIncludedInRange(token, pattern);
+        }
         // support exact match
         else
         {
@@ -179,4 +187,13 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
 
         return matches;
     }
+    
+    private boolean isVersionIncludedInRange(final String version, final String range) {
+    	try {
+			return VersionRange.createFromVersionSpec(range).containsVersion(new DefaultArtifactVersion(version));
+		} catch (InvalidVersionSpecificationException e) {
+			return false;
+		}
+	}
+
 }

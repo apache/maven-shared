@@ -27,6 +27,9 @@ import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -162,67 +165,107 @@ public class PatternIncludesArtifactFilter
         return false;
     }
 
-    private boolean matchAgainst( String value, List patterns, boolean regionMatch )
+    private boolean matchAgainst( String value, List patterns, boolean regionMatch ) {
+    	for (Iterator iterator = patterns.iterator(); iterator.hasNext();) {
+			String pattern = (String) iterator.next();
+			
+			String[] patternTokens = pattern.split( ":" );
+			String[] tokens = value.split( ":" );
+			
+			// fail immediately if pattern tokens outnumber tokens to match
+	        boolean matched = ( patternTokens.length <= tokens.length );
+
+	        for ( int i = 0; matched && i < patternTokens.length; i++ )
+	        {
+	            matched = matches( tokens[i], patternTokens[i] );
+	        }
+	        
+//	        // case of starting '*' like '*:jar:*'
+	        if (!matched && patternTokens.length < tokens.length && patternTokens.length>0 && "*".equals(patternTokens[0])) 
+	        {
+	        	matched=true;
+		        for ( int i = 0; matched && i < patternTokens.length; i++ )
+		        {
+		            matched = matches( tokens[i+(tokens.length-patternTokens.length)], patternTokens[i] );
+		        }
+	        }
+
+	        if (matched) {
+	        	patternsTriggered.add( pattern );
+                return true;
+	        }
+	        
+	        if ( regionMatch && value.indexOf( pattern ) > -1 )
+            {
+                patternsTriggered.add( pattern );
+                return true;
+            }
+			
+		}
+    	return false;
+    	
+    }
+
+    /**
+     * Gets whether the specified token matches the specified pattern segment.
+     * 
+     * @param token
+     *            the token to check
+     * @param pattern
+     *            the pattern segment to match, as defined above
+     * @return <code>true</code> if the specified token is matched by the specified pattern segment
+     */
+    private boolean matches( String token, final String pattern )
     {
-        patternLoop:
-        for ( Iterator i = patterns.iterator(); i.hasNext(); )
+    	boolean matches;
+
+        // support full wildcard and implied wildcard
+        if ( "*".equals( pattern ) || pattern.length() == 0 )
         {
-            // TODO: what about wildcards? Just specifying groups? versions?
-            String pattern = (String) i.next();
+            matches = true;
+        }
+        // support contains wildcard
+        else if ( pattern.startsWith( "*" ) && pattern.endsWith( "*" ) )
+        {
+            String contains = pattern.substring( 1, pattern.length() - 1 );
 
-            // don't allow wildcards in region-matched searches...i.e. in transitive dependencies.
-//            if ( regionMatch && ( pattern.indexOf( '*' ) > -1 ) )
-//            {
-//                continue;
-//            }
+            matches = ( token.indexOf( contains ) != -1 );
+        }
+        // support leading wildcard
+        else if ( pattern.startsWith( "*" ) )
+        {
+            String suffix = pattern.substring( 1, pattern.length() );
 
-            if ( value.equals( pattern ) )
-            {
-                patternsTriggered.add( pattern );
-                return true;
-            }
-            else if ( pattern.indexOf( '*' ) > -1 )
-            {
-                String[] subPatterns = pattern.split( "\\*" );
-                int[] idxes = new int[subPatterns.length];
+            matches = token.endsWith( suffix );
+        }
+        // support trailing wildcard
+        else if ( pattern.endsWith( "*" ) )
+        {
+            String prefix = pattern.substring( 0, pattern.length() - 1 );
 
-                for ( int j = 0; j < subPatterns.length; j++ )
-                {
-                    String subPattern = subPatterns[j];
-                    if ( subPattern.endsWith( "*" ) )
-                    {
-                        subPattern = subPattern.substring( 0, subPattern.length() - 1 );
-                    }
-
-                    if ( ( subPattern == null ) || ( subPattern.length() < 1 ) )
-                    {
-                        idxes[j] = j == 0 ? 0 : idxes[j - 1];
-
-                        continue;
-                    }
-
-                    int lastIdx = j == 0 ? 0 : idxes[j - 1];
-
-                    idxes[j] = value.indexOf( subPattern, lastIdx );
-
-                    if ( idxes[j] < 0 )
-                    {
-                    	patternsTriggered.add( pattern );
-                        continue patternLoop;
-                    }
-                }
-                
-                return true;
-            }
-            else if ( regionMatch && value.indexOf( pattern ) > -1 )
-            {
-                patternsTriggered.add( pattern );
-                return true;
-            }
+            matches = token.startsWith( prefix );
+        }
+        // support versions range 
+        else if ( pattern.startsWith( "[" ) || pattern.startsWith( "(" ))
+        {
+        	matches = isVersionIncludedInRange(token, pattern);
+        }
+        // support exact match
+        else
+        {
+            matches = token.equals( pattern );
         }
 
-        return false;
+        return matches;
     }
+    
+    private boolean isVersionIncludedInRange(final String version, final String range) {
+    	try {
+			return VersionRange.createFromVersionSpec(range).containsVersion(new DefaultArtifactVersion(version));
+		} catch (InvalidVersionSpecificationException e) {
+			return false;
+		}
+	}
 
     public void reportMissedCriteria( Logger logger )
     {

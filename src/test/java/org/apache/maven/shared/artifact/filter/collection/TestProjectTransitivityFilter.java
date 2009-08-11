@@ -40,6 +40,8 @@ public class TestProjectTransitivityFilter
     Set artifacts = new HashSet();
 
     Set directArtifacts = new HashSet();
+    
+    Set classifiedArtifacts = new HashSet();
 
     protected void setUp()
         throws Exception
@@ -48,10 +50,10 @@ public class TestProjectTransitivityFilter
 
         ArtifactStubFactory fact = new ArtifactStubFactory( null, false );
         artifacts = fact.getScopedArtifacts();
-
         directArtifacts = fact.getReleaseAndSnapshotArtifacts();
-
+        classifiedArtifacts = fact.getClassifiedArtifacts();
         artifacts.addAll( directArtifacts );
+        artifacts.addAll( classifiedArtifacts );
     }
 
     public void testAll()
@@ -60,7 +62,7 @@ public class TestProjectTransitivityFilter
 
         Set result = filter.filter( artifacts );
 
-        assertEquals( 7, result.size() );
+        assertEquals( 11, result.size() );
     }
 
     public void testExclude()
@@ -79,6 +81,15 @@ public class TestProjectTransitivityFilter
             Artifact artifact = (Artifact) iter.next();
             assertTrue( artifact.getArtifactId().equals( "release" ) || artifact.getArtifactId().equals( "snapshot" ) );
         }
+    }
+
+    public void testClassified()
+    {
+        ProjectTransitivityFilter filter = new ProjectTransitivityFilter( classifiedArtifacts, true );
+
+        Set result = filter.filter( artifacts );
+
+        assertEquals( 4, result.size() );
     }
 
 }

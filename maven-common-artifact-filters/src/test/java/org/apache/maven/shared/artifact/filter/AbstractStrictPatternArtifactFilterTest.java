@@ -42,7 +42,7 @@ public abstract class AbstractStrictPatternArtifactFilterTest extends TestCase
 {
     // fields -----------------------------------------------------------------
 
-    private Artifact artifact;
+    protected Artifact artifact;
 
     // TestCase methods -------------------------------------------------------
 
@@ -317,7 +317,31 @@ public abstract class AbstractStrictPatternArtifactFilterTest extends TestCase
 
         assertIncluded( ":::*-SNAPSHOT" );
     }
+    
+    public void testRangeVersion()
+    {
+        artifact = createArtifact( "groupId", "artifactId", "type", "1.0.1" );
+        assertIncluded( "groupId:artifactId:type:[1.0.1]");
+        assertIncluded( "groupId:artifactId:type:[1.0,1.1)");
+        
+        assertExcluded( "groupId:artifactId:type:[1.5,)");
+        assertExcluded( "groupId:artifactId:type:(,1.0],[1.2,)");
+        assertExcluded( "groupId:artifactId:type:(,1.0],[1.2,)");
+    }
 
+    public void testWildcardsWithRangeVersion()
+    {
+        artifact = createArtifact( "groupId", "artifactId", "type", "1.0.1" );
+        assertIncluded( ":::[1.0.1]");
+        assertIncluded( ":artifact*:*:[1.0,1.1)");
+        
+        assertExcluded( "*group*:*:t*e:[1.5,)");
+
+        artifact = createArtifact( "test", "uf", "jar", "0.2.0" );
+        assertIncluded( "test:*:*:[0.0.2,)" );
+    	
+    }
+    
     // protected methods ------------------------------------------------------
 
     /**

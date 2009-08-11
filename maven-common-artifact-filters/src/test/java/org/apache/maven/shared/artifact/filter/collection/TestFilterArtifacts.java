@@ -112,5 +112,20 @@ public class TestFilterArtifacts
         assertTrue( fa.getFilters().get( 2 ) instanceof TypeFilter );
 
     }
+    
+    public void testArtifactFilterWithClassifier() throws IOException, ArtifactFilterException
+    {
+        File outputFolder = new File( "target/filters/" );
+        FileUtils.deleteDirectory( outputFolder );
+        ArtifactStubFactory fact = new ArtifactStubFactory( outputFolder, false );
+        Set artifacts = fact.getClassifiedArtifacts();
+        FilterArtifacts fa = new FilterArtifacts();
+        fa.addFilter( new ClassifierFilter( "", "four" ) );
+        Set results = fa.filter( artifacts );
+        assertEquals( 3, results.size() );
+        fa.addFilter( new ClassifierFilter( "two,three", "" ) );
+        results = fa.filter( artifacts );
+        assertEquals( 2, results.size() );
+    }
 
 }

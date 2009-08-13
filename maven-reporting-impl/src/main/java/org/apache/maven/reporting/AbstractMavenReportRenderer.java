@@ -113,9 +113,6 @@ public abstract class AbstractMavenReportRenderer
     {
         section = section + 1;
 
-        sink.anchor( HtmlTools.encodeId( name ) );
-        sink.anchor_();
-
         switch ( section )
         {
             case 1:
@@ -168,6 +165,9 @@ public abstract class AbstractMavenReportRenderer
                 // TODO: warning - just don't start a section
                 break;
         }
+
+        sink.anchor( HtmlTools.encodeId( name ) );
+        sink.anchor_();
     }
 
     /**

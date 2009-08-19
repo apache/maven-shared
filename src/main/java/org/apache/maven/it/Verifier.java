@@ -1833,6 +1833,9 @@ public class Verifier
         {
             repoDir.mkdirs();
         }
+
+        // normalize path
+        localRepo = repoDir.getAbsolutePath();
     }
 
     private static void runIntegrationTest( Verifier verifier )

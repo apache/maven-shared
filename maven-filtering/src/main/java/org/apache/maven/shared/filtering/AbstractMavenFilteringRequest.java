@@ -68,6 +68,10 @@ public class AbstractMavenFilteringRequest
     private boolean injectProjectBuildFilters = false;
     
     /**
+     * Set of expression delimiter specifications to use during filtering. Delimiter specifications are
+     * given in the form 'BEGIN*END' or, for symmetical delimiters, simply 'TOKEN'. The default
+     * values are '${*}' and '@'.
+     * 
      * @since 1.0-beta-3
      */
     private Set delimiters = new HashSet();
@@ -241,6 +245,7 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
+     * See {@link AbstractMavenFilteringRequest#delimiters} for more information and default values.
      * @return Not allowed to be null or empty.
      * @since 1.0-beta-3
      */
@@ -250,7 +255,11 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
-     * @param delimiters If null, reset delimiters to ${*} only. Otherwise, use the provided parameter value.
+     * Set the delimiter specifications to use during filtering. Specifications should be of the form:
+     * 'BEGIN*END' for asymmetical delimiters, or 'TOKEN' for symmetical delimiters. See
+     * {@link AbstractMavenFilteringRequest#delimiters} for more information and default values.
+     * 
+     * @param delimiters If null, reset delimiters to '${*}' only. Otherwise, use the provided parameter value.
      * @since 1.0-beta-3
      */
     public void setDelimiters( Set delimiters )

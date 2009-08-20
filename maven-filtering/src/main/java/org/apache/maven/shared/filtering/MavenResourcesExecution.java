@@ -57,13 +57,6 @@ public class MavenResourcesExecution
 
     private boolean useDefaultFilterWrappers = false;
     
-    /** 
-     * List of String considered as expressions which contains values in the project/pom : pom project
-     * default value will be pom and project.
-     * @since 1.0-beta-2
-     */
-    private List projectStartExpressions = new ArrayList();
-    
     /**
      * Overwrite existing files even if the destination files are newer.
      * <b>false by default</b>
@@ -79,15 +72,8 @@ public class MavenResourcesExecution
     
     public MavenResourcesExecution()
     {
-        initProjectStartExpressions();
     }
     
-    private void initProjectStartExpressions()
-    {
-        projectStartExpressions.add( "pom" );
-        projectStartExpressions.add( "project" );
-    }
-
     /**
      * <b>As we use a maven project useDefaultFilterWrappers will set to true</b>
      * @param resources
@@ -102,7 +88,6 @@ public class MavenResourcesExecution
                                     List fileFilters, List nonFilteredFileExtensions, MavenSession mavenSession )
     {
         super( mavenProject, fileFilters, encoding, mavenSession );
-        initProjectStartExpressions();
         this.resources = resources;
         this.outputDirectory = outputDirectory;
         this.nonFilteredFileExtensions = nonFilteredFileExtensions;
@@ -277,24 +262,6 @@ public class MavenResourcesExecution
     public void setUseDefaultFilterWrappers( boolean useDefaultFilterWrappers )
     {
         this.useDefaultFilterWrappers = useDefaultFilterWrappers;
-    }
-
-    /**
-     * @return
-     * @since 1.0-beta-2
-     */
-    public List getProjectStartExpressions()
-    {
-        return projectStartExpressions;
-    }
-
-    /**
-     * @param projectStartExpressions
-     * @since 1.0-beta-2
-     */
-    public void setProjectStartExpressions( List projectStartExpressions )
-    {
-        this.projectStartExpressions = projectStartExpressions;
     }
 
     /**

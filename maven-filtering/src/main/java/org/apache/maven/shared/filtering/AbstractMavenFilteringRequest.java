@@ -22,8 +22,11 @@ package org.apache.maven.shared.filtering;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * @since 1.0-beta-3
@@ -41,6 +44,13 @@ public class AbstractMavenFilteringRequest
 
     private MavenSession mavenSession;
 
+    /** 
+     * List of String considered as expressions which contains values in the project/pom : pom project
+     * default value will be pom and project.
+     * @since 1.0-beta-2
+     */
+    private List projectStartExpressions = new ArrayList();
+    
     /**
      * String which will escape interpolation mechanism : foo \${foo.bar} -> foo ${foo.bar}
      * @since 1.0-beta-2
@@ -57,17 +67,33 @@ public class AbstractMavenFilteringRequest
      */
     private boolean injectProjectBuildFilters = false;
     
+    /**
+     * @since 1.0-beta-3
+     */
+    private Set delimiters = new HashSet();
+    
     protected AbstractMavenFilteringRequest()
     {
+        initDefaults();
     }
 
     protected AbstractMavenFilteringRequest( MavenProject mavenProject, List filters,
                                           String encoding, MavenSession mavenSession )
     {
+        initDefaults();
         this.mavenProject = mavenProject;
         this.filters = filters;
         this.encoding = encoding;
         this.mavenSession = mavenSession;
+    }
+
+    private void initDefaults()
+    {
+        projectStartExpressions.add( "pom" );
+        projectStartExpressions.add( "project" );
+        
+        delimiters.add( "${*}" );
+        delimiters.add( "@*@" );
     }
 
     public MavenProject getMavenProject()
@@ -196,6 +222,48 @@ public class AbstractMavenFilteringRequest
         this.escapeString = escapeString;
     }
     
-    
+    /**
+     * @return
+     * @since 1.0-beta-2
+     */
+    public List getProjectStartExpressions()
+    {
+        return projectStartExpressions;
+    }
+
+    /**
+     * @param projectStartExpressions
+     * @since 1.0-beta-2
+     */
+    public void setProjectStartExpressions( List projectStartExpressions )
+    {
+        this.projectStartExpressions = projectStartExpressions;
+    }
+
+    /**
+     * @return Not allowed to be null or empty.
+     * @since 1.0-beta-3
+     */
+    public Set getDelimiters()
+    {
+        return delimiters;
+    }
+
+    /**
+     * @param delimiters If null, reset delimiters to ${*} only. Otherwise, use the provided parameter value.
+     * @since 1.0-beta-3
+     */
+    public void setDelimiters( Set delimiters )
+    {
+        if ( delimiters == null || delimiters.isEmpty() )
+        {
+            this.delimiters.clear();
+            this.delimiters.add( "${*}" );
+        }
+        else
+        {
+            this.delimiters = delimiters;
+        }
+    }
 
 }

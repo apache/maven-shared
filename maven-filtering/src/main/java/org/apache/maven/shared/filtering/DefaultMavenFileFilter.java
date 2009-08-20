@@ -32,6 +32,9 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.sonatype.plexus.build.incremental.BuildContext;
 import org.codehaus.plexus.interpolation.InterpolatorFilterReader;
+import org.codehaus.plexus.interpolation.PrefixAwareRecursionInterceptor;
+import org.codehaus.plexus.interpolation.RecursionInterceptor;
+import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
 import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -155,9 +158,11 @@ public class DefaultMavenFileFilter
 
     }
     
-    public List getDefaultFilterWrappers( final AbstractMavenFilteringRequest request )
+    public List getDefaultFilterWrappers( final AbstractMavenFilteringRequest req )
         throws MavenFilteringException
     {
+        // compensate for null parameter value.
+        final AbstractMavenFilteringRequest request = req == null ? new MavenFileFilterRequest() : req;
 
         // here we build some properties which will be used to read some properties files
         // to interpolate the expression ${ } in this properties file
@@ -209,11 +214,11 @@ public class DefaultMavenFileFilter
 
         if ( request.getAdditionalProperties() != null )
         {
-            // additionnal properties wins
+            // additional properties wins
             filterProperties.putAll( request.getAdditionalProperties() );
         }
         
-        List defaultFilterWrappers = new ArrayList( 3 );
+        List defaultFilterWrappers = request == null ? new ArrayList( 1 ) : new ArrayList( request.getDelimiters().size() + 1 );
 
         if ( getLogger().isDebugEnabled() )
         {
@@ -224,45 +229,68 @@ public class DefaultMavenFileFilter
             new PropertiesEscapingBackSlashValueSource( request.isEscapeWindowsPaths(), filterProperties );
 
         final String escapeString = request == null ? null : request.getEscapeString();
-
-        // support ${token}
-        FileUtils.FilterWrapper one = new FileUtils.FilterWrapper()
+        
+        if ( request != null )
         {
-            public Reader getReader( Reader reader )
+            for ( Iterator it = request.getDelimiters().iterator(); it.hasNext(); )
             {
-                StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator();
-                MavenProjectValueSource valueSource =
-                    new MavenProjectValueSource( request.getMavenProject(), request.isEscapeWindowsPaths() );
-                valueSource.setPropertiesValueSource( propertiesValueSource );
-                propertiesInterpolator.addValueSource( valueSource );
-                propertiesInterpolator.setEscapeString( escapeString );
-                InterpolatorFilterReader filterReader = new InterpolatorFilterReader( reader, propertiesInterpolator );
-                filterReader.setInterpolateWithPrefixPattern( false );
-                filterReader.setEscapeString( escapeString );
-                return filterReader;
+                String delimiterPattern = (String) it.next();
+                final String[] delimiters = new String[2];
+                
+                int splitIdx = delimiterPattern.indexOf( '*' );
+                if ( splitIdx < 0 || splitIdx == delimiterPattern.length() - 1 )
+                {
+                    delimiters[0] = delimiterPattern;
+                    delimiters[1] = delimiterPattern;
+                }
+                else
+                {
+                    delimiters[0] = delimiterPattern.substring( 0, splitIdx );
+                    delimiters[1] = delimiterPattern.substring( splitIdx + 1 );
+                }
+                
+                FileUtils.FilterWrapper wrapper = new FileUtils.FilterWrapper()
+                {
+                    public Reader getReader( Reader reader )
+                    {
+                        StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( delimiters[0],
+                                                                                                        delimiters[1] );
+                        
+                        RecursionInterceptor ri = null;
+                        if ( request.getProjectStartExpressions() != null && !request.getProjectStartExpressions().isEmpty() )
+                        {
+                            ri = new PrefixAwareRecursionInterceptor( request.getProjectStartExpressions(), true );
+                        }
+                        else
+                        {
+                            ri = new SimpleRecursionInterceptor();
+                        }
+                        
+                        MavenProjectValueSource valueSource = new MavenProjectValueSource(
+                                                                                           request.getMavenProject(),
+                                                                                           request.isEscapeWindowsPaths() );
+                        
+                        valueSource.setPropertiesValueSource( propertiesValueSource );
+                        
+                        propertiesInterpolator.addValueSource( valueSource );
+                        propertiesInterpolator.setEscapeString( escapeString );
+                        
+                        InterpolatorFilterReader filterReader = new InterpolatorFilterReader( reader,
+                                                                                              propertiesInterpolator,
+                                                                                              delimiters[0],
+                                                                                              delimiters[1],
+                                                                                              ri );
+                        
+                        filterReader.setInterpolateWithPrefixPattern( false );
+                        filterReader.setEscapeString( escapeString );
+                        
+                        return filterReader;
+                    }
+                };
+                
+                defaultFilterWrappers.add( wrapper );
             }
-        };
-        defaultFilterWrappers.add( one );
-
-        // support @token@
-        FileUtils.FilterWrapper second = new FileUtils.FilterWrapper()
-        {
-            public Reader getReader( Reader reader )
-            {
-                StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( "@", "@" );
-                MavenProjectValueSource valueSource =
-                    new MavenProjectValueSource( request.getMavenProject(), request.isEscapeWindowsPaths() );
-                valueSource.setPropertiesValueSource( propertiesValueSource );
-                propertiesInterpolator.addValueSource( valueSource );
-                propertiesInterpolator.setEscapeString( escapeString );
-                InterpolatorFilterReader filterReader =
-                    new InterpolatorFilterReader( reader, propertiesInterpolator, "@", "@" );
-                filterReader.setInterpolateWithPrefixPattern( false );
-                filterReader.setEscapeString( escapeString );
-                return filterReader;
-            }
-        };
-        defaultFilterWrappers.add( second );
+        }
 
         return defaultFilterWrappers;
     }    

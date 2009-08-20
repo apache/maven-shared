@@ -161,13 +161,13 @@ public class DefaultMavenResourcesFilteringTest
             + "/src/test/units-files/maven-resources-filtering/empty-maven-resources-filtering.txt" );
 
         List nonFilteredFileExtensions = Collections.singletonList( "gif" );
-        Properties additionnalProperties = new Properties();
-        additionnalProperties.put( "greatDate", "1973-06-14" );
-        additionnalProperties.put( "pom.version", "99.00" );
+        Properties additionalProperties = new Properties();
+        additionalProperties.put( "greatDate", "1973-06-14" );
+        additionalProperties.put( "pom.version", "99.00" );
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
                                          nonFilteredFileExtensions, new StubMavenSession() );
-        mavenResourcesExecution.setAdditionnalProperies( additionnalProperties );
+        mavenResourcesExecution.setAdditionalProperties( additionalProperties );
         mavenResourcesExecution.setEscapeString( "\\" );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
         assertFiltering( baseDir, initialImageFile, true, true );

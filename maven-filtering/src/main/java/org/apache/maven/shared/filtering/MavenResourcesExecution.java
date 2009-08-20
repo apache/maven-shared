@@ -19,12 +19,6 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import java.io.File;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.Interpolator;
@@ -35,12 +29,18 @@ import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.FileUtils.FilterWrapper;
 
+import java.io.File;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A bean to configure a resources filtering execution
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @version $Id$
  */
 public class MavenResourcesExecution
+    extends AbstractMavenFilteringRequest
 {
    
     /** @see org.apache.maven.model.Resource  */
@@ -48,15 +48,7 @@ public class MavenResourcesExecution
 
     private File outputDirectory;
 
-    private MavenProject mavenProject;
-
-    private String encoding;
-
-    private List fileFilters;
-
     private List nonFilteredFileExtensions;
-
-    private MavenSession mavenSession;
 
     /** @see FileUtils.FilterWrapper */
     private List filterWrappers;
@@ -73,12 +65,6 @@ public class MavenResourcesExecution
     private List projectStartExpressions = new ArrayList();
     
     /**
-     * String which will escape interpolation mechanism : foo \${foo.bar} -> foo ${foo.bar}
-     * @since 1.0-beta-2
-     */
-    private String escapeString;
-    
-    /**
      * Overwrite existing files even if the destination files are newer.
      * <b>false by default</b>
      * @since 1.0-beta-2
@@ -91,18 +77,17 @@ public class MavenResourcesExecution
      */
     private boolean includeEmptyDirs = false;
     
-    /**
-     * 
-     * @since 1.0-beta-3
-     */
-    private Properties additionnalProperies;
-    
     public MavenResourcesExecution()
+    {
+        initProjectStartExpressions();
+    }
+    
+    private void initProjectStartExpressions()
     {
         projectStartExpressions.add( "pom" );
         projectStartExpressions.add( "project" );
     }
-    
+
     /**
      * <b>As we use a maven project useDefaultFilterWrappers will set to true</b>
      * @param resources
@@ -116,14 +101,11 @@ public class MavenResourcesExecution
     public MavenResourcesExecution( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
                                     List fileFilters, List nonFilteredFileExtensions, MavenSession mavenSession )
     {
-        this();
+        super( mavenProject, fileFilters, encoding, mavenSession );
+        initProjectStartExpressions();
         this.resources = resources;
         this.outputDirectory = outputDirectory;
-        this.mavenProject = mavenProject;
-        this.encoding = encoding;
-        this.fileFilters = fileFilters;
         this.nonFilteredFileExtensions = nonFilteredFileExtensions;
-        this.mavenSession = mavenSession;
         this.useDefaultFilterWrappers = true;
         this.resourcesBaseDirectory = mavenProject.getBasedir();
     }
@@ -134,11 +116,11 @@ public class MavenResourcesExecution
         this();
         this.resources = resources;
         this.outputDirectory = outputDirectory;
-        this.encoding = encoding;
         this.filterWrappers = filterWrappers;
         this.nonFilteredFileExtensions = nonFilteredFileExtensions;
         this.resourcesBaseDirectory = resourcesBaseDirectory;
         this.useDefaultFilterWrappers = false;
+        setEncoding( encoding );
     }
 
     
@@ -169,45 +151,6 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @return can be null
-     */
-    public MavenProject getMavenProject()
-    {
-        return mavenProject;
-    }
-
-    public void setMavenProject( MavenProject mavenProject )
-    {
-        this.mavenProject = mavenProject;
-    }
-
-    public String getEncoding()
-    {
-        return encoding;
-    }
-
-    public void setEncoding( String encoding )
-    {
-        this.encoding = encoding;
-    }
-
-    /**
-     * @return List of {@link String} which are properties file
-     */
-    public List getFileFilters()
-    {
-        return fileFilters;
-    }
-
-    /**
-     * @param fileFilters List of {@link String} which are properties file
-     */
-    public void setFileFilters( List fileFilters )
-    {
-        this.fileFilters = fileFilters;
-    }
-
-    /**
      * @return List of {@link String} file extensions to not filtering
      */
     public List getNonFilteredFileExtensions()
@@ -221,16 +164,6 @@ public class MavenResourcesExecution
     public void setNonFilteredFileExtensions( List nonFilteredFileExtensions )
     {
         this.nonFilteredFileExtensions = nonFilteredFileExtensions;
-    }
-
-    public MavenSession getMavenSession()
-    {
-        return mavenSession;
-    }
-
-    public void setMavenSession( MavenSession mavenSession )
-    {
-        this.mavenSession = mavenSession;
     }
 
     /**
@@ -368,24 +301,6 @@ public class MavenResourcesExecution
      * @return
      * @since 1.0-beta-2
      */
-    public String getEscapeString()
-    {
-        return escapeString;
-    }
-
-    /**
-     * @param escapeString
-     * @since 1.0-beta-2
-     */
-    public void setEscapeString( String escapeString )
-    {
-        this.escapeString = escapeString;
-    }
-
-    /**
-     * @return
-     * @since 1.0-beta-2
-     */
     public boolean isOverwrite()
     {
         return overwrite;
@@ -417,15 +332,44 @@ public class MavenResourcesExecution
     {
         this.includeEmptyDirs = includeEmptyDirs;
     }
-
-    public Properties getAdditionnalProperies()
+    
+    public MavenResourcesExecution copyOf()
     {
-        return additionnalProperies;
-    }
-
-    public void setAdditionnalProperies( Properties additionnalProperies )
-    {
-        this.additionnalProperies = additionnalProperies;
+        MavenResourcesExecution mre = new MavenResourcesExecution();
+        mre.setAdditionalProperties( mre.getAdditionalProperties() );
+        mre.setEncoding( mre.getEncoding() );
+        mre.setEscapedBackslashesInFilePath( mre.isEscapedBackslashesInFilePath() );
+        mre.setEscapeString( mre.getEscapeString() );
+        mre.setFileFilters( copyList( mre.getFileFilters() ) );
+        mre.setFilterWrappers( copyList( mre.getFilterWrappers() ) );
+        mre.setIncludeEmptyDirs( mre.isIncludeEmptyDirs() );
+        mre.setInjectProjectBuildFilters( mre.isInjectProjectBuildFilters() );
+        mre.setMavenProject( mre.getMavenProject() );
+        mre.setMavenSession( mre.getMavenSession() );
+        mre.setNonFilteredFileExtensions( copyList( mre.getNonFilteredFileExtensions() ) );
+        mre.setOutputDirectory( mre.getOutputDirectory() );
+        mre.setOverwrite( mre.isOverwrite() );
+        mre.setProjectStartExpressions( copyList( mre.getProjectStartExpressions() ) );
+        mre.setResources( copyList( mre.getResources() ) );
+        mre.setResourcesBaseDirectory( mre.getResourcesBaseDirectory() );
+        mre.setUseDefaultFilterWrappers( mre.isUseDefaultFilterWrappers() );
+        
+        return mre;
     }
    
+    private List copyList( List lst )
+    {
+        if ( lst == null )
+        {
+            return null;
+        }
+        else if ( lst.isEmpty() )
+        {
+            return new ArrayList();
+        }
+        else
+        {
+            return new ArrayList( lst );
+        }
+    }
 }

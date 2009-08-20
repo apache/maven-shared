@@ -156,13 +156,7 @@ public class DefaultMavenResourcesFiltering
             {
                 filterWrappers.addAll( mavenResourcesExecution.getFilterWrappers() );
             }
-            filterWrappers.addAll( mavenFileFilter.getDefaultFilterWrappers(
-                                                                             mavenResourcesExecution.getMavenProject(),
-                                                                             mavenResourcesExecution.getFileFilters(),
-                                                                             true,
-                                                                             mavenResourcesExecution.getMavenSession(),
-                                                                             mavenResourcesExecution,
-                                                                             mavenResourcesExecution.getAdditionnalProperies() ) );
+            filterWrappers.addAll( mavenFileFilter.getDefaultFilterWrappers( mavenResourcesExecution ) );
             mavenResourcesExecution.setFilterWrappers( filterWrappers );
         }
 

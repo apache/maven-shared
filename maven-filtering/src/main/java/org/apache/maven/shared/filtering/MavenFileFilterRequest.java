@@ -32,25 +32,14 @@ import org.apache.maven.project.MavenProject;
  * @since 1.0-beta-3
  */
 public class MavenFileFilterRequest
+    extends AbstractMavenFilteringRequest
 {
     
     private File from;
 
     private File to;
-
+    
     private boolean filtering;
-
-    private MavenProject mavenProject;
-
-    private List filters;
-
-    private boolean escapedBackslashesInFilePath;
-
-    private String encoding;
-
-    private MavenSession mavenSession;
-
-    private Properties additionnalProperties;
 
     public MavenFileFilterRequest()
     {
@@ -59,17 +48,14 @@ public class MavenFileFilterRequest
 
     public MavenFileFilterRequest( File from, File to, boolean filtering, MavenProject mavenProject, List filters,
                                    boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession,
-                                   Properties additionnalProperties )
+                                   Properties additionalProperties )
     {
+        super( mavenProject, filters, encoding, mavenSession );
         this.from = from;
         this.to = to;
         this.filtering = filtering;
-        this.mavenProject = mavenProject;
-        this.filters = filters;
-        this.escapedBackslashesInFilePath = escapedBackslashesInFilePath;
-        this.encoding = encoding;
-        this.mavenSession = mavenSession;
-        this.additionnalProperties = additionnalProperties;
+        setAdditionalProperties( additionalProperties );
+        setEscapeWindowsPaths( escapedBackslashesInFilePath );
     }
 
 
@@ -102,65 +88,5 @@ public class MavenFileFilterRequest
     {
         this.filtering = filtering;
     }
-
-    public MavenProject getMavenProject()
-    {
-        return mavenProject;
-    }
-
-    public void setMavenProject( MavenProject mavenProject )
-    {
-        this.mavenProject = mavenProject;
-    }
-
-    public List getFilters()
-    {
-        return filters;
-    }
-
-    public void setFilters( List filters )
-    {
-        this.filters = filters;
-    }
-
-    public boolean isEscapedBackslashesInFilePath()
-    {
-        return escapedBackslashesInFilePath;
-    }
-
-    public void setEscapedBackslashesInFilePath( boolean escapedBackslashesInFilePath )
-    {
-        this.escapedBackslashesInFilePath = escapedBackslashesInFilePath;
-    }
-
-    public String getEncoding()
-    {
-        return encoding;
-    }
-
-    public void setEncoding( String encoding )
-    {
-        this.encoding = encoding;
-    }
-
-    public MavenSession getMavenSession()
-    {
-        return mavenSession;
-    }
-
-    public void setMavenSession( MavenSession mavenSession )
-    {
-        this.mavenSession = mavenSession;
-    }
-
-    public Properties getAdditionnalProperties()
-    {
-        return additionnalProperties;
-    }
-
-    public void setAdditionnalProperties( Properties additionnalProperties )
-    {
-        this.additionnalProperties = additionnalProperties;
-    }    
 
 }

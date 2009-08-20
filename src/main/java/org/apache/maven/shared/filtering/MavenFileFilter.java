@@ -19,12 +19,11 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import java.io.File;
-import java.util.List;
-import java.util.Properties;
-
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -118,17 +117,11 @@ public interface MavenFileFilter
     
     /**
      * @since 1.0-beta-3
-     * @param mavenProject
-     * @param filters
-     * @param escapedBackslashesInFilePath
-     * @param mavenSession
-     * @param mavenResourcesExecution
-     * @param additionnalProperties properties which can override ones calculated from maven
+     * @param request
      * @return {@link List} of FileUtils.FilterWrapper 
      * @throws MavenFilteringException
      */    
-    List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath,
-                                   MavenSession mavenSession, MavenResourcesExecution mavenResourcesExecution,
-                                   Properties additionnalProperties )
+    List getDefaultFilterWrappers( AbstractMavenFilteringRequest request )
         throws MavenFilteringException;
+    
 }

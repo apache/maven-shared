@@ -238,10 +238,15 @@ public class DefaultMavenFileFilter
                 final String[] delimiters = new String[2];
                 
                 int splitIdx = delimiterPattern.indexOf( '*' );
-                if ( splitIdx < 0 || splitIdx == delimiterPattern.length() - 1 )
+                if ( splitIdx < 0 )
                 {
                     delimiters[0] = delimiterPattern;
-                    delimiters[1] = delimiterPattern;
+                    delimiters[1] = delimiters[0];
+                }
+                else if ( splitIdx == delimiterPattern.length() - 1 )
+                {
+                    delimiters[0] = delimiterPattern.substring( 0, delimiterPattern.length() - 1 );
+                    delimiters[1] = delimiters[0];
                 }
                 else
                 {

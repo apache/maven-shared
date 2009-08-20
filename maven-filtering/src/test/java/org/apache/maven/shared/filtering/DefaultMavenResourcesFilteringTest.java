@@ -668,6 +668,7 @@ public class DefaultMavenResourcesFilteringTest
                                          Collections.EMPTY_LIST, new StubMavenSession() );
         mavenResourcesExecution.setIncludeEmptyDirs( true );
         mavenResourcesExecution.setEscapeString( "\\" );
+        
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
         Properties filteredResult = PropertyUtils.loadPropertyFile( new File( output, "filtered.properties" ), null );
@@ -675,8 +676,13 @@ public class DefaultMavenResourcesFilteringTest
         Properties expectedFilteredResult =
             PropertyUtils.loadPropertyFile( new File( getBasedir() + "/src/test/units-files/MSHARED-81",
                                                       "expected-filtered.properties" ), null );
+        
+        System.out.println( "Expected:\n" );
+        expectedFilteredResult.list( System.out );
+        System.out.println( "\n\n\nGot:\n" );
+        filteredResult.list( System.out );
 
-        assertTrue( filteredResult.equals( expectedFilteredResult ) );
+        assertEquals( expectedFilteredResult, filteredResult );
 
         Properties nonFilteredResult =
             PropertyUtils.loadPropertyFile( new File( output, "unfiltered.properties" ), null );

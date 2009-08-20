@@ -24,6 +24,7 @@ import org.apache.maven.project.MavenProject;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -74,7 +75,7 @@ public class AbstractMavenFilteringRequest
      * 
      * @since 1.0-beta-3
      */
-    private Set delimiters = new HashSet();
+    private LinkedHashSet delimiters = new LinkedHashSet();
     
     protected AbstractMavenFilteringRequest()
     {
@@ -249,7 +250,7 @@ public class AbstractMavenFilteringRequest
      * @return Not allowed to be null or empty.
      * @since 1.0-beta-3
      */
-    public Set getDelimiters()
+    public LinkedHashSet getDelimiters()
     {
         return delimiters;
     }
@@ -262,7 +263,7 @@ public class AbstractMavenFilteringRequest
      * @param delimiters If null, reset delimiters to '${*}' only. Otherwise, use the provided parameter value.
      * @since 1.0-beta-3
      */
-    public void setDelimiters( Set delimiters )
+    public void setDelimiters( LinkedHashSet delimiters )
     {
         if ( delimiters == null || delimiters.isEmpty() )
         {

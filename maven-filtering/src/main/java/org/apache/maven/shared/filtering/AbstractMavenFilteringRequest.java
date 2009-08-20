@@ -93,7 +93,7 @@ public class AbstractMavenFilteringRequest
         projectStartExpressions.add( "project" );
         
         delimiters.add( "${*}" );
-        delimiters.add( "@*@" );
+        delimiters.add( "@" );
     }
 
     public MavenProject getMavenProject()

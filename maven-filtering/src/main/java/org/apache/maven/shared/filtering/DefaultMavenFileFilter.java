@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -38,6 +39,8 @@ import org.codehaus.plexus.interpolation.RecursionInterceptor;
 import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
 import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
+import org.codehaus.plexus.interpolation.multi.MultiDelimiterInterpolatorFilterReader;
+import org.codehaus.plexus.interpolation.multi.MultiDelimiterStringSearchInterpolator;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
@@ -231,39 +234,11 @@ public class DefaultMavenFileFilter
 
         if ( request != null )
         {
-            for ( Iterator it = request.getDelimiters().iterator(); it.hasNext(); )
-            {
-                String delimiterPattern = (String) it.next();
-                if ( delimiterPattern == null )
-                {
-                    continue;
-                }
-                
-                final String[] delimiters = new String[2];
-                
-                int splitIdx = delimiterPattern.indexOf( '*' );
-                if ( splitIdx < 0 )
-                {
-                    delimiters[0] = delimiterPattern;
-                    delimiters[1] = delimiters[0];
-                }
-                else if ( splitIdx == delimiterPattern.length() - 1 )
-                {
-                    delimiters[0] = delimiterPattern.substring( 0, delimiterPattern.length() - 1 );
-                    delimiters[1] = delimiters[0];
-                }
-                else
-                {
-                    delimiters[0] = delimiterPattern.substring( 0, splitIdx );
-                    delimiters[1] = delimiterPattern.substring( splitIdx + 1 );
-                }
-                
-                FileUtils.FilterWrapper wrapper = new Wrapper( delimiters, request.getMavenProject(), propertiesValueSource,
-                                                               request.getProjectStartExpressions(), request.getEscapeString(),
-                                                               request.isEscapeWindowsPaths() );
-                
-                defaultFilterWrappers.add( wrapper );
-            }
+            FileUtils.FilterWrapper wrapper = new Wrapper( request.getDelimiters(), request.getMavenProject(), propertiesValueSource,
+                                                           request.getProjectStartExpressions(), request.getEscapeString(),
+                                                           request.isEscapeWindowsPaths() );
+            
+            defaultFilterWrappers.add( wrapper );
         }
 
         return defaultFilterWrappers;
@@ -299,7 +274,7 @@ public class DefaultMavenFileFilter
     private static final class Wrapper extends FileUtils.FilterWrapper
     {
         
-        private String[] delimiters;
+        private LinkedHashSet delimiters;
         
         private MavenProject project;
         
@@ -311,7 +286,7 @@ public class DefaultMavenFileFilter
         
         private boolean escapeWindowsPaths;
 
-        Wrapper( String[] delimiters, MavenProject project, ValueSource propertiesValueSource,
+        Wrapper( LinkedHashSet delimiters, MavenProject project, ValueSource propertiesValueSource,
                         Collection projectStartExpressions, String escapeString, boolean escapeWindowsPaths )
         {
             super();
@@ -325,8 +300,8 @@ public class DefaultMavenFileFilter
 
         public Reader getReader( Reader reader )
         {
-            StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( delimiters[0],
-                                                                                            delimiters[1] );
+            MultiDelimiterStringSearchInterpolator interpolator = new MultiDelimiterStringSearchInterpolator();
+            interpolator.setDelimiterSpecs( delimiters );
             
             RecursionInterceptor ri = null;
             if ( projectStartExpressions != null && !projectStartExpressions.isEmpty() )
@@ -342,14 +317,12 @@ public class DefaultMavenFileFilter
             
             valueSource.setPropertiesValueSource( propertiesValueSource );
             
-            propertiesInterpolator.addValueSource( valueSource );
-            propertiesInterpolator.setEscapeString( escapeString );
+            interpolator.addValueSource( valueSource );
+            interpolator.setEscapeString( escapeString );
             
-            InterpolatorFilterReader filterReader = new InterpolatorFilterReader( reader,
-                                                                                  propertiesInterpolator,
-                                                                                  delimiters[0],
-                                                                                  delimiters[1],
-                                                                                  ri );
+            MultiDelimiterInterpolatorFilterReader filterReader = new MultiDelimiterInterpolatorFilterReader( reader, interpolator );
+            filterReader.setRecursionInterceptor( ri );
+            filterReader.setDelimiterSpecs( delimiters );
             
             filterReader.setInterpolateWithPrefixPattern( false );
             filterReader.setEscapeString( escapeString );

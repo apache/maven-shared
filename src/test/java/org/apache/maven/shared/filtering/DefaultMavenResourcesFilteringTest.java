@@ -114,10 +114,11 @@ public class DefaultMavenResourcesFilteringTest
         List filtersFile = new ArrayList();
         
         Settings settings = new Settings();
-        settings.setLocalRepository( "/path/to/local/repo" );
+        settings.setLocalRepository( System.getProperty( "localRepository", System.getProperty( "maven.repo.local",
+                                                                                                "/path/to/local/repo" ) ) );
         
         MavenSession session = new StubMavenSession( settings );
-
+        
         mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
                                                  Collections.EMPTY_LIST, session );
         

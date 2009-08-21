@@ -29,6 +29,8 @@ import java.util.Properties;
 
 import org.apache.maven.model.Resource;
 import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.interpolation.PrefixedObjectValueSource;
+import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -227,7 +229,7 @@ public class DefaultMavenResourcesFilteringTest
 
         String userHome = result.getProperty( "userHome" );
 
-        assertTrue( new File( userHome ).exists() );
+        assertTrue( "'" + userHome + "' does not exist.", new File( userHome ).exists() );
         assertEquals( new File( System.getProperty( "user.home" ) ), new File( userHome ) );
 
         if ( escapeTest )
@@ -279,8 +281,10 @@ public class DefaultMavenResourcesFilteringTest
             new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8", null,
                                          nonFilteredFileExtensions, new StubMavenSession() );
 
-        mavenResourcesExecution.addFilerWrapperWithEscaping( new MavenProjectValueSource( mavenProject, true ), "@",
-                                                             "@", null );
+        ValueSource vs = new PrefixedObjectValueSource( mavenResourcesExecution.getProjectStartExpressions(), mavenProject, true );
+        
+        mavenResourcesExecution.addFilerWrapperWithEscaping( vs, "@", "@", null );
+        
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
         Properties result =
             PropertyUtils.loadPropertyFile( new File( outputDirectory, "maven-resources-filtering.txt" ), null );

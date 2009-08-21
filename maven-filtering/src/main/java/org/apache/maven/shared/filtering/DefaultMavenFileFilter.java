@@ -33,8 +33,11 @@ import java.util.Properties;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.sonatype.plexus.build.incremental.BuildContext;
+import org.codehaus.plexus.interpolation.InterpolationPostProcessor;
 import org.codehaus.plexus.interpolation.InterpolatorFilterReader;
 import org.codehaus.plexus.interpolation.PrefixAwareRecursionInterceptor;
+import org.codehaus.plexus.interpolation.PrefixedObjectValueSource;
+import org.codehaus.plexus.interpolation.PropertiesBasedValueSource;
 import org.codehaus.plexus.interpolation.RecursionInterceptor;
 import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
 import org.codehaus.plexus.interpolation.StringSearchInterpolator;
@@ -195,6 +198,10 @@ public class DefaultMavenFileFilter
         final Properties filterProperties = new Properties();
 
         loadProperties( filterProperties, request.getFileFilters(), baseProps );
+        if ( filterProperties.size() < 1 )
+        {
+            filterProperties.putAll( baseProps );
+        }
 
         if ( request.getMavenProject() != null )
         {
@@ -229,8 +236,7 @@ public class DefaultMavenFileFilter
             getLogger().debug( "properties used " + filterProperties );
         }
 
-        final ValueSource propertiesValueSource =
-            new PropertiesEscapingBackSlashValueSource( request.isEscapeWindowsPaths(), filterProperties );
+        final ValueSource propertiesValueSource = new PropertiesBasedValueSource( filterProperties );
 
         if ( request != null )
         {
@@ -280,14 +286,14 @@ public class DefaultMavenFileFilter
         
         private ValueSource propertiesValueSource;
         
-        private Collection projectStartExpressions;
+        private List projectStartExpressions;
         
         private String escapeString;
         
         private boolean escapeWindowsPaths;
 
         Wrapper( LinkedHashSet delimiters, MavenProject project, ValueSource propertiesValueSource,
-                        Collection projectStartExpressions, String escapeString, boolean escapeWindowsPaths )
+                        List projectStartExpressions, String escapeString, boolean escapeWindowsPaths )
         {
             super();
             this.delimiters = delimiters;
@@ -313,12 +319,26 @@ public class DefaultMavenFileFilter
                 ri = new SimpleRecursionInterceptor();
             }
             
-            MavenProjectValueSource valueSource = new MavenProjectValueSource( project, escapeWindowsPaths );
+            interpolator.addValueSource( propertiesValueSource );
+            interpolator.addValueSource( new PrefixedObjectValueSource( projectStartExpressions, project, true ) );
             
-            valueSource.setPropertiesValueSource( propertiesValueSource );
-            
-            interpolator.addValueSource( valueSource );
             interpolator.setEscapeString( escapeString );
+            
+            if ( escapeWindowsPaths )
+            {
+                interpolator.addPostProcessor( new InterpolationPostProcessor()
+                {
+                    public Object execute( String expression, Object value )
+                    {
+                        if ( value instanceof String )
+                        {
+                            return FilteringUtils.escapeWindowsPath( (String) value );
+                        }
+                        
+                        return value;
+                    }
+                } );
+            }
             
             MultiDelimiterInterpolatorFilterReader filterReader = new MultiDelimiterInterpolatorFilterReader( reader, interpolator );
             filterReader.setRecursionInterceptor( ri );

@@ -92,6 +92,8 @@ public class DefaultMavenResourcesFiltering
                                                                                        nonFilteredFileExtensions,
                                                                                        mavenSession );
         mavenResourcesExecution.setUseDefaultFilterWrappers( true );
+//        mavenResourcesExecution.setEscapeWindowsPaths( false );
+        
         filterResources( mavenResourcesExecution );
     }
 

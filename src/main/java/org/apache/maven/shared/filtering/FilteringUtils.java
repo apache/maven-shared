@@ -25,7 +25,7 @@ import org.codehaus.plexus.util.StringUtils;
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @version $Id$
  */
-public class FilteringUtils
+public final class FilteringUtils
 {
 
     /**
@@ -36,12 +36,29 @@ public class FilteringUtils
         // nothing just an util class
     }
     
+    // TODO: Correct to handle relative windows paths. (http://jira.codehaus.org/browse/MSHARED-121)
+    // How do we distinguish a relative windows path from some other value that happens to contain backslashes??
     public static final String escapeWindowsPath( String val )
     {
         if ( !StringUtils.isEmpty( val ) && val.indexOf( ":\\" ) == 1 )
         {
-            val = StringUtils.replace( val, "\\", "\\\\" );
-            //val = StringUtils.replace( val, ":", "\\:" );
+            // Adapted from StringUtils.replace in plexus-utils to accommodate pre-escaped backslashes.
+            StringBuffer buf = new StringBuffer( val.length() );
+            int start = 0, end = 0;
+            while ( ( end = val.indexOf( '\\', start ) ) != -1 )
+            {
+                buf.append( val.substring( start, end ) ).append( "\\\\" );
+                start = end + 1;
+                
+                if ( val.indexOf( '\\', end + 1 ) == end + 1 )
+                {
+                    start++;
+                }
+            }
+            
+            buf.append( val.substring( start ) );
+            
+            return buf.toString();
         }
         return val;
     }

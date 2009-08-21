@@ -22,6 +22,7 @@ package org.apache.maven.shared.filtering;
 import java.util.Properties;
 
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.settings.Settings;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -33,21 +34,40 @@ public class StubMavenSession
 {
 
     private Properties executionProperties;
+    
+    private final Settings settings;
+    
+    public StubMavenSession( Settings settings )
+    {
+        this( null, settings );
+    }
 
     public StubMavenSession()
     {
-        this( null );
+        this( null, null );
     }
 
     public StubMavenSession( Properties executionProperties )
     {
+        this( executionProperties, null );
+    }
+    
+    public StubMavenSession( Properties executionProperties, Settings settings )
+    {
         super( null, null, null, null, null, null, null, null, null );
+        
+        this.settings = settings;
         this.executionProperties = new Properties();
         if ( executionProperties != null )
         {
             this.executionProperties.putAll( executionProperties );
         }
         this.executionProperties.putAll( System.getProperties() );
+    }
+    
+    public Settings getSettings()
+    {
+        return settings;
     }
 
     public Properties getExecutionProperties()

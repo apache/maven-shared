@@ -19,34 +19,33 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Properties;
-
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
-import org.sonatype.plexus.build.incremental.BuildContext;
+import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.interpolation.InterpolationPostProcessor;
-import org.codehaus.plexus.interpolation.InterpolatorFilterReader;
 import org.codehaus.plexus.interpolation.PrefixAwareRecursionInterceptor;
 import org.codehaus.plexus.interpolation.PrefixedObjectValueSource;
 import org.codehaus.plexus.interpolation.PropertiesBasedValueSource;
 import org.codehaus.plexus.interpolation.RecursionInterceptor;
 import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
-import org.codehaus.plexus.interpolation.StringSearchInterpolator;
+import org.codehaus.plexus.interpolation.SingleResponseValueSource;
 import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.interpolation.multi.MultiDelimiterInterpolatorFilterReader;
 import org.codehaus.plexus.interpolation.multi.MultiDelimiterStringSearchInterpolator;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.StringUtils;
+import org.sonatype.plexus.build.incremental.BuildContext;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
@@ -240,7 +239,8 @@ public class DefaultMavenFileFilter
 
         if ( request != null )
         {
-            FileUtils.FilterWrapper wrapper = new Wrapper( request.getDelimiters(), request.getMavenProject(), propertiesValueSource,
+            FileUtils.FilterWrapper wrapper = new Wrapper( request.getDelimiters(), request.getMavenProject(),
+                                                           request.getMavenSession(), propertiesValueSource,
                                                            request.getProjectStartExpressions(), request.getEscapeString(),
                                                            request.isEscapeWindowsPaths() );
             
@@ -292,12 +292,15 @@ public class DefaultMavenFileFilter
         
         private boolean escapeWindowsPaths;
 
-        Wrapper( LinkedHashSet delimiters, MavenProject project, ValueSource propertiesValueSource,
+        private final MavenSession mavenSession;
+
+        Wrapper( LinkedHashSet delimiters, MavenProject project, MavenSession mavenSession, ValueSource propertiesValueSource,
                         List projectStartExpressions, String escapeString, boolean escapeWindowsPaths )
         {
             super();
             this.delimiters = delimiters;
             this.project = project;
+            this.mavenSession = mavenSession;
             this.propertiesValueSource = propertiesValueSource;
             this.projectStartExpressions = projectStartExpressions;
             this.escapeString = escapeString;
@@ -320,7 +323,23 @@ public class DefaultMavenFileFilter
             }
             
             interpolator.addValueSource( propertiesValueSource );
-            interpolator.addValueSource( new PrefixedObjectValueSource( projectStartExpressions, project, true ) );
+            
+            if ( project != null )
+            {
+                interpolator.addValueSource( new PrefixedObjectValueSource( projectStartExpressions, project, true ) );
+            }
+            
+            if ( mavenSession != null )
+            {
+                interpolator.addValueSource( new PrefixedObjectValueSource( "session", mavenSession ) );
+                
+                final Settings settings = mavenSession.getSettings();
+                if ( settings != null )
+                {
+                    interpolator.addValueSource( new PrefixedObjectValueSource( "settings", settings ) );
+                    interpolator.addValueSource( new SingleResponseValueSource( "localRepository", settings.getLocalRepository() ) );
+                }
+            }
             
             interpolator.setEscapeString( escapeString );
             

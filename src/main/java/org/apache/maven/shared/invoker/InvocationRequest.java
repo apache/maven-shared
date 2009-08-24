@@ -248,6 +248,13 @@ public interface InvocationRequest
      * @return The value of the <code>MAVEN_OPTS</code> environment variable or <code>null</code> if not set.
      */
     String getMavenOpts();
+    
+    /**
+     * The show version behaviour (-V option)
+     * @return The show version behaviour 
+     * @since 2.0.11
+     */
+    boolean isShowVersion();
 
     // ----------------------------------------------------------------------
     // Reactor Failure Mode
@@ -504,5 +511,13 @@ public interface InvocationRequest
      * @return This invocation request.
      */
     InvocationRequest setMavenOpts( String mavenOpts );
+    
+    /**
+     * enable displaying version without stopping the build (-V cli option)
+     * @param showVersion enable displaying version 
+     * @since 2.0.11
+     * @return This invocation request.
+     */
+    InvocationRequest setShowVersion( boolean showVersion );
 
 }

@@ -87,6 +87,8 @@ public class DefaultInvocationRequest
     private boolean activatedReactor;
 
     private String[] activatedReactorIncludes, activatedReactorExcludes;
+    
+    private boolean showVersion;
 
     public InvocationRequest activateReactor( String[] includes, String[] excludes )
     {
@@ -382,6 +384,23 @@ public class DefaultInvocationRequest
     public String[] getActivatedReactorExcludes()
     {
         return activatedReactorExcludes;
+    }
+
+    /**
+     * @see org.apache.maven.shared.invoker.InvocationRequest#isShowVersion()
+     */
+    public boolean isShowVersion()
+    {
+        return this.showVersion;
+    }
+
+    /**
+     * @see org.apache.maven.shared.invoker.InvocationRequest#setShowVersion(boolean)
+     */
+    public InvocationRequest setShowVersion( boolean showVersion )
+    {
+        this.showVersion = showVersion;
+        return this;
     }
 
 }

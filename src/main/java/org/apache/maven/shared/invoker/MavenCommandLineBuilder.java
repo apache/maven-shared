@@ -141,8 +141,8 @@ public class MavenCommandLineBuilder
                     + ". Using as-is.", e );
             }
 
-            cli.createArgument().setValue( "-s" );
-            cli.createArgument().setValue( userSettingsFile.getPath() );
+            cli.createArg().setValue( "-s" );
+            cli.createArg().setValue( userSettingsFile.getPath() );
         }
     }
 
@@ -203,8 +203,8 @@ public class MavenCommandLineBuilder
 
         if ( ( profiles != null ) && !profiles.isEmpty() )
         {
-            cli.createArgument().setValue( "-P" );
-            cli.createArgument().setValue( StringUtils.join( profiles.iterator(), "," ) );
+            cli.createArg().setValue( "-P" );
+            cli.createArg().setValue( StringUtils.join( profiles.iterator(), "," ) );
         }
 
     }
@@ -215,7 +215,7 @@ public class MavenCommandLineBuilder
 
         if ( ( goals != null ) && !goals.isEmpty() )
         {
-            cli.createArgument().setLine( StringUtils.join( goals.iterator(), " " ) );
+            cli.createArg().setLine( StringUtils.join( goals.iterator(), " " ) );
         }
     }
 
@@ -232,8 +232,8 @@ public class MavenCommandLineBuilder
                 String key = (String) entry.getKey();
                 String value = (String) entry.getValue();
 
-                cli.createArgument().setValue( "-D" );
-                cli.createArgument().setValue( key + '=' + value );
+                cli.createArg().setValue( "-D" );
+                cli.createArg().setValue( key + '=' + value );
             }
         }
     }
@@ -292,8 +292,8 @@ public class MavenCommandLineBuilder
                 logger.debug( "Specified POM file is not named \'pom.xml\'. "
                     + "Using the \'-f\' command-line option to accommodate non-standard filename..." );
 
-                cli.createArgument().setValue( "-f" );
-                cli.createArgument().setValue( pom.getName() );
+                cli.createArg().setValue( "-f" );
+                cli.createArg().setValue( pom.getName() );
             }
         }
     }
@@ -360,8 +360,8 @@ public class MavenCommandLineBuilder
                     + "\' is NOT a directory." );
             }
 
-            cli.createArgument().setValue( "-D" );
-            cli.createArgument().setValue( "maven.repo.local=" + localRepositoryDirectory.getPath() );
+            cli.createArg().setValue( "-D" );
+            cli.createArg().setValue( "maven.repo.local=" + localRepositoryDirectory.getPath() );
         }
     }
 
@@ -374,28 +374,28 @@ public class MavenCommandLineBuilder
         {
             if ( InvocationRequest.REACTOR_FAIL_AT_END.equals( failureBehavior ) )
             {
-                cli.createArgument().setValue( "-fae" );
+                cli.createArg().setValue( "-fae" );
             }
             else if ( InvocationRequest.REACTOR_FAIL_NEVER.equals( failureBehavior ) )
             {
-                cli.createArgument().setValue( "-fn" );
+                cli.createArg().setValue( "-fn" );
             }
         }
 
         if ( request.isActivatedReactor() )
         {
-            cli.createArgument().setValue( "-r" );
+            cli.createArg().setValue( "-r" );
             String[] includes = request.getActivatedReactorIncludes();
             String[] excludes = request.getActivatedReactorExcludes();
             if ( includes != null )
             {
-                cli.createArgument().setValue( "-D" );
-                cli.createArgument().setValue( "maven.reactor.includes=" + StringUtils.join( includes, "," ) );
+                cli.createArg().setValue( "-D" );
+                cli.createArg().setValue( "maven.reactor.includes=" + StringUtils.join( includes, "," ) );
             }
             if ( excludes != null )
             {
-                cli.createArgument().setValue( "-D" );
-                cli.createArgument().setValue( "maven.reactor.excludes=" + StringUtils.join( excludes, "," ) );
+                cli.createArg().setValue( "-D" );
+                cli.createArg().setValue( "maven.reactor.excludes=" + StringUtils.join( excludes, "," ) );
             }
         }
     }
@@ -404,46 +404,46 @@ public class MavenCommandLineBuilder
     {
         if ( !request.isInteractive() )
         {
-            cli.createArgument().setValue( "-B" );
+            cli.createArg().setValue( "-B" );
         }
 
         if ( request.isOffline() )
         {
-            cli.createArgument().setValue( "-o" );
+            cli.createArg().setValue( "-o" );
         }
 
         if ( request.isUpdateSnapshots() )
         {
-            cli.createArgument().setValue( "-U" );
+            cli.createArg().setValue( "-U" );
         }
 
         if ( !request.isRecursive() )
         {
-            cli.createArgument().setValue( "-N" );
+            cli.createArg().setValue( "-N" );
         }
 
         if ( request.isDebug() )
         {
-            cli.createArgument().setValue( "-X" );
+            cli.createArg().setValue( "-X" );
         }
         // this is superceded by -X, if it exists.
         else if ( request.isShowErrors() )
         {
-            cli.createArgument().setValue( "-e" );
+            cli.createArg().setValue( "-e" );
         }
 
         String checksumPolicy = request.getGlobalChecksumPolicy();
         if ( InvocationRequest.CHECKSUM_POLICY_FAIL.equals( checksumPolicy ) )
         {
-            cli.createArgument().setValue( "-C" );
+            cli.createArg().setValue( "-C" );
         }
         else if ( InvocationRequest.CHECKSUM_POLICY_WARN.equals( checksumPolicy ) )
         {
-            cli.createArgument().setValue( "-c" );
+            cli.createArg().setValue( "-c" );
         }
         if ( request.isNonPluginUpdates() )
         {
-            cli.createArgument().setValue( "-npu" );
+            cli.createArg().setValue( "-npu" );
         }
         
         if ( request.isShowVersion() )

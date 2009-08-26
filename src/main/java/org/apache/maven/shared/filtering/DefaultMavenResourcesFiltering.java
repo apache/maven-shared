@@ -213,13 +213,18 @@ public class DefaultMavenResourcesFiltering
             // this part is required in case the user specified "../something" as destination
             // see MNG-1345
             File outputDirectory = mavenResourcesExecution.getOutputDirectory();
-            if ( !outputDirectory.exists() && !outputDirectory.mkdirs() )
+            boolean outputExists = outputDirectory.exists();
+            if ( !outputExists && !outputDirectory.mkdirs() )
             {
                 throw new MavenFilteringException( "Cannot create resource output directory: " + outputDirectory );
-
             }
-
-            Scanner scanner = buildContext.newScanner( resourceDirectory, buildContext.hasDelta( mavenResourcesExecution.getFileFilters() ) );
+            
+            boolean ignoreDelta =
+                buildContext.hasDelta( mavenResourcesExecution.getFileFilters() )
+                    || buildContext.hasDelta( mavenResourcesExecution.getOutputDirectory().getPath() )
+                    || !outputExists;
+            getLogger().info( "ignoreDelta " + ignoreDelta );
+            Scanner scanner = buildContext.newScanner( resourceDirectory, ignoreDelta );
 
             setupScanner(resource, scanner);
 

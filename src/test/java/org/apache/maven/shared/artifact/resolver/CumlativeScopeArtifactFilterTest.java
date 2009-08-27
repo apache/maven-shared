@@ -2,7 +2,7 @@ package org.apache.maven.shared.artifact.resolver;
 
 import org.junit.Test;
 
-public class CumlativeScopeArtifactFilter
+public class CumlativeScopeArtifactFilterTest
 {
     
     @Test

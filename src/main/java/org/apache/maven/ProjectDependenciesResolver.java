@@ -19,16 +19,15 @@ package org.apache.maven;
  * under the License.
  */
 
-import java.util.Collection;
-import java.util.Set;
-
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.repository.RepositoryRequest;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
+
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * Common interface for plugins and other third-party components running inside a Maven runtime to
@@ -45,16 +44,14 @@ public interface ProjectDependenciesResolver
      * 
      * @param projects The projects whose dependencies should be resolved.
      * @param scopes The list of scopes to resolve. These scopes may imply other scopes.
-     * @param repositoryRequest The request containing a {@link RepositoryCache}, along with 
-     *          zero or more {@link ArtifactRepository} remote repositories, a local {@link ArtifactRepository},
-     *          and a flag determining whether to run in offline mode.
+     * @param session Contains the local repository, along with other settings related to artifact resolution.
      * @return The set of resolved artifacts. If the projects contain no dependencies, this will return an empty set.
      * @throws ArtifactResolutionException In case {@link Artifact} instances cannot be created from 
      *          project {@link Dependency} instances, or artifact resolution fails.
      * @throws ArtifactNotFoundException In cases where one or more dependency artifacts cannot be found in the
      *          various repositories.
      */
-    public Set<Artifact> resolve( Collection<MavenProject> projects, Collection<String> scopes, RepositoryRequest repositoryRequest )
+    public Set<Artifact> resolve( Collection<MavenProject> projects, Collection<String> scopes, MavenSession session )
         throws ArtifactResolutionException, ArtifactNotFoundException;
 
     /**
@@ -63,15 +60,13 @@ public interface ProjectDependenciesResolver
      * 
      * @param project The project whose dependencies should be resolved.
      * @param scopes The list of scopes to resolve. These scopes may imply other scopes.
-     * @param repositoryRequest The request containing a {@link RepositoryCache}, along with 
-     *          zero or more {@link ArtifactRepository} remote repositories, a local {@link ArtifactRepository},
-     *          and a flag determining whether to run in offline mode.
+     * @param session Contains the local repository, along with other settings related to artifact resolution.
      * @return The set of resolved artifacts. If the project contains no dependencies, this will return an empty set.
      * @throws ArtifactResolutionException In case {@link Artifact} instances cannot be created from the
      *          project {@link Dependency} instance, or artifact resolution fails.
      * @throws ArtifactNotFoundException In cases where one or more dependency artifacts cannot be found in the
      *          various repositories.
      */
-    public Set<Artifact> resolve( MavenProject project, Collection<String> scopes, RepositoryRequest repositoryRequest )
+    public Set<Artifact> resolve( MavenProject project, Collection<String> scopes, MavenSession session  )
         throws ArtifactResolutionException, ArtifactNotFoundException;
 }

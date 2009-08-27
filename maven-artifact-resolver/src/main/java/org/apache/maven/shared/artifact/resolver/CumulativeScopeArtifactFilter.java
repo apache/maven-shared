@@ -34,7 +34,7 @@ import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
  * @author jdcasey
  * @version $Id$
  */
-public class CumulativeScopeArtifactFilter
+final class CumulativeScopeArtifactFilter
     implements ArtifactFilter
 {
     private boolean compileScope;
@@ -50,7 +50,7 @@ public class CumulativeScopeArtifactFilter
     /**
      * Create a new filter with all scopes disabled.
      */
-    public CumulativeScopeArtifactFilter()
+    CumulativeScopeArtifactFilter()
     {
     }
     
@@ -58,7 +58,7 @@ public class CumulativeScopeArtifactFilter
      * Create a new filter with the specified scope and its implied scopes enabled.
      * @param scope The scope to enable, along with all implied scopes.
      */
-    public CumulativeScopeArtifactFilter( String scope )
+    CumulativeScopeArtifactFilter( String scope )
     {
         addScope( scope );
     }
@@ -67,7 +67,7 @@ public class CumulativeScopeArtifactFilter
      * Enable a new scope, along with its implied scopes, in this filter.
      * @param scope The scope to enable, along with all implied scopes.
      */
-    public void addScope( String scope )
+    void addScope( String scope )
     {
         if ( DefaultArtifact.SCOPE_COMPILE.equals( scope ) )
         {

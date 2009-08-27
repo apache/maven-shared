@@ -24,14 +24,13 @@ import static org.apache.maven.project.MavenProject.getProjectReferenceId;
 import org.apache.maven.ProjectDependenciesResolver;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.manager.WagonManager;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
-import org.apache.maven.artifact.repository.RepositoryRequest;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.artifact.resolver.MultipleArtifactsNotFoundException;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 
@@ -50,7 +49,7 @@ import java.util.Set;
  * @see ProjectDependenciesResolver
  * @plexus.component role="org.apache.maven.shared.artifact.resolver.ProjectDependenciesResolver" role-hint="default"
  */
-public class DefaultProjectDependenciesResolver
+public final class DefaultProjectDependenciesResolver
     implements ProjectDependenciesResolver
 {
 
@@ -70,15 +69,10 @@ public class DefaultProjectDependenciesResolver
     private ArtifactMetadataSource metadataSource;
 
     /**
-     * @plexus.requirement
-     */
-    private WagonManager wagonManager;
-
-    /**
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public Set<Artifact> resolve( Collection<MavenProject> projects, Collection<String> scopes, RepositoryRequest repositoryRequest )
+    public Set<Artifact> resolve( final Collection<MavenProject> projects, final Collection<String> scopes, final MavenSession session )
         throws ArtifactResolutionException, ArtifactNotFoundException
     {
         if ( projects == null || projects.isEmpty() )
@@ -86,104 +80,94 @@ public class DefaultProjectDependenciesResolver
             return Collections.emptySet();
         }
         
-        boolean online = wagonManager.isOnline();
         Set<Artifact> resolved = new LinkedHashSet<Artifact>();
-        try
+        CumulativeScopeArtifactFilter scopeFilter = new CumulativeScopeArtifactFilter();
+        if ( scopes == null )
         {
-            wagonManager.setOnline( !repositoryRequest.isOffline() );
-            
-            CumulativeScopeArtifactFilter scopeFilter = new CumulativeScopeArtifactFilter();
-            if ( scopes == null )
+            scopeFilter.addScope( Artifact.SCOPE_COMPILE );
+        }
+        else
+        {
+            for ( String scope : scopes )
             {
-                scopeFilter.addScope( Artifact.SCOPE_COMPILE );
+                scopeFilter.addScope( scope );
             }
-            else
+        }
+        
+        for ( MavenProject project : projects )
+        {
+            Set<Artifact> depArtifacts = (Set<Artifact>) project.getDependencyArtifacts();
+            if ( depArtifacts == null )
             {
-                for ( String scope : scopes )
+                try
                 {
-                    scopeFilter.addScope( scope );
+                    depArtifacts = project.createArtifacts( artifactFactory, null, scopeFilter );
+                }
+                catch ( InvalidDependencyVersionException e )
+                {
+                    throw new ArtifactResolutionException( "Failed to create Artifact instances for project dependencies: "
+                        + e.getMessage(), null, e );
                 }
             }
             
-            for ( MavenProject project : projects )
+            if ( depArtifacts == null || depArtifacts.isEmpty() )
             {
-                Set<Artifact> depArtifacts = (Set<Artifact>) project.getDependencyArtifacts();
-                if ( depArtifacts == null )
+                continue;
+            }
+            
+            for ( Iterator<Artifact> it = depArtifacts.iterator(); it.hasNext(); )
+            {
+                Artifact artifact = it.next();
+                if ( resolved.contains( artifact ) )
                 {
-                    try
-                    {
-                        depArtifacts = project.createArtifacts( artifactFactory, null, scopeFilter );
-                    }
-                    catch ( InvalidDependencyVersionException e )
-                    {
-                        throw new ArtifactResolutionException( "Failed to create Artifact instances for project dependencies: "
-                            + e.getMessage(), null, e );
-                    }
+                    // already resolved, don't do it again.
+                    it.remove();
                 }
-                
-                if ( depArtifacts == null || depArtifacts.isEmpty() )
+            }
+            
+            Artifact projectArtifact = project.getArtifact();
+            if ( projectArtifact == null )
+            {
+                projectArtifact = artifactFactory.createProjectArtifact( project.getGroupId(), project.getArtifactId(),
+                                                                     project.getVersion() );
+            }
+            
+            try
+            {
+                ArtifactResolutionResult result = resolver.resolveTransitively( depArtifacts, projectArtifact,
+                                                                                project.getManagedVersionMap(),
+                                                                                session.getLocalRepository(),
+                                                                                project.getRemoteArtifactRepositories(),
+                                                                                metadataSource, scopeFilter );
+
+                if ( result.getArtifacts() != null && !result.getArtifacts().isEmpty() )
                 {
-                    continue;
+                    resolved.addAll( result.getArtifacts() );
                 }
-                
-                for ( Iterator<Artifact> it = depArtifacts.iterator(); it.hasNext(); )
+            }
+            catch ( MultipleArtifactsNotFoundException me )
+            {
+                Set<String> projectIds = getProjectIds( projects );
+                Collection<Artifact> missing = new HashSet<Artifact>( me.getMissingArtifacts() );
+                for ( Iterator<Artifact> it = missing.iterator(); it.hasNext(); )
                 {
                     Artifact artifact = it.next();
-                    if ( resolved.contains( artifact ) )
+                    if ( projectIds.contains( getProjectReferenceId( artifact.getGroupId(), artifact.getArtifactId(),
+                                                                     artifact.getVersion() ) ) )
                     {
-                        // already resolved, don't do it again.
                         it.remove();
                     }
                 }
-                
-                Artifact projectArtifact = project.getArtifact();
-                if ( projectArtifact == null )
-                {
-                    projectArtifact = artifactFactory.createProjectArtifact( project.getGroupId(), project.getArtifactId(),
-                                                                         project.getVersion() );
-                }
-                
-                try
-                {
-                    ArtifactResolutionResult result = resolver.resolveTransitively( depArtifacts, projectArtifact,
-                                                                                    project.getManagedVersionMap(),
-                                                                                    repositoryRequest.getLocalRepository(),
-                                                                                    repositoryRequest.getRemoteRepositories(),
-                                                                                    metadataSource, scopeFilter );
 
-                    if ( result.getArtifacts() != null && !result.getArtifacts().isEmpty() )
-                    {
-                        resolved.addAll( result.getArtifacts() );
-                    }
-                }
-                catch ( MultipleArtifactsNotFoundException me )
+                if ( missing.isEmpty() )
                 {
-                    Set<String> projectIds = getProjectIds( projects );
-                    Collection<Artifact> missing = new HashSet<Artifact>( me.getMissingArtifacts() );
-                    for ( Iterator<Artifact> it = missing.iterator(); it.hasNext(); )
-                    {
-                        Artifact artifact = it.next();
-                        if ( projectIds.contains( getProjectReferenceId( artifact.getGroupId(), artifact.getArtifactId(),
-                                                                         artifact.getVersion() ) ) )
-                        {
-                            it.remove();
-                        }
-                    }
-
-                    if ( missing.isEmpty() )
-                    {
-                        resolved.addAll( me.getResolvedArtifacts() );
-                    }
-                    else
-                    {
-                        throw me;
-                    }
+                    resolved.addAll( me.getResolvedArtifacts() );
+                }
+                else
+                {
+                    throw me;
                 }
             }
-        }
-        finally
-        {
-            wagonManager.setOnline( online );
         }
         
         return resolved;
@@ -192,15 +176,15 @@ public class DefaultProjectDependenciesResolver
     /**
      * {@inheritDoc}
      */
-    public Set<Artifact> resolve( MavenProject project, Collection<String> scopes, RepositoryRequest repositoryRequest )
+    public Set<Artifact> resolve( final MavenProject project, final Collection<String> scopes, final MavenSession session )
         throws ArtifactResolutionException, ArtifactNotFoundException
     {
         Collection<MavenProject> projects = Collections.singleton( project );
 
-        return resolve( projects, scopes, repositoryRequest );
+        return resolve( projects, scopes, session );
     }
 
-    private Set<String> getProjectIds( Collection<MavenProject> projects )
+    private Set<String> getProjectIds( final Collection<MavenProject> projects )
     {
         Set<String> ids = new HashSet<String>();
         if ( projects != null && !projects.isEmpty() )

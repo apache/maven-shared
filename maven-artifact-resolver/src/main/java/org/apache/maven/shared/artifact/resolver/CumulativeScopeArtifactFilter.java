@@ -20,7 +20,6 @@ package org.apache.maven.shared.artifact.resolver;
  */
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 
@@ -69,24 +68,28 @@ final class CumulativeScopeArtifactFilter
      */
     void addScope( String scope )
     {
-        if ( DefaultArtifact.SCOPE_COMPILE.equals( scope ) )
+        if ( Artifact.SCOPE_COMPILE.equals( scope ) )
         {
             systemScope = true;
             providedScope = true;
             compileScope = true;
         }
-        else if ( DefaultArtifact.SCOPE_RUNTIME.equals( scope ) )
+        else if ( Artifact.SCOPE_RUNTIME.equals( scope ) )
         {
             compileScope = true;
             runtimeScope = true;
         }
-        else if ( DefaultArtifact.SCOPE_TEST.equals( scope ) )
+        else if ( Artifact.SCOPE_TEST.equals( scope ) )
         {
             systemScope = true;
             providedScope = true;
             compileScope = true;
             runtimeScope = true;
             testScope = true;
+        }
+        else if ( Artifact.SCOPE_PROVIDED.equals( scope ) )
+        {
+            providedScope = true;
         }
     }
 

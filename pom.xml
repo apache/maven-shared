@@ -195,5 +195,14 @@ under the License.
         </plugins>
       </reporting>
     </profile>
+    <profile>
+      <id>jre-1.5+</id>
+      <activation>
+        <jdk>!1.4</jdk>
+      </activation>
+      <modules>
+        <module>maven-artifact-resolver</module>
+      </modules>
+    </profile>
   </profiles>
 </project>

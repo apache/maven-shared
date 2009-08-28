@@ -47,7 +47,7 @@ import java.util.Set;
  * @author jdcasey
  * 
  * @see ProjectDependenciesResolver
- * @plexus.component role="org.apache.maven.shared.artifact.resolver.ProjectDependenciesResolver" role-hint="default"
+ * @plexus.component role="org.apache.maven.ProjectDependenciesResolver" role-hint="default"
  */
 public final class DefaultProjectDependenciesResolver
     implements ProjectDependenciesResolver
@@ -67,6 +67,18 @@ public final class DefaultProjectDependenciesResolver
      * @plexus.requirement role-hint="maven"
      */
     private ArtifactMetadataSource metadataSource;
+    
+    // for plexus instantiation.
+    public DefaultProjectDependenciesResolver(){}
+
+    // for testing.
+    DefaultProjectDependenciesResolver( ArtifactResolver resolver, ArtifactFactory artifactFactory,
+                                               ArtifactMetadataSource metadataSource )
+    {
+        this.resolver = resolver;
+        this.artifactFactory = artifactFactory;
+        this.metadataSource = metadataSource;
+    }
 
     /**
      * {@inheritDoc}

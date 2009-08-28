@@ -71,9 +71,32 @@ under the License.
     	<artifactId>maven-core</artifactId>
     	<version>2.2.1</version>
     </dependency>
+    <dependency>
+    	<groupId>org.easymock</groupId>
+    	<artifactId>easymockclassextension</artifactId>
+    	<version>2.3</version>
+    	<type>jar</type>
+    	<scope>compile</scope>
+    </dependency>
   </dependencies>
   
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.4.3</version>
+          <configuration>
+            <includes combine.children="append">
+              <include>**/*Test.java</include>
+            </includes>
+            <excludes>
+              <exclude>**/testutil/**</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -99,4 +122,25 @@ under the License.
       </plugin>
     </plugins>
   </build>
+  
+  <profiles>
+    <profile>
+      <id>run-its</id>
+	  <build>
+	    <pluginManagement>
+	      <plugins>
+	        <plugin>
+	          <artifactId>maven-surefire-plugin</artifactId>
+	          <version>2.4.3</version>
+	          <configuration>
+	            <includes combine.children="append">
+	              <include>**/*IT.java</include>
+	            </includes>
+	          </configuration>
+	        </plugin>
+	      </plugins>
+	    </pluginManagement>
+	   </build>
+    </profile>
+  </profiles>
 </project>

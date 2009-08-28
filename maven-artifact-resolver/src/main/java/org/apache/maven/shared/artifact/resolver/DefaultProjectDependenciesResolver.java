@@ -19,8 +19,6 @@ package org.apache.maven.shared.artifact.resolver;
  * under the License.
  */
 
-import static org.apache.maven.project.MavenProject.getProjectReferenceId;
-
 import org.apache.maven.ProjectDependenciesResolver;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -108,7 +106,7 @@ public final class DefaultProjectDependenciesResolver
         
         for ( MavenProject project : projects )
         {
-            Set<Artifact> depArtifacts = (Set<Artifact>) project.getDependencyArtifacts();
+            Set<Artifact> depArtifacts = project.getDependencyArtifacts();
             if ( depArtifacts == null )
             {
                 try
@@ -208,6 +206,11 @@ public final class DefaultProjectDependenciesResolver
         }
 
         return ids;
+    }
+
+    private static String getProjectReferenceId( String groupId, String artifactId, String version )
+    {
+        return groupId + ":" + artifactId + ":" + version;
     }
 
 }

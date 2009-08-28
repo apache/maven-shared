@@ -299,8 +299,9 @@ public class DefaultProjectDependenciesResolverIT
         pomsDir = newTempDir( "poms" );
         
         ArtifactRepositoryLayout layout = (ArtifactRepositoryLayout) container.lookup( ArtifactRepositoryLayout.class.getName(), "default" );
-        
-        ArtifactRepository localRepo = new DefaultArtifactRepository( "local", localRepoDir.getAbsolutePath(), layout );
+
+        String localRepoUrl = "file://" + localRepoDir.getAbsoluteFile().toURI().getPath();
+        ArtifactRepository localRepo = new DefaultArtifactRepository( "local", localRepoUrl, layout );
         
         session = new MavenSession( container, new Settings(), localRepo, null, null, null, null, null, null );
         

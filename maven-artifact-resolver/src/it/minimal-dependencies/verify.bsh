@@ -1,0 +1,37 @@
+import java.io.*;
+import java.util.*;
+
+List artifacts = new ArrayList();
+
+BufferedReader reader = new BufferedReader( new FileReader( new File( basedir, "target/deps.txt" ) ) );
+
+try
+{
+    String line;
+    
+    while ( ( line = reader.readLine() ) != null )
+    {
+        if ( line.startsWith( "  " ) )
+        {
+            String artifact = line.trim();
+            artifact = artifact.substring( 0, artifact.indexOf( ':', artifact.indexOf( ':' ) + 1 ) );
+            artifacts.add( artifact );
+        }
+    }
+}
+finally
+{
+    reader.close();
+}
+
+System.out.println( "Checking dependency closure of shared component..." );
+System.out.println( artifacts );
+
+artifacts.remove( "org.apache.maven.shared:maven-artifact-resolver" );
+
+if ( !artifacts.isEmpty() )
+{
+    throw new Exception( "shared component leaks unwanted dependencies into plugin class path: " + artifacts );
+}
+
+return true;

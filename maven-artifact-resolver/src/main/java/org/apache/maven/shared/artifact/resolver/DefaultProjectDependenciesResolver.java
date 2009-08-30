@@ -40,7 +40,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- * Default implementation of {@link ProjectDependenciesResolver}.
+ * Default implementation of {@link ProjectDependenciesResolver}. <strong>Warning:</strong> This is an internal utility
+ * class that is only public for technical reasons, it is not part of the public API. In particular, this class can
+ * be changed or deleted without prior notice.
  * 
  * @author jdcasey
  * 

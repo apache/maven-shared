@@ -51,7 +51,8 @@ public interface ProjectDependenciesResolver
      * @throws ArtifactNotFoundException In cases where one or more dependency artifacts cannot be found in the
      *          various repositories.
      */
-    public Set<Artifact> resolve( Collection<MavenProject> projects, Collection<String> scopes, MavenSession session )
+    public Set<Artifact> resolve( Collection<? extends MavenProject> projects, Collection<String> scopes,
+                                  MavenSession session )
         throws ArtifactResolutionException, ArtifactNotFoundException;
 
     /**

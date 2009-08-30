@@ -85,12 +85,13 @@ public final class DefaultProjectDependenciesResolver
     public Set<Artifact> resolve( final Collection<MavenProject> projects, final Collection<String> scopes, final MavenSession session )
         throws ArtifactResolutionException, ArtifactNotFoundException
     {
+        Set<Artifact> resolved = new LinkedHashSet<Artifact>();
+
         if ( projects == null || projects.isEmpty() )
         {
-            return Collections.emptySet();
+            return resolved;
         }
         
-        Set<Artifact> resolved = new LinkedHashSet<Artifact>();
         CumulativeScopeArtifactFilter scopeFilter = new CumulativeScopeArtifactFilter();
         if ( scopes == null )
         {

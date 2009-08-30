@@ -84,7 +84,8 @@ public final class DefaultProjectDependenciesResolver
      * {@inheritDoc}
      */
     @SuppressWarnings( "unchecked" )
-    public Set<Artifact> resolve( final Collection<MavenProject> projects, final Collection<String> scopes, final MavenSession session )
+    public Set<Artifact> resolve( final Collection<? extends MavenProject> projects, final Collection<String> scopes,
+                                  final MavenSession session )
         throws ArtifactResolutionException, ArtifactNotFoundException
     {
         Set<Artifact> resolved = new LinkedHashSet<Artifact>();
@@ -186,7 +187,7 @@ public final class DefaultProjectDependenciesResolver
         return resolve( projects, scopes, session );
     }
 
-    private Set<String> getProjectIds( final Collection<MavenProject> projects )
+    private Set<String> getProjectIds( final Collection<? extends MavenProject> projects )
     {
         Set<String> ids = new HashSet<String>();
         if ( projects != null && !projects.isEmpty() )

@@ -93,19 +93,8 @@ public final class DefaultProjectDependenciesResolver
         {
             return resolved;
         }
-        
-        CumulativeScopeArtifactFilter scopeFilter = new CumulativeScopeArtifactFilter();
-        if ( scopes == null )
-        {
-            scopeFilter.addScope( Artifact.SCOPE_COMPILE );
-        }
-        else
-        {
-            for ( String scope : scopes )
-            {
-                scopeFilter.addScope( scope );
-            }
-        }
+
+        CumulativeScopeArtifactFilter scopeFilter = new CumulativeScopeArtifactFilter( scopes );
         
         for ( MavenProject project : projects )
         {

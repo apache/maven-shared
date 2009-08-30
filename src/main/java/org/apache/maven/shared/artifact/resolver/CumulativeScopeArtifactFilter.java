@@ -19,6 +19,8 @@ package org.apache.maven.shared.artifact.resolver;
  * under the License.
  */
 
+import java.util.Collection;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
@@ -61,7 +63,23 @@ final class CumulativeScopeArtifactFilter
     {
         addScope( scope );
     }
-    
+
+    /**
+     * Create a new filter with the specified scopes and their implied scopes enabled.
+     * 
+     * @param scopes The scopes to enable, along with all implied scopes, may be {@code null}.
+     */
+    CumulativeScopeArtifactFilter( Collection<String> scopes )
+    {
+        if ( scopes != null )
+        {
+            for ( String scope : scopes )
+            {
+                addScope( scope );
+            }
+        }
+    }
+
     /**
      * Enable a new scope, along with its implied scopes, in this filter.
      * @param scope The scope to enable, along with all implied scopes.

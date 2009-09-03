@@ -114,7 +114,6 @@ under the License.
   <modules>
     <module>file-management</module>
     <module>maven-ant</module>
-    <module>maven-app-configuration</module>
     <module>maven-archiver</module>
     <module>maven-common-artifact-filters</module>
     <module>maven-dependency-analyzer</module>
@@ -135,7 +134,6 @@ under the License.
     <module>maven-shared-jar</module>
     <module>maven-shared-monitor</module>
     <module>maven-verifier</module>
-    <module>maven-web-ui-tests</module>
   </modules>
 
   <scm>

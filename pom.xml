@@ -40,6 +40,11 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-jar</developerConnection>
     <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-jar</url>
   </scm>
+  
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/13279</url>
+  </issueManagement>  
 
   <dependencies>
     <dependency>

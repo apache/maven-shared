@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>11</version>
+    <version>12-SNAPSHOT</version>
   </parent>
 
   <artifactId>maven-shared-jar</artifactId>
@@ -34,6 +34,12 @@
   <description>
     Utilities that help identify the contents of a JAR, including Java class analysis and Maven metadata analysis.
   </description>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-jar</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-jar</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-jar</url>
+  </scm>
 
   <dependencies>
     <dependency>

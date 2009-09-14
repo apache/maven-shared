@@ -62,6 +62,12 @@ public class ModelCreator
     {
         return withCoordinate( "group.id", "artifact-id", "1" );
     }
+    
+    public ModelCreator withArtifactId( String artifactId )
+    {
+        model.setArtifactId( artifactId );
+        return this;
+    }
 
     public ModelCreator withManagedDependency( String groupId, String artifactId, String version )
     {

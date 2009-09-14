@@ -247,6 +247,36 @@ public class DefaultProjectDependenciesResolverIT
         assertSingleArtifact( result, gid, aid, version );
     }
     
+    @Test
+    public void ignoreUnbuiltInterdependency()
+        throws ArtifactResolutionException, ArtifactNotFoundException, IOException, ProjectBuildingException
+    {
+        String gid = "org.codehaus.plexus";
+        String aid = "plexus-utils";
+        String version = "1.5.15";
+        
+        Model model1 = new ModelCreator().withDefaultCoordinate().withArtifactId( "child1" ).withDependency( gid, aid, version )
+                                         .getModel();
+        MavenProject project1 = writeAndBuild( model1, "pom.interdep-child-1.xml" );
+        
+        Model model2 = new ModelCreator().withDefaultCoordinate().withArtifactId( "child2" ).withDependency( model1.getGroupId(),
+                                                                                                             model1.getArtifactId(),
+                                                                                                             model1.getVersion() )
+                                         .getModel();
+        
+        MavenProject project2 = writeAndBuild( model2, "pom.interdep-child-2.xml" );
+        
+        Set<MavenProject> projects = new LinkedHashSet<MavenProject>();
+        projects.add( project1 );
+        projects.add( project2 );
+        
+        Collection<String> scopes = Collections.singleton( Artifact.SCOPE_COMPILE );
+        
+        Set<Artifact> result = resolver.resolve( projects, scopes, session );
+        
+        assertSingleArtifact( result, gid, aid, version );
+    }
+    
     private void assertSingleArtifact( Set<Artifact> result, String gid, String aid, String version )
     {
         assertNotNull( result );

@@ -25,7 +25,7 @@ under the License.
   <parent>
     <artifactId>maven-shared-components</artifactId>
     <groupId>org.apache.maven.shared</groupId>
-    <version>12-SNAPSHOT</version>
+    <version>12</version>
   </parent>
   
   <artifactId>maven-artifact-resolver</artifactId>

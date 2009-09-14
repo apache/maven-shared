@@ -34,12 +34,6 @@ under the License.
     Provides a component for plugins to easily resolve project dependencies.
   </description>
   
-  <scm>
-    <connection>http://svn-master.apache.org/repos/asf/maven/shared/trunk/maven-artifact-resolver</connection>
-    <developerConnection>https://svn.apache.org/repos/asf/maven/shared/trunk/maven-artifact-resolver</developerConnection>
-    <url>http://svn.apache.org/repos/asf/maven/shared/trunk/maven-artifact-resolver</url>
-  </scm>
-
   <!--
   NOTE: This library is meant to be used by plugins, hence we can consider the Maven API to be provided by the
   runtime environment. Last but not least, using "provided" scope is the easiest way to exclude all our transitive

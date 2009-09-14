@@ -33,6 +33,12 @@ under the License.
   <description>
     Provides a component for plugins to easily resolve project dependencies.
   </description>
+  
+  <scm>
+    <connection>http://svn-master.apache.org/repos/asf/maven/shared/trunk/maven-artifact-resolver</connection>
+    <developerConnection>https://svn.apache.org/repos/asf/maven/shared/trunk/maven-artifact-resolver</developerConnection>
+    <url>http://svn.apache.org/repos/asf/maven/shared/trunk/maven-artifact-resolver</url>
+  </scm>
 
   <!--
   NOTE: This library is meant to be used by plugins, hence we can consider the Maven API to be provided by the

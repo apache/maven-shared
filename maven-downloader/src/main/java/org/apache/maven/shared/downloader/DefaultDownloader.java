@@ -27,6 +27,7 @@ public class DefaultDownloader
      */
     private ArtifactFactory artifactFactory;
 
+    // FIXME! This calls itself, and couldn't work even if it called the other download method!
     public File download( String groupId,
                           String artifactId,
                           String version,
@@ -42,7 +43,7 @@ public class DefaultDownloader
                           String artifactId,
                           String version,
                           ArtifactRepository localRepository,
-                          List remoteRepositories )
+                          List/*<ArtifactRepository>*/ remoteRepositories )
         throws DownloadException, DownloadNotFoundException
 
     {

@@ -37,7 +37,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
@@ -46,13 +45,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Writer;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.security.AccessControlException;
-import java.security.Permission;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -106,7 +100,7 @@ public class Verifier
 
     private boolean debug;
 
-    private boolean forkJvm = true;
+    private Boolean forkJvm;
 
     private String logFileName = LOG_FILENAME;
 
@@ -114,6 +108,22 @@ public class Verifier
     
     // will launch mvn with --debug 
     private boolean mavenDebug = false;
+
+    private String forkMode;
+
+    private static Embedded3xLauncher embeddedLauncher;
+
+    public Verifier( String basedir )
+        throws VerificationException
+    {
+        this( basedir, null );
+    }
+
+    public Verifier( String basedir, boolean debug )
+        throws VerificationException
+    {
+        this( basedir, null, debug );
+    }
 
     public Verifier( String basedir, String settingsFile )
         throws VerificationException
@@ -124,10 +134,16 @@ public class Verifier
     public Verifier( String basedir, String settingsFile, boolean debug )
         throws VerificationException
     {
-        this( basedir, settingsFile, debug, true );
+        this( basedir, settingsFile, debug, null );
     }
 
     public Verifier( String basedir, String settingsFile, boolean debug, boolean forkJvm )
+        throws VerificationException
+    {
+        this( basedir, settingsFile, debug, Boolean.valueOf( forkJvm ) );
+    }
+
+    private Verifier( String basedir, String settingsFile, boolean debug, Boolean forkJvm )
         throws VerificationException
     {
         this.basedir = basedir;
@@ -135,6 +151,7 @@ public class Verifier
         this.debug = debug;
 
         this.forkJvm = forkJvm;
+        this.forkMode = System.getProperty( "verifier.forkMode" );
 
         if ( !debug )
         {
@@ -168,18 +185,15 @@ public class Verifier
                 throw new VerificationException( "Cannot read system environment variables.", e );
             }
         }
-    }
 
-    public Verifier( String basedir )
-        throws VerificationException
-    {
-        this( basedir, null );
-    }
-
-    public Verifier( String basedir, boolean debug )
-        throws VerificationException
-    {
-        this( basedir, null, debug );
+        if ( defaultMavenHome == null )
+        {
+            File f = new File( System.getProperty( "user.home" ), "m2" );
+            if ( new File( f, "bin/mvn" ).isFile() )
+            {
+                defaultMavenHome = f.getAbsolutePath();
+            }
+        }
     }
 
     public void setLocalRepo( String localRepo )
@@ -1197,93 +1211,109 @@ public class Verifier
 
         allGoals.addAll( goals );
 
-        Commandline cli = null;
+        List args = new ArrayList();
+
         int ret;
 
         File logFile = new File( getBasedir(), getLogFileName() );
+
+        for ( Iterator it = cliOptions.iterator(); it.hasNext(); )
+        {
+            String key = String.valueOf( it.next() );
+
+            String resolvedArg = resolveCommandLineArg( key );
+
+            try
+            {
+                args.addAll( Arrays.asList( Commandline.translateCommandline( resolvedArg ) ) );
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace();
+            }
+        }
+
+        args.add( "-e" );
+
+        args.add( "--batch-mode" );
+
+        if ( this.mavenDebug )
+        {
+            args.add( "--debug" );
+        }
+
+        for ( Iterator i = systemProperties.keySet().iterator(); i.hasNext(); )
+        {
+            String key = (String) i.next();
+            String value = systemProperties.getProperty( key );
+            args.add( "-D" + key + "=" + value );
+        }
+
+        /*
+         * NOTE: Unless explicitly requested by the caller, the forked builds should use the current local
+         * repository. Otherwise, the forked builds would in principle leave the sandbox environment which has been
+         * setup for the current build. In particular, using "maven.repo.local" will make sure the forked builds use
+         * the same local repo as the parent build even if a custom user settings is provided.
+         */
+        boolean useMavenRepoLocal =
+            Boolean.valueOf( verifierProperties.getProperty( "use.mavenRepoLocal", "true" ) ).booleanValue();
+
+        if ( useMavenRepoLocal )
+        {
+            args.add( "-Dmaven.repo.local=" + localRepo );
+        }
+
+        args.addAll( allGoals );
+
         try
         {
-            cli = createCommandLine();
+            String[] cliArgs = (String[]) args.toArray( new String[args.size()] );
 
-            for ( Iterator i = envVars.keySet().iterator(); i.hasNext(); )
+            boolean fork;
+            if ( forkJvm != null )
             {
-                String key = (String) i.next();
+                fork = forkJvm.booleanValue();
+            }
+            else if ( envVars.isEmpty() && "auto".equalsIgnoreCase( forkMode ) )
+            {
+                fork = false;
 
-                cli.addEnvironment( key, (String) envVars.get( key ) );
-
-       /* What was the point of this? It doesn't work on windows.
-        *   try
+                if ( embeddedLauncher == null )
                 {
-                    FileUtils.fileWrite( "/tmp/foo.txt", "setting envar[ " + key + " = " + envVars.get( key ) );
+                    try
+                    {
+                        embeddedLauncher = new Embedded3xLauncher( defaultMavenHome );
+                    }
+                    catch ( Exception e )
+                    {
+                        fork = true;
+                    }
                 }
-                catch ( IOException e )
+            }
+            else
+            {
+                fork = true;
+            }
+
+            if ( !fork )
+            {
+                if ( embeddedLauncher == null )
                 {
-                    e.printStackTrace(); // To change body of catch statement use File | Settings | File Templates.
-                }*/
+                    embeddedLauncher = new Embedded3xLauncher( defaultMavenHome );
+                }
 
-               // System.out.println();
+                ret = embeddedLauncher.run( cliArgs, getBasedir(), logFile );
             }
-
-            if ( envVars.get( "JAVA_HOME" ) == null )
+            else
             {
-                cli.addEnvironment( "JAVA_HOME", System.getProperty( "java.home" ) );
+                ForkedLauncher launcher = new ForkedLauncher( defaultMavenHome );
+
+                ret = launcher.run( cliArgs, envVars, getBasedir(), logFile );
             }
-
-            cli.addEnvironment( "MAVEN_TERMINATE_CMD", "on" );
-
-            cli.setWorkingDirectory( getBasedir() );
-
-            for ( Iterator it = cliOptions.iterator(); it.hasNext(); )
-            {
-                String key = String.valueOf( it.next() );
-
-                String resolvedArg = resolveCommandLineArg( key );
-
-                cli.createArgument().setLine( resolvedArg );
-            }
-
-            cli.createArgument().setValue( "-e" );
-
-            cli.createArgument().setValue( "--batch-mode" );
-            
-            if ( this.mavenDebug )
-            {
-                cli.createArgument().setValue( "--debug" );
-            }
-
-            for ( Iterator i = systemProperties.keySet().iterator(); i.hasNext(); )
-            {
-                String key = (String) i.next();
-                String value = systemProperties.getProperty( key );
-                cli.createArgument().setValue( "-D" + key + "=" + value );
-            }
-
-            /*
-             * NOTE: Unless explicitly requested by the caller, the forked builds should use the current local
-             * repository. Otherwise, the forked builds would in principle leave the sandbox environment which has been
-             * setup for the current build. In particular, using "maven.repo.local" will make sure the forked builds use
-             * the same local repo as the parent build even if a custom user settings is provided.
-             */
-            boolean useMavenRepoLocal =
-                Boolean.valueOf( verifierProperties.getProperty( "use.mavenRepoLocal", "true" ) ).booleanValue();
-
-            if ( useMavenRepoLocal )
-            {
-                cli.createArgument().setValue( "-Dmaven.repo.local=" + localRepo );
-            }
-
-            for ( Iterator i = allGoals.iterator(); i.hasNext(); )
-            {
-                cli.createArgument().setValue( (String) i.next() );
-            }
-
-           // System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
-
-            ret = runCommandLine( cli, logFile );
         }
-        catch ( CommandLineException e )
+        catch ( LauncherException e )
         {
-            throw new VerificationException( "Failed to execute Maven: " + cli, e );
+            throw new VerificationException( "Failed to execute Maven: " + e.getMessage(), e );
         }
         catch ( IOException e )
         {
@@ -1294,21 +1324,21 @@ public class Verifier
         {
             System.err.println( "Exit code: " + ret );
 
-            throw new VerificationException( "Exit code was non-zero: " + ret + "; command line and log = \n" + cli
-                + "\n" + getLogContents( logFile ) );
+            throw new VerificationException( "Exit code was non-zero: " + ret + "; command line and log = \n"
+                + new File( defaultMavenHome, "bin/mvn" ) + " " + StringUtils.join( args.iterator(), " " ) + "\n"
+                + getLogContents( logFile ) );
         }
     }
 
     public String getMavenVersion()
         throws VerificationException
     {
-        Commandline cmd = createCommandLine();
-        cmd.addArguments( new String[] { "--version" } );
+        ForkedLauncher launcher = new ForkedLauncher( defaultMavenHome );
 
-        File log;
+        File logFile;
         try
         {
-            log = File.createTempFile( "maven", "log" );
+            logFile = File.createTempFile( "maven", "log" );
         }
         catch ( IOException e )
         {
@@ -1317,21 +1347,21 @@ public class Verifier
 
         try
         {
-            runCommandLine( cmd, log );
+            launcher.run( new String[] { "--version" }, null, null, logFile );
         }
-        catch ( CommandLineException e )
+        catch ( LauncherException e )
         {
-            throw new VerificationException( "Error running commandline " + cmd.toString(), e );
+            throw new VerificationException( "Error running commandline " + e.toString(), e );
         }
         catch ( IOException e )
         {
-            throw new VerificationException( "IO Error communicating with commandline " + cmd.toString(), e );
+            throw new VerificationException( "IO Error communicating with commandline " + e.toString(), e );
         }
 
         String version = null;
 
-        List logLines = loadFile( log, false );
-        log.delete();
+        List logLines = loadFile( logFile, false );
+        logFile.delete();
 
         for ( Iterator it = logLines.iterator(); version == null && it.hasNext(); )
         {
@@ -1370,197 +1400,6 @@ public class Verifier
         else
         {
             return version;
-        }
-    }
-
-    private Commandline createCommandLine()
-    {
-        Commandline cmd = new Commandline();
-        String executable = getExecutable();
-        if ( executable.endsWith( "/bin/mvn" ) )
-        {
-            cmd.addEnvironment( "M2_HOME", executable.substring( 0, executable.length() - 8 ) );
-        }
-        cmd.setExecutable( executable );
-        return cmd;
-    }
-
-    private int runCommandLine( Commandline cli, File logFile )
-        throws CommandLineException, IOException
-    {
-        if ( forkJvm )
-        {
-            Writer logWriter = new FileWriter( logFile );
-
-            StreamConsumer out = new WriterStreamConsumer( logWriter );
-
-            StreamConsumer err = new WriterStreamConsumer( logWriter );
-
-            try
-            {
-                return CommandLineUtils.executeCommandLine( cli, out, err );
-            }
-            finally
-            {
-                logWriter.close();
-            }
-        }
-
-        String mavenHome = defaultMavenHome;
-
-        if ( mavenHome == null )
-        {
-            mavenHome = System.getProperty( "user.home" ) + "/local/apache-maven-2.1-SNAPSHOT";
-        }
-
-        File coreDir = new File( mavenHome, "core/boot" );
-        File[] files = coreDir.listFiles();
-        File classWorldFile = null;
-        for ( int i = 0; files != null && i < files.length; i++ )
-        {
-            if ( files[i].getName().indexOf( "plexus-classworlds" ) >= 0 )
-            {
-                classWorldFile = files[i];
-                break;
-            }
-        }
-
-        if ( classWorldFile == null )
-        {
-            throw new CommandLineException( "Cannot find plexus-classworlds in " + coreDir );
-        }
-
-        URLClassLoader cl;
-
-        try
-        {
-            cl = new URLClassLoader( new URL[] { classWorldFile.toURI().toURL() }, null );
-        }
-        catch ( MalformedURLException e )
-        {
-            throw new CommandLineException( "Cannot conver to url: " + classWorldFile, e );
-        }
-
-        class ExitSecurityException
-            extends SecurityException
-        {
-
-            private int status;
-
-            public ExitSecurityException( int status )
-            {
-                this.status = status;
-            }
-
-            public int getStatus()
-            {
-                return status;
-            }
-        }
-
-        try
-        {
-            Class c = cl.loadClass( "org.codehaus.plexus.classworlds.launcher.Launcher" );
-
-            Method m = c.getMethod( "mainWithExitCode", new Class[] { String[].class } );
-
-            SecurityManager oldSm = System.getSecurityManager();
-
-            try
-            {
-                System.setSecurityManager( new SecurityManager()
-                {
-                    public void checkPermission( Permission perm )
-                    {
-                        // ok
-                    }
-
-                    public void checkExit( int status )
-                    {
-                        throw new ExitSecurityException( status );
-                    }
-                } );
-            }
-            catch ( AccessControlException e )
-            {
-                throw new CommandLineException( "Error isntalling securitymanager", e );
-            }
-
-            cli.createArgument().setValue( "-f" );
-            cli.createArgument().setValue( cli.getWorkingDirectory().getAbsolutePath() + "/pom.xml" );
-
-            PrintStream oldOut = System.out;
-            PrintStream oldErr = System.err;
-
-            String oldCwConf = System.getProperty( "classworlds.conf" );
-            String oldMavenHome = System.getProperty( "maven.home" );
-
-            ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-
-            try
-            {
-                Thread.currentThread().setContextClassLoader( cl );// ClassLoader.getSystemClassLoader() );
-                FileOutputStream logWriter = new FileOutputStream( logFile );
-                System.setOut( new PrintStream( logWriter ) );
-                System.setErr( new PrintStream( logWriter ) );
-
-                System.setProperty( "classworlds.conf", new File( mavenHome, "bin/m2.conf" ).getAbsolutePath() );
-                System.setProperty( "maven.home", mavenHome );
-
-                return ( (Integer) m.invoke( null, new Object[] { cli.getArguments() } ) ).intValue();
-            }
-            catch ( ExitSecurityException e )
-            {
-                oldOut.println( "exit security exception caught: status=" + e.getStatus() );
-                return e.getStatus();
-            }
-            finally
-            {
-                System.setOut( oldOut );
-                System.setErr( oldErr );
-                if ( oldCwConf == null )
-                {
-                    System.getProperties().remove( "classworlds.conf" );
-                }
-                else
-                {
-                    System.setProperty( "classworlds.conf", oldCwConf );
-                }
-                if ( oldMavenHome == null )
-                {
-                    System.getProperties().remove( "maven.home" );
-                }
-                else
-                {
-                    System.setProperty( "maven.home", oldMavenHome );
-                }
-                Thread.currentThread().setContextClassLoader( oldCl );
-                System.setSecurityManager( oldSm );
-            }
-        }
-        catch ( ClassNotFoundException e )
-        {
-            throw new CommandLineException( "Cannot load classworlds launcher", e );
-        }
-        catch ( NoSuchMethodException e )
-        {
-            throw new CommandLineException( "Cannot find classworlds launcher's main method", e );
-        }
-        catch ( IllegalArgumentException e )
-        {
-            throw new CommandLineException( "Error executing classworlds launcher's main method", e );
-        }
-        catch ( InvocationTargetException e )
-        {
-            if ( e.getCause() instanceof ExitSecurityException )
-            {
-                return ( (ExitSecurityException) e.getCause() ).getStatus();
-            }
-            throw new CommandLineException( "Error executing classworlds launcher's main method", e );
-        }
-        catch ( IllegalAccessException e )
-        {
-            throw new CommandLineException( "Error executing classworlds launcher's main method", e );
         }
     }
 
@@ -1999,6 +1838,18 @@ public class Verifier
     public void setSystemProperties( Properties systemProperties )
     {
         this.systemProperties = systemProperties;
+    }
+
+    public void setSystemProperty( String key, String value )
+    {
+        if ( value != null )
+        {
+            systemProperties.setProperty( key, value );
+        }
+        else
+        {
+            systemProperties.remove( key );
+        }
     }
 
     public Properties getVerifierProperties()

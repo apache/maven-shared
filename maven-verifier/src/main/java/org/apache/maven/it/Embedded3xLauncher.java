@@ -36,9 +36,12 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ * Launches an embedded Maven 3.x instance from some Maven installation directory.
+ * 
  * @author Benjamin Bentmann
  */
 class Embedded3xLauncher
+    implements MavenLauncher
 {
 
     private final Object mavenCli;
@@ -48,6 +51,11 @@ class Embedded3xLauncher
     public Embedded3xLauncher( String mavenHome )
         throws LauncherException
     {
+        if ( mavenHome == null || mavenHome.length() <= 0 )
+        {
+            throw new LauncherException( "Invalid Maven home directory " + mavenHome );
+        }
+
         System.setProperty( "maven.home", mavenHome );
 
         File config = new File( mavenHome, "bin/m2.conf" );

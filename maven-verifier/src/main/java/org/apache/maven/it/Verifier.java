@@ -111,7 +111,7 @@ public class Verifier
 
     private String forkMode;
 
-    private static Embedded3xLauncher embeddedLauncher;
+    private static MavenLauncher embeddedLauncher;
 
     public Verifier( String basedir )
         throws VerificationException
@@ -166,6 +166,11 @@ public class Verifier
 
         findLocalRepo( settingsFile );
         findDefaultMavenHome();
+
+        if ( StringUtils.isEmpty( defaultMavenHome ) && StringUtils.isEmpty( forkMode ) )
+        {
+            forkMode = "auto";
+        }
     }
 
     private void findDefaultMavenHome()
@@ -1278,16 +1283,13 @@ public class Verifier
             {
                 fork = false;
 
-                if ( embeddedLauncher == null )
+                try
                 {
-                    try
-                    {
-                        embeddedLauncher = new Embedded3xLauncher( defaultMavenHome );
-                    }
-                    catch ( Exception e )
-                    {
-                        fork = true;
-                    }
+                    initEmbeddedLauncher();
+                }
+                catch ( Exception e )
+                {
+                    fork = true;
                 }
             }
             else
@@ -1297,10 +1299,7 @@ public class Verifier
 
             if ( !fork )
             {
-                if ( embeddedLauncher == null )
-                {
-                    embeddedLauncher = new Embedded3xLauncher( defaultMavenHome );
-                }
+                initEmbeddedLauncher();
 
                 ret = embeddedLauncher.run( cliArgs, getBasedir(), logFile );
             }
@@ -1330,10 +1329,26 @@ public class Verifier
         }
     }
 
+    private void initEmbeddedLauncher()
+        throws LauncherException
+    {
+        if ( embeddedLauncher == null )
+        {
+            if ( StringUtils.isEmpty( defaultMavenHome ) )
+            {
+                embeddedLauncher = new Classpath3xLauncher();
+            }
+            else
+            {
+                embeddedLauncher = new Embedded3xLauncher( defaultMavenHome );
+            }
+        }
+    }
+
     public String getMavenVersion()
         throws VerificationException
     {
-        ForkedLauncher launcher = new ForkedLauncher( defaultMavenHome );
+        MavenLauncher launcher = new ForkedLauncher( defaultMavenHome );
 
         File logFile;
         try
@@ -1347,7 +1362,7 @@ public class Verifier
 
         try
         {
-            launcher.run( new String[] { "--version" }, null, null, logFile );
+            launcher.run( new String[] { "--version" }, null, logFile );
         }
         catch ( LauncherException e )
         {

@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -36,6 +37,7 @@ import org.apache.maven.it.util.cli.WriterStreamConsumer;
  * @author Benjamin Bentmann
  */
 class ForkedLauncher
+    implements MavenLauncher
 {
 
     private final String mavenHome;
@@ -110,6 +112,12 @@ class ForkedLauncher
         {
             logWriter.close();
         }
+    }
+
+    public int run( String[] cliArgs, String workingDirectory, File logFile )
+        throws IOException, LauncherException
+    {
+        return run( cliArgs, Collections.EMPTY_MAP, workingDirectory, logFile );
     }
 
 }

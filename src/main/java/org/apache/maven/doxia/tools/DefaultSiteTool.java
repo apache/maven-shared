@@ -736,13 +736,16 @@ public class DefaultSiteTool
                     }
                     pomFile = new File( getNormalizedPath( pomFile.getPath() ) );
 
-                    MavenProject mavenProject = mavenProjectBuilder.build( pomFile, localRepository, null );
-
-                    if ( mavenProject.getGroupId().equals( origParent.getGroupId() )
-                        && mavenProject.getArtifactId().equals( origParent.getArtifactId() )
-                        && mavenProject.getVersion().equals( origParent.getVersion() ) )
+                    if ( pomFile.isFile() )
                     {
-                        parentProject = mavenProject;
+                        MavenProject mavenProject = mavenProjectBuilder.build( pomFile, localRepository, null );
+
+                        if ( mavenProject.getGroupId().equals( origParent.getGroupId() )
+                            && mavenProject.getArtifactId().equals( origParent.getArtifactId() )
+                            && mavenProject.getVersion().equals( origParent.getVersion() ) )
+                        {
+                            parentProject = mavenProject;
+                        }
                     }
                 }
                 catch ( ProjectBuildingException e )

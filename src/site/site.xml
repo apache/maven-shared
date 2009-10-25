@@ -27,10 +27,4 @@ under the License.
       <item name="Shared Components" href="http://maven.apache.org/shared/index.html" />
     </breadcrumbs>
   </body>
-  <!-- TODO remove when using Maven Parent 11+ -->
-  <skin>
-    <groupId>org.apache.maven.skins</groupId>
-    <artifactId>maven-stylus-skin</artifactId>
-    <version>1.1</version>
-  </skin>
 </project>

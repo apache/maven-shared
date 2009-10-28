@@ -149,11 +149,11 @@ class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
         }
         catch ( XmlPullParserException exception )
         {
-            throw new MavenRuntimeException( "Cannot read project XML", exception );
+            throw new MavenRuntimeException( "Cannot read project XML: " + url, exception );
         }
         catch ( IOException exception )
         {
-            throw new MavenRuntimeException( "Cannot read project XML", exception );
+            throw new MavenRuntimeException( "Cannot read project XML: " + url, exception );
         }
         finally
         {

@@ -132,7 +132,7 @@ class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor
         }
         catch ( IOException exception )
         {
-            throw new MavenRuntimeException( "Cannot read project properties", exception );
+            throw new MavenRuntimeException( "Cannot read project properties: " + url, exception );
         }
         finally
         {

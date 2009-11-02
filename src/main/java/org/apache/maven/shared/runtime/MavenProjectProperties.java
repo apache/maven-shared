@@ -29,7 +29,7 @@ import java.io.Serializable;
  * {@code META-INF/maven/<groupId>/<artifactId>/pom.properties} in the packaged project.
  * </p>
  * 
- * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @author <a href="mailto:markh@apache.org">Mark Hobson</a>
  * @version $Id$
  */
 public class MavenProjectProperties implements Serializable

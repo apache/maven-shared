@@ -24,7 +24,7 @@ import java.util.Enumeration;
 /**
  * Enumeration that spans two other enumerations.
  * 
- * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @author <a href="mailto:markh@apache.org">Mark Hobson</a>
  * @version $Id$
  * @param <T>
  *            the element type of this enumeration

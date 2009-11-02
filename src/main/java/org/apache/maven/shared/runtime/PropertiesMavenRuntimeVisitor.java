@@ -33,7 +33,7 @@ import org.codehaus.plexus.util.IOUtil;
 /**
  * A visitor that parses and collects Maven project property files.
  * 
- * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @author <a href="mailto:markh@apache.org">Mark Hobson</a>
  * @version $Id$
  */
 class PropertiesMavenRuntimeVisitor implements MavenRuntimeVisitor

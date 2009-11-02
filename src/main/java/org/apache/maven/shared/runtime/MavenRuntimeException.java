@@ -22,7 +22,7 @@ package org.apache.maven.shared.runtime;
 /**
  * Indicates an error occurred introspecting the Maven runtime environment.
  * 
- * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @author <a href="mailto:markh@apache.org">Mark Hobson</a>
  * @version $Id$
  */
 public class MavenRuntimeException extends Exception

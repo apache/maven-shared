@@ -27,7 +27,7 @@ import org.apache.maven.project.MavenProject;
 /**
  * Default implementation of {@code MavenRuntime}.
  * 
- * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @author <a href="mailto:markh@apache.org">Mark Hobson</a>
  * @version $Id$
  * @see MavenRuntime
  * @plexus.component role="org.apache.maven.shared.runtime.MavenRuntime"

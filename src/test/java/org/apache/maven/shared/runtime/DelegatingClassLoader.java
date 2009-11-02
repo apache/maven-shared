@@ -27,7 +27,7 @@ import java.util.Enumeration;
 /**
  * A parent- or child-delegating class loader for use by tests.
  * 
- * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @author <a href="mailto:markh@apache.org">Mark Hobson</a>
  * @version $Id$
  */
 public class DelegatingClassLoader extends URLClassLoader

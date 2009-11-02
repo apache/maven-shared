@@ -24,7 +24,7 @@ import java.net.URL;
 /**
  * Defines a visitor for the Maven runtime environment.
  * 
- * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @author <a href="mailto:markh@apache.org">Mark Hobson</a>
  * @version $Id$
  */
 interface MavenRuntimeVisitor

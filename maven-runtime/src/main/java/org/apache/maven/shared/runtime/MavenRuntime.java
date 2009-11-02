@@ -27,7 +27,7 @@ import org.apache.maven.project.MavenProject;
 /**
  * Provides methods to introspect the current Maven runtime environment.
  * 
- * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @author <a href="mailto:markh@apache.org">Mark Hobson</a>
  * @version $Id$
  */
 public interface MavenRuntime

@@ -39,7 +39,7 @@ import org.codehaus.plexus.PlexusTestCase;
 /**
  * Tests {@code DefaultMavenRuntime}.
  * 
- * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @author <a href="mailto:markh@apache.org">Mark Hobson</a>
  * @version $Id$
  * @see DefaultMavenRuntime
  */

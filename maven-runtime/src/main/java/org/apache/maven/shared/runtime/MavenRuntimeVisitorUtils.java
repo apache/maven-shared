@@ -34,7 +34,7 @@ import org.codehaus.plexus.util.IOUtil;
 /**
  * Provides various methods of applying Maven runtime visitors.
  * 
- * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @author <a href="mailto:markh@apache.org">Mark Hobson</a>
  * @version $Id$
  * @see MavenRuntimeVisitor
  */

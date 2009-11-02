@@ -1,0 +1,53 @@
+ ------
+ Introspecting a URL
+ ------
+ Mark Hobson
+ <markhobson@gmail.com>
+ ------
+ 2 Nov 2009
+ ------
+
+
+Introspecting a URL
+
+ Maven Runtime can introspect a URL to obtain metadata for each Maven project accessible within it.
+ 
+* Using project properties
+
+ To obtain a list of
+ <<<{{{../apidocs/org/apache/maven/shared/runtime/MavenProjectProperties.html}MavenProjectProperties}}>>>
+ instances for each Maven project accessible within a specified URL:
+
+---
+/**
+ * @component
+ */
+private MavenRuntime runtime;
+
+public void processProjects() throws MavenRuntimeException
+{
+    List<MavenProjectProperties> projects = runtime.getProjectsProperties( myUrl );
+    
+    // process projects
+}
+---
+
+* Using project XML
+
+ To obtain a list of
+ <<<{{{http://maven.apache.org/ref/current/maven-project/apidocs/org/apache/maven/project/MavenProject.html}MavenProject}}>>>
+ instances for each Maven project accessible within a specified URL:
+
+---
+/**
+ * @component
+ */
+private MavenRuntime runtime;
+
+public void processProjects() throws MavenRuntimeException
+{
+    List<MavenProject> projects = runtime.getProjects( myUrl );
+    
+    // process projects
+}
+---

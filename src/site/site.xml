@@ -27,8 +27,9 @@
       <item name="FAQ" href="faq.html"/>
     </menu>
     <menu name="Examples">
-      <item name="Introspecting a class loader" href="examples/introspecting-a-class-loader.html"/>
+      <item name="Introspecting a URL" href="examples/introspecting-a-url.html"/>
       <item name="Introspecting a class" href="examples/introspecting-a-class.html"/>
+      <item name="Introspecting a class loader" href="examples/introspecting-a-class-loader.html"/>
     </menu>
     <menu ref="reports"/>
   </body>

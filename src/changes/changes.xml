@@ -27,8 +27,8 @@
   </properties>
   <body>
     <release version="1.0-alpha-2" date="In SVN">
-      <action type="fix" dev="markh">Added url to parsing exception messages</action>
       <action type="add" dev="markh">Added support for introspecting URLs to MavenRuntime</action>
+      <action type="fix" dev="markh">Added url to parsing exception messages</action>
     </release>
     <release version="1.0-alpha-1" date="2008-05-29"/>
   </body>

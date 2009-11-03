@@ -20,14 +20,21 @@ package org.apache.maven.reporting;
  */
 
 import org.apache.maven.doxia.sink.Sink;
+import org.apache.maven.doxia.site.decoration.DecorationModel;
 import org.apache.maven.doxia.siterenderer.Renderer;
+import org.apache.maven.doxia.siterenderer.RendererException;
+import org.apache.maven.doxia.siterenderer.SiteRenderingContext;
 import org.apache.maven.doxia.siterenderer.sink.SiteRendererSink;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.sink.SinkFactory;
+import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.WriterFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Locale;
 
 /**
@@ -58,11 +65,12 @@ public abstract class AbstractMavenReport
     public void execute()
         throws MojoExecutionException
     {
+        SiteRendererSink sink;
         try
         {
             String outputDirectory = getOutputDirectory();
 
-            SiteRendererSink sink =
+            sink =
                 SinkFactory.createSink( new File( outputDirectory ), getOutputName() + ".html" );
 
             generate( sink, Locale.getDefault() );
@@ -74,6 +82,36 @@ public abstract class AbstractMavenReport
         {
             throw new MojoExecutionException( "An error has occurred in " + getName( locale ) + " report generation.",
                                               e );
+        }
+
+        File outputHtml = new File( getOutputDirectory(), getOutputName() + ".html" );
+        outputHtml.getParentFile().mkdirs();
+
+        Writer writer = null;
+        try
+        {
+            SiteRenderingContext context = new SiteRenderingContext();
+            context.setDecoration( new DecorationModel() );
+            context.setTemplateName( "org/apache/maven/doxia/siterenderer/resources/default-site.vm" );
+            context.setLocale( locale );
+
+            writer = WriterFactory.newXmlWriter( outputHtml );
+
+            getSiteRenderer().generateDocument( writer, sink, context );
+        }
+        catch ( RendererException e )
+        {
+            throw new MojoExecutionException( "An error has occurred in " + getName( Locale.ENGLISH )
+                + " report generation.", e );
+        }
+        catch ( IOException e )
+        {
+            throw new MojoExecutionException( "An error has occurred in " + getName( Locale.ENGLISH )
+                + " report generation.", e );
+        }
+        finally
+        {
+            IOUtil.close( writer );
         }
     }
 
@@ -100,6 +138,7 @@ public abstract class AbstractMavenReport
 
     protected void closeReport()
     {
+        getSink().close();
     }
 
     public String getCategoryName()

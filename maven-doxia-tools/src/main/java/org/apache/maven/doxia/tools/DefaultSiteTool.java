@@ -1213,6 +1213,7 @@ public class DefaultSiteTool
         }
 
         String siteDescriptorContent = null;
+        long siteDescriptorLastModified = 0L;
         try
         {
             if ( siteDescriptor != null && siteDescriptor.exists() )
@@ -1220,6 +1221,7 @@ public class DefaultSiteTool
                 getLogger().debug( "Reading site descriptor from " + siteDescriptor );
                 Reader siteDescriptorReader = ReaderFactory.newXmlReader( siteDescriptor );
                 siteDescriptorContent = IOUtil.toString( siteDescriptorReader );
+                siteDescriptorLastModified = siteDescriptor.lastModified();
             }
         }
         catch ( IOException e )
@@ -1234,6 +1236,7 @@ public class DefaultSiteTool
                                                                           inputEncoding, outputEncoding );
 
             decoration = readDecorationModel( siteDescriptorContent );
+            decoration.setLastModified( siteDescriptorLastModified );
         }
 
         MavenProject parentProject = getParentProject( project, reactorProjects, localRepository );

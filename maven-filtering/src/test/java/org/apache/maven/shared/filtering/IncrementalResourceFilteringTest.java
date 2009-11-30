@@ -73,6 +73,27 @@ public class IncrementalResourceFilteringTest
 
     }
 
+    public void testOutputChange()
+        throws Exception
+    {
+        // run full build first
+        filter( "time" );
+
+        // all files are reprocessed after contents of output directory changed (e.g. was deleted)
+        HashSet changedFiles = new HashSet();
+        changedFiles.add( "target/IncrementalResourceFilteringTest" );
+        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, changedFiles, new HashMap() );
+        ThreadBuildContext.setThreadBuildContext( ctx );
+
+        filter( "notime" );
+        assertTime( "notime", "file01.txt" );
+        assertTime( "notime", "file02.txt" );
+
+        assertTrue( ctx.getRefreshFiles().contains( new File( outputDirectory, "file01.txt" ) ) );
+        assertTrue( ctx.getRefreshFiles().contains( new File( outputDirectory, "file02.txt" ) ) );
+
+    }
+
     public void testFilterChange()
         throws Exception
     {
@@ -136,7 +157,7 @@ public class IncrementalResourceFilteringTest
     private void filter( String time )
         throws Exception, MavenFilteringException
     {
-        File baseDir = new File( "c:\\foo\\bar" );
+        File baseDir = new File( getBasedir() );
         StubMavenProject mavenProject = new StubMavenProject( baseDir );
         mavenProject.setVersion( "1.0" );
         mavenProject.setGroupId( "org.apache" );

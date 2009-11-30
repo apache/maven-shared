@@ -33,6 +33,7 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.PathTool;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.Scanner;
 import org.codehaus.plexus.util.StringUtils;
@@ -220,9 +221,8 @@ public class DefaultMavenResourcesFiltering
             }
             
             boolean ignoreDelta =
-                buildContext.hasDelta( mavenResourcesExecution.getFileFilters() )
-                    || buildContext.hasDelta( mavenResourcesExecution.getOutputDirectory().getPath() )
-                    || !outputExists;
+                !outputExists || buildContext.hasDelta( mavenResourcesExecution.getFileFilters() )
+                    || buildContext.hasDelta( getRelativeOutputDirectory( mavenResourcesExecution ) );
             getLogger().debug( "ignoreDelta " + ignoreDelta );
             Scanner scanner = buildContext.newScanner( resourceDirectory, ignoreDelta );
 
@@ -378,4 +378,26 @@ public class DefaultMavenResourcesFiltering
             destination.mkdirs();
         }
     }
+
+    private String getRelativeOutputDirectory( MavenResourcesExecution execution )
+    {
+        String relOutDir = execution.getOutputDirectory().getAbsolutePath();
+
+        if ( execution.getMavenProject() != null && execution.getMavenProject().getBasedir() != null )
+        {
+            String basedir = execution.getMavenProject().getBasedir().getAbsolutePath();
+            relOutDir = PathTool.getRelativeFilePath( basedir, relOutDir );
+            if ( relOutDir == null )
+            {
+                relOutDir = execution.getOutputDirectory().getPath();
+            }
+            else
+            {
+                relOutDir = relOutDir.replace( '\\', '/' );
+            }
+        }
+
+        return relOutDir;
+    }
+
 }

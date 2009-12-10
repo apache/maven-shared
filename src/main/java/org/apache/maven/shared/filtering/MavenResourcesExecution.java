@@ -265,6 +265,7 @@ public class MavenResourcesExecution
     }
 
     /**
+     * Overwrite existing files even if the destination files are newer.
      * @return
      * @since 1.0-beta-2
      */
@@ -274,6 +275,7 @@ public class MavenResourcesExecution
     }
 
     /**
+     * Overwrite existing files even if the destination files are newer.
      * @param overwrite
      * @since 1.0-beta-2
      */
@@ -283,6 +285,7 @@ public class MavenResourcesExecution
     }
 
     /**
+     * Copy any empty directories included in the Resources.
      * @return
      * @since 1.0-beta-2
      */
@@ -292,6 +295,7 @@ public class MavenResourcesExecution
     }
 
     /**
+     * Copy any empty directories included in the Resources.
      * @param includeEmptyDirs
      * @since 1.0-beta-2
      */

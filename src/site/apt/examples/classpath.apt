@@ -224,20 +224,21 @@ Class-Path: lib/plexus-utils-1.1.jar lib/commons-lang-2.1.jar
   <build>
     <plugins>
       <plugin>
-         <artifactId>maven-jar-plugin</artifactId>
-         <configuration>
-           <archive>
-             <manifest>
-               <addClasspath>true</addClasspath>
-               <classpathPrefix>lib/</classpathPrefix>
-               <classpathLayoutType>repository</classpathLayoutType>
-               
-               <!-- NOTE: Deprecated in version 2.4. Use 'classpathLayoutType' instead.
-               <classpathMavenRepositoryLayout>true</classpathMavenRepositoryLayout>
-               -->
-             </manifest>
-           </archive>
-         </configuration>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <classpathPrefix>lib/</classpathPrefix>
+              <classpathLayoutType>repository</classpathLayoutType>
+              
+              <!-- NOTE: Deprecated in version 2.4. Use 'classpathLayoutType' instead.
+              <classpathMavenRepositoryLayout>true</classpathMavenRepositoryLayout>
+              -->
+            </manifest>
+          </archive>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -258,7 +259,7 @@ Class-Path: lib/plexus-utils-1.1.jar lib/commons-lang-2.1.jar
 </project>
 +-----+
 
-  <<NOTE:>> In version 2.3, this feature was available by setting the <<<\<classpathMavenRepositoryLayout\>>>>
+  <<Note:>> In version 2.3, this feature was available by setting the <<<\<classpathMavenRepositoryLayout\>>>>
   element to the value <<<true>>>. This configuration option has been *deprecated* in version 2.4, 
   in favor of the more general <<<\<classpathLayoutType\>>>> element, where a value of <<<'repository'>>>
   will render the same behavior.

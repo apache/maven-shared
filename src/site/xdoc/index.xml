@@ -7,9 +7,9 @@
   to you under the Apache License, Version 2.0 (the
   "License"); you may not use this file except in compliance
   with the License.  You may obtain a copy of the License at
-  
+
   http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing,
   software distributed under the License is distributed on an
   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -222,9 +222,24 @@ Specification-Vendor: ${pom.organization.name}
             <td></td>
           </tr>
           <tr>
+            <td>classpathLayoutType</td>
+            <td>
+              The type of layout to use when formatting entries in the generated
+              <code>Class-Path</code>. Valid values are: <code>simple</code>,
+              <code>repository</code> (the same as a Maven classpath layout) and
+              <code>custom</code>.
+              <br/>
+              <b>Note:</b> If you specify a type of <code>custom</code> you
+              <b>must</b> also set <code>customClasspathLayout</code>.
+              The default value is <code>simple</code>.
+            </td>
+            <td>String</td>
+            <td>2.4</td>
+          </tr>
+          <tr>
             <td>classpathMavenRepositoryLayout</td>
             <td>
-              The generated <code>Class-Path</code> entry will contains paths
+              The generated <code>Class-Path</code> entry will contain paths
               that follow the Maven 2 repository layout:
               <code>${groupId}/${artifactId}/${version}/${fileName}</code>.
               The default value is <code>false</code>.
@@ -241,6 +256,23 @@ Specification-Vendor: ${pom.organization.name}
             </td>
             <td>String</td>
             <td></td>
+          </tr>
+          <tr>
+            <td>customClasspathLayout</td>
+            <td>
+              The layout expression to use when the layout type set in
+              <code>classpathLayoutType</code> has the value <code>custom</code>.
+              Expressions will be evaluated against the following ordered list
+              of classpath-related objects:
+              <ol>
+                <li>The current Artifact instance, if one exists.</li>
+                <li>The current ArtifactHandler instance from the artifact above.</li>
+              </ol>
+              <b>Note:</b> If you specify a layout type of <code>custom</code>
+              you <b>must</b> set this layout expression.
+            </td>
+            <td>String</td>
+            <td>2.4</td>
           </tr>
           <tr>
             <td>mainClass</td>

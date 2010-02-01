@@ -44,19 +44,23 @@
   <issueManagement>
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED/component/13279</url>
-  </issueManagement>  
+  </issueManagement> 
+  
+  <properties>
+    <mavenVersion>2.0.7</mavenVersion>
+  </properties> 
 
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-model</artifactId>
-      <version>2.0.7</version>
+      <version>${mavenVersion}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
-      <version>2.0.7</version>
+      <version>${mavenVersion}</version>
     </dependency>
 
     <dependency>

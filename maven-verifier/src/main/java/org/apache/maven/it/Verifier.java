@@ -91,6 +91,8 @@ public class Verifier
 
     private Properties systemProperties = new Properties();
 
+    private Properties environmentVariables = new Properties();
+
     private Properties verifierProperties = new Properties();
 
     private boolean autoclean = true;
@@ -1155,7 +1157,7 @@ public class Verifier
     public void executeGoal( String goal )
         throws VerificationException
     {
-        executeGoal( goal, Collections.EMPTY_MAP );
+        executeGoal( goal, environmentVariables );
     }
 
     public void executeGoal( String goal, Map envVars )
@@ -1167,7 +1169,7 @@ public class Verifier
     public void executeGoals( List goals )
         throws VerificationException
     {
-        executeGoals( goals, Collections.EMPTY_MAP );
+        executeGoals( goals, environmentVariables );
     }
 
     public String getExecutable()
@@ -1864,6 +1866,28 @@ public class Verifier
         else
         {
             systemProperties.remove( key );
+        }
+    }
+
+    public Properties getEnvironmentVariables()
+    {
+        return environmentVariables;
+    }
+
+    public void setEnvironmentVariables( Properties environmentVariables )
+    {
+        this.environmentVariables = environmentVariables;
+    }
+
+    public void setEnvironmentVariable( String key, String value )
+    {
+        if ( value != null )
+        {
+            environmentVariables.setProperty( key, value );
+        }
+        else
+        {
+            environmentVariables.remove( key );
         }
     }
 

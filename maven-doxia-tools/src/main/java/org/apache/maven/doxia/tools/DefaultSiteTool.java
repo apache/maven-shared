@@ -1257,12 +1257,14 @@ public class DefaultSiteTool
             DecorationModel parent = getDecorationModel( parentProject, reactorProjects, localRepository, repositories,
                                                          siteDirectory, locale, props, inputEncoding, outputEncoding );
 
-            if ( decoration == null )
+            // MSHARED-116 requires an empty decoration model (instead of a null one)
+            // MSHARED-145 requires us to do this only if there is a parent to merge it with
+            if ( decoration == null && parent != null )
             {
                 // we have no site descriptor: merge the parent into an empty one
                 decoration = new DecorationModel();
             }
-
+            // Merge the parent and child site descriptors
             assembler.assembleModelInheritance( project.getName(), decoration, parent, project.getUrl(),
                         parentProject.getUrl() == null ? project.getUrl() : parentProject.getUrl() );
         }

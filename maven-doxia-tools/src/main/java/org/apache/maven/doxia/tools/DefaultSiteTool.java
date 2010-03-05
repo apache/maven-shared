@@ -827,20 +827,31 @@ public class DefaultSiteTool
             else
             {
                 // parent has no url, assume relative path is given by site structure
-                String parentPath = parentProject.getBasedir().getAbsolutePath();
-                String projectPath = project.getBasedir().getAbsolutePath();
-                parentUrl = getRelativePath( parentPath, projectPath ) + "/index.html";
+                File parentBasedir = parentProject.getBasedir();
+                // First make sure that the parent is available on the file system
+                if( parentBasedir != null ) {
+                    // Try to find the relative path to the parent via the file system
+                    String parentPath = parentBasedir.getAbsolutePath();
+                    String projectPath = project.getBasedir().getAbsolutePath();
+                    parentUrl = getRelativePath( parentPath, projectPath ) + "/index.html";
+                }
             }
 
-            if ( menu.getName() == null )
-            {
-                menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.parentproject" ) );
+            // Only add the parent menu if we were able to find a URL for it
+            if( parentUrl == null ) {
+                getLogger().warn( "Unable to find a URL to the parent project. The parent menu will NOT be added." );
             }
+            else {
+                if ( menu.getName() == null )
+                {
+                    menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.parentproject" ) );
+                }
 
-            MenuItem item = new MenuItem();
-            item.setName( parentProject.getName() );
-            item.setHref( parentUrl );
-            menu.addItem( item );
+                MenuItem item = new MenuItem();
+                item.setName( parentProject.getName() );
+                item.setHref( parentUrl );
+                menu.addItem( item );
+            }
         }
     }
 

@@ -250,7 +250,7 @@ public class DefaultSiteTool
             }
             else
             {
-                // dont share basic URL infomation, no relative available
+                // don't share basic URL information, no relative available
 
                 return to;
             }
@@ -266,7 +266,7 @@ public class DefaultSiteTool
         // share the common protocol and domain info and we are left
         // with their URI information
 
-        // normalise the path delimiters
+        // normalize the path delimiters
 
         toPath = new File( toPath ).getPath();
         fromPath = new File( fromPath ).getPath();
@@ -298,7 +298,7 @@ public class DefaultSiteTool
         if ( ( toPath.startsWith( ":", 1 ) && fromPath.startsWith( ":", 1 ) )
             && ( !toPath.substring( 0, 1 ).equals( fromPath.substring( 0, 1 ) ) ) )
         {
-            // they both have drive path element but they dont match, no
+            // they both have drive path element but they don't match, no
             // relative path
 
             return to;
@@ -308,14 +308,14 @@ public class DefaultSiteTool
             || ( !toPath.startsWith( ":", 1 ) && fromPath.startsWith( ":", 1 ) ) )
         {
 
-            // one has a drive path element and the other doesnt, no relative
+            // one has a drive path element and the other doesn't, no relative
             // path.
 
             return to;
 
         }
 
-        // use tokeniser to traverse paths and for lazy checking
+        // use tokenizer to traverse paths and for lazy checking
         StringTokenizer toTokeniser = new StringTokenizer( toPath, File.separator );
         StringTokenizer fromTokeniser = new StringTokenizer( fromPath, File.separator );
 
@@ -342,7 +342,7 @@ public class DefaultSiteTool
             count++;
         }
 
-        // reinitialise the tokenisers to count positions to retrieve the
+        // reinitialize the tokenizers to count positions to retrieve the
         // gobbled token
 
         toTokeniser = new StringTokenizer( toPath, File.separator );
@@ -829,7 +829,8 @@ public class DefaultSiteTool
                 // parent has no url, assume relative path is given by site structure
                 File parentBasedir = parentProject.getBasedir();
                 // First make sure that the parent is available on the file system
-                if( parentBasedir != null ) {
+                if ( parentBasedir != null )
+                {
                     // Try to find the relative path to the parent via the file system
                     String parentPath = parentBasedir.getAbsolutePath();
                     String projectPath = project.getBasedir().getAbsolutePath();
@@ -838,10 +839,12 @@ public class DefaultSiteTool
             }
 
             // Only add the parent menu if we were able to find a URL for it
-            if( parentUrl == null ) {
+            if ( parentUrl == null )
+            {
                 getLogger().warn( "Unable to find a URL to the parent project. The parent menu will NOT be added." );
             }
-            else {
+            else
+            {
                 if ( menu.getName() == null )
                 {
                     menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.parentproject" ) );
@@ -1322,7 +1325,7 @@ public class DefaultSiteTool
      * Return all the projects that are modules, or modules of modules, of the specified project found within the
      * reactor.
      * <p/>
-     * The levels parameter controls how many descendent levels of modules are returned. With levels equal
+     * The levels parameter controls how many descendant levels of modules are returned. With levels equal
      * to 1, only the immediate modules of the specified project are returned.
      * <p/>
      * If levels equals 2 it returns those modules' modules as well.
@@ -1332,7 +1335,7 @@ public class DefaultSiteTool
      *
      * @param project         the project to search under
      * @param reactorProjects The projects in the reactor
-     * @param levels          the number of descendent levels to return
+     * @param levels          the number of descendant levels to return
      * @return the list of module projects.
      */
     private List getModuleProjects( final MavenProject project, final List reactorProjects, final int levels )

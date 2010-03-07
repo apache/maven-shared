@@ -1958,4 +1958,9 @@ public class Verifier
         this.mavenDebug = mavenDebug;
     }
 
+    public void setForkJvm( boolean forkJvm )
+    {
+        this.forkJvm = Boolean.valueOf( forkJvm );
+    }
+
 }

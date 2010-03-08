@@ -1201,11 +1201,6 @@ public class Verifier
     public void executeGoals( List goals, Map envVars )
         throws VerificationException
     {
-        if ( goals.size() == 0 )
-        {
-            throw new VerificationException( "No goals specified" );
-        }
-
         List allGoals = new ArrayList();
 
         if ( autoclean )

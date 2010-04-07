@@ -512,9 +512,9 @@ public class Commandline
     public static String quoteArgument( String argument )
         throws CommandLineException
     {
-        if ( argument.indexOf( "\"" ) > -1 )
+        if ( argument.indexOf( '\"' ) > -1 )
         {
-            if ( argument.indexOf( "\'" ) > -1 )
+            if ( argument.indexOf( '\'' ) > -1 )
             {
                 throw new CommandLineException( "Can't handle single and double quotes in same argument" );
             }
@@ -523,7 +523,7 @@ public class Commandline
                 return '\'' + argument + '\'';
             }
         }
-        else if ( argument.indexOf( "\'" ) > -1 || argument.indexOf( " " ) > -1 )
+        else if ( containsAny( argument, "'<>&|*? " ) )
         {
             return '\"' + argument + '\"';
         }
@@ -531,6 +531,18 @@ public class Commandline
         {
             return argument;
         }
+    }
+
+    private static boolean containsAny( String argument, String chars )
+    {
+        for ( int i = chars.length() - 1; i >= 0; i-- )
+        {
+            if ( argument.indexOf( chars.charAt( i ) ) >= 0 )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static String toString( String[] line )

@@ -61,7 +61,7 @@ public abstract class AbstractMavenReport
     private Locale locale = Locale.ENGLISH;
 
     /**
-     * This method is called when the report in invoked directly as a Mojo, not in the
+     * This method is called when the report is invoked directly as a Mojo, not in the
      * context of a full site generation (where maven-site-plugin:site is the Mojo
      * being executed)
      *

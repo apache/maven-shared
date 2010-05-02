@@ -38,7 +38,7 @@ import java.util.Locale;
  */
 public abstract class AbstractMavenReport
     extends AbstractMojo
-    implements MavenReport
+    implements MavenMultiPageReport
 {
     /** The current sink to use */
     private Sink sink;
@@ -201,7 +201,7 @@ public abstract class AbstractMavenReport
      * value of this method is irrelevant. Therefore, developers should always call {@link #getReportOutputDirectory()}
      * to get the effective output directory for the report. The later method will eventually fallback to this method
      * if the mojo is not run as part of a site generation.
-     * 
+     *
      * @return The path to the output directory as specified in the plugin configuration for this report.
      */
     protected abstract String getOutputDirectory();

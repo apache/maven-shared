@@ -20,15 +20,20 @@ under the License.
 -->
 
 <project xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd' xmlns='http://maven.apache.org/POM/4.0.0'>
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
     <version>12</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.apache.maven</groupId>
   <artifactId>maven-reporting-api</artifactId>
-  <name>Maven Reporting API</name>
   <version>3.0-SNAPSHOT</version>
+
+  <name>Maven Reporting API</name>
+
   <developers>
     <developer>
       <id>vsiveton</id>
@@ -40,6 +45,7 @@ under the License.
       <timezone>-5</timezone>
     </developer>
   </developers>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven.doxia</groupId>

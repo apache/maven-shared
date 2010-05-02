@@ -21,12 +21,21 @@ package org.apache.maven.reporting;
 
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.sink.SinkFactory;
+import org.apache.maven.doxia.sink.render.RenderingContext;
+import org.apache.maven.doxia.site.decoration.DecorationModel;
 import org.apache.maven.doxia.siterenderer.Renderer;
+import org.apache.maven.doxia.siterenderer.RendererException;
+import org.apache.maven.doxia.siterenderer.SiteRenderingContext;
+import org.apache.maven.doxia.siterenderer.sink.SiteRendererSink;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.WriterFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Locale;
 
 /**
@@ -49,8 +58,12 @@ public abstract class AbstractMavenReport
     /** The current report output directory to use */
     private File reportOutputDirectory;
 
+    private Locale locale = Locale.ENGLISH;
+
     /**
-     * This method should be never called - all reports are rendered by Maven site-plugin's
+     * This method is called when the report in invoked directly as a Mojo, not in the
+     * context of a full site generation (where maven-site-plugin:site is the Mojo
+     * being executed)
      *
      * @throws MojoExecutionException always
      * @see org.apache.maven.plugins.site.ReportDocumentRender
@@ -59,7 +72,58 @@ public abstract class AbstractMavenReport
     public void execute()
         throws MojoExecutionException
     {
-        throw new MojoExecutionException( "Reporting mojo's can only be called from ReportDocumentRender" );
+        if ( !canGenerateReport() )
+        {
+            return;
+        }
+
+        SiteRendererSink sink;
+        try
+        {
+            String outputDirectory = getOutputDirectory();
+
+            sink = new SiteRendererSink( new RenderingContext( new File( outputDirectory ), getOutputName() + ".html" ) );
+
+            generate( sink, null, Locale.getDefault() );
+
+            // TODO: add back when skinning support is in the site renderer
+//            getSiteRenderer().copyResources( outputDirectory, "maven" );
+        }
+        catch ( MavenReportException e )
+        {
+            throw new MojoExecutionException( "An error has occurred in " + getName( locale ) + " report generation.",
+                                              e );
+        }
+
+        File outputHtml = new File( getOutputDirectory(), getOutputName() + ".html" );
+        outputHtml.getParentFile().mkdirs();
+
+        Writer writer = null;
+        try
+        {
+            SiteRenderingContext context = new SiteRenderingContext();
+            context.setDecoration( new DecorationModel() );
+            context.setTemplateName( "org/apache/maven/doxia/siterenderer/resources/default-site.vm" );
+            context.setLocale( locale );
+
+            writer = WriterFactory.newXmlWriter( outputHtml );
+
+            getSiteRenderer().generateDocument( writer, sink, context );
+        }
+        catch ( RendererException e )
+        {
+            throw new MojoExecutionException( "An error has occurred in " + getName( Locale.ENGLISH )
+                + " report generation.", e );
+        }
+        catch ( IOException e )
+        {
+            throw new MojoExecutionException( "An error has occurred in " + getName( Locale.ENGLISH )
+                + " report generation.", e );
+        }
+        finally
+        {
+            IOUtil.close( writer );
+        }
     }
 
     /**
@@ -148,11 +212,11 @@ public abstract class AbstractMavenReport
     }
 
     /**
-     * Actions when closing the report. By default, nothing to do.
+     * Actions when closing the report.
      */
     protected void closeReport()
     {
-        // nop
+        getSink().close();
     }
 
     /**

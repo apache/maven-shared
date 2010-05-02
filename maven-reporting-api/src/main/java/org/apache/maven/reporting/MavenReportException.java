@@ -25,14 +25,29 @@ package org.apache.maven.reporting;
  * @author Brett Porter
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
+ * @since 2.0
  */
 public class MavenReportException extends Exception
 {
+    /** The serialVersionUID **/
+    public static final long serialVersionUID = -6200353563231163785L;
+
+    /**
+     * Default constructor.
+     *
+     * @param msg the exception message.
+     */
     public MavenReportException( String msg )
     {
         super( msg );
     }
 
+    /**
+     * Other constructor.
+     *
+     * @param msg the exception message.
+     * @param e the exception.
+     */
     public MavenReportException( String msg, Exception e )
     {
         super( msg, e );

@@ -33,6 +33,7 @@ under the License.
   <version>3.0-SNAPSHOT</version>
 
   <name>Maven Reporting API</name>
+  <description>API to manage report generation.</description>
 
   <developers>
     <developer>
@@ -45,6 +46,17 @@ under the License.
       <timezone>-5</timezone>
     </developer>
   </developers>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-reporting-api</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-reporting-api</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-reporting-api</url>
+  </scm>
+
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/14413</url>
+  </issueManagement>
 
   <dependencies>
     <dependency>

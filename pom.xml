@@ -23,12 +23,12 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>14</version>
+    <version>15</version>
   </parent>
 
   <groupId>org.apache.maven.reporting</groupId>
   <artifactId>maven-reporting-impl</artifactId>
-  <version>2.0.4.4-SNAPSHOT</version>
+  <version>2.0.5-SNAPSHOT</version>
 
   <name>Maven Reporting Implementation</name>
   <description>Abstract classes to manage report generation.</description>

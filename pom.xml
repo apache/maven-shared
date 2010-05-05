@@ -62,6 +62,12 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.apache.maven.reporting</groupId>
+      <artifactId>maven-reporting-api</artifactId>
+      <version>3.0-SNAPSHOT</version>
+    </dependency>
+
     <!-- maven -->
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -78,11 +84,6 @@
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>${mavenVersion}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.reporting</groupId>
-      <artifactId>maven-reporting-api</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
     <dependency>
@@ -116,7 +117,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <pluginManagement>
       <plugins>

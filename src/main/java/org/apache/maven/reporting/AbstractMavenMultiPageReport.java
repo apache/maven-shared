@@ -32,6 +32,7 @@ import java.util.List;
 /**
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id: MavenReport.java 163376 2005-02-23 00:06:06Z brett $
+ * @deprecated will be removed in 2.1, replaced by MavenMultiPageReport interface implemented by AbstractMavenReport
  */
 public abstract class AbstractMavenMultiPageReport
     extends AbstractMavenReport

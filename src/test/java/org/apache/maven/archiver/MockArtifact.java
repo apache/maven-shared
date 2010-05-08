@@ -209,8 +209,7 @@ class MockArtifact
 
     public VersionRange getVersionRange()
     {
-        // TODO
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return VersionRange.createFromVersion( version );
     }
 
     public void setVersionRange( VersionRange versionRange )

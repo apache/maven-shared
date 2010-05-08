@@ -38,6 +38,7 @@ import junit.framework.TestCase;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.handler.ArtifactHandler;
+import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Organization;
@@ -880,6 +881,7 @@ public class MavenArchiverTest
         artifact.setArtifactId( "dummy" );
         artifact.setVersion( "0.1" );
         artifact.setType( "jar" );
+        artifact.setArtifactHandler( new DefaultArtifactHandler( "jar" ) );
         project.setArtifact( artifact );
 
         ArtifactHandler artifactHandler = new ArtifactHandler()
@@ -992,6 +994,7 @@ public class MavenArchiverTest
         artifact.setArtifactId( "dummy" );
         artifact.setVersion( "0.1" );
         artifact.setType( "jar" );
+        artifact.setArtifactHandler( new DefaultArtifactHandler( "jar" ) );
         project.setArtifact( artifact );
 
         ArtifactHandler artifactHandler = new ArtifactHandler()

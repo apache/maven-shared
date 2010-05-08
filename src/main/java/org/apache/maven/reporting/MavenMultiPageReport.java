@@ -31,7 +31,7 @@ import java.util.Locale;
  *
  * @author <a href="mailto:kenney@apache.org">Kenney Westerhof</a>
  * @see MavenReport#generate(org.codehaus.doxia.sink.Sink, Locale)
- * @since 3.0
+ * @since 3.0 (copied in maven-site-plugin 2.0-beta-6)
  */
 public interface MavenMultiPageReport
     extends MavenReport

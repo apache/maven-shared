@@ -27,7 +27,8 @@ package org.apache.maven.reporting;
  * @version $Id$
  * @since 2.0
  */
-public class MavenReportException extends Exception
+public class MavenReportException
+    extends Exception
 {
     /** The serialVersionUID **/
     public static final long serialVersionUID = -6200353563231163785L;
@@ -46,10 +47,10 @@ public class MavenReportException extends Exception
      * Other constructor.
      *
      * @param msg the exception message.
-     * @param e the exception.
+     * @param cause the cause.
      */
-    public MavenReportException( String msg, Exception e )
+    public MavenReportException( String msg, Exception cause )
     {
-        super( msg, e );
+        super( msg, cause );
     }
 }

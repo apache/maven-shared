@@ -25,12 +25,12 @@ import org.apache.maven.doxia.sink.SinkFactory;
 import java.util.Locale;
 
 /**
- * Temporary class for backwards compatibility. This method
- * should be moved to the MavenReport class, and the other 'generate'
- * method should be dropped. But that will render all reporting mojo's 
- * uncompilable. 
+ * Interface created separately for backwards compatibility. This method
+ * would ideally have been added in the {@link MavenReport} interface, and the other 'generate'
+ * method dropped. But that would have rendered all reporting mojo's uncompilable and binary incompatible.
  *
  * @author <a href="mailto:kenney@apache.org">Kenney Westerhof</a>
+ * @see MavenReport#generate(org.codehaus.doxia.sink.Sink, Locale)
  */
 public interface MavenMultiPageReport
     extends MavenReport

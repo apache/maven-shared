@@ -38,10 +38,15 @@ import java.io.Writer;
 import java.util.Locale;
 
 /**
- * The basis for a Maven report.
+ * The basis for a Maven report which can be generated both as part of a site generation or
+ * as a direct standalone invocation.
  *
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
- * @version $Id: MavenReport.java 163376 2005-02-23 00:06:06Z brett $
+ * @version $Id: AbstractMavenReport.java 942477 2010-05-08 22:53:23Z hboutemy $
+ * @since 2.0
+ * @see #execute()
+ * @see #generate(Sink, SinkFactory, Locale)
+ * @see #executeReport(Locale)
  */
 public abstract class AbstractMavenReport
     extends AbstractMojo
@@ -52,21 +57,13 @@ public abstract class AbstractMavenReport
 
     private Locale locale = Locale.ENGLISH;
 
-    protected abstract Renderer getSiteRenderer();
-
-    protected abstract String getOutputDirectory();
-
-    protected abstract MavenProject getProject();
-
     /** The current report output directory to use */
     private File reportOutputDirectory;
 
     /**
-     * This method is called when the report is invoked directly as a Mojo, not in the
-     * context of a full site generation (where maven-site-plugin:site is the Mojo
-     * being executed)
+     * This method is called when the report generation is invoked directly as a standalone Mojo.
      *
-     * @throws MojoExecutionException always
+     * @throws MojoExecutionException if an error uccurs when generating the report
      * @see org.apache.maven.plugins.site.ReportDocumentRender
      * @see org.apache.maven.plugin.Mojo#execute()
      */
@@ -121,6 +118,8 @@ public abstract class AbstractMavenReport
     }
 
     /**
+     * This method is called when the report generation is invoked by maven-site-plugin.
+     *
      * @see org.apache.maven.reporting.MavenReport#generate(org.codehaus.doxia.sink.Sink, java.util.Locale)
      */
     public void generate( org.codehaus.doxia.sink.Sink sink, Locale locale )
@@ -137,9 +136,6 @@ public abstract class AbstractMavenReport
 
         closeReport();
     }
-
-    protected abstract void executeReport( Locale locale )
-        throws MavenReportException;
 
     protected void closeReport()
     {
@@ -190,4 +186,38 @@ public abstract class AbstractMavenReport
     {
         return true;
     }
+
+    /**
+     * @return the site renderer used.
+     */
+    protected abstract Renderer getSiteRenderer();
+
+    /**
+     * The output directory when the mojo is run directly from the command line. Implementors should use this method to
+     * return the value of a mojo parameter that the user may use to customize the output directory.
+     * <br/>
+     * <strong>Note:</strong>
+     * When the mojo is run as part of a site generation, Maven will set the effective output directory via
+     * {@link org.apache.maven.reporting.MavenReport#setReportOutputDirectory(java.io.File)}. In this case, the return
+     * value of this method is irrelevant. Therefore, developers should always call {@link #getReportOutputDirectory()}
+     * to get the effective output directory for the report. The later method will eventually fallback to this method
+     * if the mojo is not run as part of a site generation.
+     *
+     * @return The path to the output directory as specified in the plugin configuration for this report.
+     */
+    protected abstract String getOutputDirectory();
+
+    /**
+     * @return the Maven project instance.
+     */
+    protected abstract MavenProject getProject();
+
+    /**
+     * Execute the generation of the report.
+     *
+     * @param locale the wanted locale to return the report's description, could be null.
+     * @throws MavenReportException if any
+     */
+    protected abstract void executeReport( Locale locale )
+        throws MavenReportException;
 }

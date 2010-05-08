@@ -47,6 +47,7 @@ public abstract class AbstractMavenReport
     extends AbstractMojo
     implements MavenReport
 {
+    /** The current sink to use */
     private Sink sink;
 
     private Locale locale = Locale.ENGLISH;
@@ -57,47 +58,51 @@ public abstract class AbstractMavenReport
 
     protected abstract MavenProject getProject();
 
+    /** The current report output directory to use */
     private File reportOutputDirectory;
 
     /**
+     * This method is called when the report is invoked directly as a Mojo, not in the
+     * context of a full site generation (where maven-site-plugin:site is the Mojo
+     * being executed)
+     *
+     * @throws MojoExecutionException always
+     * @see org.apache.maven.plugins.site.ReportDocumentRender
      * @see org.apache.maven.plugin.Mojo#execute()
      */
     public void execute()
         throws MojoExecutionException
     {
-        SiteRendererSink sink;
-        try
-        {
-            String outputDirectory = getOutputDirectory();
-
-            sink =
-                SinkFactory.createSink( new File( outputDirectory ), getOutputName() + ".html" );
-
-            generate( sink, Locale.getDefault() );
-
-            // TODO: add back when skinning support is in the site renderer
-//            getSiteRenderer().copyResources( outputDirectory, "maven" );
-        }
-        catch ( MavenReportException e )
-        {
-            throw new MojoExecutionException( "An error has occurred in " + getName( locale ) + " report generation.",
-                                              e );
-        }
-
-        File outputHtml = new File( getOutputDirectory(), getOutputName() + ".html" );
-        outputHtml.getParentFile().mkdirs();
-
         Writer writer = null;
         try
         {
+            File outputDirectory = new File( getOutputDirectory() );
+
+            String filename = getOutputName() + ".html";
+
             SiteRenderingContext context = new SiteRenderingContext();
             context.setDecoration( new DecorationModel() );
             context.setTemplateName( "org/apache/maven/doxia/siterenderer/resources/default-site.vm" );
             context.setLocale( locale );
 
+            SiteRendererSink sink = SinkFactory.createSink( outputDirectory, filename );
+
+            generate( sink, Locale.getDefault() );
+
+            // TODO: add back when skinning support is in the site renderer
+//            getSiteRenderer().copyResources( outputDirectory, "maven" );
+
+            File outputHtml = new File( outputDirectory, filename );
+            outputHtml.getParentFile().mkdirs();
+
             writer = WriterFactory.newXmlWriter( outputHtml );
 
             getSiteRenderer().generateDocument( writer, sink, context );
+        }
+        catch ( MavenReportException e )
+        {
+            throw new MojoExecutionException( "An error has occurred in " + getName( locale ) + " report generation.",
+                                              e );
         }
         catch ( RendererException e )
         {
@@ -141,11 +146,13 @@ public abstract class AbstractMavenReport
         getSink().close();
     }
 
+    /** {@inheritDoc} */
     public String getCategoryName()
     {
         return CATEGORY_PROJECT_REPORTS;
     }
 
+    /** {@inheritDoc} */
     public File getReportOutputDirectory()
     {
         if ( reportOutputDirectory == null )
@@ -155,21 +162,30 @@ public abstract class AbstractMavenReport
         return reportOutputDirectory;
     }
 
+    /** {@inheritDoc} */
     public void setReportOutputDirectory( File reportOutputDirectory )
     {
         this.reportOutputDirectory = reportOutputDirectory;
     }
 
+    /**
+     * @return the sink used
+     */
     public Sink getSink()
     {
         return sink;
     }
 
+    /**
+     * @see org.apache.maven.reporting.MavenReport#isExternalReport()
+     * @return <tt>false</tt> by default.
+     */
     public boolean isExternalReport()
     {
         return false;
     }
 
+    /** {@inheritDoc} */
     public boolean canGenerateReport()
     {
         return true;

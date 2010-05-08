@@ -57,6 +57,8 @@ public interface MavenReport
         throws MavenReportException;
 
     /**
+     * Get the base name used to create report's output file(s).
+     *
      * @return the output name of this report.
      */
     String getOutputName();
@@ -64,20 +66,22 @@ public interface MavenReport
     /**
      * Get the category name for this report.
      *
-     * @return the category name of this report. Should be <code>CATEGORY_PROJECT_INFORMATION</code>
-     * or <code>CATEGORY_PROJECT_REPORTS</code>
-     * {@link #CATEGORY_PROJECT_INFORMATION}
-     * {@link #CATEGORY_PROJECT_REPORTS}
+     * @return the category name of this report. Should be {@link #CATEGORY_PROJECT_INFORMATION}
+     * or {@link #CATEGORY_PROJECT_REPORTS}
      */
     String getCategoryName();
 
     /**
+     * Get the localized report name.
+     *
      * @param locale the wanted locale to return the report's name, could be null.
      * @return the name of this report.
      */
     String getName( Locale locale );
 
     /**
+     * Get the localized report description.
+     *
      * @param locale the wanted locale to return the report's description, could be null.
      * @return the description of this report.
      */
@@ -100,7 +104,7 @@ public interface MavenReport
      * A good example is javadoc tool.
      *
      * @return <tt>true</tt> if this report is external, <tt>false</tt> otherwise.
-     * Default should <tt>false</tt>.
+     * Default should be <tt>false</tt>.
      */
     boolean isExternalReport();
 
@@ -108,7 +112,7 @@ public interface MavenReport
      * Verify some conditions before generate the report.
      *
      * @return <tt>true</tt> if this report could be generated, <tt>false</tt> otherwise.
-     * Default should <tt>true</tt>.
+     * Default should be <tt>true</tt>.
      */
     boolean canGenerateReport();
 }

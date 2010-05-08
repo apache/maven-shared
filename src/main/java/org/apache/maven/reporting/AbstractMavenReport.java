@@ -40,11 +40,15 @@ import java.io.Writer;
 import java.util.Locale;
 
 /**
- * The basis for a Maven report.
+ * The basis for a Maven report which can be generated both as part of a site generation or
+ * as a direct standalone invocation.
  *
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  * @since 2.0
+ * @see #execute()
+ * @see #generate(Sink, SinkFactory, Locale)
+ * @see #executeReport(Locale)
  */
 public abstract class AbstractMavenReport
     extends AbstractMojo
@@ -60,11 +64,9 @@ public abstract class AbstractMavenReport
     private File reportOutputDirectory;
 
     /**
-     * This method is called when the report is invoked directly as a Mojo, not in the
-     * context of a full site generation (where maven-site-plugin:site is the Mojo
-     * being executed)
+     * This method is called when the report generation is invoked directly as a standalone Mojo.
      *
-     * @throws MojoExecutionException always
+     * @throws MojoExecutionException if an error uccurs when generating the report
      * @see org.apache.maven.plugins.site.ReportDocumentRender
      * @see org.apache.maven.plugin.Mojo#execute()
      */
@@ -158,7 +160,7 @@ public abstract class AbstractMavenReport
     }
 
     /**
-     * Generate a report.
+     * This method is called when the report generation is invoked by maven-site-plugin.
      *
      * @param aSink
      * @param aSinkFactory

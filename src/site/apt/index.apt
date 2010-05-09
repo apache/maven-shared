@@ -1,0 +1,21 @@
+ -----
+ Maven Reporting Implementation
+ -----
+ Hervé Boutemy
+ -----
+ 2010-05-09
+ -----
+
+Maven Reporting Implementation
+
+  Abstract classes to manage report generation.
+
+  Until Maven 2.0.4, <<<maven-reporting-impl>>> was included in Maven 2 core distribution: version
+  used was completely driven by Maven version used. It was removed from Maven core starting with Maven 2.0.5 and
+  moved to shared components to improve fexibility: starting with Maven 2.0.5, each plugin can choose its
+  <<<maven-reporting-impl>>> version independently from Maven.
+
+  <<<maven-reporting-impl 2.0.x>>> uses Doxia 1.0, then is used for plugins wanting Maven 2.0.x compatibility.
+
+  <<<maven-reporting-impl 2.1.x>>> uses Doxia 1.1: using this version implies for a plugin that it has Maven 2.1
+  as prerequisite.

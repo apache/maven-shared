@@ -57,7 +57,7 @@
   </issueManagement>
 
   <properties>
-    <mavenVersion>2.0.4</mavenVersion>
+    <mavenVersion>2.0.6</mavenVersion>
     <doxiaVersion>1.0</doxiaVersion>
   </properties>
 
@@ -65,7 +65,7 @@
     <dependency>
       <groupId>org.apache.maven.reporting</groupId>
       <artifactId>maven-reporting-api</artifactId>
-      <version>3.0-SNAPSHOT</version>
+      <version>3.0</version>
     </dependency>
 
     <!-- maven -->
@@ -91,17 +91,17 @@
       <artifactId>doxia-site-renderer</artifactId>
       <version>${doxiaVersion}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-doxia-tools</artifactId>
+      <version>1.0.2</version>
+    </dependency>
 
     <!-- misc -->
     <dependency>
       <groupId>commons-validator</groupId>
       <artifactId>commons-validator</artifactId>
       <version>1.2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.shared</groupId>
-      <artifactId>maven-doxia-tools</artifactId>
-      <version>1.0.2</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>

@@ -30,7 +30,7 @@ under the License.
 
   <groupId>org.apache.maven.reporting</groupId>
   <artifactId>maven-reporting-api</artifactId>
-  <version>3.0</version>
+  <version>3.1-SNAPSHOT</version>
 
   <name>Maven Reporting API</name>
   <description>API to manage report generation.</description>
@@ -48,9 +48,9 @@ under the License.
   </developers>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-reporting-api-3.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-reporting-api-3.0</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-reporting-api-3.0</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-reporting-api</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-reporting-api</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-reporting-api</url>
   </scm>
 
   <issueManagement>

@@ -15,7 +15,7 @@ Maven Reporting Implementation
   moved to shared components to improve fexibility: starting with Maven 2.0.5, each plugin can choose its
   <<<maven-reporting-impl>>> version independently from Maven.
 
-  <<<maven-reporting-impl 2.0.x>>> uses Doxia 1.0, then is used for plugins wanting Maven 2.0.x compatibility.
+  <<<maven-reporting-impl 2.0.x>>> uses Doxia 1.0, then is used for reporting plugins wanting Maven 2.0.x compatibility.
 
-  <<<maven-reporting-impl 2.1.x>>> uses Doxia 1.1: using this version implies for a plugin that it has Maven 2.1
+  <<<maven-reporting-impl 2.1.x>>> uses Doxia 1.1: using this version implies for a reporting plugin that it has Maven 2.1
   as prerequisite.

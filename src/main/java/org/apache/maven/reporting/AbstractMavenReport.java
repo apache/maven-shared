@@ -66,7 +66,7 @@ public abstract class AbstractMavenReport
     /**
      * This method is called when the report generation is invoked directly as a standalone Mojo.
      *
-     * @throws MojoExecutionException if an error uccurs when generating the report
+     * @throws MojoExecutionException if an error occurs when generating the report
      * @see org.apache.maven.plugins.site.ReportDocumentRender
      * @see org.apache.maven.plugin.Mojo#execute()
      */
@@ -139,7 +139,8 @@ public abstract class AbstractMavenReport
     public void generate( org.codehaus.doxia.sink.Sink aSink, Locale aLocale )
         throws MavenReportException
     {
-        getLog().warn( "Deprecated API called - not org.apache.maven.doxia.sink.Sink instance and no SinkFactory available. Please update this plugin." );
+        getLog().warn( "Deprecated API called - not org.apache.maven.doxia.sink.Sink instance and no SinkFactory"
+                       + " available. Please update this plugin." );
         generate( aSink, null, aLocale );
     }
 
@@ -177,7 +178,8 @@ public abstract class AbstractMavenReport
 
         if ( !canGenerateReport() )
         {
-            getLog().info( "This report cannot be generated as part of the current build. The report name should be referenced in this line of output." );
+            getLog().info( "This report cannot be generated as part of the current build. "
+                           + "The report name should be referenced in this line of output." );
             return;
         }
 

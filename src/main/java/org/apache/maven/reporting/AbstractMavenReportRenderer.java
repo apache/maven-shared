@@ -620,9 +620,9 @@ public abstract class AbstractMavenReportRenderer
         String[] schemes = {"http", "https"};
         UrlValidator urlValidator = new UrlValidator( schemes );
 
-        if ( ( EmailValidator.getInstance().isValid( href ) ) ||
-             ( ( href.indexOf( "?" ) != -1 ) &&
-               ( EmailValidator.getInstance().isValid( href.substring( 0, href.indexOf( "?" ) ) ) ) ) )
+        if ( ( EmailValidator.getInstance().isValid( href ) )
+            || ( ( href.indexOf( "?" ) != -1 )
+                 && ( EmailValidator.getInstance().isValid( href.substring( 0, href.indexOf( "?" ) ) ) ) ) )
         {
             return "mailto:" + href;
         }
@@ -655,7 +655,7 @@ public abstract class AbstractMavenReportRenderer
             {
                 if ( href.length() > 2 )
                 {
-                    return href.substring(2, href.length() );
+                    return href.substring( 2, href.length() );
                 }
 
                 return ".";

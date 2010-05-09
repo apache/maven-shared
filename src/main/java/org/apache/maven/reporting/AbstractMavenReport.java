@@ -45,7 +45,7 @@ import java.util.Locale;
  * @version $Id: AbstractMavenReport.java 942477 2010-05-08 22:53:23Z hboutemy $
  * @since 2.0
  * @see #execute()
- * @see #generate(Sink, SinkFactory, Locale)
+ * @see #generate(Sink, Locale)
  * @see #executeReport(Locale)
  */
 public abstract class AbstractMavenReport

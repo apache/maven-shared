@@ -32,6 +32,10 @@
   <name>Maven Archiver</name>
   <description>Provides utility methods for creating JARs and other archive files from a Maven project.</description>
 
+  <prerequisites>
+    <maven>${mavenVersion}</maven>
+  </prerequisites>
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-archiver-2.4.1</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-archiver-2.4.1</developerConnection>
@@ -41,12 +45,22 @@
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED/component/13268</url>
   </issueManagement>
-  
+
   <properties>
-    <mavenVersion>2.0</mavenVersion>
+    <mavenVersion>2.0.6</mavenVersion>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+      <version>${mavenVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <version>${mavenVersion}</version>
+    </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>
@@ -68,12 +82,6 @@
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
       <version>2.0.5</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-container-default</artifactId>
-      <version>1.5.4</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>

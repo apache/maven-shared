@@ -38,8 +38,10 @@
     &lt;addDefaultImplementationEntries/&gt;
     &lt;addDefaultSpecificationEntries/&gt;
     &lt;addExtensions/&gt;
+    &lt;classpathLayoutType/&gt;
     &lt;classpathMavenRepositoryLayout/&gt;
     &lt;classpathPrefix/&gt;
+    &lt;customClasspathLayout/&gt;
     &lt;mainClass/&gt;
     &lt;packageName/&gt;
   &lt;/manifest&gt;

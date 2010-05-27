@@ -1370,7 +1370,7 @@ public class Verifier
     public String getMavenVersion()
         throws VerificationException
     {
-        MavenLauncher launcher = new ForkedLauncher( defaultMavenHome );
+        ForkedLauncher launcher = new ForkedLauncher( defaultMavenHome );
 
         File logFile;
         try
@@ -1384,7 +1384,9 @@ public class Verifier
 
         try
         {
-            launcher.run( new String[] { "--version" }, null, logFile );
+            // disable EMMA runtime controller port allocation, should be harmless if EMMA is not used
+            Map envVars = Collections.singletonMap( "MAVEN_OPTS", "-Demma.rt.control=false" );
+            launcher.run( new String[] { "--version" }, envVars, null, logFile );
         }
         catch ( LauncherException e )
         {

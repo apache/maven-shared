@@ -97,7 +97,7 @@ public interface SiteTool
     String getRelativePath( String to, String from );
 
     /**
-     * Get a site descriptor from the project's base direcory.
+     * Get a site descriptor from the project's base directory.
      *
      * @param siteDirectory The path to the directory containing the <code>site.xml</code> file, relative to the
      * project base directory. If null, using by default "src/site".
@@ -282,7 +282,7 @@ public interface SiteTool
      * of the Java Virtual Machine.</p>
      *
      * @param localeCode the locale code string.
-     * @return a java.util.Locale object instancied or null if errors occurred
+     * @return a java.util.Locale object instanced or null if errors occurred
      * @see <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/Locale.html">java.util.Locale#getDefault()</a>
      */
     Locale codeToLocale( String localeCode );

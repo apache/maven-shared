@@ -257,7 +257,7 @@ public class DefaultSiteTool
         }
         else if ( ( toUrl != null && fromUrl == null ) || ( toUrl == null && fromUrl != null ) )
         {
-            // one is a URL and the other isnt, no relative available.
+            // one is a URL and the other isn't, no relative available.
 
             return to;
         }
@@ -1124,8 +1124,8 @@ public class DefaultSiteTool
         // TODO: this is a bit crude - proper type, or proper handling as metadata rather than an artifact in 2.1?
         Artifact artifact = artifactFactory.createArtifactWithClassifier( project.getGroupId(),
                                                                           project.getArtifactId(),
-                                                                          project.getVersion(), "xml", "site_"
-                                                                              + locale.getLanguage() );
+                                                                          project.getVersion(), "xml",
+                                                                          "site_" + locale.getLanguage() );
 
         boolean found = false;
         try

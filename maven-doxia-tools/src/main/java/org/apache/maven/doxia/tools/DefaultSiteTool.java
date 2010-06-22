@@ -123,7 +123,8 @@ public class DefaultSiteTool
     // ----------------------------------------------------------------------
 
     /** {@inheritDoc} */
-    public Artifact getSkinArtifactFromRepository( ArtifactRepository localRepository, List remoteArtifactRepositories,
+    public Artifact getSkinArtifactFromRepository( ArtifactRepository localRepository,
+                                                   List<ArtifactRepository> remoteArtifactRepositories,
                                                    DecorationModel decoration )
         throws SiteToolException
     {
@@ -179,7 +180,8 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public Artifact getDefaultSkinArtifact( ArtifactRepository localRepository, List remoteArtifactRepositories )
+    public Artifact getDefaultSkinArtifact( ArtifactRepository localRepository,
+                                            List<ArtifactRepository> remoteArtifactRepositories )
         throws SiteToolException
     {
         return getSkinArtifactFromRepository( localRepository, remoteArtifactRepositories, new DecorationModel() );
@@ -424,7 +426,7 @@ public class DefaultSiteTool
 
     /** {@inheritDoc} */
     public File getSiteDescriptorFromRepository( MavenProject project, ArtifactRepository localRepository,
-                                                 List repositories, Locale locale )
+                                                 List<ArtifactRepository> repositories, Locale locale )
         throws SiteToolException
     {
         if ( project == null )
@@ -466,10 +468,10 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public DecorationModel getDecorationModel( MavenProject project, List reactorProjects,
-                                               ArtifactRepository localRepository, List repositories,
-                                               String siteDirectory, Locale locale, String inputEncoding,
-                                               String outputEncoding )
+    public DecorationModel getDecorationModel( MavenProject project, List<MavenProject> reactorProjects,
+                                               ArtifactRepository localRepository,
+                                               List<ArtifactRepository> repositories, String siteDirectory,
+                                               Locale locale, String inputEncoding, String outputEncoding )
         throws SiteToolException
     {
         if ( project == null )
@@ -502,7 +504,7 @@ public class DefaultSiteTool
             locale = Locale.getDefault();
         }
 
-        Map props = new HashMap();
+        Map<String, String> props = new HashMap<String, String>();
 
         // This is to support the deprecated ${reports} and ${modules} tags.
         props.put( "reports", "<menu ref=\"reports\"/>\n" );
@@ -563,7 +565,8 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public void populateReportsMenu( DecorationModel decorationModel, Locale locale, Map categories )
+    public void populateReportsMenu( DecorationModel decorationModel, Locale locale,
+                                     Map<String, List<MavenReport>> categories )
     {
         if ( decorationModel == null )
         {
@@ -591,7 +594,7 @@ public class DefaultSiteTool
             boolean found = false;
             if ( menu.getItems().isEmpty() )
             {
-                List categoryReports = (List) categories.get( MavenReport.CATEGORY_PROJECT_INFORMATION );
+                List<MavenReport> categoryReports = categories.get( MavenReport.CATEGORY_PROJECT_INFORMATION );
                 if ( !isEmptyList( categoryReports ) )
                 {
                     MenuItem item = createCategoryMenu( i18n.getString( "site-tool", locale,
@@ -601,7 +604,7 @@ public class DefaultSiteTool
                     found = true;
                 }
 
-                categoryReports = (List) categories.get( MavenReport.CATEGORY_PROJECT_REPORTS );
+                categoryReports = categories.get( MavenReport.CATEGORY_PROJECT_REPORTS );
                 if ( !isEmptyList( categoryReports ) )
                 {
                     MenuItem item = createCategoryMenu( i18n.getString( "site-tool", locale,
@@ -619,8 +622,9 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public String getInterpolatedSiteDescriptorContent( Map props, MavenProject aProject, String siteDescriptorContent,
-                                                        String inputEncoding, String outputEncoding )
+    public String getInterpolatedSiteDescriptorContent( Map<String, String> props, MavenProject aProject,
+                                                        String siteDescriptorContent, String inputEncoding,
+                                                        String outputEncoding )
         throws SiteToolException
     {
         if ( props == null )
@@ -648,7 +652,7 @@ public class DefaultSiteTool
         // ${modules} to aProject.getModules(), so we need to interpolate that
         // first.
 
-        Map modulesProps = new HashMap();
+        Map<String, String> modulesProps = new HashMap<String, String>();
 
         // Legacy for the old ${modules} syntax
         modulesProps.put( "modules", "<menu ref=\"modules\"/>" );
@@ -688,7 +692,7 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public MavenProject getParentProject( MavenProject aProject, List reactorProjects,
+    public MavenProject getParentProject( MavenProject aProject, List<MavenProject> reactorProjects,
                                           ArtifactRepository localRepository )
     {
         if ( aProject == null )
@@ -709,12 +713,8 @@ public class DefaultSiteTool
         MavenProject origParent = aProject.getParent();
         if ( origParent != null )
         {
-            Iterator reactorItr = reactorProjects.iterator();
-
-            while ( reactorItr.hasNext() )
+            for ( MavenProject reactorProject : reactorProjects )
             {
-                MavenProject reactorProject = (MavenProject) reactorItr.next();
-
                 if ( reactorProject.getGroupId().equals( origParent.getGroupId() )
                     && reactorProject.getArtifactId().equals( origParent.getArtifactId() )
                     && reactorProject.getVersion().equals( origParent.getVersion() ) )
@@ -875,16 +875,18 @@ public class DefaultSiteTool
      *      {@link #populateModulesMenu(MavenProject, List, ArtifactRepository, DecorationModel, Locale, boolean)}
      *      instead
      */
-    public void populateModules( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
-                                 DecorationModel decorationModel, Locale locale, boolean keepInheritedRefs )
+    public void populateModules( MavenProject project, List<MavenProject> reactorProjects,
+                                 ArtifactRepository localRepository, DecorationModel decorationModel, Locale locale,
+                                 boolean keepInheritedRefs )
         throws SiteToolException
     {
         populateModulesMenu( project, reactorProjects, localRepository, decorationModel, locale, keepInheritedRefs );
     }
 
     /** {@inheritDoc} */
-    public void populateModulesMenu( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
-                                     DecorationModel decorationModel, Locale locale, boolean keepInheritedRefs )
+    public void populateModulesMenu( MavenProject project, List<MavenProject> reactorProjects,
+                                     ArtifactRepository localRepository, DecorationModel decorationModel,
+                                     Locale locale, boolean keepInheritedRefs )
         throws SiteToolException
     {
         if ( project == null )
@@ -921,7 +923,7 @@ public class DefaultSiteTool
             // we require child modules and reactors to process module menu
             if ( project.getModules().size() > 0 )
             {
-                List projects = reactorProjects;
+                List<MavenProject> projects = reactorProjects;
 
                 if ( menu.getName() == null )
                 {
@@ -933,10 +935,10 @@ public class DefaultSiteTool
                     getLogger().debug( "Attempting to load module information from local filesystem" );
 
                     // Not running reactor - search for the projects manually
-                    List models = new ArrayList( project.getModules().size() );
-                    for ( Iterator i = project.getModules().iterator(); i.hasNext(); )
+                    List<Model> models = new ArrayList<Model>( project.getModules().size() );
+                    for ( Iterator<String> i = project.getModules().iterator(); i.hasNext(); )
                     {
-                        String module = (String) i.next();
+                        String module = i.next();
                         Model model;
                         File f = new File( project.getBasedir(), module + "/pom.xml" );
                         if ( f.exists() )
@@ -975,9 +977,9 @@ public class DefaultSiteTool
     }
 
     /** {@inheritDoc} */
-    public List getAvailableLocales( String locales )
+    public List<Locale> getAvailableLocales( String locales )
     {
-        List localesList = new ArrayList();
+        List<Locale> localesList = new ArrayList<Locale>();
         if ( locales != null )
         {
             String[] localesArray = StringUtils.split( locales, "," );
@@ -1115,8 +1117,8 @@ public class DefaultSiteTool
      * @throws ArtifactResolutionException if any
      * @throws ArtifactNotFoundException if any
      */
-    private File resolveSiteDescriptor( MavenProject project, ArtifactRepository localRepository, List repositories,
-                                        Locale locale )
+    private File resolveSiteDescriptor( MavenProject project, ArtifactRepository localRepository,
+                                        List<ArtifactRepository> repositories, Locale locale )
         throws IOException, ArtifactResolutionException, ArtifactNotFoundException
     {
         File result;
@@ -1199,13 +1201,14 @@ public class DefaultSiteTool
      * @return the decoration model depending the locale
      * @throws SiteToolException if any
      */
-    private DecorationModel getDecorationModel( MavenProject project, List reactorProjects,
-                                                ArtifactRepository localRepository, List repositories,
-                                                String siteDirectory, Locale locale, Map origProps,
-                                                String inputEncoding, String outputEncoding )
+    private DecorationModel getDecorationModel( MavenProject project, List<MavenProject> reactorProjects,
+                                                ArtifactRepository localRepository,
+                                                List<ArtifactRepository> repositories, String siteDirectory,
+                                                Locale locale, Map<String, String> origProps, String inputEncoding,
+                                                String outputEncoding )
         throws SiteToolException
     {
-        Map props = new HashMap( origProps );
+        Map<String, String> props = new HashMap<String, String>( origProps );
 
         File siteDescriptor;
         if ( project.getBasedir() == null )
@@ -1309,13 +1312,11 @@ public class DefaultSiteTool
      * @param reactorProjects not null
      * @param menu            not null
      */
-    private void populateModulesMenuItemsFromReactorProjects( MavenProject project, List reactorProjects, Menu menu )
+    private void populateModulesMenuItemsFromReactorProjects( MavenProject project, List<MavenProject> reactorProjects,
+                                                              Menu menu )
     {
-        Iterator iterator = getModuleProjects( project, reactorProjects, 1 ).iterator();
-        while ( iterator.hasNext() )
+        for ( MavenProject moduleProject : getModuleProjects( project, reactorProjects, 1 ) )
         {
-            MavenProject moduleProject = (MavenProject) iterator.next();
-
             appendMenuItem( project, menu, moduleProject.getName(), moduleProject.getUrl(),
                             moduleProject.getArtifactId() );
         }
@@ -1338,19 +1339,17 @@ public class DefaultSiteTool
      * @param levels          the number of descendant levels to return
      * @return the list of module projects.
      */
-    private List getModuleProjects( final MavenProject project, final List reactorProjects, final int levels )
+    private List<MavenProject> getModuleProjects( final MavenProject project, final List<MavenProject> reactorProjects,
+                                                  final int levels )
     {
-        List moduleProjects = new ArrayList();
+        List<MavenProject> moduleProjects = new ArrayList<MavenProject>();
 
         boolean infinite = ( levels == -1 );
 
         if ( ( reactorProjects != null ) && ( infinite || levels > 0 ) )
         {
-            Iterator iterator = reactorProjects.iterator();
-            while ( iterator.hasNext() )
+            for ( MavenProject reactorProject : reactorProjects )
             {
-                MavenProject reactorProject = (MavenProject) iterator.next();
-
                 if ( isModuleOfProject( project, reactorProject ) )
                 {
                     moduleProjects.add( reactorProject );
@@ -1376,17 +1375,14 @@ public class DefaultSiteTool
     {
         boolean result = false;
 
-        List modules = parentProject.getModules();
+        List<String> modules = parentProject.getModules();
 
         if ( modules != null && parentProject != potentialModule )
         {
             File parentBaseDir = parentProject.getBasedir();
 
-            Iterator iterator = modules.iterator();
-            while ( iterator.hasNext() )
+            for ( String module : modules )
             {
-                String module = (String) iterator.next();
-
                 File moduleBaseDir = new File( parentBaseDir, module );
 
                 try
@@ -1416,16 +1412,12 @@ public class DefaultSiteTool
      * @param models not null
      * @param menu not null
      */
-    private void populateModulesMenuItemsFromModels( MavenProject project, List models, Menu menu )
+    private void populateModulesMenuItemsFromModels( MavenProject project, List<Model> models, Menu menu )
     {
         if ( models != null && models.size() > 1 )
         {
-            Iterator reactorItr = models.iterator();
-
-            while ( reactorItr.hasNext() )
+            for ( Model model : models )
             {
-                Model model = (Model) reactorItr.next();
-
                 String reactorUrl = model.getUrl();
                 String name = model.getName();
 
@@ -1477,7 +1469,7 @@ public class DefaultSiteTool
      * @param locale not null
      * @return the menu item object
      */
-    private MenuItem createCategoryMenu( String name, String href, List categoryReports, Locale locale )
+    private MenuItem createCategoryMenu( String name, String href, List<MavenReport> categoryReports, Locale locale )
     {
         MenuItem item = new MenuItem();
         item.setName( name );
@@ -1486,10 +1478,8 @@ public class DefaultSiteTool
 
         Collections.sort( categoryReports, new ReportComparator( locale ) );
 
-        for ( Iterator k = categoryReports.iterator(); k.hasNext(); )
+        for ( MavenReport report : categoryReports )
         {
-            MavenReport report = (MavenReport) k.next();
-
             MenuItem subitem = new MenuItem();
             subitem.setName( report.getName( locale ) );
             subitem.setHref( report.getOutputName() + ".html" );
@@ -1509,7 +1499,7 @@ public class DefaultSiteTool
      * @param list could be null
      * @return true if the list is <code>null</code> or empty
      */
-    private static boolean isEmptyList( List list )
+    private static boolean isEmptyList( List<?> list )
     {
         return list == null || list.isEmpty();
     }

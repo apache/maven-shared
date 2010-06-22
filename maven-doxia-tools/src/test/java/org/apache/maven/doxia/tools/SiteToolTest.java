@@ -31,6 +31,7 @@ import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.doxia.site.decoration.DecorationModel;
 import org.apache.maven.doxia.site.decoration.Skin;
 import org.apache.maven.doxia.tools.stubs.SiteToolMavenProjectStub;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusTestCase;
 
 /**
@@ -233,12 +234,13 @@ public class SiteToolTest
         project.setArtifactId( "maven-site" );
         project.setVersion( "1.0" );
         String siteDirectory = "src/site";
-        List reactorProjects = new ArrayList();
+        List<MavenProject> reactorProjects = new ArrayList<MavenProject>();
 
         project.setBasedir( null ); // get it from repo
 
-        DecorationModel model = tool.getDecorationModel( project, reactorProjects, getLocalRepo(), project
-            .getRemoteArtifactRepositories(), siteDirectory, Locale.getDefault(), "ISO-8859-1", "ISO-8859-1" );
+        DecorationModel model =
+            tool.getDecorationModel( project, reactorProjects, getLocalRepo(), project.getRemoteArtifactRepositories(),
+                                     siteDirectory, Locale.getDefault(), "ISO-8859-1", "ISO-8859-1" );
         assertNotNull( model );
         assertNotNull( model.getBannerLeft() );
         assertEquals( "Maven", model.getBannerLeft().getName() );
@@ -261,7 +263,7 @@ public class SiteToolTest
 
         SiteToolMavenProjectStub project = new SiteToolMavenProjectStub( "no-site-test" );
         String siteDirectory = "src/site";
-        List reactorProjects = new ArrayList();
+        List<MavenProject> reactorProjects = new ArrayList<MavenProject>();
 
         DecorationModel model =
             tool.getDecorationModel( project, reactorProjects, getLocalRepo(), project.getRemoteArtifactRepositories(),

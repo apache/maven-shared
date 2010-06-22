@@ -34,7 +34,7 @@ import java.util.Locale;
  * @todo allow reports to define their order in some other way?
  */
 public class ReportComparator
-    implements Comparator
+    implements Comparator<MavenReport>
 {
     /** the local */
     private final Locale locale;
@@ -54,11 +54,8 @@ public class ReportComparator
     }
 
     /** {@inheritDoc} */
-    public int compare( Object o1, Object o2 )
+    public int compare( MavenReport r1, MavenReport r2 )
     {
-        MavenReport r1 = (MavenReport) o1;
-        MavenReport r2 = (MavenReport) o2;
-
         Collator collator = Collator.getInstance( locale );
         return collator.compare( r1.getName( locale ), r2.getName( locale ) );
     }

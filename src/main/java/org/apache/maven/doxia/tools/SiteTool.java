@@ -28,6 +28,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.doxia.site.decoration.DecorationModel;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.reporting.MavenReport;
 
 /**
  * Tool to play with <a href="http://maven.apache.org/doxia/">Doxia</a> objects
@@ -57,7 +58,8 @@ public interface SiteTool
      * local repository
      * @throws SiteToolException if any
      */
-    Artifact getSkinArtifactFromRepository( ArtifactRepository localRepository, List remoteArtifactRepositories,
+    Artifact getSkinArtifactFromRepository( ArtifactRepository localRepository,
+                                            List<ArtifactRepository> remoteArtifactRepositories,
                                             DecorationModel decoration )
         throws SiteToolException;
 
@@ -71,7 +73,8 @@ public interface SiteTool
      * @see org.apache.maven.doxia.site.decoration.Skin#getDefaultSkin()
      * @see #getSkinArtifactFromRepository(ArtifactRepository, List, DecorationModel)
      */
-    Artifact getDefaultSkinArtifact( ArtifactRepository localRepository, List remoteArtifactRepositories )
+    Artifact getDefaultSkinArtifact( ArtifactRepository localRepository,
+                                     List<ArtifactRepository> remoteArtifactRepositories )
         throws SiteToolException;
 
     /**
@@ -120,8 +123,8 @@ public interface SiteTool
      * found in repositories.
      * @throws SiteToolException if any
      */
-    File getSiteDescriptorFromRepository( MavenProject project, ArtifactRepository localRepository, List repositories,
-                                          Locale locale )
+    File getSiteDescriptorFromRepository( MavenProject project, ArtifactRepository localRepository,
+                                          List<ArtifactRepository> repositories, Locale locale )
         throws SiteToolException;
 
     /**
@@ -140,9 +143,9 @@ public interface SiteTool
      * interpolations.
      * @throws SiteToolException if any
      */
-    DecorationModel getDecorationModel( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
-                                        List repositories, String siteDirectory, Locale locale, String inputEncoding,
-                                        String outputEncoding )
+    DecorationModel getDecorationModel( MavenProject project, List<MavenProject> reactorProjects,
+                                        ArtifactRepository localRepository, List<ArtifactRepository> repositories,
+                                        String siteDirectory, Locale locale, String inputEncoding, String outputEncoding )
         throws SiteToolException;
 
     /**
@@ -152,7 +155,8 @@ public interface SiteTool
      * @param locale the locale used for the i18n in DecorationModel. If null, using the default locale in the jvm.
      * @param categories a map to put on the decoration model, not null.
      */
-    void populateReportsMenu( DecorationModel decorationModel, Locale locale, Map categories );
+    void populateReportsMenu( DecorationModel decorationModel, Locale locale,
+                              Map<String, List<MavenReport>> categories );
 
     /**
      * Interpolating several expressions in the site descriptor content. Actually, the expressions can be in
@@ -186,8 +190,9 @@ public interface SiteTool
      * @return the site descriptor content based on the <code>site.xml</code> file with interpolated strings.
      * @throws SiteToolException if errors happened during the interpolation.
      */
-    String getInterpolatedSiteDescriptorContent( Map props, MavenProject aProject, String siteDescriptorContent,
-                                                 String inputEncoding, String outputEncoding )
+    String getInterpolatedSiteDescriptorContent( Map<String, String> props, MavenProject aProject,
+                                                 String siteDescriptorContent, String inputEncoding,
+                                                 String outputEncoding )
         throws SiteToolException;
 
     /**
@@ -203,7 +208,8 @@ public interface SiteTool
      * @param localRepository the Maven local repository, not null.
      * @return the parent project with interpolated URLs.
      */
-    MavenProject getParentProject( MavenProject aProject, List reactorProjects, ArtifactRepository localRepository );
+    MavenProject getParentProject( MavenProject aProject, List<MavenProject> reactorProjects,
+                                   ArtifactRepository localRepository );
 
     /**
      * Populate the parent menu part of the decoration model.
@@ -245,7 +251,7 @@ public interface SiteTool
      *      {@link #populateModulesMenu(MavenProject, List, ArtifactRepository, DecorationModel, Locale, boolean)}
      *      instead
      */
-    void populateModules( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
+    void populateModules( MavenProject project, List<MavenProject> reactorProjects, ArtifactRepository localRepository,
                           DecorationModel decorationModel, Locale locale, boolean keepInheritedRefs )
         throws SiteToolException;
 
@@ -260,8 +266,9 @@ public interface SiteTool
      * @param keepInheritedRefs used for inherited references.
      * @throws SiteToolException if any
      */
-    void populateModulesMenu( MavenProject project, List reactorProjects, ArtifactRepository localRepository,
-                              DecorationModel decorationModel, Locale locale, boolean keepInheritedRefs )
+    void populateModulesMenu( MavenProject project, List<MavenProject> reactorProjects,
+                              ArtifactRepository localRepository, DecorationModel decorationModel, Locale locale,
+                              boolean keepInheritedRefs )
         throws SiteToolException;
 
     /**
@@ -273,7 +280,7 @@ public interface SiteTool
      * default Locale for this instance of the Java Virtual Machine.
      * @return a list of <code>Locale</code>
      */
-    List getAvailableLocales( String locales );
+    List<Locale> getAvailableLocales( String locales );
 
     /**
      * Converts a locale code like "en", "en_US" or "en_US_win" to a <code>java.util.Locale</code>

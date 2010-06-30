@@ -760,7 +760,7 @@ public class DefaultSiteTool
                 {
                     parentProject = mavenProjectBuilder.buildFromRepository( aProject.getParentArtifact(), aProject
                         .getRemoteArtifactRepositories(), localRepository );
-                    getLogger().info( "Parent project loaded from repository." );
+                    getLogger().info( "Parent project loaded from repository: " + parentProject.getId() );
                 }
                 catch ( ProjectBuildingException e )
                 {

@@ -510,9 +510,11 @@ public class DefaultSiteTool
         props.put( "reports", "<menu ref=\"reports\"/>\n" );
         props.put( "modules", "<menu ref=\"modules\"/>\n" );
 
-        DecorationModel decorationModel = getDecorationModel( project, reactorProjects, localRepository, repositories,
-                                                              siteDirectory, locale, props, inputEncoding,
-                                                              outputEncoding );
+        MavenProject parentProject = getParentProject( project, reactorProjects, localRepository );
+
+        DecorationModel decorationModel =
+            getDecorationModel( project, parentProject, reactorProjects, localRepository, repositories, siteDirectory,
+                                locale, props, inputEncoding, outputEncoding );
 
         if ( decorationModel == null )
         {
@@ -534,8 +536,6 @@ public class DefaultSiteTool
 
             decorationModel = readDecorationModel( siteDescriptorContent );
         }
-
-        MavenProject parentProject = getParentProject( project, reactorProjects, localRepository );
 
         if ( parentProject != null )
         {
@@ -1201,8 +1201,8 @@ public class DefaultSiteTool
      * @return the decoration model depending the locale
      * @throws SiteToolException if any
      */
-    private DecorationModel getDecorationModel( MavenProject project, List<MavenProject> reactorProjects,
-                                                ArtifactRepository localRepository,
+    private DecorationModel getDecorationModel( MavenProject project, MavenProject parentProject,
+                                                List<MavenProject> reactorProjects, ArtifactRepository localRepository,
                                                 List<ArtifactRepository> repositories, String siteDirectory,
                                                 Locale locale, Map<String, String> origProps, String inputEncoding,
                                                 String outputEncoding )
@@ -1256,12 +1256,15 @@ public class DefaultSiteTool
             decoration.setLastModified( siteDescriptorLastModified );
         }
 
-        MavenProject parentProject = getParentProject( project, reactorProjects, localRepository );
         if ( parentProject != null )
         {
             getLogger().debug( "Parent project loaded ..." );
-            DecorationModel parent = getDecorationModel( parentProject, reactorProjects, localRepository, repositories,
-                                                         siteDirectory, locale, props, inputEncoding, outputEncoding );
+
+            MavenProject parentParentProject = getParentProject( parentProject, reactorProjects, localRepository );
+
+            DecorationModel parent =
+                getDecorationModel( parentProject, parentParentProject, reactorProjects, localRepository, repositories,
+                                    siteDirectory, locale, props, inputEncoding, outputEncoding );
 
             // MSHARED-116 requires an empty decoration model (instead of a null one)
             // MSHARED-145 requires us to do this only if there is a parent to merge it with

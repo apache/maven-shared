@@ -356,43 +356,43 @@ public class DefaultSiteTool
             toTokeniser.nextToken();
         }
 
-        String relativePath = "";
+        StringBuilder relativePath = new StringBuilder();
 
         // add back refs for the rest of from location.
         while ( fromTokeniser.hasMoreTokens() )
         {
             fromTokeniser.nextToken();
 
-            relativePath += "..";
+            relativePath.append( ".." );
 
             if ( fromTokeniser.hasMoreTokens() )
             {
-                relativePath += File.separatorChar;
+                relativePath.append( File.separatorChar );
             }
         }
 
         if ( relativePath.length() != 0 && toTokeniser.hasMoreTokens() )
         {
-            relativePath += File.separatorChar;
+            relativePath.append( File.separatorChar );
         }
 
         // add fwd fills for whatever's left of to.
         while ( toTokeniser.hasMoreTokens() )
         {
-            relativePath += toTokeniser.nextToken();
+            relativePath.append( toTokeniser.nextToken() );
 
             if ( toTokeniser.hasMoreTokens() )
             {
-                relativePath += File.separatorChar;
+                relativePath.append( File.separatorChar );
             }
         }
 
-        if ( !relativePath.equals( to ) )
+        if ( getLogger().isDebugEnabled() && !relativePath.equals( to ) )
         {
             getLogger().debug( "Mapped url: " + to + " to relative path: " + relativePath );
         }
 
-        return relativePath;
+        return relativePath.toString();
     }
 
     /** {@inheritDoc} */

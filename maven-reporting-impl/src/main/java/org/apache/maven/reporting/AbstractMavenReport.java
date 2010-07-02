@@ -139,8 +139,6 @@ public abstract class AbstractMavenReport
     public void generate( org.codehaus.doxia.sink.Sink aSink, Locale aLocale )
         throws MavenReportException
     {
-        getLog().warn( "Deprecated API called - not org.apache.maven.doxia.sink.Sink instance and no SinkFactory"
-                       + " available. Please update this plugin." );
         generate( aSink, null, aLocale );
     }
 
@@ -156,7 +154,6 @@ public abstract class AbstractMavenReport
     public void generate( Sink aSink, Locale aLocale )
         throws MavenReportException
     {
-        getLog().warn( "Deprecated API called - no SinkFactory available. Please update this plugin." );
         generate( aSink, null, aLocale );
     }
 

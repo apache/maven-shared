@@ -1869,6 +1869,11 @@ public class Verifier
         this.cliOptions = cliOptions;
     }
 
+    public void addCliOption( String option )
+    {
+        cliOptions.add( option );
+    }
+
     public Properties getSystemProperties()
     {
         return systemProperties;

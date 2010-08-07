@@ -44,7 +44,6 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-doxia-tools/</developerConnection>
     <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-doxia-tools/</url>
   </scm>
-
   <issueManagement>
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED/component/13263</url>

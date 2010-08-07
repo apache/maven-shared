@@ -39,4 +39,14 @@ under the License.
     <module>maven-script-ant</module>
     <module>maven-script-beanshell</module>
   </modules>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-script</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-script</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-script</url>
+  </scm>
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/13277</url>
+  </issueManagement>
 </project>

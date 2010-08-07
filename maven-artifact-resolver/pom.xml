@@ -21,24 +21,36 @@ under the License.
 
 <project xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd' xmlns='http://maven.apache.org/POM/4.0.0'>
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <artifactId>maven-shared-components</artifactId>
     <groupId>org.apache.maven.shared</groupId>
     <version>12</version>
   </parent>
-  
+
   <artifactId>maven-artifact-resolver</artifactId>
   <version>1.1-SNAPSHOT</version>
+
   <name>Maven Artifact Resolution API</name>
   <description>
     Provides a component for plugins to easily resolve project dependencies.
   </description>
-  
+
   <!--
   NOTE: This library is meant to be used by plugins, hence we can consider the Maven API to be provided by the
   runtime environment. Last but not least, using "provided" scope is the easiest way to exclude all our transitive
   dependencies from the plugin class path.
   -->
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-artifact-resolver</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-artifact-resolver</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-artifact-resolver</url>
+  </scm>
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/14048</url>
+  </issueManagement>
 
   <dependencies>
     <dependency>

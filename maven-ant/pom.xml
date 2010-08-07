@@ -50,6 +50,10 @@ under the License.
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-ant</developerConnection>
     <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-ant</url>
   </scm>
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/14295</url>
+  </issueManagement>
 
   <dependencies>
     <dependency>

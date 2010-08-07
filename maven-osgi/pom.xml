@@ -32,6 +32,16 @@
   <name>Maven OSGi integration</name>
   <description>Library for Maven-OSGi integration</description>
 
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-osgi</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-osgi</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-osgi</url>
+  </scm>
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/13273</url>
+  </issueManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>

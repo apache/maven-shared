@@ -47,7 +47,7 @@
 
   <issueManagement>
     <system>jira</system>
-    <url>http://jira.codehaus.org/browse/MSHARED</url>
+    <url>http://jira.codehaus.org/browse/MSHARED/component/13263</url>
   </issueManagement>
 
   <properties>

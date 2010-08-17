@@ -99,7 +99,8 @@ public class AbstractMavenReportRendererTest extends TestCase
         // real world cases with quote
         checkPattern( "project''s info", new String[] { "project'", null, "s info", null } );
         checkPattern( "it''s a question of {chance, http://en.wikipedia.org/wiki/Chance}",
-                      new String[] { "it'", null, "s a question of ", null, "chance", "http://en.wikipedia.org/wiki/Chance" } );
+                      new String[] { "it'", null, "s a question of ", null,
+                                     "chance", "http://en.wikipedia.org/wiki/Chance" } );
         checkPattern( "{s'inscrire,mail@mail.com}", new String[] { "s'inscrire", "mail@mail.com" } );
 
         // throwing an IllegalArgumentException in case of unmatched quote would avoid the following:
@@ -107,5 +108,6 @@ public class AbstractMavenReportRendererTest extends TestCase
                       new String[] { "it's a question of {chance, http://en.wikipedia.org/wiki/Chance}", null } );
 
         checkPattern( "{}test,", new String[] { "", null, "test,", null } );
+        checkPattern( "Hi ${name}. How is it going, sir?", new String[] { "Hi ${name}. How is it going, sir?", null } );
     }
 }

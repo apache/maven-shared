@@ -688,7 +688,7 @@ public abstract class AbstractMavenReportRenderer
         {
             int lastComma = text.lastIndexOf( "," );
             int lastSemi = text.lastIndexOf( "}" );
-            if ( lastComma != -1 && lastSemi != -1 )
+            if ( lastComma != -1 && lastSemi != -1 && lastComma < lastSemi )
             {
                 segments.add( text.substring( lastComma + 1, lastSemi ).trim() );
                 segments.add( null );

@@ -25,7 +25,13 @@
   </properties>
   <body>
     <section name="Maven Archiver">
-      <p>The Maven Archiver is mainly used by plugins to handle packaging.</p>
+      <p>
+        The Maven Archiver is mainly used by plugins to handle packaging. The
+        version numbers referenced in the Since column on this page are the
+        version of the Maven Archiver component - not for any specific plugin.
+        To see which version of Maven Archiver a plugin uses, go to the site
+        for that plugin.
+      </p>
 
       <source>
 &lt;<a href="#class_archive">archive</a>&gt;

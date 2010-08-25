@@ -165,7 +165,7 @@ public class DefaultSiteTool
         catch ( InvalidVersionSpecificationException e )
         {
             throw new SiteToolException( "InvalidVersionSpecificationException: The skin version '" + version
-                + "' is not valid: " + e.getMessage() );
+                + "' is not valid: " + e.getMessage(), e );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -173,7 +173,7 @@ public class DefaultSiteTool
         }
         catch ( ArtifactNotFoundException e )
         {
-            throw new SiteToolException( "ArtifactNotFoundException: The skin does not exist: " + e.getMessage() );
+            throw new SiteToolException( "ArtifactNotFoundException: The skin does not exist: " + e.getMessage(), e );
         }
 
         return artifact;
@@ -459,11 +459,11 @@ public class DefaultSiteTool
         catch ( ArtifactResolutionException e )
         {
             throw new SiteToolException( "ArtifactResolutionException: Unable to locate site descriptor: "
-                + e.getMessage() );
+                + e.getMessage(), e );
         }
         catch ( IOException e )
         {
-            throw new SiteToolException( "IOException: Unable to locate site descriptor: " + e.getMessage() );
+            throw new SiteToolException( "IOException: Unable to locate site descriptor: " + e.getMessage(), e );
         }
     }
 
@@ -1402,7 +1402,7 @@ public class DefaultSiteTool
                 catch ( IOException e )
                 {
                     getLogger().error(
-                        "Error encountered when trying to resolve canonical module paths: " + e.getMessage() );
+                        "Error encountered when trying to resolve canonical module paths: " + e.getMessage(), e );
                 }
             }
         }

@@ -18,30 +18,39 @@
  */
 package org.apache.maven.shared.artifact.filter;
 
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-
-public class PatternExcludesArtifactFilterTest
-    extends TestCase
+public class PatternExcludesArtifactFilterTest extends TestCase
 {
 
-    private PatternArtifactFilterTCK tck = new PatternArtifactFilterTCK()
+    private final PatternArtifactFilterTCK tck = new PatternArtifactFilterTCK()
     {
 
-        protected ArtifactFilter createFilter( List patterns )
+        protected ArtifactFilter createFilter( final List patterns )
         {
             return new PatternExcludesArtifactFilter( patterns );
         }
 
-        protected ArtifactFilter createFilter( List patterns, boolean actTransitively )
+        protected ArtifactFilter createFilter( final List patterns, final boolean actTransitively )
         {
             return new PatternExcludesArtifactFilter( patterns, actTransitively );
         }
 
     };
+
+    public void testShouldTriggerBothPatternsWithNonColonWildcards()
+    {
+        tck.testShouldTriggerBothPatternsWithNonColonWildcards( true );
+    }
+
+    public void testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard()
+    {
+        tck.testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard( true );
+    }
 
     public void testShouldTriggerBothPatternsWithWildcards()
     {
@@ -99,8 +108,8 @@ public class PatternExcludesArtifactFilterTest
     }
 
     // See comment in TCK.
-//    public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild()
-//    {
-//        tck.testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild( true );
-//    }
+    // public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild()
+    // {
+    // tck.testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild( true );
+    // }
 }

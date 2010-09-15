@@ -18,29 +18,33 @@
  */
 package org.apache.maven.shared.artifact.filter;
 
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-
-public class PatternIncludesArtifactFilterTest
-    extends TestCase
+public class PatternIncludesArtifactFilterTest extends TestCase
 {
-    private PatternArtifactFilterTCK tck = new PatternArtifactFilterTCK()
+    private final PatternArtifactFilterTCK tck = new PatternArtifactFilterTCK()
     {
 
-        protected ArtifactFilter createFilter( List patterns )
+        protected ArtifactFilter createFilter( final List patterns )
         {
             return new PatternIncludesArtifactFilter( patterns );
         }
 
-        protected ArtifactFilter createFilter( List patterns, boolean actTransitively )
+        protected ArtifactFilter createFilter( final List patterns, final boolean actTransitively )
         {
             return new PatternIncludesArtifactFilter( patterns, actTransitively );
         }
 
     };
+
+    public void testShouldTriggerBothPatternsWithNonColonWildcards()
+    {
+        tck.testShouldTriggerBothPatternsWithNonColonWildcards( false );
+    }
 
     public void testShouldTriggerBothPatternsWithWildcards()
     {
@@ -60,6 +64,11 @@ public class PatternIncludesArtifactFilterTest
     public void testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled()
     {
         tck.testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled( false );
+    }
+
+    public void testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard()
+    {
+        tck.testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard( false );
     }
 
     public void testShouldNotIncludeWhenArtifactIdDiffers()
@@ -98,8 +107,8 @@ public class PatternIncludesArtifactFilterTest
     }
 
     // See comment in TCK.
-//    public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild()
-//    {
-//        tck.testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild( false );
-//    }
+    // public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild()
+    // {
+    // tck.testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild( false );
+    // }
 }

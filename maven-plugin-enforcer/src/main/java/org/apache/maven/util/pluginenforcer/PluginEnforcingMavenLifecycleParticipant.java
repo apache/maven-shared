@@ -23,7 +23,6 @@ import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
-import org.apache.maven.model.ReportPlugin;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
@@ -71,6 +70,11 @@ public class PluginEnforcingMavenLifecycleParticipant
             String groupId = parts.length == 3 ? parts[0] : "org.apache.maven.plugins";
             String artifactId = parts[parts.length - 2];
             String version = parts[parts.length - 1];
+            if ( StringUtils.isEmpty( groupId ) || StringUtils.isEmpty( artifactId ) || StringUtils.isEmpty( version ) )
+            {
+                logger.warn( "\"" + forcePlugin + "\" does not match the format [groupId:]artifactId:version" );
+                continue;
+            }
             logger.info( "Forcing " + ArtifactUtils.versionlessKey( groupId, artifactId ) + " to " + version );
             logger.info( "" );
             for ( MavenProject project : session.getProjects() )

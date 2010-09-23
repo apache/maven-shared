@@ -1,0 +1,111 @@
+   ---
+   Introduction
+   ---
+   Stephen Connolly
+   ---
+   2010-09-23
+   ---
+
+ ~~ Licensed to the Apache Software Foundation (ASF) under one
+ ~~ or more contributor license agreements.  See the NOTICE file
+ ~~ distributed with this work for additional information
+ ~~ regarding copyright ownership.  The ASF licenses this file
+ ~~ to you under the Apache License, Version 2.0 (the
+ ~~ "License"); you may not use this file except in compliance
+ ~~ with the License.  You may obtain a copy of the License at
+ ~~
+ ~~   http://www.apache.org/licenses/LICENSE-2.0
+ ~~
+ ~~ Unless required by applicable law or agreed to in writing,
+ ~~ software distributed under the License is distributed on an
+ ~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~~ KIND, either express or implied.  See the License for the
+ ~~ specific language governing permissions and limitations
+ ~~ under the License.
+
+ ~~ NOTE: For help with the syntax of this file, see:
+ ~~ http://maven.apache.org/doxia/references/apt-format.html
+
+Usage
+
+  This page documents how to use the Maven ${target.maven.version} Plugin 
+  Enforcer.
+
+* Installation
+
+  To install the Maven ${target.maven.version} Plugin Enforcer, you copy
+  the <<<${project.artifactId}-${project.version}.jar>>> file into the
+  <<<lib>>> directory of your installation of Maven ${target.maven.version}.
+
+  When the plugin is installed, Maven will print a message on each build after 
+  it has finished scanning for projects, e.g.
+
++---+
+$ mvn package
+[INFO] Scanning for projects...
+[INFO] Plugin Enforcer: Nothing to do (i.e. -Dforce.plugins undefined)
+[INFO]       
+...                                                                  
++---+
+
+* Uninstallation
+
+  To uninstall the Maven ${target.maven.version} Plugin Enforcer, you delete
+  the <<<${project.artifactId}-${project.version}.jar>>> file from the
+  <<<lib>>> directory of your installation of Maven ${target.maven.version}.
+
+* Forcing a specific plugin version
+
+  To force a specific plugin version you just specify the plugin's GAV coordinates
+  in the force.plugins property from the command line, e.g. to use buildhelper-maven-plugin
+  version 1.5:
+
++---+
+$ mvn -Dforce.plugins=org.codehaus.mojo:buildhelper-maven-plugin:1.5 ...
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Plugin Enforcer
+[INFO] ------------------------------------------------------------------------
+[INFO] Forcing org.codehaus.mojo:buildhelper-maven-plugin to 1.5
+[INFO] 
+...
++---+
+
+  For plugins with a group Id of <<<org.apache.maven.plugins>>> you can omit the group Id, e.g.
+
++---+
+$ mvn -Dforce.plugins=maven-surefire-plugin:2.6 ...
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Plugin Enforcer
+[INFO] ------------------------------------------------------------------------
+[INFO] Forcing org.apache.maven.plugins:maven-surefire-plugin to 2.6
+[INFO] 
+...
++---+
+
+  If you want to force multiple plugin versions at the same time, you separate the GAV coordinates
+  with a comma, e.g.
+
++---+
+$ mvn -Dforce.plugins=org.codehaus.mojo:buildhelper-maven-plugin:1.5,maven-surefire-plugin:2.6 ...
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Plugin Enforcer
+[INFO] ------------------------------------------------------------------------
+[INFO] Forcing org.codehaus.mojo:buildhelper-maven-plugin to 1.5
+[INFO] 
+[WARNING] No replacements Project: XXX
+[INFO] 
+[INFO] Forcing org.apache.maven.plugins:maven-surefire-plugin to 2.6
+[INFO] 
+[INFO] Project: XXX
+[INFO] Plugin Management: replacing version 2.4.3 with 2.6
+[INFO] Build Plugins: replacing version 2.6 with 2.6
+[INFO] 
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building XXX 1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+...
++---+

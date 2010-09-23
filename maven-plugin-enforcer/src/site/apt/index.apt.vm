@@ -26,20 +26,20 @@
  ~~ NOTE: For help with the syntax of this file, see:
  ~~ http://maven.apache.org/doxia/references/apt-format.html
 
-Maven ${target.maven.version} Plugin Enforcer
+Maven ${targetMavenVersion} Plugin Enforcer
 
   When testing new versions of Maven plugins, it can often be useful
   to have a means of forcing a specific maven plugin version be used
-  irrespective of what is defined in the pom.xml. Maven plugin 
-  developers may also want a CI server to test the new version of their 
+  irrespective of what is defined in the pom.xml. Maven plugin
+  developers may also want a CI server to test the new version of their
   plugin against third-party source code bases. If the third-party
   tree has locked down their plugin versions to non-SNAPSHOT versions
   and the CI server is building a -SNAPSHOT version of the plugin,
   it can be hard to automate testing the plugin -SNAPSHOTs.
 
-  The Maven ${target.maven.version} Plugin Enforcer provides a means
+  The Maven ${targetMavenVersion} Plugin Enforcer provides a means
   of forcing maven to use specific versions of plugins that you
-  specify from the command line overriding any specification in the 
+  specify from the command line overriding any specification in the
   pom.xml file.
 
 * Features

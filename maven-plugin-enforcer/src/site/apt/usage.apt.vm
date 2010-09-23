@@ -28,31 +28,31 @@
 
 Usage
 
-  This page documents how to use the Maven ${target.maven.version} Plugin 
+  This page documents how to use the Maven ${targetMavenVersion} Plugin
   Enforcer.
 
 * Installation
 
-  To install the Maven ${target.maven.version} Plugin Enforcer, you copy
+  To install the Maven ${targetMavenVersion} Plugin Enforcer, you copy
   the <<<${project.artifactId}-${project.version}.jar>>> file into the
-  <<<lib>>> directory of your installation of Maven ${target.maven.version}.
+  <<<lib>>> directory of your installation of Maven ${targetMavenVersion}.
 
-  When the plugin is installed, Maven will print a message on each build after 
+  When the plugin is installed, Maven will print a message on each build after
   it has finished scanning for projects, e.g.
 
 +---+
 $ mvn package
 [INFO] Scanning for projects...
 [INFO] Plugin Enforcer: Nothing to do (i.e. -Dforce.plugins undefined)
-[INFO]       
-...                                                                  
+[INFO]
+...
 +---+
 
 * Uninstallation
 
-  To uninstall the Maven ${target.maven.version} Plugin Enforcer, you delete
+  To uninstall the Maven ${targetMavenVersion} Plugin Enforcer, you delete
   the <<<${project.artifactId}-${project.version}.jar>>> file from the
-  <<<lib>>> directory of your installation of Maven ${target.maven.version}.
+  <<<lib>>> directory of your installation of Maven ${targetMavenVersion}.
 
 * Forcing a specific plugin version
 
@@ -67,7 +67,7 @@ $ mvn -Dforce.plugins=org.codehaus.mojo:buildhelper-maven-plugin:1.5 ...
 [INFO] Plugin Enforcer
 [INFO] ------------------------------------------------------------------------
 [INFO] Forcing org.codehaus.mojo:buildhelper-maven-plugin to 1.5
-[INFO] 
+[INFO]
 ...
 +---+
 
@@ -80,7 +80,7 @@ $ mvn -Dforce.plugins=maven-surefire-plugin:2.6 ...
 [INFO] Plugin Enforcer
 [INFO] ------------------------------------------------------------------------
 [INFO] Forcing org.apache.maven.plugins:maven-surefire-plugin to 2.6
-[INFO] 
+[INFO]
 ...
 +---+
 
@@ -94,16 +94,16 @@ $ mvn -Dforce.plugins=org.codehaus.mojo:buildhelper-maven-plugin:1.5,maven-suref
 [INFO] Plugin Enforcer
 [INFO] ------------------------------------------------------------------------
 [INFO] Forcing org.codehaus.mojo:buildhelper-maven-plugin to 1.5
-[INFO] 
+[INFO]
 [WARNING] No replacements Project: XXX
-[INFO] 
+[INFO]
 [INFO] Forcing org.apache.maven.plugins:maven-surefire-plugin to 2.6
-[INFO] 
+[INFO]
 [INFO] Project: XXX
 [INFO] Plugin Management: replacing version 2.4.3 with 2.6
 [INFO] Build Plugins: replacing version 2.6 with 2.6
-[INFO] 
-[INFO]                                                                         
+[INFO]
+[INFO]
 [INFO] ------------------------------------------------------------------------
 [INFO] Building XXX 1.0-SNAPSHOT
 [INFO] ------------------------------------------------------------------------

@@ -23,7 +23,7 @@
   <artifactId>maven-plugin-enforcer</artifactId>
   <version>3.0-SNAPSHOT</version>
 
-  <name>Apache Maven ${target.maven.version} Plugin Enforcer</name>
+  <name>Apache Maven ${targetMavenVersion} Plugin Enforcer</name>
   <description>
     A build extension that allows to enforce specific versions for build plugins. The primary purpose is to easily
     test new plugin versions without actually changing the POMs.
@@ -40,14 +40,14 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <target.maven.version>3.0-beta-3</target.maven.version>
+    <targetMavenVersion>3.0-beta-3</targetMavenVersion>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
-      <version>${target.maven.version}</version>
+      <version>${targetMavenVersion}</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

@@ -724,7 +724,8 @@ public class DefaultSiteTool
                 }
             }
 
-            if ( parentProject == null && aProject.getBasedir() != null )
+            if ( parentProject == null && aProject.getBasedir() != null
+                && StringUtils.isNotEmpty( aProject.getModel().getParent().getRelativePath() ) )
             {
                 try
                 {

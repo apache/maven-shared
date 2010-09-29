@@ -31,10 +31,12 @@ import java.util.Properties;
 
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.invoker.InvocationRequest;
 import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.test.plugin.BuildTool;
 import org.apache.maven.shared.test.plugin.TestToolsException;
 import org.codehaus.plexus.PlexusTestCase;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  * Tests {@code DefaultMavenRuntime}.
@@ -651,9 +653,23 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         List<String> goals = Arrays.asList( new String[] { "clean", "package" } );
         File log = new File( pom.getParentFile(), "build.log" );
 
-        InvocationResult result = buildTool.executeMaven( pom, properties, goals, log );
+        InvocationRequest request = buildTool.createBasicInvocationRequest( pom, properties, goals, log );
+        request.setLocalRepositoryDirectory( findLocalRepo() );
+        InvocationResult result = buildTool.executeMaven( request );
         assertNull( "Error building test project", result.getExecutionException() );
         assertEquals( "Error building test project", 0, result.getExitCode() );
+    }
+
+    private File findLocalRepo()
+    {
+        String basedir = System.getProperty( "maven.repo.local", "" );
+
+        if ( StringUtils.isNotEmpty( basedir ) )
+        {
+            return new File( basedir );
+        }
+
+        return null;
     }
 
     private File getPackage( String pomPath )

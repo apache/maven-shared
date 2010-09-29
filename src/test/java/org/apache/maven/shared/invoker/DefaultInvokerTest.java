@@ -194,10 +194,15 @@ public class DefaultInvokerTest
         throws IOException
     {
         Invoker invoker = new DefaultInvoker();
+
         invoker.setMavenHome( findMavenHome() );
+
         InvokerLogger logger = new SystemOutLogger();
         logger.setThreshold( InvokerLogger.DEBUG );
         invoker.setLogger( logger );
+
+        invoker.setLocalRepositoryDirectory( findLocalRepo() );
+
         return invoker;
     }
 
@@ -218,6 +223,18 @@ public class DefaultInvokerTest
         }
 
         return new File( mavenHome );
+    }
+
+    private File findLocalRepo()
+    {
+        String basedir = System.getProperty( "maven.repo.local", "" );
+
+        if ( StringUtils.isNotEmpty( basedir ) )
+        {
+            return new File( basedir );
+        }
+
+        return null;
     }
 
     private File getBasedirForBuild()

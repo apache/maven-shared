@@ -82,6 +82,7 @@ class Classpath3xLauncher
             Properties originalProperties = System.getProperties();
             System.setProperties( null );
             System.setProperty( "maven.home", originalProperties.getProperty( "maven.home", "" ) );
+            System.setProperty( "user.dir", new File( workingDirectory ).getAbsolutePath() );
 
             ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader( mavenCli.getClass().getClassLoader() );

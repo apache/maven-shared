@@ -928,6 +928,7 @@ public class Verifier
         }
 
         File dstFile = new File( getBasedir(), dstPath );
+        dstFile.getParentFile().mkdirs();
         FileUtils.fileWrite( dstFile.getPath(), fileEncoding, data );
 
         return dstFile;

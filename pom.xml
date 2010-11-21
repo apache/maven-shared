@@ -50,8 +50,8 @@
   </issueManagement>
 
   <properties>
-    <doxiaVersion>1.1.3</doxiaVersion>
-    <doxiaSitetoolsVersion>1.1.3</doxiaSitetoolsVersion>
+    <doxiaVersion>1.1.4</doxiaVersion>
+    <doxiaSitetoolsVersion>1.1.4</doxiaSitetoolsVersion>
     <mavenVersion>2.2.1</mavenVersion>
   </properties>
 

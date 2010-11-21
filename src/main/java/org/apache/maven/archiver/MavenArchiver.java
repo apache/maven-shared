@@ -239,7 +239,7 @@ public class MavenArchiver
                             }
                             
                             extraExpressions.setProperty( "groupIdPath", artifact.getGroupId().replace( '.', '/' ) );
-                            if ( artifact.getClassifier() != null )
+                            if ( StringUtils.isNotEmpty( artifact.getClassifier() ) )
                             {
                                 extraExpressions.setProperty( "dashClassifier", "-" + artifact.getClassifier() );
                                 extraExpressions.setProperty( "dashClassifier?", "-" + artifact.getClassifier() );

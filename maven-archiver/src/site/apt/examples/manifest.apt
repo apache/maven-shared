@@ -83,13 +83,13 @@ Archiver-Version: Plexus Archiver
 Created-By: Apache Maven
 Built-By: ${user.name}
 Build-Jdk: ${java.version}
-Specification-Title: ${pom.name}
-Specification-Version: ${pom.version}
-Specification-Vendor: ${pom.organization.name}
-Implementation-Title: ${pom.name}
-Implementation-Version: ${pom.version}
-Implementation-Vendor-Id: ${pom.groupId}
-Implementation-Vendor: ${pom.organization.name}
+Specification-Title: ${project.name}
+Specification-Version: ${project.version}
+Specification-Vendor: ${project.organization.name}
+Implementation-Title: ${project.name}
+Implementation-Version: ${project.version}
+Implementation-Vendor-Id: ${project.groupId}
+Implementation-Vendor: ${project.organization.name}
 +-----+
 
  <<Note:>> If your pom.xml does not have an <<<\<organization\>>>>/<<<\<name\>>>>
@@ -98,4 +98,4 @@ Implementation-Vendor: ${pom.organization.name}
 
  <<Note:>> If your pom.xml does not have a <<<\<name\>>>> element, then the
  <<<Specification-Title>>> and <<<Implementation-Title>>> entries will have
- "Unnamed - $\{pom.groupId\}:$\{pom.artifactId\}:$\{pom.version\}" as their value.
+ "Unnamed - $\{project.groupId\}:$\{project.artifactId\}:$\{project.version\}" as their value.

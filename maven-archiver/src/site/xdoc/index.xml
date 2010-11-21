@@ -195,10 +195,10 @@
             <td>
               If the manifest will contain these entries:
               <source>
-Implementation-Title: ${pom.name}
-Implementation-Version: ${pom.version}
-Implementation-Vendor-Id: ${pom.groupId}
-Implementation-Vendor: ${pom.organization.name}
+Implementation-Title: ${project.name}
+Implementation-Version: ${project.version}
+Implementation-Vendor-Id: ${project.groupId}
+Implementation-Vendor: ${project.organization.name}
               </source>
               The default value is <code>false</code>.
             </td>
@@ -210,9 +210,9 @@ Implementation-Vendor: ${pom.organization.name}
             <td>
               If the manifest will contain these entries:
               <source>
-Specification-Title: ${pom.name}
-Specification-Version: ${pom.version}
-Specification-Vendor: ${pom.organization.name}
+Specification-Title: ${project.name}
+Specification-Version: ${project.version}
+Specification-Vendor: ${project.organization.name}
               </source>
               The default value is <code>false</code>.
             </td>
@@ -330,9 +330,9 @@ Specification-Vendor: ${pom.organization.name}
           following content:
         </p>
         <source>
-version=${pom.version}
-groupId=${pom.groupId}
-artifactId=${pom.artifactId}
+version=${project.version}
+groupId=${project.groupId}
+artifactId=${project.artifactId}
         </source>
       </subsection>
     </section>

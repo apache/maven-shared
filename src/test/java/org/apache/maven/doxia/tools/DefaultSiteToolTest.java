@@ -28,25 +28,10 @@ import junit.framework.TestCase;
 public class DefaultSiteToolTest
     extends TestCase
 {
-    /** {@inheritDoc} */
-    protected void setUp()
-        throws Exception
-    {
-        super.setUp();
-    }
-
-    /** {@inheritDoc} */
-    protected void tearDown()
-        throws Exception
-    {
-        super.tearDown();
-    }
-
     /**
-     * @throws Exception
+     * test getNormalizedPath().
      */
     public void testGetNormalizedPath()
-        throws Exception
     {
         assertEquals( null, DefaultSiteTool.getNormalizedPath( null ) );
         assertEquals( "", DefaultSiteTool.getNormalizedPath( "" ) );
@@ -58,6 +43,6 @@ public class DefaultSiteToolTest
         assertEquals( "foo", DefaultSiteTool.getNormalizedPath( "./foo" ) );
         assertEquals( "../foo", DefaultSiteTool.getNormalizedPath( "../foo" ) );
         assertEquals( "../../foo", DefaultSiteTool.getNormalizedPath( "../../foo" ) );
+        assertEquals( "index.html", DefaultSiteTool.getNormalizedPath( "./foo/../index.html" ) );
     }
-
 }

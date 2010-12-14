@@ -387,7 +387,7 @@ public class DefaultSiteTool
             }
         }
 
-        if ( getLogger().isDebugEnabled() && !relativePath.equals( to ) )
+        if ( getLogger().isDebugEnabled() && !relativePath.toString().equals( to ) )
         {
             getLogger().debug( "Mapped url: " + to + " to relative path: " + relativePath );
         }
@@ -1480,7 +1480,8 @@ public class DefaultSiteTool
         item.setCollapse( true );
         item.setHref( href );
 
-        Collections.sort( categoryReports, new ReportComparator( locale ) );
+        // MSHARED-172, allow reports to define their order in some other way?
+        //Collections.sort( categoryReports, new ReportComparator( locale ) );
 
         for ( MavenReport report : categoryReports )
         {

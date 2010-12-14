@@ -41,21 +41,9 @@ import org.codehaus.plexus.PlexusTestCase;
 public class SiteToolTest
     extends PlexusTestCase
 {
-    /** {@inheritDoc} */
-    protected void setUp()
-        throws Exception
-    {
-        super.setUp();
-    }
-
-    /** {@inheritDoc} */
-    protected void tearDown()
-        throws Exception
-    {
-        super.tearDown();
-    }
-
     /**
+     * @return the repo.
+     *
      * @throws Exception
      */
     protected ArtifactRepository getLocalRepo()
@@ -71,11 +59,13 @@ public class SiteToolTest
         ArtifactRepositoryLayout defaultArtifactRepositoryLayout = (ArtifactRepositoryLayout) lookup(
                                                                                                       ArtifactRepositoryLayout.ROLE,
                                                                                                       "default" );
-        return artifactRepositoryFactory.createArtifactRepository( "local", getTestFile( "target/local-repo" ).toURL()
+        return artifactRepositoryFactory.createArtifactRepository( "local", getTestFile( "target/local-repo" ).toURI().toURL()
             .toString(), defaultArtifactRepositoryLayout, snapshotsPolicy, releasesPolicy );
     }
 
     /**
+     * @return the local repo directory.
+     *
      * @throws Exception
      */
     protected File getLocalRepoDir()

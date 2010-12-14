@@ -931,8 +931,6 @@ public class DefaultSiteTool
                     menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.projectmodules" ) );
                 }
 
-                if ( projects.size() == 1 )
-                {
                     getLogger().debug( "Attempting to load module information from local filesystem" );
 
                     // Not running reactor - search for the projects manually
@@ -964,11 +962,6 @@ public class DefaultSiteTool
                         models.add( model );
                     }
                     populateModulesMenuItemsFromModels( project, models, menu );
-                }
-                else
-                {
-                    populateModulesMenuItemsFromReactorProjects( project, reactorProjects, menu );
-                }
             }
             else
             {
@@ -1309,106 +1302,6 @@ public class DefaultSiteTool
             throw new SiteToolException( "Error reading site descriptor", e );
         }
         return decoration;
-    }
-
-    /**
-     * @param project         not null
-     * @param reactorProjects not null
-     * @param menu            not null
-     */
-    private void populateModulesMenuItemsFromReactorProjects( MavenProject project, List<MavenProject> reactorProjects,
-                                                              Menu menu )
-    {
-        for ( MavenProject moduleProject : getModuleProjects( project, reactorProjects, 1 ) )
-        {
-            appendMenuItem( project, menu, moduleProject.getName(), moduleProject.getUrl(),
-                            moduleProject.getArtifactId() );
-        }
-    }
-
-    /**
-     * Return all the projects that are modules, or modules of modules, of the specified project found within the
-     * reactor.
-     * <p/>
-     * The levels parameter controls how many descendant levels of modules are returned. With levels equal
-     * to 1, only the immediate modules of the specified project are returned.
-     * <p/>
-     * If levels equals 2 it returns those modules' modules as well.
-     * <p/>
-     * If levels equals -1 it returns the entire module hierarchy beneath the specified project. Note that this is
-     * simply the equivalent to the entire reactor if the specified project is the root execution project.
-     *
-     * @param project         the project to search under
-     * @param reactorProjects The projects in the reactor
-     * @param levels          the number of descendant levels to return
-     * @return the list of module projects.
-     */
-    private List<MavenProject> getModuleProjects( final MavenProject project, final List<MavenProject> reactorProjects,
-                                                  final int levels )
-    {
-        List<MavenProject> moduleProjects = new ArrayList<MavenProject>();
-
-        boolean infinite = ( levels == -1 );
-
-        if ( ( reactorProjects != null ) && ( infinite || levels > 0 ) )
-        {
-            for ( MavenProject reactorProject : reactorProjects )
-            {
-                if ( isModuleOfProject( project, reactorProject ) )
-                {
-                    moduleProjects.add( reactorProject );
-
-                    // recurse to find the modules of this project
-                    moduleProjects.addAll(
-                        getModuleProjects( reactorProject, reactorProjects, infinite ? levels : levels - 1 ) );
-                }
-            }
-        }
-
-        return moduleProjects;
-    }
-
-    /**
-     * Return <code>true</code> if the supplied potentialModule project is a module of the specified parentProject.
-     *
-     * @param parentProject   the parent project.
-     * @param potentialModule the potential module project.
-     * @return true if the potentialModule is indeed a module of the specified parent project.
-     */
-    private boolean isModuleOfProject( MavenProject parentProject, MavenProject potentialModule )
-    {
-        boolean result = false;
-
-        List<String> modules = parentProject.getModules();
-
-        if ( modules != null && parentProject != potentialModule )
-        {
-            File parentBaseDir = parentProject.getBasedir();
-
-            for ( String module : modules )
-            {
-                File moduleBaseDir = new File( parentBaseDir, module );
-
-                try
-                {
-                    String lhs = potentialModule.getBasedir().getCanonicalPath();
-                    String rhs = moduleBaseDir.getCanonicalPath();
-
-                    if ( lhs.equals( rhs ) )
-                    {
-                        result = true;
-                        break;
-                    }
-                }
-                catch ( IOException e )
-                {
-                    getLogger().error(
-                        "Error encountered when trying to resolve canonical module paths: " + e.getMessage(), e );
-                }
-            }
-        }
-
-        return result;
     }
 
     /**

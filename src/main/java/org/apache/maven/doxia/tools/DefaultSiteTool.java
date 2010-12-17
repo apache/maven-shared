@@ -963,8 +963,9 @@ public class DefaultSiteTool
                     }
                     populateModulesMenuItemsFromModels( project, models, menu );
             }
-            else
+            else if ( decorationModel.getMenuRef( "modules" ).getInherit() == null )
             {
+                // only remove if project has no modules AND menu is not inherited, see MSHARED-174
                 decorationModel.removeMenuRef( "modules" );
             }
         }

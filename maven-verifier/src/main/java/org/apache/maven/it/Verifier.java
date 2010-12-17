@@ -97,8 +97,7 @@ public class Verifier
 
     private boolean autoclean = true;
 
-    // TODO: needs to be configurable
-    private static String localRepoLayout = "default";
+    private String localRepoLayout = "default";
 
     private boolean debug;
 
@@ -1749,6 +1748,8 @@ public class Verifier
 
         // normalize path
         localRepo = repoDir.getAbsolutePath();
+
+        localRepoLayout = System.getProperty( "maven.repo.local.layout", "default" );
     }
 
     private static void runIntegrationTest( Verifier verifier )
@@ -2023,6 +2024,16 @@ public class Verifier
     public void setForkJvm( boolean forkJvm )
     {
         this.forkJvm = Boolean.valueOf( forkJvm );
+    }
+
+    public String getLocalRepoLayout()
+    {
+        return localRepoLayout;
+    }
+
+    public void setLocalRepoLayout( String localRepoLayout )
+    {
+        this.localRepoLayout = localRepoLayout;
     }
 
 }

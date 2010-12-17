@@ -46,15 +46,22 @@ class ForkedLauncher
 
     public ForkedLauncher( String mavenHome )
     {
+        this( mavenHome, false );
+    }
+
+    public ForkedLauncher( String mavenHome, boolean debugJvm )
+    {
         this.mavenHome = mavenHome;
+
+        String script = debugJvm ? "mvnDebug" : "mvn";
 
         if ( mavenHome != null )
         {
-            executable = new File( mavenHome, "bin/mvn" ).getPath();
+            executable = new File( mavenHome, "bin/" + script ).getPath();
         }
         else
         {
-            executable = "mvn";
+            executable = script;
         }
     }
 

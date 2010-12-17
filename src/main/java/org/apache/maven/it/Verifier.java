@@ -112,6 +112,8 @@ public class Verifier
 
     private String forkMode;
 
+    private boolean debugJvm = false;
+
     private static MavenLauncher embeddedLauncher;
 
     public Verifier( String basedir )
@@ -1361,7 +1363,7 @@ public class Verifier
             }
             else
             {
-                ForkedLauncher launcher = new ForkedLauncher( defaultMavenHome );
+                ForkedLauncher launcher = new ForkedLauncher( defaultMavenHome, debugJvm );
 
                 ret = launcher.run( cliArgs, envVars, getBasedir(), logFile );
             }
@@ -2024,6 +2026,16 @@ public class Verifier
     public void setForkJvm( boolean forkJvm )
     {
         this.forkJvm = Boolean.valueOf( forkJvm );
+    }
+
+    public boolean isDebugJvm()
+    {
+        return debugJvm;
+    }
+
+    public void setDebugJvm( boolean debugJvm )
+    {
+        this.debugJvm = debugJvm;
     }
 
     public String getLocalRepoLayout()

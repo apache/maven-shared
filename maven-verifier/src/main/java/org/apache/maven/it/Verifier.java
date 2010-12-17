@@ -550,11 +550,30 @@ public class Verifier
 
     public String getArtifactPath( String org, String name, String version, String ext )
     {
+        return getArtifactPath( org, name, version, ext, null );
+    }
+
+    /**
+     * Returns the absolute path to the artifact denoted by groupId, artifactId, version, extension and classifier.
+     * 
+     * @param gid The groupId, must not be null.
+     * @param aid The artifactId, must not be null.
+     * @param version The version, must not be null.
+     * @param ext The extension, must not be null.
+     * @param classifier The classifier, may be null to be omitted.
+     * @return the absolute path to the artifact denoted by groupId, artifactId, version, extension and classifier,
+     *         never null.
+     */
+    public String getArtifactPath( String gid, String aid, String version, String ext, String classifier )
+    {
+        if ( classifier != null && classifier.length() == 0 )
+        {
+            classifier = null;
+        }
         if ( "maven-plugin".equals( ext ) )
         {
             ext = "jar";
         }
-        String classifier = null;
         if ( "coreit-artifact".equals( ext ) )
         {
             ext = "jar";
@@ -569,13 +588,13 @@ public class Verifier
         String repositoryPath;
         if ( "legacy".equals( localRepoLayout ) )
         {
-            repositoryPath = org + "/" + ext + "s/" + name + "-" + version + "." + ext;
+            repositoryPath = gid + "/" + ext + "s/" + aid + "-" + version + "." + ext;
         }
         else if ( "default".equals( localRepoLayout ) )
         {
-            repositoryPath = org.replace( '.', '/' );
-            repositoryPath = repositoryPath + "/" + name + "/" + version;
-            repositoryPath = repositoryPath + "/" + name + "-" + version;
+            repositoryPath = gid.replace( '.', '/' );
+            repositoryPath = repositoryPath + "/" + aid + "/" + version;
+            repositoryPath = repositoryPath + "/" + aid + "-" + version;
             if ( classifier != null )
             {
                 repositoryPath = repositoryPath + "-" + classifier;
@@ -607,10 +626,25 @@ public class Verifier
      * 
      * @param gid The group id, must not be <code>null</code>.
      * @param aid The artifact id, must not be <code>null</code>.
-     * @param version The artifact version, must not be <code>null</code>.
+     * @param version The artifact version, may be <code>null</code>.
      * @return The (absolute) path to the local artifact metadata, never <code>null</code>.
      */
     public String getArtifactMetadataPath( String gid, String aid, String version )
+    {
+        return getArtifactMetadataPath( gid, aid, version, "maven-metadata-local.xml" );
+    }
+
+    /**
+     * Gets the path to a file in the local artifact directory. Note that the method does not check whether the returned
+     * path actually points to an existing file.
+     * 
+     * @param gid The group id, must not be <code>null</code>.
+     * @param aid The artifact id, must not be <code>null</code>.
+     * @param version The artifact version, may be <code>null</code>.
+     * @param filename The filename to use, must not be <code>null</code>.
+     * @return The (absolute) path to the local artifact metadata, never <code>null</code>.
+     */
+    public String getArtifactMetadataPath( String gid, String aid, String version, String filename )
     {
         StringBuffer buffer = new StringBuffer( 256 );
 
@@ -628,7 +662,7 @@ public class Verifier
                 buffer.append( version );
                 buffer.append( '/' );
             }
-            buffer.append( "maven-metadata-local.xml" );
+            buffer.append( filename );
         }
         else
         {

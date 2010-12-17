@@ -640,7 +640,7 @@ public class Verifier
      * path actually points to an existing file.
      * 
      * @param gid The group id, must not be <code>null</code>.
-     * @param aid The artifact id, must not be <code>null</code>.
+     * @param aid The artifact id, may be <code>null</code>.
      * @param version The artifact version, may be <code>null</code>.
      * @param filename The filename to use, must not be <code>null</code>.
      * @return The (absolute) path to the local artifact metadata, never <code>null</code>.
@@ -656,13 +656,19 @@ public class Verifier
         {
             buffer.append( gid.replace( '.', '/' ) );
             buffer.append( '/' );
-            buffer.append( aid );
-            buffer.append( '/' );
-            if ( version != null )
+
+            if ( aid != null )
             {
-                buffer.append( version );
+                buffer.append( aid );
                 buffer.append( '/' );
+
+                if ( version != null )
+                {
+                    buffer.append( version );
+                    buffer.append( '/' );
+                }
             }
+
             buffer.append( filename );
         }
         else

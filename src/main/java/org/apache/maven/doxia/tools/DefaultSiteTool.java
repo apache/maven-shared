@@ -1312,15 +1312,12 @@ public class DefaultSiteTool
      */
     private void populateModulesMenuItemsFromModels( MavenProject project, List<Model> models, Menu menu )
     {
-        if ( models != null && models.size() > 1 )
+        for ( Model model : models )
         {
-            for ( Model model : models )
-            {
-                String reactorUrl = model.getUrl();
-                String name = model.getName();
+            String reactorUrl = model.getUrl();
+            String name = model.getName();
 
-                appendMenuItem( project, menu, name, reactorUrl, model.getArtifactId() );
-            }
+            appendMenuItem( project, menu, name, reactorUrl, model.getArtifactId() );
         }
     }
 

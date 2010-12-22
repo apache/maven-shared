@@ -75,6 +75,12 @@ public class AbstractMavenFilteringRequest
      */
     private LinkedHashSet delimiters = new LinkedHashSet();
     
+    /**
+     * not stop trying filtering tokens when reaching EOL
+     * @since 1.0-beta-5
+     */
+    private boolean supportMultiLineFiltering;
+    
     protected AbstractMavenFilteringRequest()
     {
         initDefaults();
@@ -272,6 +278,16 @@ public class AbstractMavenFilteringRequest
         {
             this.delimiters = delimiters;
         }
+    }
+
+    public boolean isSupportMultiLineFiltering()
+    {
+        return supportMultiLineFiltering;
+    }
+
+    public void setSupportMultiLineFiltering( boolean supportMultiLineFiltering )
+    {
+        this.supportMultiLineFiltering = supportMultiLineFiltering;
     }
 
 }

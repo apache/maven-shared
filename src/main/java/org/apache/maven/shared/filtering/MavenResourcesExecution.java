@@ -19,20 +19,19 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
+import java.io.File;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.interpolation.Interpolator;
-import org.codehaus.plexus.interpolation.InterpolatorFilterReader;
 import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
 import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.FileUtils.FilterWrapper;
-
-import java.io.File;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A bean to configure a resources filtering execution
@@ -70,8 +69,15 @@ public class MavenResourcesExecution
      */
     private boolean includeEmptyDirs = false;
     
+    /**
+     * not stop trying filtering tokens when reaching EOL
+     * @since 1.0-beta-5
+     */
+    private boolean supportMultiLineFiltering;    
+    
     public MavenResourcesExecution()
     {
+        // no op
     }
     
     /**
@@ -178,8 +184,9 @@ public class MavenResourcesExecution
     
     /**
      * Helper to add {@link FileUtils.FilterWrapper}, will {@link RegexBasedInterpolator} with default regex Exp ${ } 
-     * and InterpolatorFilterReader with defaultTokens ${ }
+     * and InterpolatorFilterReaderLineEnding with defaultTokens ${ }
      * @param valueSource 
+     * @deprecated this doesn't support escaping use {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
      */
     public void addFilerWrapper( final ValueSource valueSource )
     {
@@ -189,7 +196,9 @@ public class MavenResourcesExecution
             {
                 Interpolator propertiesInterpolator = new RegexBasedInterpolator();
                 propertiesInterpolator.addValueSource( valueSource );
-                return new InterpolatorFilterReader( reader, propertiesInterpolator );
+                return new InterpolatorFilterReaderLineEnding( reader, propertiesInterpolator,
+                                                               InterpolatorFilterReaderLineEnding.DEFAULT_BEGIN_TOKEN,
+                                                               InterpolatorFilterReaderLineEnding.DEFAULT_END_TOKEN, false );
             }
         } );
     }
@@ -200,7 +209,7 @@ public class MavenResourcesExecution
      * @param endRegExp
      * @param startToken
      * @param endToken
-     * @deprecated this doesn't support escaping use {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String)}
+     * @deprecated this doesn't support escaping use {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
      */
     public void addFilerWrapper( final ValueSource valueSource, final String startRegExp, final String endRegExp,
                                  final String startToken, final String endToken )
@@ -211,7 +220,7 @@ public class MavenResourcesExecution
             {
                 Interpolator propertiesInterpolator = new RegexBasedInterpolator( startRegExp, endRegExp );
                 propertiesInterpolator.addValueSource( valueSource );
-                return new InterpolatorFilterReader( reader, propertiesInterpolator, startToken, endToken );
+                return new InterpolatorFilterReaderLineEnding( reader, propertiesInterpolator, startToken, endToken, false );
             }
         } );
     }  
@@ -222,6 +231,7 @@ public class MavenResourcesExecution
      * @param endExp endToken }
      * @since 1.0-beta-2
      * @param escapeString
+     * @deprecated this doesn't support escaping use {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
      */
     public void addFilerWrapperWithEscaping( final ValueSource valueSource, final String startExp, final String endExp,
                                              final String escapeString )
@@ -233,15 +243,43 @@ public class MavenResourcesExecution
                 StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( startExp, endExp );
                 propertiesInterpolator.addValueSource( valueSource );
                 propertiesInterpolator.setEscapeString( escapeString );
-                InterpolatorFilterReader interpolatorFilterReader = new InterpolatorFilterReader(
+                InterpolatorFilterReaderLineEnding interpolatorFilterReader = new InterpolatorFilterReaderLineEnding(
                                                                                                   reader,
                                                                                                   propertiesInterpolator,
-                                                                                                  startExp, endExp );
+                                                                                                  startExp, endExp, false );
                 interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
                 return interpolatorFilterReader;
             }
         } );
-    }      
+    } 
+    
+    /**
+     * @param valueSource
+     * @param startExp start token like ${
+     * @param endExp endToken }
+     * @since 1.0-beta-5
+     * @param escapeString
+     * @param supportMultiLineFiltering do we support or to use filtering on multi lines start and endotken on multi lines)
+     */    
+    public void addFilerWrapperWithEscaping( final ValueSource valueSource, final String startExp, final String endExp,
+                                             final String escapeString, final boolean supportMultiLineFiltering )
+    {
+        addFilterWrapper( new FileUtils.FilterWrapper()
+        {
+            public Reader getReader( Reader reader )
+            {
+                StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( startExp, endExp );
+                propertiesInterpolator.addValueSource( valueSource );
+                propertiesInterpolator.setEscapeString( escapeString );
+                InterpolatorFilterReaderLineEnding interpolatorFilterReader = new InterpolatorFilterReaderLineEnding(
+                                                                                                  reader,
+                                                                                                  propertiesInterpolator,
+                                                                                                  startExp, endExp, supportMultiLineFiltering );
+                interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
+                return interpolatorFilterReader;
+            }
+        } );
+    }    
     
     
     public File getResourcesBaseDirectory()
@@ -324,7 +362,7 @@ public class MavenResourcesExecution
         mre.setResources( copyList( mre.getResources() ) );
         mre.setResourcesBaseDirectory( mre.getResourcesBaseDirectory() );
         mre.setUseDefaultFilterWrappers( mre.isUseDefaultFilterWrappers() );
-        
+        mre.setSupportMultiLineFiltering( mre.isSupportMultiLineFiltering() );
         return mre;
     }
    
@@ -342,5 +380,15 @@ public class MavenResourcesExecution
         {
             return new ArrayList( lst );
         }
+    }
+
+    public boolean isSupportMultiLineFiltering()
+    {
+        return supportMultiLineFiltering;
+    }
+
+    public void setSupportMultiLineFiltering( boolean supportMultiLineFiltering )
+    {
+        this.supportMultiLineFiltering = supportMultiLineFiltering;
     }
 }

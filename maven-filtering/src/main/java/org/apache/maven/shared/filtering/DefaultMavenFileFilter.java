@@ -167,9 +167,14 @@ public class DefaultMavenFileFilter
     public List getDefaultFilterWrappers( final AbstractMavenFilteringRequest req )
         throws MavenFilteringException
     {
+        // backup values
+        boolean supportMultiLineFiltering = req.isSupportMultiLineFiltering();
+        
         // compensate for null parameter value.
         final AbstractMavenFilteringRequest request = req == null ? new MavenFileFilterRequest() : req;
 
+        request.setSupportMultiLineFiltering( supportMultiLineFiltering );
+        
         // here we build some properties which will be used to read some properties files
         // to interpolate the expression ${ } in this properties file
 
@@ -242,7 +247,7 @@ public class DefaultMavenFileFilter
             FileUtils.FilterWrapper wrapper = new Wrapper( request.getDelimiters(), request.getMavenProject(),
                                                            request.getMavenSession(), propertiesValueSource,
                                                            request.getProjectStartExpressions(), request.getEscapeString(),
-                                                           request.isEscapeWindowsPaths() );
+                                                           request.isEscapeWindowsPaths(), request.isSupportMultiLineFiltering() );
             
             defaultFilterWrappers.add( wrapper );
         }
@@ -293,9 +298,11 @@ public class DefaultMavenFileFilter
         private boolean escapeWindowsPaths;
 
         private final MavenSession mavenSession;
+        
+        private boolean supportMultiLineFiltering;
 
         Wrapper( LinkedHashSet delimiters, MavenProject project, MavenSession mavenSession, ValueSource propertiesValueSource,
-                        List projectStartExpressions, String escapeString, boolean escapeWindowsPaths )
+                        List projectStartExpressions, String escapeString, boolean escapeWindowsPaths, boolean supportMultiLineFiltering )
         {
             super();
             this.delimiters = delimiters;
@@ -305,6 +312,7 @@ public class DefaultMavenFileFilter
             this.projectStartExpressions = projectStartExpressions;
             this.escapeString = escapeString;
             this.escapeWindowsPaths = escapeWindowsPaths;
+            this.supportMultiLineFiltering = supportMultiLineFiltering;
         }
 
         public Reader getReader( Reader reader )
@@ -359,7 +367,8 @@ public class DefaultMavenFileFilter
                 } );
             }
             
-            MultiDelimiterInterpolatorFilterReader filterReader = new MultiDelimiterInterpolatorFilterReader( reader, interpolator );
+            MultiDelimiterInterpolatorFilterReaderLineEnding filterReader = 
+                new MultiDelimiterInterpolatorFilterReaderLineEnding( reader, interpolator, supportMultiLineFiltering );
             filterReader.setRecursionInterceptor( ri );
             filterReader.setDelimiterSpecs( delimiters );
             

@@ -40,6 +40,7 @@ public interface MavenResourcesFiltering
      * @param fileFilters {@link List} of String which are path to a Property file
      * @param nonFilteredFileExtensions {@link List} of String for non filtered file extensions
      * @param mavenSession Can include executionProperties that will be used for filtering
+     * @deprecated use {@link #filterResources(MavenResourcesExecution)}
      * @throws MavenFilteringException
      */
     void filterResources( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
@@ -53,6 +54,7 @@ public interface MavenResourcesFiltering
      * @param filterWrappers {@link List} of FileUtils.FilterWrapper
      * @param resourcesBaseDirectory baseDirectory of resources
      * @param nonFilteredFileExtensions {@link List} of String for non filtered file extensions
+     * @deprecated use {@link #filterResources(MavenResourcesExecution)}
      * @throws MavenFilteringException
      */
     void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers,
@@ -74,7 +76,7 @@ public interface MavenResourcesFiltering
     boolean filteredFileExtension( String fileName, List userNonFilteredFileExtensions );
 
     /**
-     * @param mavenResourcesExecution
+     * @param mavenResourcesExecution {@link MavenResourcesExecution}
      * @throws MavenFilteringException
      */
     void filterResources( MavenResourcesExecution mavenResourcesExecution )

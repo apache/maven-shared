@@ -30,12 +30,12 @@ under the License.
   </parent>
 
   <groupId>org.apache.maven.shared</groupId>
-  <artifactId>maven-shared-aggregator</artifactId>
-  <version>1-SNAPSHOT</version>
+  <artifactId>maven-shared-components</artifactId>
+  <version>16-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Maven Shared Components Aggregator</name>
-  <description>Maven shared components Aggregator</description>
+  <name>Maven Shared Components</name>
+  <description>Maven shared components</description>
   <url>http://maven.apache.org/shared/</url>
 
   <mailingLists>

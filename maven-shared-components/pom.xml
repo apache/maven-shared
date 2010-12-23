@@ -111,36 +111,12 @@ under the License.
     </mailingList>
   </mailingLists>
 
-  <modules>
-    <module>file-management</module>
-    <module>maven-ant</module>
-    <module>maven-archiver</module>
-    <module>maven-common-artifact-filters</module>
-    <module>maven-dependency-analyzer</module>
-    <module>maven-dependency-tree</module>
-    <module>maven-downloader</module>
-    <module>maven-doxia-tools</module>
-    <module>maven-filtering</module>
-    <module>maven-invoker</module>
-    <module>maven-model-converter</module>
-    <module>maven-osgi</module>
-    <module>maven-reporting-api</module>
-    <module>maven-reporting-impl</module>
-    <module>maven-repository-builder</module>
-    <module>maven-runtime</module>
-    <!-- TODO: This seems to target Maven 3.x and needs some love
-    <module>maven-script</module>
-    -->
-    <module>maven-shared-io</module>
-    <module>maven-shared-jar</module>
-    <module>maven-shared-monitor</module>
-    <module>maven-verifier</module>
-  </modules>
+
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-components</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-components</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-components</url>
   </scm>
   <issueManagement>
     <system>jira</system>
@@ -193,15 +169,6 @@ under the License.
           </plugin>
         </plugins>
       </reporting>
-    </profile>
-    <profile>
-      <id>jre-1.5+</id>
-      <activation>
-        <jdk>!1.4</jdk>
-      </activation>
-      <modules>
-        <module>maven-artifact-resolver</module>
-      </modules>
     </profile>
     <profile>
       <id>parent-release</id>

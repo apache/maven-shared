@@ -38,6 +38,7 @@ under the License.
   <description>Maven shared components Aggregator</description>
   <url>http://maven.apache.org/shared/</url>
   <modules>
+    <module>maven-shared-components</module>
     <module>file-management</module>
     <module>maven-ant</module>
     <module>maven-archiver</module>

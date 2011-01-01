@@ -1268,8 +1268,12 @@ public class DefaultSiteTool
                 // we have no site descriptor: merge the parent into an empty one
                 decoration = new DecorationModel();
             }
+
+            final String name = ( StringUtils.isEmpty( decoration.getName() ) ?
+                project.getName() : decoration.getName() );
+
             // Merge the parent and child site descriptors
-            assembler.assembleModelInheritance( project.getName(), decoration, parent, project.getUrl(),
+            assembler.assembleModelInheritance( name, decoration, parent, project.getUrl(),
                         parentProject.getUrl() == null ? project.getUrl() : parentProject.getUrl() );
         }
 

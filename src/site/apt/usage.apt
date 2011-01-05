@@ -3,7 +3,7 @@
  ------
  Olivier Lamy
  ------
- 2008-07-21
+ 2011-01-05
  ------
 
  ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -25,7 +25,7 @@
 
 Usage
 
-* Filter a List of org.apache.maven.model.Resource
+* Filter a <<<List>>> of <<<org.apache.maven.model.Resource>>>
 
   Lookup the component in your Mojo:
 
@@ -38,7 +38,7 @@ Usage
     private MavenResourcesFiltering mavenResourcesFiltering;
 +-----+
 
-  Apply filtering on your <<<List>>> of resources, see {{{./index.html}Introduction}} to see the default FilterWrappers
+  Apply filtering on your <<<List>>> of resources, see {{{./index.html}Introduction}} for the default <<<FilterWrappers>>>
   that are used.
 
 +-----+
@@ -52,25 +52,25 @@ Usage
 
 * Add a new filtering token
 
-  You must use the other methods from the <<<MavenResourcesFiltering>>> component and construct your own List of
-  FilterWrappers. The following example adds interpolation for the Token @ @ using values coming from reflection
+  You must use the other methods from the <<<MavenResourcesFiltering>>> component and construct your own <<<List>>> of
+  <<<FilterWrappers>>>. The following example adds interpolation for the token @ @ using values coming from reflection
   with the Maven Project.
 
 +-----+
         // Create your FilterWrapper
         FileUtils.FilterWrapper filterWrapper = new FileUtils.FilterWrapper()
         {
-          public Reader getReader( Reader reader )
-          {
-              Interpolator propertiesInterpolator =
-                  new RegexBasedInterpolator(  "\\@", "(.+?)\\@" );
-              ValueSource valueSource = new MavenProjectValueSource( mavenProject,
-                                                                     true );
-              propertiesInterpolator.addValueSource( valueSource );
-              return new InterpolatorFilterReader( reader,
-                                                   propertiesInterpolator,
-                                                   "@", "@" );
-          }
+            public Reader getReader( Reader reader )
+            {
+                Interpolator propertiesInterpolator =
+                    new RegexBasedInterpolator(  "\\@", "(.+?)\\@" );
+                ValueSource valueSource = new MavenProjectValueSource( mavenProject,
+                                                                       true );
+                propertiesInterpolator.addValueSource( valueSource );
+                return new InterpolatorFilterReader( reader,
+                                                     propertiesInterpolator,
+                                                     "@", "@" );
+            }
         };
 
         // Add the new filterWrapper to your MavenResourcesExecution instance
@@ -85,8 +85,8 @@ Usage
                                                  "\\@", "(.+?)\\@", "@", "@" );
 +-----+
 
-  <<Note:>> If the <<<mavenResourcesExecution.useDefaultFilterWrappers>>> is set to <<<true>>>,
-  the default FilterWrappers will be added first.
+  <<Note:>> If <<<mavenResourcesExecution.useDefaultFilterWrappers>>> is set to <<<true>>>,
+  the default <<<FilterWrapper>>>s will be added first.
 
   Now it's time to filter the resources:
 
@@ -95,6 +95,6 @@ Usage
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 +-----+
 
-  <<Note:>> maven-filtering uses the
+  <<Note:>> Maven Filtering uses the
   {{{http://plexus.codehaus.org/plexus-components/plexus-interpolation/}plexus-interpolation component}}.
 

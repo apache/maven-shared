@@ -27,8 +27,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A Map composed with some others (optional adding SystemProperties and envvar)
- * The get Method look in the Map list to return the corresponding value
+ * A Map composed with some others (optional adding SystemProperties and envvar).
+ * The get method look in the Map list to return the corresponding value.
+ *
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @version $Id$
  */
@@ -50,9 +51,9 @@ public class CompositeMap
     }
 
     /**
-     * @param maps an orderer {@link List} of {@link Map}
+     * @param maps an ordered {@link List} of {@link Map}
      * @param useSystemProperties using or not the System Properties
-     * @param systemPropertiesFirst if with get( key ) the sysProps must wins (the internal ordered {@link List} 
+     * @param systemPropertiesFirst if with get( key ) the sysProps must win (the internal ordered {@link List} 
      *        will have in first the System Properties)
      */
     public CompositeMap( List /*Map*/maps, boolean useSystemProperties, boolean systemPropertiesFirst )

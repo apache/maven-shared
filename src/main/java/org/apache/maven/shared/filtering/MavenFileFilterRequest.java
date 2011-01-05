@@ -28,7 +28,6 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * @author <a href="mailto:olamy@apache">olamy</a>
- *
  * @since 1.0-beta-3
  */
 public class MavenFileFilterRequest

@@ -40,8 +40,8 @@ public interface MavenResourcesFiltering
      * @param fileFilters {@link List} of String which are path to a Property file
      * @param nonFilteredFileExtensions {@link List} of String for non filtered file extensions
      * @param mavenSession Can include executionProperties that will be used for filtering
-     * @deprecated use {@link #filterResources(MavenResourcesExecution)}
      * @throws MavenFilteringException
+     * @deprecated use {@link #filterResources(MavenResourcesExecution)}
      */
     void filterResources( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
                           List fileFilters, List nonFilteredFileExtensions, MavenSession mavenSession )
@@ -54,8 +54,8 @@ public interface MavenResourcesFiltering
      * @param filterWrappers {@link List} of FileUtils.FilterWrapper
      * @param resourcesBaseDirectory baseDirectory of resources
      * @param nonFilteredFileExtensions {@link List} of String for non filtered file extensions
-     * @deprecated use {@link #filterResources(MavenResourcesExecution)}
      * @throws MavenFilteringException
+     * @deprecated use {@link #filterResources(MavenResourcesExecution)}
      */
     void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers,
                           File resourcesBaseDirectory, List nonFilteredFileExtensions )
@@ -70,7 +70,7 @@ public interface MavenResourcesFiltering
     /**
      * @param fileName the file name
      * @param userNonFilteredFileExtensions an extra list of file extensions
-     * @return true if filtering can be apply to the file (means extensions.lowerCase is in the
+     * @return true if filtering can be applied to the file (means extensions.lowerCase is in the
      *         default List or in the user defined extension List)
      */
     boolean filteredFileExtension( String fileName, List userNonFilteredFileExtensions );

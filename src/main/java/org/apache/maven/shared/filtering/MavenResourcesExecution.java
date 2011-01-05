@@ -34,7 +34,8 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.FileUtils.FilterWrapper;
 
 /**
- * A bean to configure a resources filtering execution
+ * A bean to configure a resources filtering execution.
+ *
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @version $Id$
  */
@@ -58,19 +59,22 @@ public class MavenResourcesExecution
     
     /**
      * Overwrite existing files even if the destination files are newer.
-     * <b>false by default</b>
+     * <code>false</code> by default.
+     *
      * @since 1.0-beta-2
      */
     private boolean overwrite = false;
     
     /**
      * Copy any empty directories included in the Resources.
+     *
      * @since 1.0-beta-2
      */
     private boolean includeEmptyDirs = false;
     
     /**
-     * not stop trying filtering tokens when reaching EOL
+     * Do not stop trying to filter tokens when reaching EOL.
+     *
      * @since 1.0-beta-5
      */
     private boolean supportMultiLineFiltering;    
@@ -81,7 +85,8 @@ public class MavenResourcesExecution
     }
     
     /**
-     * <b>As we use a maven project useDefaultFilterWrappers will set to true</b>
+     * As we use a Maven project <code>useDefaultFilterWrappers</code> will be set to <code>true</code>.
+     *
      * @param resources
      * @param outputDirectory
      * @param mavenProject
@@ -142,7 +147,7 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @return List of {@link String} file extensions to not filtering
+     * @return List of {@link String} file extensions to not filter
      */
     public List getNonFilteredFileExtensions()
     {
@@ -150,7 +155,7 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @param nonFilteredFileExtensions List of {@link String} file extensions to not filtering
+     * @param nonFilteredFileExtensions List of {@link String} file extensions to not filter
      */
     public void setNonFilteredFileExtensions( List nonFilteredFileExtensions )
     {
@@ -184,9 +189,10 @@ public class MavenResourcesExecution
     
     /**
      * Helper to add {@link FileUtils.FilterWrapper}, will {@link RegexBasedInterpolator} with default regex Exp ${ } 
-     * and InterpolatorFilterReaderLineEnding with defaultTokens ${ }
+     * and InterpolatorFilterReaderLineEnding with defaultTokens ${ }.
+     *
      * @param valueSource 
-     * @deprecated this doesn't support escaping use {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
+     * @deprecated This doesn't support escaping use {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
      */
     public void addFilerWrapper( final ValueSource valueSource )
     {
@@ -209,7 +215,7 @@ public class MavenResourcesExecution
      * @param endRegExp
      * @param startToken
      * @param endToken
-     * @deprecated this doesn't support escaping use {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
+     * @deprecated This doesn't support escaping use {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
      */
     public void addFilerWrapper( final ValueSource valueSource, final String startRegExp, final String endRegExp,
                                  final String startToken, final String endToken )
@@ -231,7 +237,7 @@ public class MavenResourcesExecution
      * @param endExp endToken }
      * @since 1.0-beta-2
      * @param escapeString
-     * @deprecated this doesn't support escaping use {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
+     * @deprecated This doesn't support escaping use {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
      */
     public void addFilerWrapperWithEscaping( final ValueSource valueSource, final String startExp, final String endExp,
                                              final String escapeString )
@@ -259,7 +265,7 @@ public class MavenResourcesExecution
      * @param endExp endToken }
      * @since 1.0-beta-5
      * @param escapeString
-     * @param supportMultiLineFiltering do we support or to use filtering on multi lines start and endotken on multi lines)
+     * @param supportMultiLineFiltering do we support or use filtering on multi lines with start and endtoken on multi lines)
      */    
     public void addFilerWrapperWithEscaping( final ValueSource valueSource, final String startExp, final String endExp,
                                              final String escapeString, final boolean supportMultiLineFiltering )
@@ -304,7 +310,7 @@ public class MavenResourcesExecution
 
     /**
      * Overwrite existing files even if the destination files are newer.
-     * @return
+     *
      * @since 1.0-beta-2
      */
     public boolean isOverwrite()
@@ -314,6 +320,7 @@ public class MavenResourcesExecution
 
     /**
      * Overwrite existing files even if the destination files are newer.
+     *
      * @param overwrite
      * @since 1.0-beta-2
      */
@@ -324,7 +331,7 @@ public class MavenResourcesExecution
 
     /**
      * Copy any empty directories included in the Resources.
-     * @return
+     *
      * @since 1.0-beta-2
      */
     public boolean isIncludeEmptyDirs()
@@ -334,6 +341,7 @@ public class MavenResourcesExecution
 
     /**
      * Copy any empty directories included in the Resources.
+     *
      * @param includeEmptyDirs
      * @since 1.0-beta-2
      */

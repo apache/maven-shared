@@ -51,8 +51,8 @@ import java.util.Properties;
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @version $Id$
  *
- * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter"
- *                   role-hint="default"
+ * @component role="org.apache.maven.shared.filtering.MavenFileFilter"
+ *            role-hint="default"
  */
 public class DefaultMavenFileFilter
     extends AbstractLogEnabled
@@ -108,7 +108,7 @@ public class DefaultMavenFileFilter
             {
                 if ( getLogger().isDebugEnabled() )
                 {
-                    getLogger().debug( "filering " + from.getPath() + " to " + to.getPath() );
+                    getLogger().debug( "filtering " + from.getPath() + " to " + to.getPath() );
                 }
                 FileUtils.FilterWrapper[] wrappers = (FileUtils.FilterWrapper[]) filterWrappers
                     .toArray( new FileUtils.FilterWrapper[filterWrappers.size()] );
@@ -175,11 +175,11 @@ public class DefaultMavenFileFilter
 
         request.setSupportMultiLineFiltering( supportMultiLineFiltering );
         
-        // here we build some properties which will be used to read some properties files
+        // Here we build some properties which will be used to read some properties files
         // to interpolate the expression ${ } in this properties file
 
         // Take a copy of filterProperties to ensure that evaluated filterTokens are not propagated
-        // to subsequent filter files. NB this replicates current behaviour and seems to make sense.
+        // to subsequent filter files. Note: this replicates current behaviour and seems to make sense.
 
         final Properties baseProps = new Properties();
 
@@ -302,7 +302,7 @@ public class DefaultMavenFileFilter
         private boolean supportMultiLineFiltering;
 
         Wrapper( LinkedHashSet delimiters, MavenProject project, MavenSession mavenSession, ValueSource propertiesValueSource,
-                        List projectStartExpressions, String escapeString, boolean escapeWindowsPaths, boolean supportMultiLineFiltering )
+                 List projectStartExpressions, String escapeString, boolean escapeWindowsPaths, boolean supportMultiLineFiltering )
         {
             super();
             this.delimiters = delimiters;

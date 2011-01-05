@@ -43,8 +43,8 @@ import org.sonatype.plexus.build.incremental.BuildContext;
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @version $Id$
  * 
- * @component role="org.apache.maven.shared.filtering.MavenResourcesFiltering"
- *            role-hint="default"
+ * @plexus.component role="org.apache.maven.shared.filtering.MavenResourcesFiltering"
+ *                   role-hint="default"
  */
 public class DefaultMavenResourcesFiltering
     extends AbstractLogEnabled

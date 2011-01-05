@@ -76,7 +76,8 @@ public interface MavenFileFilter
      * @throws MavenFilteringException
      * @since 1.0-beta-2
      */
-    void copyFile( File from, final File to, boolean filtering, List filterWrappers, String encoding, boolean overwrite )
+    void copyFile( File from, final File to, boolean filtering, List filterWrappers, String encoding,
+                   boolean overwrite )
         throws MavenFilteringException;    
     
     /**

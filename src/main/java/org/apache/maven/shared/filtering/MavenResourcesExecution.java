@@ -204,7 +204,8 @@ public class MavenResourcesExecution
                 propertiesInterpolator.addValueSource( valueSource );
                 return new InterpolatorFilterReaderLineEnding( reader, propertiesInterpolator,
                                                                InterpolatorFilterReaderLineEnding.DEFAULT_BEGIN_TOKEN,
-                                                               InterpolatorFilterReaderLineEnding.DEFAULT_END_TOKEN, false );
+                                                               InterpolatorFilterReaderLineEnding.DEFAULT_END_TOKEN,
+                                                               false );
             }
         } );
     }
@@ -226,7 +227,8 @@ public class MavenResourcesExecution
             {
                 Interpolator propertiesInterpolator = new RegexBasedInterpolator( startRegExp, endRegExp );
                 propertiesInterpolator.addValueSource( valueSource );
-                return new InterpolatorFilterReaderLineEnding( reader, propertiesInterpolator, startToken, endToken, false );
+                return new InterpolatorFilterReaderLineEnding( reader, propertiesInterpolator, startToken, endToken,
+                                                               false );
             }
         } );
     }  
@@ -249,10 +251,10 @@ public class MavenResourcesExecution
                 StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( startExp, endExp );
                 propertiesInterpolator.addValueSource( valueSource );
                 propertiesInterpolator.setEscapeString( escapeString );
-                InterpolatorFilterReaderLineEnding interpolatorFilterReader = new InterpolatorFilterReaderLineEnding(
-                                                                                                  reader,
-                                                                                                  propertiesInterpolator,
-                                                                                                  startExp, endExp, false );
+                InterpolatorFilterReaderLineEnding interpolatorFilterReader
+                    = new InterpolatorFilterReaderLineEnding( reader,
+                                                              propertiesInterpolator,
+                                                              startExp, endExp, false );
                 interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
                 return interpolatorFilterReader;
             }
@@ -277,10 +279,10 @@ public class MavenResourcesExecution
                 StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( startExp, endExp );
                 propertiesInterpolator.addValueSource( valueSource );
                 propertiesInterpolator.setEscapeString( escapeString );
-                InterpolatorFilterReaderLineEnding interpolatorFilterReader = new InterpolatorFilterReaderLineEnding(
-                                                                                                  reader,
-                                                                                                  propertiesInterpolator,
-                                                                                                  startExp, endExp, supportMultiLineFiltering );
+                InterpolatorFilterReaderLineEnding interpolatorFilterReader
+                    = new InterpolatorFilterReaderLineEnding( reader,
+                                                              propertiesInterpolator,
+                                                              startExp, endExp, supportMultiLineFiltering );
                 interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
                 return interpolatorFilterReader;
             }

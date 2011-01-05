@@ -1,5 +1,24 @@
 package org.apache.maven.shared.filtering;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -75,7 +94,8 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * @param interpolator interpolator instance to use
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, boolean supportMultiLineFiltering )
+    public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator,
+                                                             boolean supportMultiLineFiltering )
     {
         this( in, interpolator, new SimpleRecursionInterceptor(), supportMultiLineFiltering );
     }
@@ -86,7 +106,9 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * @param ri The {@link RecursionInterceptor} to use to prevent recursive expressions.
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, RecursionInterceptor ri, boolean supportMultiLineFiltering )
+    public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator,
+                                                             RecursionInterceptor ri,
+                                                             boolean supportMultiLineFiltering )
     {
         super( in );
 
@@ -207,7 +229,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
         {
             ch = in.read();
         }
-        if (ch == '\n' && !supportMultiLineFiltering)
+        if ( ch == '\n' && !supportMultiLineFiltering )
         {
             previousIndex = -1;
             return ch;
@@ -225,7 +247,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
 
             if ( inEscape )
             {
-                for( int i = 0; i < escapeString.length() - 1; i++ )
+                for ( int i = 0; i < escapeString.length() - 1; i++ )
                 {
                     ch = in.read();
                     if ( ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
@@ -296,7 +318,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
             while ( ch != this.endToken.charAt( 0 ) );
 
             // now test endToken
-            if ( ch != -1 && ( ch != '\n' && !supportMultiLineFiltering) && this.endToken.length() > 1 )
+            if ( ch != -1 && ( ch != '\n' && !supportMultiLineFiltering ) && this.endToken.length() > 1 )
             {
                 int endTokenMatchPos = 1;
 
@@ -315,7 +337,8 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
                     {
                         key.append( (char) ch );
 
-                        if ( ch != this.endToken.charAt( endTokenMatchPos++ ) || ( ch != '\n' && !supportMultiLineFiltering ) )
+                        if ( ch != this.endToken.charAt( endTokenMatchPos++ )
+                            || ( ch != '\n' && !supportMultiLineFiltering ) )
                         {
                             ch = -1; // not really EOF but to trigger code below
                             break;
@@ -333,7 +356,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
             // There is nothing left to read so we have the situation where the begin/end token
             // are in fact the same and as there is nothing left to read we have got ourselves
             // end of a token boundary so let it pass through.
-            if ( ch == -1 || (ch =='\n' && !supportMultiLineFiltering ) )
+            if ( ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
             {
                 replaceData = key.toString();
                 replaceIndex = 1;

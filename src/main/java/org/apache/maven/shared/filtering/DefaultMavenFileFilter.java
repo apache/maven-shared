@@ -99,7 +99,8 @@ public class DefaultMavenFileFilter
 
     
     
-    public void copyFile( File from, File to, boolean filtering, List filterWrappers, String encoding, boolean overwrite )
+    public void copyFile( File from, File to, boolean filtering, List filterWrappers, String encoding,
+                          boolean overwrite )
         throws MavenFilteringException
     {
         try
@@ -233,7 +234,8 @@ public class DefaultMavenFileFilter
             filterProperties.putAll( request.getAdditionalProperties() );
         }
         
-        List defaultFilterWrappers = request == null ? new ArrayList( 1 ) : new ArrayList( request.getDelimiters().size() + 1 );
+        List defaultFilterWrappers
+            = request == null ? new ArrayList( 1 ) : new ArrayList( request.getDelimiters().size() + 1 );
 
         if ( getLogger().isDebugEnabled() )
         {
@@ -246,8 +248,9 @@ public class DefaultMavenFileFilter
         {
             FileUtils.FilterWrapper wrapper = new Wrapper( request.getDelimiters(), request.getMavenProject(),
                                                            request.getMavenSession(), propertiesValueSource,
-                                                           request.getProjectStartExpressions(), request.getEscapeString(),
-                                                           request.isEscapeWindowsPaths(), request.isSupportMultiLineFiltering() );
+                                                           request.getProjectStartExpressions(),
+                                                           request.getEscapeString(), request.isEscapeWindowsPaths(),
+                                                           request.isSupportMultiLineFiltering() );
             
             defaultFilterWrappers.add( wrapper );
         }
@@ -255,7 +258,8 @@ public class DefaultMavenFileFilter
         return defaultFilterWrappers;
     }    
 
-    private void loadProperties( Properties filterProperties, List /* String */propertiesFilePaths, Properties baseProps )
+    private void loadProperties( Properties filterProperties, List /* String */propertiesFilePaths,
+                                 Properties baseProps )
         throws MavenFilteringException
     {
         if ( propertiesFilePaths != null )
@@ -301,8 +305,9 @@ public class DefaultMavenFileFilter
         
         private boolean supportMultiLineFiltering;
 
-        Wrapper( LinkedHashSet delimiters, MavenProject project, MavenSession mavenSession, ValueSource propertiesValueSource,
-                 List projectStartExpressions, String escapeString, boolean escapeWindowsPaths, boolean supportMultiLineFiltering )
+        Wrapper( LinkedHashSet delimiters, MavenProject project, MavenSession mavenSession,
+                 ValueSource propertiesValueSource, List projectStartExpressions, String escapeString,
+                 boolean escapeWindowsPaths, boolean supportMultiLineFiltering )
         {
             super();
             this.delimiters = delimiters;
@@ -345,7 +350,8 @@ public class DefaultMavenFileFilter
                 if ( settings != null )
                 {
                     interpolator.addValueSource( new PrefixedObjectValueSource( "settings", settings ) );
-                    interpolator.addValueSource( new SingleResponseValueSource( "localRepository", settings.getLocalRepository() ) );
+                    interpolator.addValueSource( new SingleResponseValueSource( "localRepository",
+                                                                                settings.getLocalRepository() ) );
                 }
             }
             

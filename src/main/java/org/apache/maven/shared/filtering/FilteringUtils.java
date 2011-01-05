@@ -30,7 +30,7 @@ public final class FilteringUtils
 {
     private static final String WINDOWS_PATH_PATTERN = "^[a-zA-Z]:\\\\(.*)";
 
-    private static final Pattern PATTERN = Pattern.compile( WINDOWS_PATH_PATTERN) ;
+    private static final Pattern PATTERN = Pattern.compile( WINDOWS_PATH_PATTERN ) ;
 
     /**
      * 
@@ -42,7 +42,7 @@ public final class FilteringUtils
     
     // TODO: Correct to handle relative windows paths. (http://jira.codehaus.org/browse/MSHARED-121)
     // How do we distinguish a relative windows path from some other value that happens to contain backslashes??
-    public static final String escapeWindowsPath( String val )
+    public static String escapeWindowsPath( String val )
     {
         if ( !StringUtils.isEmpty( val ) && PATTERN.matcher( val ).matches() )
         {

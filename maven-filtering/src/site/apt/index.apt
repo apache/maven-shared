@@ -3,7 +3,7 @@
  ------
  Olivier Lamy
  ------
- 2008-01-01
+ 2011-01-05
  ------
 
  ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -27,74 +27,75 @@ Maven Filtering
 
   These Plexus components have been built from the filtering process/code in Maven Resources Plugin.
 
-  The goal is to provide a shared component for all plugins which needs to filter resources.
+  The goal is to provide a shared component for all plugins that needs to filter resources.
+
+
+* MavenResourcesExecution
+
+** POM Interpolation
   
-* What's New in 1.0-beta-2 (All of this new features are configurable with the MavenResourcesExecution bean)
-
-** Release Note
-
-  The release note is available {{{http://jira.codehaus.org/secure/ReleaseNote.jspa?version=14488&styleName=Html&projectId=11761&Create=Create}here}}.
-
-** Pom interpolation
-  
-  {{{http://jira.codehaus.org/browse/MSHARED-60}[MSHARED-60]}} something like $\{foo.url\} was interpolated to the value of pom url.
-  Now pom values will interpolated <<<only>>> with expressions starting with pom or project (it's configurable).\
-  This means before something like $\{foo.version\} or $\{version\} was interpolated with the current pom version. 
-  <<Now it won't be interpolated with a pom value.>>
+  POM values will be interpolated <<only>> with expressions starting with <<<pom>>> or <<<project>>> (it's configurable).
+  In previous versions something like $\{foo.version\} or $\{version\} was interpolated with the current POM version, but
+  it won't be interpolated with a POM value any more.
   
 ** Escaping Interpolation 
 
-  {{{http://jira.codehaus.org/browse/MSHARED-51}[MSHARED-51]}} It's possible now to define a String which will escape interpolation.\
-  \$\{java.home\} will be interpolated to $\{java.home\}
+  It's possible now to define a String which will escape interpolation.
+  \$\{java.home\} will be interpolated to $\{java.home\}.
 
-** targetPath accepts now absolute paths too
+** <<<targetPath>>> parameter
 
-** overwrite parameter
+  It also accepts absolute paths.
 
-  {{{http://jira.codehaus.org/browse/MSHARED-67}[MSHARED-67]}} Add a new parameter to force file copy even if the destination file is newer.
+** <<<overwrite>>> parameter
+
+  The parameter <<<overwrite>>> forces file copy even if the destination file is newer.
+
 
 * MavenResourcesFiltering
 
-  This component will apply filtering on a <<<List>>> of <<<org.apache.maven.model.Resource>>>.
+  This component will apply filtering on a <<<List>>> of <<<org.apache.maven.model.Resource>>>s.
 
   If you want to use the default <<<List>>> of <<<FileUtils.FilterWrapper>>> (see below)
   you should use the method without the <<<filterWrappers>>> parameter.
 
   The component will not filter a predefined set of file extensions (jpg, jpeg, gif, bmp, png).
-  Note: you can easily add extra file extensions.
+
+  <<Note:>> You can easily add extra file extensions.
+
 
 * MavenFileFilter
 
-  This component has a method which returns the default <<<FileUtils.FilterWrapper>>>.
+  This component has a method which returns the default <<<FileUtils.FilterWrapper>>>s.
   These are:
 
-    * interpolation with token $\{ \} and values from properties files, project.build.filters, project.properties
-      and mavenSession.executionProperties
+  * Interpolation with token $\{ \} and values from properties files, <<<\<project\>>>>/<<<\<build\>>>>/<<<\<filters>>>, <<<project.properties>>>
+    and <<<mavenSession.executionProperties>>>
 
-    * interpolation with token @ @ and values from properties files, project.build.filters, project.properties
-      and mavenSession.executionProperties
+  * Interpolation with token @ @ and values from properties files, <<<\<project\>>>>/<<<\<build\>>>>/<<<\<filters>>>, <<<project.properties>>>
+    and <<<mavenSession.executionProperties>>>
 
-    * interpolation with token $\{ \} and values from mavenProject interpolation
+  * Interpolation with token $\{ \} and values from <<<mavenProject>>> interpolation
 
-    * interpolation with token @ @ and values from mavenProject interpolation
+  * Interpolation with token @ @ and values from <<<mavenProject>>> interpolation
 
-    []
+  []
 
-    The values used for interpolation are stored in a <<<Properties>>> object
-    and are loaded in the following order:
+  The values used for interpolation are stored in a <<<Properties>>> object
+  and are loaded in the following order:
 
-    * A <<<List>>> of properties files, provided as a parameter to the method
+  * A <<<List>>> of properties files, provided as a parameter to the method
 
-    * Filters defined in the <<<\<build\>>>>/<<<\<filters\>>>> section of the POM
+  * Filters defined in the <<<\<build\>>>>/<<<\<filters\>>>> section of the POM
 
-    * Properties defined in the <<<\<properties\>>>> section of the POM
+  * Properties defined in the <<<\<properties\>>>> section of the POM
 
-    * The <<<executionProperties>>> from the current <<<MavenSession>>>
+  * The <<<executionProperties>>> from the current <<<MavenSession>>>
 
-    []
+  []
 
-    <<Note>>: As it's a <<<Properties>>> object, the last defined key/value pair wins.
+  <<Note:>> As it's a <<<Properties>>> object, the last defined key/value pair wins.
 
-    <<Note>>: When building the <<<Properties>>> object and reading the properties files defining the different filters,
-    interpolation with the token $\{ \} is supported for these filters with limited properties values coming from
-    project.properties and mavenSession.executionProperties. The last wins here too.
+  <<Note:>> When building the <<<Properties>>> object and reading the properties files that defines the different filters,
+  interpolation with the token $\{ \} is supported for these filters with limited properties values coming from
+  <<<project.properties>>> and <<<mavenSession.executionProperties>>>. The last wins here too.

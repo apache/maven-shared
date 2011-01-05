@@ -86,7 +86,8 @@ public class InterpolatorFilterReaderLineEnding
      * @param endToken end token to use
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    public InterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, String beginToken, String endToken, boolean supportMultiLineFiltering )
+    public InterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, String beginToken, String endToken,
+                                               boolean supportMultiLineFiltering )
     {
         this( in, interpolator, beginToken, endToken, new SimpleRecursionInterceptor(), supportMultiLineFiltering );
     }    
@@ -99,7 +100,9 @@ public class InterpolatorFilterReaderLineEnding
      * @param ri The {@link RecursionInterceptor} to use to prevent recursive expressions.
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    private InterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, String beginToken, String endToken, RecursionInterceptor ri, boolean supportMultiLineFiltering )
+    private InterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, String beginToken,
+                                                String endToken, RecursionInterceptor ri,
+                                                boolean supportMultiLineFiltering )
     {
         super( in );
 
@@ -204,7 +207,7 @@ public class InterpolatorFilterReaderLineEnding
             ch = in.read();
         }
         
-        if (ch == '\n' && !supportMultiLineFiltering )
+        if ( ch == '\n' && !supportMultiLineFiltering )
         {
             previousIndex = -1;
             return ch;
@@ -228,13 +231,13 @@ public class InterpolatorFilterReaderLineEnding
                 {
                     ch = in.read();
                 }
-                if ( ch != -1 && (ch != '\n' && !supportMultiLineFiltering ) )
+                if ( ch != -1 && ( ch != '\n' && !supportMultiLineFiltering ) )
                 {
                     key.append( (char) ch );
                     if ( ( beginTokenMatchPos < this.beginToken.length() )
                         && ( ch != this.beginToken.charAt( beginTokenMatchPos++ ) )
-                        && ( useEscape && this.orginalBeginToken.length() > ( beginTokenMatchPos - 1 ) && ch != this.orginalBeginToken
-                            .charAt( beginTokenMatchPos - 1 ) ) )
+                        && ( useEscape && this.orginalBeginToken.length() > ( beginTokenMatchPos - 1 )
+                        && ch != this.orginalBeginToken.charAt( beginTokenMatchPos - 1 ) ) )
                     {
                         ch = -1; // not really EOF but to trigger code below
                         break;
@@ -246,7 +249,8 @@ public class InterpolatorFilterReaderLineEnding
                 }
                 // MSHARED-81 olamy : we must take care of token with length 1, escaping and same char : \@foo@
                 // here ch == endToken == beginToken -> not going to next char : bad :-)
-                if ( useEscape && this.orginalBeginToken == this.endToken && key.toString().startsWith( this.beginToken ) )
+                if ( useEscape
+                    && this.orginalBeginToken == this.endToken && key.toString().startsWith( this.beginToken ) )
                 {
                     ch = in.read();
                     key.append( (char) ch );
@@ -292,7 +296,7 @@ public class InterpolatorFilterReaderLineEnding
             // There is nothing left to read so we have the situation where the begin/end token
             // are in fact the same and as there is nothing left to read we have got ourselves
             // end of a token boundary so let it pass through.
-            if ( ch == -1 || ( ch =='\n' && !supportMultiLineFiltering ) )
+            if ( ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
             {
                 replaceData = key.toString();
                 replaceIndex = 1;

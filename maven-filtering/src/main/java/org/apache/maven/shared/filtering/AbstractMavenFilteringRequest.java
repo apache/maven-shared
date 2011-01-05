@@ -268,7 +268,7 @@ public class AbstractMavenFilteringRequest
      * 'BEGIN*END' for asymmetrical delimiters, or 'TOKEN' for symmetrical delimiters. See
      * {@link AbstractMavenFilteringRequest#delimiters} for more information and default values.
      * 
-     * @param delimiters If <code>null</code>, reset delimiters to '${*}' only. Otherwise, use the provided parameter value.
+     * @param delimiters If <code>null</code>, reset delimiters to '${*}' only. Otherwise, use the provided value.
      * @since 1.0-beta-3
      */
     public void setDelimiters( LinkedHashSet delimiters )

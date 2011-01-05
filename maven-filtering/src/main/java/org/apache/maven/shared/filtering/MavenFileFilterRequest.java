@@ -1,12 +1,5 @@
 package org.apache.maven.shared.filtering;
 
-import java.io.File;
-import java.util.List;
-import java.util.Properties;
-
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.project.MavenProject;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,6 +18,13 @@ import org.apache.maven.project.MavenProject;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import java.io.File;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.project.MavenProject;
 
 /**
  * @author <a href="mailto:olamy@apache">olamy</a>

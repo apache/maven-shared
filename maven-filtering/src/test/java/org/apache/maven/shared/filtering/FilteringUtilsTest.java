@@ -35,6 +35,16 @@ public class FilteringUtilsTest
         assertEquals( "C:\\\\Users\\\\Administrator", FilteringUtils.escapeWindowsPath( "C:\\Users\\Administrator" ) );
     }
 
+    public void testEscapeWindowsPathMissingDriveLetter()
+    {
+        assertEquals( ":\\Users\\Administrator", FilteringUtils.escapeWindowsPath( ":\\Users\\Administrator" ) );
+    }
+
+    public void testEscapeWindowsPathInvalidDriveLetter()
+    {
+        assertEquals( "4:\\Users\\Administrator", FilteringUtils.escapeWindowsPath( "4:\\Users\\Administrator" ) );
+    }
+
     // This doesn't work, see MSHARED-121
     /*
     public void testEscapeWindowsPathStartingWithDrivelessAbsolutePath()

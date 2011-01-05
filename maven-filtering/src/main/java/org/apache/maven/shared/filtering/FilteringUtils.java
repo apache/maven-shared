@@ -19,6 +19,7 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
+import java.util.regex.Pattern;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
@@ -27,6 +28,9 @@ import org.codehaus.plexus.util.StringUtils;
  */
 public final class FilteringUtils
 {
+    private static final String WINDOWS_PATH_PATTERN = "^[a-zA-Z]:\\\\(.*)";
+
+    private static final Pattern PATTERN = Pattern.compile( WINDOWS_PATH_PATTERN) ;
 
     /**
      * 
@@ -40,7 +44,7 @@ public final class FilteringUtils
     // How do we distinguish a relative windows path from some other value that happens to contain backslashes??
     public static final String escapeWindowsPath( String val )
     {
-        if ( !StringUtils.isEmpty( val ) && val.indexOf( ":\\" ) == 1 )
+        if ( !StringUtils.isEmpty( val ) && PATTERN.matcher( val ).matches() )
         {
             // Adapted from StringUtils.replace in plexus-utils to accommodate pre-escaped backslashes.
             StringBuffer buf = new StringBuffer( val.length() );

@@ -51,8 +51,8 @@ import java.util.Properties;
  * @author <a href="mailto:olamy@apache.org">olamy</a>
  * @version $Id$
  *
- * @component role="org.apache.maven.shared.filtering.MavenFileFilter"
- *            role-hint="default"
+ * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter"
+ *                   role-hint="default"
  */
 public class DefaultMavenFileFilter
     extends AbstractLogEnabled

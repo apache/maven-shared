@@ -38,7 +38,7 @@ import java.util.Properties;
 public final class PropertyUtils
 {
     /**
-     * private empty constructor to prevent instantiation
+     * Private empty constructor to prevent instantiation.
      */
     private PropertyUtils()
     {
@@ -53,7 +53,7 @@ public final class PropertyUtils
      * </p>
      * 
      * @param propFile The property file to load.
-     * @param baseProps Properties containing the initial values to subsitute into the properties file.
+     * @param baseProps Properties containing the initial values to substitute into the properties file.
      * @return Properties object containing the properties in the file with their values fully resolved.
      * @throws IOException if profile does not exist, or cannot be read.
      */
@@ -81,7 +81,7 @@ public final class PropertyUtils
         combinedProps.putAll( fileProps );
 
         // The algorithm iterates only over the fileProps which is all that is required to resolve
-        // the properties defined within the file. This is slighlty different to current, however
+        // the properties defined within the file. This is slightly different to current, however
         // I suspect that this was the actual original intent.
         // 
         // The difference is that #loadPropertyFile(File, boolean, boolean) also resolves System properties
@@ -103,8 +103,8 @@ public final class PropertyUtils
      * Reads a property file, resolving all internal variables.
      *
      * @param propfile The property file to load
-     * @param fail wheter to throw an exception when the file cannot be loaded or to return null
-     * @param useSystemProps wheter to incorporate System.getProperties settings into the returned Properties object.
+     * @param fail whether to throw an exception when the file cannot be loaded or to return null
+     * @param useSystemProps whether to incorporate System.getProperties settings into the returned Properties object.
      * @return the loaded and fully resolved Properties object
      * @throws IOException if profile does not exist, or cannot be read.
      */
@@ -150,6 +150,7 @@ public final class PropertyUtils
      * the value of a property contains a key), and will
      * not loop endlessly on a pair like
      * test = ${test}.
+     *
      * @param k
      * @param p
      * @return The filtered property value.

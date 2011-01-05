@@ -44,14 +44,18 @@ public class AbstractMavenFilteringRequest
     private MavenSession mavenSession;
 
     /** 
-     * List of String considered as expressions which contains values in the project/pom : pom project
-     * default value will be pom and project.
+     * List of Strings considered as expressions which contains values in the project/pom:
+     * pom project
+     * Default value will be pom and project.
+     *
      * @since 1.0-beta-2
      */
     private List projectStartExpressions = new ArrayList();
     
     /**
-     * String which will escape interpolation mechanism : foo \${foo.bar} -> foo ${foo.bar}
+     * String which will escape interpolation mechanism:
+     * foo \${foo.bar} -> foo ${foo.bar}
+     *
      * @since 1.0-beta-2
      */
     private String escapeString;
@@ -68,7 +72,7 @@ public class AbstractMavenFilteringRequest
     
     /**
      * Set of expression delimiter specifications to use during filtering. Delimiter specifications are
-     * given in the form 'BEGIN*END' or, for symmetical delimiters, simply 'TOKEN'. The default
+     * given in the form 'BEGIN*END' or, for symmetrical delimiters, simply 'TOKEN'. The default
      * values are '${*}' and '@'.
      * 
      * @since 1.0-beta-3
@@ -76,7 +80,8 @@ public class AbstractMavenFilteringRequest
     private LinkedHashSet delimiters = new LinkedHashSet();
     
     /**
-     * not stop trying filtering tokens when reaching EOL
+     * Do not stop trying to filter tokens when reaching EOL.
+     *
      * @since 1.0-beta-5
      */
     private boolean supportMultiLineFiltering;
@@ -87,7 +92,7 @@ public class AbstractMavenFilteringRequest
     }
 
     protected AbstractMavenFilteringRequest( MavenProject mavenProject, List filters,
-                                          String encoding, MavenSession mavenSession )
+                                             String encoding, MavenSession mavenSession )
     {
         initDefaults();
         this.mavenProject = mavenProject;
@@ -214,7 +219,6 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
-     * @return
      * @since 1.0-beta-2
      */
     public String getEscapeString()
@@ -232,7 +236,6 @@ public class AbstractMavenFilteringRequest
     }
     
     /**
-     * @return
      * @since 1.0-beta-2
      */
     public List getProjectStartExpressions()
@@ -251,7 +254,8 @@ public class AbstractMavenFilteringRequest
 
     /**
      * See {@link AbstractMavenFilteringRequest#delimiters} for more information and default values.
-     * @return Not allowed to be null or empty.
+     *
+     * @return Not allowed to be <code>null</code> or empty.
      * @since 1.0-beta-3
      */
     public LinkedHashSet getDelimiters()
@@ -261,10 +265,10 @@ public class AbstractMavenFilteringRequest
 
     /**
      * Set the delimiter specifications to use during filtering. Specifications should be of the form:
-     * 'BEGIN*END' for asymmetical delimiters, or 'TOKEN' for symmetical delimiters. See
+     * 'BEGIN*END' for asymmetrical delimiters, or 'TOKEN' for symmetrical delimiters. See
      * {@link AbstractMavenFilteringRequest#delimiters} for more information and default values.
      * 
-     * @param delimiters If null, reset delimiters to '${*}' only. Otherwise, use the provided parameter value.
+     * @param delimiters If <code>null</code>, reset delimiters to '${*}' only. Otherwise, use the provided parameter value.
      * @since 1.0-beta-3
      */
     public void setDelimiters( LinkedHashSet delimiters )

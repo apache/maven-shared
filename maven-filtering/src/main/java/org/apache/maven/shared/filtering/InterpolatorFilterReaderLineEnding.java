@@ -84,6 +84,7 @@ public class InterpolatorFilterReaderLineEnding
      * @param interpolator interpolator instance to use
      * @param beginToken start token to use
      * @param endToken end token to use
+     * @param supportMultiLineFiltering If multi line filtering is allowed
      */
     public InterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, String beginToken, String endToken, boolean supportMultiLineFiltering )
     {
@@ -96,6 +97,7 @@ public class InterpolatorFilterReaderLineEnding
      * @param beginToken start token to use
      * @param endToken end token to use
      * @param ri The {@link RecursionInterceptor} to use to prevent recursive expressions.
+     * @param supportMultiLineFiltering If multi line filtering is allowed
      */
     private InterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, String beginToken, String endToken, RecursionInterceptor ri, boolean supportMultiLineFiltering )
     {

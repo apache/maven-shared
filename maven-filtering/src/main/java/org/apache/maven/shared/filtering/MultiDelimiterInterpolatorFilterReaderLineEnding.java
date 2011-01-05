@@ -69,9 +69,11 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
     private boolean supportMultiLineFiltering;
     
     /**
-     * this constructor use default begin token ${ and default end token } 
+     * This constructor uses default begin token ${ and default end token }.
+     *
      * @param in reader to use
      * @param interpolator interpolator instance to use
+     * @param supportMultiLineFiltering If multi line filtering is allowed
      */
     public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, boolean supportMultiLineFiltering )
     {
@@ -81,10 +83,8 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
     /**
      * @param in reader to use
      * @param interpolator interpolator instance to use
-     * @param beginToken start token to use
-     * @param endToken end token to use
      * @param ri The {@link RecursionInterceptor} to use to prevent recursive expressions.
-     * @since 1.12
+     * @param supportMultiLineFiltering If multi line filtering is allowed
      */
     public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, RecursionInterceptor ri, boolean supportMultiLineFiltering )
     {

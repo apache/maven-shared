@@ -33,9 +33,9 @@ public interface MavenFileFilter
 {
     
     /**
-     * Will copy a file with some filtering using defaultFilterWrappers 
+     * Will copy a file with some filtering using defaultFilterWrappers.
+     *
      * @see #getDefaultFilterWrappers(MavenProject, List, boolean, MavenSession)
-     * 
      * @param from file to copy/filter
      * @param to destination file
      * @param filtering enable or not filering
@@ -44,13 +44,13 @@ public interface MavenFileFilter
      * @throws MavenFilteringException 
      */
     void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject, List filters,
-                          boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )
+                   boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )
         throws MavenFilteringException;
     
     /**
-     * @since 1.0-beta-3
      * @param mavenFileFilterRequest
      * @throws MavenFilteringException
+     * @since 1.0-beta-3
      */
     void copyFile( MavenFileFilterRequest mavenFileFilterRequest )
         throws MavenFilteringException;
@@ -73,15 +73,14 @@ public interface MavenFileFilter
      * @param filterWrappers
      * @param encoding
      * @param overwrite 
-     * @since 1.0-beta-2
      * @throws MavenFilteringException
+     * @since 1.0-beta-2
      */
     void copyFile( File from, final File to, boolean filtering, List filterWrappers, String encoding, boolean overwrite )
         throws MavenFilteringException;    
     
     /**
-     * 
-     * Will return the default FileUtils.FilterWrappers
+     * Will return the default FileUtils.FilterWrappers.
      * 
      * <ul>
      *   <li>interpolate with token ${} and values from sysProps, project.properties, filters and project filters.</li>
@@ -89,38 +88,37 @@ public interface MavenFileFilter
      *   <li>interpolate with token ${} and values from mavenProject interpolation.</li>
      *   <li>interpolation with token @ @ and values from mavenProject interpolation</li>
      * </ul>
-     * <b>this method si now deprecated and no escape mechanism will be use</b>
-     * @deprecated use {@link #getDefaultFilterWrappers(MavenProject, List, boolean, MavenSession, MavenResourcesExecution)}
+     * <b>This method is now deprecated and no escape mechanism will be used.</b>
+     *
      * @param mavenProject
      * @param filters {@link List} of properties file
-     * 
-     * @return {@link List} of FileUtils.FilterWrapper 
-     * 
+     * @return {@link List} of FileUtils.FilterWrapper
+     * @deprecated use {@link #getDefaultFilterWrappers(MavenProject, List, boolean, MavenSession, MavenResourcesExecution)}
      */
     List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath,
                                    MavenSession mavenSession )
         throws MavenFilteringException;
     
     /**
-     * @since 1.0-beta-2
      * @param mavenProject
      * @param filters
      * @param escapedBackslashesInFilePath
      * @param mavenSession
      * @param mavenResourcesExecution
-     * @return {@link List} of FileUtils.FilterWrapper 
+     * @return {@link List} of FileUtils.FilterWrapper
      * @throws MavenFilteringException
+     * @since 1.0-beta-2
      */
     List getDefaultFilterWrappers( MavenProject mavenProject, List filters, boolean escapedBackslashesInFilePath,
                                    MavenSession mavenSession, MavenResourcesExecution mavenResourcesExecution )
         throws MavenFilteringException;
     
     /**
-     * @since 1.0-beta-3
      * @param request
-     * @return {@link List} of FileUtils.FilterWrapper 
+     * @return {@link List} of FileUtils.FilterWrapper
      * @throws MavenFilteringException
-     */    
+     * @since 1.0-beta-3
+     */
     List getDefaultFilterWrappers( AbstractMavenFilteringRequest request )
         throws MavenFilteringException;
     

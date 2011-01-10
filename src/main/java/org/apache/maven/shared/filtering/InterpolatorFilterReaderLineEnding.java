@@ -35,7 +35,7 @@ import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
  * @author cstamas
  * @author Olivier Lamy
  * @version $Id$
- * @since 1.0-beta-5
+ * @since 1.0
  */
 public class InterpolatorFilterReaderLineEnding
     extends FilterReader

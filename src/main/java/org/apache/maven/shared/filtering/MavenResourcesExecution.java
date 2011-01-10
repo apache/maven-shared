@@ -75,7 +75,7 @@ public class MavenResourcesExecution
     /**
      * Do not stop trying to filter tokens when reaching EOL.
      *
-     * @since 1.0-beta-5
+     * @since 1.0
      */
     private boolean supportMultiLineFiltering;    
     
@@ -265,10 +265,10 @@ public class MavenResourcesExecution
      * @param valueSource
      * @param startExp start token like ${
      * @param endExp endToken }
-     * @since 1.0-beta-5
      * @param escapeString
-     * @param supportMultiLineFiltering do we support or use filtering on multi lines with start and endtoken on multi lines)
-     */    
+     * @param supportMultiLineFiltering do we support or use filtering on multi lines with start and endtoken on multi lines
+     * @since 1.0
+     */
     public void addFilerWrapperWithEscaping( final ValueSource valueSource, final String startExp, final String endExp,
                                              final String escapeString, final boolean supportMultiLineFiltering )
     {

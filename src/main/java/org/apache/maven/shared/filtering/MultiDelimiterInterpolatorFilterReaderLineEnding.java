@@ -39,7 +39,7 @@ import org.codehaus.plexus.interpolation.multi.DelimiterSpecification;
  * @author cstamas
  * @author Olivier Lamy
  * @version $Id$
- * @since 1.0-beta-5
+ * @since 1.0
  */
 public class MultiDelimiterInterpolatorFilterReaderLineEnding
     extends FilterReader

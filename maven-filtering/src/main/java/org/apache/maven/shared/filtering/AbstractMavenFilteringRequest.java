@@ -82,7 +82,7 @@ public class AbstractMavenFilteringRequest
     /**
      * Do not stop trying to filter tokens when reaching EOL.
      *
-     * @since 1.0-beta-5
+     * @since 1.0
      */
     private boolean supportMultiLineFiltering;
     

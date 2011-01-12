@@ -51,7 +51,7 @@
 
   <properties>
     <doxiaVersion>1.1.4</doxiaVersion>
-    <doxiaSitetoolsVersion>1.1.4</doxiaSitetoolsVersion>
+    <doxiaSitetoolsVersion>1.1.5-SNAPSHOT</doxiaSitetoolsVersion>
     <mavenVersion>2.2.1</mavenVersion>
   </properties>
 

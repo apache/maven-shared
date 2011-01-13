@@ -24,7 +24,7 @@ import org.codehaus.plexus.PlexusTestCase;
 /**
  * @author John Casey
  * @author Dennis Lundberg
- * @since 2.5
+ * @since 1.0
  * @version $Id$
  */
 public class FilteringUtilsTest

@@ -28,7 +28,7 @@ import org.codehaus.plexus.PlexusTestCase;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 22 janv. 08
+ * @since 1.0-beta-1
  * @version $Id$
  */
 public class TestReflectionProperties

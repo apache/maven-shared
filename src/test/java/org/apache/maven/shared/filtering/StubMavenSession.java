@@ -26,7 +26,7 @@ import org.apache.maven.settings.Settings;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 24 february. 2008
+ * @since 1.0-beta-1
  * @version $Id$
  */
 public class StubMavenSession

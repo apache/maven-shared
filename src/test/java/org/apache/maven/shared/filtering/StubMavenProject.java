@@ -26,7 +26,7 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @since 28 janv. 08
+ * @since 1.0-beta-1
  * @version $Id$
  */
 public class StubMavenProject

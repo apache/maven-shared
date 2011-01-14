@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -1439,39 +1440,10 @@ public class Verifier
             throw new VerificationException( "IO Error communicating with commandline " + e.toString(), e );
         }
 
-        String version = null;
-
         List logLines = loadFile( logFile, false );
         logFile.delete();
 
-        for ( Iterator it = logLines.iterator(); version == null && it.hasNext(); )
-        {
-            String line = (String) it.next();
-
-            final String MAVEN_VERSION = "Maven version: ";
-
-            // look out for "Maven version: 3.0-SNAPSHOT built on unknown"
-            if ( line.regionMatches( true, 0, MAVEN_VERSION, 0, MAVEN_VERSION.length() ) )
-            {
-                version = line.substring( MAVEN_VERSION.length() ).trim();
-                if ( version.indexOf( ' ' ) >= 0 )
-                {
-                    version = version.substring( 0, version.indexOf( ' ' ) );
-                }
-            }
-
-            final String NEW_MAVEN_VERSION = "Apache Maven ";
-
-            // look out for "Apache Maven 2.1.0-M2-SNAPSHOT (rXXXXXX; date)"
-            if ( line.regionMatches( true, 0, NEW_MAVEN_VERSION, 0, NEW_MAVEN_VERSION.length() ) )
-            {
-                version = line.substring( NEW_MAVEN_VERSION.length() ).trim();
-                if ( version.indexOf( ' ' ) >= 0 )
-                {
-                    version = version.substring( 0, version.indexOf( ' ' ) );
-                }
-            }
-        }
+        String version = extractMavenVersion( logLines );
 
         if ( version == null )
         {
@@ -1482,6 +1454,26 @@ public class Verifier
         {
             return version;
         }
+    }
+
+    static String extractMavenVersion( List logLines )
+    {
+        String version = null;
+
+        final Pattern MAVEN_VERSION = Pattern.compile( "(?i).*Maven [^0-9]*([0-9]\\S*).*" );
+
+        for ( Iterator it = logLines.iterator(); version == null && it.hasNext(); )
+        {
+            String line = (String) it.next();
+
+            Matcher m = MAVEN_VERSION.matcher( line );
+            if ( m.matches() )
+            {
+                version = m.group( 1 );
+            }
+        }
+
+        return version;
     }
 
     private static String getLogContents( File logFile )

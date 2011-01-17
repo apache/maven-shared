@@ -1319,10 +1319,23 @@ public class DefaultSiteTool
         for ( Model model : models )
         {
             String reactorUrl = model.getUrl();
-            String name = model.getName();
+            String name = name( model );
 
             appendMenuItem( project, menu, name, reactorUrl, model.getArtifactId() );
         }
+    }
+
+    private static String name( final Model model )
+    {
+        String name = model.getName();
+
+        if ( name == null )
+        {
+            name = "Unnamed - " + model.getGroupId() + ":" + model.getArtifactId() + ":"
+                    + model.getPackaging() + ":" + model.getVersion();
+        }
+
+        return name;
     }
 
     /**

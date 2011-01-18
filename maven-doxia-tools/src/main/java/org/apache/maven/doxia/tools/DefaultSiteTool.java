@@ -1269,8 +1269,11 @@ public class DefaultSiteTool
                 decoration = new DecorationModel();
             }
 
-            final String name = ( StringUtils.isEmpty( decoration.getName() ) ?
-                project.getName() : decoration.getName() );
+            String name = project.getName();
+            if ( decoration != null && StringUtils.isNotEmpty( decoration.getName() ) )
+            {
+                name = decoration.getName();
+            }
 
             // Merge the parent and child site descriptors
             assembler.assembleModelInheritance( name, decoration, parent, project.getUrl(),

@@ -272,10 +272,27 @@ public class DefaultSiteTool
         // share the common protocol and domain info and we are left
         // with their URI information
 
+        String relativePath = getRelativeFilePath( fromPath, toPath );
+
+        if ( relativePath == null )
+        {
+            relativePath = to;
+        }
+
+        if ( getLogger().isDebugEnabled() && !relativePath.toString().equals( to ) )
+        {
+            getLogger().debug( "Mapped url: " + to + " to relative path: " + relativePath );
+        }
+
+        return relativePath;
+    }
+
+    private static String getRelativeFilePath( final String oldPath, final String newPath )
+    {
         // normalize the path delimiters
 
-        toPath = new File( toPath ).getPath();
-        fromPath = new File( fromPath ).getPath();
+        String fromPath = new File( oldPath ).getPath();
+        String toPath = new File( newPath ).getPath();
 
         // strip any leading slashes if its a windows path
         if ( toPath.matches( "^\\[a-zA-Z]:" ) )
@@ -288,14 +305,13 @@ public class DefaultSiteTool
         }
 
         // lowercase windows drive letters.
-
-        if ( toPath.startsWith( ":", 1 ) )
-        {
-            toPath = toPath.substring( 0, 1 ).toLowerCase() + toPath.substring( 1 );
-        }
         if ( fromPath.startsWith( ":", 1 ) )
         {
-            fromPath = fromPath.substring( 0, 1 ).toLowerCase() + fromPath.substring( 1 );
+            fromPath = Character.toLowerCase( fromPath.charAt( 0 ) ) + fromPath.substring( 1 );
+        }
+        if ( toPath.startsWith( ":", 1 ) )
+        {
+            toPath = Character.toLowerCase( toPath.charAt( 0 ) ) + toPath.substring( 1 );
         }
 
         // check for the presence of windows drives. No relative way of
@@ -307,7 +323,7 @@ public class DefaultSiteTool
             // they both have drive path element but they don't match, no
             // relative path
 
-            return to;
+            return null;
         }
 
         if ( ( toPath.startsWith( ":", 1 ) && !fromPath.startsWith( ":", 1 ) )
@@ -317,84 +333,11 @@ public class DefaultSiteTool
             // one has a drive path element and the other doesn't, no relative
             // path.
 
-            return to;
+            return null;
 
         }
 
-        // use tokenizer to traverse paths and for lazy checking
-        StringTokenizer toTokeniser = new StringTokenizer( toPath, File.separator );
-        StringTokenizer fromTokeniser = new StringTokenizer( fromPath, File.separator );
-
-        int count = 0;
-
-        // walk along the to path looking for divergence from the from path
-        while ( toTokeniser.hasMoreTokens() && fromTokeniser.hasMoreTokens() )
-        {
-            if ( File.separatorChar == '\\' )
-            {
-                if ( !fromTokeniser.nextToken().equalsIgnoreCase( toTokeniser.nextToken() ) )
-                {
-                    break;
-                }
-            }
-            else
-            {
-                if ( !fromTokeniser.nextToken().equals( toTokeniser.nextToken() ) )
-                {
-                    break;
-                }
-            }
-
-            count++;
-        }
-
-        // reinitialize the tokenizers to count positions to retrieve the
-        // gobbled token
-
-        toTokeniser = new StringTokenizer( toPath, File.separator );
-        fromTokeniser = new StringTokenizer( fromPath, File.separator );
-
-        while ( count-- > 0 )
-        {
-            fromTokeniser.nextToken();
-            toTokeniser.nextToken();
-        }
-
-        StringBuilder relativePath = new StringBuilder();
-
-        // add back refs for the rest of from location.
-        while ( fromTokeniser.hasMoreTokens() )
-        {
-            fromTokeniser.nextToken();
-
-            relativePath.append( ".." );
-
-            if ( fromTokeniser.hasMoreTokens() )
-            {
-                relativePath.append( File.separatorChar );
-            }
-        }
-
-        if ( relativePath.length() != 0 && toTokeniser.hasMoreTokens() )
-        {
-            relativePath.append( File.separatorChar );
-        }
-
-        // add fwd fills for whatever's left of to.
-        while ( toTokeniser.hasMoreTokens() )
-        {
-            relativePath.append( toTokeniser.nextToken() );
-
-            if ( toTokeniser.hasMoreTokens() )
-            {
-                relativePath.append( File.separatorChar );
-            }
-        }
-
-        if ( getLogger().isDebugEnabled() && !relativePath.toString().equals( to ) )
-        {
-            getLogger().debug( "Mapped url: " + to + " to relative path: " + relativePath );
-        }
+        final String relativePath = buildRelativePath( toPath, fromPath, File.separatorChar );
 
         return relativePath.toString();
     }
@@ -1314,6 +1257,80 @@ public class DefaultSiteTool
             throw new SiteToolException( "Error reading site descriptor", e );
         }
         return decoration;
+    }
+
+    private static String buildRelativePath( final String toPath,  final String fromPath, final char separatorChar )
+    {
+        // use tokenizer to traverse paths and for lazy checking
+        StringTokenizer toTokeniser = new StringTokenizer( toPath, String.valueOf( separatorChar ) );
+        StringTokenizer fromTokeniser = new StringTokenizer( fromPath, String.valueOf( separatorChar ) );
+
+        int count = 0;
+
+        // walk along the to path looking for divergence from the from path
+        while ( toTokeniser.hasMoreTokens() && fromTokeniser.hasMoreTokens() )
+        {
+            if ( separatorChar == '\\' )
+            {
+                if ( !fromTokeniser.nextToken().equalsIgnoreCase( toTokeniser.nextToken() ) )
+                {
+                    break;
+                }
+            }
+            else
+            {
+                if ( !fromTokeniser.nextToken().equals( toTokeniser.nextToken() ) )
+                {
+                    break;
+                }
+            }
+
+            count++;
+        }
+
+        // reinitialize the tokenizers to count positions to retrieve the
+        // gobbled token
+
+        toTokeniser = new StringTokenizer( toPath, String.valueOf( separatorChar ) );
+        fromTokeniser = new StringTokenizer( fromPath, String.valueOf( separatorChar ) );
+
+        while ( count-- > 0 )
+        {
+            fromTokeniser.nextToken();
+            toTokeniser.nextToken();
+        }
+
+        StringBuilder relativePath = new StringBuilder();
+
+        // add back refs for the rest of from location.
+        while ( fromTokeniser.hasMoreTokens() )
+        {
+            fromTokeniser.nextToken();
+
+            relativePath.append( ".." );
+
+            if ( fromTokeniser.hasMoreTokens() )
+            {
+                relativePath.append( separatorChar );
+            }
+        }
+
+        if ( relativePath.length() != 0 && toTokeniser.hasMoreTokens() )
+        {
+            relativePath.append( separatorChar );
+        }
+
+        // add fwd fills for whatever's left of to.
+        while ( toTokeniser.hasMoreTokens() )
+        {
+            relativePath.append( toTokeniser.nextToken() );
+
+            if ( toTokeniser.hasMoreTokens() )
+            {
+                relativePath.append( separatorChar );
+            }
+        }
+        return relativePath.toString();
     }
 
     /**

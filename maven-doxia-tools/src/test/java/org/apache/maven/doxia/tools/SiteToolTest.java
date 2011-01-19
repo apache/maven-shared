@@ -20,6 +20,7 @@ package org.apache.maven.doxia.tools;
  */
 
 import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -32,6 +33,7 @@ import org.apache.maven.doxia.site.decoration.DecorationModel;
 import org.apache.maven.doxia.site.decoration.Skin;
 import org.apache.maven.doxia.tools.stubs.SiteToolMavenProjectStub;
 import org.apache.maven.project.MavenProject;
+
 import org.codehaus.plexus.PlexusTestCase;
 
 /**

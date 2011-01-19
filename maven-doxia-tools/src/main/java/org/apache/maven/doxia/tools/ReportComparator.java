@@ -19,11 +19,11 @@ package org.apache.maven.doxia.tools;
  * under the License.
  */
 
-import org.apache.maven.reporting.MavenReport;
-
 import java.text.Collator;
 import java.util.Comparator;
 import java.util.Locale;
+
+import org.apache.maven.reporting.MavenReport;
 
 /**
  * Sorts reports.

@@ -350,19 +350,22 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "The parameter 'basedir' can not be null" );
         }
 
-        if ( siteDirectory == null )
+        String dir = siteDirectory;
+        if ( dir == null )
         {
             // TODO need to be more dynamic
-            siteDirectory = "src/site";
+            dir = "src/site";
         }
-        if ( locale == null )
+
+        Locale llocale = locale;
+        if ( llocale == null )
         {
-            locale = new Locale( "" );
+            llocale = new Locale( "" );
         }
 
-        File siteDir = new File( basedir, siteDirectory );
+        File siteDir = new File( basedir, dir );
 
-        File siteDescriptor = new File( siteDir, "site_" + locale.getLanguage() + ".xml" );
+        File siteDescriptor = new File( siteDir, "site_" + llocale.getLanguage() + ".xml" );
 
         if ( !siteDescriptor.isFile() )
         {
@@ -389,14 +392,15 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "The parameter 'remoteArtifactRepositories' can not be null" );
         }
 
-        if ( locale == null )
+        Locale llocale = locale;
+        if ( llocale == null )
         {
-            locale = new Locale( "" );
+            llocale = new Locale( "" );
         }
 
         try
         {
-            return resolveSiteDescriptor( project, localRepository, repositories, locale );
+            return resolveSiteDescriptor( project, localRepository, repositories, llocale );
         }
         catch ( ArtifactNotFoundException e )
         {
@@ -446,12 +450,13 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "The parameter 'outputEncoding' can not be null" );
         }
 
-        if ( locale == null )
+        Locale llocale = locale;
+        if ( llocale == null )
         {
-            locale = Locale.getDefault();
+            llocale = Locale.getDefault();
         }
 
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, String> props = new HashMap<String, String>( 2 );
 
         // This is to support the deprecated ${reports} and ${modules} tags.
         props.put( "reports", "<menu ref=\"reports\"/>\n" );
@@ -461,7 +466,7 @@ public class DefaultSiteTool
 
         DecorationModel decorationModel =
             getDecorationModel( project, parentProject, reactorProjects, localRepository, repositories, siteDirectory,
-                                locale, props, inputEncoding, outputEncoding );
+                                llocale, props, inputEncoding, outputEncoding );
 
         if ( decorationModel == null )
         {
@@ -486,10 +491,10 @@ public class DefaultSiteTool
 
         if ( parentProject != null )
         {
-            populateParentMenu( decorationModel, locale, project, parentProject, true );
+            populateParentMenu( decorationModel, llocale, project, parentProject, true );
         }
 
-        populateModulesMenu( project, reactorProjects, localRepository, decorationModel, locale, true );
+        populateModulesMenu( project, reactorProjects, localRepository, decorationModel, llocale, true );
 
         if ( decorationModel.getBannerLeft() == null )
         {
@@ -524,9 +529,10 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "The parameter 'categories' can not be null" );
         }
 
-        if ( locale == null )
+        Locale llocale = locale;
+        if ( llocale == null )
         {
-            locale = Locale.getDefault();
+            llocale = Locale.getDefault();
         }
 
         Menu menu = decorationModel.getMenuRef( "reports" );
@@ -535,7 +541,7 @@ public class DefaultSiteTool
         {
             if ( menu.getName() == null )
             {
-                menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.projectdocumentation" ) );
+                menu.setName( i18n.getString( "site-tool", llocale, "decorationModel.menu.projectdocumentation" ) );
             }
 
             boolean found = false;
@@ -544,9 +550,9 @@ public class DefaultSiteTool
                 List<MavenReport> categoryReports = categories.get( MavenReport.CATEGORY_PROJECT_INFORMATION );
                 if ( !isEmptyList( categoryReports ) )
                 {
-                    MenuItem item = createCategoryMenu( i18n.getString( "site-tool", locale,
+                    MenuItem item = createCategoryMenu( i18n.getString( "site-tool", llocale,
                                                                         "decorationModel.menu.projectinformation" ),
-                                                        "/project-info.html", categoryReports, locale );
+                                                        "/project-info.html", categoryReports, llocale );
                     menu.getItems().add( item );
                     found = true;
                 }
@@ -554,9 +560,9 @@ public class DefaultSiteTool
                 categoryReports = categories.get( MavenReport.CATEGORY_PROJECT_REPORTS );
                 if ( !isEmptyList( categoryReports ) )
                 {
-                    MenuItem item = createCategoryMenu( i18n.getString( "site-tool", locale,
+                    MenuItem item = createCategoryMenu( i18n.getString( "site-tool", llocale,
                                                                         "decorationModel.menu.projectreports" ),
-                                                        "/project-reports.html", categoryReports, locale );
+                                                        "/project-reports.html", categoryReports, llocale );
                     menu.getItems().add( item );
                     found = true;
                 }
@@ -599,12 +605,12 @@ public class DefaultSiteTool
         // ${modules} to aProject.getModules(), so we need to interpolate that
         // first.
 
-        Map<String, String> modulesProps = new HashMap<String, String>();
+        Map<String, String> modulesProps = new HashMap<String, String>( 1 );
 
         // Legacy for the old ${modules} syntax
         modulesProps.put( "modules", "<menu ref=\"modules\"/>" );
 
-        siteDescriptorContent = StringUtils.interpolate( siteDescriptorContent, modulesProps );
+        String interpolatedSiteDescriptorContent = StringUtils.interpolate( siteDescriptorContent, modulesProps );
 
         RegexBasedInterpolator interpolator = new RegexBasedInterpolator();
 
@@ -623,7 +629,7 @@ public class DefaultSiteTool
 
         interpolator.addValueSource( new MapBasedValueSource( aProject.getProperties() ) );
 
-        siteDescriptorContent = interpolator.interpolate( siteDescriptorContent, "project" );
+        interpolatedSiteDescriptorContent = interpolator.interpolate( interpolatedSiteDescriptorContent, "project" );
 
         props.put( "inputEncoding", inputEncoding );
 
@@ -635,7 +641,7 @@ public class DefaultSiteTool
         // Legacy for the old ${reports} syntax
         props.put( "reports", "<menu ref=\"reports\"/>" );
 
-        return StringUtils.interpolate( siteDescriptorContent, props );
+        return StringUtils.interpolate( interpolatedSiteDescriptorContent, props );
     }
 
     /** {@inheritDoc} */
@@ -743,9 +749,10 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "The parameter 'parentProject' can not be null" );
         }
 
-        if ( locale == null )
+        Locale llocale = locale;
+        if ( llocale == null )
         {
-            locale = Locale.getDefault();
+            llocale = Locale.getDefault();
         }
 
         Menu menu = decorationModel.getMenuRef( "parent" );
@@ -795,7 +802,7 @@ public class DefaultSiteTool
             {
                 if ( menu.getName() == null )
                 {
-                    menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.parentproject" ) );
+                    menu.setName( i18n.getString( "site-tool", llocale, "decorationModel.menu.parentproject" ) );
                 }
 
                 MenuItem item = new MenuItem();
@@ -854,9 +861,10 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "The parameter 'decorationModel' can not be null" );
         }
 
-        if ( locale == null )
+        Locale llocale = locale;
+        if ( llocale == null )
         {
-            locale = Locale.getDefault();
+            llocale = Locale.getDefault();
         }
 
         Menu menu = decorationModel.getMenuRef( "modules" );
@@ -875,7 +883,7 @@ public class DefaultSiteTool
 
                 if ( menu.getName() == null )
                 {
-                    menu.setName( i18n.getString( "site-tool", locale, "decorationModel.menu.projectmodules" ) );
+                    menu.setName( i18n.getString( "site-tool", llocale, "decorationModel.menu.projectmodules" ) );
                 }
 
                     getLogger().debug( "Attempting to load module information from local filesystem" );
@@ -921,35 +929,40 @@ public class DefaultSiteTool
     /** {@inheritDoc} */
     public List<Locale> getAvailableLocales( String locales )
     {
-        List<Locale> localesList = new ArrayList<Locale>();
-        if ( locales != null )
+        if ( locales == null )
         {
-            String[] localesArray = StringUtils.split( locales, "," );
+            return Collections.singletonList( DEFAULT_LOCALE );
+        }
 
-            for ( int i = 0; i < localesArray.length; i++ )
+        String[] localesArray = StringUtils.split( locales, "," );
+        List<Locale> localesList = new ArrayList<Locale>( localesArray.length );
+
+        for ( int i = 0; i < localesArray.length; i++ )
+        {
+            Locale locale = codeToLocale( localesArray[i] );
+
+            if ( locale != null )
             {
-                Locale locale = codeToLocale( localesArray[i] );
-
-                if ( locale != null )
+                if ( !Arrays.asList( Locale.getAvailableLocales() ).contains( locale ) )
                 {
-                    if ( !Arrays.asList( Locale.getAvailableLocales() ).contains( locale ) )
+                    if ( getLogger().isWarnEnabled() )
                     {
-                        if ( getLogger().isWarnEnabled() )
-                        {
-                            getLogger().warn( "The locale parsed defined by '" + locale
-                                + "' is not available in this Java Virtual Machine ("
-                                + System.getProperty( "java.version" )
-                                + " from " + System.getProperty( "java.vendor" ) + ") - IGNORING" );
-                        }
-                        continue;
+                        getLogger().warn( "The locale parsed defined by '" + locale
+                            + "' is not available in this Java Virtual Machine ("
+                            + System.getProperty( "java.version" )
+                            + " from " + System.getProperty( "java.vendor" ) + ") - IGNORING" );
                     }
+                    continue;
+                }
 
-                    // Default bundles are in English
-                    if ( ( !locale.getLanguage().equals( DEFAULT_LOCALE.getLanguage() ) )
-                        && ( !i18n.getBundle( "site-tool", locale ).getLocale().getLanguage()
-                            .equals( locale.getLanguage() ) ) )
+                // Default bundles are in English
+                if ( ( !locale.getLanguage().equals( DEFAULT_LOCALE.getLanguage() ) )
+                    && ( !i18n.getBundle( "site-tool", locale ).getLocale().getLanguage()
+                        .equals( locale.getLanguage() ) ) )
+                {
+                    if ( getLogger().isWarnEnabled() )
                     {
-                        StringBuffer sb = new StringBuffer();
+                        final StringBuilder sb = new StringBuilder( 256 );
 
                         sb.append( "The locale '" ).append( locale ).append( "' (" );
                         sb.append( locale.getDisplayName( Locale.ENGLISH ) );
@@ -961,16 +974,13 @@ public class DefaultSiteTool
                         sb.append( "http://maven.apache.org/plugins/maven-site-plugin/i18n.html " );
                         sb.append( "for detailed instructions." );
 
-                        if ( getLogger().isWarnEnabled() )
-                        {
-                            getLogger().warn( sb.toString() );
-                        }
-
-                        continue;
+                        getLogger().warn( sb.toString() );
                     }
 
-                    localesList.add( locale );
+                    continue;
                 }
+
+                localesList.add( locale );
             }
         }
 

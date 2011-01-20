@@ -61,12 +61,10 @@ public class FilteringUtilsTest
     }
     */
 
-    // This doesn't work, see MSHARED-179
-    /*
+    // MSHARED-179
     public void testEscapeWindowsPathNotAtBeginning()
         throws Exception
     {
         assertEquals( "jdbc:derby:C:\\\\Users\\\\Administrator/test;create=true", FilteringUtils.escapeWindowsPath( "jdbc:derby:C:\\Users\\Administrator/test;create=true" ) );
     }
-    */
 }

@@ -357,11 +357,7 @@ public class DefaultSiteTool
             dir = "src/site";
         }
 
-        Locale llocale = locale;
-        if ( llocale == null )
-        {
-            llocale = new Locale( "" );
-        }
+        final Locale llocale = ( locale == null ) ? new Locale( "" ) : locale;
 
         File siteDir = new File( basedir, dir );
 
@@ -392,11 +388,7 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "The parameter 'remoteArtifactRepositories' can not be null" );
         }
 
-        Locale llocale = locale;
-        if ( llocale == null )
-        {
-            llocale = new Locale( "" );
-        }
+        final Locale llocale = ( locale == null ) ? new Locale( "" ) : locale;
 
         try
         {
@@ -450,11 +442,7 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "The parameter 'outputEncoding' can not be null" );
         }
 
-        Locale llocale = locale;
-        if ( llocale == null )
-        {
-            llocale = Locale.getDefault();
-        }
+        final Locale llocale = ( locale == null ) ? Locale.getDefault() : locale;
 
         Map<String, String> props = new HashMap<String, String>( 2 );
 
@@ -529,16 +517,15 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "The parameter 'categories' can not be null" );
         }
 
-        Locale llocale = locale;
-        if ( llocale == null )
-        {
-            llocale = Locale.getDefault();
-        }
-
         Menu menu = decorationModel.getMenuRef( "reports" );
 
-        if ( menu != null )
+        if ( menu == null )
         {
+            return;
+        }
+
+        final Locale llocale = ( locale == null ) ? Locale.getDefault() : locale;
+
             if ( menu.getName() == null )
             {
                 menu.setName( i18n.getString( "site-tool", llocale, "decorationModel.menu.projectdocumentation" ) );
@@ -571,7 +558,6 @@ public class DefaultSiteTool
             {
                 decorationModel.removeMenuRef( "reports" );
             }
-        }
     }
 
     /** {@inheritDoc} */
@@ -749,12 +735,6 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "The parameter 'parentProject' can not be null" );
         }
 
-        Locale llocale = locale;
-        if ( llocale == null )
-        {
-            llocale = Locale.getDefault();
-        }
-
         Menu menu = decorationModel.getMenuRef( "parent" );
 
         if ( menu == null )
@@ -762,8 +742,13 @@ public class DefaultSiteTool
             return;
         }
 
-        if ( !keepInheritedRefs || !menu.isInheritAsRef() )
+        if ( keepInheritedRefs && menu.isInheritAsRef() )
         {
+            return;
+        }
+
+        final Locale llocale = ( locale == null ) ? Locale.getDefault() : locale;
+
             String parentUrl = parentProject.getUrl();
 
             if ( parentUrl != null )
@@ -810,7 +795,6 @@ public class DefaultSiteTool
                 item.setHref( parentUrl );
                 menu.addItem( item );
             }
-        }
     }
 
     /**
@@ -861,12 +845,6 @@ public class DefaultSiteTool
             throw new IllegalArgumentException( "The parameter 'decorationModel' can not be null" );
         }
 
-        Locale llocale = locale;
-        if ( llocale == null )
-        {
-            llocale = Locale.getDefault();
-        }
-
         Menu menu = decorationModel.getMenuRef( "modules" );
 
         if ( menu == null )
@@ -874,8 +852,13 @@ public class DefaultSiteTool
             return;
         }
 
-        if ( !keepInheritedRefs || !menu.isInheritAsRef() )
+        if ( keepInheritedRefs && menu.isInheritAsRef() )
         {
+            return;
+        }
+
+        final Locale llocale = ( locale == null ) ? Locale.getDefault() : locale ;
+
             // we require child modules and reactors to process module menu
             if ( project.getModules().size() > 0 )
             {
@@ -923,7 +906,6 @@ public class DefaultSiteTool
                 // only remove if project has no modules AND menu is not inherited, see MSHARED-174
                 decorationModel.removeMenuRef( "modules" );
             }
-        }
     }
 
     /** {@inheritDoc} */

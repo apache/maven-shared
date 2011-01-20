@@ -24,11 +24,12 @@ import org.codehaus.plexus.util.StringUtils;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * @author Dennis Lundberg
  * @version $Id$
  */
 public final class FilteringUtils
 {
-    private static final String WINDOWS_PATH_PATTERN = "^[a-zA-Z]:\\\\(.*)";
+    private static final String WINDOWS_PATH_PATTERN = "^(.*)[a-zA-Z]:\\\\(.*)";
 
     private static final Pattern PATTERN = Pattern.compile( WINDOWS_PATH_PATTERN ) ;
 

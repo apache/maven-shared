@@ -65,10 +65,11 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.interpolation.EnvarBasedValueSource;
-import org.codehaus.plexus.util.interpolation.MapBasedValueSource;
-import org.codehaus.plexus.util.interpolation.ObjectBasedValueSource;
-import org.codehaus.plexus.util.interpolation.RegexBasedInterpolator;
+import org.codehaus.plexus.interpolation.EnvarBasedValueSource;
+import org.codehaus.plexus.interpolation.InterpolationException;
+import org.codehaus.plexus.interpolation.MapBasedValueSource;
+import org.codehaus.plexus.interpolation.ObjectBasedValueSource;
+import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 /**
@@ -615,7 +616,14 @@ public class DefaultSiteTool
 
         interpolator.addValueSource( new MapBasedValueSource( aProject.getProperties() ) );
 
-        interpolatedSiteDescriptorContent = interpolator.interpolate( interpolatedSiteDescriptorContent, "project" );
+        try
+        {
+            interpolatedSiteDescriptorContent = interpolator.interpolate( interpolatedSiteDescriptorContent, "project" );
+        }
+        catch ( InterpolationException e )
+        {
+            throw new SiteToolException( "Cannot interpolate site descriptor: " + e.getMessage(), e );
+        }
 
         props.put( "inputEncoding", inputEncoding );
 

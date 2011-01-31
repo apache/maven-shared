@@ -54,7 +54,9 @@ import org.apache.maven.doxia.site.decoration.MenuItem;
 import org.apache.maven.doxia.site.decoration.Skin;
 import org.apache.maven.doxia.site.decoration.inheritance.DecorationModelInheritanceAssembler;
 import org.apache.maven.doxia.site.decoration.io.xpp3.DecorationXpp3Reader;
+import org.apache.maven.model.DistributionManagement;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Site;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
@@ -757,7 +759,7 @@ public class DefaultSiteTool
 
         final Locale llocale = ( locale == null ) ? Locale.getDefault() : locale;
 
-            String parentUrl = parentProject.getUrl();
+            String parentUrl = getDistMgmntSiteUrl( parentProject );
 
             if ( parentUrl != null )
             {
@@ -770,7 +772,7 @@ public class DefaultSiteTool
                     parentUrl += "/index.html";
                 }
 
-                parentUrl = getRelativePath( parentUrl, project.getUrl() );
+                parentUrl = getRelativePath( parentUrl, getDistMgmntSiteUrl( project ) );
             }
             else
             {
@@ -903,7 +905,7 @@ public class DefaultSiteTool
 
                             model = new Model();
                             model.setName( module );
-                            model.setUrl( module );
+                            setDistMgmntSiteUrl( model, module );
                         }
                         models.add( model );
                     }
@@ -1223,8 +1225,9 @@ public class DefaultSiteTool
             }
 
             // Merge the parent and child site descriptors
-            assembler.assembleModelInheritance( name, decoration, parent, project.getUrl(),
-                        parentProject.getUrl() == null ? project.getUrl() : parentProject.getUrl() );
+            assembler.assembleModelInheritance( name, decoration, parent, getDistMgmntSiteUrl( project ),
+                        getDistMgmntSiteUrl( parentProject ) == null
+                        ? getDistMgmntSiteUrl( project ) : getDistMgmntSiteUrl( parentProject ) );
         }
 
         if ( decoration != null && decoration.getSkin() != null )
@@ -1342,7 +1345,7 @@ public class DefaultSiteTool
     {
         for ( Model model : models )
         {
-            String reactorUrl = model.getUrl();
+            String reactorUrl = getDistMgmntSiteUrl( model );
             String name = name( model );
 
             appendMenuItem( project, menu, name, reactorUrl, model.getArtifactId() );
@@ -1381,7 +1384,7 @@ public class DefaultSiteTool
         MenuItem item = new MenuItem();
         item.setName( name );
 
-        String baseUrl = project.getUrl();
+        String baseUrl = getDistMgmntSiteUrl( project );
         if ( baseUrl != null )
         {
             selectedHref = getRelativePath( selectedHref, baseUrl );
@@ -1439,5 +1442,54 @@ public class DefaultSiteTool
     private static boolean isEmptyList( List<?> list )
     {
         return list == null || list.isEmpty();
+    }
+
+    /**
+     * Return distributionManagement.site.url if defined, null otherwise.
+     *
+     * @param project not null
+     * @return could be null
+     */
+    private static String getDistMgmntSiteUrl( MavenProject project )
+    {
+        if ( project.getDistributionManagement() != null
+            && project.getDistributionManagement().getSite() != null )
+        {
+            return project.getDistributionManagement().getSite().getUrl();
+        }
+
+        return null;
+    }
+
+    /**
+     * Return distributionManagement.site.url if defined, null otherwise.
+     *
+     * @param model not null
+     * @return could be null
+     */
+    private static String getDistMgmntSiteUrl( Model model )
+    {
+        if ( model.getDistributionManagement() != null
+            && model.getDistributionManagement().getSite() != null )
+        {
+            return model.getDistributionManagement().getSite().getUrl();
+        }
+
+        return null;
+    }
+
+    private static void setDistMgmntSiteUrl( Model model, String url )
+    {
+        if ( model.getDistributionManagement() == null )
+        {
+            model.setDistributionManagement( new DistributionManagement() );
+        }
+
+        if ( model.getDistributionManagement().getSite() == null )
+        {
+            model.getDistributionManagement().setSite( new Site() );
+        }
+
+        model.getDistributionManagement().getSite().setUrl( url );
     }
 }

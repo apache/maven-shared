@@ -1,6 +1,8 @@
 package org.apache.maven.shared.filtering;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.codehaus.plexus.PlexusTestCase;
@@ -32,7 +34,7 @@ import org.codehaus.plexus.util.FileUtils;
 public class DefaultMavenFileFilterTest
     extends PlexusTestCase
 {
-    
+
     File to = new File( getBasedir(), "target/reflection-test.properties" );
 
     protected void setUp()
@@ -101,4 +103,23 @@ public class DefaultMavenFileFilterTest
         // shouldn't fail
     }
 
+    public void testMultiFilterFileInheritance()
+        throws Exception
+    {
+        DefaultMavenFileFilter mavenFileFilter = new DefaultMavenFileFilter();
+
+        File testDir = new File(getBasedir(), "src/test/units-files/MSHARED-177");
+
+        List filters = new ArrayList();
+
+        filters.add(new File(testDir, "first_filter_file.properties").getAbsolutePath());
+        filters.add(new File(testDir, "second_filter_file.properties").getAbsolutePath());
+        filters.add(new File(testDir, "third_filter_file.properties").getAbsolutePath());
+
+        final Properties filterProperties = new Properties();
+
+        mavenFileFilter.loadProperties(filterProperties, filters, new Properties() );
+
+        assertTrue( filterProperties.getProperty( "third_filter_key" ).equals( "first and second" ) );
+    }
 }

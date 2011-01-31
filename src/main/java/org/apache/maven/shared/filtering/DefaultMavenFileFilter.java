@@ -257,12 +257,18 @@ public class DefaultMavenFileFilter
         return defaultFilterWrappers;
     }    
 
-    private void loadProperties( Properties filterProperties, List /* String */propertiesFilePaths,
+    /**
+     * protected only for testing reason !
+     */
+    protected void loadProperties( Properties filterProperties, List /* String */propertiesFilePaths,
                                  Properties baseProps )
         throws MavenFilteringException
     {
         if ( propertiesFilePaths != null )
         {
+            Properties workProperties = new Properties();
+            workProperties.putAll(baseProps);
+
             for ( Iterator iterator = propertiesFilePaths.iterator(); iterator.hasNext(); )
             {
                 String filterFile = (String) iterator.next();
@@ -274,8 +280,9 @@ public class DefaultMavenFileFilter
                 try
                 {
                     // TODO new File should be new File(mavenProject.getBasedir(), filterfile ) ?
-                    Properties properties = PropertyUtils.loadPropertyFile( new File( filterFile ), baseProps );
+                    Properties properties = PropertyUtils.loadPropertyFile( new File( filterFile ), workProperties );
                     filterProperties.putAll( properties );
+                    workProperties.putAll(properties);
                 }
                 catch ( IOException e )
                 {

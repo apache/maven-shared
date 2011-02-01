@@ -495,6 +495,7 @@ public class DefaultSiteTool
             decorationModel.setBannerLeft( banner );
         }
 
+        /* TODO: MSITE-159: make this configurable? */
         if ( project.getUrl() != null )
         {
             assembler.resolvePaths( decorationModel, project.getUrl() );

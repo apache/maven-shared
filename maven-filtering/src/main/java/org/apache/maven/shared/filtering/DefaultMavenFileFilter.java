@@ -267,7 +267,7 @@ public class DefaultMavenFileFilter
         if ( propertiesFilePaths != null )
         {
             Properties workProperties = new Properties();
-            workProperties.putAll(baseProps);
+            workProperties.putAll( baseProps );
 
             for ( Iterator iterator = propertiesFilePaths.iterator(); iterator.hasNext(); )
             {
@@ -282,7 +282,7 @@ public class DefaultMavenFileFilter
                     // TODO new File should be new File(mavenProject.getBasedir(), filterfile ) ?
                     Properties properties = PropertyUtils.loadPropertyFile( new File( filterFile ), workProperties );
                     filterProperties.putAll( properties );
-                    workProperties.putAll(properties);
+                    workProperties.putAll( properties );
                 }
                 catch ( IOException e )
                 {

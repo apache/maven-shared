@@ -221,7 +221,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
             }
             return ch;
         }
-        if (preserveChar != null )
+        if ( preserveChar != null )
         {
             char copy = Character.valueOf( preserveChar.charValue() ).charValue();
             preserveChar = null;
@@ -278,7 +278,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
                         // so we preserve it
                         replaceData = key.toString();
                         replaceIndex = 1;
-                        preserveChar = Character.valueOf( (char)ch );
+                        preserveChar = Character.valueOf( (char) ch );
                         return replaceData.charAt( 0 );
                     }
                     else

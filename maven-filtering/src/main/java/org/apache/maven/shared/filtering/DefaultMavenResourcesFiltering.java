@@ -226,7 +226,7 @@ public class DefaultMavenResourcesFiltering
             getLogger().debug( "ignoreDelta " + ignoreDelta );
             Scanner scanner = buildContext.newScanner( resourceDirectory, ignoreDelta );
 
-            setupScanner(resource, scanner);
+            setupScanner( resource, scanner );
 
             scanner.scan();
 
@@ -259,7 +259,7 @@ public class DefaultMavenResourcesFiltering
 
                 //File destinationFile = new File( outputDirectory, destination );
 
-                File destinationFile = getDestinationFile(outputDirectory, targetPath, name);
+                File destinationFile = getDestinationFile( outputDirectory, targetPath, name );
                 
                 boolean filteredExt = filteredFileExtension( source.getName(), mavenResourcesExecution
                     .getNonFilteredFileExtensions() );
@@ -273,7 +273,7 @@ public class DefaultMavenResourcesFiltering
 
             scanner = buildContext.newDeleteScanner( resourceDirectory );
             
-            setupScanner(resource, scanner);
+            setupScanner( resource, scanner );
             
             scanner.scan();
 
@@ -283,7 +283,7 @@ public class DefaultMavenResourcesFiltering
             {
                 String name = (String) j.next();
 
-                File destinationFile = getDestinationFile(outputDirectory, targetPath, name);
+                File destinationFile = getDestinationFile( outputDirectory, targetPath, name );
                 
                 destinationFile.delete();
                 
@@ -294,7 +294,8 @@ public class DefaultMavenResourcesFiltering
 
     }
 
-    private File getDestinationFile(File outputDirectory, String targetPath, String name) {
+    private File getDestinationFile( File outputDirectory, String targetPath, String name )
+    {
       String destination = name;
 
       if ( targetPath != null )
@@ -315,7 +316,8 @@ public class DefaultMavenResourcesFiltering
       return destinationFile;
     }
 
-    private String[] setupScanner(Resource resource, Scanner scanner) {
+    private String[] setupScanner( Resource resource, Scanner scanner )
+    {
       String[] includes = null;
       if ( resource.getIncludes() != null && !resource.getIncludes().isEmpty() )
       {

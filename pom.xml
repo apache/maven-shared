@@ -196,7 +196,6 @@ under the License.
         </plugins>
       </build>
     </profile>
-    <!-- FIXME add this in the maven parent -->
     <profile>
       <id>maven-3</id>
       <activation>
@@ -205,25 +204,12 @@ under the License.
           <exists>${basedir}</exists>
         </file>
       </activation>
-      <properties>
-        <sitePluginVersion>3.0-beta-3</sitePluginVersion>
-      </properties>
       <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-site-plugin</artifactId>
-              <version>${sitePluginVersion}</version>
-            </plugin>          
-          </plugins>
-        </pluginManagement>
         <plugins>
           <!-- if releasing current pom with maven 3 site descriptor must be attached -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-site-plugin</artifactId>
-            <version>${sitePluginVersion}</version>
             <inherited>false</inherited>
             <executions>
               <execution>
@@ -239,17 +225,4 @@ under the License.
                   
     </profile>    
   </profiles>
-  <!-- TODO remove when the parent will be released -->
-  <repositories>
-    <repository>
-      <id>apache.snapshots</id>
-      <url>https://repository.apache.org/content/groups/snapshots-group/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 </project>

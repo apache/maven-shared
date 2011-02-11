@@ -31,7 +31,7 @@ under the License.
 
   <groupId>org.apache.maven.shared</groupId>
   <artifactId>maven-shared-components</artifactId>
-  <version>16</version>
+  <version>17-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Maven Shared Components</name>
@@ -114,9 +114,9 @@ under the License.
 
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-16</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-components-16</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-shared-components-16</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-components</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-components</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-components</url>
   </scm>
   <issueManagement>
     <system>jira</system>

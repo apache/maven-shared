@@ -211,7 +211,7 @@ public class DefaultMavenFileFilter
         {
             if ( request.isInjectProjectBuildFilters() )
             {
-                List buildFilters = request.getMavenProject().getBuild().getFilters();
+                List buildFilters = new ArrayList( request.getMavenProject().getBuild().getFilters() );
                 buildFilters.removeAll( request.getFileFilters() );
                 
                 loadProperties( filterProperties, buildFilters, baseProps );

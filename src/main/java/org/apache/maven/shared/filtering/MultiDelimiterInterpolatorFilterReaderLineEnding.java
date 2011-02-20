@@ -87,7 +87,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
     
     private boolean supportMultiLineFiltering;
     
-    private Character preserveChar = null;
+    private int preserveChar = -1;
     
     /**
      * This constructor uses default begin token ${ and default end token }.
@@ -221,10 +221,10 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
             }
             return ch;
         }
-        if ( preserveChar != null )
+        if ( preserveChar >= 0 )
         {
-            char copy = Character.valueOf( preserveChar.charValue() ).charValue();
-            preserveChar = null;
+            int copy = preserveChar;
+            preserveChar = -1;
             replaceIndex = -1;
             return copy;
         }
@@ -278,7 +278,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
                         // so we preserve it
                         replaceData = key.toString();
                         replaceIndex = 1;
-                        preserveChar = Character.valueOf( (char) ch );
+                        preserveChar = ch;
                         return replaceData.charAt( 0 );
                     }
                     else

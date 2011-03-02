@@ -495,18 +495,6 @@ public class DefaultSiteTool
             decorationModel.setBannerLeft( banner );
         }
 
-        /* TODO: MSITE-159: make this configurable? */
-        final String url = project.getUrl();
-        if ( url != null )
-        {
-            getLogger().warn( "Relativizing decoration links with respect to project URL: " + url );
-            assembler.resolvePaths( decorationModel, url );
-        }
-        else
-        {
-            getLogger().warn( "No project URL defined - decoration links will not be relativized!" );
-        }
-
         return decorationModel;
     }
 

@@ -496,13 +496,15 @@ public class DefaultSiteTool
         }
 
         /* TODO: MSITE-159: make this configurable? */
-        if ( project.getUrl() != null )
+        final String url = project.getUrl();
+        if ( url != null )
         {
-            assembler.resolvePaths( decorationModel, project.getUrl() );
+            getLogger().warn( "Relativizing decoration links with respect to project URL: " + url );
+            assembler.resolvePaths( decorationModel, url );
         }
         else
         {
-            getLogger().warn( "No URL defined for the project - decoration links will not be resolved" );
+            getLogger().warn( "No project URL defined - decoration links will not be relativized!" );
         }
 
         return decorationModel;

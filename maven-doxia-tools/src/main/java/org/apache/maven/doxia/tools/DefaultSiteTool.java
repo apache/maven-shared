@@ -1446,7 +1446,7 @@ public class DefaultSiteTool
         if ( project.getDistributionManagement() != null
             && project.getDistributionManagement().getSite() != null )
         {
-            return project.getDistributionManagement().getSite().getUrl();
+            return urlEncode( project.getDistributionManagement().getSite().getUrl() );
         }
 
         return null;
@@ -1463,10 +1463,22 @@ public class DefaultSiteTool
         if ( model.getDistributionManagement() != null
             && model.getDistributionManagement().getSite() != null )
         {
-            return model.getDistributionManagement().getSite().getUrl();
+            return urlEncode( model.getDistributionManagement().getSite().getUrl() );
         }
 
         return null;
+    }
+
+    private static String urlEncode( final String url )
+    {
+        try
+        {
+            return new File( url ).toURI().toURL().toExternalForm();
+        }
+        catch ( MalformedURLException ex )
+        {
+            return url; // this will then throw somewhere else
+        }
     }
 
     private static void setDistMgmntSiteUrl( Model model, String url )

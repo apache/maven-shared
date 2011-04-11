@@ -1,3 +1,5 @@
+package org.apache.maven.shared.osgi;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.shared.osgi;
 
 import org.apache.maven.artifact.Artifact;
 

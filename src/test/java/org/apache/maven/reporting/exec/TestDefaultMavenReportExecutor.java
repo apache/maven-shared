@@ -21,11 +21,8 @@ import org.apache.maven.settings.building.DefaultSettingsBuildingRequest;
 import org.apache.maven.settings.building.SettingsBuilder;
 import org.apache.maven.settings.building.SettingsBuildingException;
 import org.apache.maven.settings.building.SettingsBuildingRequest;
-import org.codehaus.plexus.ContainerConfiguration;
 import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.classworlds.ClassWorld;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
-import org.codehaus.plexus.classworlds.realm.DuplicateRealmException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.logging.Logger;
 import org.sonatype.aether.RepositorySystemSession;
@@ -35,8 +32,6 @@ import org.sonatype.aether.repository.WorkspaceReader;
 import org.sonatype.aether.repository.WorkspaceRepository;
 
 import java.io.File;
-import java.io.FilenameFilter;
-import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -51,40 +46,6 @@ public class TestDefaultMavenReportExecutor
     MavenExecutionRequest request = null;
 
     ArtifactRepository localArtifactRepository;
-
-    protected void customizeContainerConfiguration( final ContainerConfiguration containerConfiguration )
-    {
-        String mavenHome = System.getProperty( "mavenHome" );
-        File mavenLibs = new File( mavenHome, "lib" );
-        File[] jars = mavenLibs.listFiles( new FilenameFilter()
-        {
-            public boolean accept( File dir, String name )
-            {
-                return name.endsWith( ".jar" );
-            }
-        } );
-
-        ClassWorld classWorld = new ClassWorld();
-        try
-        {
-            ClassRealm classRealm = classWorld.newRealm( "foo" );
-            for ( File file : jars )
-            {
-                classRealm.addURL( file.toURI().toURL() );
-
-            }
-            containerConfiguration.setRealm( classRealm );
-        }
-        catch ( MalformedURLException e )
-        {
-            e.printStackTrace();
-        }
-        catch ( DuplicateRealmException e )
-        {
-            e.printStackTrace();
-        }
-
-    }
 
     public void testSimpleLookup()
         throws Exception
@@ -135,8 +96,9 @@ public class TestDefaultMavenReportExecutor
                 mavenReportExecutor.buildMavenReports( mavenReportExecutorRequest );
 
             assertNotNull( mavenReportExecutions );
-            System.out.println( "size " + mavenReportExecutions.size() );
-            System.out.println( mavenReportExecutions.get( 0 ).getMavenReport().getOutputName() );
+            assertEquals( 2, mavenReportExecutions.size() );
+            assertEquals( "apidocs/index", mavenReportExecutions.get( 0 ).getMavenReport().getOutputName() );
+            assertEquals( "testapidocs/index", mavenReportExecutions.get( 1 ).getMavenReport().getOutputName() );
         }
         finally
         {
@@ -294,7 +256,13 @@ public class TestDefaultMavenReportExecutor
             @Override
             public List getCompileSourceRoots()
             {
-                return Lists.newArrayList("src/main/java");
+                return Lists.newArrayList( "src/main/java" );
+            }
+
+            @Override
+            public List getTestCompileSourceRoots()
+            {
+                return Lists.newArrayList( "src/test/java" );
             }
         };
 
@@ -305,6 +273,8 @@ public class TestDefaultMavenReportExecutor
         build.setOutputDirectory( "target" );
 
         build.setSourceDirectory( "src/main/java" );
+
+        build.setTestSourceDirectory( "src/test/java" );
 
         mavenProjectStub.setBuild( build );
 

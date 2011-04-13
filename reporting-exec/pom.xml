@@ -242,7 +242,9 @@
             <localRepository>${settings.localRepository}</localRepository>
             <mavenHome>${env.M2_HOME}</mavenHome>
           </systemPropertyVariables>
+          <!--
           <forkMode>none</forkMode>
+          -->
         </configuration>
       </plugin>
       <plugin>

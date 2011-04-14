@@ -79,7 +79,7 @@ public class TestDefaultMavenReportExecutor
             ReportPlugin reportPlugin = new ReportPlugin();
             reportPlugin.setGroupId( "org.apache.maven.plugins" );
             reportPlugin.setArtifactId( "maven-javadoc-plugin" );
-            reportPlugin.setVersion( "2.8-SNAPSHOT" );
+            reportPlugin.setVersion( "2.7" );
 
             ReportSet reportSet = new ReportSet();
             reportSet.getReports().add( "javadoc" );

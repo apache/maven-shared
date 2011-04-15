@@ -83,7 +83,7 @@ under the License.
         </file>
       </activation>
       <modules>
-        <module>reporting-exec</module>
+        <module>maven-reporting-exec</module>
       </modules>
     </profile>
   </profiles>

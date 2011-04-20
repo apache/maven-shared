@@ -42,7 +42,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.outputEncoding>UTF-8</project.build.outputEncoding>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <targetMavenVersion>3.0-beta-3</targetMavenVersion>
+    <targetMavenVersion>3.0</targetMavenVersion>
   </properties>
 
   <dependencies>

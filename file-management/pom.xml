@@ -26,6 +26,7 @@ under the License.
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
     <version>16</version>
+    <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
 
   <artifactId>file-management</artifactId>

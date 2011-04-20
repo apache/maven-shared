@@ -25,7 +25,8 @@ under the License.
   <parent>
     <artifactId>maven-shared-components</artifactId>
     <groupId>org.apache.maven.shared</groupId>
-    <version>12</version>
+    <version>16</version>
+    <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
 
   <artifactId>maven-artifact-resolver</artifactId>

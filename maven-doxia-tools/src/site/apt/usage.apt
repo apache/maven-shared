@@ -64,6 +64,6 @@ public class YourOwnMojo extends AbstractMojo
 
 * References
 
-  [[1]] {{{apidocs/org/apache/maven/doxia/tools/SiteTool.html}SiteTool API}}
+  [[1]] {{{./apidocs/org/apache/maven/doxia/tools/SiteTool.html}SiteTool API}}
 
   []

@@ -50,8 +50,13 @@
     <url>http://jira.codehaus.org/browse/MSHARED/component/13263</url>
   </issueManagement>
 
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>https://builds.apache.org/hudson/job/maven-shared/</url>
+  </ciManagement>
+
   <properties>
-    <doxiaVersion>1.1.4</doxiaVersion>
+    <doxiaVersion>1.2</doxiaVersion>
     <doxiaSitetoolsVersion>1.2</doxiaSitetoolsVersion>
     <mavenVersion>2.2.1</mavenVersion>
   </properties>
@@ -218,4 +223,22 @@
       </plugin>
     </plugins>
   </reporting>
+
+  <profiles>
+    <profile>
+      <id>reporting</id>
+      <reporting>
+        <plugins>
+          <plugin>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>2.5</version>
+            <configuration>
+              <targetJdk>1.5</targetJdk>
+            </configuration>
+           </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+  </profiles>
+
 </project>

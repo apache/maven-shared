@@ -612,7 +612,8 @@ public class DefaultSiteTool
         try
         {
             // FIXME: this does not escape xml entities, see MSITE-226, PLXCOMP-118
-            interpolatedSiteDescriptorContent = interpolator.interpolate( interpolatedSiteDescriptorContent, "project" );
+            interpolatedSiteDescriptorContent = interpolator.interpolate( interpolatedSiteDescriptorContent,
+                                                                          "project" );
         }
         catch ( InterpolationException e )
         {

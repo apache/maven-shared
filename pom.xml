@@ -56,7 +56,7 @@
   </ciManagement>
 
   <properties>
-    <doxiaVersion>1.1.4</doxiaVersion>
+    <doxiaVersion>1.2</doxiaVersion>
     <doxiaSitetoolsVersion>1.2</doxiaSitetoolsVersion>
     <mavenVersion>2.2.1</mavenVersion>
   </properties>

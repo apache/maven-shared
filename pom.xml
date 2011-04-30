@@ -50,6 +50,11 @@
     <url>http://jira.codehaus.org/browse/MSHARED/component/13263</url>
   </issueManagement>
 
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>https://builds.apache.org/hudson/job/maven-shared/</url>
+  </ciManagement>
+
   <properties>
     <doxiaVersion>1.1.4</doxiaVersion>
     <doxiaSitetoolsVersion>1.2</doxiaSitetoolsVersion>

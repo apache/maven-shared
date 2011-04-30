@@ -118,10 +118,17 @@ under the License.
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-components</developerConnection>
     <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-components</url>
   </scm>
+
   <issueManagement>
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED</url>
   </issueManagement>
+
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>https://builds.apache.org/hudson/job/maven-shared/</url>
+  </ciManagement>
+
   <distributionManagement>
     <site>
       <id>apache.website</id>

@@ -145,7 +145,8 @@ public interface SiteTool
      */
     DecorationModel getDecorationModel( MavenProject project, List<MavenProject> reactorProjects,
                                         ArtifactRepository localRepository, List<ArtifactRepository> repositories,
-                                        String siteDirectory, Locale locale, String inputEncoding, String outputEncoding )
+                                        String siteDirectory, Locale locale, String inputEncoding,
+                                        String outputEncoding )
         throws SiteToolException;
 
     /**

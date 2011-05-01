@@ -1,0 +1,49 @@
+ ------
+ Introduction
+ ------
+ Dennis Lundberg
+ ------
+ 2011-05-01
+ ------
+
+~~ Licensed to the Apache Software Foundation (ASF) under one
+~~ or more contributor license agreements.  See the NOTICE file
+~~ distributed with this work for additional information
+~~ regarding copyright ownership.  The ASF licenses this file
+~~ to you under the Apache License, Version 2.0 (the
+~~ "License"); you may not use this file except in compliance
+~~ with the License.  You may obtain a copy of the License at
+~~
+~~   http://www.apache.org/licenses/LICENSE-2.0
+~~
+~~ Unless required by applicable law or agreed to in writing,
+~~ software distributed under the License is distributed on an
+~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~~ KIND, either express or implied.  See the License for the
+~~ specific language governing permissions and limitations
+~~ under the License.
+
+Maven Shared Resources
+
+  This is a collection of templates that are specific to the Maven project. They
+  are probably not of interest to projects other than Apache Maven.
+
+  Below you will find a listing of the resources that can be found in the
+  current version (${project.version}) of Maven Shared Resources. They are
+  listed by which plugin they are meant to be used with.
+
+
+* Maven Changes Plugin
+
+** org/apache/maven/plugins/announcement.vm
+
+  This is a template that can be used by Maven Changes Plugin to create and send
+  an announcement e-mail for one of our plugins. It will create an announcement
+  e-mail that conforms to the "Promote the release" section of our
+  {{{http://maven.apache.org/developers/release/maven-project-release-procedure.html#Promote_the_release}release procedure}}.
+
+
+* Usage
+
+  General instructions on how to use the Maven Shared Resources can be found on
+  the {{{./usage.html}usage page}}.

@@ -42,6 +42,13 @@ Maven Shared Resources
   e-mail that conforms to the "Promote the release" section of our
   {{{http://maven.apache.org/developers/release/maven-project-release-procedure.html#Promote_the_release}release procedure}}.
 
+** org/apache/maven/shared/announcement.vm
+
+  This is a template that can be used by Maven Changes Plugin to create and send
+  an announcement e-mail for one of our shared components. It will create an
+  announcement e-mail that conforms to the "Promote the release" section of our
+  {{{http://maven.apache.org/developers/release/maven-project-release-procedure.html#Promote_the_release}release procedure}}.
+
 
 * Usage
 

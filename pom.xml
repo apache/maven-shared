@@ -61,6 +61,7 @@ under the License.
     <module>maven-shared-io</module>
     <module>maven-shared-jar</module>
     <module>maven-shared-monitor</module>
+    <module>maven-shared-resources</module>
     <module>maven-verifier</module>
   </modules>
 

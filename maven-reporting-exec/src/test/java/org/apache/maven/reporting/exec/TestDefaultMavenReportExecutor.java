@@ -226,7 +226,7 @@ public class TestDefaultMavenReportExecutor
             }
 
             @Override
-            public List getRemoteArtifactRepositories()
+            public List<RemoteRepository> getRemoteArtifactRepositories()
             {
                 if ( super.getRemotePluginRepositories() == null )
                 {
@@ -254,13 +254,13 @@ public class TestDefaultMavenReportExecutor
             }
 
             @Override
-            public List getCompileSourceRoots()
+            public List<String> getCompileSourceRoots()
             {
                 return Lists.newArrayList( "src/main/java" );
             }
 
             @Override
-            public List getTestCompileSourceRoots()
+            public List<String> getTestCompileSourceRoots()
             {
                 return Lists.newArrayList( "src/test/java" );
             }

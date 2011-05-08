@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.shared.dependency.tree.traversal.DependencyNodeVisitor;
 import org.apache.maven.shared.dependency.tree.traversal.SerializingDependencyNodeVisitor;
@@ -142,7 +143,7 @@ public class DependencyNode
     /**
      * The list of child dependency nodes of this dependency node.
      */
-    private final List children;
+    private final List<DependencyNode> children;
 
     /**
      * The parent dependency node of this dependency node.
@@ -193,7 +194,7 @@ public class DependencyNode
 
     private VersionRange versionSelectedFromRange;
     
-    private List availableVersions;
+    private List<ArtifactVersion> availableVersions;
 
     // constructors -----------------------------------------------------------
 
@@ -276,7 +277,7 @@ public class DependencyNode
         this.state = state;
         this.relatedArtifact = relatedArtifact;
 
-        children = new ArrayList();
+        children = new ArrayList<DependencyNode>();
     }
     
     /**
@@ -287,7 +288,7 @@ public class DependencyNode
     DependencyNode()
     {
         artifact = null;
-        children = new ArrayList();
+        children = new ArrayList<DependencyNode>();
     }
 
     // public methods ---------------------------------------------------------
@@ -304,13 +305,12 @@ public class DependencyNode
     {
         if ( visitor.visit( this ) )
         {
-            boolean visiting = true;
-
-            for ( Iterator iterator = getChildren().iterator(); visiting && iterator.hasNext(); )
+            for ( DependencyNode child : getChildren() )
             {
-                DependencyNode child = (DependencyNode) iterator.next();
-
-                visiting = child.accept( visitor );
+                if ( !child.accept( visitor ) )
+                {
+                    break;
+                }
             }
         }
 
@@ -369,7 +369,7 @@ public class DependencyNode
      * @return the depth
      * @deprecated As of 1.1, depth is computed by node hierarchy. With the introduction of node
      *             visitors and filters this method can give misleading results. For example, consider
-     *             serialising a tree with a filter using a visitor: this method would return the
+     *             serializing a tree with a filter using a visitor: this method would return the
      *             unfiltered depth of a node, whereas the correct depth would be calculated by the
      *             visitor.
      */
@@ -394,7 +394,7 @@ public class DependencyNode
      * 
      * @return the list of child dependency nodes
      */
-    public List getChildren()
+    public List<DependencyNode> getChildren()
     {
         return Collections.unmodifiableList( children );
     }
@@ -545,12 +545,12 @@ public class DependencyNode
      *         <code>null</code> if the artifact had a explicit version.
      * @since 1.2
      */
-    public List getAvailableVersions()
+    public List<ArtifactVersion> getAvailableVersions()
     {
         return availableVersions;
     }
     
-    public void setAvailableVersions( List availableVersions )
+    public void setAvailableVersions( List<ArtifactVersion> availableVersions )
     {
         this.availableVersions = availableVersions;
     }
@@ -644,7 +644,7 @@ public class DependencyNode
      * @return the preorder traversal iterator
      * @see #preorderIterator()
      */
-    public Iterator iterator()
+    public Iterator<DependencyNode> iterator()
     {
         return preorderIterator();
     }
@@ -655,7 +655,7 @@ public class DependencyNode
      * @return the preorder traversal iterator
      * @see DependencyTreePreorderIterator
      */
-    public Iterator preorderIterator()
+    public Iterator<DependencyNode> preorderIterator()
     {
         return new DependencyTreePreorderIterator( this );
     }
@@ -666,7 +666,7 @@ public class DependencyNode
      * @return the postorder traversal iterator
      * @see DependencyTreeInverseIterator
      */
-    public Iterator inverseIterator()
+    public Iterator<DependencyNode> inverseIterator()
     {
         return new DependencyTreeInverseIterator( this );
     }
@@ -795,9 +795,7 @@ public class DependencyNode
         return hashCode;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean equals( Object object )
     {
         // TODO: probably better using commons-lang EqualsBuilder
@@ -854,10 +852,8 @@ public class DependencyNode
      */
     private void removeAllChildren()
     {
-        for ( Iterator iterator = children.iterator(); iterator.hasNext(); )
+        for ( DependencyNode child : children )
         {
-            DependencyNode child = (DependencyNode) iterator.next();
-
             child.parent = null;
         }
 

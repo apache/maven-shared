@@ -33,7 +33,8 @@ import org.jmock.MockObjectTestCase;
  * @version $Id$
  * @see ArtifactDependencyNodeFilter
  */
-public class ArtifactDependencyNodeFilterTest extends MockObjectTestCase
+public class ArtifactDependencyNodeFilterTest
+    extends MockObjectTestCase
 {
     // fields -----------------------------------------------------------------
 
@@ -50,7 +51,8 @@ public class ArtifactDependencyNodeFilterTest extends MockObjectTestCase
     /**
      * {@inheritDoc}
      */
-    protected void setUp() throws Exception
+    protected void setUp()
+        throws Exception
     {
         artifact = new ArtifactStub();
         node = new DependencyNode( artifact );

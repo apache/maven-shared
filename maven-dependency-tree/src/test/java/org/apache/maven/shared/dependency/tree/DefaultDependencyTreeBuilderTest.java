@@ -56,7 +56,8 @@ import org.codehaus.plexus.PlexusTestCase;
  * @version $Id$
  * @see DefaultDependencyTreeBuilder
  */
-public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
+public class DefaultDependencyTreeBuilderTest
+    extends PlexusTestCase
 {
     // fields -----------------------------------------------------------------
 
@@ -75,7 +76,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
     /**
      * {@inheritDoc}
      */
-    protected void setUp() throws Exception
+    protected void setUp()
+        throws Exception
     {
         super.setUp();
 
@@ -92,7 +94,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
     /**
      * {@inheritDoc}
      */
-    protected void tearDown() throws Exception
+    protected void tearDown()
+        throws Exception
     {
         super.tearDown();
 
@@ -111,7 +114,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      * 
      * @throws DependencyTreeBuilderException 
      */
-    public void testProjectWithDependency() throws DependencyTreeBuilderException
+    public void testProjectWithDependency()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -135,7 +139,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      *
      * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithTransitiveDependency() throws DependencyTreeBuilderException
+    public void testProjectWithTransitiveDependency()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -165,7 +170,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      *
      * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithDuplicateDependency() throws DependencyTreeBuilderException
+    public void testProjectWithDuplicateDependency()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact child1Artifact = createArtifact( "g:a:t:1" );
@@ -202,7 +208,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      *
      * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithConflictDependencyVersionFirstWins() throws DependencyTreeBuilderException
+    public void testProjectWithConflictDependencyVersionFirstWins()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact nearestArtifact = createArtifact( "g:a:t:1" );
@@ -235,7 +242,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      *
      * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithConflictDependencyVersionLastWins() throws DependencyTreeBuilderException
+    public void testProjectWithConflictDependencyVersionLastWins()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -268,7 +276,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      *
      * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithConflictDependencyScopeCurrentPom() throws DependencyTreeBuilderException
+    public void testProjectWithConflictDependencyScopeCurrentPom()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact nearestArtifact = createArtifact( "g:b:t:1:test" );
@@ -303,7 +312,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      *
      * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithConflictDependencyScopeFirstWins() throws DependencyTreeBuilderException
+    public void testProjectWithConflictDependencyScopeFirstWins()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -369,7 +379,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      *
      * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithConflictDependencyScopeLastWins() throws DependencyTreeBuilderException
+    public void testProjectWithConflictDependencyScopeLastWins()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -432,7 +443,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      * 
      * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithManagedTransitiveDependencyVersion() throws DependencyTreeBuilderException
+    public void testProjectWithManagedTransitiveDependencyVersion()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -511,7 +523,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      *
      * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithManagedTransitiveDependencyScope() throws DependencyTreeBuilderException
+    public void testProjectWithManagedTransitiveDependencyScope()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -544,7 +557,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      * 
      * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithManagedTransitiveDependencyVersionAndScope() throws DependencyTreeBuilderException
+    public void testProjectWithManagedTransitiveDependencyVersionAndScope()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact childArtifact = createArtifact( "g:a:t:1" );
@@ -579,7 +593,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      * 
      * @throws DependencyTreeBuilderException
      */
-    public void testProjectWithManagedTransitiveDependencyVersionAndConflictDependencyVersion() throws DependencyTreeBuilderException
+    public void testProjectWithManagedTransitiveDependencyVersionAndConflictDependencyVersion()
+        throws DependencyTreeBuilderException
     {
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
         Artifact nearestArtifact = createArtifact( "g:a:t:1" );
@@ -615,7 +630,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
      * @throws InvalidVersionSpecificationException 
      * @throws DependencyTreeBuilderException 
      */
-    public void testProjectWithVersionRange() throws InvalidVersionSpecificationException, DependencyTreeBuilderException
+    public void testProjectWithVersionRange()
+        throws InvalidVersionSpecificationException, DependencyTreeBuilderException
     {
         String range = "[1,2)";
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
@@ -624,7 +640,7 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
         MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } );
 
         ArtifactVersion version = new DefaultArtifactVersion( "1.0" );
-        List availableVersions = new ArrayList();
+        List<ArtifactVersion> availableVersions = new ArrayList<ArtifactVersion>();
         availableVersions.add( version );
 
         DependencyNode expectedRootNode = createNode( "g:p:t:1" );
@@ -696,8 +712,8 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
         MavenProject project = new MavenProject();
         project.setArtifact( projectArtifact );
         // LinkedHashSet since order is significant when omitting conflicts
-        project.setDependencyArtifacts( new LinkedHashSet( Arrays.asList( dependencyArtifacts ) ) );
-        project.setManagedVersionMap( new HashMap() );
+        project.setDependencyArtifacts( new LinkedHashSet<Artifact>( Arrays.asList( dependencyArtifacts ) ) );
+        project.setManagedVersionMap( new HashMap<String, Artifact>() );
         project.setRemoteArtifactRepositories( Collections.EMPTY_LIST );
         return project;
     }
@@ -709,21 +725,20 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
     
     private void addArtifactMetadata( Artifact artifact, Artifact[] dependencyArtifacts )
     {
-        addArtifactMetadata( artifact, new LinkedHashSet( Arrays.asList( dependencyArtifacts ) ) );
+        addArtifactMetadata( artifact, new LinkedHashSet<Artifact>( Arrays.asList( dependencyArtifacts ) ) );
     }
     
-    private void addArtifactMetadata( Artifact artifact, Set dependencyArtifacts )
+    private void addArtifactMetadata( Artifact artifact, Set<Artifact> dependencyArtifacts )
     {
         artifactMetadataSource.addArtifactMetadata( artifact, dependencyArtifacts );
     }
     
-    private void setManagedVersionMap( MavenProject project, Set managedArtifacts )
+    private void setManagedVersionMap( MavenProject project, Set<Artifact> managedArtifacts )
     {
-        Map managedVersionMap = new HashMap();
+        Map<String, Artifact> managedVersionMap = new HashMap<String, Artifact>();
         
-        for ( Iterator iterator = managedArtifacts.iterator(); iterator.hasNext(); )
+        for ( Artifact artifact : managedArtifacts )
         {
-            Artifact artifact = (Artifact) iterator.next();
             String managementKey = getManagementKey( artifact );
             
             managedVersionMap.put( managementKey, artifact );
@@ -734,66 +749,73 @@ public class DefaultDependencyTreeBuilderTest extends PlexusTestCase
     
     private String getManagementKey( Artifact artifact )
     {
-        return artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getType() + (artifact.getClassifier() != null ? ":" + artifact.getClassifier() : "");
+        return artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getType()
+            + ( artifact.getClassifier() != null ? ":" + artifact.getClassifier() : "" );
     }
     
-    private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project ) throws DependencyTreeBuilderException
+    private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project )
+        throws DependencyTreeBuilderException
     {
         assertDependencyTree( expectedRootNode, project, null );
     }
     
-    private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project, ArtifactFilter artifactFilter ) throws DependencyTreeBuilderException
+    private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project,
+                                       ArtifactFilter artifactFilter )
+        throws DependencyTreeBuilderException
     {
         // assert built dependency tree is as expected
-        
+
         DependencyNode actualRootNode =
             builder.buildDependencyTree( project, artifactRepository, artifactFactory, artifactMetadataSource,
                                          artifactFilter, artifactCollector );
-        
+
         assertEquals( "Dependency tree", expectedRootNode, actualRootNode );
-        
+
         // assert resolution tree is as expected
-        
+
         ArtifactResolutionResult result = builder.getArtifactResolutionResult();
-        
+
         assertTreeEquals( expectedRootNode, project, result );
     }
     
-    private void assertTreeEquals( DependencyNode dependencyNode, MavenProject project, ArtifactResolutionResult resolutionResult )
+    private void assertTreeEquals( DependencyNode dependencyNode, MavenProject project,
+                                   ArtifactResolutionResult resolutionResult )
     {
-        List rootChildrenResolutionNodes = ResolutionNodeUtils.getRootChildrenResolutionNodes( project, resolutionResult );
-        
+        List<ResolutionNode> rootChildrenResolutionNodes =
+            ResolutionNodeUtils.getRootChildrenResolutionNodes( project, resolutionResult );
+
         try
         {
             assertEquals( "Root node artifact", dependencyNode.getArtifact(), project.getArtifact() );
-        
+
             assertNodesEquals( dependencyNode.getChildren(), rootChildrenResolutionNodes );
         }
         catch ( AssertionFailedError error )
         {
             StringBuffer buffer = new StringBuffer();
-            
+
             buffer.append( error.getMessage() ).append( "; " );
             buffer.append( "expected dependency tree <" ).append( dependencyNode ).append( "> " );
             buffer.append( "actual resolution tree <" );
             ResolutionNodeUtils.append( buffer, project, resolutionResult );
             buffer.append( ">" );
-            
+
             throw new AssertionFailedError( buffer.toString() );
         }
     }
     
-    private void assertNodesEquals( List dependencyNodes, List resolutionNodes )
+    private void assertNodesEquals( List<DependencyNode> dependencyNodes, List<ResolutionNode> resolutionNodes )
     {
         assertNodesEquals( dependencyNodes.iterator(), resolutionNodes.iterator() );
     }
 
-    private void assertNodesEquals( Iterator dependencyNodesIterator, Iterator resolutionNodesIterator )
+    private void assertNodesEquals( Iterator<DependencyNode> dependencyNodesIterator,
+                                    Iterator<ResolutionNode> resolutionNodesIterator )
     {
         while ( dependencyNodesIterator.hasNext() && resolutionNodesIterator.hasNext() )
         {
-            DependencyNode dependencyNode = (DependencyNode) dependencyNodesIterator.next();
-            ResolutionNode resolutionNode = (ResolutionNode) resolutionNodesIterator.next();
+            DependencyNode dependencyNode = dependencyNodesIterator.next();
+            ResolutionNode resolutionNode = resolutionNodesIterator.next();
             
             assertNodeEquals( dependencyNode, resolutionNode );
         }

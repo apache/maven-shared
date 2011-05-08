@@ -21,7 +21,6 @@ package org.apache.maven.shared.dependency.tree.filter;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.shared.dependency.tree.DependencyNode;
@@ -33,14 +32,15 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @since 1.1
  */
-public class AndDependencyNodeFilter implements DependencyNodeFilter
+public class AndDependencyNodeFilter
+    implements DependencyNodeFilter
 {
     // fields -----------------------------------------------------------------
 
     /**
      * The dependency node filters that this filter ANDs together.
      */
-    private final List filters;
+    private final List<DependencyNodeFilter> filters;
 
     // constructors -----------------------------------------------------------
 
@@ -63,7 +63,7 @@ public class AndDependencyNodeFilter implements DependencyNodeFilter
      * @param filters
      *            the list of dependency node filters to logically AND together
      */
-    public AndDependencyNodeFilter( List filters )
+    public AndDependencyNodeFilter( List<DependencyNodeFilter> filters )
     {
         this.filters = Collections.unmodifiableList( filters );
     }
@@ -75,16 +75,15 @@ public class AndDependencyNodeFilter implements DependencyNodeFilter
      */
     public boolean accept( DependencyNode node )
     {
-        boolean accept = true;
-
-        for ( Iterator iterator = filters.iterator(); accept && iterator.hasNext(); )
+        for ( DependencyNodeFilter filter : filters )
         {
-            DependencyNodeFilter filter = (DependencyNodeFilter) iterator.next();
-
-            accept = filter.accept( node );
+            if ( !filter.accept( node ) )
+            {
+                return false;
+            }
         }
 
-        return accept;
+        return true;
     }
 
     // public methods ---------------------------------------------------------
@@ -94,7 +93,7 @@ public class AndDependencyNodeFilter implements DependencyNodeFilter
      * 
      * @return the dependency node filters that this filter ANDs together
      */
-    public List getDependencyNodeFilters()
+    public List<DependencyNodeFilter> getDependencyNodeFilters()
     {
         return filters;
     }

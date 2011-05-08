@@ -37,28 +37,24 @@
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-dependency-tree/</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-dependency-tree/</developerConnection>
-    <url>http://svn.apache.org/viewcvs.cgi/maven/shared/trunk/maven-dependency-tree/</url>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-dependency-tree/</url>
   </scm>
   <issueManagement>
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED/component/13264</url>
   </issueManagement>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-artifact</artifactId>
-        <version>2.0.9</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+  <properties>
+    <mavenVersion>2.2.0</mavenVersion>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>
-      <version>2.0.8</version>
+      <version>${mavenVersion}</version>
     </dependency>
+
     <dependency>
       <groupId>jmock</groupId>
       <artifactId>jmock</artifactId>
@@ -74,6 +70,19 @@
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.5</source>
+            <target>1.5</target>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
@@ -88,4 +97,21 @@
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>reporting</id>
+      <reporting>
+        <plugins>
+          <plugin>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>2.5</version>
+            <configuration>
+              <targetJdk>1.5</targetJdk>
+            </configuration>
+           </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+  </profiles>
 </project>

@@ -30,7 +30,8 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @since 1.1
  */
-public class ArtifactDependencyNodeFilter implements DependencyNodeFilter
+public class ArtifactDependencyNodeFilter
+    implements DependencyNodeFilter
 {
     // fields -----------------------------------------------------------------
 

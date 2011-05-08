@@ -29,7 +29,8 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @see AncestorOrSelfDependencyNodeFilter
  */
-public class AncestorOrSelfDependencyNodeFilterTest extends AbstractDependencyNodeTest
+public class AncestorOrSelfDependencyNodeFilterTest
+    extends AbstractDependencyNodeTest
 {
     // constants --------------------------------------------------------------
 
@@ -48,7 +49,8 @@ public class AncestorOrSelfDependencyNodeFilterTest extends AbstractDependencyNo
     /**
      * {@inheritDoc}
      */
-    protected void setUp() throws Exception
+    protected void setUp()
+        throws Exception
     {
         /*
          * p -> a -> c

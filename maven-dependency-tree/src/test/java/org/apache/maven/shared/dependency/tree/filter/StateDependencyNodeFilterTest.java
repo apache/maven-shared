@@ -32,7 +32,8 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @see StateDependencyNodeFilter
  */
-public class StateDependencyNodeFilterTest extends TestCase
+public class StateDependencyNodeFilterTest
+    extends TestCase
 {
     // fields -----------------------------------------------------------------
 
@@ -51,7 +52,8 @@ public class StateDependencyNodeFilterTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected void setUp() throws Exception
+    protected void setUp()
+        throws Exception
     {
         Artifact artifact = new ArtifactStub();
         Artifact relatedArtifact = new ArtifactStub();

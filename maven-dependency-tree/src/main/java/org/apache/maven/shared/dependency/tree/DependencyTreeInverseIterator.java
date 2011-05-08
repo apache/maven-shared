@@ -33,9 +33,9 @@ import java.util.Stack;
  * @version $Id$
  */
 public class DependencyTreeInverseIterator
-    implements Iterator
+    implements Iterator<DependencyNode>
 {
-    private Stack nodesToProcess = new Stack();
+    private Stack<DependencyNode> nodesToProcess = new Stack<DependencyNode>();
 
     public DependencyTreeInverseIterator( DependencyNode rootNode )
     {
@@ -51,7 +51,7 @@ public class DependencyTreeInverseIterator
         return !nodesToProcess.isEmpty();
     }
 
-    public Object next()
+    public DependencyNode next()
     {
         if ( !hasNext() )
         {

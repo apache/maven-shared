@@ -32,7 +32,8 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @since 1.1
  */
-public class SerializingDependencyNodeVisitor implements DependencyNodeVisitor
+public class SerializingDependencyNodeVisitor
+    implements DependencyNodeVisitor
 {
     // classes ----------------------------------------------------------------
 
@@ -209,7 +210,7 @@ public class SerializingDependencyNodeVisitor implements DependencyNodeVisitor
         }
         else
         {
-            List siblings = parent.getChildren();
+            List<DependencyNode> siblings = parent.getChildren();
 
             last = ( siblings.indexOf( node ) == siblings.size() - 1 );
         }

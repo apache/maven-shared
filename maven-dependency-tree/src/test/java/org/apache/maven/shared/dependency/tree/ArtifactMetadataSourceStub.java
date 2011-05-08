@@ -30,6 +30,7 @@ import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.metadata.ResolutionGroup;
 import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
 
 /**
  * Provides a stub to simulate an artifact metadata source.
@@ -37,7 +38,8 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
  */
-public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
+public class ArtifactMetadataSourceStub
+    implements ArtifactMetadataSource
 {
     // TODO: move to maven-plugin-testing-harness?
     
@@ -46,12 +48,12 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
     /**
      * Map of resolution groups by artifact.
      */
-    private final Map resolutionGroupsByArtifact;
+    private final Map<Artifact, ResolutionGroup> resolutionGroupsByArtifact;
 
     /**
      * Map of available versions by artifact.
      */
-    private final Map availableVersionsByArtifact;
+    private final Map<Artifact, List<ArtifactVersion>> availableVersionsByArtifact;
 
     // constructors -----------------------------------------------------------
     
@@ -60,8 +62,8 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
      */
     public ArtifactMetadataSourceStub()
     {
-        resolutionGroupsByArtifact = new HashMap();
-        availableVersionsByArtifact = new HashMap();
+        resolutionGroupsByArtifact = new HashMap<Artifact, ResolutionGroup>();
+        availableVersionsByArtifact = new HashMap<Artifact, List<ArtifactVersion>>();
     }
 
     // ArtifactMetadataSource methods -----------------------------------------
@@ -72,7 +74,7 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
     public ResolutionGroup retrieve( Artifact artifact, ArtifactRepository localRepository, List remoteRepositories )
         throws ArtifactMetadataRetrievalException
     {
-        ResolutionGroup resolution = (ResolutionGroup) resolutionGroupsByArtifact.get( artifact );
+        ResolutionGroup resolution = resolutionGroupsByArtifact.get( artifact );
         
         // if we return null then the artifact gets excluded in DefaultArtifactCollector
         if ( resolution == null )
@@ -87,9 +89,10 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
      * {@inheritDoc}
      */
     public List retrieveAvailableVersions( Artifact artifact, ArtifactRepository localRepository,
-                                           List remoteRepositories ) throws ArtifactMetadataRetrievalException
+                                           List remoteRepositories )
+        throws ArtifactMetadataRetrievalException
     {
-        List availableVersions = (List) availableVersionsByArtifact.get( artifact );
+        List<ArtifactVersion> availableVersions = availableVersionsByArtifact.get( artifact );
 
         return availableVersions != null ? availableVersions : Collections.EMPTY_LIST;
     }
@@ -104,7 +107,7 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
      * @param dependencyArtifacts
      *            the set of artifacts to register as dependencies of the specified artifact
      */
-    public void addArtifactMetadata( Artifact artifact, Set dependencyArtifacts )
+    public void addArtifactMetadata( Artifact artifact, Set<Artifact> dependencyArtifacts )
     {
         ResolutionGroup resolution = new ResolutionGroup( artifact, dependencyArtifacts, Collections.EMPTY_LIST );
 
@@ -119,8 +122,15 @@ public class ArtifactMetadataSourceStub implements ArtifactMetadataSource
      * @param versions
      *            the list of versions to register as available for the specified artifact
      */
-    public void addAvailableVersions( Artifact artifact, List versions )
+    public void addAvailableVersions( Artifact artifact, List<ArtifactVersion> versions )
     {
         availableVersionsByArtifact.put( artifact, versions );
+    }
+
+    public Artifact retrieveRelocatedArtifact( Artifact artifact, ArtifactRepository localRepository,
+                                               List remoteRepositories )
+        throws ArtifactMetadataRetrievalException
+    {
+        return artifact;
     }
 }

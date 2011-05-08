@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -44,7 +45,9 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
  * @plexus.component role="org.apache.maven.shared.dependency.tree.DependencyTreeBuilder"
  * @see DependencyTreeBuilder
  */
-public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements DependencyTreeBuilder
+public class DefaultDependencyTreeBuilder
+    extends AbstractLogEnabled
+    implements DependencyTreeBuilder
 {
     // fields -----------------------------------------------------------------
     
@@ -59,13 +62,14 @@ public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements 
      */
     public DependencyTree buildDependencyTree( MavenProject project, ArtifactRepository repository,
                                                ArtifactFactory factory, ArtifactMetadataSource metadataSource,
-                                               ArtifactCollector collector ) throws DependencyTreeBuilderException
+                                               ArtifactCollector collector )
+        throws DependencyTreeBuilderException
     {
         DependencyNode rootNode = buildDependencyTree( project, repository, factory, metadataSource, null, collector );
-        
+
         CollectingDependencyNodeVisitor collectingVisitor = new CollectingDependencyNodeVisitor();
         rootNode.accept( collectingVisitor );
-        
+
         return new DependencyTree( rootNode, collectingVisitor.getNodes() );
     }
     
@@ -81,17 +85,17 @@ public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements 
 
         try
         {
-            Map managedVersions = project.getManagedVersionMap();
+            Map<String, Artifact> managedVersions = project.getManagedVersionMap();
 
-            Set dependencyArtifacts = project.getDependencyArtifacts();
+            Set<Artifact> dependencyArtifacts = project.getDependencyArtifacts();
 
             if ( dependencyArtifacts == null )
             {
                 dependencyArtifacts = project.createArtifacts( factory, null, null );
             }
-            
+
             getLogger().debug( "Dependency tree resolution listener events:" );
-            
+
             // TODO: note that filter does not get applied due to MNG-3236
 
             result = collector.collect( dependencyArtifacts, project.getArtifact(), managedVersions, repository,
@@ -110,9 +114,9 @@ public class DefaultDependencyTreeBuilder extends AbstractLogEnabled implements 
                 + project.getArtifact() );
         }
     }
-    
+
     // protected methods ------------------------------------------------------
-    
+
     protected ArtifactResolutionResult getArtifactResolutionResult()
     {
         return result;

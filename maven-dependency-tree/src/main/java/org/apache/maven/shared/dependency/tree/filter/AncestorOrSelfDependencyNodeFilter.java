@@ -20,7 +20,6 @@ package org.apache.maven.shared.dependency.tree.filter;
  */
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.shared.dependency.tree.DependencyNode;
@@ -32,14 +31,15 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @since 1.1
  */
-public class AncestorOrSelfDependencyNodeFilter implements DependencyNodeFilter
+public class AncestorOrSelfDependencyNodeFilter
+    implements DependencyNodeFilter
 {
     // fields -----------------------------------------------------------------
 
     /**
      * The list of nodes that this filter accepts ancestors-or-self of.
      */
-    private final List descendantNodes;
+    private final List<DependencyNode> descendantNodes;
 
     // constructors -----------------------------------------------------------
 
@@ -55,7 +55,7 @@ public class AncestorOrSelfDependencyNodeFilter implements DependencyNodeFilter
      * @param descendantNodes
      *            the list of nodes to accept ancestors-or-self of
      */
-    public AncestorOrSelfDependencyNodeFilter( List descendantNodes )
+    public AncestorOrSelfDependencyNodeFilter( List<DependencyNode> descendantNodes )
     {
         this.descendantNodes = descendantNodes;
     }
@@ -67,19 +67,15 @@ public class AncestorOrSelfDependencyNodeFilter implements DependencyNodeFilter
      */
     public boolean accept( DependencyNode node )
     {
-        boolean accept = false;
-
-        for ( Iterator iterator = descendantNodes.iterator(); !accept && iterator.hasNext(); )
+        for ( DependencyNode descendantNode : descendantNodes )
         {
-            DependencyNode descendantNode = (DependencyNode) iterator.next();
-
             if ( isAncestorOrSelf( node, descendantNode ) )
             {
-                accept = true;
+                return true;
             }
         }
 
-        return accept;
+        return false;
     }
 
     // private methods --------------------------------------------------------

@@ -28,7 +28,8 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @since 1.1
  */
-public class StateDependencyNodeFilter implements DependencyNodeFilter
+public class StateDependencyNodeFilter
+    implements DependencyNodeFilter
 {
     // constants --------------------------------------------------------------
 

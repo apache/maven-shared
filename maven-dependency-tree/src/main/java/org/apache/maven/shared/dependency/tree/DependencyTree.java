@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.maven.artifact.Artifact;
+
 /**
  * Represents a Maven project's dependency tree.
  * 
@@ -37,7 +39,7 @@ public class DependencyTree
 
     private final DependencyNode rootNode;
 
-    private final Collection nodes;
+    private final Collection<DependencyNode> nodes;
 
     // constructors -----------------------------------------------------------
 
@@ -47,7 +49,7 @@ public class DependencyTree
      * @param rootNode
      * @param nodes
      */
-    public DependencyTree( DependencyNode rootNode, Collection nodes )
+    public DependencyTree( DependencyNode rootNode, Collection<DependencyNode> nodes )
     {
         this.rootNode = rootNode;
         this.nodes = nodes;
@@ -60,19 +62,17 @@ public class DependencyTree
         return rootNode;
     }
 
-    public Collection getNodes()
+    public Collection<DependencyNode> getNodes()
     {
         return nodes;
     }
 
-    public List getArtifacts()
+    public List<Artifact> getArtifacts()
     {
-        List artifacts = new ArrayList();
+        List<Artifact> artifacts = new ArrayList<Artifact>();
 
-        Iterator it = getNodes().iterator();
-        while ( it.hasNext() )
+        for ( DependencyNode node : getNodes() )
         {
-            DependencyNode node = (DependencyNode) it.next();
             artifacts.add( node.getArtifact() );
         }
 
@@ -87,7 +87,7 @@ public class DependencyTree
     /**
      * @see DependencyNode#iterator()
      */
-    public Iterator iterator()
+    public Iterator<DependencyNode> iterator()
     {
         return getRootNode().iterator();
     }
@@ -95,7 +95,7 @@ public class DependencyTree
     /**
      * @see DependencyNode#preorderIterator()
      */
-    public Iterator preorderIterator()
+    public Iterator<DependencyNode> preorderIterator()
     {
         return getRootNode().preorderIterator();
     }
@@ -103,7 +103,7 @@ public class DependencyTree
     /**
      * @see DependencyNode#inverseIterator()
      */
-    public Iterator inverseIterator()
+    public Iterator<DependencyNode> inverseIterator()
     {
         return getRootNode().inverseIterator();
     }

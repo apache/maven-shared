@@ -31,7 +31,8 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @see SerializingDependencyNodeVisitor
  */
-public class SerializingDependencyNodeVisitorTest extends AbstractDependencyNodeTest
+public class SerializingDependencyNodeVisitorTest
+    extends AbstractDependencyNodeTest
 {
     // constants --------------------------------------------------------------
 
@@ -48,7 +49,8 @@ public class SerializingDependencyNodeVisitorTest extends AbstractDependencyNode
     /**
      * {@inheritDoc}
      */
-    protected void setUp() throws Exception
+    protected void setUp()
+        throws Exception
     {
         writer = new StringWriter();
 

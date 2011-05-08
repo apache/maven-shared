@@ -31,7 +31,8 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @since 1.1
  */
-public class BuildingDependencyNodeVisitor implements DependencyNodeVisitor
+public class BuildingDependencyNodeVisitor
+    implements DependencyNodeVisitor
 {
     // fields -----------------------------------------------------------------
 
@@ -43,7 +44,7 @@ public class BuildingDependencyNodeVisitor implements DependencyNodeVisitor
     /**
      * The resultant tree parent nodes for the currently visited node.
      */
-    private final Stack parentNodes;
+    private final Stack<DependencyNode> parentNodes;
 
     /**
      * The root node of the resultant tree.
@@ -71,7 +72,7 @@ public class BuildingDependencyNodeVisitor implements DependencyNodeVisitor
     {
         this.visitor = visitor;
 
-        parentNodes = new Stack();
+        parentNodes = new Stack<DependencyNode>();
     }
 
     // DependencyNodeVisitor methods ------------------------------------------
@@ -94,7 +95,7 @@ public class BuildingDependencyNodeVisitor implements DependencyNodeVisitor
         }
         else
         {
-            DependencyNode parentNode = (DependencyNode) parentNodes.peek();
+            DependencyNode parentNode = parentNodes.peek();
             parentNode.addChild( newNode );
         }
 

@@ -33,7 +33,8 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @see CollectingDependencyNodeVisitor
  */
-public class CollectingDependencyNodeVisitorTest extends AbstractDependencyNodeTest
+public class CollectingDependencyNodeVisitorTest
+    extends AbstractDependencyNodeTest
 {
     // fields -----------------------------------------------------------------
     
@@ -50,7 +51,8 @@ public class CollectingDependencyNodeVisitorTest extends AbstractDependencyNodeT
     /**
      * {@inheritDoc}
      */
-    protected void setUp() throws Exception
+    protected void setUp()
+        throws Exception
     {
         visitor = new CollectingDependencyNodeVisitor();
         node1 = createNode( "g:a:t:1" );
@@ -73,7 +75,7 @@ public class CollectingDependencyNodeVisitorTest extends AbstractDependencyNodeT
         assertTrue( visitor.visit( node1 ) );
         assertTrue( visitor.visit( node2 ) );
         assertTrue( visitor.visit( node3 ) );
-        assertNodes( Arrays.asList( new Object[] { node1, node2, node3 } ) );
+        assertNodes( Arrays.asList( new DependencyNode[] { node1, node2, node3 } ) );
     }
 
     public void testEndVisit()
@@ -87,7 +89,7 @@ public class CollectingDependencyNodeVisitorTest extends AbstractDependencyNodeT
     
     private void assertEmptyNodes()
     {
-        assertNodes( Collections.EMPTY_LIST );
+        assertNodes( Collections.<DependencyNode>emptyList() );
     }
     
     private void assertNodes( DependencyNode node )
@@ -95,7 +97,7 @@ public class CollectingDependencyNodeVisitorTest extends AbstractDependencyNodeT
         assertNodes( Collections.singletonList( node ) );
     }
     
-    private void assertNodes( List expectedNodes )
+    private void assertNodes( List<DependencyNode> expectedNodes )
     {
         assertEquals( "Collected nodes", expectedNodes, visitor.getNodes() );
     }

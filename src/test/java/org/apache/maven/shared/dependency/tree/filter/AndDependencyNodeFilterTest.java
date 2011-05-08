@@ -30,7 +30,8 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @see AndDependencyNodeFilter
  */
-public class AndDependencyNodeFilterTest extends AbstractDependencyNodeFilterTest
+public class AndDependencyNodeFilterTest
+    extends AbstractDependencyNodeFilterTest
 {
     // fields -----------------------------------------------------------------
 
@@ -49,7 +50,8 @@ public class AndDependencyNodeFilterTest extends AbstractDependencyNodeFilterTes
     /**
      * {@inheritDoc}
      */
-    protected void setUp() throws Exception
+    protected void setUp()
+        throws Exception
     {
         artifact = new ArtifactStub();
         node = new DependencyNode( artifact );

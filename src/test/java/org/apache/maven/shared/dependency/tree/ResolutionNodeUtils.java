@@ -50,18 +50,17 @@ public final class ResolutionNodeUtils
 
     // public methods ---------------------------------------------------------
     
-    public static List getRootChildrenResolutionNodes( MavenProject project, ArtifactResolutionResult resolutionResult )
+    public static List<ResolutionNode> getRootChildrenResolutionNodes( MavenProject project,
+                                                                       ArtifactResolutionResult resolutionResult )
     {
-        Set resolutionNodes = resolutionResult.getArtifactResolutionNodes();
+        Set<ResolutionNode> resolutionNodes = resolutionResult.getArtifactResolutionNodes();
 
         // obtain root children nodes
         
-        Map rootChildrenResolutionNodesByArtifact = new HashMap();
+        Map<Artifact, ResolutionNode> rootChildrenResolutionNodesByArtifact = new HashMap<Artifact, ResolutionNode>();
         
-        for ( Iterator iterator = resolutionNodes.iterator(); iterator.hasNext(); )
+        for ( ResolutionNode resolutionNode : resolutionNodes )
         {
-            ResolutionNode resolutionNode = (ResolutionNode) iterator.next();
-            
             if ( resolutionNode.isChildOfRootNode() )
             {
                 rootChildrenResolutionNodesByArtifact.put( resolutionNode.getArtifact(), resolutionNode );
@@ -70,12 +69,12 @@ public final class ResolutionNodeUtils
         
         // order root children by project dependencies
         
-        List rootChildrenResolutionNodes = new ArrayList();
+        List<ResolutionNode> rootChildrenResolutionNodes = new ArrayList<ResolutionNode>();
         
-        for ( Iterator iterator = project.getDependencyArtifacts().iterator(); iterator.hasNext(); )
+        for ( Iterator<Artifact> iterator = project.getDependencyArtifacts().iterator(); iterator.hasNext(); )
         {
-            Artifact artifact = (Artifact) iterator.next();
-            ResolutionNode resolutionNode = (ResolutionNode) rootChildrenResolutionNodesByArtifact.get( artifact );
+            Artifact artifact = iterator.next();
+            ResolutionNode resolutionNode = rootChildrenResolutionNodesByArtifact.get( artifact );
             
             rootChildrenResolutionNodes.add( resolutionNode );
         }
@@ -97,7 +96,7 @@ public final class ResolutionNodeUtils
         ResolutionNode rootNode = new ResolutionNode( project.getArtifact(), Collections.EMPTY_LIST );
         append( buffer, rootNode, 0 );
 
-        List rootChildrenNodes = getRootChildrenResolutionNodes( project, result );
+        List<ResolutionNode> rootChildrenNodes = getRootChildrenResolutionNodes( project, result );
         append( buffer, rootChildrenNodes.iterator(), 1 );
         
         return buffer;
@@ -105,11 +104,11 @@ public final class ResolutionNodeUtils
     
     // private methods --------------------------------------------------------
     
-    private static StringBuffer append( StringBuffer buffer, Iterator nodesIterator, int depth )
+    private static StringBuffer append( StringBuffer buffer, Iterator<ResolutionNode> nodesIterator, int depth )
     {
         while ( nodesIterator.hasNext() )
         {
-            ResolutionNode node = (ResolutionNode) nodesIterator.next();
+            ResolutionNode node = nodesIterator.next();
             
             append( buffer, node, depth );
         }

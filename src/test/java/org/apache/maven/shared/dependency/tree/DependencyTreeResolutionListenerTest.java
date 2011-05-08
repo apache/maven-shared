@@ -33,7 +33,8 @@ import org.apache.maven.plugin.testing.SilentLog;
  * @version $Id$
  * @see DependencyTreeResolutionListener
  */
-public class DependencyTreeResolutionListenerTest extends AbstractDependencyNodeTest
+public class DependencyTreeResolutionListenerTest
+    extends AbstractDependencyNodeTest
 {
     // fields -----------------------------------------------------------------
 

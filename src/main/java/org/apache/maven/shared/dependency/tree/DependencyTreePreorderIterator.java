@@ -31,9 +31,9 @@ import java.util.Stack;
  * @version $Id$
  */
 public class DependencyTreePreorderIterator
-    implements Iterator
+    implements Iterator<DependencyNode>
 {
-    private Stack nodesToProcess = new Stack();
+    private Stack<DependencyNode> nodesToProcess = new Stack<DependencyNode>();
 
     public DependencyTreePreorderIterator( DependencyNode rootNode )
     {
@@ -45,14 +45,14 @@ public class DependencyTreePreorderIterator
         return !nodesToProcess.isEmpty();
     }
 
-    public Object next()
+    public DependencyNode next()
     {
         if ( !hasNext() )
         {
             throw new NoSuchElementException();
         }
-        DependencyNode currentNode = (DependencyNode) nodesToProcess.pop();
-        List children = currentNode.getChildren();
+        DependencyNode currentNode = nodesToProcess.pop();
+        List<DependencyNode> children = currentNode.getChildren();
         if ( children != null )
         {
             for ( int i = children.size() - 1; i >= 0; i-- )

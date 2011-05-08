@@ -41,7 +41,8 @@ import org.codehaus.plexus.logging.Logger;
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
  */
-public class DependencyTreeResolutionListener implements ResolutionListener, ResolutionListenerForDepMgmt
+public class DependencyTreeResolutionListener
+    implements ResolutionListener, ResolutionListenerForDepMgmt
 {
     // fields -----------------------------------------------------------------
     
@@ -53,12 +54,12 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
     /**
      * The parent dependency nodes of the current dependency node.
      */
-    private final Stack parentNodes;
+    private final Stack<DependencyNode> parentNodes;
 
     /**
      * A map of dependency nodes by their attached artifact.
      */
-    private final Map nodesByArtifact;
+    private final Map<Artifact, DependencyNode> nodesByArtifact;
 
     /**
      * The root dependency node of the computed dependency tree.
@@ -73,12 +74,12 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
     /**
      * Map &lt; String replacementId, String premanaged version >
      */
-    private Map managedVersions = new HashMap();
+    private Map<String, String> managedVersions = new HashMap<String, String>();
 
     /**
      * Map &lt; String replacementId, String premanaged scope >
      */
-    private Map managedScopes = new HashMap();
+    private Map<String, String> managedScopes = new HashMap<String, String>();
 
     // constructors -----------------------------------------------------------
 
@@ -92,8 +93,8 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
     {
         this.logger = logger;
         
-        parentNodes = new Stack();
-        nodesByArtifact = new IdentityHashMap();
+        parentNodes = new Stack<DependencyNode>();
+        nodesByArtifact = new IdentityHashMap<Artifact, DependencyNode>();
         rootNode = null;
         currentNode = null;
     }
@@ -129,7 +130,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
      */
     public void endProcessChildren( Artifact artifact )
     {
-        DependencyNode node = (DependencyNode) parentNodes.pop();
+        DependencyNode node = parentNodes.pop();
 
         log( "endProcessChildren: artifact=" + artifact );
         
@@ -371,7 +372,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
      * @return a list of dependency nodes
      * @deprecated As of 1.1, use a {@link CollectingDependencyNodeVisitor} on the root dependency node
      */
-    public Collection getNodes()
+    public Collection<DependencyNode> getNodes()
     {
         return Collections.unmodifiableCollection( nodesByArtifact.values() );
     }
@@ -423,7 +424,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
 
         if ( !parentNodes.isEmpty() )
         {
-            DependencyNode parent = (DependencyNode) parentNodes.peek();
+            DependencyNode parent = parentNodes.peek();
 
             parent.addChild( node );
         }
@@ -444,7 +445,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
     {
         DependencyNode node = createNode( artifact );
 
-        DependencyNode previousNode = (DependencyNode) nodesByArtifact.put( node.getArtifact(), node );
+        DependencyNode previousNode = nodesByArtifact.put( node.getArtifact(), node );
         
         if ( previousNode != null )
         {
@@ -471,7 +472,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
      */
     private DependencyNode getNode( Artifact artifact )
     {
-        return (DependencyNode) nodesByArtifact.get( artifact );
+        return nodesByArtifact.get( artifact );
     }
 
     /**
@@ -482,7 +483,7 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
      */
     private void removeNode( Artifact artifact )
     {
-        DependencyNode node = (DependencyNode) nodesByArtifact.remove( artifact );
+        DependencyNode node = nodesByArtifact.remove( artifact );
 
         if ( !artifact.equals( node.getArtifact() ) )
         {
@@ -500,19 +501,15 @@ public class DependencyTreeResolutionListener implements ResolutionListener, Res
      */
     private boolean isCurrentNodeIncluded()
     {
-        boolean included = true;
-
-        for ( Iterator iterator = parentNodes.iterator(); included && iterator.hasNext(); )
+        for ( DependencyNode node : parentNodes )
         {
-            DependencyNode node = (DependencyNode) iterator.next();
-
             if ( node.getState() != DependencyNode.INCLUDED )
             {
-                included = false;
+                return false;
             }
         }
 
-        return included;
+        return true;
     }
 
     /**

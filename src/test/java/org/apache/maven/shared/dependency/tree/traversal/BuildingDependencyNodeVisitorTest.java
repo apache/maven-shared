@@ -30,7 +30,8 @@ import org.jmock.Mock;
  * @version $Id$
  * @see BuildingDependencyNodeVisitor
  */
-public class BuildingDependencyNodeVisitorTest extends AbstractDependencyNodeTest
+public class BuildingDependencyNodeVisitorTest
+    extends AbstractDependencyNodeTest
 {
     // fields -----------------------------------------------------------------
 

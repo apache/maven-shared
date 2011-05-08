@@ -62,7 +62,7 @@ public class DependencyNodeTest
         rootNode = node1;
     }
 
-    private void assertNode( Iterator it, DependencyNode node )
+    private void assertNode( Iterator<DependencyNode> it, DependencyNode node )
     {
         assertTrue( it.hasNext() );
         assertSame( node, it.next() );
@@ -70,7 +70,7 @@ public class DependencyNodeTest
 
     public void testPreorderIterator()
     {
-        Iterator it = rootNode.iterator();
+        Iterator<DependencyNode> it = rootNode.iterator();
 
         assertNode( it, node1 );
         assertNode( it, node2 );
@@ -84,7 +84,7 @@ public class DependencyNodeTest
 
     public void testInverseIterator()
     {
-        Iterator it = rootNode.inverseIterator();
+        Iterator<DependencyNode> it = rootNode.inverseIterator();
 
         assertNode( it, node7 );
         assertNode( it, node3 );

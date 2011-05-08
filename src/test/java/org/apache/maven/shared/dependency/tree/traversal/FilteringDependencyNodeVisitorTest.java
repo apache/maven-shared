@@ -32,7 +32,8 @@ import org.jmock.Mock;
  * @version $Id$
  * @see FilteringDependencyNodeVisitor
  */
-public class FilteringDependencyNodeVisitorTest extends AbstractDependencyNodeFilterTest
+public class FilteringDependencyNodeVisitorTest
+    extends AbstractDependencyNodeFilterTest
 {
     // fields -----------------------------------------------------------------
 
@@ -49,7 +50,8 @@ public class FilteringDependencyNodeVisitorTest extends AbstractDependencyNodeFi
     /**
      * {@inheritDoc}
      */
-    protected void setUp() throws Exception
+    protected void setUp()
+        throws Exception
     {
         node = new DependencyNode( new ArtifactStub() );
 

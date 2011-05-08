@@ -29,7 +29,8 @@ import org.jmock.MockObjectTestCase;
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
  */
-public abstract class AbstractDependencyNodeFilterTest extends MockObjectTestCase
+public abstract class AbstractDependencyNodeFilterTest
+    extends MockObjectTestCase
 {
     // protected methods ---------------------------------------------------------
 

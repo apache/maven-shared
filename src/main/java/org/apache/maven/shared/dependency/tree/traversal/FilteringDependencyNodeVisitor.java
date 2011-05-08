@@ -29,7 +29,8 @@ import org.apache.maven.shared.dependency.tree.filter.DependencyNodeFilter;
  * @version $Id$
  * @since 1.1
  */
-public class FilteringDependencyNodeVisitor implements DependencyNodeVisitor
+public class FilteringDependencyNodeVisitor
+    implements DependencyNodeVisitor
 {
     // fields -----------------------------------------------------------------
 

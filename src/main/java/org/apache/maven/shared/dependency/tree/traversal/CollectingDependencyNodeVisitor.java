@@ -32,14 +32,15 @@ import org.apache.maven.shared.dependency.tree.DependencyNode;
  * @version $Id$
  * @since 1.1
  */
-public class CollectingDependencyNodeVisitor implements DependencyNodeVisitor
+public class CollectingDependencyNodeVisitor
+    implements DependencyNodeVisitor
 {
     // fields -----------------------------------------------------------------
 
     /**
      * The collected list of nodes.
      */
-    private final List nodes;
+    private final List<DependencyNode> nodes;
 
     // constructors -----------------------------------------------------------
 
@@ -48,7 +49,7 @@ public class CollectingDependencyNodeVisitor implements DependencyNodeVisitor
      */
     public CollectingDependencyNodeVisitor()
     {
-        nodes = new ArrayList();
+        nodes = new ArrayList<DependencyNode>();
     }
 
     // DependencyNodeVisitor methods ------------------------------------------
@@ -79,7 +80,7 @@ public class CollectingDependencyNodeVisitor implements DependencyNodeVisitor
      * 
      * @return the list of collected dependency nodes
      */
-    public List getNodes()
+    public List<DependencyNode> getNodes()
     {
         return Collections.unmodifiableList( nodes );
     }

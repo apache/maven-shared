@@ -226,13 +226,13 @@ public class TestDefaultMavenReportExecutor
             }
 
             @Override
-            public List<RemoteRepository> getRemoteArtifactRepositories()
+            public List<ArtifactRepository> getRemoteArtifactRepositories()
             {
                 if ( super.getRemotePluginRepositories() == null )
                 {
-                    return RepositoryUtils.toRepos( request.getRemoteRepositories() );
+                    return request.getRemoteRepositories();
                 }
-                return super.getRemotePluginRepositories();
+                return super.getRemoteArtifactRepositories();
             }
 
             @Override

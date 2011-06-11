@@ -19,6 +19,7 @@ package org.apache.maven.it;
  * under the License.
  */
 
+import junit.framework.Assert;
 import org.apache.maven.it.util.FileUtils;
 import org.apache.maven.it.util.IOUtil;
 import org.apache.maven.it.util.StringUtils;
@@ -32,6 +33,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -60,17 +64,11 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import junit.framework.Assert;
-
 /**
  * @author Jason van Zyl
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id$
- * @noinspection UseOfSystemOutOrSystemErr,RefusedBequest
+ * @noinspection UseOfSystemOutOrSystemErr, RefusedBequest
  */
 public class Verifier
 {
@@ -107,7 +105,7 @@ public class Verifier
     private String logFileName = LOG_FILENAME;
 
     private String defaultMavenHome;
-    
+
     // will launch mvn with --debug 
     private boolean mavenDebug = false;
 
@@ -284,7 +282,7 @@ public class Verifier
     /**
      * Checks whether the specified line is just an error message from Velocity. Especially old versions of Doxia employ
      * a very noisy Velocity instance.
-     * 
+     *
      * @param line The log line to check, must not be <code>null</code>.
      * @return <code>true</code> if the line appears to be a Velocity error, <code>false</code> otherwise.
      */
@@ -304,6 +302,7 @@ public class Verifier
 
     /**
      * Throws an exception if the text is not present in the log.
+     *
      * @param text
      * @throws VerificationException
      */
@@ -317,17 +316,17 @@ public class Verifier
         for ( Iterator i = lines.iterator(); i.hasNext(); )
         {
             String line = (String) i.next();
-            if ( line.indexOf( text ) >= 0)
+            if ( line.indexOf( text ) >= 0 )
             {
                 result = true;
                 break;
             }
         }
-        if (!result)
+        if ( !result )
         {
             throw new VerificationException( "Text not found in log: " + text );
         }
-}
+    }
 
     public Properties loadProperties( String filename )
         throws VerificationException
@@ -364,10 +363,10 @@ public class Verifier
 
     /**
      * Loads the (non-empty) lines of the specified text file.
-     * 
+     *
      * @param filename The path to the text file to load, relative to the base directory, must not be <code>null</code>.
      * @param encoding The character encoding of the file, may be <code>null</code> or empty to use the platform default
-     *            encoding.
+     *                 encoding.
      * @return The list of (non-empty) lines from the text file, can be empty but never <code>null</code>.
      * @throws IOException If the file could not be loaded.
      * @since 1.2
@@ -419,11 +418,13 @@ public class Verifier
     {
         List lines = new ArrayList();
 
+        BufferedReader reader = null;
+
         if ( file.exists() )
         {
             try
             {
-                BufferedReader reader = new BufferedReader( new FileReader( file ) );
+                reader = new BufferedReader( new FileReader( file ) );
 
                 String line = reader.readLine();
 
@@ -447,6 +448,10 @@ public class Verifier
             catch ( IOException e )
             {
                 throw new VerificationException( e );
+            }
+            finally
+            {
+                IOUtil.close( reader );
             }
         }
 
@@ -557,11 +562,11 @@ public class Verifier
 
     /**
      * Returns the absolute path to the artifact denoted by groupId, artifactId, version, extension and classifier.
-     * 
-     * @param gid The groupId, must not be null.
-     * @param aid The artifactId, must not be null.
-     * @param version The version, must not be null.
-     * @param ext The extension, must not be null.
+     *
+     * @param gid        The groupId, must not be null.
+     * @param aid        The artifactId, must not be null.
+     * @param version    The version, must not be null.
+     * @param ext        The extension, must not be null.
      * @param classifier The classifier, may be null to be omitted.
      * @return the absolute path to the artifact denoted by groupId, artifactId, version, extension and classifier,
      *         never null.
@@ -625,9 +630,9 @@ public class Verifier
     /**
      * Gets the path to the local artifact metadata. Note that the method does not check whether the returned path
      * actually points to existing metadata.
-     * 
-     * @param gid The group id, must not be <code>null</code>.
-     * @param aid The artifact id, must not be <code>null</code>.
+     *
+     * @param gid     The group id, must not be <code>null</code>.
+     * @param aid     The artifact id, must not be <code>null</code>.
      * @param version The artifact version, may be <code>null</code>.
      * @return The (absolute) path to the local artifact metadata, never <code>null</code>.
      */
@@ -639,10 +644,10 @@ public class Verifier
     /**
      * Gets the path to a file in the local artifact directory. Note that the method does not check whether the returned
      * path actually points to an existing file.
-     * 
-     * @param gid The group id, must not be <code>null</code>.
-     * @param aid The artifact id, may be <code>null</code>.
-     * @param version The artifact version, may be <code>null</code>.
+     *
+     * @param gid      The group id, must not be <code>null</code>.
+     * @param aid      The artifact id, may be <code>null</code>.
+     * @param version  The artifact version, may be <code>null</code>.
      * @param filename The filename to use, must not be <code>null</code>.
      * @return The (absolute) path to the local artifact metadata, never <code>null</code>.
      */
@@ -683,7 +688,7 @@ public class Verifier
     /**
      * Gets the path to the local artifact metadata. Note that the method does not check whether the returned path
      * actually points to existing metadata.
-     * 
+     *
      * @param gid The group id, must not be <code>null</code>.
      * @param aid The artifact id, must not be <code>null</code>.
      * @return The (absolute) path to the local artifact metadata, never <code>null</code>.
@@ -866,7 +871,7 @@ public class Verifier
 
     /**
      * Deletes all artifacts in the specified group id from the local repository.
-     * 
+     *
      * @param gid The group id whose artifacts should be deleted, must not be <code>null</code>.
      * @throws IOException If the artifacts could not be deleted.
      * @since 1.2
@@ -893,9 +898,9 @@ public class Verifier
 
     /**
      * Deletes all artifacts in the specified g:a:v from the local repository.
-     * 
-     * @param gid The group id whose artifacts should be deleted, must not be <code>null</code>.
-     * @param aid The artifact id whose artifacts should be deleted, must not be <code>null</code>.
+     *
+     * @param gid     The group id whose artifacts should be deleted, must not be <code>null</code>.
+     * @param aid     The artifact id whose artifacts should be deleted, must not be <code>null</code>.
      * @param version The (base) version whose artifacts should be deleted, must not be <code>null</code>.
      * @throws IOException If the artifacts could not be deleted.
      * @since 1.3
@@ -918,7 +923,7 @@ public class Verifier
 
     /**
      * Deletes the specified directory.
-     * 
+     *
      * @param path The path to the directory to delete, relative to the base directory, must not be <code>null</code>.
      * @throws IOException If the directory could not be deleted.
      * @since 1.2
@@ -931,8 +936,8 @@ public class Verifier
 
     /**
      * Writes a text file with the specified contents. The contents will be encoded using UTF-8.
-     * 
-     * @param path The path to the file, relative to the base directory, must not be <code>null</code>.
+     *
+     * @param path     The path to the file, relative to the base directory, must not be <code>null</code>.
      * @param contents The contents to write, must not be <code>null</code>.
      * @throws IOException If the file could not be written.
      * @since 1.2
@@ -945,12 +950,12 @@ public class Verifier
 
     /**
      * Filters a text file by replacing some user-defined tokens.
-     * 
-     * @param srcPath The path to the input file, relative to the base directory, must not be <code>null</code>.
-     * @param dstPath The path to the output file, relative to the base directory and possibly equal to the input file,
-     *            must not be <code>null</code>.
-     * @param fileEncoding The file encoding to use, may be <code>null</code> or empty to use the platform's default
-     *            encoding.
+     *
+     * @param srcPath          The path to the input file, relative to the base directory, must not be <code>null</code>.
+     * @param dstPath          The path to the output file, relative to the base directory and possibly equal to the input file,
+     *                         must not be <code>null</code>.
+     * @param fileEncoding     The file encoding to use, may be <code>null</code> or empty to use the platform's default
+     *                         encoding.
      * @param filterProperties The mapping from tokens to replacement values, must not be <code>null</code>.
      * @return The path to the filtered output file, never <code>null</code>.
      * @throws IOException If the file could not be filtered.
@@ -979,7 +984,7 @@ public class Verifier
     /**
      * Gets a new copy of the default filter properties. These default filter properties map the tokens "@basedir@" and
      * "@baseurl@" to the test's base directory and its base <code>file:</code> URL, respectively.
-     * 
+     *
      * @return The (modifiable) map with the default filter properties, never <code>null</code>.
      * @since 1.2
      */
@@ -1021,7 +1026,7 @@ public class Verifier
      * Check that given file's content matches an regular expression. Note this method also checks that the file exists
      * and is readable.
      *
-     * @param file the file to check.
+     * @param file  the file to check.
      * @param regex a regular expression.
      * @see Pattern
      */
@@ -1164,7 +1169,8 @@ public class Verifier
                 {
                     if ( wanted )
                     {
-                        throw new VerificationException( "Expected file pattern was not found: " + expectedFile.getPath() );
+                        throw new VerificationException(
+                            "Expected file pattern was not found: " + expectedFile.getPath() );
                     }
                 }
                 else
@@ -1231,7 +1237,7 @@ public class Verifier
     public void executeGoal( String goal, Map envVars )
         throws VerificationException
     {
-        executeGoals( Arrays.asList( new String[] { goal } ), envVars );
+        executeGoals( Arrays.asList( new String[]{ goal } ), envVars );
     }
 
     public void executeGoals( List goals )
@@ -1389,8 +1395,9 @@ public class Verifier
             System.err.println( "Exit code: " + ret );
 
             throw new VerificationException( "Exit code was non-zero: " + ret + "; command line and log = \n"
-                + new File( defaultMavenHome, "bin/mvn" ) + " " + StringUtils.join( args.iterator(), " " ) + "\n"
-                + getLogContents( logFile ) );
+                                                 + new File( defaultMavenHome, "bin/mvn" ) + " "
+                                                 + StringUtils.join( args.iterator(), " " ) + "\n" + getLogContents(
+                logFile ) );
         }
     }
 
@@ -1429,7 +1436,7 @@ public class Verifier
         {
             // disable EMMA runtime controller port allocation, should be harmless if EMMA is not used
             Map envVars = Collections.singletonMap( "MAVEN_OPTS", "-Demma.rt.control=false" );
-            launcher.run( new String[] { "--version" }, envVars, null, logFile );
+            launcher.run( new String[]{ "--version" }, envVars, null, logFile );
         }
         catch ( LauncherException e )
         {
@@ -1447,8 +1454,9 @@ public class Verifier
 
         if ( version == null )
         {
-            throw new VerificationException( "Illegal maven output: String 'Maven version: ' not found in the following output:\n"
-                + StringUtils.join( logLines.iterator(), "\n" ) );
+            throw new VerificationException(
+                "Illegal maven output: String 'Maven version: ' not found in the following output:\n"
+                    + StringUtils.join( logLines.iterator(), "\n" ) );
         }
         else
         {
@@ -1527,9 +1535,10 @@ public class Verifier
     private void displayLogFile()
     {
         System.out.println( "Log file contents:" );
+        BufferedReader reader = null;
         try
         {
-            BufferedReader reader = new BufferedReader( new FileReader( new File( getBasedir(), getLogFileName() ) ) );
+            reader = new BufferedReader( new FileReader( new File( getBasedir(), getLogFileName() ) ) );
             String line = reader.readLine();
             while ( line != null )
             {
@@ -1545,6 +1554,10 @@ public class Verifier
         catch ( IOException e )
         {
             System.err.println( "Error: " + e );
+        }
+        finally
+        {
+            IOUtil.close( reader );
         }
     }
 
@@ -1981,7 +1994,7 @@ public class Verifier
 
     /**
      * Gets the name of the file used to log build output.
-     * 
+     *
      * @return The name of the log file, relative to the base directory, never <code>null</code>.
      * @since 1.2
      */
@@ -1992,9 +2005,9 @@ public class Verifier
 
     /**
      * Sets the name of the file used to log build output.
-     * 
+     *
      * @param logFileName The name of the log file, relative to the base directory, must not be empty or
-     *            <code>null</code>.
+     *                    <code>null</code>.
      * @since 1.2
      */
     public void setLogFileName( String logFileName )

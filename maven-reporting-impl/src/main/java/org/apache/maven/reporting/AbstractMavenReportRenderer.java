@@ -562,7 +562,7 @@ public abstract class AbstractMavenReportRenderer
             return text;
         }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append( "{" ).append( text ).append( ", " ).append( href ).append( "}" );
 
         return sb.toString();
@@ -576,7 +576,7 @@ public abstract class AbstractMavenReportRenderer
      */
     protected static String propertiesToString( Properties props )
     {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         if ( props == null || props.isEmpty() )
         {

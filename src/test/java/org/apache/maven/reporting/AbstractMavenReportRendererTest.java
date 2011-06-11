@@ -29,23 +29,25 @@ import junitx.util.PrivateAccessor;
 /**
  * Test case for some public method in AbstractMavenReportRenderer.
  */
-public class AbstractMavenReportRendererTest extends TestCase
+public class AbstractMavenReportRendererTest
+    extends TestCase
 {
-    private static List applyPattern( String pattern ) throws Throwable
+    private static List<String> applyPattern( String pattern )
+        throws Throwable
     {
-        return (List) PrivateAccessor.invoke( AbstractMavenReportRenderer.class, "applyPattern",
-                                             new Class[] { String.class }, new Object[] { pattern } );
+        return (List<String>) PrivateAccessor.invoke( AbstractMavenReportRenderer.class, "applyPattern",
+                                              new Class[] { String.class }, new Object[] { pattern } );
     }
 
     private static void checkPattern( String pattern, String[] expectedResult ) throws Throwable
     {
-        List result = applyPattern( pattern );
+        List<String> result = applyPattern( pattern );
         Assert.assertEquals( "result size", expectedResult.length, result.size() );
         int i = 0;
-        for ( Iterator it = result.iterator(); it.hasNext(); )
+        for ( Iterator<String> it = result.iterator(); it.hasNext(); )
         {
-            String name = (String) it.next();
-            String href = (String) it.next();
+            String name = it.next();
+            String href = it.next();
             Assert.assertEquals( expectedResult[i], name );
             Assert.assertEquals( expectedResult[i + 1], href );
             i += 2;

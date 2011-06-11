@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -507,7 +508,7 @@ public abstract class AbstractMavenReportRenderer
         }
         else
         {
-            List segments = applyPattern( text );
+            List<String> segments = applyPattern( text );
 
             if ( segments == null )
             {
@@ -515,10 +516,10 @@ public abstract class AbstractMavenReportRenderer
             }
             else
             {
-                for ( Iterator it = segments.iterator(); it.hasNext(); )
+                for ( Iterator<String> it = segments.iterator(); it.hasNext(); )
                 {
-                    String name = (String) it.next();
-                    String href = (String) it.next();
+                    String name = it.next();
+                    String href = it.next();
 
                     if ( href == null )
                     {
@@ -580,16 +581,14 @@ public abstract class AbstractMavenReportRenderer
 
         StringBuilder sb = new StringBuilder();
 
-        for ( Iterator i = props.keySet().iterator(); i.hasNext(); )
+        for ( Map.Entry<?, ?> entry : props.entrySet() )
         {
-            String key = (String) i.next();
-
             if ( sb.length() > 0 )
             {
                 sb.append( ", " );
             }
 
-            sb.append( key ).append( "=" ).append( props.get( key ) );
+            sb.append( entry.getKey() ).append( "=" ).append( entry.getValue() );
         }
 
         return sb.toString();
@@ -618,10 +617,10 @@ public abstract class AbstractMavenReportRenderer
 
         String[] schemes = {"http", "https"};
         UrlValidator urlValidator = new UrlValidator( schemes );
+        EmailValidator emailValidator = EmailValidator.getInstance();
 
-        if ( ( EmailValidator.getInstance().isValid( href ) )
-            || ( ( href.indexOf( "?" ) != -1 )
-                 && ( EmailValidator.getInstance().isValid( href.substring( 0, href.indexOf( "?" ) ) ) ) ) )
+        if ( emailValidator.isValid( href )
+            || ( href.contains( "?" ) && emailValidator.isValid( href.substring( 0, href.indexOf( "?" ) ) ) ) )
         {
             return "mailto:" + href;
         }
@@ -671,7 +670,7 @@ public abstract class AbstractMavenReportRenderer
      * @param text a text with or without the pattern <code>{text, url}</code>
      * @return a map of text/href
      */
-    private static List applyPattern( String text )
+    private static List<String> applyPattern( String text )
     {
         if ( StringUtils.isEmpty( text ) )
         {
@@ -680,7 +679,7 @@ public abstract class AbstractMavenReportRenderer
 
         // Map defined by key/value name/href
         // If href == null, it means
-        List segments = new ArrayList();
+        List<String> segments = new ArrayList<String>();
 
         // TODO Special case http://jira.codehaus.org/browse/MEV-40
         if ( text.indexOf( "${" ) != -1 )
@@ -775,9 +774,9 @@ public abstract class AbstractMavenReportRenderer
             }
         }
 
-        if ( !StringUtils.isEmpty( text.substring( lastOffset, text.length() ) ) )
+        if ( !StringUtils.isEmpty( text.substring( lastOffset ) ) )
         {
-            segments.add( text.substring( lastOffset, text.length() ) );
+            segments.add( text.substring( lastOffset ) );
             segments.add( null );
         }
 

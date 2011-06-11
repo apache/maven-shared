@@ -562,10 +562,7 @@ public abstract class AbstractMavenReportRenderer
             return text;
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append( "{" ).append( text ).append( ", " ).append( href ).append( "}" );
-
-        return sb.toString();
+        return '{' + text + ", " + href + '}';
     }
 
     /**
@@ -576,21 +573,23 @@ public abstract class AbstractMavenReportRenderer
      */
     protected static String propertiesToString( Properties props )
     {
-        StringBuilder sb = new StringBuilder();
-
         if ( props == null || props.isEmpty() )
         {
-            return sb.toString();
+            return "";
         }
+
+        StringBuilder sb = new StringBuilder();
 
         for ( Iterator i = props.keySet().iterator(); i.hasNext(); )
         {
             String key = (String) i.next();
-            sb.append( key ).append( "=" ).append( props.get( key ) );
-            if ( i.hasNext() )
+
+            if ( sb.length() > 0 )
             {
                 sb.append( ", " );
             }
+
+            sb.append( key ).append( "=" ).append( props.get( key ) );
         }
 
         return sb.toString();

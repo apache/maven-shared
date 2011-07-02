@@ -19,7 +19,8 @@
   under the License.
 -->
 
-<model>
+<model xmlns="http://modello.codehaus.org/MODELLO/1.4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://modello.codehaus.org/MODELLO/1.4.0 http://modello.codehaus.org/xsd/modello-1.4.0.xsd">
   <id>fileset</id>
   <name>FileSet</name>
   <description>
@@ -45,7 +46,7 @@
           <name>followSymlinks</name>
           <version>1.0.0+</version>
           <type>boolean</type>
-          <default>false</default>
+          <defaultValue>false</defaultValue>
           <description>
             Specifies whether symbolic links should be traversed, or handled as-is.
           </description>
@@ -64,7 +65,7 @@
           <name>useDefaultExcludes</name>
           <version>1.1.0</version>
           <type>boolean</type>
-          <default>true</default>
+          <defaultValue>true</defaultValue>
           <description>
             Whether to include exclusion patterns for common temporary and SCM control
             files (true by default).

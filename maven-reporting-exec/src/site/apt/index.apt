@@ -1,0 +1,41 @@
+ -----
+ Maven Reporting Executor
+ -----
+ Hervé Boutemy
+ -----
+ 2011-07-06
+ -----
+
+Maven Reporting Executor
+
+  Classes to manage report plugin executions with Maven 3.
+
+  Report plugins can be configured in <<<\<configuration\>>>> element of <<<maven-site-plugin>>> or any other
+  report building plugin with following XML model:
+
++----
+<reportPlugins>
+  <plugin>
+    <groupId/>
+    <artifactId/>
+    <version/>
+    <configuration/>
+    <reports/>
+    <reportSets>
+      <reportSet>
+        <id/>
+        <configuration/>
+        <reports/>
+      </reportSet>
+    </reportSets>
+  </plugin>
+</reportPlugins>
++----
+
+  Notice: this is the model from plugins in <<<\<reporting\>>>> section of POM without <<<\<inherited\>>>> element
+  and with <<<\<reports\>>>> list that simplifies reports configuration in usual cases.
+
+  Maven 3 core makes an automatic transformation of <<<\<reporting\>>>> POM section to <<<maven-site-plugin>>>
+  configuration through the
+  {{{http://maven.apache.org/ref/current/maven-model-builder/apidocs/org/apache/maven/model/plugin/ReportingConverter.html}ReportingConverter}}
+  component.

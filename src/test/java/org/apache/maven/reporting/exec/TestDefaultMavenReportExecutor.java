@@ -101,8 +101,8 @@ public class TestDefaultMavenReportExecutor
             reportPlugin.setVersion( "2.7" );
 
             ReportSet reportSet = new ReportSet();
-            reportSet.getReports().add( "javadoc" );
             reportSet.getReports().add( "test-javadoc" );
+            reportSet.getReports().add( "javadoc" );
             reportPlugin.getReportSets().add( reportSet );
 
             List<ReportPlugin> reportPlugins = Lists.newArrayList( reportPlugin );
@@ -116,8 +116,8 @@ public class TestDefaultMavenReportExecutor
 
             assertNotNull( mavenReportExecutions );
             assertEquals( 2, mavenReportExecutions.size() );
-            assertEquals( "apidocs/index", mavenReportExecutions.get( 0 ).getMavenReport().getOutputName() );
-            assertEquals( "testapidocs/index", mavenReportExecutions.get( 1 ).getMavenReport().getOutputName() );
+            assertEquals( "testapidocs/index", mavenReportExecutions.get( 0 ).getMavenReport().getOutputName() );
+            assertEquals( "apidocs/index", mavenReportExecutions.get( 1 ).getMavenReport().getOutputName() );
         }
         finally
         {

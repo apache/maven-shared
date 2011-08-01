@@ -1829,11 +1829,11 @@ public class Verifier
             }
             catch ( FileNotFoundException e )
             {
-                throw new VerificationException( "file not found path : " + file.getPath(), e );
+                throw new VerificationException( "file not found path : " + file.getAbsolutePath(), e );
             }
             catch ( IOException e )
             {
-                throw new VerificationException( " IOException path : " + file.getPath(), e );
+                throw new VerificationException( " IOException path : " + file.getAbsolutePath(), e );
             }
             catch ( ParserConfigurationException e )
             {
@@ -1841,7 +1841,7 @@ public class Verifier
             }
             catch ( SAXException e )
             {
-                throw new VerificationException( "Parsing exception for file " + file.getPath(), e );
+                throw new VerificationException( "Parsing exception for file " + file.getAbsolutePath(), e );
             }
         }
 

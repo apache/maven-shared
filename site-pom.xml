@@ -29,7 +29,7 @@ under the License.
     <relativePath>./pom.xml</relativePath>
   </parent>
 
-  <artifactId>maven-shared-components-site</artifactId>
+  <artifactId>maven-shared-components.</artifactId>
   <packaging>pom</packaging>
 
   <name>Apache Maven Shared Components POM</name>

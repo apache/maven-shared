@@ -146,6 +146,16 @@ public class SiteToolTest
         from = "http://maven.apache.org/plugins/maven-site-plugin";
         assertEquals( tool.getRelativePath( to, from ), ".." + File.separator + ".." );
 
+        // MSITE-600, MSHARED-203
+        to = "file:///tmp/bloop";
+        from = "scp://localhost:/tmp/blop";
+        // FIXME! assertEquals( tool.getRelativePath( to, from ), to );
+
+        // note: 'tmp' is the host here which is probably not the intention, but at least the result is correct
+        to = "file://tmp/bloop";
+        from = "scp://localhost:/tmp/blop";
+        assertEquals( tool.getRelativePath( to, from ), to );
+
         to = "http://maven.apache.org/plugins/maven-site-plugin/";
         from = "http://maven.apache.org";
         assertEquals( tool.getRelativePath( to, from ), "plugins" + File.separator + "maven-site-plugin" );

@@ -98,14 +98,18 @@ public abstract class AbstractMavenReport
 
             generate( sink, null, locale );
 
-            outputDirectory.mkdirs();
+            if ( !isExternalReport() ) // MSHARED-204: only render Doxia sink if not an external report
+            {
+                outputDirectory.mkdirs();
 
-            writer = new OutputStreamWriter( new FileOutputStream( new File( outputDirectory, filename ) ), "UTF-8" );
+                writer =
+                    new OutputStreamWriter( new FileOutputStream( new File( outputDirectory, filename ) ), "UTF-8" );
 
-            getSiteRenderer().generateDocument( writer, sink, siteContext );
+                getSiteRenderer().generateDocument( writer, sink, siteContext );
 
-            //getSiteRenderer().copyResources( siteContext, new File( project.getBasedir(), "src/site/resources" ),
-            //                            outputDirectory );
+                //getSiteRenderer().copyResources( siteContext, new File( project.getBasedir(), "src/site/resources" ),
+                //                            outputDirectory );
+            }
         }
         catch ( RendererException e )
         {

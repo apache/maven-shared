@@ -18,13 +18,14 @@
  */
 package org.apache.maven.shared.artifact.filter;
 
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-
 import java.util.List;
 
 import junit.framework.TestCase;
 
-public class PatternExcludesArtifactFilterTest extends TestCase
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+
+public class PatternExcludesArtifactFilterTest
+    extends TestCase
 {
 
     private final PatternArtifactFilterTCK tck = new PatternArtifactFilterTCK()
@@ -105,6 +106,11 @@ public class PatternExcludesArtifactFilterTest extends TestCase
     public void testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent()
     {
         tck.testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent( true );
+    }
+
+    public void testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId()
+    {
+        tck.testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId( true );
     }
 
     // See comment in TCK.

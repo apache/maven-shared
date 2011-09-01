@@ -18,11 +18,6 @@
  */
 package org.apache.maven.shared.artifact.filter;
 
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.shared.tools.easymock.MockManager;
-import org.easymock.MockControl;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,7 +25,13 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-public abstract class PatternArtifactFilterTCK extends TestCase
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.shared.tools.easymock.MockManager;
+import org.easymock.MockControl;
+
+public abstract class PatternArtifactFilterTCK
+    extends TestCase
 {
 
     private final MockManager mockManager = new MockManager();
@@ -373,6 +374,33 @@ public abstract class PatternArtifactFilterTCK extends TestCase
         mockManager.verifyAll();
     }
 
+    public void testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId( final boolean reverse )
+    {
+        final String groupId = "group";
+        final String artifactId = "some-artifact-id";
+
+        final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
+
+        mockManager.replayAll();
+
+        final List patterns = new ArrayList();
+
+        patterns.add( "group:some-*-id" );
+
+        final ArtifactFilter filter = createFilter( patterns );
+
+        if ( reverse )
+        {
+            assertFalse( filter.include( mac.artifact ) );
+        }
+        else
+        {
+            assertTrue( filter.include( mac.artifact ) );
+        }
+
+        mockManager.verifyAll();
+    }
+
     public void testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent( final boolean reverse )
     {
         final String groupId = "group";
@@ -488,14 +516,9 @@ public abstract class PatternArtifactFilterTCK extends TestCase
             }
         }
 
-        public ArtifactMockAndControl( final String groupId, final String artifactId )
+        ArtifactMockAndControl( final String groupId, final String artifactId )
         {
             this( groupId, artifactId, "jar", null );
-        }
-
-        public ArtifactMockAndControl( final String groupId, final String artifactId, final String type )
-        {
-            this( groupId, artifactId, type, null );
         }
 
         void enableGetId()

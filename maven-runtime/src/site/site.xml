@@ -24,8 +24,11 @@
     <menu name="Overview">
       <item name="Introduction" href="index.html"/>
       <item name="Usage" href="usage.html"/>
+      <item name="JavaDocs" href="apidocs/index.html"/>
+      <item name="Source Xref" href="xref/index.html"/>
       <item name="FAQ" href="faq.html"/>
     </menu>
+
     <menu name="Examples">
       <item name="Introspecting a URL" href="examples/introspecting-a-url.html"/>
       <item name="Introspecting a class" href="examples/introspecting-a-class.html"/>

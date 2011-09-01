@@ -18,6 +18,12 @@
  */
 package org.apache.maven.shared.artifact.filter;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
@@ -26,19 +32,14 @@ import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.codehaus.plexus.logging.Logger;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 /**
  * TODO: include in maven-artifact in future
  * 
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @see StrictPatternIncludesArtifactFilter
  */
-public class PatternIncludesArtifactFilter implements ArtifactFilter, StatisticsReportingArtifactFilter
+public class PatternIncludesArtifactFilter
+    implements ArtifactFilter, StatisticsReportingArtifactFilter
 {
     private final List positivePatterns;
 
@@ -187,7 +188,7 @@ public class PatternIncludesArtifactFilter implements ArtifactFilter, Statistics
 
             // // case of starting '*' like '*:jar:*'
             if ( !matched && patternTokens.length < tokens.length && patternTokens.length > 0
-                            && "*".equals( patternTokens[0] ) )
+                && "*".equals( patternTokens[0] ) )
             {
                 matched = true;
                 for ( int i = 0; matched && i < patternTokens.length; i++ )
@@ -216,10 +217,8 @@ public class PatternIncludesArtifactFilter implements ArtifactFilter, Statistics
     /**
      * Gets whether the specified token matches the specified pattern segment.
      * 
-     * @param token
-     *            the token to check
-     * @param pattern
-     *            the pattern segment to match, as defined above
+     * @param token the token to check
+     * @param pattern the pattern segment to match, as defined above
      * @return <code>true</code> if the specified token is matched by the specified pattern segment
      */
     private boolean matches( final String token, final String pattern )
@@ -251,6 +250,27 @@ public class PatternIncludesArtifactFilter implements ArtifactFilter, Statistics
             final String prefix = pattern.substring( 0, pattern.length() - 1 );
 
             matches = token.startsWith( prefix );
+        }
+        // support wildcards in the middle of a pattern segment
+        else if ( pattern.indexOf( '*' ) > -1 )
+        {
+            String[] parts = pattern.split( "\\*" );
+            int lastPartEnd = -1;
+            boolean match = true;
+
+            for ( String part : parts )
+            {
+                int idx = token.indexOf( part );
+                if ( idx <= lastPartEnd )
+                {
+                    match = false;
+                    break;
+                }
+
+                lastPartEnd = idx + part.length();
+            }
+
+            matches = match;
         }
         // support versions range
         else if ( pattern.startsWith( "[" ) || pattern.startsWith( "(" ) )
@@ -311,6 +331,7 @@ public class PatternIncludesArtifactFilter implements ArtifactFilter, Statistics
         }
     }
 
+    @Override
     public String toString()
     {
         return "Includes filter:" + getPatternsAsString();

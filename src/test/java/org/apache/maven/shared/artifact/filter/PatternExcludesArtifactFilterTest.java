@@ -31,91 +31,144 @@ public class PatternExcludesArtifactFilterTest
     private final PatternArtifactFilterTCK tck = new PatternArtifactFilterTCK()
     {
 
+        @Override
         protected ArtifactFilter createFilter( final List patterns )
         {
             return new PatternExcludesArtifactFilter( patterns );
         }
 
+        @Override
         protected ArtifactFilter createFilter( final List patterns, final boolean actTransitively )
         {
             return new PatternExcludesArtifactFilter( patterns, actTransitively );
+        }
+
+        @Override
+        protected boolean isInclusionExpected()
+        {
+            return false;
         }
 
     };
 
     public void testShouldTriggerBothPatternsWithNonColonWildcards()
     {
-        tck.testShouldTriggerBothPatternsWithNonColonWildcards( true );
+        tck.testShouldTriggerBothPatternsWithNonColonWildcards();
     }
 
     public void testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard()
     {
-        tck.testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard( true );
+        tck.testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard();
     }
 
     public void testShouldTriggerBothPatternsWithWildcards()
     {
-        tck.testShouldTriggerBothPatternsWithWildcards( true );
+        tck.testShouldTriggerBothPatternsWithWildcards();
     }
 
     public void testShouldNotIncludeDirectlyMatchedArtifactByDependencyConflictId()
     {
-        tck.testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId( true );
+        tck.testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId();
     }
 
     public void testShouldNotIncludeDirectlyMatchedArtifactByGroupIdArtifactId()
     {
-        tck.testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId( true );
+        tck.testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId();
     }
 
     public void testShouldNotIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled()
     {
-        tck.testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled( true );
+        tck.testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled();
     }
 
     public void testShouldIncludeWhenArtifactIdDiffers()
     {
-        tck.testShouldNotIncludeWhenArtifactIdDiffers( true );
+        tck.testShouldNotIncludeWhenArtifactIdDiffers();
     }
 
     public void testShouldIncludeWhenBothIdElementsDiffer()
     {
-        tck.testShouldNotIncludeWhenBothIdElementsDiffer( true );
+        tck.testShouldNotIncludeWhenBothIdElementsDiffer();
     }
 
     public void testShouldIncludeWhenGroupIdDiffers()
     {
-        tck.testShouldNotIncludeWhenGroupIdDiffers( true );
+        tck.testShouldNotIncludeWhenGroupIdDiffers();
     }
 
     public void testShouldIncludeWhenNegativeMatch()
     {
-        tck.testShouldNotIncludeWhenNegativeMatch( true );
+        tck.testShouldNotIncludeWhenNegativeMatch();
     }
 
     public void testShouldNotIncludeWhenWildcardMatchesInsideSequence()
     {
-        tck.testShouldIncludeWhenWildcardMatchesInsideSequence( true );
+        tck.testShouldIncludeWhenWildcardMatchesInsideSequence();
     }
 
     public void testShouldIncludeWhenWildcardMatchesOutsideSequence()
     {
-        tck.testShouldIncludeWhenWildcardMatchesOutsideSequence( true );
+        tck.testShouldIncludeWhenWildcardMatchesOutsideSequence();
     }
 
     public void testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent()
     {
-        tck.testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent( true );
+        tck.testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent();
     }
 
     public void testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId()
     {
-        tck.testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId( true );
+        tck.testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId();
+    }
+
+    public void testShouldIncludeWhenWildcardCoversPartOfGroupIdAndEverythingElse()
+    {
+        tck.testShouldIncludeWhenWildcardCoversPartOfGroupIdAndEverythingElse();
+    }
+
+    public void testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId()
+    {
+        tck.testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId();
+    }
+
+    public void testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId()
+    {
+        tck.testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId();
+    }
+
+    public void testShouldNotIncludeWhenGroupIdDiffers()
+    {
+        tck.testShouldNotIncludeWhenGroupIdDiffers();
+    }
+
+    public void testShouldNotIncludeWhenArtifactIdDiffers()
+    {
+        tck.testShouldNotIncludeWhenArtifactIdDiffers();
+    }
+
+    public void testShouldNotIncludeWhenBothIdElementsDiffer()
+    {
+        tck.testShouldNotIncludeWhenBothIdElementsDiffer();
+    }
+
+    public void testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled()
+    {
+        tck.testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled();
+    }
+
+    public void testShouldNotIncludeWhenNegativeMatch()
+    {
+        tck.testShouldNotIncludeWhenNegativeMatch();
+    }
+
+    public void testShouldIncludeWhenWildcardMatchesInsideSequence()
+    {
+        tck.testShouldIncludeWhenWildcardMatchesInsideSequence();
     }
 
     // See comment in TCK.
     // public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild()
     // {
-    // tck.testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild( true );
+    // tck.testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild();
     // }
 }

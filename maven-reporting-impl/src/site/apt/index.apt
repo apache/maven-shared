@@ -1,21 +1,43 @@
  -----
- Maven Reporting Implementation
+ About
  -----
  Hervé Boutemy
  -----
- 2010-05-09
+ 2011-09-01
  -----
 
 Maven Reporting Implementation
 
-  Abstract classes to manage report generation.
+  Abstract classes to manage report generation, which can be run both:
+  
+  * as part of a site generation (as a {{{../maven-reporting-api/}maven-reporting-api}}'s
+  <<<{{{../maven-reporting-api/apidocs/org/apache/maven/reporting/MavenReport.html}MavenReport}}>>>),
+
+  * or as a direct standalone invocation (as a {{{/ref/current/maven-plugin-api/}maven-plugin-api}}'s
+  <<<{{{/ref/current/maven-plugin-api/apidocs/org/apache/maven/plugin/Mojo.html}Mojo}})>>>.
+
+  []
+
+* Usage
+
+  Creating a new report plugin can be done by copying
+  <<<{{{./xref-test/org/apache/maven/reporting/AbstractMavenReportTest.html}AbstractMavenReportTest.java}}>>>
+  structure and implement a few methods.
+
+* History
+
+** inclusion in Maven core
 
   Until Maven 2.0.4, <<<maven-reporting-impl>>> was included in Maven 2 core distribution: version
-  used was completely driven by Maven version used. It was removed from Maven core starting with Maven 2.0.5 and
+  used was completely driven by Maven version used.
+  
+  The module was removed from Maven core starting with Maven 2.0.5 and
   moved to shared components to improve fexibility: starting with Maven 2.0.5, each plugin can choose its
   <<<maven-reporting-impl>>> version independently from Maven.
 
-  <<<maven-reporting-impl 2.0.x>>> uses Doxia 1.0, then is used for reporting plugins wanting Maven 2.0.x compatibility.
+** Doxia dependency
 
-  <<<maven-reporting-impl 2.1.x>>> uses Doxia 1.1: using this version implies for a reporting plugin that it has Maven 2.1
+  <<<maven-reporting-impl 2.0.x>>> use Doxia 1.0, then is used for reporting plugins wanting Maven 2.0.x compatibility.
+
+  <<<maven-reporting-impl 2.1.x>>> use Doxia 1.1: using this version implies for a reporting plugin that it has Maven 2.1
   as prerequisite.

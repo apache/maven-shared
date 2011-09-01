@@ -25,8 +25,8 @@ import org.apache.maven.doxia.sink.SinkFactory;
 import java.util.Locale;
 
 /**
- * Temporary copy of <code>maven-reporting-api</code> class to avoid
- * Maven 3 prerequisite, since <code>maven-reporting-api</code> is included
+ * Temporary copy of <a href="http://maven.apache.org/shared/maven-reporting-api/"><code>maven-reporting-api</code></a>
+ * class to avoid Maven 3 prerequisite, since <code>maven-reporting-api</code> is included
  * in Maven 2 then internal version is preferred.
  */
 public interface MavenMultiPageReport

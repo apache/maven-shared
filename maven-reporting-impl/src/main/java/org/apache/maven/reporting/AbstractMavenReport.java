@@ -198,7 +198,10 @@ public abstract class AbstractMavenReport
         closeReport();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     * @return CATEGORY_PROJECT_REPORTS
+     */
     public String getCategoryName()
     {
         return CATEGORY_PROJECT_REPORTS;

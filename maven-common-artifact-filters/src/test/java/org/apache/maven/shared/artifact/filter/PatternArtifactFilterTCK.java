@@ -40,7 +40,9 @@ public abstract class PatternArtifactFilterTCK
 
     protected abstract ArtifactFilter createFilter( List patterns, boolean actTransitively );
 
-    public void testShouldTriggerBothPatternsWithWildcards( final boolean reverse )
+    protected abstract boolean isInclusionExpected();
+
+    public void testShouldTriggerBothPatternsWithWildcards()
     {
         final String groupId1 = "group";
         final String artifactId1 = "artifact";
@@ -59,7 +61,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertFalse( filter.include( mac1.artifact ) );
             assertFalse( filter.include( mac2.artifact ) );
@@ -73,7 +75,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldTriggerBothPatternsWithNonColonWildcards( final boolean reverse )
+    public void testShouldTriggerBothPatternsWithNonColonWildcards()
     {
         final String groupId1 = "group";
         final String artifactId1 = "artifact";
@@ -92,7 +94,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertFalse( filter.include( mac1.artifact ) );
             assertFalse( filter.include( mac2.artifact ) );
@@ -106,7 +108,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId( final boolean reverse )
+    public void testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId()
     {
         final String groupId = "group";
         final String artifactId = "artifact";
@@ -117,7 +119,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( Collections.singletonList( groupId + ":" + artifactId ) );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertFalse( filter.include( mac.artifact ) );
         }
@@ -129,7 +131,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId( final boolean reverse )
+    public void testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId()
     {
         final String groupId = "group";
         final String artifactId = "artifact";
@@ -140,7 +142,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( Collections.singletonList( groupId + ":" + artifactId + ":jar" ) );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertFalse( filter.include( mac.artifact ) );
         }
@@ -152,7 +154,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldNotIncludeWhenGroupIdDiffers( final boolean reverse )
+    public void testShouldNotIncludeWhenGroupIdDiffers()
     {
         final String groupId = "group";
         final String artifactId = "artifact";
@@ -167,7 +169,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertTrue( filter.include( mac.artifact ) );
         }
@@ -179,7 +181,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldNotIncludeWhenArtifactIdDiffers( final boolean reverse )
+    public void testShouldNotIncludeWhenArtifactIdDiffers()
     {
         final String groupId = "group";
         final String artifactId = "artifact";
@@ -195,7 +197,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertTrue( filter.include( mac.artifact ) );
         }
@@ -207,7 +209,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldNotIncludeWhenBothIdElementsDiffer( final boolean reverse )
+    public void testShouldNotIncludeWhenBothIdElementsDiffer()
     {
         final String groupId = "group";
         final String artifactId = "artifact";
@@ -223,7 +225,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertTrue( filter.include( mac.artifact ) );
         }
@@ -235,7 +237,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled( final boolean reverse )
+    public void testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled()
     {
         final String groupId = "group";
         final String artifactId = "artifact";
@@ -252,7 +254,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns, true );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertFalse( filter.include( mac.artifact ) );
         }
@@ -264,7 +266,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard( final boolean reverse )
+    public void testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard()
     {
         final String groupId = "group";
         final String artifactId = "artifact";
@@ -281,7 +283,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns, true );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertFalse( filter.include( mac.artifact ) );
         }
@@ -293,7 +295,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldNotIncludeWhenNegativeMatch( final boolean reverse )
+    public void testShouldNotIncludeWhenNegativeMatch()
     {
         final String groupId = "group";
         final String artifactId = "artifact";
@@ -308,7 +310,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertTrue( filter.include( mac.artifact ) );
         }
@@ -320,7 +322,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeWhenWildcardMatchesInsideSequence( final boolean reverse )
+    public void testShouldIncludeWhenWildcardMatchesInsideSequence()
     {
         final String groupId = "group";
         final String artifactId = "artifact";
@@ -335,7 +337,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertFalse( filter.include( mac.artifact ) );
         }
@@ -347,7 +349,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeWhenWildcardMatchesOutsideSequence( final boolean reverse )
+    public void testShouldIncludeWhenWildcardMatchesOutsideSequence()
     {
         final String groupId = "group";
         final String artifactId = "artifact";
@@ -362,7 +364,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertFalse( filter.include( mac.artifact ) );
         }
@@ -374,7 +376,7 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId( final boolean reverse )
+    public void testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId()
     {
         final String groupId = "group";
         final String artifactId = "some-artifact-id";
@@ -389,7 +391,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertFalse( filter.include( mac.artifact ) );
         }
@@ -401,7 +403,34 @@ public abstract class PatternArtifactFilterTCK
         mockManager.verifyAll();
     }
 
-    public void testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent( final boolean reverse )
+    public void testShouldIncludeWhenWildcardCoversPartOfGroupIdAndEverythingElse()
+    {
+        final String groupId = "some.group.id";
+        final String artifactId = "some-artifact-id";
+
+        final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
+
+        mockManager.replayAll();
+
+        final List patterns = new ArrayList();
+
+        patterns.add( "some.group*" );
+
+        final ArtifactFilter filter = createFilter( patterns );
+
+        if ( !isInclusionExpected() )
+        {
+            assertFalse( filter.include( mac.artifact ) );
+        }
+        else
+        {
+            assertTrue( filter.include( mac.artifact ) );
+        }
+
+        mockManager.verifyAll();
+    }
+
+    public void testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent()
     {
         final String groupId = "group";
         final String artifactId = "artifact";
@@ -422,7 +451,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactFilter filter = createFilter( patterns, true );
 
-        if ( reverse )
+        if ( !isInclusionExpected() )
         {
             assertTrue( filter.include( otherMac.artifact ) );
             assertFalse( filter.include( mac.artifact ) );
@@ -458,7 +487,7 @@ public abstract class PatternArtifactFilterTCK
     //
     // ArtifactFilter filter = createFilter( patterns, true );
     //
-    // if ( reverse )
+    // if ( isInclusionExpected() )
     // {
     // assertTrue( filter.include( otherMac.artifact ) );
     // assertFalse( filter.include( mac.artifact ) );

@@ -30,91 +30,104 @@ public class PatternIncludesArtifactFilterTest
     private final PatternArtifactFilterTCK tck = new PatternArtifactFilterTCK()
     {
 
+        @Override
         protected ArtifactFilter createFilter( final List patterns )
         {
             return new PatternIncludesArtifactFilter( patterns );
         }
 
+        @Override
         protected ArtifactFilter createFilter( final List patterns, final boolean actTransitively )
         {
             return new PatternIncludesArtifactFilter( patterns, actTransitively );
+        }
+
+        @Override
+        protected boolean isInclusionExpected()
+        {
+            return true;
         }
 
     };
 
     public void testShouldTriggerBothPatternsWithNonColonWildcards()
     {
-        tck.testShouldTriggerBothPatternsWithNonColonWildcards( false );
+        tck.testShouldTriggerBothPatternsWithNonColonWildcards();
     }
 
     public void testShouldTriggerBothPatternsWithWildcards()
     {
-        tck.testShouldTriggerBothPatternsWithWildcards( false );
+        tck.testShouldTriggerBothPatternsWithWildcards();
     }
 
     public void testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId()
     {
-        tck.testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId( false );
+        tck.testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId();
     }
 
     public void testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId()
     {
-        tck.testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId( false );
+        tck.testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId();
     }
 
     public void testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled()
     {
-        tck.testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled( false );
+        tck.testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled();
     }
 
     public void testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard()
     {
-        tck.testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard( false );
+        tck.testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard();
     }
 
     public void testShouldNotIncludeWhenArtifactIdDiffers()
     {
-        tck.testShouldNotIncludeWhenArtifactIdDiffers( false );
+        tck.testShouldNotIncludeWhenArtifactIdDiffers();
     }
 
     public void testShouldNotIncludeWhenBothIdElementsDiffer()
     {
-        tck.testShouldNotIncludeWhenBothIdElementsDiffer( false );
+        tck.testShouldNotIncludeWhenBothIdElementsDiffer();
     }
 
     public void testShouldNotIncludeWhenGroupIdDiffers()
     {
-        tck.testShouldNotIncludeWhenGroupIdDiffers( false );
+        tck.testShouldNotIncludeWhenGroupIdDiffers();
     }
 
     public void testShouldNotIncludeWhenNegativeMatch()
     {
-        tck.testShouldNotIncludeWhenNegativeMatch( false );
+        tck.testShouldNotIncludeWhenNegativeMatch();
     }
 
     public void testShouldIncludeWhenWildcardMatchesInsideSequence()
     {
-        tck.testShouldIncludeWhenWildcardMatchesInsideSequence( false );
+        tck.testShouldIncludeWhenWildcardMatchesInsideSequence();
     }
 
     public void testShouldIncludeWhenWildcardMatchesOutsideSequence()
     {
-        tck.testShouldIncludeWhenWildcardMatchesOutsideSequence( false );
+        tck.testShouldIncludeWhenWildcardMatchesOutsideSequence();
     }
 
     public void testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent()
     {
-        tck.testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent( false );
+        tck.testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent();
     }
 
     public void testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId()
     {
-        tck.testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId( false );
+        tck.testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId();
+    }
+
+    public void testShouldIncludeWhenWildcardCoversPartOfGroupIdAndEverythingElse()
+    {
+        tck.testShouldIncludeWhenWildcardCoversPartOfGroupIdAndEverythingElse();
     }
 
     // See comment in TCK.
     // public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild()
     // {
-    // tck.testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild( false );
+    // tck.testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild();
     // }
 }

@@ -42,13 +42,18 @@ import java.util.Locale;
 /**
  * The basis for a Maven report which can be generated both as part of a site generation or
  * as a direct standalone invocation.
+ * Both invocations are delegated to <a href=""><code>abstract executeReport( Locale )</code></a>:
+ * <ul> 
+ * <li>Mojo's execute() method (see maven-plugin-api)</li>
+ * <li>MavenMultiPageReport's generate( Sink, SinkFactory, Locale ) (see maven-reporting-api)</li>
+ * </ul>
  *
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  * @since 2.0
- * @see #execute()
- * @see #generate(Sink, SinkFactory, Locale)
- * @see #executeReport(Locale)
+ * @see #execute() Mojo.execute() (from maven-plugin-api) 
+ * @see #generate(Sink, SinkFactory, Locale) MavenMultiPageReport.generate( Sink, SinkFactory, Locale ) (from maven-reporting-api)
+ * @see #executeReport(Locale) abstract executeReport( Locale )
  */
 public abstract class AbstractMavenReport
     extends AbstractMojo

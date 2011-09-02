@@ -35,7 +35,8 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
- * An abstract class to manage report generation.
+ * An abstract class to manage report generation, with many helper methods to ease the job: you just need to
+ * implement getTitle() and renderBody().
  *
  * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
@@ -45,6 +46,8 @@ import java.util.Properties;
  * @TODO Later it may be appropriate to create something like a VelocityMavenReportRenderer
  * that could take a velocity template and pipe that through Doxia rather than coding them
  * up like this.
+ * @see #getTitle()
+ * @see #renderBody()
  */
 public abstract class AbstractMavenReportRenderer
     implements MavenReportRenderer

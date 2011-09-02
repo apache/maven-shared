@@ -97,8 +97,12 @@ public class AbstractMavenReportTest
     protected void executeReport( Locale locale )
         throws MavenReportException
     {
-        getSink().body();
+        // direct report generation
+        /*getSink().body();
         getSink().text( "Abstract Maven Report Test Content" );
-        getSink().body_();
+        getSink().body_();*/
+
+        // use a AbstractMavenReportRenderer subclass
+        MavenReportRenderer r = new DemoReportRenderer( getSink() );
     }
 }

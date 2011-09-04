@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>16</version>
+    <version>17</version>
     <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
 
@@ -215,28 +215,13 @@
       <artifactId>velocity</artifactId>
       <version>1.5</version>
     </dependency>
-
-
   </dependencies>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.8</version>
         <configuration>
           <systemPropertyVariables>
             <localRepository>${settings.localRepository}</localRepository>
@@ -250,7 +235,6 @@
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-metadata</artifactId>
-        <version>1.5.5</version>
         <executions>
           <execution>
             <goals>
@@ -262,7 +246,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.0</version>
         <executions>
           <execution>
             <goals>

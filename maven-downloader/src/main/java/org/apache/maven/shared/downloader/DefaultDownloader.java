@@ -6,6 +6,7 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
+import org.apache.maven.artifact.versioning.VersionRange;
 
 import java.io.File;
 import java.util.List;
@@ -47,9 +48,31 @@ public class DefaultDownloader
         throws DownloadException, DownloadNotFoundException
 
     {
-        Artifact artifact =
-            artifactFactory.createArtifact( groupId, artifactId, version, Artifact.SCOPE_RUNTIME, "jar" );
+        return download( groupId, artifactId, version, "jar", null, localRepository, remoteRepositories );
+    }
+    
+    public File download( String groupId,
+                          String artifactId,
+                          String version,
+                          String type,
+                          String classifier,
+                          ArtifactRepository localRepository,
+                          List/*<ArtifactRepository>*/ remoteRepositories )
+        throws DownloadException, DownloadNotFoundException
 
+    {
+        Artifact artifact =
+            artifactFactory.createDependencyArtifact( groupId, artifactId, VersionRange.createFromVersion( version ), type, classifier, Artifact.SCOPE_RUNTIME );
+
+        return download( artifact, localRepository, remoteRepositories );
+    }
+    
+    private File download( Artifact artifact,
+                            ArtifactRepository localRepository,
+                            List/*<ArtifactRepository>*/ remoteRepositories )
+        throws DownloadException, DownloadNotFoundException
+        
+    {
         try
         {
             artifactResolver.resolve( artifact, remoteRepositories, localRepository );
@@ -63,6 +86,6 @@ public class DefaultDownloader
             throw new DownloadNotFoundException( "Requested download does not exist.", e );
         }
 
-        return artifact.getFile();
+        return artifact.getFile();    
     }
 }

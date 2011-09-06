@@ -25,4 +25,13 @@ public interface Downloader
                           ArtifactRepository localRepository,
                           List remoteRepositories )
         throws DownloadException, DownloadNotFoundException;
+
+    public File download( String groupId,
+                          String artifactId,
+                          String version,
+                          String type,
+                          String classifier,
+                          ArtifactRepository localRepository,
+                          List remoteRepositories )
+        throws DownloadException, DownloadNotFoundException;
 }

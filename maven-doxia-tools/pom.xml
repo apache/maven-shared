@@ -25,11 +25,10 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>16</version>
+    <version>17</version>
     <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
 
-  <groupId>org.apache.maven.shared</groupId>
   <artifactId>maven-doxia-tools</artifactId>
   <version>1.5-SNAPSHOT</version>
 
@@ -49,11 +48,6 @@
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED/component/13263</url>
   </issueManagement>
-
-  <ciManagement>
-    <system>Jenkins</system>
-    <url>https://builds.apache.org/hudson/job/maven-shared/</url>
-  </ciManagement>
 
   <properties>
     <doxiaVersion>1.2</doxiaVersion>
@@ -159,18 +153,6 @@
   </dependencies>
 
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <configuration>
-            <source>1.5</source>
-            <target>1.5</target>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
@@ -223,22 +205,4 @@
       </plugin>
     </plugins>
   </reporting>
-
-  <profiles>
-    <profile>
-      <id>reporting</id>
-      <reporting>
-        <plugins>
-          <plugin>
-            <artifactId>maven-pmd-plugin</artifactId>
-            <version>2.5</version>
-            <configuration>
-              <targetJdk>1.5</targetJdk>
-            </configuration>
-           </plugin>
-        </plugins>
-      </reporting>
-    </profile>
-  </profiles>
-
 </project>

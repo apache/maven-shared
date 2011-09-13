@@ -520,38 +520,38 @@ public class DefaultSiteTool
 
         final Locale llocale = ( locale == null ) ? Locale.getDefault() : locale;
 
-            if ( menu.getName() == null )
+        if ( menu.getName() == null )
+        {
+            menu.setName( i18n.getString( "site-tool", llocale, "decorationModel.menu.projectdocumentation" ) );
+        }
+
+        boolean found = false;
+        if ( menu.getItems().isEmpty() )
+        {
+            List<MavenReport> categoryReports = categories.get( MavenReport.CATEGORY_PROJECT_INFORMATION );
+            if ( !isEmptyList( categoryReports ) )
             {
-                menu.setName( i18n.getString( "site-tool", llocale, "decorationModel.menu.projectdocumentation" ) );
+                MenuItem item =
+                    createCategoryMenu( i18n.getString( "site-tool", llocale, "decorationModel.menu.projectinformation" ),
+                                        "/project-info.html", categoryReports, llocale );
+                menu.getItems().add( item );
+                found = true;
             }
 
-            boolean found = false;
-            if ( menu.getItems().isEmpty() )
+            categoryReports = categories.get( MavenReport.CATEGORY_PROJECT_REPORTS );
+            if ( !isEmptyList( categoryReports ) )
             {
-                List<MavenReport> categoryReports = categories.get( MavenReport.CATEGORY_PROJECT_INFORMATION );
-                if ( !isEmptyList( categoryReports ) )
-                {
-                    MenuItem item = createCategoryMenu( i18n.getString( "site-tool", llocale,
-                                                                        "decorationModel.menu.projectinformation" ),
-                                                        "/project-info.html", categoryReports, llocale );
-                    menu.getItems().add( item );
-                    found = true;
-                }
-
-                categoryReports = categories.get( MavenReport.CATEGORY_PROJECT_REPORTS );
-                if ( !isEmptyList( categoryReports ) )
-                {
-                    MenuItem item = createCategoryMenu( i18n.getString( "site-tool", llocale,
-                                                                        "decorationModel.menu.projectreports" ),
-                                                        "/project-reports.html", categoryReports, llocale );
-                    menu.getItems().add( item );
-                    found = true;
-                }
+                MenuItem item =
+                    createCategoryMenu( i18n.getString( "site-tool", llocale, "decorationModel.menu.projectreports" ),
+                                        "/project-reports.html", categoryReports, llocale );
+                menu.getItems().add( item );
+                found = true;
             }
-            if ( !found )
-            {
-                decorationModel.removeMenuRef( "reports" );
-            }
+        }
+        if ( !found )
+        {
+            decorationModel.removeMenuRef( "reports" );
+        }
     }
 
     /** {@inheritDoc} */
@@ -752,52 +752,52 @@ public class DefaultSiteTool
 
         final Locale llocale = ( locale == null ) ? Locale.getDefault() : locale;
 
-            String parentUrl = getDistMgmntSiteUrl( parentProject );
+        String parentUrl = getDistMgmntSiteUrl( parentProject );
 
-            if ( parentUrl != null )
+        if ( parentUrl != null )
+        {
+            if ( parentUrl.endsWith( "/" ) )
             {
-                if ( parentUrl.endsWith( "/" ) )
-                {
-                    parentUrl += "index.html";
-                }
-                else
-                {
-                    parentUrl += "/index.html";
-                }
-
-                parentUrl = getRelativePath( parentUrl, getDistMgmntSiteUrl( project ) );
+                parentUrl += "index.html";
             }
             else
             {
-                // parent has no url, assume relative path is given by site structure
-                File parentBasedir = parentProject.getBasedir();
-                // First make sure that the parent is available on the file system
-                if ( parentBasedir != null )
-                {
-                    // Try to find the relative path to the parent via the file system
-                    String parentPath = parentBasedir.getAbsolutePath();
-                    String projectPath = project.getBasedir().getAbsolutePath();
-                    parentUrl = getRelativePath( parentPath, projectPath ) + "/index.html";
-                }
+                parentUrl += "/index.html";
             }
 
-            // Only add the parent menu if we were able to find a URL for it
-            if ( parentUrl == null )
+            parentUrl = getRelativePath( parentUrl, getDistMgmntSiteUrl( project ) );
+        }
+        else
+        {
+            // parent has no url, assume relative path is given by site structure
+            File parentBasedir = parentProject.getBasedir();
+            // First make sure that the parent is available on the file system
+            if ( parentBasedir != null )
             {
-                getLogger().warn( "Unable to find a URL to the parent project. The parent menu will NOT be added." );
+                // Try to find the relative path to the parent via the file system
+                String parentPath = parentBasedir.getAbsolutePath();
+                String projectPath = project.getBasedir().getAbsolutePath();
+                parentUrl = getRelativePath( parentPath, projectPath ) + "/index.html";
             }
-            else
-            {
-                if ( menu.getName() == null )
-                {
-                    menu.setName( i18n.getString( "site-tool", llocale, "decorationModel.menu.parentproject" ) );
-                }
+        }
 
-                MenuItem item = new MenuItem();
-                item.setName( parentProject.getName() );
-                item.setHref( parentUrl );
-                menu.addItem( item );
+        // Only add the parent menu if we were able to find a URL for it
+        if ( parentUrl == null )
+        {
+            getLogger().warn( "Unable to find a URL to the parent project. The parent menu will NOT be added." );
+        }
+        else
+        {
+            if ( menu.getName() == null )
+            {
+                menu.setName( i18n.getString( "site-tool", llocale, "decorationModel.menu.parentproject" ) );
             }
+
+            MenuItem item = new MenuItem();
+            item.setName( parentProject.getName() );
+            item.setHref( parentUrl );
+            menu.addItem( item );
+        }
     }
 
     /**
@@ -862,53 +862,53 @@ public class DefaultSiteTool
 
         final Locale llocale = ( locale == null ) ? Locale.getDefault() : locale ;
 
-            // we require child modules and reactors to process module menu
-            if ( project.getModules().size() > 0 )
-            {
-                List<MavenProject> projects = reactorProjects;
+        // we require child modules and reactors to process module menu
+        if ( project.getModules().size() > 0 )
+        {
+            List<MavenProject> projects = reactorProjects;
 
-                if ( menu.getName() == null )
+            if ( menu.getName() == null )
+            {
+                menu.setName( i18n.getString( "site-tool", llocale, "decorationModel.menu.projectmodules" ) );
+            }
+
+            getLogger().debug( "Attempting to load module information from local filesystem" );
+
+            // Not running reactor - search for the projects manually
+            List<Model> models = new ArrayList<Model>( project.getModules().size() );
+            for ( Iterator<String> i = project.getModules().iterator(); i.hasNext(); )
+            {
+                String module = i.next();
+                Model model;
+                File f = new File( project.getBasedir(), module + "/pom.xml" );
+                if ( f.exists() )
                 {
-                    menu.setName( i18n.getString( "site-tool", llocale, "decorationModel.menu.projectmodules" ) );
-                }
-
-                    getLogger().debug( "Attempting to load module information from local filesystem" );
-
-                    // Not running reactor - search for the projects manually
-                    List<Model> models = new ArrayList<Model>( project.getModules().size() );
-                    for ( Iterator<String> i = project.getModules().iterator(); i.hasNext(); )
+                    try
                     {
-                        String module = i.next();
-                        Model model;
-                        File f = new File( project.getBasedir(), module + "/pom.xml" );
-                        if ( f.exists() )
-                        {
-                            try
-                            {
-                                model = mavenProjectBuilder.build( f, localRepository, null ).getModel();
-                            }
-                            catch ( ProjectBuildingException e )
-                            {
-                                throw new SiteToolException( "Unable to read local module-POM", e );
-                            }
-                        }
-                        else
-                        {
-                            getLogger().warn( "No filesystem module-POM available" );
-
-                            model = new Model();
-                            model.setName( module );
-                            setDistMgmntSiteUrl( model, module );
-                        }
-                        models.add( model );
+                        model = mavenProjectBuilder.build( f, localRepository, null ).getModel();
                     }
-                    populateModulesMenuItemsFromModels( project, models, menu );
+                    catch ( ProjectBuildingException e )
+                    {
+                        throw new SiteToolException( "Unable to read local module-POM", e );
+                    }
+                }
+                else
+                {
+                    getLogger().warn( "No filesystem module-POM available" );
+
+                    model = new Model();
+                    model.setName( module );
+                    setDistMgmntSiteUrl( model, module );
+                }
+                models.add( model );
             }
-            else if ( decorationModel.getMenuRef( "modules" ).getInherit() == null )
-            {
-                // only remove if project has no modules AND menu is not inherited, see MSHARED-174
-                decorationModel.removeMenuRef( "modules" );
-            }
+            populateModulesMenuItemsFromModels( project, models, menu );
+        }
+        else if ( decorationModel.getMenuRef( "modules" ).getInherit() == null )
+        {
+            // only remove if project has no modules AND menu is not inherited, see MSHARED-174
+            decorationModel.removeMenuRef( "modules" );
+        }
     }
 
     /** {@inheritDoc} */
@@ -926,47 +926,41 @@ public class DefaultSiteTool
         {
             Locale locale = codeToLocale( localesArray[i] );
 
-            if ( locale != null )
+            if ( locale == null )
             {
-                if ( !Arrays.asList( Locale.getAvailableLocales() ).contains( locale ) )
-                {
-                    if ( getLogger().isWarnEnabled() )
-                    {
-                        getLogger().warn( "The locale parsed defined by '" + locale
-                            + "' is not available in this Java Virtual Machine ("
-                            + System.getProperty( "java.version" )
-                            + " from " + System.getProperty( "java.vendor" ) + ") - IGNORING" );
-                    }
-                    continue;
-                }
-
-                // Default bundles are in English
-                if ( ( !locale.getLanguage().equals( DEFAULT_LOCALE.getLanguage() ) )
-                    && ( !i18n.getBundle( "site-tool", locale ).getLocale().getLanguage()
-                        .equals( locale.getLanguage() ) ) )
-                {
-                    if ( getLogger().isWarnEnabled() )
-                    {
-                        final StringBuilder sb = new StringBuilder( 256 );
-
-                        sb.append( "The locale '" ).append( locale ).append( "' (" );
-                        sb.append( locale.getDisplayName( Locale.ENGLISH ) );
-                        sb.append( ") is not currently support by Maven - IGNORING. " );
-                        sb.append( "\n" );
-                        sb.append( "Contribution are welcome and greatly appreciated! " );
-                        sb.append( "\n" );
-                        sb.append( "If you want to contribute a new translation, please visit " );
-                        sb.append( "http://maven.apache.org/plugins/maven-site-plugin/i18n.html " );
-                        sb.append( "for detailed instructions." );
-
-                        getLogger().warn( sb.toString() );
-                    }
-
-                    continue;
-                }
-
-                localesList.add( locale );
+                continue;
             }
+
+            if ( !Arrays.asList( Locale.getAvailableLocales() ).contains( locale ) )
+            {
+                if ( getLogger().isWarnEnabled() )
+                {
+                    getLogger().warn( "The locale parsed defined by '" + locale
+                        + "' is not available in this Java Virtual Machine ("
+                        + System.getProperty( "java.version" )
+                        + " from " + System.getProperty( "java.vendor" ) + ") - IGNORING" );
+                }
+                continue;
+            }
+
+            // Default bundles are in English
+            if ( ( !locale.getLanguage().equals( DEFAULT_LOCALE.getLanguage() ) )
+                && ( !i18n.getBundle( "site-tool", locale ).getLocale().getLanguage()
+                    .equals( locale.getLanguage() ) ) )
+            {
+                if ( getLogger().isWarnEnabled() )
+                {
+                    getLogger().warn( "The locale '" + locale + "' (" + locale.getDisplayName( Locale.ENGLISH )
+                        + ") is not currently support by Maven - IGNORING."
+                        + "\nContribution are welcome and greatly appreciated!"
+                        + "\nIf you want to contribute a new translation, please visit "
+                        + "http://maven.apache.org/plugins/maven-site-plugin/i18n.html for detailed instructions." );
+                }
+
+                continue;
+            }
+
+            localesList.add( locale );
         }
 
         if ( localesList.isEmpty() )

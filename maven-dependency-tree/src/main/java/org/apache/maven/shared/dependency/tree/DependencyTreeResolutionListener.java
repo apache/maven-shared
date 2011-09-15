@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 
@@ -522,8 +521,8 @@ public class DependencyTreeResolutionListener
     private void flushDependencyManagement( DependencyNode node )
     {
         Artifact artifact = node.getArtifact();
-        String premanagedVersion = (String) managedVersions.get( artifact.getId() );
-        String premanagedScope = (String) managedScopes.get( artifact.getId() );
+        String premanagedVersion = managedVersions.get( artifact.getId() );
+        String premanagedScope = managedScopes.get( artifact.getId() );
         
         if ( premanagedVersion != null || premanagedScope != null )
         {

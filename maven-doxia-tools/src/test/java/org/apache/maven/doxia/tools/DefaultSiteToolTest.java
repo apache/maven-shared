@@ -35,14 +35,22 @@ public class DefaultSiteToolTest
     {
         assertEquals( null, DefaultSiteTool.getNormalizedPath( null ) );
         assertEquals( "", DefaultSiteTool.getNormalizedPath( "" ) );
+        assertEquals( "", DefaultSiteTool.getNormalizedPath( "." ) );
+        assertEquals( "", DefaultSiteTool.getNormalizedPath( "./" ) );
         assertEquals( "foo", DefaultSiteTool.getNormalizedPath( "foo" ) );
         assertEquals( "foo/bar", DefaultSiteTool.getNormalizedPath( "foo/bar" ) );
         assertEquals( "foo/bar", DefaultSiteTool.getNormalizedPath( "foo\\bar" ) );
         assertEquals( "foo/bar", DefaultSiteTool.getNormalizedPath( "foo/./bar" ) );
+        assertEquals( "foo/bar", DefaultSiteTool.getNormalizedPath( "foo//bar" ) );
+        assertEquals( "", DefaultSiteTool.getNormalizedPath( "foo/../" ) );
+        assertEquals( "", DefaultSiteTool.getNormalizedPath( "foo/.." ) );
         assertEquals( "bar", DefaultSiteTool.getNormalizedPath( "foo/../bar" ) );
         assertEquals( "foo", DefaultSiteTool.getNormalizedPath( "./foo" ) );
         assertEquals( "../foo", DefaultSiteTool.getNormalizedPath( "../foo" ) );
         assertEquals( "../../foo", DefaultSiteTool.getNormalizedPath( "../../foo" ) );
         assertEquals( "index.html", DefaultSiteTool.getNormalizedPath( "./foo/../index.html" ) );
+
+        // note: space is preserved and double slash is removed!
+        assertEquals( "file:/Documents and Settings/", DefaultSiteTool.getNormalizedPath( "file://Documents and Settings/" ) );
     }
 }

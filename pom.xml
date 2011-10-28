@@ -50,6 +50,12 @@
     <mavenVersion>2.0.6</mavenVersion>
   </properties>
 
+  <contributors>
+    <contributor>
+      <name>Tony Chemit</name>
+    </contributor>
+  </contributors>
+
   <dependencies>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>

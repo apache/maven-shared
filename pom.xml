@@ -61,6 +61,7 @@ under the License.
     <module>maven-shared-resources</module>
     <module>maven-verifier</module>
     <module>maven-jarsigner</module>
+    <module>maven-script-interpreter</module>
   </modules>
 
   <profiles>

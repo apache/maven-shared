@@ -12,6 +12,18 @@
   <artifactId>maven-script-interpreter</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>Maven Script Interpreter</name>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-script-interpreter</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-script-interpreter</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-script-interpreter</url>
+  </scm>
+
+  <issueManagement>
+    <system>jira</system>
+    <url>https://jira.codehaus.org/browse/MSHARED/component/15256</url>
+  </issueManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.codehaus.groovy</groupId>

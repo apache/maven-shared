@@ -30,7 +30,7 @@ import java.util.Map;
  * @author Benjamin Bentmann
  * @version $Id$
  */
-interface ScriptInterpreter
+public interface ScriptInterpreter
 {
 
     /**

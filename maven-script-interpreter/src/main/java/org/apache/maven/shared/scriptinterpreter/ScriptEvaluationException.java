@@ -26,7 +26,7 @@ package org.apache.maven.shared.scriptinterpreter;
  * @author Benjamin Bentmann
  * @version $Id$
  */
-class ScriptEvaluationException
+public class ScriptEvaluationException
     extends Exception
 {
 

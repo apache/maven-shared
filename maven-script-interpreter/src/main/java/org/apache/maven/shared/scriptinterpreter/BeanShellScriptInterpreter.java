@@ -37,7 +37,7 @@ import java.util.Map;
  * @version $Id$
  * @plexus.component role="org.apache.maven.shared.scriptinterpreter.ScriptInterpreter" role-hint="bsh"
  */
-class BeanShellScriptInterpreter
+public class BeanShellScriptInterpreter
     implements ScriptInterpreter
 {
 

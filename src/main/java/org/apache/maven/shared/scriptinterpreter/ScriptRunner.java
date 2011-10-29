@@ -87,6 +87,11 @@ public class ScriptRunner
         globalVariables = new HashMap<String, Object>();
         classPath = new ArrayList<String>();
     }
+    
+    public void addScriptInterpreter(String id, ScriptInterpreter scriptInterpreter)
+    {
+        scriptInterpreters.put( id, scriptInterpreter );
+    }
 
     /**
      * Gets the mojo logger.

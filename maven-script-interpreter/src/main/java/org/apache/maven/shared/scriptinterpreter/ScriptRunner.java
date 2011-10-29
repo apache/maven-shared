@@ -36,7 +36,7 @@ import java.util.Map;
 
 /**
  * Runs pre-/post-build hook scripts.
- * 
+ *
  * @author Benjamin Bentmann
  * @version $Id$
  */
@@ -71,7 +71,7 @@ public class ScriptRunner
 
     /**
      * Creates a new script runner.
-     * 
+     *
      * @param log The mojo logger to print diagnostic to, must not be <code>null</code>.
      */
     public ScriptRunner( Log log )
@@ -87,15 +87,15 @@ public class ScriptRunner
         globalVariables = new HashMap<String, Object>();
         classPath = new ArrayList<String>();
     }
-    
-    public void addScriptInterpreter(String id, ScriptInterpreter scriptInterpreter)
+
+    public void addScriptInterpreter( String id, ScriptInterpreter scriptInterpreter )
     {
         scriptInterpreters.put( id, scriptInterpreter );
     }
 
     /**
      * Gets the mojo logger.
-     * 
+     *
      * @return The mojo logger, never <code>null</code>.
      */
     private Log getLog()
@@ -105,8 +105,8 @@ public class ScriptRunner
 
     /**
      * Sets a global variable for the script interpeter.
-     * 
-     * @param name The name of the variable, must not be <code>null</code>.
+     *
+     * @param name  The name of the variable, must not be <code>null</code>.
      * @param value The value of the variable, may be <code>null</code>.
      */
     public void setGlobalVariable( String name, Object value )
@@ -117,10 +117,10 @@ public class ScriptRunner
     /**
      * Sets the additional class path for the hook scripts. Note that the provided list is copied, so any later changes
      * will not affect the scripts.
-     * 
+     *
      * @param classPath The additional class path for the script interpreter, may be <code>null</code> or empty if only
-     *            the plugin realm should be used for the script evaluation. If specified, this class path will precede
-     *            the artifacts from the plugin class path.
+     *                  the plugin realm should be used for the script evaluation. If specified, this class path will precede
+     *                  the artifacts from the plugin class path.
      */
     public void setClassPath( List<String> classPath )
     {
@@ -129,9 +129,9 @@ public class ScriptRunner
 
     /**
      * Sets the file encoding of the hook scripts.
-     * 
+     *
      * @param encoding The file encoding of the hook scripts, may be <code>null</code> or empty to use the platform's
-     *            default encoding.
+     *                 default encoding.
      */
     public void setScriptEncoding( String encoding )
     {
@@ -140,21 +140,23 @@ public class ScriptRunner
 
     /**
      * Runs the specified hook script of the specified project (if any).
-     * 
-     * @param scriptDescription The description of the script to use for logging, must not be <code>null</code>.
-     * @param basedir The base directory of the project, must not be <code>null</code>.
+     *
+     * @param scriptDescription  The description of the script to use for logging, must not be <code>null</code>.
+     * @param basedir            The base directory of the project, must not be <code>null</code>.
      * @param relativeScriptPath The path to the script relative to the project base directory, may be <code>null</code>
-     *            to skip the script execution.
-     * @param context The key-value storage used to share information between hook scripts, may be <code>null</code>.
-     * @param logger The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
-     * @param stage The stage of the build job the script is invoked in, must not be <code>null</code>.
-     * @param failOnException If <code>true</code> and the script throws an exception, then a {@link BuildFailureException}
-     *            will be thrown, otherwise a {@link BuildErrorException} will be thrown on script exception.
-     * @throws org.apache.maven.plugin.MojoExecutionException If an I/O error occurred while reading the script file.
+     *                           to skip the script execution.
+     * @param context            The key-value storage used to share information between hook scripts, may be <code>null</code>.
+     * @param logger             The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
+     * @param stage              The stage of the build job the script is invoked in, must not be <code>null</code>.
+     * @param failOnException    If <code>true</code> and the script throws an exception, then a {@link BuildFailureException}
+     *                           will be thrown, otherwise a {@link BuildErrorException} will be thrown on script exception.
+     * @throws org.apache.maven.plugin.MojoExecutionException
+     *                               If an I/O error occurred while reading the script file.
      * @throws BuildFailureException If the script did not return <code>true</code> of threw an exception.
      */
     public void run( final String scriptDescription, final File basedir, final String relativeScriptPath,
-                     final Map<String, ? extends Object> context, final ExecutionLogger logger, String stage, boolean failOnException )
+                     final Map<String, ? extends Object> context, final ExecutionLogger logger, String stage,
+                     boolean failOnException )
         throws MojoExecutionException, BuildFailureException
     {
         if ( relativeScriptPath == null )
@@ -166,8 +168,11 @@ public class ScriptRunner
 
         if ( !scriptFile.exists() )
         {
+            getLog().debug( "no script found in directory:" + basedir.getAbsolutePath() );
             return;
         }
+
+        getLog().info( "run script " + scriptFile.getAbsolutePath() );
 
         Map<String, Object> globalVariables = new HashMap<String, Object>( this.globalVariables );
         globalVariables.put( "basedir", basedir );
@@ -240,7 +245,7 @@ public class ScriptRunner
     /**
      * Gets the effective path to the specified script. For convenience, we allow to specify a script path as "verify"
      * and have the plugin auto-append the file extension to search for "verify.bsh" and "verify.groovy".
-     * 
+     *
      * @param scriptFile The script file to resolve, may be <code>null</code>.
      * @return The effective path to the script file or <code>null</code> if the input was <code>null</code>.
      */
@@ -265,7 +270,7 @@ public class ScriptRunner
      * Determines the script interpreter for the specified script file by looking at its file extension. In this
      * context, file extensions are considered case-insensitive. For backward compatibility with plugin versions 1.2-,
      * the BeanShell interpreter will be used for any unrecognized extension.
-     * 
+     *
      * @param scriptFile The script file for which to determine an interpreter, must not be <code>null</code>.
      * @return The script interpreter for the file, never <code>null</code>.
      */

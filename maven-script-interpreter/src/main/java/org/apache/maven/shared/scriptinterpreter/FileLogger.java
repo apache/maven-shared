@@ -30,7 +30,7 @@ import java.io.PrintStream;
 /**
  * @version $Id$
  */
-class FileLogger
+public class FileLogger
     implements ExecutionLogger
 {
 

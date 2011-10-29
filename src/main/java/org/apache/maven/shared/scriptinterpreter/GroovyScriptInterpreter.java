@@ -35,6 +35,7 @@ import java.util.Map;
  * 
  * @author Benjamin Bentmann
  * @version $Id$
+ * @plexus.component role="org.apache.maven.shared.scriptinterpreter.ScriptInterpreter" role-hint="groovy"
  */
 class GroovyScriptInterpreter
     implements ScriptInterpreter

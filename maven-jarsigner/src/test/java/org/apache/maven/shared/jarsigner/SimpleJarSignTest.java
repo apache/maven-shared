@@ -84,7 +84,7 @@ public class SimpleJarSignTest
 
     }
 
-    protected JarSignerSignRequest buildJarSignerRequest(File target)
+    protected JarSignerSignRequest buildJarSignerRequest( File target )
     {
         JarSignerSignRequest jarSignerRequest = new JarSignerSignRequest();
         jarSignerRequest.setArchive( target );
@@ -93,7 +93,7 @@ public class SimpleJarSignTest
         jarSignerRequest.setAlias( "foo_alias" );
         jarSignerRequest.setKeypass( "key-passwd" );
         jarSignerRequest.setStorepass( "changeit" );
-        jarSignerRequest.setSignedjar( "target/ssimple.jar" );
+        jarSignerRequest.setSignedjar( new File( "target/ssimple.jar" ) );
         return jarSignerRequest;
     }
 }

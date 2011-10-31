@@ -172,11 +172,11 @@ public class JarSignerCommandLineBuilder
             cli.createArg().setValue( sigfile );
         }
 
-        String signedjar = request.getSignedjar();
-        if (!StringUtils.isEmpty( signedjar ))
+        File signedjar = request.getSignedjar();
+        if ( signedjar != null )
         {
             cli.createArg().setValue( "-signedjar" );
-            cli.createArg().setValue( signedjar );
+            cli.createArg().setValue( signedjar.getAbsolutePath() );
         }
         cli.createArg().setFile( request.getArchive() );
 

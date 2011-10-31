@@ -28,7 +28,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Usuful methods.
+ * Useful methods.
  *
  * @author tchemit <chemit@codelutin.com>
  * @version $Id$

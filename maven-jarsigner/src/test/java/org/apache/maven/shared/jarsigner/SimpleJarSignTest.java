@@ -75,9 +75,12 @@ public class SimpleJarSignTest
         assertEquals( "not exit code 0 " + jarSignerResult.getExecutionException(), 0, jarSignerResult.getExitCode() );
 
         JarSignerVerifyRequest request = new JarSignerVerifyRequest();
-        request.setArchive( target );
+        request.setCerts( true );
+        request.setVerbose( true );
+        request.setArchive( new File( "target/ssimple.jar" ) );
 
-        jarSigner.execute( request );
+        jarSignerResult = jarSigner.execute( request );
+        assertEquals( "not exit code 0 " + jarSignerResult.getExecutionException(), 0, jarSignerResult.getExitCode() );
 
     }
 
@@ -90,6 +93,7 @@ public class SimpleJarSignTest
         jarSignerRequest.setAlias( "foo_alias" );
         jarSignerRequest.setKeypass( "key-passwd" );
         jarSignerRequest.setStorepass( "changeit" );
+        jarSignerRequest.setSignedjar( "target/ssimple.jar" );
         return jarSignerRequest;
     }
 }

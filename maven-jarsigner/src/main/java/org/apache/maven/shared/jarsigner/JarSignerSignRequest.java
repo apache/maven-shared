@@ -19,6 +19,8 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
+import java.io.File;
+
 /**
  * Specifies the parameters used to control a jar signer sign operation invocation.
  *
@@ -78,6 +80,7 @@ public class JarSignerSignRequest
      * See <a href="http://java.sun.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
      */
     protected String signedjar;
+
 
     public String getKeystore()
     {
@@ -178,4 +181,5 @@ public class JarSignerSignRequest
     {
         this.signedjar = signedjar;
     }
+
 }

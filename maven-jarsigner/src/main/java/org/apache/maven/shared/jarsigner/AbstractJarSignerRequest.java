@@ -19,6 +19,8 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
+import org.codehaus.plexus.util.cli.StreamConsumer;
+
 import java.io.File;
 
 /**
@@ -57,6 +59,16 @@ public abstract class AbstractJarSignerRequest
      */
     private File archive;
 
+    /**
+     * Optional system out stream consumer used by the commandline execution.
+     */
+    private StreamConsumer systemOutStreamConsumer;
+
+    /**
+     * Optional system error stream consumer used by the commandline execution.
+     */
+    private StreamConsumer systemErrorStreamConsumer;
+
     public boolean isVerbose()
     {
         return verbose;
@@ -82,6 +94,16 @@ public abstract class AbstractJarSignerRequest
         return archive;
     }
 
+    public StreamConsumer getSystemOutStreamConsumer()
+    {
+        return systemOutStreamConsumer;
+    }
+
+    public StreamConsumer getSystemErrorStreamConsumer()
+    {
+        return systemErrorStreamConsumer;
+    }
+
     public void setVerbose( boolean verbose )
     {
         this.verbose = verbose;
@@ -105,5 +127,15 @@ public abstract class AbstractJarSignerRequest
     public void setArchive( File archive )
     {
         this.archive = archive;
+    }
+
+    public void setSystemOutStreamConsumer( StreamConsumer systemOutStreamConsumer )
+    {
+        this.systemOutStreamConsumer = systemOutStreamConsumer;
+    }
+
+    public void setSystemErrorStreamConsumer( StreamConsumer systemErrorStreamConsumer )
+    {
+        this.systemErrorStreamConsumer = systemErrorStreamConsumer;
     }
 }

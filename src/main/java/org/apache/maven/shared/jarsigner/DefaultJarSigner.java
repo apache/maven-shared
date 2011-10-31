@@ -30,7 +30,6 @@ import org.codehaus.plexus.util.cli.StreamConsumer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -82,16 +81,14 @@ public class DefaultJarSigner
         JarSignerCommandLineBuilder cliBuilder = new JarSignerCommandLineBuilder();
         cliBuilder.setLogger( getLogger() );
         cliBuilder.setJarSignerFile( jarSignerFile );
-        Commandline cli;
         try
         {
-            cli = cliBuilder.build( request );
+            return cliBuilder.build( request );
         }
         catch ( CommandLineConfigurationException e )
         {
             throw new JarSignerException( "Error configuring command-line. Reason: " + e.getMessage(), e );
         }
-        return cli;
     }
 
     protected JarSignerResult executeCommandLine( Commandline cli, JarSignerRequest request )

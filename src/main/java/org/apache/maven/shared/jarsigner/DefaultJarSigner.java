@@ -30,7 +30,7 @@ import org.codehaus.plexus.util.cli.StreamConsumer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * Default implementation of component {@link JarSigner}.
@@ -165,29 +165,16 @@ public class DefaultJarSigner
 
         if ( executable == null )
         {
-            try
-            {
-                Properties env = CommandLineUtils.getSystemEnvVars();
 
-                String[] variables = { "JDK_HOME", "JAVA_HOME" };
+            Map<String, String> env = System.getenv();
 
-                for ( int i = 0; i < variables.length && executable == null; i++ )
-                {
-                    executable =
-                        findExecutable( command, env.getProperty( variables[i] ), new String[]{ "bin", "sh" } );
-                }
-            }
-            catch ( IOException e )
+            String[] variables = { "JDK_HOME", "JAVA_HOME" };
+
+            for ( int i = 0; i < variables.length && executable == null; i++ )
             {
-                if ( getLogger().isDebugEnabled() )
-                {
-                    getLogger().warn( "Failed to retrieve environment variables, cannot search for " + command, e );
-                }
-                else
-                {
-                    getLogger().warn( "Failed to retrieve environment variables, cannot search for " + command );
-                }
+                executable = findExecutable( command, env.get( variables[i] ), new String[]{ "bin", "sh" } );
             }
+
         }
 
         if ( executable == null )

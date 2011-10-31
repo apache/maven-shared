@@ -171,6 +171,12 @@ public class JarSignerCommandLineBuilder
             cli.createArg().setValue( sigfile );
         }
 
+        String signedjar = request.getSignedjar();
+        if (!StringUtils.isEmpty( signedjar ))
+        {
+            cli.createArg().setValue( "-signedjar" );
+            cli.createArg().setValue( signedjar );
+        }
         cli.createArg().setFile( request.getArchive() );
 
         String alias = request.getAlias();
@@ -178,6 +184,8 @@ public class JarSignerCommandLineBuilder
         {
             cli.createArg().setValue( alias );
         }
+
+
     }
 
     protected Commandline build( JarSignerVerifyRequest request, Commandline cli )

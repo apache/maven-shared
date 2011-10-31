@@ -74,6 +74,11 @@ public class JarSignerSignRequest
      */
     private String alias;
 
+    /**
+     * See <a href="http://java.sun.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     */
+    protected String signedjar;
+
     public String getKeystore()
     {
         return keystore;
@@ -162,5 +167,15 @@ public class JarSignerSignRequest
     public void setAlias( String alias )
     {
         this.alias = alias;
+    }
+
+    public String getSignedjar()
+    {
+        return signedjar;
+    }
+
+    public void setSignedjar( String signedjar )
+    {
+        this.signedjar = signedjar;
     }
 }

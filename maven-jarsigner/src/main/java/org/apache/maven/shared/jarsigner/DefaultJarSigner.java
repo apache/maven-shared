@@ -30,6 +30,7 @@ import org.codehaus.plexus.util.cli.StreamConsumer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -140,6 +141,15 @@ public class DefaultJarSigner
 
         DefaultJarSignerResult result = new DefaultJarSignerResult();
         result.setCommandline( cli );
+
+        if ( verbose )
+        {
+            getLogger().info( cli.toString() );
+        }
+        else
+        {
+            getLogger().debug( cli.toString() );
+        }
 
         try
         {

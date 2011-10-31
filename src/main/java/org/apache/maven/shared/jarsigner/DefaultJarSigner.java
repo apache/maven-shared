@@ -112,32 +112,42 @@ public class DefaultJarSigner
             }
 
         };
-        StreamConsumer systemOut = new StreamConsumer()
+        StreamConsumer systemOut = request.getSystemOutStreamConsumer();
+
+        if ( systemOut == null )
         {
-
-            public void consumeLine( final String line )
+            systemOut = new StreamConsumer()
             {
-                if ( verbose )
-                {
-                    getLogger().info( line );
-                }
-                else
-                {
-                    getLogger().debug( line );
-                }
-            }
 
-        };
+                public void consumeLine( final String line )
+                {
+                    if ( verbose )
+                    {
+                        getLogger().info( line );
+                    }
+                    else
+                    {
+                        getLogger().debug( line );
+                    }
+                }
 
-        StreamConsumer systemErr = new StreamConsumer()
+            };
+        }
+
+        StreamConsumer systemErr = request.getSystemErrorStreamConsumer();
+
+        if (systemErr==null)
         {
-
-            public void consumeLine( final String line )
+            systemErr = new StreamConsumer()
             {
-                getLogger().warn( line );
-            }
 
-        };
+                public void consumeLine( final String line )
+                {
+                    getLogger().warn( line );
+                }
+
+            };
+        }
 
         DefaultJarSignerResult result = new DefaultJarSignerResult();
         result.setCommandline( cli );

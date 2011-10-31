@@ -19,6 +19,8 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
+import org.codehaus.plexus.util.cli.StreamConsumer;
+
 import java.io.File;
 
 /**
@@ -30,23 +32,113 @@ import java.io.File;
  */
 public interface JarSignerRequest
 {
+
+    /**
+     * Gets the value of the {@code verbose} field.
+     *
+     * @return the value of the {@code verbose} field.
+     */
+
     boolean isVerbose();
 
+    /**
+     * Gets the value of the {@code maxMemory} field.
+     *
+     * @return the value of the {@code maxMemory} field.
+     */
     String getMaxMemory();
 
+    /**
+     * Gets the value of the {@code maxMemory} field.
+     *
+     * @return the value of the {@code maxMemory} field.
+     */
     String[] getArguments();
 
+    /**
+     * Gets the value of the {@code workingDirectory} field.
+     *
+     * @return the value of the {@code workingDirectory} field.
+     */
     File getWorkingDirectory();
 
+    /**
+     * Gets the value of the {@code archive} field.
+     * <p/>
+     * The archive field is in fact the file on which the jarsigner request will be executed.
+     *
+     * @return the value of the {@code archive} field.
+     */
     File getArchive();
 
+    /**
+     * Gets the value of the {@code systemOutStreamConsumer} field.
+     * <p/>
+     * This option field if filled is used by the commandline tool to consume system ouput stream of the jarsigner
+     * command.
+     *
+     * @return the value of the {@code systemOutStreamConsumer} field.
+     */
+    StreamConsumer getSystemOutStreamConsumer();
+
+    /**
+     * Gets the value of the {@code systemErrorStreamConsumer} field.
+     * <p/>
+     * This option field if filled is used by the commandline tool to consume system error stream of the jarsigner
+     * command.
+     *
+     * @return the value of the {@code systemErrorStreamConsumer} field.
+     */
+    StreamConsumer getSystemErrorStreamConsumer();
+
+    /**
+     * Sets the new given value to the field {@code verbose} of the request.
+     *
+     * @param verbose the new value of the field {@code verbose}.
+     */
     void setVerbose( boolean verbose );
 
+    /**
+     * Sets the new given value to the field {@code maxMemory} of the request.
+     *
+     * @param maxMemory the new value of the field {@code maxMemory}.
+     */
     void setMaxMemory( String maxMemory );
 
+    /**
+     * Sets the new given value to the field {@code arguments} of the request.
+     *
+     * @param arguments the new value of the field {@code arguments}.
+     */
     void setArguments( String[] arguments );
 
+    /**
+     * Sets the new given value to the field {@code workingDirectory} of the request.
+     *
+     * @param workingDirectory the new value of the field {@code workingDirectory}.
+     */
     void setWorkingDirectory( File workingDirectory );
 
+    /**
+     * Sets the new given value to the field {@code archive} of the request.
+     *
+     * @param archive the new value of the field {@code archive}.
+     */
     void setArchive( File archive );
+
+    /**
+     * Sets the new given value to the field {@code systemOutStreamConsumer} of the request.
+     *
+     * @param systemOutStreamConsumer the new value of the field {@code systemOutStreamConsumer}.
+     */
+    void setSystemOutStreamConsumer( StreamConsumer systemOutStreamConsumer );
+
+    /**
+     * Sets the new given value to the field {@code systemErrorStreamConsumer} of the request.
+     *
+     * @param systemErrorStreamConsumer the new value of the field {@code systemErrorStreamConsumer}.
+     */
+    void setSystemErrorStreamConsumer( StreamConsumer systemErrorStreamConsumer );
+
+
 }

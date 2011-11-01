@@ -66,4 +66,16 @@ Overview
 
 * Using ScriptRunner
 
+  ScriptRunner class will detect the script file to run based on supported extensions (.bsh,.groovy).
+
+  This class will search in the provided directory the script with the provided fileName and the supported extensions.
+
++---------
+    SystemStreamLog systemStreamLog = new SystemStreamLog();
+
+    ScriptRunner scriptRunner = new ScriptRunner( systemStreamLog );
+    scriptRunner.run( "test", new File( "src/test/resources/bsh-test" ), "verify", buildContext(),
+                      new FileLogger( logFile ), "foo", true );
++---------
+
 

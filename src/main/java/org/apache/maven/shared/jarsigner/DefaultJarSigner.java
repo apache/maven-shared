@@ -133,7 +133,7 @@ public class DefaultJarSigner
 
         StreamConsumer systemErr = request.getSystemErrorStreamConsumer();
 
-        if (systemErr==null)
+        if ( systemErr == null )
         {
             systemErr = new StreamConsumer()
             {

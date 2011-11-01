@@ -1,0 +1,13 @@
+import java.io.*;
+
+File file = new File( basedir, "verify.bsh");
+if ( !file.exists())
+{
+  throw new FileNotFoundException("verify.bsh not found in " + basedir);
+}
+
+String value = context.get( "foo" );
+System.out.println("foo="+value);
+
+System.out.print("Test");
+return true;

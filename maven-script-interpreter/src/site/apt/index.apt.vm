@@ -70,6 +70,8 @@ Overview
 
   This class will search in the provided directory the script with the provided fileName and the supported extensions.
 
+  See {{{./apidocs/org/apache/maven/shared/scriptinterpreter/ScriptRunner.html}javadoc}} for run method.
+
 +---------
     SystemStreamLog systemStreamLog = new SystemStreamLog();
 

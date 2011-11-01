@@ -42,7 +42,7 @@ Overview
 
 * Sign a jar
 
-  You must construct a JarSignerSignRequest. See javadoc for more available options.
+  You must construct a JarSignerSignRequest. See {{{./apidocs/org/apache/maven/shared/jarsigner/JarSignerSignRequest.html}javadoc}} for more available options.
 
 +---------
 
@@ -71,7 +71,7 @@ Overview
 
 * Verify a signed jar
 
-  You must construct a JarSignerVerifyRequest. See javadoc for more available options.
+  You must construct a JarSignerVerifyRequest. See {{{./apidocs/org/apache/maven/shared/jarsigner/JarSignerVerifyRequest.html}javadoc}} for more available options.
 
 +----------
     JarSignerVerifyRequest request = new JarSignerVerifyRequest();

@@ -9,3 +9,4 @@ target
 .settings
 build
 .svn/
+.DS_Store

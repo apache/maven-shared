@@ -148,16 +148,16 @@ public class ScriptRunner
      * @param context            The key-value storage used to share information between hook scripts, may be <code>null</code>.
      * @param logger             The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
      * @param stage              The stage of the build job the script is invoked in, must not be <code>null</code>.
-     * @param failOnException    If <code>true</code> and the script throws an exception, then a {@link BuildFailureException}
+     * @param failOnException    If <code>true</code> and the script throws an exception, then a {@link RunFailureException}
      *                           will be thrown, otherwise a {@link RunErrorException} will be thrown on script exception.
      * @throws org.apache.maven.plugin.MojoExecutionException
      *                               If an I/O error occurred while reading the script file.
-     * @throws BuildFailureException If the script did not return <code>true</code> of threw an exception.
+     * @throws RunFailureException If the script did not return <code>true</code> of threw an exception.
      */
     public void run( final String scriptDescription, final File basedir, final String relativeScriptPath,
                      final Map<String, ? extends Object> context, final ExecutionLogger logger, String stage,
                      boolean failOnException )
-        throws MojoExecutionException, BuildFailureException
+        throws MojoExecutionException, RunFailureException
     {
         if ( relativeScriptPath == null )
         {
@@ -228,7 +228,7 @@ public class ScriptRunner
             }
             if ( failOnException )
             {
-                throw new BuildFailureException( "The " + scriptDescription + " did not succeed. " + msg, stage );
+                throw new RunFailureException( "The " + scriptDescription + " did not succeed. " + msg, stage );
             }
             else
             {
@@ -238,7 +238,7 @@ public class ScriptRunner
 
         if ( !( result == null || Boolean.TRUE.equals( result ) || "true".equals( result ) ) )
         {
-            throw new BuildFailureException( "The " + scriptDescription + " returned " + result + ".", stage );
+            throw new RunFailureException( "The " + scriptDescription + " returned " + result + ".", stage );
         }
     }
 

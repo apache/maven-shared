@@ -26,7 +26,7 @@ package org.apache.maven.shared.scriptinterpreter;
  * @author Benjamin Bentmann
  * @version $Id$
  */
-public class BuildFailureException
+public class RunFailureException
     extends Exception
 {
 
@@ -46,7 +46,7 @@ public class BuildFailureException
      * @param message The detail message, may be <code>null</code>.
      * @param type The type of build failure, may not be <code>null</code>.
      */
-    public BuildFailureException( String message, String type )
+    public RunFailureException( String message, String type )
     {
         super( message );
         if ( type == null )

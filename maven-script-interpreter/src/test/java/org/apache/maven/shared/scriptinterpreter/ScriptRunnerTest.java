@@ -47,7 +47,7 @@ public class ScriptRunnerTest
                           new FileLogger( logFile ), "foo", true );
 
         String logContent = FileUtils.fileRead( logFile );
-        assertTrue( logContent.contains( "src/test/resources/bsh-test/verify.bsh" ) );
+        assertTrue( logContent.contains( new File( "src/test/resources/bsh-test/verify.bsh" ).getPath() ) );
         assertTrue( logContent.contains( "foo=bar" ) );
 
     }
@@ -67,7 +67,7 @@ public class ScriptRunnerTest
                           new FileLogger( logFile ), "foo", true );
 
         String logContent = FileUtils.fileRead( logFile );
-        assertTrue( logContent.contains( "src/test/resources/groovy-test/verify.groovy" ) );
+        assertTrue( logContent.contains( new File( "src/test/resources/groovy-test/verify.groovy" ).getPath() ) );
         assertTrue( logContent.contains( "foo=bar" ) );
 
     }

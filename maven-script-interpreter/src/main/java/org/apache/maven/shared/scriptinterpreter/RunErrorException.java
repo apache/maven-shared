@@ -26,7 +26,7 @@ package org.apache.maven.shared.scriptinterpreter;
  * @author Stephen Connolly
  * @version $Id$
  */
-public class BuildErrorException
+public class RunErrorException
     extends BuildFailureException
 {
 
@@ -42,7 +42,7 @@ public class BuildErrorException
      * @param type The type of build failure, may not be <code>null</code>.
      * @param cause The cause of the build error.
      */
-    public BuildErrorException( String message, String type, Throwable cause )
+    public RunErrorException( String message, String type, Throwable cause )
     {
         super( message, type );
         initCause( cause );

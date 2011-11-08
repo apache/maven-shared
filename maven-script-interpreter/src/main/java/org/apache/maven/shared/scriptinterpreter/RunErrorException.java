@@ -27,7 +27,7 @@ package org.apache.maven.shared.scriptinterpreter;
  * @version $Id$
  */
 public class RunErrorException
-    extends BuildFailureException
+    extends RunFailureException
 {
 
     /**

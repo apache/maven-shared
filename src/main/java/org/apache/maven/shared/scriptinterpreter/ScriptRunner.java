@@ -149,7 +149,7 @@ public class ScriptRunner
      * @param logger             The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
      * @param stage              The stage of the build job the script is invoked in, must not be <code>null</code>.
      * @param failOnException    If <code>true</code> and the script throws an exception, then a {@link BuildFailureException}
-     *                           will be thrown, otherwise a {@link BuildErrorException} will be thrown on script exception.
+     *                           will be thrown, otherwise a {@link RunErrorException} will be thrown on script exception.
      * @throws org.apache.maven.plugin.MojoExecutionException
      *                               If an I/O error occurred while reading the script file.
      * @throws BuildFailureException If the script did not return <code>true</code> of threw an exception.
@@ -232,7 +232,7 @@ public class ScriptRunner
             }
             else
             {
-                throw new BuildErrorException( "The " + scriptDescription + " did not succeed. " + msg, stage, t );
+                throw new RunErrorException( "The " + scriptDescription + " did not succeed. " + msg, stage, t );
             }
         }
 

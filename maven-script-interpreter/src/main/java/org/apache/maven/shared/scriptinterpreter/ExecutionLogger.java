@@ -1,4 +1,5 @@
 package org.apache.maven.shared.scriptinterpreter;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,6 +27,6 @@ import java.io.PrintStream;
 public interface ExecutionLogger
 {
     PrintStream getPrintStream();
-    
-    void consumeLine(String line);
+
+    void consumeLine( String line );
 }

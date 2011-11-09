@@ -80,4 +80,34 @@ Overview
                       new FileLogger( logFile ), "foo", true );
 +---------
 
+** Build context
+
+  You can pass some values to your scipt using a execution context which have the type <<<Map<String, ? extends Object> context>>>.
+
++---------
+    Map<String, Object> context = new HashMap<String, Object>();
+    context.put( "foo", "bar" );
+    return context;
+
+    // in your bsh script
+    String value = context.get( "foo" );
+    value will be "bar"
+
+    // in your groovy script
+    context.get("foo")
++---------
+
+** Additionnal classpath entries
+
+  You can add some additionnal classpath entries for your script execution
+
++---------
+    SystemStreamLog systemStreamLog = new SystemStreamLog();
+
+    List<String> classpathEntries = list of jar paths
+    ScriptRunner scriptRunner = new ScriptRunner( systemStreamLog );
+    scriptRunner.setClassPath( classpathEntries );
+    scriptRunner.run( "test", new File( "src/test/resources/bsh-test" ), "verify", buildContext(),
+                      new FileLogger( logFile ), "foo", true );
++---------
 

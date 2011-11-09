@@ -32,7 +32,7 @@ import java.util.Map;
 
 /**
  * Provides a facade to evaluate BeanShell scripts.
- * 
+ *
  * @author Benjamin Bentmann
  * @version $Id$
  * @plexus.component role="org.apache.maven.shared.scriptinterpreter.ScriptInterpreter" role-hint="bsh"
@@ -44,7 +44,8 @@ public class BeanShellScriptInterpreter
     /**
      * {@inheritDoc}
      */
-    public Object evaluateScript( String script, List<String> classPath, Map<String, ? extends Object> globalVariables, PrintStream scriptOutput )
+    public Object evaluateScript( String script, List<String> classPath, Map<String, ? extends Object> globalVariables,
+                                  PrintStream scriptOutput )
         throws ScriptEvaluationException
     {
         PrintStream origOut = System.out;
@@ -79,7 +80,7 @@ public class BeanShellScriptInterpreter
 
             if ( classPath != null && !classPath.isEmpty() )
             {
-                for ( String path : classPath)
+                for ( String path : classPath )
                 {
                     try
                     {

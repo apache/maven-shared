@@ -26,7 +26,17 @@ import java.io.PrintStream;
  */
 public interface ExecutionLogger
 {
+    /**
+     * The stream which will catch the output of the {@link ScriptRunner}.
+     * 
+     * @return the output stream
+     */
     PrintStream getPrintStream();
 
+    /**
+     * Consume logging from this component.
+     * 
+     * @param line the line to consume
+     */
     void consumeLine( String line );
 }

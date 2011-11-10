@@ -147,7 +147,7 @@ public class ScriptRunner
      *                           to skip the script execution.
      * @param context            The key-value storage used to share information between hook scripts, may be <code>null</code>.
      * @param logger             The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
-     * @param stage              The stage of the build job the script is invoked in, must not be <code>null</code>.
+     * @param stage              The stage of the build job the script is invoked in, must not be <code>null</code>. This is for logging purpose only.
      * @param failOnException    If <code>true</code> and the script throws an exception, then a {@link RunFailureException}
      *                           will be thrown, otherwise a {@link RunErrorException} will be thrown on script exception.
      * @throws org.apache.maven.plugin.MojoExecutionException

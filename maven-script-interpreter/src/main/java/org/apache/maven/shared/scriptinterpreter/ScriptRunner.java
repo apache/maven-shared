@@ -161,6 +161,7 @@ public class ScriptRunner
     {
         if ( relativeScriptPath == null )
         {
+            getLog().info( "relativeScriptPath is null: not executing script" );
             return;
         }
 

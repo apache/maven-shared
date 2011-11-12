@@ -1,5 +1,17 @@
 import java.io.*;
 
+if ( !( basedir instanceof File ) )
+{
+    System.out.println( "Global script variable not defined: basedir or not a File" );
+    throw new RuntimeException("Global script variable not defined: basedir or not a File");
+}
+
+if ( !( context instanceof Map ) )
+{
+    System.out.println( "Global script variable not defined: context or not a Map" );
+    throw new RuntimeException("Global script variable not defined: context or not a Map");
+}
+
 File file = new File( basedir, "verify.bsh");
 if ( !file.exists())
 {

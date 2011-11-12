@@ -150,14 +150,13 @@ public class ScriptRunner
      * @param stage              The stage of the build job the script is invoked in, must not be <code>null</code>. This is for logging purpose only.
      * @param failOnException    If <code>true</code> and the script throws an exception, then a {@link RunFailureException}
      *                           will be thrown, otherwise a {@link RunErrorException} will be thrown on script exception.
-     * @throws org.apache.maven.plugin.MojoExecutionException
-     *                             If an I/O error occurred while reading the script file.
+     * @throws IOException         If an I/O error occurred while reading the script file.
      * @throws RunFailureException If the script did not return <code>true</code> of threw an exception.
      */
     public void run( final String scriptDescription, final File basedir, final String relativeScriptPath,
                      final Map<String, ? extends Object> context, final ExecutionLogger logger, String stage,
                      boolean failOnException )
-        throws MojoExecutionException, RunFailureException
+        throws IOException, RunFailureException
     {
         if ( relativeScriptPath == null )
         {
@@ -180,20 +179,19 @@ public class ScriptRunner
     /**
      * Runs the specified hook script.
      *
-     * @param scriptDescription  The description of the script to use for logging, must not be <code>null</code>.
-     * @param scriptFile         The path to the script, may be <code>null</code> to skip the script execution.
-     * @param context            The key-value storage used to share information between hook scripts, may be <code>null</code>.
-     * @param logger             The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
-     * @param stage              The stage of the build job the script is invoked in, must not be <code>null</code>. This is for logging purpose only.
-     * @param failOnException    If <code>true</code> and the script throws an exception, then a {@link RunFailureException}
-     *                           will be thrown, otherwise a {@link RunErrorException} will be thrown on script exception.
-     * @throws org.apache.maven.plugin.MojoExecutionException
-     *                             If an I/O error occurred while reading the script file.
+     * @param scriptDescription The description of the script to use for logging, must not be <code>null</code>.
+     * @param scriptFile        The path to the script, may be <code>null</code> to skip the script execution.
+     * @param context           The key-value storage used to share information between hook scripts, may be <code>null</code>.
+     * @param logger            The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
+     * @param stage             The stage of the build job the script is invoked in, must not be <code>null</code>. This is for logging purpose only.
+     * @param failOnException   If <code>true</code> and the script throws an exception, then a {@link RunFailureException}
+     *                          will be thrown, otherwise a {@link RunErrorException} will be thrown on script exception.
+     * @throws IOException         If an I/O error occurred while reading the script file.
      * @throws RunFailureException If the script did not return <code>true</code> of threw an exception.
      */
     public void run( final String scriptDescription, File scriptFile, final Map<String, ? extends Object> context,
                      final ExecutionLogger logger, String stage, boolean failOnException )
-        throws MojoExecutionException, RunFailureException
+        throws IOException, RunFailureException
     {
 
         if ( !scriptFile.exists() )
@@ -227,7 +225,9 @@ public class ScriptRunner
         {
             String errorMessage =
                 "error reading " + scriptDescription + " " + scriptFile.getPath() + ", " + e.getMessage();
-            throw new MojoExecutionException( errorMessage, e );
+            IOException ioException = new IOException( errorMessage );
+            ioException.initCause( e );
+            throw ioException;
         }
 
         Object result;

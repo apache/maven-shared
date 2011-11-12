@@ -139,7 +139,7 @@ public class ScriptRunner
     }
 
     /**
-     * Runs the specified hook script of the specified project (if any).
+     * Runs the specified hook script.
      *
      * @param scriptDescription  The description of the script to use for logging, must not be <code>null</code>.
      * @param basedir            The base directory of the project, must not be <code>null</code>.
@@ -151,7 +151,7 @@ public class ScriptRunner
      * @param failOnException    If <code>true</code> and the script throws an exception, then a {@link RunFailureException}
      *                           will be thrown, otherwise a {@link RunErrorException} will be thrown on script exception.
      * @throws org.apache.maven.plugin.MojoExecutionException
-     *                               If an I/O error occurred while reading the script file.
+     *                             If an I/O error occurred while reading the script file.
      * @throws RunFailureException If the script did not return <code>true</code> of threw an exception.
      */
     public void run( final String scriptDescription, final File basedir, final String relativeScriptPath,
@@ -161,7 +161,7 @@ public class ScriptRunner
     {
         if ( relativeScriptPath == null )
         {
-            getLog().info( "relativeScriptPath is null: not executing script" );
+            getLog().debug( "relativeScriptPath is null: not executing script" );
             return;
         }
 
@@ -173,10 +173,39 @@ public class ScriptRunner
             return;
         }
 
+        run( scriptDescription, scriptFile, context, logger, stage, failOnException );
+
+    }
+
+    /**
+     * Runs the specified hook script.
+     *
+     * @param scriptDescription  The description of the script to use for logging, must not be <code>null</code>.
+     * @param scriptFile         The path to the script, may be <code>null</code> to skip the script execution.
+     * @param context            The key-value storage used to share information between hook scripts, may be <code>null</code>.
+     * @param logger             The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
+     * @param stage              The stage of the build job the script is invoked in, must not be <code>null</code>. This is for logging purpose only.
+     * @param failOnException    If <code>true</code> and the script throws an exception, then a {@link RunFailureException}
+     *                           will be thrown, otherwise a {@link RunErrorException} will be thrown on script exception.
+     * @throws org.apache.maven.plugin.MojoExecutionException
+     *                             If an I/O error occurred while reading the script file.
+     * @throws RunFailureException If the script did not return <code>true</code> of threw an exception.
+     */
+    public void run( final String scriptDescription, File scriptFile, final Map<String, ? extends Object> context,
+                     final ExecutionLogger logger, String stage, boolean failOnException )
+        throws MojoExecutionException, RunFailureException
+    {
+
+        if ( !scriptFile.exists() )
+        {
+            getLog().debug( "scriptFile not found in directory:" + scriptFile.getAbsolutePath() );
+            return;
+        }
+
         getLog().info( "run script " + scriptFile.getAbsolutePath() );
 
         Map<String, Object> globalVariables = new HashMap<String, Object>( this.globalVariables );
-        globalVariables.put( "basedir", basedir );
+        globalVariables.put( "basedir", scriptFile.getParentFile() );
         globalVariables.put( "context", context );
 
         PrintStream out = ( logger != null ) ? logger.getPrintStream() : null;

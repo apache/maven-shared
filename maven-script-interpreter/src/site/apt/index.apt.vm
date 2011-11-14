@@ -80,6 +80,27 @@ Overview
                       new FileLogger( logFile ), "foo", true );
 +---------
 
+** Global variables
+
+  Your scripts will have by default two global variables:
+
+  * basedir: the base directory of your script
+
+  * context: the build context (see below)
+
+  []
+
+   You can add more global variables as it.
+
++---------
+
+    SystemStreamLog systemStreamLog = new SystemStreamLog();
+
+    ScriptRunner scriptRunner = new ScriptRunner( systemStreamLog );
+    scriptRunner.setGlobalVariable( name, value );
+
++---------
+
 ** Build context
 
   You can pass some values to your script using a execution context which have the type <<<Map<String, ? extends Object> context>>>.

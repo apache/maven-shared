@@ -12,4 +12,7 @@ if ( !( context instanceof Map ) )
 }
 
 System.out.println("foo="+context.get("foo"));
+
+if (binding.variables.containsKey("globalVar")) System.out.println("globalVar="+globalVar);
+
 return true

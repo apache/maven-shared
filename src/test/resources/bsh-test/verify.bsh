@@ -21,5 +21,7 @@ if ( !file.exists())
 String value = context.get( "foo" );
 System.out.println("foo="+value);
 
+System.out.println("globalVar="+globalVar);
+
 System.out.print("Test");
 return true;

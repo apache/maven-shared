@@ -52,6 +52,26 @@ public class ScriptRunnerTest
 
     }
 
+    public void testBeanshellWithFile()
+        throws Exception
+    {
+        File logFile = new File( "target/build.log" );
+        if ( logFile.exists() )
+        {
+            logFile.delete();
+        }
+        SystemStreamLog systemStreamLog = new SystemStreamLog();
+
+        ScriptRunner scriptRunner = new ScriptRunner( systemStreamLog );
+        scriptRunner.run( "test", new File( "src/test/resources/bsh-test/verify.bsh" ), buildContext(),
+                          new FileLogger( logFile ), "foo", true );
+
+        String logContent = FileUtils.fileRead( logFile );
+        assertTrue( logContent.contains( new File( "src/test/resources/bsh-test/verify.bsh" ).getPath() ) );
+        assertTrue( logContent.contains( "foo=bar" ) );
+
+    }
+
     public void testGroovy()
         throws Exception
     {
@@ -71,6 +91,27 @@ public class ScriptRunnerTest
         assertTrue( logContent.contains( "foo=bar" ) );
 
     }
+
+    public void testGroovyWithFile()
+        throws Exception
+    {
+        File logFile = new File( "target/build.log" );
+        if ( logFile.exists() )
+        {
+            logFile.delete();
+        }
+        SystemStreamLog systemStreamLog = new SystemStreamLog();
+
+        ScriptRunner scriptRunner = new ScriptRunner( systemStreamLog );
+        scriptRunner.run( "test", new File( "src/test/resources/groovy-test/verify.groovy" ), buildContext(),
+                          new FileLogger( logFile ), "foo", true );
+
+        String logContent = FileUtils.fileRead( logFile );
+        assertTrue( logContent.contains( new File( "src/test/resources/groovy-test/verify.groovy" ).getPath() ) );
+        assertTrue( logContent.contains( "foo=bar" ) );
+
+    }
+
 
     private Map<String, ? extends Object> buildContext()
     {

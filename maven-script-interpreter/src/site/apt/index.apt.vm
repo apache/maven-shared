@@ -82,7 +82,7 @@ Overview
 
 ** Build context
 
-  You can pass some values to your scipt using a execution context which have the type <<<Map<String, ? extends Object> context>>>.
+  You can pass some values to your script using a execution context which have the type <<<Map<String, ? extends Object> context>>>.
 
 +---------
     Map<String, Object> context = new HashMap<String, Object>();
@@ -99,7 +99,7 @@ Overview
 
 ** Additionnal classpath entries
 
-  You can add some additionnal classpath entries for your script execution
+  You can add some additional classpath entries for your script execution
 
 +---------
     SystemStreamLog systemStreamLog = new SystemStreamLog();

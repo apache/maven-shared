@@ -27,7 +27,7 @@
     <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
   <artifactId>maven-jarsigner</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <name>Maven Jarsigner</name>
 
   <description>A component to assist in signing jars.</description>
@@ -37,9 +37,9 @@
   </prerequisites>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-jarsigner-1.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-jarsigner-1.0</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-jarsigner-1.0</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-jarsigner</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-jarsigner</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-jarsigner</url>
   </scm>
   <issueManagement>
     <system>jira</system>

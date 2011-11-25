@@ -121,6 +121,63 @@ public class JarSignerUtil
     }
 
     /**
+     * Scans an archive for existing signatures.
+     *
+     * @param jarFile The archive to scan, must not be <code>null</code>.
+     *
+     * @return <code>true</code>, if the archive contains at least one signature file; <code>false</code>, if the
+     * archive does not contain any signature files.
+     *
+     * @throws IOException if scanning <code>jarFile</code> fails.
+     */
+    public static boolean isArchiveSigned( final File jarFile )
+        throws IOException
+    {
+        if ( jarFile == null )
+        {
+            throw new NullPointerException( "jarFile" );
+        }
+
+        ZipInputStream in = null;
+        boolean suppressExceptionOnClose = true;
+
+        try
+        {
+            boolean signed = false;
+            in = new ZipInputStream( new BufferedInputStream( new FileInputStream( jarFile ) ) );
+
+            for ( ZipEntry ze = in.getNextEntry(); ze != null; ze = in.getNextEntry() )
+            {
+                if ( isSignatureFile( ze.getName() ) )
+                {
+                    signed = true;
+                    break;
+                }
+            }
+
+            suppressExceptionOnClose = false;
+            return signed;
+        }
+        finally
+        {
+            try
+            {
+                if ( in != null )
+                {
+                    in.close();
+                }
+            }
+            catch ( final IOException e )
+            {
+                if ( !suppressExceptionOnClose )
+                {
+                    throw e;
+                }
+            }
+        }
+    }
+
+    /**
      * Checks whether the specified JAR file entry denotes a signature-related file, i.e. matches
      * <code>META-INF/*.SF</code>, <code>META-INF/*.DSA</code> or <code>META-INF/*.RSA</code>.
      *

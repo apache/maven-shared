@@ -204,6 +204,10 @@ public class JarSignerUtil
                 {
                     return true;
                 }
+                if ( entryName.regionMatches( true, entryName.length() - 3, ".EC", 0, 3 ) )
+                {
+                    return true;
+                }
             }
         }
         return false;

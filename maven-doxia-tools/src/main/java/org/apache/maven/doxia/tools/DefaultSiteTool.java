@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -55,7 +54,6 @@ import org.apache.maven.doxia.site.decoration.MenuItem;
 import org.apache.maven.doxia.site.decoration.Skin;
 import org.apache.maven.doxia.site.decoration.inheritance.DecorationModelInheritanceAssembler;
 import org.apache.maven.doxia.site.decoration.io.xpp3.DecorationXpp3Reader;
-import org.apache.maven.doxia.site.decoration.io.xpp3.DecorationXpp3Writer;
 import org.apache.maven.model.DistributionManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Site;
@@ -461,9 +459,10 @@ public class DefaultSiteTool
             getDecorationModel( project, parentProject, reactorProjects, localRepository, repositories, siteDirectory,
                                 llocale, props, inputEncoding, outputEncoding );
 
-        String siteDescriptorContent;
         if ( decorationModel == null )
         {
+            String siteDescriptorContent;
+
             try
             {
                 // Note the default is not a super class - it is used when nothing else is found
@@ -474,24 +473,12 @@ public class DefaultSiteTool
             {
                 throw new SiteToolException( "Error reading default site descriptor: " + e.getMessage(), e );
             }
+
+            siteDescriptorContent = getInterpolatedSiteDescriptorContent( props, project, siteDescriptorContent,
+                                                                          inputEncoding, outputEncoding );
+
+            decorationModel = readDecorationModel( siteDescriptorContent );
         }
-        else
-        {
-            try
-            {
-                StringWriter writer = new StringWriter();
-                new DecorationXpp3Writer().write( writer, decorationModel );
-                siteDescriptorContent = writer.toString();
-            }
-            catch ( IOException e )
-            {
-                throw new SiteToolException( "The site descriptor cannot be parsed!", e );
-            }
-        }
-        
-        siteDescriptorContent = getInterpolatedSiteDescriptorContent( props, project, siteDescriptorContent,
-                                                                      inputEncoding, outputEncoding );
-        decorationModel = readDecorationModel( siteDescriptorContent );
 
         if ( parentProject != null )
         {
@@ -1173,20 +1160,31 @@ public class DefaultSiteTool
             siteDescriptor = getSiteDescriptorFromBasedir( siteDirectory, project.getBasedir(), locale );
         }
 
-        DecorationModel decoration = null;
+        String siteDescriptorContent = null;
+        long siteDescriptorLastModified = 0L;
         try
         {
             if ( siteDescriptor != null && siteDescriptor.exists() )
             {
                 getLogger().debug( "Reading site descriptor from " + siteDescriptor );
                 Reader siteDescriptorReader = ReaderFactory.newXmlReader( siteDescriptor );
-                decoration = readDecorationModel( siteDescriptorReader );
-                decoration.setLastModified( siteDescriptor.lastModified() );
+                siteDescriptorContent = IOUtil.toString( siteDescriptorReader );
+                siteDescriptorLastModified = siteDescriptor.lastModified();
             }
         }
         catch ( IOException e )
         {
             throw new SiteToolException( "The site descriptor cannot be read!", e );
+        }
+
+        DecorationModel decoration = null;
+        if ( siteDescriptorContent != null )
+        {
+            siteDescriptorContent = getInterpolatedSiteDescriptorContent( props, project, siteDescriptorContent,
+                                                                          inputEncoding, outputEncoding );
+
+            decoration = readDecorationModel( siteDescriptorContent );
+            decoration.setLastModified( siteDescriptorLastModified );
         }
 
         if ( parentProject != null )
@@ -1235,21 +1233,10 @@ public class DefaultSiteTool
     private DecorationModel readDecorationModel( String siteDescriptorContent )
         throws SiteToolException
     {
-        return readDecorationModel( new StringReader( siteDescriptorContent ) );
-    }
-    
-    /**
-     * @param siteDescriptorContent not null
-     * @return the decoration model object
-     * @throws SiteToolException if any
-     */
-    private DecorationModel readDecorationModel( Reader siteDescriptorReader )
-        throws SiteToolException
-    {
         DecorationModel decoration;
         try
         {
-            decoration = new DecorationXpp3Reader().read( siteDescriptorReader );
+            decoration = new DecorationXpp3Reader().read( new StringReader( siteDescriptorContent ) );
         }
         catch ( XmlPullParserException e )
         {

@@ -25,22 +25,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.doxia.site.decoration.DecorationModel;
-import org.apache.maven.doxia.site.decoration.LinkItem;
 import org.apache.maven.doxia.site.decoration.Skin;
 import org.apache.maven.doxia.tools.stubs.SiteToolMavenProjectStub;
-import org.apache.maven.plugin.testing.stubs.ArtifactStub;
-import org.apache.maven.plugin.testing.stubs.MavenProjectStub;
 import org.apache.maven.project.MavenProject;
 
 import org.codehaus.plexus.PlexusTestCase;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 /**
  * @author <a href="mailto:vincent.siveton@gmail.com">Vincent Siveton</a>
@@ -294,39 +288,6 @@ public class SiteToolTest
             tool.getDecorationModel( project, reactorProjects, getLocalRepo(), project.getRemoteArtifactRepositories(),
                                      siteDirectory, Locale.getDefault(), "UTF-8", "UTF-8" );
         assertNotNull( model );
-    }
-    
-    // MSHARED-217
-    public void testMultiModuleInterpolation()
-        throws Exception
-    {
-        SiteTool tool = (SiteTool) lookup( SiteTool.ROLE );
-        assertNotNull( tool );
-
-        MavenProjectStub parentProject = new SiteToolMavenProjectStub( "interpolation-parent-test" );
-        parentProject.setGroupId( "org.apache.maven.shared.its" );
-        parentProject.setArtifactId( "mshared-217-parent" );
-        parentProject.setVersion( "1.0-SNAPSHOT" );
-        parentProject.setBasedir( null ); // get it from repo
-        parentProject.setName( "MSHARED-217 Parent" );
-        String siteDirectory = "src/site";
-        
-        MavenProjectStub childProject = new SiteToolMavenProjectStub( "interpolation-child-test" );
-        childProject.setParent( parentProject );
-        childProject.setGroupId( "org.apache.maven.shared.its" );
-        childProject.setArtifactId( "mshared-217-child" );
-        childProject.setVersion( "1.0-SNAPSHOT" );
-        childProject.setBasedir( null ); // get it from repo
-        childProject.setName( "MSHARED-217 Child" );
-
-        List<MavenProject> reactorProjects = Collections.singletonList( parentProject );
-
-        DecorationModel model =
-            tool.getDecorationModel( childProject, reactorProjects, getLocalRepo(),
-                                     childProject.getRemoteArtifactRepositories(), siteDirectory, Locale.getDefault(),
-                                     "ISO-8859-1", "ISO-8859-1" );
-        assertNotNull( model );
-        assertEquals( "MSHARED-217 Child", model.getName() );
     }
 
 }

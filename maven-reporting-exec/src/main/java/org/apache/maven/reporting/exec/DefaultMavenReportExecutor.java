@@ -121,7 +121,9 @@ public class DefaultMavenReportExecutor
                                                                "org.apache.maven.doxia.sink.SinkFactory",
                                                                "org.codehaus.doxia.sink.Sink",
                                                                "org.apache.maven.doxia.sink.Sink",
-                                                               "org.apache.maven.doxia.sink.SinkEventAttributes" );
+                                                               "org.apache.maven.doxia.sink.SinkEventAttributes",
+                                                               "org.apache.maven.doxia.logging.LogEnabled",
+                                                               "org.apache.maven.doxia.logging.Log" );
 
     private static final ExclusionsDependencyFilter EXCLUDES =
         new ExclusionsDependencyFilter( Arrays.asList( "doxia-site-renderer", "doxia-sink-api", "maven-reporting-api" ) );

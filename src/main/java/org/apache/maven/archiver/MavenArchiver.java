@@ -52,26 +52,28 @@ import java.util.Set;
  */
 public class MavenArchiver
 {
-    
-    public static final String SIMPLE_LAYOUT = "${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}";
+
+    public static final String SIMPLE_LAYOUT =
+        "${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}";
 
     public static final String REPOSITORY_LAYOUT = "${artifact.groupIdPath}/${artifact.artifactId}/" +
-    		"${artifact.baseVersion}/${artifact.artifactId}-" +
-    		"${artifact.version}${dashClassifier?}.${artifact.extension}";
-    
-    public static final String SIMPLE_LAYOUT_NONUNIQUE = "${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
+        "${artifact.baseVersion}/${artifact.artifactId}-" +
+        "${artifact.version}${dashClassifier?}.${artifact.extension}";
+
+    public static final String SIMPLE_LAYOUT_NONUNIQUE =
+        "${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
 
     public static final String REPOSITORY_LAYOUT_NONUNIQUE = "${artifact.groupIdPath}/${artifact.artifactId}/" +
-            "${artifact.baseVersion}/${artifact.artifactId}-" +
-            "${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
-    
+        "${artifact.baseVersion}/${artifact.artifactId}-" +
+        "${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
+
     private static final List ARTIFACT_EXPRESSION_PREFIXES;
-    
+
     static
     {
         List artifactExpressionPrefixes = new ArrayList();
         artifactExpressionPrefixes.add( "artifact." );
-        
+
         ARTIFACT_EXPRESSION_PREFIXES = artifactExpressionPrefixes;
     }
 
@@ -88,17 +90,17 @@ public class MavenArchiver
         throws ManifestException, DependencyResolutionRequiredException
     {
         boolean hasManifestEntries = !config.isManifestEntriesEmpty();
-        Map entries = hasManifestEntries ? config.getManifestEntries() : Collections.EMPTY_MAP;
+        Map<String, String> entries = hasManifestEntries ? config.getManifestEntries() : Collections.EMPTY_MAP;
         Manifest manifest = getManifest( project, config.getManifest(), entries );
 
         // any custom manifest entries in the archive configuration manifest?
         if ( hasManifestEntries )
         {
-            Set keys = entries.keySet();
-            for ( Iterator iter = keys.iterator(); iter.hasNext(); )
+
+            for ( Map.Entry<String, String> entry : entries.entrySet() )
             {
-                String key = (String) iter.next();
-                String value = (String) entries.get( key );
+                String key = entry.getKey();
+                String value = entry.getValue();
                 Manifest.Attribute attr = manifest.getMainSection().getAttribute( key );
                 if ( key.equals( "Class-Path" ) && attr != null )
                 {
@@ -117,21 +119,19 @@ public class MavenArchiver
         // any custom manifest sections in the archive configuration manifest?
         if ( !config.isManifestSectionsEmpty() )
         {
-            List sections = config.getManifestSections();
-            for ( Iterator iter = sections.iterator(); iter.hasNext(); )
+            for ( ManifestSection section : config.getManifestSections() )
             {
-                ManifestSection section = (ManifestSection) iter.next();
                 Manifest.Section theSection = new Manifest.Section();
                 theSection.setName( section.getName() );
 
                 if ( !section.isManifestEntriesEmpty() )
                 {
-                    Map sectionEntries = section.getManifestEntries();
-                    Set keys = sectionEntries.keySet();
-                    for ( Iterator it = keys.iterator(); it.hasNext(); )
+                    Map<String, String> sectionEntries = section.getManifestEntries();
+
+                    for ( Map.Entry<String, String> entry : sectionEntries.entrySet() )
                     {
-                        String key = (String) it.next();
-                        String value = (String) sectionEntries.get( key );
+                        String key = entry.getKey();
+                        String value = entry.getValue();
                         Manifest.Attribute attr = new Manifest.Attribute( key, value );
                         theSection.addConfiguredAttribute( attr );
                     }
@@ -152,10 +152,10 @@ public class MavenArchiver
     public Manifest getManifest( MavenProject project, ManifestConfiguration config )
         throws ManifestException, DependencyResolutionRequiredException
     {
-        return getManifest( project, config, Collections.EMPTY_MAP );
+        return getManifest( project, config, Collections.<String, String>emptyMap() );
     }
 
-    private void addManifestAttribute( Manifest manifest, Map map, String key, String value )
+    private void addManifestAttribute( Manifest manifest, Map<String, String> map, String key, String value )
         throws ManifestException
     {
         if ( map.containsKey( key ) )
@@ -182,7 +182,7 @@ public class MavenArchiver
         }
     }
 
-    protected Manifest getManifest( MavenProject project, ManifestConfiguration config, Map entries )
+    protected Manifest getManifest( MavenProject project, ManifestConfiguration config, Map<String, String> entries )
         throws ManifestException, DependencyResolutionRequiredException
     {
         // TODO: Should we replace "map" with a copy? Note, that we modify it!
@@ -195,13 +195,13 @@ public class MavenArchiver
 
         if ( config.isAddClasspath() )
         {
-            StringBuffer classpath = new StringBuffer();
-            
+            StringBuilder classpath = new StringBuilder();
+
             List artifacts = project.getRuntimeClasspathElements();
             String classpathPrefix = config.getClasspathPrefix();
             String layoutType = config.getClasspathLayoutType();
             String layout = config.getCustomClasspathLayout();
-            
+
             Interpolator interpolator = new StringSearchInterpolator();
 
             for ( Iterator iter = artifacts.iterator(); iter.hasNext(); )
@@ -210,13 +210,13 @@ public class MavenArchiver
                 if ( f.getAbsoluteFile().isFile() )
                 {
                     Artifact artifact = findArtifactWithFile( project.getArtifacts(), f );
-                    
+
                     if ( classpath.length() > 0 )
                     {
                         classpath.append( " " );
                     }
                     classpath.append( classpathPrefix );
-                    
+
                     // NOTE: If the artifact or layout type (from config) is null, give up and use the file name by itself.
                     if ( artifact == null || layoutType == null )
                     {
@@ -225,9 +225,12 @@ public class MavenArchiver
                     else
                     {
                         List valueSources = new ArrayList();
-                        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact, true ) );
-                        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact == null ? null : artifact.getArtifactHandler(), true ) );
-                        
+                        valueSources.add(
+                            new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact, true ) );
+                        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact == null
+                            ? null
+                            : artifact.getArtifactHandler(), true ) );
+
                         Properties extraExpressions = new Properties();
                         if ( artifact != null )
                         {
@@ -237,7 +240,7 @@ public class MavenArchiver
                             {
                                 extraExpressions.setProperty( "baseVersion", artifact.getVersion() );
                             }
-                            
+
                             extraExpressions.setProperty( "groupIdPath", artifact.getGroupId().replace( '.', '/' ) );
                             if ( StringUtils.isNotEmpty( artifact.getClassifier() ) )
                             {
@@ -250,16 +253,18 @@ public class MavenArchiver
                                 extraExpressions.setProperty( "dashClassifier?", "" );
                             }
                         }
-                        valueSources.add( new PrefixedPropertiesValueSource( ARTIFACT_EXPRESSION_PREFIXES, extraExpressions, true ) );
-                        
+                        valueSources.add(
+                            new PrefixedPropertiesValueSource( ARTIFACT_EXPRESSION_PREFIXES, extraExpressions, true ) );
+
                         for ( Iterator it = valueSources.iterator(); it.hasNext(); )
                         {
                             ValueSource vs = (ValueSource) it.next();
                             interpolator.addValueSource( vs );
                         }
-                        
-                        RecursionInterceptor recursionInterceptor = new PrefixAwareRecursionInterceptor( ARTIFACT_EXPRESSION_PREFIXES );
-                        
+
+                        RecursionInterceptor recursionInterceptor =
+                            new PrefixAwareRecursionInterceptor( ARTIFACT_EXPRESSION_PREFIXES );
+
                         try
                         {
                             if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_SIMPLE.equals( layoutType ) )
@@ -270,7 +275,8 @@ public class MavenArchiver
                                 }
                                 else
                                 {
-                                    classpath.append( interpolator.interpolate( SIMPLE_LAYOUT_NONUNIQUE, recursionInterceptor ) );
+                                    classpath.append(
+                                        interpolator.interpolate( SIMPLE_LAYOUT_NONUNIQUE, recursionInterceptor ) );
                                 }
                             }
                             else if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_REPOSITORY.equals( layoutType ) )
@@ -279,36 +285,36 @@ public class MavenArchiver
                                 // here we must find the Artifact in the project Artifacts to generate the maven layout
                                 if ( config.isUseUniqueVersions() )
                                 {
-                                    classpath.append( interpolator.interpolate( REPOSITORY_LAYOUT, recursionInterceptor ) );
+                                    classpath.append(
+                                        interpolator.interpolate( REPOSITORY_LAYOUT, recursionInterceptor ) );
                                 }
                                 else
                                 {
-                                    classpath.append( interpolator.interpolate( REPOSITORY_LAYOUT_NONUNIQUE, recursionInterceptor ) );
+                                    classpath.append(
+                                        interpolator.interpolate( REPOSITORY_LAYOUT_NONUNIQUE, recursionInterceptor ) );
                                 }
                             }
                             else if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM.equals( layoutType ) )
                             {
                                 if ( layout == null )
                                 {
-                                    throw new ManifestException(
-                                                                 ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM
+                                    throw new ManifestException( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM
                                                                      + " layout type was declared, but custom layout expression was not specified. Check your <archive><manifest><customLayout/> element." );
                                 }
-                                
+
                                 classpath.append( interpolator.interpolate( layout, recursionInterceptor ) );
                             }
                             else
                             {
                                 throw new ManifestException( "Unknown classpath layout type: '" + layoutType
-                                    + "'. Check your <archive><manifest><layoutType/> element." );
+                                                                 + "'. Check your <archive><manifest><layoutType/> element." );
                             }
                         }
                         catch ( InterpolationException e )
                         {
-                            ManifestException error =
-                                new ManifestException( "Error interpolating artifact path for classpath entry: "
-                                    + e.getMessage() );
-                            
+                            ManifestException error = new ManifestException(
+                                "Error interpolating artifact path for classpath entry: " + e.getMessage() );
+
                             error.initCause( e );
                             throw error;
                         }
@@ -415,7 +421,7 @@ public class MavenArchiver
         return m;
     }
 
-    private void addCustomEntries( Manifest m, Map entries, ManifestConfiguration config )
+    private void addCustomEntries( Manifest m, Map<String, String> entries, ManifestConfiguration config )
         throws ManifestException
     {
         addManifestAttribute( m, entries, "Built-By", System.getProperty( "user.name" ) );
@@ -533,7 +539,7 @@ public class MavenArchiver
         }
 
         archiver.setForced( forced );
-        if ( !archiveConfiguration.isForced()  &&  archiver.isSupportingForced() )
+        if ( !archiveConfiguration.isForced() && archiver.isSupportingForced() )
         {
             // TODO Should issue a warning here, but how do we get a logger?
             // TODO getLog().warn( "Forced build is disabled, but disabling the forced mode isn't supported by the archiver." );
@@ -542,8 +548,8 @@ public class MavenArchiver
         // create archive
         archiver.createArchive();
     }
-    
-    
+
+
     private Artifact findArtifactWithFile( Set artifacts, File file )
     {
         for ( Iterator iterator = artifacts.iterator(); iterator.hasNext(); )

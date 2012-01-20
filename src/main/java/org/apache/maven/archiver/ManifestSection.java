@@ -31,14 +31,14 @@ public class ManifestSection
 
     private String name = null;
 
-    private Map manifestEntries = new HashMap();
+    private Map<String,String> manifestEntries = new HashMap<String,String>();
 
-    public void addManifestEntry( Object key, Object value )
+    public void addManifestEntry( String key, String value )
     {
         manifestEntries.put( key, value );
     }
 
-    public Map getManifestEntries()
+    public Map<String,String> getManifestEntries()
     {
         return manifestEntries;
     }
@@ -53,7 +53,7 @@ public class ManifestSection
         this.name = name;
     }
 
-    public void addManifestEntries( Map map )
+    public void addManifestEntries( Map<String,String> map )
     {
         manifestEntries.putAll( map );
     }

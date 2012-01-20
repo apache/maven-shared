@@ -21,6 +21,7 @@ package org.apache.maven.archiver;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
@@ -85,13 +86,20 @@ public class MavenArchiver
      * Return a pre-configured manifest
      *
      * @todo Add user attributes list and user groups list
+     * @deprecated
      */
     public Manifest getManifest( MavenProject project, MavenArchiveConfiguration config )
         throws ManifestException, DependencyResolutionRequiredException
     {
+        return getManifest( null, project, config );
+    }
+
+    public Manifest getManifest( MavenSession session, MavenProject project, MavenArchiveConfiguration config )
+        throws ManifestException, DependencyResolutionRequiredException
+    {
         boolean hasManifestEntries = !config.isManifestEntriesEmpty();
         Map<String, String> entries = hasManifestEntries ? config.getManifestEntries() : Collections.EMPTY_MAP;
-        Manifest manifest = getManifest( project, config.getManifest(), entries );
+        Manifest manifest = getManifest( session, project, config.getManifest(), entries );
 
         // any custom manifest entries in the archive configuration manifest?
         if ( hasManifestEntries )
@@ -152,7 +160,13 @@ public class MavenArchiver
     public Manifest getManifest( MavenProject project, ManifestConfiguration config )
         throws ManifestException, DependencyResolutionRequiredException
     {
-        return getManifest( project, config, Collections.<String, String>emptyMap() );
+        return getManifest( null, project, config, Collections.<String, String>emptyMap() );
+    }
+
+    public Manifest getManifest( MavenSession mavenSession, MavenProject project, ManifestConfiguration config )
+        throws ManifestException, DependencyResolutionRequiredException
+    {
+        return getManifest( mavenSession, project, config, Collections.<String, String>emptyMap() );
     }
 
     private void addManifestAttribute( Manifest manifest, Map<String, String> map, String key, String value )
@@ -182,14 +196,15 @@ public class MavenArchiver
         }
     }
 
-    protected Manifest getManifest( MavenProject project, ManifestConfiguration config, Map<String, String> entries )
+    protected Manifest getManifest( MavenSession session, MavenProject project, ManifestConfiguration config,
+                                    Map<String, String> entries )
         throws ManifestException, DependencyResolutionRequiredException
     {
         // TODO: Should we replace "map" with a copy? Note, that we modify it!
 
         // Added basic entries
         Manifest m = new Manifest();
-        addManifestAttribute( m, entries, "Created-By", "Apache Maven" );
+        addCreatedByEntry( session, m, entries );
 
         addCustomEntries( m, entries, config );
 
@@ -459,7 +474,17 @@ public class MavenArchiver
         archiveFile = outputFile;
     }
 
+    /**
+     * @deprecated
+     */
     public void createArchive( MavenProject project, MavenArchiveConfiguration archiveConfiguration )
+        throws ArchiverException, ManifestException, IOException, DependencyResolutionRequiredException
+    {
+        createArchive( null, project, archiveConfiguration );
+    }
+
+    public void createArchive( MavenSession session, MavenProject project,
+                               MavenArchiveConfiguration archiveConfiguration )
         throws ArchiverException, ManifestException, IOException, DependencyResolutionRequiredException
     {
         // we have to clone the project instance so we can write out the pom with the deployment version,
@@ -516,7 +541,7 @@ public class MavenArchiver
             archiver.setManifest( manifestFile );
         }
 
-        Manifest manifest = getManifest( workingProject, archiveConfiguration );
+        Manifest manifest = getManifest( session, workingProject, archiveConfiguration );
 
         // Configure the jar
         archiver.addConfiguredManifest( manifest );
@@ -547,6 +572,21 @@ public class MavenArchiver
 
         // create archive
         archiver.createArchive();
+    }
+
+    private void addCreatedByEntry( MavenSession session, Manifest m, Map entries )
+        throws ManifestException
+    {
+        String createdBy = "Apache Maven";
+        if ( session != null ) // can be null due to API backwards compatibility
+        {
+            String mavenVersion = session.getExecutionProperties().getProperty( "maven.version" );
+            if ( mavenVersion != null )
+            {
+                createdBy += " " + mavenVersion;
+            }
+        }
+        addManifestAttribute( m, entries, "Created-By", createdBy );
     }
 
 

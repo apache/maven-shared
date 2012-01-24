@@ -44,9 +44,9 @@ public class MavenArchiveConfiguration
 
     private ManifestConfiguration manifest;
 
-    private Map manifestEntries = new HashMap();
+    private Map<String, String> manifestEntries = new HashMap<String, String>();
 
-    private List manifestSections = new ArrayList();
+    private List<ManifestSection> manifestSections = new ArrayList<ManifestSection>();
 
     /**
      * @since 2.2
@@ -112,12 +112,12 @@ public class MavenArchiveConfiguration
         this.manifest = manifest;
     }
 
-    public void addManifestEntry( Object key, Object value )
+    public void addManifestEntry( String key, String value )
     {
         manifestEntries.put( key, value );
     }
 
-    public void addManifestEntries( Map map )
+    public void addManifestEntries( Map<String,String> map )
     {
         manifestEntries.putAll( map );
     }
@@ -127,37 +127,37 @@ public class MavenArchiveConfiguration
         return manifestEntries.isEmpty();
     }
 
-    public Map getManifestEntries()
+    public Map<String,String> getManifestEntries()
     {
         return manifestEntries;
     }
-    
+
     public void setManifestEntries( Map manifestEntries )
     {
         this.manifestEntries = manifestEntries;
     }
-    
-    public void addManifestSection( ManifestSection section ) 
+
+    public void addManifestSection( ManifestSection section )
     {
         manifestSections.add( section );
     }
-    
-    public void addManifestSections( List list ) 
+
+    public void addManifestSections( List<ManifestSection> list )
     {
         manifestSections.addAll( list );
     }
-    
-    public boolean isManifestSectionsEmpty() 
+
+    public boolean isManifestSectionsEmpty()
     {
         return manifestSections.isEmpty();
     }
-    
-    public List getManifestSections() 
+
+    public List<ManifestSection> getManifestSections()
     {
         return manifestSections;
     }
-    
-    public void setManifestSections( List manifestSections )
+
+    public void setManifestSections( List<ManifestSection> manifestSections )
     {
         this.manifestSections = manifestSections;
     }
@@ -174,8 +174,9 @@ public class MavenArchiveConfiguration
      * of source files won't be detected.</p>
      * <p>An archiver doesn't necessarily support checks for uptodate. If
      * so, setting this option to true will simply be ignored.</p>
+     *
      * @return True, if the target archive should always be created; false
-     *   otherwise
+     *         otherwise
      * @see #setForced(boolean)
      */
     public boolean isForced()
@@ -195,8 +196,9 @@ public class MavenArchiveConfiguration
      * of source files won't be detected.</p>
      * <p>An archiver doesn't necessarily support checks for uptodate. If
      * so, setting this option to true will simply be ignored.</p>
+     *
      * @param forced True, if the target archive should always be created; false
-     *   otherwise
+     *               otherwise
      * @see #isForced()
      */
     public void setForced( boolean forced )
@@ -205,8 +207,9 @@ public class MavenArchiveConfiguration
     }
 
     /**
-     * Returns the location of the "pom.properties" file. 
+     * Returns the location of the "pom.properties" file.
      * May be null, in which case a default value is choosen.
+     *
      * @return "pom.properties" location or null.
      */
     public File getPomPropertiesFile()
@@ -215,8 +218,9 @@ public class MavenArchiveConfiguration
     }
 
     /**
-     * Sets the location of the "pom.properties" file. 
+     * Sets the location of the "pom.properties" file.
      * May be null, in which case a default value is choosen.
+     *
      * @param pomPropertiesFile "pom.properties" location or null.
      */
     public void setPomPropertiesFile( File pomPropertiesFile )

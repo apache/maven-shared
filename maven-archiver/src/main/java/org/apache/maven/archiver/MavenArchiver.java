@@ -418,14 +418,15 @@ public class MavenArchiver
                 Artifact artifact = (Artifact) iter.next();
                 if ( "jar".equals( artifact.getType() ) )
                 {
-                    String ename = artifact.getArtifactId() + "-Extension-Name";
+                    String artifactId = artifact.getArtifactId().replace('.', '_');
+                    String ename = artifactId + "-Extension-Name";
                     addManifestAttribute( m, entries, ename, artifact.getArtifactId() );
-                    String iname = artifact.getArtifactId() + "-Implementation-Version";
+                    String iname = artifactId + "-Implementation-Version";
                     addManifestAttribute( m, entries, iname, artifact.getVersion() );
 
                     if ( artifact.getRepository() != null )
                     {
-                        iname = artifact.getArtifactId() + "-Implementation-URL";
+                        iname = artifactId + "-Implementation-URL";
                         String url = artifact.getRepository().getUrl() + "/" + artifact.toString();
                         addManifestAttribute( m, entries, iname, url );
                     }

@@ -19,6 +19,14 @@ package org.apache.maven.archiver;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.execution.MavenSession;
@@ -36,16 +44,6 @@ import org.codehaus.plexus.interpolation.RecursionInterceptor;
 import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.util.StringUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
@@ -68,11 +66,11 @@ public class MavenArchiver
         "${artifact.baseVersion}/${artifact.artifactId}-" +
         "${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
 
-    private static final List ARTIFACT_EXPRESSION_PREFIXES;
+    private static final List<String> ARTIFACT_EXPRESSION_PREFIXES;
 
     static
     {
-        List artifactExpressionPrefixes = new ArrayList();
+        List<String> artifactExpressionPrefixes = new ArrayList<String>();
         artifactExpressionPrefixes.add( "artifact." );
 
         ARTIFACT_EXPRESSION_PREFIXES = artifactExpressionPrefixes;
@@ -85,9 +83,15 @@ public class MavenArchiver
     /**
      * Return a pre-configured manifest
      *
+     * @param project the project
+     * @param config the configuration to use
      * @todo Add user attributes list and user groups list
      * @deprecated
+     * @return a manifest, clients are recommended to use java.util.jar.Manifest datatype.
+     * @throws org.apache.maven.artifact.DependencyResolutionRequiredException .
+     * @throws org.codehaus.plexus.archiver.jar.ManifestException .
      */
+    @SuppressWarnings( "UnusedDeclaration" )
     public Manifest getManifest( MavenProject project, MavenArchiveConfiguration config )
         throws ManifestException, DependencyResolutionRequiredException
     {
@@ -98,6 +102,7 @@ public class MavenArchiver
         throws ManifestException, DependencyResolutionRequiredException
     {
         boolean hasManifestEntries = !config.isManifestEntriesEmpty();
+        @SuppressWarnings( "unchecked" )
         Map<String, String> entries = hasManifestEntries ? config.getManifestEntries() : Collections.EMPTY_MAP;
         Manifest manifest = getManifest( session, project, config.getManifest(), entries );
 
@@ -157,6 +162,7 @@ public class MavenArchiver
      *
      * @todo Add user attributes list and user groups list
      */
+    @SuppressWarnings( { "JavaDoc", "UnusedDeclaration" } )
     public Manifest getManifest( MavenProject project, ManifestConfiguration config )
         throws ManifestException, DependencyResolutionRequiredException
     {
@@ -212,18 +218,20 @@ public class MavenArchiver
         {
             StringBuilder classpath = new StringBuilder();
 
-            List artifacts = project.getRuntimeClasspathElements();
+            @SuppressWarnings( "unchecked" )
+            List<String> artifacts = project.getRuntimeClasspathElements();
             String classpathPrefix = config.getClasspathPrefix();
             String layoutType = config.getClasspathLayoutType();
             String layout = config.getCustomClasspathLayout();
 
             Interpolator interpolator = new StringSearchInterpolator();
 
-            for ( Iterator iter = artifacts.iterator(); iter.hasNext(); )
+            for ( String artifactFile : artifacts )
             {
-                File f = new File( (String) iter.next() );
+                File f = new File( artifactFile );
                 if ( f.getAbsoluteFile().isFile() )
                 {
+                    @SuppressWarnings( "unchecked" )
                     Artifact artifact = findArtifactWithFile( project.getArtifacts(), f );
 
                     if ( classpath.length() > 0 )
@@ -239,7 +247,7 @@ public class MavenArchiver
                     }
                     else
                     {
-                        List valueSources = new ArrayList();
+                        List<ValueSource> valueSources = new ArrayList<ValueSource>();
                         valueSources.add(
                             new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact, true ) );
                         valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact == null
@@ -271,9 +279,8 @@ public class MavenArchiver
                         valueSources.add(
                             new PrefixedPropertiesValueSource( ARTIFACT_EXPRESSION_PREFIXES, extraExpressions, true ) );
 
-                        for ( Iterator it = valueSources.iterator(); it.hasNext(); )
+                        for ( ValueSource vs : valueSources )
                         {
-                            ValueSource vs = (ValueSource) it.next();
                             interpolator.addValueSource( vs );
                         }
 
@@ -335,9 +342,8 @@ public class MavenArchiver
                         }
                         finally
                         {
-                            for ( Iterator it = valueSources.iterator(); it.hasNext(); )
+                            for ( ValueSource vs : valueSources )
                             {
-                                ValueSource vs = (ValueSource) it.next();
                                 interpolator.removeValuesSource( vs );
                             }
                         }
@@ -387,12 +393,11 @@ public class MavenArchiver
         if ( config.isAddExtensions() )
         {
             // TODO: this is only for applets - should we distinguish them as a packaging?
-            StringBuffer extensionsList = new StringBuffer();
-            Set artifacts = project.getArtifacts();
+            StringBuilder extensionsList = new StringBuilder();
+            @SuppressWarnings( "unchecked" ) Set<Artifact> artifacts = (Set<Artifact>)project.getArtifacts();
 
-            for ( Iterator iter = artifacts.iterator(); iter.hasNext(); )
+            for ( Artifact artifact : artifacts )
             {
-                Artifact artifact = (Artifact) iter.next();
                 if ( !Artifact.SCOPE_TEST.equals( artifact.getScope() ) )
                 {
                     if ( "jar".equals( artifact.getType() ) )
@@ -411,14 +416,14 @@ public class MavenArchiver
                 addManifestAttribute( m, entries, "Extension-List", extensionsList.toString() );
             }
 
-            for ( Iterator iter = artifacts.iterator(); iter.hasNext(); )
+            for ( Object artifact1 : artifacts )
             {
                 // TODO: the correct solution here would be to have an extension type, and to read
                 // the real extension values either from the artifact's manifest or some part of the POM
-                Artifact artifact = (Artifact) iter.next();
+                Artifact artifact = (Artifact) artifact1;
                 if ( "jar".equals( artifact.getType() ) )
                 {
-                    String artifactId = artifact.getArtifactId().replace('.', '_');
+                    String artifactId = artifact.getArtifactId().replace( '.', '_' );
                     String ename = artifactId + "-Extension-Name";
                     addManifestAttribute( m, entries, ename, artifact.getArtifactId() );
                     String iname = artifactId + "-Implementation-Version";
@@ -460,6 +465,7 @@ public class MavenArchiver
         }
     }
 
+    @SuppressWarnings( "UnusedDeclaration" )
     public JarArchiver getArchiver()
     {
         return archiver;
@@ -478,6 +484,7 @@ public class MavenArchiver
     /**
      * @deprecated
      */
+    @SuppressWarnings( "JavaDoc" )
     public void createArchive( MavenProject project, MavenArchiveConfiguration archiveConfiguration )
         throws ArchiverException, ManifestException, IOException, DependencyResolutionRequiredException
     {
@@ -556,10 +563,10 @@ public class MavenArchiver
         // make the archiver index the jars on the classpath, if we are adding that to the manifest
         if ( archiveConfiguration.getManifest().isAddClasspath() )
         {
-            List artifacts = project.getRuntimeClasspathElements();
-            for ( Iterator iter = artifacts.iterator(); iter.hasNext(); )
+            @SuppressWarnings( "unchecked" ) List<String> artifacts = project.getRuntimeClasspathElements();
+            for ( String artifact : artifacts )
             {
-                File f = new File( (String) iter.next() );
+                File f = new File( artifact );
                 archiver.addConfiguredIndexJars( f );
             }
         }
@@ -591,11 +598,10 @@ public class MavenArchiver
     }
 
 
-    private Artifact findArtifactWithFile( Set artifacts, File file )
+    private Artifact findArtifactWithFile( Set<Artifact> artifacts, File file )
     {
-        for ( Iterator iterator = artifacts.iterator(); iterator.hasNext(); )
+        for ( Artifact artifact : artifacts )
         {
-            Artifact artifact = (Artifact) iterator.next();
             // normally not null but we can check
             if ( artifact.getFile() != null )
             {

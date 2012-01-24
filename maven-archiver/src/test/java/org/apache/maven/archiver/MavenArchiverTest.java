@@ -342,8 +342,8 @@ public class MavenArchiverTest
         MavenSession session = getDummySession();
         MavenProject project = getDummyProject();
 
-        Set<Artifact> artifacts = getArtifacts( getMockArtifact1(), getArtifactWithDot(),
-                                                getMockArtifact2(), getMockArtifact3() );
+        Set<Artifact> artifacts =
+            getArtifacts( getMockArtifact1(), getArtifactWithDot(), getMockArtifact2(), getMockArtifact3() );
 
         project.setArtifacts( artifacts );
 
@@ -360,204 +360,186 @@ public class MavenArchiverTest
         assertTrue( jarFile.exists() );
     }
 
+    public void testDashesInClassPath_MSHARED_182()
+        throws IOException, ManifestException, DependencyResolutionRequiredException
+    {
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
+
+        MavenSession session = getDummySession();
+        MavenProject project = getDummyProject();
+
+        Set<Artifact> artifacts =
+            getArtifacts( getMockArtifact1(), getArtifactWithDot(), getMockArtifact2(), getMockArtifact3() );
+
+        project.setArtifacts( artifacts );
+
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( false );
+
+        final ManifestConfiguration mftConfig = config.getManifest();
+        mftConfig.setMainClass( "org.apache.maven.Foo" );
+        mftConfig.setAddClasspath( true );
+        mftConfig.setAddExtensions( true );
+        mftConfig.setClasspathPrefix( "./lib/" );
+        config.addManifestEntry( "Key1", "value1" );
+        config.addManifestEntry( "key2", "value2" );
+
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
+        final Attributes mainAttributes = getJarFileManifest( jarFile ).getMainAttributes();
+        assertEquals( "value1", mainAttributes.getValue( "Key1" ) );
+        assertEquals( "value2", mainAttributes.getValue( "Key2" ) );
+    }
+
     public void testCarriageReturnInManifestEntry()
         throws Exception
     {
-        JarFile jar = null;
-        try
-        {
-            File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
 
-            MavenArchiver archiver = getMavenArchiver( jarArchiver );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
-            MavenSession session = getDummySession();
-            MavenProject project = getDummyProject();
+        MavenSession session = getDummySession();
+        MavenProject project = getDummyProject();
 
-            String ls = System.getProperty( "line.separator" );
-            project.setDescription( "foo " + ls + " bar " );
-            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-            config.setForced( true );
-            config.getManifest().setAddDefaultImplementationEntries( true );
-            config.addManifestEntry( "Description", project.getDescription() );
-            // config.addManifestEntry( "EntryWithTab", " foo tab " + ( '\u0009' ) + ( '\u0009' ) + " bar tab" + (
-            // '\u0009' ) );
-            archiver.createArchive( session, project, config );
-            assertTrue( jarFile.exists() );
+        String ls = System.getProperty( "line.separator" );
+        project.setDescription( "foo " + ls + " bar " );
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.addManifestEntry( "Description", project.getDescription() );
+        // config.addManifestEntry( "EntryWithTab", " foo tab " + ( '\u0009' ) + ( '\u0009' ) + " bar tab" + (
+        // '\u0009' ) );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
 
-            jar = new JarFile( jarFile );
-
-            Attributes attributes = jar.getManifest().getMainAttributes();
-            assertTrue( project.getDescription().indexOf( ls ) > 0 );
-            Attributes.Name description = new Attributes.Name( "Description" );
-            String value = attributes.getValue( description );
-            assertNotNull( value );
-            assertFalse( value.indexOf( ls ) > 0 );
-        }
-        finally
-        {
-            // cleanup streams
-            if ( jar != null )
-            {
-                jar.close();
-            }
-        }
+        final Manifest manifest = getJarFileManifest( jarFile );
+        Attributes attributes = manifest.getMainAttributes();
+        assertTrue( project.getDescription().indexOf( ls ) > 0 );
+        Attributes.Name description = new Attributes.Name( "Description" );
+        String value = attributes.getValue( description );
+        assertNotNull( value );
+        assertFalse( value.indexOf( ls ) > 0 );
     }
 
     public void testDeprecatedCreateArchiveAPI()
         throws Exception
     {
-        JarFile jar = null;
-        try
-        {
-            File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
 
-            MavenArchiver archiver = getMavenArchiver( jarArchiver );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
-            MavenProject project = getDummyProject();
-            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-            config.setForced( true );
-            config.getManifest().setAddDefaultImplementationEntries( true );
-            config.getManifest().setAddDefaultSpecificationEntries( true );
+        MavenProject project = getDummyProject();
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
 
-            //noinspection deprecation
-            archiver.createArchive( project, config );
-            assertTrue( jarFile.exists() );
-            jar = new JarFile( jarFile );
+        //noinspection deprecation
+        archiver.createArchive( project, config );
+        assertTrue( jarFile.exists() );
+        Attributes manifest = getJarFileManifest( jarFile ).getMainAttributes();
 
-            Attributes manifest = jar.getManifest().getMainAttributes();
+        assertEquals( "Apache Maven", manifest.get( new Attributes.Name( "Created-By" ) ) ); // no version number
 
-            assertEquals( "Apache Maven", manifest.get( new Attributes.Name( "Created-By" ) ) ); // no version number
+        assertEquals( "archiver test", manifest.get( Attributes.Name.SPECIFICATION_TITLE ) );
+        assertEquals( "0.1", manifest.get( Attributes.Name.SPECIFICATION_VERSION ) );
+        assertEquals( "Apache", manifest.get( Attributes.Name.SPECIFICATION_VENDOR ) );
 
-            assertEquals( "archiver test", manifest.get( Attributes.Name.SPECIFICATION_TITLE ) );
-            assertEquals( "0.1", manifest.get( Attributes.Name.SPECIFICATION_VERSION ) );
-            assertEquals( "Apache", manifest.get( Attributes.Name.SPECIFICATION_VENDOR ) );
+        assertEquals( "archiver test", manifest.get( Attributes.Name.IMPLEMENTATION_TITLE ) );
+        assertEquals( "0.1", manifest.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
+        assertEquals( "org.apache.dummy", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR_ID ) );
+        assertEquals( "Apache", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR ) );
 
-            assertEquals( "archiver test", manifest.get( Attributes.Name.IMPLEMENTATION_TITLE ) );
-            assertEquals( "0.1", manifest.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
-            assertEquals( "org.apache.dummy", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR_ID ) );
-            assertEquals( "Apache", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR ) );
-
-            assertEquals( System.getProperty( "java.version" ), manifest.get( new Attributes.Name( "Build-Jdk" ) ) );
-            assertEquals( System.getProperty( "user.name" ), manifest.get( new Attributes.Name( "Built-By" ) ) );
-        }
-        finally
-        {
-            // cleanup streams
-            if ( jar != null )
-            {
-                jar.close();
-            }
-        }
+        assertEquals( System.getProperty( "java.version" ), manifest.get( new Attributes.Name( "Build-Jdk" ) ) );
+        assertEquals( System.getProperty( "user.name" ), manifest.get( new Attributes.Name( "Built-By" ) ) );
     }
 
     public void testManifestEntries()
         throws Exception
     {
-        JarFile jar = null;
-        try
-        {
-            File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
 
-            MavenArchiver archiver = getMavenArchiver( jarArchiver );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
-            MavenSession session = getDummySession();
-            MavenProject project = getDummyProject();
-            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-            config.setForced( true );
-            config.getManifest().setAddDefaultImplementationEntries( true );
-            config.getManifest().setAddDefaultSpecificationEntries( true );
+        MavenSession session = getDummySession();
+        MavenProject project = getDummyProject();
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
 
-            Map<String, String> manifestEntries = new HashMap<String, String>();
-            manifestEntries.put( "foo", "bar" );
-            manifestEntries.put( "first-name", "olivier" );
-            manifestEntries.put( "keyWithEmptyValue", null );
-            config.setManifestEntries( manifestEntries );
+        Map<String, String> manifestEntries = new HashMap<String, String>();
+        manifestEntries.put( "foo", "bar" );
+        manifestEntries.put( "first-name", "olivier" );
+        manifestEntries.put( "keyWithEmptyValue", null );
+        config.setManifestEntries( manifestEntries );
 
-            ManifestSection manifestSection = new ManifestSection();
-            manifestSection.setName( "UserSection" );
-            manifestSection.addManifestEntry( "key", "value" );
-            List<ManifestSection> manifestSections = new ArrayList<ManifestSection>();
-            manifestSections.add( manifestSection );
-            config.setManifestSections( manifestSections );
-            config.getManifest().setMainClass( "org.apache.maven.Foo" );
-            archiver.createArchive( session, project, config );
-            assertTrue( jarFile.exists() );
-            jar = new JarFile( jarFile );
+        ManifestSection manifestSection = new ManifestSection();
+        manifestSection.setName( "UserSection" );
+        manifestSection.addManifestEntry( "key", "value" );
+        List<ManifestSection> manifestSections = new ArrayList<ManifestSection>();
+        manifestSections.add( manifestSection );
+        config.setManifestSections( manifestSections );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
 
-            Attributes manifest = jar.getManifest().getMainAttributes();
+        final Manifest jarFileManifest = getJarFileManifest( jarFile );
+        Attributes manifest = jarFileManifest.getMainAttributes();
 
-            assertEquals( "Apache Maven 3.0.4", manifest.get( new Attributes.Name( "Created-By" ) ) );
+        assertEquals( "Apache Maven 3.0.4", manifest.get( new Attributes.Name( "Created-By" ) ) );
 
-            assertEquals( "archiver test", manifest.get( Attributes.Name.SPECIFICATION_TITLE ) );
-            assertEquals( "0.1", manifest.get( Attributes.Name.SPECIFICATION_VERSION ) );
-            assertEquals( "Apache", manifest.get( Attributes.Name.SPECIFICATION_VENDOR ) );
+        assertEquals( "archiver test", manifest.get( Attributes.Name.SPECIFICATION_TITLE ) );
+        assertEquals( "0.1", manifest.get( Attributes.Name.SPECIFICATION_VERSION ) );
+        assertEquals( "Apache", manifest.get( Attributes.Name.SPECIFICATION_VENDOR ) );
 
-            assertEquals( "archiver test", manifest.get( Attributes.Name.IMPLEMENTATION_TITLE ) );
-            assertEquals( "0.1", manifest.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
-            assertEquals( "org.apache.dummy", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR_ID ) );
-            assertEquals( "Apache", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR ) );
+        assertEquals( "archiver test", manifest.get( Attributes.Name.IMPLEMENTATION_TITLE ) );
+        assertEquals( "0.1", manifest.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
+        assertEquals( "org.apache.dummy", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR_ID ) );
+        assertEquals( "Apache", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR ) );
 
-            assertEquals( "org.apache.maven.Foo", manifest.get( Attributes.Name.MAIN_CLASS ) );
+        assertEquals( "org.apache.maven.Foo", manifest.get( Attributes.Name.MAIN_CLASS ) );
 
-            assertEquals( "bar", manifest.get( new Attributes.Name( "foo" ) ) );
-            assertEquals( "olivier", manifest.get( new Attributes.Name( "first-name" ) ) );
+        assertEquals( "bar", manifest.get( new Attributes.Name( "foo" ) ) );
+        assertEquals( "olivier", manifest.get( new Attributes.Name( "first-name" ) ) );
 
-            assertEquals( System.getProperty( "java.version" ), manifest.get( new Attributes.Name( "Build-Jdk" ) ) );
-            assertEquals( System.getProperty( "user.name" ), manifest.get( new Attributes.Name( "Built-By" ) ) );
+        assertEquals( System.getProperty( "java.version" ), manifest.get( new Attributes.Name( "Build-Jdk" ) ) );
+        assertEquals( System.getProperty( "user.name" ), manifest.get( new Attributes.Name( "Built-By" ) ) );
 
-            assertTrue( StringUtils.isEmpty( manifest.getValue( new Attributes.Name( "keyWithEmptyValue" ) ) ) );
-            assertTrue( manifest.containsKey( new Attributes.Name( "keyWithEmptyValue" ) ) );
+        assertTrue( StringUtils.isEmpty( manifest.getValue( new Attributes.Name( "keyWithEmptyValue" ) ) ) );
+        assertTrue( manifest.containsKey( new Attributes.Name( "keyWithEmptyValue" ) ) );
 
-            manifest = jar.getManifest().getAttributes( "UserSection" );
+        manifest = jarFileManifest.getAttributes( "UserSection" );
 
-            assertEquals( "value", manifest.get( new Attributes.Name( "key" ) ) );
-        }
-        finally
-        {
-            // cleanup streams
-            if ( jar != null )
-            {
-                jar.close();
-            }
-        }
+        assertEquals( "value", manifest.get( new Attributes.Name( "key" ) ) );
     }
 
     public void testCreatedByManifestEntryWithoutMavenVersion()
         throws Exception
     {
-        JarFile jar = null;
-        try
-        {
-            File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
 
-            MavenArchiver archiver = getMavenArchiver( jarArchiver );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
-            MavenSession session = getDummySessionWithoutMavenVersion();
-            MavenProject project = getDummyProject();
+        MavenSession session = getDummySessionWithoutMavenVersion();
+        MavenProject project = getDummyProject();
 
-            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-            config.setForced( true );
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
 
-            archiver.createArchive( session, project, config );
-            assertTrue( jarFile.exists() );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
 
-            jar = new JarFile( jarFile );
-            Map entries = jar.getManifest().getMainAttributes();
+        final Manifest manifest = getJarFileManifest( jarFile );
+        Map entries = manifest.getMainAttributes();
 
-            assertEquals( "Apache Maven", entries.get( new Attributes.Name( "Created-By" ) ) );
-        }
-        finally
-        {
-            // cleanup streams
-            if ( jar != null )
-            {
-                jar.close();
-            }
-        }
+        assertEquals( "Apache Maven", entries.get( new Attributes.Name( "Created-By" ) ) );
     }
 
     /*
@@ -596,39 +578,26 @@ public class MavenArchiverTest
     {
         MavenSession session = getDummySession();
         MavenProject project = getDummyProject();
-        JarFile jar = null;
-        try
-        {
-            File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
 
-            MavenArchiver archiver = getMavenArchiver( jarArchiver );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
-            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-            config.setForced( true );
-            config.getManifest().setAddDefaultImplementationEntries( true );
-            config.getManifest().setAddDefaultSpecificationEntries( true );
-            config.getManifest().setMainClass( "org.apache.maven.Foo" );
-            config.getManifest().setAddClasspath( true );
-            archiver.createArchive( session, project, config );
-            assertTrue( jarFile.exists() );
-            jar = new JarFile( jarFile );
-
-            String classPath = jar.getManifest().getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
-            assertNotNull( classPath );
-            String[] classPathEntries = StringUtils.split( classPath, " " );
-            assertEquals( "dummy1-1.0.jar", classPathEntries[0] );
-            assertEquals( "dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "dummy3-2.0.jar", classPathEntries[2] );
-        }
-        finally
-        {
-            // cleanup streams
-            if ( jar != null )
-            {
-                jar.close();
-            }
-        }
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        config.getManifest().setAddClasspath( true );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
+        final Manifest manifest = getJarFileManifest( jarFile );
+        String classPath = manifest.getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+        assertNotNull( classPath );
+        String[] classPathEntries = StringUtils.split( classPath, " " );
+        assertEquals( "dummy1-1.0.jar", classPathEntries[0] );
+        assertEquals( "dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "dummy3-2.0.jar", classPathEntries[2] );
     }
 
     @SuppressWarnings( "ResultOfMethodCallIgnored" )
@@ -644,39 +613,27 @@ public class MavenArchiverTest
     {
         MavenSession session = getDummySession();
         MavenProject project = getDummyProjectWithSnapshot();
-        JarFile jar = null;
-        try
-        {
-            File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
 
-            MavenArchiver archiver = getMavenArchiver( jarArchiver );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
-            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-            config.setForced( true );
-            config.getManifest().setAddDefaultImplementationEntries( true );
-            config.getManifest().setAddDefaultSpecificationEntries( true );
-            config.getManifest().setMainClass( "org.apache.maven.Foo" );
-            config.getManifest().setAddClasspath( true );
-            archiver.createArchive( session, project, config );
-            assertTrue( jarFile.exists() );
-            jar = new JarFile( jarFile );
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        config.getManifest().setAddClasspath( true );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
 
-            String classPath = jar.getManifest().getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
-            assertNotNull( classPath );
-            String[] classPathEntries = StringUtils.split( classPath, " " );
-            assertEquals( "dummy1-1.1-20081022.112233-1.jar", classPathEntries[0] );
-            assertEquals( "dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "dummy3-2.0.jar", classPathEntries[2] );
-        }
-        finally
-        {
-            // cleanup streams
-            if ( jar != null )
-            {
-                jar.close();
-            }
-        }
+        final Manifest manifest = getJarFileManifest( jarFile );
+        String classPath = manifest.getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+        assertNotNull( classPath );
+        String[] classPathEntries = StringUtils.split( classPath, " " );
+        assertEquals( "dummy1-1.1-20081022.112233-1.jar", classPathEntries[0] );
+        assertEquals( "dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "dummy3-2.0.jar", classPathEntries[2] );
     }
 
     public void testMavenRepoClassPathValue()
@@ -684,48 +641,33 @@ public class MavenArchiverTest
     {
         MavenSession session = getDummySession();
         MavenProject project = getDummyProject();
-        JarFile jar = null;
-        try
-        {
-            File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
 
-            MavenArchiver archiver = getMavenArchiver( jarArchiver );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
-            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-            config.setForced( true );
-            config.getManifest().setAddDefaultImplementationEntries( true );
-            config.getManifest().setAddDefaultSpecificationEntries( true );
-            config.getManifest().setMainClass( "org.apache.maven.Foo" );
-            config.getManifest().setAddClasspath( true );
-            config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_REPOSITORY );
-            archiver.createArchive( session, project, config );
-            assertTrue( jarFile.exists() );
-            jar = new JarFile( jarFile );
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        config.getManifest().setAddClasspath( true );
+        config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_REPOSITORY );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
+        Manifest manifest = archiver.getManifest( session, project, config );
+        String[] classPathEntries =
+            StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ), " " );
+        assertEquals( "org/apache/dummy/dummy1/1.0/dummy1-1.0.jar", classPathEntries[0] );
+        assertEquals( "org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
 
-            Manifest manifest = archiver.getManifest( session, project, config );
-            String[] classPathEntries =
-                StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ),
-                                   " " );
-            assertEquals( "org/apache/dummy/dummy1/1.0/dummy1-1.0.jar", classPathEntries[0] );
-            assertEquals( "org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
-
-            String classPath = jar.getManifest().getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
-            assertNotNull( classPath );
-            classPathEntries = StringUtils.split( classPath, " " );
-            assertEquals( "org/apache/dummy/dummy1/1.0/dummy1-1.0.jar", classPathEntries[0] );
-            assertEquals( "org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
-        }
-        finally
-        {
-            // cleanup streams
-            if ( jar != null )
-            {
-                jar.close();
-            }
-        }
+        String classPath = getJarFileManifest( jarFile ).getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+        assertNotNull( classPath );
+        classPathEntries = StringUtils.split( classPath, " " );
+        assertEquals( "org/apache/dummy/dummy1/1.0/dummy1-1.0.jar", classPathEntries[0] );
+        assertEquals( "org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
     }
 
     public void testMavenRepoClassPathValue_WithSnapshot()
@@ -733,50 +675,34 @@ public class MavenArchiverTest
     {
         MavenSession session = getDummySession();
         MavenProject project = getDummyProjectWithSnapshot();
-        JarFile jar = null;
-        try
-        {
-            File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
 
-            MavenArchiver archiver = getMavenArchiver( jarArchiver );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
-            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-            config.setForced( true );
-            config.getManifest().setAddDefaultImplementationEntries( true );
-            config.getManifest().setAddDefaultSpecificationEntries( true );
-            config.getManifest().setMainClass( "org.apache.maven.Foo" );
-            config.getManifest().setAddClasspath( true );
-            config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_REPOSITORY );
-            archiver.createArchive( session, project, config );
-            assertTrue( jarFile.exists() );
-            jar = new JarFile( jarFile );
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        config.getManifest().setAddClasspath( true );
+        config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_REPOSITORY );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
 
-            Manifest manifest = archiver.getManifest( session, project, config );
-            String[] classPathEntries =
-                StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ),
-                                   " " );
-            assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/dummy1-1.1-20081022.112233-1.jar",
-                          classPathEntries[0] );
-            assertEquals( "org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
+        Manifest manifest = archiver.getManifest( session, project, config );
+        String[] classPathEntries =
+            StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ), " " );
+        assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/dummy1-1.1-20081022.112233-1.jar", classPathEntries[0] );
+        assertEquals( "org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
 
-            String classPath = jar.getManifest().getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
-            assertNotNull( classPath );
-            classPathEntries = StringUtils.split( classPath, " " );
-            assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/dummy1-1.1-20081022.112233-1.jar",
-                          classPathEntries[0] );
-            assertEquals( "org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
-        }
-        finally
-        {
-            // cleanup streams
-            if ( jar != null )
-            {
-                jar.close();
-            }
-        }
+        String classPath = getJarFileManifest( jarFile ).getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+        assertNotNull( classPath );
+        classPathEntries = StringUtils.split( classPath, " " );
+        assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/dummy1-1.1-20081022.112233-1.jar", classPathEntries[0] );
+        assertEquals( "org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
     }
 
     public void testCustomClassPathValue()
@@ -784,50 +710,36 @@ public class MavenArchiverTest
     {
         MavenSession session = getDummySession();
         MavenProject project = getDummyProject();
-        JarFile jar = null;
-        try
-        {
-            File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
 
-            MavenArchiver archiver = getMavenArchiver( jarArchiver );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
-            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-            config.setForced( true );
-            config.getManifest().setAddDefaultImplementationEntries( true );
-            config.getManifest().setAddDefaultSpecificationEntries( true );
-            config.getManifest().setMainClass( "org.apache.maven.Foo" );
-            config.getManifest().setAddClasspath( true );
-            config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
-            config.getManifest().setCustomClasspathLayout(
-                "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.version}/TEST-${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}" );
-            archiver.createArchive( session, project, config );
-            assertTrue( jarFile.exists() );
-            jar = new JarFile( jarFile );
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        config.getManifest().setAddClasspath( true );
+        config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
+        config.getManifest().setCustomClasspathLayout(
+            "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.version}/TEST-${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}" );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
+        Manifest manifest = archiver.getManifest( session, project, config );
+        String[] classPathEntries =
+            StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ), " " );
+        assertEquals( "org/apache/dummy/dummy1/1.0/TEST-dummy1-1.0.jar", classPathEntries[0] );
+        assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
 
-            Manifest manifest = archiver.getManifest( session, project, config );
-            String[] classPathEntries =
-                StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ),
-                                   " " );
-            assertEquals( "org/apache/dummy/dummy1/1.0/TEST-dummy1-1.0.jar", classPathEntries[0] );
-            assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
-
-            String classPath = jar.getManifest().getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
-            assertNotNull( classPath );
-            classPathEntries = StringUtils.split( classPath, " " );
-            assertEquals( "org/apache/dummy/dummy1/1.0/TEST-dummy1-1.0.jar", classPathEntries[0] );
-            assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
-        }
-        finally
-        {
-            // cleanup streams
-            if ( jar != null )
-            {
-                jar.close();
-            }
-        }
+        final Manifest manifest1 = getJarFileManifest( jarFile );
+        String classPath = manifest1.getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+        assertNotNull( classPath );
+        classPathEntries = StringUtils.split( classPath, " " );
+        assertEquals( "org/apache/dummy/dummy1/1.0/TEST-dummy1-1.0.jar", classPathEntries[0] );
+        assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
     }
 
     public void testCustomClassPathValue_WithSnapshotResolvedVersion()
@@ -835,51 +747,37 @@ public class MavenArchiverTest
     {
         MavenSession session = getDummySession();
         MavenProject project = getDummyProjectWithSnapshot();
-        JarFile jar = null;
-        try
-        {
-            File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
-            MavenArchiver archiver = getMavenArchiver( jarArchiver );
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
-            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-            config.setForced( true );
-            config.getManifest().setAddDefaultImplementationEntries( true );
-            config.getManifest().setAddDefaultSpecificationEntries( true );
-            config.getManifest().setMainClass( "org.apache.maven.Foo" );
-            config.getManifest().setAddClasspath( true );
-            config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
-            config.getManifest().setCustomClasspathLayout(
-                "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.baseVersion}/TEST-${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}" );
-            archiver.createArchive( session, project, config );
-            assertTrue( jarFile.exists() );
-            jar = new JarFile( jarFile );
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        config.getManifest().setAddClasspath( true );
+        config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
+        config.getManifest().setCustomClasspathLayout(
+            "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.baseVersion}/TEST-${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}" );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
 
-            Manifest manifest = archiver.getManifest( session, project, config );
-            String[] classPathEntries =
-                StringUtils.split( new String( manifest.getMainAttributes().getValue("Class-Path").getBytes() ),
-                                   " " );
-            assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/TEST-dummy1-1.1-20081022.112233-1.jar",
-                          classPathEntries[0] );
-            assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
+        Manifest manifest = archiver.getManifest( session, project, config );
+        String[] classPathEntries =
+            StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ), " " );
+        assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/TEST-dummy1-1.1-20081022.112233-1.jar",
+                      classPathEntries[0] );
+        assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
 
-            String classPath = jar.getManifest().getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
-            assertNotNull( classPath );
-            classPathEntries = StringUtils.split( classPath, " " );
-            assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/TEST-dummy1-1.1-20081022.112233-1.jar",
-                          classPathEntries[0] );
-            assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
-        }
-        finally
-        {
-            // cleanup streams
-            if ( jar != null )
-            {
-                jar.close();
-            }
-        }
+        String classPath = getJarFileManifest( jarFile ).getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+        assertNotNull( classPath );
+        classPathEntries = StringUtils.split( classPath, " " );
+        assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/TEST-dummy1-1.1-20081022.112233-1.jar",
+                      classPathEntries[0] );
+        assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
     }
 
     public void testCustomClassPathValue_WithSnapshotForcingBaseVersion()
@@ -887,50 +785,35 @@ public class MavenArchiverTest
     {
         MavenSession session = getDummySession();
         MavenProject project = getDummyProjectWithSnapshot();
-        JarFile jar = null;
-        try
-        {
-            File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
 
-            MavenArchiver archiver = getMavenArchiver( jarArchiver );
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
-            MavenArchiveConfiguration config = new MavenArchiveConfiguration();
-            config.setForced( true );
-            config.getManifest().setAddDefaultImplementationEntries( true );
-            config.getManifest().setAddDefaultSpecificationEntries( true );
-            config.getManifest().setMainClass( "org.apache.maven.Foo" );
-            config.getManifest().setAddClasspath( true );
-            config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
-            config.getManifest().setCustomClasspathLayout(
-                "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.baseVersion}/TEST-${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}" );
-            archiver.createArchive( session, project, config );
-            assertTrue( jarFile.exists() );
-            jar = new JarFile( jarFile );
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        config.getManifest().setAddClasspath( true );
+        config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
+        config.getManifest().setCustomClasspathLayout(
+            "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.baseVersion}/TEST-${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}" );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
+        Manifest manifest = archiver.getManifest( session, project, config );
+        String[] classPathEntries =
+            StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ), " " );
+        assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/TEST-dummy1-1.1-SNAPSHOT.jar", classPathEntries[0] );
+        assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
 
-            Manifest manifest = archiver.getManifest( session, project, config );
-            String[] classPathEntries =
-                StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ),
-                                   " " );
-            assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/TEST-dummy1-1.1-SNAPSHOT.jar", classPathEntries[0] );
-            assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
-
-            String classPath = jar.getManifest().getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
-            assertNotNull( classPath );
-            classPathEntries = StringUtils.split( classPath, " " );
-            assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/TEST-dummy1-1.1-SNAPSHOT.jar", classPathEntries[0] );
-            assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
-            assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
-        }
-        finally
-        {
-            // cleanup streams
-            if ( jar != null )
-            {
-                jar.close();
-            }
-        }
+        String classPath = getJarFileManifest( jarFile ).getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+        assertNotNull( classPath );
+        classPathEntries = StringUtils.split( classPath, " " );
+        assertEquals( "org/apache/dummy/dummy1/1.1-SNAPSHOT/TEST-dummy1-1.1-SNAPSHOT.jar", classPathEntries[0] );
+        assertEquals( "org/apache/dummy/foo/dummy2/1.5/TEST-dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
     }
 
     private JarArchiver getCleanJarArciver( File jarFile )
@@ -1174,5 +1057,24 @@ public class MavenArchiverTest
             result.add( artifact );
         }
         return result;
+    }
+
+    public Manifest getJarFileManifest( File jarFile )
+        throws IOException
+    {
+        JarFile jar = null;
+        try
+        {
+            jar = new JarFile( jarFile );
+            return jar.getManifest();
+        }
+        finally
+        {
+            if ( jar != null )
+            {
+                jar.close();
+            }
+        }
+
     }
 }

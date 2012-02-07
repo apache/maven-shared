@@ -1,9 +1,9 @@
  -----
- About
+ Introduction
  -----
  Hervé Boutemy
  -----
- 2011-09-01
+ 2012-02-06
  -----
 
 Maven Reporting Implementation
@@ -41,3 +41,5 @@ Maven Reporting Implementation
 
   <<<maven-reporting-impl 2.1.x>>> use Doxia 1.1: using this version implies for a reporting plugin that it has Maven 2.1
   as prerequisite.
+
+  <<<maven-reporting-impl 2.2.x>>> use Doxia 1.2.

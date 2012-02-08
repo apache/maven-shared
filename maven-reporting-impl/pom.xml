@@ -57,7 +57,7 @@
   </issueManagement>
 
   <properties>
-    <mavenVersion>2.0.10</mavenVersion>
+    <mavenVersion>2.2.1</mavenVersion>
     <doxiaVersion>1.2</doxiaVersion>
   </properties>
 

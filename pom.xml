@@ -43,7 +43,6 @@ under the License.
     <module>maven-dependency-analyzer</module>
     <module>maven-dependency-tree</module>
     <module>maven-downloader</module>
-    <module>maven-doxia-tools</module>
     <module>maven-filtering</module>
     <module>maven-invoker</module>
     <module>maven-model-converter</module>

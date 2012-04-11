@@ -50,6 +50,7 @@
     &lt;customClasspathLayout/&gt;
     &lt;mainClass/&gt;
     &lt;packageName/&gt;
+    &lt;useUniqueVersions/&gt;
   &lt;/manifest&gt;
   &lt;manifestEntries&gt;
     &lt;key&gt;value&lt;/key&gt;
@@ -293,6 +294,15 @@ Specification-Vendor: ${project.organization.name}
             <td>Package manifest entry.</td>
             <td>String</td>
             <td></td>
+          </tr>
+          <tr>
+            <td>useUniqueVersions</td>
+            <td>
+              Whether to use unique timestamp Snapshot versions rather than -SNAPSHOT versions.
+              The default value is <code>true</code>.
+            </td>
+            <td>boolean</td>
+            <td>2.4</td>
           </tr>
         </table>
       </subsection>

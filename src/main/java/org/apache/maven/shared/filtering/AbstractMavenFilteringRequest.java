@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * @since 1.0-beta-3
@@ -50,7 +51,7 @@ public class AbstractMavenFilteringRequest
      *
      * @since 1.0-beta-2
      */
-    private List projectStartExpressions = new ArrayList();
+    private List<String> projectStartExpressions = new ArrayList<String>();
     
     /**
      * String which will escape interpolation mechanism:
@@ -77,7 +78,7 @@ public class AbstractMavenFilteringRequest
      * 
      * @since 1.0-beta-3
      */
-    private LinkedHashSet delimiters = new LinkedHashSet();
+    private LinkedHashSet<String> delimiters = new LinkedHashSet<String>();
     
     /**
      * Do not stop trying to filter tokens when reaching EOL.
@@ -258,7 +259,7 @@ public class AbstractMavenFilteringRequest
      * @return Not allowed to be <code>null</code> or empty.
      * @since 1.0-beta-3
      */
-    public LinkedHashSet getDelimiters()
+    public LinkedHashSet<String> getDelimiters()
     {
         return delimiters;
     }
@@ -271,7 +272,7 @@ public class AbstractMavenFilteringRequest
      * @param delimiters If <code>null</code>, reset delimiters to '${*}' only. Otherwise, use the provided value.
      * @since 1.0-beta-3
      */
-    public void setDelimiters( LinkedHashSet delimiters )
+    public void setDelimiters( LinkedHashSet<String> delimiters )
     {
         if ( delimiters == null || delimiters.isEmpty() )
         {

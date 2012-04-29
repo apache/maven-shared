@@ -1,0 +1,16 @@
+ -----
+ Maven Dependency Tree
+ -----
+ Hervé Boutemy
+ -----
+ 2012-04-29
+ -----
+
+Maven Dependency Tree
+
+  A tree-based API for resolution of Maven project dependencies.
+
+  Component entry point is <<<{{{./apidocs/org/apache/maven/shared/dependency/tree/DependencyTreeBuilder.html}DependencyTreeBuilder}}>>>.
+
+  Notice that this component actually only works with Maven 2 but computes wrong information with Maven 3:
+  see {{{http://jira.codehaus.org/browse/MSHARED-167}MSHARED-167}}.

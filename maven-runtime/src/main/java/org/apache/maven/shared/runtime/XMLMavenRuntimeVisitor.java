@@ -103,9 +103,13 @@ class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
      */
     public List<MavenProject> getSortedProjects() throws MavenRuntimeException
     {
+        // mediate dependency versions since declared versions can differ from runtime versions
+        List<MavenProject> mediatedProjects = new ArrayList<MavenProject>( projects );
+        MavenProjectUtils.mediateDependencyVersions( mediatedProjects );
+        
         try
         {
-            ProjectSorter projectSorter = new ProjectSorter( projects );
+            ProjectSorter projectSorter = new ProjectSorter( mediatedProjects );
 
             return genericList( projectSorter.getSortedProjects(), MavenProject.class );
         }

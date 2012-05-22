@@ -135,7 +135,7 @@
         <configuration>
           <links>
             <link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
-            <link>http://maven.apache.org/ref/current/maven-project/apidocs/</link>
+            <link>http://maven.apache.org/ref/3.0.4/maven-core/apidocs/</link>
           </links>
         </configuration>
       </plugin>

@@ -157,7 +157,7 @@ final class MavenRuntimeVisitorUtils
     {
         try
         {
-            if ("jar".equals( url.getProtocol() ))
+            if ( "jar".equals( url.getProtocol() ) )
             {
                 url = getJarFileURL( url );
             }

@@ -77,6 +77,7 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
             packageProject( "testMultipleJars/project2/pom.xml" );
             packageProject( "testMultipleJars/project3/pom.xml" );
             packageProject( "testDependentJars/pom.xml" );
+            packageProject( "testDependentJars2/pom.xml" );
 
             initialized = true;
         }
@@ -584,6 +585,25 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         assertMavenProjects( new String[] {
             "org.apache.maven.shared.runtime.tests:testDependentJars3:1.0",
             "org.apache.maven.shared.runtime.tests:testDependentJars1:1.0",
+            "org.apache.maven.shared.runtime.tests:testDependentJars2:1.0"
+        }, projects );
+    }
+
+    // MSHARED-165
+    public void testGetSortedProjectsWithMediatedDependency()
+        throws MavenRuntimeException, IOException
+    {
+        File jar1 = getPackage( "testDependentJars2/project1/pom.xml" );
+        File jar2 = getPackage( "testDependentJars/project2/pom.xml" );
+        File jar3 = getPackage( "testDependentJars/project3/pom.xml" );
+
+        URLClassLoader classLoader = newClassLoader( new File[] { jar1, jar2, jar3 } );
+
+        List<MavenProject> projects = mavenRuntime.getSortedProjects( classLoader );
+
+        assertMavenProjects( new String[] {
+            "org.apache.maven.shared.runtime.tests:testDependentJars3:1.0",
+            "org.apache.maven.shared.runtime.tests:testDependentJars1:2.0",
             "org.apache.maven.shared.runtime.tests:testDependentJars2:1.0"
         }, projects );
     }

@@ -28,7 +28,7 @@
 
 Maven Shared Components POM
 
-    This POM is the common parent of all of the Maven Shared Components
+    This POM is the common parent of all of the {{{/shared/}Maven Shared Components}}
     in the Apache Maven project.
 
 History

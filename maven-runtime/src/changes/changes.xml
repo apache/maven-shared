@@ -26,6 +26,10 @@
     <author email="markh@apache.org">Mark Hobson</author>
   </properties>
   <body>
+    <release version="1.0-alpha-3" date="2012-05-22">
+      <action type="update" dev="markh">Upgrade dependencies to Maven3</action>
+      <action type="fix" dev="markh">Mediate dependency versions for stricter Maven3 ProjectSorter</action>
+    </release>
     <release version="1.0-alpha-2" date="2009-11-03">
       <action type="add" dev="markh">Added support for introspecting URLs to MavenRuntime</action>
       <action type="fix" dev="markh">Added url to parsing exception messages</action>

@@ -42,7 +42,7 @@ public void processProject() throws MavenRuntimeException
 * Using project XML
 
  To obtain a 
- <<<{{{http://maven.apache.org/ref/current/maven-project/apidocs/org/apache/maven/project/MavenProject.html}MavenProject}}>>>
+ <<<{{{http://maven.apache.org/ref/3.0.4/maven-core/apidocs/org/apache/maven/project/MavenProject.html}MavenProject}}>>>
  instance for a class's Maven project:
 
 ---

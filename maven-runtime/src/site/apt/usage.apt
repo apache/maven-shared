@@ -11,7 +11,7 @@
 Usage
 
  Maven Runtime allows introspection of Maven project metadata at runtime.  The main entry point is the
- {{{apidocs/org/apache/maven/shared/runtime/MavenRuntime.html}MavenRuntime}} Plexus component.  The following example 
+ {{{./apidocs/org/apache/maven/shared/runtime/MavenRuntime.html}MavenRuntime}} Plexus component.  The following example 
  describes the basic usage of the component:
 
 ---

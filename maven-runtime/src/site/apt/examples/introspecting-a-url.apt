@@ -35,7 +35,7 @@ public void processProjects() throws MavenRuntimeException
 * Using project XML
 
  To obtain a list of
- <<<{{{http://maven.apache.org/ref/current/maven-project/apidocs/org/apache/maven/project/MavenProject.html}MavenProject}}>>>
+ <<<{{{http://maven.apache.org/ref/3.0.4/maven-core/apidocs/org/apache/maven/project/MavenProject.html}MavenProject}}>>>
  instances for each Maven project accessible within a specified URL:
 
 ---

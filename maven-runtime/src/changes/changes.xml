@@ -26,6 +26,8 @@
     <author email="markh@apache.org">Mark Hobson</author>
   </properties>
   <body>
+    <release version="1.0-alpha-4" date="In SVN">
+    </release>
     <release version="1.0-alpha-3" date="2012-05-22">
       <action type="update" dev="markh">Upgrade dependencies to Maven3</action>
       <action type="fix" dev="markh">Mediate dependency versions for stricter Maven3 ProjectSorter</action>

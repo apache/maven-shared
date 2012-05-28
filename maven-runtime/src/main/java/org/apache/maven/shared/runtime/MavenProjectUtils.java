@@ -19,6 +19,8 @@ package org.apache.maven.shared.runtime;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,24 @@ final class MavenProjectUtils
     }
 
     // public methods ---------------------------------------------------------
+
+    /**
+     * Deep copies the specified list of projects.
+     * 
+     * @param projects the projects to copy
+     * @return a deep copy of the specified projects
+     */
+    public static List<MavenProject> cloneProjects( Collection<MavenProject> projects )
+    {
+        List<MavenProject> clonedProjects = new ArrayList<MavenProject>();
+
+        for ( MavenProject project : projects )
+        {
+            clonedProjects.add( project.clone() );
+        }
+
+        return clonedProjects;
+    }
 
     /**
      * Aligns dependency versions to their corresponding project version for the specified projects.

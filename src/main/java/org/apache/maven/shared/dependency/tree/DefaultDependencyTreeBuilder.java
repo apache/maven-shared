@@ -34,6 +34,7 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.apache.maven.shared.dependency.tree.traversal.CollectingDependencyNodeVisitor;
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
@@ -42,9 +43,9 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
  * @author Edwin Punzalan
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
- * @plexus.component role="org.apache.maven.shared.dependency.tree.DependencyTreeBuilder"
  * @see DependencyTreeBuilder
  */
+@Component( role = DependencyTreeBuilder.class )
 public class DefaultDependencyTreeBuilder
     extends AbstractLogEnabled
     implements DependencyTreeBuilder
@@ -85,8 +86,10 @@ public class DefaultDependencyTreeBuilder
 
         try
         {
+            @SuppressWarnings( "unchecked" )
             Map<String, Artifact> managedVersions = project.getManagedVersionMap();
 
+            @SuppressWarnings( "unchecked" )
             Set<Artifact> dependencyArtifacts = project.getDependencyArtifacts();
 
             if ( dependencyArtifacts == null )

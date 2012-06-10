@@ -27,7 +27,8 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Builds a tree of dependencies for a given Maven project.
+ * Builds a tree of dependencies for a given Maven 2 project. Notice that it doesn't fail with Maven 3
+ * but the result isn't reliable.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
@@ -88,5 +89,8 @@ public interface DependencyTreeBuilder
      */
     DependencyNode buildDependencyTree( MavenProject project, ArtifactRepository repository, ArtifactFactory factory,
                                         ArtifactMetadataSource metadataSource, ArtifactFilter filter, ArtifactCollector collector )
+        throws DependencyTreeBuilderException;
+
+    DependencyNode buildDependencyTree( MavenProject project )
         throws DependencyTreeBuilderException;
 }

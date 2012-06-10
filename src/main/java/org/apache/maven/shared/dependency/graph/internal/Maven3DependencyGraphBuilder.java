@@ -22,6 +22,7 @@ package org.apache.maven.shared.dependency.graph.internal;
 import java.lang.reflect.InvocationTargetException;
 
 import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.DefaultDependencyResolutionRequest;
 import org.apache.maven.project.DependencyResolutionException;
 import org.apache.maven.project.DependencyResolutionRequest;
@@ -52,7 +53,7 @@ public class Maven3DependencyGraphBuilder
     @Requirement
     private ArtifactFactory factory;
 
-    public DependencyNode buildDependencyGraph( MavenProject project )
+    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
         try
@@ -65,7 +66,7 @@ public class Maven3DependencyGraphBuilder
 
             DependencyResolutionResult result = resolver.resolve( request );
 
-            return new Maven3DependencyNode( factory, result.getDependencyGraph(), project.getArtifact() );
+            return new Maven3DependencyNode( factory, result.getDependencyGraph(), project.getArtifact(), filter );
         }
         catch ( DependencyResolutionException e )
         {

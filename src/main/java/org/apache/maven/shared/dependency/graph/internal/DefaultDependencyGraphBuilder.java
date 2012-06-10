@@ -19,6 +19,7 @@ package org.apache.maven.shared.dependency.graph.internal;
  * under the License.
  */
 
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
@@ -46,7 +47,7 @@ public class DefaultDependencyGraphBuilder
 {
     protected PlexusContainer container;
 
-    public DependencyNode buildDependencyGraph( MavenProject project )
+    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
         try
@@ -56,7 +57,7 @@ public class DefaultDependencyGraphBuilder
             DependencyGraphBuilder effectiveGraphBuilder =
                 (DependencyGraphBuilder) container.lookup( DependencyGraphBuilder.class.getCanonicalName(), hint );
 
-            return effectiveGraphBuilder.buildDependencyGraph( project );
+            return effectiveGraphBuilder.buildDependencyGraph( project, filter );
         }
         catch ( ComponentLookupException e )
         {

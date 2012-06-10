@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.sonatype.aether.graph.Dependency;
@@ -43,7 +44,8 @@ public class Maven3DependencyNode
 
     private final List<DependencyNode> children;
 
-    public Maven3DependencyNode( ArtifactFactory factory, org.sonatype.aether.graph.DependencyNode node, final Artifact artifact )
+    public Maven3DependencyNode( ArtifactFactory factory, org.sonatype.aether.graph.DependencyNode node,
+                                 final Artifact artifact, ArtifactFilter filter )
     {
         if ( artifact != null )
         {
@@ -54,16 +56,30 @@ public class Maven3DependencyNode
             Dependency dep = node.getDependency();
             org.sonatype.aether.artifact.Artifact art = dep.getArtifact();
 
-            this.artifact =
+            Artifact tmpArtifact =
                 factory.createDependencyArtifact( art.getGroupId(), art.getArtifactId(),
                                                   VersionRange.createFromVersion( art.getVersion() ),
                                                   art.getExtension(), art.getClassifier(), dep.getScope() );
+
+            if ( !filter.include( tmpArtifact ) )
+            {
+                this.artifact = null;
+                children = null;
+                return;
+            }
+
+            this.artifact = tmpArtifact;
         }
 
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );
         for ( org.sonatype.aether.graph.DependencyNode child : node.getChildren() )
         {
-            nodes.add( new Maven3DependencyNode( factory, child, null ) );
+            DependencyNode tmpNode = new Maven3DependencyNode( factory, child, null, filter );
+
+            if ( tmpNode.getArtifact() != null )
+            {
+                nodes.add( tmpNode );
+            }
         }
         children = Collections.unmodifiableList( nodes );
     }

@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
 
 /**
@@ -40,14 +41,17 @@ public class Maven2DependencyNode
 
     private final List<DependencyNode> children;
 
-    public Maven2DependencyNode( org.apache.maven.shared.dependency.tree.DependencyNode node )
+    public Maven2DependencyNode( org.apache.maven.shared.dependency.tree.DependencyNode node, ArtifactFilter filter )
     {
         this.artifact = node.getArtifact();
 
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );
         for ( org.apache.maven.shared.dependency.tree.DependencyNode child : node.getChildren() )
         {
-            nodes.add( new Maven2DependencyNode( child ) );
+            if ( filter.include( child.getArtifact() ) )
+            {
+                nodes.add( new Maven2DependencyNode( child, filter ) );
+            }
         }
 
         children = Collections.unmodifiableList( nodes );

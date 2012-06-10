@@ -19,6 +19,7 @@ package org.apache.maven.shared.dependency.graph.internal;
  * under the License.
  */
 
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
@@ -42,12 +43,12 @@ public class Maven2DependencyGraphBuilder
     @Requirement
     private DependencyTreeBuilder treeBuilder;
 
-    public DependencyNode buildDependencyGraph( MavenProject project )
+    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
         try
         {
-            return new Maven2DependencyNode( treeBuilder.buildDependencyTree( project ) );
+            return new Maven2DependencyNode( treeBuilder.buildDependencyTree( project ), filter );
         }
         catch ( DependencyTreeBuilderException e )
         {

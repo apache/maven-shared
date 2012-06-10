@@ -19,6 +19,7 @@ package org.apache.maven.shared.dependency.graph;
  * under the License.
  */
 
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -29,6 +30,6 @@ import org.apache.maven.project.MavenProject;
  */
 public interface DependencyGraphBuilder
 {
-    public DependencyNode buildDependencyGraph( MavenProject project )
+    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException;
 }

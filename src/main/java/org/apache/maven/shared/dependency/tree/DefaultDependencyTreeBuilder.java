@@ -30,11 +30,13 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactCollector;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.resolver.ResolutionListener;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 import org.apache.maven.shared.dependency.tree.traversal.CollectingDependencyNodeVisitor;
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 /**
@@ -50,6 +52,18 @@ public class DefaultDependencyTreeBuilder
     extends AbstractLogEnabled
     implements DependencyTreeBuilder
 {
+    @Requirement
+    private ArtifactFactory factory;
+
+    @Requirement
+    private ArtifactMetadataSource metadataSource;
+
+    /**
+     * Artifact collector component.
+     */
+    @Requirement
+    private ArtifactCollector collector;
+
     // fields -----------------------------------------------------------------
     
     private ArtifactResolutionResult result;
@@ -101,9 +115,10 @@ public class DefaultDependencyTreeBuilder
 
             // TODO: note that filter does not get applied due to MNG-3236
 
-            result = collector.collect( dependencyArtifacts, project.getArtifact(), managedVersions, repository,
-                               project.getRemoteArtifactRepositories(), metadataSource, filter,
-                               Collections.singletonList( listener ) );
+            result =
+                collector.collect( dependencyArtifacts, project.getArtifact(), managedVersions, repository,
+                                   project.getRemoteArtifactRepositories(), metadataSource, filter,
+                                   Collections.singletonList( (ResolutionListener) listener ) );
 
             return listener.getRootNode();
         }
@@ -116,6 +131,13 @@ public class DefaultDependencyTreeBuilder
             throw new DependencyTreeBuilderException( "Invalid dependency version for artifact "
                 + project.getArtifact() );
         }
+    }
+
+    public DependencyNode buildDependencyTree( MavenProject project )
+        throws DependencyTreeBuilderException
+    {
+        return buildDependencyTree( project, project.getProjectBuilderConfiguration().getLocalRepository(), factory,
+                                    metadataSource, null, collector );
     }
 
     // protected methods ------------------------------------------------------

@@ -59,7 +59,8 @@ public class Maven3DependencyNode
             Artifact tmpArtifact =
                 factory.createDependencyArtifact( art.getGroupId(), art.getArtifactId(),
                                                   VersionRange.createFromVersion( art.getVersion() ),
-                                                  art.getExtension(), art.getClassifier(), dep.getScope() );
+                                                  art.getExtension(), art.getClassifier(), dep.getScope(),
+                                                  dep.isOptional() );
 
             if ( !filter.include( tmpArtifact ) )
             {

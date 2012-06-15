@@ -48,7 +48,7 @@ public class Maven2DependencyNode
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );
         for ( org.apache.maven.shared.dependency.tree.DependencyNode child : node.getChildren() )
         {
-            if ( filter.include( child.getArtifact() ) )
+            if ( ( filter == null ) || filter.include( child.getArtifact() ) )
             {
                 nodes.add( new Maven2DependencyNode( child, filter ) );
             }

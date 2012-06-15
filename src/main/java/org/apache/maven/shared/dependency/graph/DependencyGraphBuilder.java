@@ -30,6 +30,14 @@ import org.apache.maven.project.MavenProject;
  */
 public interface DependencyGraphBuilder
 {
+    /**
+     * Build the dependency graph.
+     *
+     * @param project the project
+     * @param filter artifact filter (can be <code>null</code>
+     * @return the dependency graph
+     * @throws DependencyGraphBuilderException
+     */
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException;
 }

@@ -62,7 +62,7 @@ public class Maven3DependencyNode
                                                   art.getExtension(), art.getClassifier(), dep.getScope(),
                                                   dep.isOptional() );
 
-            if ( !filter.include( tmpArtifact ) )
+            if ( ( filter != null ) && !filter.include( tmpArtifact ) )
             {
                 this.artifact = null;
                 children = null;

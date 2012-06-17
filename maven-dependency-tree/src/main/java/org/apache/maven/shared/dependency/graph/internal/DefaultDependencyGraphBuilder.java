@@ -30,6 +30,7 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
 /**
@@ -43,6 +44,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
  */
 @Component( role = DependencyGraphBuilder.class )
 public class DefaultDependencyGraphBuilder
+    extends AbstractLogEnabled
     implements DependencyGraphBuilder, Contextualizable
 {
     protected PlexusContainer container;
@@ -53,6 +55,7 @@ public class DefaultDependencyGraphBuilder
         try
         {
             String hint = isMaven2x() ? "maven2" : "maven3";
+            getLogger().debug( "building " + hint + " dependency graph for " + project.getId() );
 
             DependencyGraphBuilder effectiveGraphBuilder =
                 (DependencyGraphBuilder) container.lookup( DependencyGraphBuilder.class.getCanonicalName(), hint );

@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.graph;
+package org.apache.maven.shared.dependency.graph.filter;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,30 +19,23 @@ package org.apache.maven.shared.dependency.graph;
  * under the License.
  */
 
-import java.util.List;
-
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor;
+import org.apache.maven.shared.dependency.graph.DependencyNode;
 
 /**
- * Represents an artifact node within a Maven project's dependency graph.
- *
- * @author Hervé Boutemy
- * @since 2.0
+ * Defines a filter for dependency nodes.
+ * 
+ * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
+ * @version $Id$
+ * @since 1.1
  */
-public interface DependencyNode
+public interface DependencyNodeFilter
 {
-    public Artifact getArtifact();
-
-    public List<DependencyNode> getChildren();
-
     /**
-     * Applies the specified dependency node visitor to this dependency node and its children.
+     * Gets whether this filter accepts the specified dependency node.
      * 
-     * @param visitor
-     *            the dependency node visitor to use
-     * @return the visitor result of ending the visit to this node
-     * @since 1.1
+     * @param node
+     *            the dependency node to check
+     * @return <code>true</code> if this filter accepts the specified dependency node
      */
-    public boolean accept( DependencyNodeVisitor visitor );
+    boolean accept( DependencyNode node );
 }

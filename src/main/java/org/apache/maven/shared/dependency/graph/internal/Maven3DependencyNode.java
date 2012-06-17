@@ -38,7 +38,7 @@ import org.sonatype.aether.graph.Dependency;
  * @since 2.0
  */
 public class Maven3DependencyNode
-    implements DependencyNode
+    extends AbstractDependencyNode
 {
     private final Artifact artifact;
 

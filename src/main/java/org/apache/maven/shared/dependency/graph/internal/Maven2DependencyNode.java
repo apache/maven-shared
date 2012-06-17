@@ -35,7 +35,7 @@ import org.apache.maven.shared.dependency.graph.DependencyNode;
  * @since 2.0
  */
 public class Maven2DependencyNode
-    implements DependencyNode
+    extends AbstractDependencyNode
 {
     private final Artifact artifact;
 

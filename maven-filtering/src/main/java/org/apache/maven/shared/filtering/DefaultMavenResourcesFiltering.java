@@ -40,7 +40,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
- * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * @author Olivier Lamy
  * @version $Id$
  * 
  * @plexus.component role="org.apache.maven.shared.filtering.MavenResourcesFiltering"

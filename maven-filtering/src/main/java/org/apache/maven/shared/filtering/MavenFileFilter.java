@@ -27,7 +27,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * @author Olivier Lamy
  * @version $Id$
  */
 public interface MavenFileFilter

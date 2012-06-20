@@ -52,6 +52,12 @@
   <properties>
     <mavenVersion>2.0.6</mavenVersion>
   </properties>
+
+  <contributors>
+    <contributor>
+      <name>Graham Leggett</name>
+    </contributor>
+  </contributors>
   
   <dependencyManagement>
     <dependencies>

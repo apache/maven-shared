@@ -19,18 +19,19 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
+import org.codehaus.plexus.interpolation.InterpolationException;
+import org.codehaus.plexus.interpolation.Interpolator;
+import org.codehaus.plexus.interpolation.RecursionInterceptor;
+import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
+import org.codehaus.plexus.interpolation.multi.DelimiterSpecification;
+
+import java.io.BufferedReader;
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-
-import org.codehaus.plexus.interpolation.InterpolationException;
-import org.codehaus.plexus.interpolation.Interpolator;
-import org.codehaus.plexus.interpolation.RecursionInterceptor;
-import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
-import org.codehaus.plexus.interpolation.multi.DelimiterSpecification;
 
 /**
  * A FilterReader implementation, that works with Interpolator interface instead of it's own interpolation
@@ -45,55 +46,67 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
     extends FilterReader
 {
 
-    /** Interpolator used to interpolate */
+    /**
+     * Interpolator used to interpolate
+     */
     private Interpolator interpolator;
 
     private RecursionInterceptor recursionInterceptor;
 
-    /** replacement text from a token */
+    /**
+     * replacement text from a token
+     */
     private String replaceData = null;
 
-    /** Index into replacement data */
-    private int replaceIndex = -1;
+    /**
+     * Index into replacement data
+     */
+    private int replaceIndex = 0;
 
-    /** Index into previous data */
-    private int previousIndex = -1;
-
-    /** Default begin token. */
+    /**
+     * Default begin token.
+     */
     public static final String DEFAULT_BEGIN_TOKEN = "${";
 
-    /** Default end token. */
+    /**
+     * Default end token.
+     */
     public static final String DEFAULT_END_TOKEN = "}";
-    
-    /** true by default to preserve backward comp */
+
+    /**
+     * true by default to preserve backward comp
+     */
     private boolean interpolateWithPrefixPattern = true;
 
     private String escapeString;
-    
+
     private boolean useEscape = false;
-    
-    /** if true escapeString will be preserved \{foo} -> \{foo} */
+
+    /**
+     * if true escapeString will be preserved \{foo} -> \{foo}
+     */
     private boolean preserveEscapeString = false;
-    
+
     private LinkedHashSet delimiters = new LinkedHashSet();
-    
-    private DelimiterSpecification currentSpec;
 
     private String beginToken;
 
-    private String originalBeginToken;
-
     private String endToken;
-    
+
     private boolean supportMultiLineFiltering;
-    
-    private int preserveChar = -1;
-    
+
+    /**
+     * must always be bigger than escape string plus delimiters, but doesn't need to be exact
+     */
+    private int markLength = 16;
+
+    private boolean eof = false;
+
     /**
      * This constructor uses default begin token ${ and default end token }.
      *
-     * @param in reader to use
-     * @param interpolator interpolator instance to use
+     * @param in                        reader to use
+     * @param interpolator              interpolator instance to use
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
     public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator,
@@ -101,37 +114,41 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
     {
         this( in, interpolator, new SimpleRecursionInterceptor(), supportMultiLineFiltering );
     }
-    
+
     /**
-     * @param in reader to use
-     * @param interpolator interpolator instance to use
-     * @param ri The {@link RecursionInterceptor} to use to prevent recursive expressions.
+     * @param in                        reader to use
+     * @param interpolator              interpolator instance to use
+     * @param ri                        The {@link RecursionInterceptor} to use to prevent recursive expressions.
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
     public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator,
                                                              RecursionInterceptor ri,
                                                              boolean supportMultiLineFiltering )
     {
-        super( in );
+        // wrap our own buffer, so we can use mark/reset safely.
+        super( new BufferedReader( in ) );
 
         this.interpolator = interpolator;
-        
+
         // always cache answers, since we'll be sending in pure expressions, not mixed text.
         this.interpolator.setCacheAnswers( true );
-        
-        recursionInterceptor = ri;
-        
-        delimiters.add( DelimiterSpecification.DEFAULT_SPEC );
-        
-        this.supportMultiLineFiltering = supportMultiLineFiltering;
-    }    
 
-    
+        recursionInterceptor = ri;
+
+        delimiters.add( DelimiterSpecification.DEFAULT_SPEC );
+
+        this.supportMultiLineFiltering = supportMultiLineFiltering;
+
+        calculateMarkLength();
+
+    }
+
+
     public boolean removeDelimiterSpec( String delimiterSpec )
     {
         return delimiters.remove( DelimiterSpecification.parse( delimiterSpec ) );
     }
-    
+
     public MultiDelimiterInterpolatorFilterReaderLineEnding setDelimiterSpecs( HashSet specs )
     {
         delimiters.clear();
@@ -139,19 +156,20 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
         {
             String spec = (String) it.next();
             delimiters.add( DelimiterSpecification.parse( spec ) );
+            markLength += spec.length() * 2;
         }
-        
+
         return this;
     }
-    
+
     /**
      * Skips characters. This method will block until some characters are available, an I/O error occurs, or the end of
      * the stream is reached.
      *
      * @param n The number of characters to skip
      * @return the number of characters actually skipped
-     * @exception IllegalArgumentException If <code>n</code> is negative.
-     * @exception IOException If an I/O error occurs
+     * @throws IllegalArgumentException If <code>n</code> is negative.
+     * @throws IOException              If an I/O error occurs
      */
     public long skip( long n )
         throws IOException
@@ -176,10 +194,10 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * occurs, or the end of the stream is reached.
      *
      * @param cbuf Destination buffer to write characters to. Must not be <code>null</code>.
-     * @param off Offset at which to start storing characters.
-     * @param len Maximum number of characters to read.
+     * @param off  Offset at which to start storing characters.
+     * @param len  Maximum number of characters to read.
      * @return the number of characters read, or -1 if the end of the stream has been reached
-     * @exception IOException If an I/O error occurs
+     * @throws IOException If an I/O error occurs
      */
     public int read( char cbuf[], int off, int len )
         throws IOException
@@ -207,205 +225,183 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * Returns the next character in the filtered stream, replacing tokens from the original stream.
      *
      * @return the next character in the resulting stream, or -1 if the end of the resulting stream has been reached
-     * @exception IOException if the underlying stream throws an IOException during reading
+     * @throws IOException if the underlying stream throws an IOException during reading
      */
     public int read()
         throws IOException
     {
-        if ( replaceIndex != -1 && replaceIndex < replaceData.length() )
+        if ( replaceIndex > 0 )
         {
-            int ch = replaceData.charAt( replaceIndex++ );
-            if ( replaceIndex >= replaceData.length() )
-            {
-                replaceIndex = -1;
-            }
-            return ch;
+            return replaceData.charAt( replaceData.length() - ( replaceIndex-- ) );
         }
-        if ( preserveChar >= 0 )
+        if ( eof )
         {
-            int copy = preserveChar;
-            preserveChar = -1;
-            replaceIndex = -1;
-            return copy;
+            return -1;
         }
 
-        int ch = -1;
-        if ( previousIndex != -1 && previousIndex < this.endToken.length() )
+        in.mark( markLength );
+
+        int ch = in.read();
+        if ( ( ch == -1 ) || ( ch == '\n' && !supportMultiLineFiltering ) )
         {
-            ch = this.endToken.charAt( previousIndex++ );
-        }
-        else
-        {
-            ch = in.read();
-        }
-        if ( ch == '\n' && !supportMultiLineFiltering )
-        {
-            previousIndex = -1;
             return ch;
         }
-        boolean inEscape = false;
-        
-        if ( ( inEscape = ( useEscape && ch == escapeString.charAt( 0 ) ) ) || reselectDelimiterSpec( ch ) )
+
+        boolean inEscape = ( useEscape && ch == escapeString.charAt( 0 ) );
+
+        StringBuffer key = new StringBuffer();
+
+        // have we found an escape string?
+        if ( inEscape )
         {
-            StringBuffer key = new StringBuffer( );
+            for ( int i = 0; i < escapeString.length(); i++ )
+            {
+                key.append( (char) ch );
+
+                if ( ch != escapeString.charAt( i ) || ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
+                {
+                    // mismatch, EOF or EOL, no escape string here
+                    in.reset();
+                    inEscape = false;
+                    key.setLength( 0 );
+                    break;
+                }
+
+                ch = in.read();
+
+            }
+
+        }
+
+        // have we found a delimiter?
+        int max = 0;
+        for ( Iterator it = delimiters.iterator(); it.hasNext(); )
+        {
+            DelimiterSpecification spec = (DelimiterSpecification) it.next();
+            String begin = spec.getBegin();
+
+            // longest match wins
+            if ( begin.length() < max )
+            {
+                continue;
+            }
+
+            for ( int i = 0; i < begin.length(); i++ )
+            {
+                if ( ch != begin.charAt( i ) || ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
+                {
+                    // mismatch, EOF or EOL, no match
+                    break;
+                }
+
+                if ( i == begin.length() - 1 )
+                {
+
+                    beginToken = spec.getBegin();
+                    endToken = spec.getEnd();
+
+                }
+
+                ch = in.read();
+
+            }
+
+            in.reset();
+            in.skip( key.length() );
+            ch = in.read();
+
+        }
+
+        // escape means no luck, prevent parsing of the escaped character, and return
+        if ( inEscape )
+        {
+
+            if ( beginToken != null )
+            {
+                if ( !preserveEscapeString )
+                {
+                    key.setLength( 0 );
+                }
+            }
+
+            beginToken = null;
+            endToken = null;
 
             key.append( (char) ch );
-            
-            // this will happen when we're using an escape string, and ONLY then.
-            boolean atEnd = false;
 
-            if ( inEscape )
+            replaceData = key.toString();
+            replaceIndex = key.length();
+
+            return read();
+
+        }
+
+        // no match means no luck, reset and return
+        if ( beginToken == null || beginToken.length() == 0 || endToken == null || endToken.length() == 0 )
+        {
+
+            in.reset();
+            return in.read();
+
+        }
+
+        // we're committed, find the end token, EOL or EOF
+
+        key.append( beginToken );
+        in.reset();
+        in.skip( beginToken.length() );
+        ch = in.read();
+
+        int end = endToken.length();
+        do
+        {
+            if ( ch == -1 )
             {
-                for ( int i = 0; i < escapeString.length() - 1; i++ )
-                {
-                    ch = in.read();
-                    if ( ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
-                    {
-                        atEnd = true;
-                        break;
-                    }
-                    
-                    key.append( (char) ch );
-                }
-                
-                if ( !atEnd )
-                {
-                    ch = in.read();
-                    if ( !reselectDelimiterSpec( ch ) )
-                    {
-                        // here we are after the escape but didn't found the a startToken
-                        // but we have read this means it will be removed
-                        // so we preserve it
-                        replaceData = key.toString();
-                        replaceIndex = 1;
-                        preserveChar = ch;
-                        return replaceData.charAt( 0 );
-                    }
-                    else
-                    {
-                        key.append( (char) ch );
-                    }
-                }
+                break;
+            }
+            else if ( ch == '\n' && !supportMultiLineFiltering )
+            {
+                // EOL
+                key.append( (char) ch );
+                break;
             }
 
-            int beginTokenMatchPos = 1;
-            do
+            key.append( (char) ch );
+
+            if ( ch == this.endToken.charAt( end - 1 ) )
             {
-                if ( atEnd )
-                {
-                    // didn't finish reading the escape string.
-                    break;
-                }
-                
-                if ( previousIndex != -1 && previousIndex < this.endToken.length() )
-                {
-                    ch = this.endToken.charAt( previousIndex++ );
-                }
-                else
-                {
-                    ch = in.read();
-                }
-                if ( ch == '\n' && !supportMultiLineFiltering )
-                {
-                    // EOL 
-                    key.append( (char) ch );
-                    break;
-                }                
-                if ( ch != -1 )
-                {
-                    key.append( (char) ch );
-                    if ( ( beginTokenMatchPos < this.originalBeginToken.length() )
-                        && ( ch != this.originalBeginToken.charAt( beginTokenMatchPos ) ) )
-                    {
-                        ch = -1; // not really EOF but to trigger code below
-                        break;
-                    }
-                }
-                else
+                end--;
+                if ( end == 0 )
                 {
                     break;
                 }
-                
-                beginTokenMatchPos++;
             }
-            while ( ch != this.endToken.charAt( 0 ) );
-
-            // now test endToken
-            if ( ch != -1 && ( ch != '\n' && !supportMultiLineFiltering ) && this.endToken.length() > 1 )
+            else
             {
-                int endTokenMatchPos = 1;
-
-                do
-                {
-                    if ( previousIndex != -1 && previousIndex < this.endToken.length() )
-                    {
-                        ch = this.endToken.charAt( previousIndex++ );
-                    }
-                    else
-                    {
-                        ch = in.read();
-                    }
-
-                    if ( ch != -1 )
-                    {
-                        key.append( (char) ch );
-
-                        if ( ch != this.endToken.charAt( endTokenMatchPos++ )
-                            || ( ch != '\n' && !supportMultiLineFiltering ) )
-                        {
-                            ch = -1; // not really EOF but to trigger code below
-                            break;
-                        }
-
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                while ( endTokenMatchPos < this.endToken.length() );
+                end = endToken.length();
             }
 
-            // There is nothing left to read so we have the situation where the begin/end token
-            // are in fact the same and as there is nothing left to read we have got ourselves
-            // end of a token boundary so let it pass through.
-            if ( ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
-            {
-                replaceData = key.toString();
-                replaceIndex = 1;
-                return replaceData.charAt( 0 );
-            }
+            ch = in.read();
+        }
+        while ( true );
 
-            String value = null;
+        // reset back to no tokens
+        beginToken = null;
+        endToken = null;
+
+        // found endtoken? interpolate our key resolved above
+        String value = null;
+        if ( end == 0 )
+        {
             try
             {
-                boolean escapeFound = false;
-                if ( useEscape )
+                if ( interpolateWithPrefixPattern )
                 {
-                    if ( key.toString().startsWith( beginToken ) )
-                    {
-                        String keyStr = key.toString();
-                        if ( !preserveEscapeString )
-                        {
-                            value = keyStr.substring( escapeString.length(), keyStr.length() );
-                        }
-                        else
-                        {
-                            value = keyStr;
-                        }
-                        escapeFound = true;
-                    }
+                    value = interpolator.interpolate( key.toString(), "", recursionInterceptor );
                 }
-                if ( !escapeFound )
+                else
                 {
-                    if ( interpolateWithPrefixPattern )
-                    {
-                        value = interpolator.interpolate( key.toString(), "", recursionInterceptor );
-                    }
-                    else
-                    {
-                        value = interpolator.interpolate( key.toString(), recursionInterceptor );
-                    }
+                    value = interpolator.interpolate( key.toString(), recursionInterceptor );
                 }
             }
             catch ( InterpolationException e )
@@ -415,45 +411,26 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
 
                 throw error;
             }
-
-            if ( value != null )
-            {
-                if ( value.length() != 0 )
-                {
-                    replaceData = value;
-                    replaceIndex = 0;
-                }
-                return read();
-            }
-            else
-            {
-                previousIndex = 0;
-                replaceData = key.substring( 0, key.length() - this.endToken.length() );
-                replaceIndex = 0;
-                return this.beginToken.charAt( 0 );
-            }
         }
 
-        return ch;
-    }
-
-    private boolean reselectDelimiterSpec( int ch )
-    {
-        for ( Iterator it = delimiters.iterator(); it.hasNext(); )
+        // write away the value if present, otherwise the key unmodified
+        if ( value != null )
         {
-            DelimiterSpecification spec = (DelimiterSpecification) it.next();
-            if ( ch == spec.getBegin().charAt( 0 ) )
-            {
-                currentSpec = spec;
-                originalBeginToken = currentSpec.getBegin();
-                beginToken = useEscape ? escapeString + originalBeginToken : originalBeginToken;
-                endToken = currentSpec.getEnd();
-                
-                return true;
-            }
+            replaceData = value;
+            replaceIndex = value.length();
         }
-        
-        return false;
+        else
+        {
+            replaceData = key.toString();
+            replaceIndex = key.length();
+        }
+
+        if ( ch == -1 )
+        {
+            eof = true;
+        }
+        return read();
+
     }
 
     public boolean isInterpolateWithPrefixPattern()
@@ -465,6 +442,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
     {
         this.interpolateWithPrefixPattern = interpolateWithPrefixPattern;
     }
+
     public String getEscapeString()
     {
         return escapeString;
@@ -477,6 +455,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
         {
             this.escapeString = escapeString;
             this.useEscape = escapeString != null && escapeString.length() >= 1;
+            calculateMarkLength();
         }
     }
 
@@ -495,9 +474,31 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
         return recursionInterceptor;
     }
 
-    public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor recursionInterceptor )
+    public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor(
+        RecursionInterceptor recursionInterceptor )
     {
         this.recursionInterceptor = recursionInterceptor;
         return this;
     }
+
+    private void calculateMarkLength()
+    {
+        markLength = 16;
+
+        if ( escapeString != null )
+        {
+
+            markLength += escapeString.length();
+
+        }
+        for ( Iterator it = delimiters.iterator(); it.hasNext(); )
+        {
+
+            DelimiterSpecification spec = (DelimiterSpecification) it.next();
+            markLength += spec.getBegin().length();
+            markLength += spec.getEnd().length();
+
+        }
+    }
+
 }

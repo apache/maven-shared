@@ -36,7 +36,7 @@ import org.codehaus.plexus.util.FileUtils.FilterWrapper;
 /**
  * A bean to configure a resources filtering execution.
  *
- * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * @author Olivier Lamy
  * @version $Id$
  */
 public class MavenResourcesExecution

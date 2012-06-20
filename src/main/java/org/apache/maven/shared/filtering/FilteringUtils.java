@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 import org.codehaus.plexus.util.StringUtils;
 
 /**
- * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * @author Olivier Lamy
  * @author Dennis Lundberg
  * @version $Id$
  */

@@ -20,7 +20,7 @@ package org.apache.maven.shared.filtering;
  */
 
 /**
- * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * @author Olivier Lamy
  * @version $Id$
  */
 public class MavenFilteringException

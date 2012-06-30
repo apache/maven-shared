@@ -44,9 +44,14 @@ public class Maven3DependencyNode
 
     private final List<DependencyNode> children;
 
-    public Maven3DependencyNode( ArtifactFactory factory, org.sonatype.aether.graph.DependencyNode node,
-                                 final Artifact artifact, ArtifactFilter filter )
+    private final DependencyNode parent;
+
+    public Maven3DependencyNode( DependencyNode parent, ArtifactFactory factory,
+                                 org.sonatype.aether.graph.DependencyNode node, final Artifact artifact,
+                                 ArtifactFilter filter )
     {
+        this.parent = parent;
+
         if ( artifact != null )
         {
             this.artifact = artifact;
@@ -75,7 +80,7 @@ public class Maven3DependencyNode
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );
         for ( org.sonatype.aether.graph.DependencyNode child : node.getChildren() )
         {
-            DependencyNode tmpNode = new Maven3DependencyNode( factory, child, null, filter );
+            DependencyNode tmpNode = new Maven3DependencyNode( this, factory, child, null, filter );
 
             if ( tmpNode.getArtifact() != null )
             {
@@ -95,4 +100,8 @@ public class Maven3DependencyNode
         return children;
     }
 
+    public DependencyNode getParent()
+    {
+        return parent;
+    }
 }

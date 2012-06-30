@@ -48,7 +48,7 @@ public class Maven2DependencyGraphBuilder
     {
         try
         {
-            return new Maven2DependencyNode( treeBuilder.buildDependencyTree( project ), filter );
+            return new Maven2DependencyNode( null, treeBuilder.buildDependencyTree( project ), filter );
         }
         catch ( DependencyTreeBuilderException e )
         {

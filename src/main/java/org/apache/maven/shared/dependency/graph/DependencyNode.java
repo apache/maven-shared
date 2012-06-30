@@ -45,4 +45,11 @@ public interface DependencyNode
      * @since 1.1
      */
     public boolean accept( DependencyNodeVisitor visitor );
+
+    /**
+     * Gets the parent dependency node of this dependency node.
+     * 
+     * @return the parent dependency node
+     */
+    public DependencyNode getParent();
 }

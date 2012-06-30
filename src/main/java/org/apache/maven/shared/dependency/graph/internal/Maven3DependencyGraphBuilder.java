@@ -66,7 +66,7 @@ public class Maven3DependencyGraphBuilder
 
             DependencyResolutionResult result = resolver.resolve( request );
 
-            return new Maven3DependencyNode( factory, result.getDependencyGraph(), project.getArtifact(), filter );
+            return new Maven3DependencyNode( null, factory, result.getDependencyGraph(), project.getArtifact(), filter );
         }
         catch ( DependencyResolutionException e )
         {

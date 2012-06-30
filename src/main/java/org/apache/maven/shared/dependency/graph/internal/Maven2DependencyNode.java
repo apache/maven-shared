@@ -41,8 +41,12 @@ public class Maven2DependencyNode
 
     private final List<DependencyNode> children;
 
-    public Maven2DependencyNode( org.apache.maven.shared.dependency.tree.DependencyNode node, ArtifactFilter filter )
+    private final DependencyNode parent;
+
+    public Maven2DependencyNode( DependencyNode parent, org.apache.maven.shared.dependency.tree.DependencyNode node,
+                                 ArtifactFilter filter )
     {
+        this.parent = parent;
         this.artifact = node.getArtifact();
 
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );
@@ -50,7 +54,7 @@ public class Maven2DependencyNode
         {
             if ( ( filter == null ) || filter.include( child.getArtifact() ) )
             {
-                nodes.add( new Maven2DependencyNode( child, filter ) );
+                nodes.add( new Maven2DependencyNode( this, child, filter ) );
             }
         }
 
@@ -67,4 +71,8 @@ public class Maven2DependencyNode
         return children;
     }
 
+    public DependencyNode getParent()
+    {
+        return parent;
+    }
 }

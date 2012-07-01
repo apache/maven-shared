@@ -52,6 +52,12 @@ public class Maven2DependencyNode
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );
         for ( org.apache.maven.shared.dependency.tree.DependencyNode child : node.getChildren() )
         {
+            if ( child.getState() != org.apache.maven.shared.dependency.tree.DependencyNode.INCLUDED )
+            {
+                // only included nodes are supported in the graph API
+                continue;
+            }
+
             if ( ( filter == null ) || filter.include( child.getArtifact() ) )
             {
                 nodes.add( new Maven2DependencyNode( this, child, filter ) );

@@ -20,9 +20,14 @@ package org.apache.maven.shared.dependency.graph.internal;
  */
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.project.DefaultDependencyResolutionRequest;
 import org.apache.maven.project.DependencyResolutionException;
 import org.apache.maven.project.DependencyResolutionRequest;
@@ -35,6 +40,7 @@ import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.sonatype.aether.graph.Dependency;
 
 /**
  * Wrapper around Maven 3 dependency resolver.
@@ -66,7 +72,7 @@ public class Maven3DependencyGraphBuilder
 
             DependencyResolutionResult result = resolver.resolve( request );
 
-            return new Maven3DependencyNode( null, factory, result.getDependencyGraph(), project.getArtifact(), filter );
+            return buildDependencyNode( null, result.getDependencyGraph(), project.getArtifact(), filter );
         }
         catch ( DependencyResolutionException e )
         {
@@ -90,5 +96,36 @@ public class Maven3DependencyGraphBuilder
         throws IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
         return object.getClass().getMethod( method ).invoke( object );
+    }
+
+    private Artifact getDependencyArtifact( Dependency dep )
+    {
+        org.sonatype.aether.artifact.Artifact artifact = dep.getArtifact();
+
+        return factory.createDependencyArtifact( artifact.getGroupId(), artifact.getArtifactId(),
+                                                 VersionRange.createFromVersion( artifact.getVersion() ),
+                                                 artifact.getExtension(), artifact.getClassifier(), dep.getScope(),
+                                                 dep.isOptional() );
+    }
+
+    private DependencyNode buildDependencyNode( DependencyNode parent, org.sonatype.aether.graph.DependencyNode node,
+                                                Artifact artifact, ArtifactFilter filter )
+    {
+        DefaultDependencyNode current = new DefaultDependencyNode( parent, artifact );
+
+        List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );
+        for ( org.sonatype.aether.graph.DependencyNode child : node.getChildren() )
+        {
+            Artifact childArtifact = getDependencyArtifact( child.getDependency() );
+
+            if ( ( filter == null ) || filter.include( childArtifact ) )
+            {
+                nodes.add( buildDependencyNode( current, child, childArtifact, filter ) );
+            }
+        }
+
+        current.setChildren( Collections.unmodifiableList( nodes ) );
+
+        return current;
     }
 }

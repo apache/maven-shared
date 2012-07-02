@@ -19,6 +19,10 @@ package org.apache.maven.shared.dependency.graph.internal;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
@@ -48,11 +52,37 @@ public class Maven2DependencyGraphBuilder
     {
         try
         {
-            return new Maven2DependencyNode( null, treeBuilder.buildDependencyTree( project ), filter );
+            return buildDependencyNode( null, treeBuilder.buildDependencyTree( project ), filter );
         }
         catch ( DependencyTreeBuilderException e )
         {
             throw new DependencyGraphBuilderException( e.getMessage(), e );
         }
+    }
+
+    private DependencyNode buildDependencyNode( DependencyNode parent,
+                                                org.apache.maven.shared.dependency.tree.DependencyNode node,
+                                                ArtifactFilter filter )
+    {
+        DefaultDependencyNode current = new DefaultDependencyNode( parent, node.getArtifact() );
+
+        List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );
+        for ( org.apache.maven.shared.dependency.tree.DependencyNode child : node.getChildren() )
+        {
+            if ( child.getState() != org.apache.maven.shared.dependency.tree.DependencyNode.INCLUDED )
+            {
+                // only included nodes are supported in the graph API
+                continue;
+            }
+
+            if ( ( filter == null ) || filter.include( child.getArtifact() ) )
+            {
+                nodes.add( buildDependencyNode( current, child, filter ) );
+            }
+        }
+
+        current.setChildren( Collections.unmodifiableList( nodes ) );
+
+        return current;
     }
 }

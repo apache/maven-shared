@@ -1,11 +1,26 @@
 package org.apache.maven.shared.dependency.graph.internal;
 
+import java.util.List;
+
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor;
 
-public abstract class AbstractDependencyNode
+public class DefaultDependencyNode
     implements DependencyNode
 {
+    private final Artifact artifact;
+
+    private final DependencyNode parent;
+
+    private List<DependencyNode> children;
+
+    public DefaultDependencyNode( DependencyNode parent, Artifact artifact )
+    {
+        this.parent = parent;
+        this.artifact = artifact;
+    }
+
     /**
      * Applies the specified dependency node visitor to this dependency node and its children.
      * 
@@ -28,5 +43,25 @@ public abstract class AbstractDependencyNode
         }
 
         return visitor.endVisit( this );
+    }
+
+    public Artifact getArtifact()
+    {
+        return artifact;
+    }
+
+    public void setChildren( List<DependencyNode> children )
+    {
+        this.children = children;
+    }
+
+    public List<DependencyNode> getChildren()
+    {
+        return children;
+    }
+
+    public DependencyNode getParent()
+    {
+        return parent;
     }
 }

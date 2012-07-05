@@ -35,7 +35,7 @@ import java.io.Reader;
  *
  * @author cstamas
  * @author Olivier Lamy
- * @version $Id$
+ *
  * @since 1.0
  */
 public class InterpolatorFilterReaderLineEnding

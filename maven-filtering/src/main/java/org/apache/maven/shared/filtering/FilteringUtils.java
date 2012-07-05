@@ -25,7 +25,7 @@ import org.codehaus.plexus.util.StringUtils;
 /**
  * @author Olivier Lamy
  * @author Dennis Lundberg
- * @version $Id$
+ *
  */
 public final class FilteringUtils
 {

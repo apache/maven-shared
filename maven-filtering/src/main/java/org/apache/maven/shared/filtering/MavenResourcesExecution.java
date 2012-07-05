@@ -38,7 +38,7 @@ import java.util.List;
  * A bean to configure a resources filtering execution.
  *
  * @author Olivier Lamy
- * @version $Id$
+ *
  */
 public class MavenResourcesExecution
     extends AbstractMavenFilteringRequest

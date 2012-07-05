@@ -33,7 +33,7 @@ import java.util.Properties;
 /**
  * @author <a href="mailto:kenney@neonics.com">Kenney Westerhof</a>
  * @author William Ferguson
- * @version $Id$
+ *
  */
 public final class PropertyUtils
 {

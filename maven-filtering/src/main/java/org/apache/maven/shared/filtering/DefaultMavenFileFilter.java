@@ -48,7 +48,7 @@ import java.util.Properties;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>
- * @version $Id$
+ *
  * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter"
  * role-hint="default"
  */

@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * @author Olivier Lamy
- * @version $Id$
+ *
  */
 public interface MavenResourcesFiltering
 {

@@ -21,7 +21,7 @@ package org.apache.maven.shared.filtering;
 
 /**
  * @author Olivier Lamy
- * @version $Id$
+ *
  */
 public class MavenFilteringException
     extends Exception

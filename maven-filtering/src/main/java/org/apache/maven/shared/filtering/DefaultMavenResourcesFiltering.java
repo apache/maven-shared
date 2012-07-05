@@ -40,7 +40,7 @@ import java.util.List;
 
 /**
  * @author Olivier Lamy
- * @version $Id$
+ *
  * @plexus.component role="org.apache.maven.shared.filtering.MavenResourcesFiltering"
  * role-hint="default"
  */

@@ -19,13 +19,6 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
@@ -39,25 +32,32 @@ import org.codehaus.plexus.util.Scanner;
 import org.codehaus.plexus.util.StringUtils;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Olivier Lamy
  * @version $Id$
- * 
  * @plexus.component role="org.apache.maven.shared.filtering.MavenResourcesFiltering"
- *                   role-hint="default"
+ * role-hint="default"
  */
 public class DefaultMavenResourcesFiltering
     extends AbstractLogEnabled
     implements MavenResourcesFiltering, Initializable
 {
 
-    private static final String[] EMPTY_STRING_ARRAY = {};
+    private static final String[] EMPTY_STRING_ARRAY = { };
 
-    private static final String[] DEFAULT_INCLUDES = {"**/**"};
-    
-    private List defaultNonFilteredFileExtensions;
+    private static final String[] DEFAULT_INCLUDES = { "**/**" };
 
-    /** @plexus.requirement */
+    private List<String> defaultNonFilteredFileExtensions;
+
+    /**
+     * @plexus.requirement
+     */
     private BuildContext buildContext;
 
     // ------------------------------------------------
@@ -67,63 +67,59 @@ public class DefaultMavenResourcesFiltering
         throws InitializationException
     {
         // jpg,jpeg,gif,bmp,png
-        this.defaultNonFilteredFileExtensions = new ArrayList( 5 );
+        this.defaultNonFilteredFileExtensions = new ArrayList<String>( 5 );
         this.defaultNonFilteredFileExtensions.add( "jpg" );
         this.defaultNonFilteredFileExtensions.add( "jpeg" );
         this.defaultNonFilteredFileExtensions.add( "gif" );
         this.defaultNonFilteredFileExtensions.add( "bmp" );
         this.defaultNonFilteredFileExtensions.add( "png" );
-    }    
-    
-    
-    
+    }
+
+
     /**
-     * @plexus.requirement
-     *  role-hint="default"
+     * @plexus.requirement role-hint="default"
      */
     private MavenFileFilter mavenFileFilter;
-    
-    public void filterResources( List resources, File outputDirectory, MavenProject mavenProject, String encoding,
-                                 List fileFilters, List nonFilteredFileExtensions, MavenSession mavenSession )
+
+    public void filterResources( List<Resource> resources, File outputDirectory, MavenProject mavenProject,
+                                 String encoding, List<String> fileFilters, List<String> nonFilteredFileExtensions,
+                                 MavenSession mavenSession )
         throws MavenFilteringException
     {
-        MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, outputDirectory,
-                                                                                       mavenProject, encoding,
-                                                                                       fileFilters,
-                                                                                       nonFilteredFileExtensions,
-                                                                                       mavenSession );
+        MavenResourcesExecution mavenResourcesExecution =
+            new MavenResourcesExecution( resources, outputDirectory, mavenProject, encoding, fileFilters,
+                                         nonFilteredFileExtensions, mavenSession );
         mavenResourcesExecution.setUseDefaultFilterWrappers( true );
 //        mavenResourcesExecution.setEscapeWindowsPaths( false );
-        
+
         filterResources( mavenResourcesExecution );
     }
 
-    public void filterResources( List resources, File outputDirectory, String encoding, List filterWrappers,
-                                 File resourcesBaseDirectory, List nonFilteredFileExtensions )
+    public void filterResources( List<Resource> resources, File outputDirectory, String encoding,
+                                 List<FileUtils.FilterWrapper> filterWrappers, File resourcesBaseDirectory,
+                                 List<String> nonFilteredFileExtensions )
         throws MavenFilteringException
     {
-        MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, outputDirectory,
-                                                                                       encoding, filterWrappers,
-                                                                                       resourcesBaseDirectory,
-                                                                                       nonFilteredFileExtensions );
+        MavenResourcesExecution mavenResourcesExecution =
+            new MavenResourcesExecution( resources, outputDirectory, encoding, filterWrappers, resourcesBaseDirectory,
+                                         nonFilteredFileExtensions );
         filterResources( mavenResourcesExecution );
     }
 
-    
-    public boolean filteredFileExtension( String fileName, List userNonFilteredFileExtensions )
+
+    public boolean filteredFileExtension( String fileName, List<String> userNonFilteredFileExtensions )
     {
-        List nonFilteredFileExtensions = new ArrayList( getDefaultNonFilteredFileExtensions() );
+        List<String> nonFilteredFileExtensions = new ArrayList<String>( getDefaultNonFilteredFileExtensions() );
         if ( userNonFilteredFileExtensions != null )
         {
             nonFilteredFileExtensions.addAll( userNonFilteredFileExtensions );
         }
-        boolean filteredFileExtension = !nonFilteredFileExtensions.contains( StringUtils.lowerCase( FileUtils
-            .extension( fileName ) ) );
+        boolean filteredFileExtension =
+            !nonFilteredFileExtensions.contains( StringUtils.lowerCase( FileUtils.extension( fileName ) ) );
         if ( getLogger().isDebugEnabled() )
         {
             getLogger().debug(
-                               "file " + fileName + " has a" + ( filteredFileExtension ? " " : " non " )
-                                   + "filtered file extension" );
+                "file " + fileName + " has a" + ( filteredFileExtension ? " " : " non " ) + "filtered file extension" );
         }
         return filteredFileExtension;
     }
@@ -140,21 +136,21 @@ public class DefaultMavenResourcesFiltering
         {
             throw new MavenFilteringException( "mavenResourcesExecution cannot be null" );
         }
-        
+
         if ( mavenResourcesExecution.getResources() == null )
         {
             getLogger().info( "No resources configured skip copying/filtering" );
             return;
         }
-        
+
         if ( mavenResourcesExecution.getOutputDirectory() == null )
         {
             throw new MavenFilteringException( "outputDirectory cannot be null" );
         }
-        
+
         if ( mavenResourcesExecution.isUseDefaultFilterWrappers() )
         {
-            List filterWrappers = new ArrayList();
+            List<FileUtils.FilterWrapper> filterWrappers = new ArrayList<FileUtils.FilterWrapper>();
             if ( mavenResourcesExecution.getFilterWrappers() != null )
             {
                 filterWrappers.addAll( mavenResourcesExecution.getFilterWrappers() );
@@ -165,33 +161,29 @@ public class DefaultMavenResourcesFiltering
 
         if ( mavenResourcesExecution.getEncoding() == null || mavenResourcesExecution.getEncoding().length() < 1 )
         {
-            getLogger().warn(
-                              "Using platform encoding (" + ReaderFactory.FILE_ENCODING
+            getLogger().warn( "Using platform encoding (" + ReaderFactory.FILE_ENCODING
                                   + " actually) to copy filtered resources, i.e. build is platform dependent!" );
         }
         else
         {
             getLogger().info(
-                              "Using '" + mavenResourcesExecution.getEncoding()
-                                  + "' encoding to copy filtered resources." );
+                "Using '" + mavenResourcesExecution.getEncoding() + "' encoding to copy filtered resources." );
         }
-        
-        for ( Iterator i = mavenResourcesExecution.getResources().iterator(); i.hasNext(); )
+
+        for ( Resource resource : mavenResourcesExecution.getResources() )
         {
-            Resource resource = (Resource) i.next();
-            
+
             if ( getLogger().isDebugEnabled() )
             {
                 String ls = System.getProperty( "line.separator" );
-                StringBuffer debugMessage = new StringBuffer( "resource with targetPath " + resource.getTargetPath() )
-                    .append( ls );
+                StringBuffer debugMessage =
+                    new StringBuffer( "resource with targetPath " + resource.getTargetPath() ).append( ls );
                 debugMessage.append( "directory " + resource.getDirectory() ).append( ls );
+                debugMessage.append( "excludes " + ( resource.getExcludes() == null
+                    ? " empty "
+                    : resource.getExcludes().toString() ) ).append( ls );
                 debugMessage.append(
-                                     "excludes "
-                                         + ( resource.getExcludes() == null ? " empty " : resource.getExcludes()
-                                             .toString() ) ).append( ls );
-                debugMessage.append( "includes "
-                    + ( resource.getIncludes() == null ? " empty " : resource.getIncludes().toString() ) );
+                    "includes " + ( resource.getIncludes() == null ? " empty " : resource.getIncludes().toString() ) );
                 getLogger().debug( debugMessage.toString() );
             }
 
@@ -201,8 +193,8 @@ public class DefaultMavenResourcesFiltering
 
             if ( !resourceDirectory.isAbsolute() )
             {
-                resourceDirectory = new File( mavenResourcesExecution.getResourcesBaseDirectory(), resourceDirectory
-                    .getPath() );
+                resourceDirectory =
+                    new File( mavenResourcesExecution.getResourcesBaseDirectory(), resourceDirectory.getPath() );
             }
 
             if ( !resourceDirectory.exists() )
@@ -219,10 +211,9 @@ public class DefaultMavenResourcesFiltering
             {
                 throw new MavenFilteringException( "Cannot create resource output directory: " + outputDirectory );
             }
-            
-            boolean ignoreDelta =
-                !outputExists || buildContext.hasDelta( mavenResourcesExecution.getFileFilters() )
-                    || buildContext.hasDelta( getRelativeOutputDirectory( mavenResourcesExecution ) );
+
+            boolean ignoreDelta = !outputExists || buildContext.hasDelta( mavenResourcesExecution.getFileFilters() )
+                || buildContext.hasDelta( getRelativeOutputDirectory( mavenResourcesExecution ) );
             getLogger().debug( "ignoreDelta " + ignoreDelta );
             Scanner scanner = buildContext.newScanner( resourceDirectory, ignoreDelta );
 
@@ -234,59 +225,58 @@ public class DefaultMavenResourcesFiltering
             {
                 try
                 {
-                    File targetDirectory = targetPath == null ? outputDirectory
-                                                             : new File( outputDirectory, targetPath );
+                    File targetDirectory =
+                        targetPath == null ? outputDirectory : new File( outputDirectory, targetPath );
                     copyDirectoryLayout( resourceDirectory, targetDirectory, scanner );
                 }
                 catch ( IOException e )
                 {
-                    throw new MavenFilteringException( "Cannot copy directory structure from "
-                        + resourceDirectory.getPath() + " to " + outputDirectory.getPath() );
+                    throw new MavenFilteringException(
+                        "Cannot copy directory structure from " + resourceDirectory.getPath() + " to "
+                            + outputDirectory.getPath() );
                 }
             }
 
-            List includedFiles = Arrays.asList( scanner.getIncludedFiles() );
+            List<String> includedFiles = Arrays.asList( scanner.getIncludedFiles() );
 
             getLogger().info(
-                              "Copying " + includedFiles.size() + " resource" + ( includedFiles.size() > 1 ? "s" : "" )
-                                  + ( targetPath == null ? "" : " to " + targetPath ) );
+                "Copying " + includedFiles.size() + " resource" + ( includedFiles.size() > 1 ? "s" : "" ) + (
+                    targetPath == null ? "" : " to " + targetPath ) );
 
-            for ( Iterator j = includedFiles.iterator(); j.hasNext(); )
+            for ( String name : includedFiles )
             {
-                String name = (String) j.next();
 
                 File source = new File( resourceDirectory, name );
 
                 //File destinationFile = new File( outputDirectory, destination );
 
                 File destinationFile = getDestinationFile( outputDirectory, targetPath, name );
-                
-                boolean filteredExt = filteredFileExtension( source.getName(), mavenResourcesExecution
-                    .getNonFilteredFileExtensions() );
-                
+
+                boolean filteredExt =
+                    filteredFileExtension( source.getName(), mavenResourcesExecution.getNonFilteredFileExtensions() );
+
                 mavenFileFilter.copyFile( source, destinationFile, resource.isFiltering() && filteredExt,
-                                          mavenResourcesExecution.getFilterWrappers(), mavenResourcesExecution
-                                              .getEncoding(), mavenResourcesExecution.isOverwrite() );
+                                          mavenResourcesExecution.getFilterWrappers(),
+                                          mavenResourcesExecution.getEncoding(),
+                                          mavenResourcesExecution.isOverwrite() );
             }
 
             // deal with deleted source files
 
             scanner = buildContext.newDeleteScanner( resourceDirectory );
-            
+
             setupScanner( resource, scanner );
-            
+
             scanner.scan();
 
-            List deletedFiles = Arrays.asList( scanner.getIncludedFiles() );
+            List<String> deletedFiles = Arrays.asList( scanner.getIncludedFiles() );
 
-            for ( Iterator j = deletedFiles.iterator(); j.hasNext(); )
+            for ( String name : deletedFiles )
             {
-                String name = (String) j.next();
-
                 File destinationFile = getDestinationFile( outputDirectory, targetPath, name );
-                
+
                 destinationFile.delete();
-                
+
                 buildContext.refresh( destinationFile );
             }
 
@@ -296,50 +286,50 @@ public class DefaultMavenResourcesFiltering
 
     private File getDestinationFile( File outputDirectory, String targetPath, String name )
     {
-      String destination = name;
+        String destination = name;
 
-      if ( targetPath != null )
-      {
-          destination = targetPath + "/" + name;
-      }
+        if ( targetPath != null )
+        {
+            destination = targetPath + "/" + name;
+        }
 
-      File destinationFile = new File( destination );
-      if ( !destinationFile.isAbsolute() )
-      {
-          destinationFile = new File( outputDirectory, destination );
-      }                
-      
-      if ( !destinationFile.getParentFile().exists() )
-      {
-          destinationFile.getParentFile().mkdirs();
-      }
-      return destinationFile;
+        File destinationFile = new File( destination );
+        if ( !destinationFile.isAbsolute() )
+        {
+            destinationFile = new File( outputDirectory, destination );
+        }
+
+        if ( !destinationFile.getParentFile().exists() )
+        {
+            destinationFile.getParentFile().mkdirs();
+        }
+        return destinationFile;
     }
 
     private String[] setupScanner( Resource resource, Scanner scanner )
     {
-      String[] includes = null;
-      if ( resource.getIncludes() != null && !resource.getIncludes().isEmpty() )
-      {
-          includes = (String[]) resource.getIncludes().toArray( EMPTY_STRING_ARRAY ) ;
-      }
-      else
-      {
-          includes = DEFAULT_INCLUDES;
-      }
-      scanner.setIncludes( includes );
-      
-      String[] excludes = null;
-      if ( resource.getExcludes() != null && !resource.getExcludes().isEmpty() )
-      {
-          excludes = (String[]) resource.getExcludes().toArray( EMPTY_STRING_ARRAY );
-          scanner.setExcludes( excludes );
-      }
+        String[] includes = null;
+        if ( resource.getIncludes() != null && !resource.getIncludes().isEmpty() )
+        {
+            includes = (String[]) resource.getIncludes().toArray( EMPTY_STRING_ARRAY );
+        }
+        else
+        {
+            includes = DEFAULT_INCLUDES;
+        }
+        scanner.setIncludes( includes );
 
-      scanner.addDefaultExcludes();
-      return includes;
+        String[] excludes = null;
+        if ( resource.getExcludes() != null && !resource.getExcludes().isEmpty() )
+        {
+            excludes = (String[]) resource.getExcludes().toArray( EMPTY_STRING_ARRAY );
+            scanner.setExcludes( excludes );
+        }
+
+        scanner.addDefaultExcludes();
+        return includes;
     }
-    
+
     private void copyDirectoryLayout( File sourceDirectory, File destinationDirectory, Scanner scanner )
         throws IOException
     {
@@ -363,12 +353,10 @@ public class DefaultMavenResourcesFiltering
             throw new IOException( "Source directory doesn't exists (" + sourceDirectory.getAbsolutePath() + ")." );
         }
 
-        List includedDirectories = Arrays.asList( scanner.getIncludedDirectories() );
+        List<String> includedDirectories = Arrays.asList( scanner.getIncludedDirectories() );
 
-        for ( Iterator i = includedDirectories.iterator(); i.hasNext(); )
+        for ( String name : includedDirectories )
         {
-            String name = (String) i.next();
-
             File source = new File( sourceDirectory, name );
 
             if ( source.equals( sourceDirectory ) )

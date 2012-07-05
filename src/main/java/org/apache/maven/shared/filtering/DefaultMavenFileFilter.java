@@ -62,7 +62,7 @@ public class DefaultMavenFileFilter
      */
     private BuildContext buildContext;
 
-    public void copyFile( File from, File to, boolean filtering, MavenProject mavenProject, List filters,
+    public void copyFile( File from, File to, boolean filtering, MavenProject mavenProject, List<String> filters,
                           boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )
         throws MavenFilteringException
     {
@@ -73,7 +73,7 @@ public class DefaultMavenFileFilter
         mre.setMavenSession( mavenSession );
         mre.setInjectProjectBuildFilters( true );
 
-        List filterWrappers = getDefaultFilterWrappers( mre );
+        List<FileUtils.FilterWrapper> filterWrappers = getDefaultFilterWrappers( mre );
         copyFile( from, to, filtering, filterWrappers, encoding );
     }
 
@@ -88,7 +88,8 @@ public class DefaultMavenFileFilter
     }
 
 
-    public void copyFile( File from, File to, boolean filtering, List filterWrappers, String encoding )
+    public void copyFile( File from, File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
+                          String encoding )
         throws MavenFilteringException
     {
         // overwrite forced to false to preserve backward comp
@@ -96,8 +97,8 @@ public class DefaultMavenFileFilter
     }
 
 
-    public void copyFile( File from, File to, boolean filtering, List filterWrappers, String encoding,
-                          boolean overwrite )
+    public void copyFile( File from, File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
+                          String encoding, boolean overwrite )
         throws MavenFilteringException
     {
         try
@@ -134,7 +135,8 @@ public class DefaultMavenFileFilter
      * @see org.apache.maven.shared.filtering.MavenFileFilter#getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession)
      * @deprecated
      */
-    public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject, List filters,
+    public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject,
+                                                                   List<String> filters,
                                                                    final boolean escapedBackslashesInFilePath,
                                                                    MavenSession mavenSession )
         throws MavenFilteringException
@@ -143,7 +145,7 @@ public class DefaultMavenFileFilter
     }
 
 
-    public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject, List filters,
+    public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject, List<String> filters,
                                                                    final boolean escapedBackslashesInFilePath,
                                                                    MavenSession mavenSession,
                                                                    MavenResourcesExecution mavenResourcesExecution )
@@ -210,7 +212,7 @@ public class DefaultMavenFileFilter
         {
             if ( request.isInjectProjectBuildFilters() )
             {
-                List buildFilters = new ArrayList( request.getMavenProject().getBuild().getFilters() );
+                List<String> buildFilters = new ArrayList( request.getMavenProject().getBuild().getFilters() );
                 buildFilters.removeAll( request.getFileFilters() );
 
                 loadProperties( filterProperties, buildFilters, baseProps );
@@ -260,8 +262,7 @@ public class DefaultMavenFileFilter
     /**
      * protected only for testing reason !
      */
-    protected void loadProperties( Properties filterProperties, List /* String */propertiesFilePaths,
-                                   Properties baseProps )
+    protected void loadProperties( Properties filterProperties, List<String> propertiesFilePaths, Properties baseProps )
         throws MavenFilteringException
     {
         if ( propertiesFilePaths != null )
@@ -302,7 +303,7 @@ public class DefaultMavenFileFilter
 
         private ValueSource propertiesValueSource;
 
-        private List projectStartExpressions;
+        private List<String> projectStartExpressions;
 
         private String escapeString;
 
@@ -313,7 +314,7 @@ public class DefaultMavenFileFilter
         private boolean supportMultiLineFiltering;
 
         Wrapper( LinkedHashSet<String> delimiters, MavenProject project, MavenSession mavenSession,
-                 ValueSource propertiesValueSource, List projectStartExpressions, String escapeString,
+                 ValueSource propertiesValueSource, List<String> projectStartExpressions, String escapeString,
                  boolean escapeWindowsPaths, boolean supportMultiLineFiltering )
         {
             super();

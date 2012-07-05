@@ -45,7 +45,7 @@ public class MavenFileFilterRequest
         // nothing
     }
 
-    public MavenFileFilterRequest( File from, File to, boolean filtering, MavenProject mavenProject, List filters,
+    public MavenFileFilterRequest( File from, File to, boolean filtering, MavenProject mavenProject, List<String> filters,
                                    boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession,
                                    Properties additionalProperties )
     {

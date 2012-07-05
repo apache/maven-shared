@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * @author Olivier Lamy
  *
  * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter"
  * role-hint="default"

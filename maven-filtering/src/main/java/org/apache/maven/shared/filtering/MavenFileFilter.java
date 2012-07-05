@@ -44,7 +44,7 @@ public interface MavenFileFilter
      * @throws MavenFilteringException
      * @see #getDefaultFilterWrappers(MavenProject, List, boolean, MavenSession)
      */
-    void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject, List filters,
+    void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject, List<String> filters,
                    boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )
         throws MavenFilteringException;
 
@@ -98,7 +98,7 @@ public interface MavenFileFilter
      * @return {@link List} of FileUtils.FilterWrapper
      * @deprecated use {@link #getDefaultFilterWrappers(MavenProject, List, boolean, MavenSession, MavenResourcesExecution)}
      */
-    List<FileUtils.FilterWrapper> getDefaultFilterWrappers( MavenProject mavenProject, List filters,
+    List<FileUtils.FilterWrapper> getDefaultFilterWrappers( MavenProject mavenProject, List<String> filters,
                                                             boolean escapedBackslashesInFilePath,
                                                             MavenSession mavenSession )
         throws MavenFilteringException;
@@ -113,7 +113,7 @@ public interface MavenFileFilter
      * @throws MavenFilteringException
      * @since 1.0-beta-2
      */
-    List<FileUtils.FilterWrapper> getDefaultFilterWrappers( MavenProject mavenProject, List filters,
+    List<FileUtils.FilterWrapper> getDefaultFilterWrappers( MavenProject mavenProject, List<String> filters,
                                                             boolean escapedBackslashesInFilePath,
                                                             MavenSession mavenSession,
                                                             MavenResourcesExecution mavenResourcesExecution )

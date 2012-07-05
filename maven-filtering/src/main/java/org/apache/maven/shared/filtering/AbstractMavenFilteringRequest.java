@@ -36,7 +36,7 @@ public class AbstractMavenFilteringRequest
 
     private MavenProject mavenProject;
 
-    private List filters;
+    private List<String> filters;
 
     private boolean escapeWindowsPaths = true;
 
@@ -92,7 +92,7 @@ public class AbstractMavenFilteringRequest
         initDefaults();
     }
 
-    protected AbstractMavenFilteringRequest( MavenProject mavenProject, List filters,
+    protected AbstractMavenFilteringRequest( MavenProject mavenProject, List<String> filters,
                                              String encoding, MavenSession mavenSession )
     {
         initDefaults();
@@ -121,22 +121,22 @@ public class AbstractMavenFilteringRequest
         this.mavenProject = mavenProject;
     }
 
-    public List getFilters()
+    public List<String> getFilters()
     {
         return filters;
     }
 
-    public void setFilters( List filters )
+    public void setFilters( List<String> filters )
     {
         this.filters = filters;
     }
 
-    public List getFileFilters()
+    public List<String> getFileFilters()
     {
         return getFilters();
     }
 
-    public void setFileFilters( List filters )
+    public void setFileFilters( List<String> filters )
     {
         setFilters( filters );
     }

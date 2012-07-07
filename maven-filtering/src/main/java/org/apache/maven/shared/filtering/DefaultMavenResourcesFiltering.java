@@ -40,7 +40,6 @@ import java.util.List;
 
 /**
  * @author Olivier Lamy
- *
  * @plexus.component role="org.apache.maven.shared.filtering.MavenResourcesFiltering"
  * role-hint="default"
  */
@@ -124,8 +123,12 @@ public class DefaultMavenResourcesFiltering
         return filteredFileExtension;
     }
 
-    public List getDefaultNonFilteredFileExtensions()
+    public List<String> getDefaultNonFilteredFileExtensions()
     {
+        if ( this.defaultNonFilteredFileExtensions == null )
+        {
+            this.defaultNonFilteredFileExtensions = new ArrayList<String>();
+        }
         return this.defaultNonFilteredFileExtensions;
     }
 

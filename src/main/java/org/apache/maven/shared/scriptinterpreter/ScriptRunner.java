@@ -171,8 +171,10 @@ public class ScriptRunner
             return;
         }
 
-        run( scriptDescription, scriptFile, context, logger, stage, failOnException );
+        String path = scriptFile.getAbsolutePath();
+        getLog().info( "run script " + relativeScriptPath + path.substring( path.lastIndexOf( '.' ) ) );
 
+        executeRun( scriptDescription, scriptFile, context, logger, stage, failOnException );
     }
 
     /**
@@ -201,6 +203,14 @@ public class ScriptRunner
 
         getLog().info( "run script " + scriptFile.getAbsolutePath() );
 
+        executeRun( scriptDescription, scriptFile, context, logger, stage, failOnException );
+    }
+
+    private void executeRun( final String scriptDescription, File scriptFile,
+                             final Map<String, ? extends Object> context, final ExecutionLogger logger, String stage,
+                             boolean failOnException )
+        throws IOException, RunFailureException
+    {
         Map<String, Object> globalVariables = new HashMap<String, Object>( this.globalVariables );
         globalVariables.put( "basedir", scriptFile.getParentFile() );
         globalVariables.put( "context", context );

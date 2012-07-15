@@ -168,7 +168,7 @@ public class ScriptRunner
 
         if ( !scriptFile.exists() )
         {
-            getLog().debug( "no script found in directory:" + basedir.getAbsolutePath() );
+            getLog().debug( "no script found in directory: " + basedir.getAbsolutePath() );
             return;
         }
 
@@ -196,7 +196,7 @@ public class ScriptRunner
 
         if ( !scriptFile.exists() )
         {
-            getLog().debug( "scriptFile not found in directory:" + scriptFile.getAbsolutePath() );
+            getLog().debug( "scriptFile not found in directory: " + scriptFile.getAbsolutePath() );
             return;
         }
 

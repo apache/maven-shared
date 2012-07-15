@@ -23,6 +23,7 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import org.apache.tools.ant.AntClassLoader;
 import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.plexus.component.annotations.Component;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -35,8 +36,8 @@ import java.util.Map;
  * 
  * @author Benjamin Bentmann
  * @version $Id$
- * @plexus.component role="org.apache.maven.shared.scriptinterpreter.ScriptInterpreter" role-hint="groovy"
  */
+@Component( role = ScriptInterpreter.class, hint = "groovy" )
 public class GroovyScriptInterpreter
     implements ScriptInterpreter
 {
@@ -44,7 +45,8 @@ public class GroovyScriptInterpreter
     /**
      * {@inheritDoc}
      */
-    public Object evaluateScript( String script, List<String> classPath, Map<String, ? extends Object> globalVariables, PrintStream scriptOutput )
+    public Object evaluateScript( String script, List<String> classPath, Map<String, ? extends Object> globalVariables,
+                                  PrintStream scriptOutput )
         throws ScriptEvaluationException
     {
         PrintStream origOut = System.out;

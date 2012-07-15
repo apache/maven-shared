@@ -25,9 +25,11 @@
     <version>17</version>
     <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
+
   <artifactId>maven-script-interpreter</artifactId>
   <version>1.1-SNAPSHOT</version>
   <name>Maven Script Interpreter</name>
+  <description>This component provides some utilities to interpret/execute some scripts for various implementations: groovy or beanshell.</description>
 
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-script-interpreter</connection>

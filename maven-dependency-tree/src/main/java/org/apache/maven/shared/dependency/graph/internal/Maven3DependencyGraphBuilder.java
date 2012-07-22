@@ -41,6 +41,7 @@ import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.sonatype.aether.graph.Dependency;
+import org.sonatype.aether.version.VersionConstraint;
 
 /**
  * Wrapper around Maven 3 dependency resolver.
@@ -111,7 +112,9 @@ public class Maven3DependencyGraphBuilder
     private DependencyNode buildDependencyNode( DependencyNode parent, org.sonatype.aether.graph.DependencyNode node,
                                                 Artifact artifact, ArtifactFilter filter )
     {
-        DefaultDependencyNode current = new DefaultDependencyNode( parent, artifact );
+        DefaultDependencyNode current =
+            new DefaultDependencyNode( parent, artifact, node.getPremanagedVersion(), node.getPremanagedScope(),
+                                       getVersionSelectedFromRange( node.getVersionConstraint() ) );
 
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );
         for ( org.sonatype.aether.graph.DependencyNode child : node.getChildren() )
@@ -127,5 +130,30 @@ public class Maven3DependencyGraphBuilder
         current.setChildren( Collections.unmodifiableList( nodes ) );
 
         return current;
+    }
+
+    private String getVersionSelectedFromRange( VersionConstraint constraint )
+    {
+        if ( constraint == null )
+        {
+            return null;
+        }
+
+        if ( constraint.getVersion() != null )
+        {
+            return constraint.getVersion().toString();
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for ( org.sonatype.aether.version.VersionRange range : constraint.getRanges() )
+        {
+            if ( sb.length() > 0 )
+            {
+                sb.append( ',' );
+            }
+            sb.append( range );
+        }
+
+        return sb.toString();
     }
 }

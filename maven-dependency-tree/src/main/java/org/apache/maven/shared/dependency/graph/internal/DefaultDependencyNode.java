@@ -13,12 +13,22 @@ public class DefaultDependencyNode
 
     private final DependencyNode parent;
 
+    private final String premanagedVersion;
+
+    private final String premanagedScope;
+
+    private final String versionConstraint;
+
     private List<DependencyNode> children;
 
-    public DefaultDependencyNode( DependencyNode parent, Artifact artifact )
+    public DefaultDependencyNode( DependencyNode parent, Artifact artifact, String premanagedVersion,
+                                  String premanagedScope, String versionConstraint )
     {
         this.parent = parent;
         this.artifact = artifact;
+        this.premanagedVersion = premanagedVersion;
+        this.premanagedScope = premanagedScope;
+        this.versionConstraint = versionConstraint;
     }
 
     /**
@@ -63,5 +73,100 @@ public class DefaultDependencyNode
     public DependencyNode getParent()
     {
         return parent;
+    }
+
+    public String getPremanagedVersion()
+    {
+        return premanagedVersion;
+    }
+
+    public String getPremanagedScope()
+    {
+        return premanagedScope;
+    }
+
+    public String getVersionConstraint()
+    {
+        return versionConstraint;
+    }
+
+    public String toNodeString()
+    {
+        StringBuffer buffer = new StringBuffer();
+
+        buffer.append( artifact );
+        
+        ItemAppender appender = new ItemAppender( buffer, " (", "; ", ")" );
+
+        if ( getPremanagedVersion() != null )
+        {
+            appender.append( "version managed from ", getPremanagedVersion() );
+        }
+            
+        if ( getPremanagedScope() != null )
+        {
+            appender.append( "scope managed from ", getPremanagedScope() );
+        }
+        
+        if ( getVersionConstraint() != null )
+        {
+            appender.append( "version selected from constraint ", getVersionConstraint() );
+        }
+        
+        appender.flush();
+
+        return buffer.toString();
+    }
+
+    /**
+     * Utility class to concatenate a number of parameters with separator tokens.   
+     */
+    private static class ItemAppender
+    {
+        private StringBuffer buffer;
+        
+        private String startToken;
+        
+        private String separatorToken;
+        
+        private String endToken;
+        
+        private boolean appended;
+        
+        public ItemAppender( StringBuffer buffer, String startToken, String separatorToken, String endToken )
+        {
+            this.buffer = buffer;
+            this.startToken = startToken;
+            this.separatorToken = separatorToken;
+            this.endToken = endToken;
+            
+            appended = false;
+        }
+
+        public ItemAppender append( String item1, String item2 )
+        {
+            appendToken();
+            
+            buffer.append( item1 ).append( item2 );
+            
+            return this;
+        }
+        
+        public void flush()
+        {
+            if ( appended )
+            {
+                buffer.append( endToken );
+                
+                appended = false;
+            }
+        }
+        
+        private void appendToken()
+        {
+            buffer.append( appended ? separatorToken : startToken );
+            
+            appended = true;
+        }
     }
 }

@@ -64,7 +64,15 @@ public class Maven2DependencyGraphBuilder
                                                 org.apache.maven.shared.dependency.tree.DependencyNode node,
                                                 ArtifactFilter filter )
     {
-        DefaultDependencyNode current = new DefaultDependencyNode( parent, node.getArtifact() );
+        String versionSelectedFromRange = null;
+        if ( node.getVersionSelectedFromRange() != null )
+        {
+            versionSelectedFromRange = node.getVersionSelectedFromRange().toString();
+        }
+
+        DefaultDependencyNode current =
+            new DefaultDependencyNode( parent, node.getArtifact(), node.getPremanagedVersion(),
+                                       node.getPremanagedScope(), versionSelectedFromRange );
 
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );
         for ( org.apache.maven.shared.dependency.tree.DependencyNode child : node.getChildren() )

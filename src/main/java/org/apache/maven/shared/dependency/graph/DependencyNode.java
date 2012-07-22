@@ -32,9 +32,9 @@ import org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor;
  */
 public interface DependencyNode
 {
-    public Artifact getArtifact();
+    Artifact getArtifact();
 
-    public List<DependencyNode> getChildren();
+    List<DependencyNode> getChildren();
 
     /**
      * Applies the specified dependency node visitor to this dependency node and its children.
@@ -44,12 +44,41 @@ public interface DependencyNode
      * @return the visitor result of ending the visit to this node
      * @since 1.1
      */
-    public boolean accept( DependencyNodeVisitor visitor );
+    boolean accept( DependencyNodeVisitor visitor );
 
     /**
      * Gets the parent dependency node of this dependency node.
      * 
      * @return the parent dependency node
      */
-    public DependencyNode getParent();
+    DependencyNode getParent();
+
+    /**
+     * Gets the version or version range for the dependency before dependency management was applied (if any).
+     * 
+     * @return The dependency version before dependency management or {@code null} if the version was not managed.
+     */
+    String getPremanagedVersion();
+
+    /**
+     * Gets the scope for the dependency before dependency management was applied (if any).
+     * 
+     * @return The dependency scope before dependency management or {@code null} if the scope was not managed.
+     */
+    String getPremanagedScope();
+
+    /**
+     * A constraint on versions for a dependency. A constraint can either consist of one or more version ranges or a single
+     * version.
+     * 
+     * @return The constraint on the dependency.
+     */
+    String getVersionConstraint();
+
+    /**
+     * Returns a string representation of this dependency node.
+     * 
+     * @return the string representation
+     */
+    String toNodeString();
 }

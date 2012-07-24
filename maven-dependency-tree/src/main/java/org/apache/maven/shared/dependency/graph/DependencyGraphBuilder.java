@@ -38,6 +38,6 @@ public interface DependencyGraphBuilder
      * @return the dependency graph
      * @throws DependencyGraphBuilderException
      */
-    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
+    DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException;
 }

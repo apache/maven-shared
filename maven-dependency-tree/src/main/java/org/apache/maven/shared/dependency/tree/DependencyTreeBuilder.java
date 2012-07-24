@@ -88,7 +88,8 @@ public interface DependencyTreeBuilder
      * @since 1.1
      */
     DependencyNode buildDependencyTree( MavenProject project, ArtifactRepository repository, ArtifactFactory factory,
-                                        ArtifactMetadataSource metadataSource, ArtifactFilter filter, ArtifactCollector collector )
+                                        ArtifactMetadataSource metadataSource, ArtifactFilter filter,
+                                        ArtifactCollector collector )
         throws DependencyTreeBuilderException;
 
     DependencyNode buildDependencyTree( MavenProject project )

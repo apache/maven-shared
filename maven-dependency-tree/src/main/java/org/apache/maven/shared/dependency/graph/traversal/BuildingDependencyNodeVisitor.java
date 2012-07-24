@@ -19,6 +19,7 @@ package org.apache.maven.shared.dependency.graph.traversal;
  * under the License.
  */
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import org.apache.maven.shared.dependency.graph.DependencyNode;
@@ -82,10 +83,11 @@ public class BuildingDependencyNodeVisitor
     public boolean visit( DependencyNode node )
     {
         // clone the node
-        DependencyNode newNode =
+        DefaultDependencyNode newNode =
             new DefaultDependencyNode( parentNodes.isEmpty() ? null : parentNodes.peek(), node.getArtifact(),
                                        node.getPremanagedScope(), node.getPremanagedVersion(),
                                        node.getVersionConstraint() );
+        newNode.setChildren( new ArrayList<DependencyNode>() );
 
         if ( parentNodes.empty() )
         {

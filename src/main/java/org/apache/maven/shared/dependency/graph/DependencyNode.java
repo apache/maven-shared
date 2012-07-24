@@ -68,8 +68,8 @@ public interface DependencyNode
     String getPremanagedScope();
 
     /**
-     * A constraint on versions for a dependency. A constraint can either consist of one or more version ranges or a single
-     * version.
+     * A constraint on versions for a dependency. A constraint can either consist of one or more version ranges or a
+     * single version.
      * 
      * @return The constraint on the dependency.
      */

@@ -134,14 +134,9 @@ public class Maven3DependencyGraphBuilder
 
     private String getVersionSelectedFromRange( VersionConstraint constraint )
     {
-        if ( constraint == null )
+        if ( ( constraint == null ) || ( constraint.getVersion() != null ) )
         {
             return null;
-        }
-
-        if ( constraint.getVersion() != null )
-        {
-            return constraint.getVersion().toString();
         }
 
         StringBuilder sb = new StringBuilder();

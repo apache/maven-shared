@@ -108,4 +108,30 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+
+    <profile>
+      <id>reporting</id>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <groups>
+                <group>
+                  <title>Maven 2 &amp; 3 Dependency Graph</title>
+                  <packages>org.apache.maven.shared.dependency.graph*</packages>
+                </group>
+                <group>
+                  <title>Maven 2-specific Dependency Tree</title>
+                  <packages>org.apache.maven.shared.dependency.tree*</packages>
+                </group>
+              </groups>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+  </profiles>
 </project>

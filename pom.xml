@@ -28,15 +28,15 @@
   </parent>
 
   <artifactId>maven-dependency-tree</artifactId>
-  <version>2.0-SNAPSHOT</version>
+  <version>2.0</version>
 
   <name>Maven Dependency Tree</name>
   <description>A tree-based API for resolution of Maven project dependencies</description>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-dependency-tree/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-dependency-tree/</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-dependency-tree/</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-dependency-tree-2.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-dependency-tree-2.0</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-dependency-tree-2.0</url>
   </scm>
   <issueManagement>
     <system>jira</system>

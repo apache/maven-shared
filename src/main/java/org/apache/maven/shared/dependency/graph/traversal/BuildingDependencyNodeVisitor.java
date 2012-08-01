@@ -85,7 +85,7 @@ public class BuildingDependencyNodeVisitor
         // clone the node
         DefaultDependencyNode newNode =
             new DefaultDependencyNode( parentNodes.isEmpty() ? null : parentNodes.peek(), node.getArtifact(),
-                                       node.getPremanagedScope(), node.getPremanagedVersion(),
+                                       node.getPremanagedVersion(), node.getPremanagedScope(),
                                        node.getVersionConstraint() );
         newNode.setChildren( new ArrayList<DependencyNode>() );
 

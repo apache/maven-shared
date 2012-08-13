@@ -11,7 +11,7 @@
   <parent>
     <artifactId>maven-shared-components</artifactId>
     <groupId>org.apache.maven.shared</groupId>
-    <version>17</version>
+    <version>18</version>
     <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
 

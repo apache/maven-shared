@@ -105,7 +105,7 @@ public class Maven3DependencyGraphBuilder
 
         return factory.createDependencyArtifact( artifact.getGroupId(), artifact.getArtifactId(),
                                                  VersionRange.createFromVersion( artifact.getVersion() ),
-                                                 artifact.getExtension(), artifact.getClassifier(), dep.getScope(),
+                                                 artifact.getProperty("type", artifact.getExtension()), artifact.getClassifier(), dep.getScope(),
                                                  dep.isOptional() );
     }
 

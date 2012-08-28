@@ -36,7 +36,7 @@ under the License.
   <url>http://maven.apache.org/shared/</url>
   <modules>
     <module>maven-shared-components</module>
-<!--    <module>maven-shared-utils</module> -->
+    <module>maven-shared-utils</module>
     <module>file-management</module>
     <module>maven-ant</module>
     <module>maven-archiver</module>

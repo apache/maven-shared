@@ -47,6 +47,12 @@
     <mavenVersion>2.2.0</mavenVersion>
   </properties>
 
+  <contributors>
+    <contributor>
+      <name>Tuomas Kiviaho</name>
+    </contributor>
+  </contributors>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>

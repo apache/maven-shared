@@ -20,11 +20,11 @@ package org.apache.maven.it;
  */
 
 import junit.framework.Assert;
-import org.apache.maven.it.util.cli.CommandLineException;
-import org.apache.maven.it.util.cli.CommandLineUtils;
-import org.apache.maven.it.util.cli.Commandline;
-import org.apache.maven.it.util.cli.StreamConsumer;
-import org.apache.maven.it.util.cli.WriterStreamConsumer;
+import org.apache.maven.shared.utils.cli.CommandLineException;
+import org.apache.maven.shared.utils.cli.CommandLineUtils;
+import org.apache.maven.shared.utils.cli.Commandline;
+import org.apache.maven.shared.utils.cli.StreamConsumer;
+import org.apache.maven.shared.utils.cli.WriterStreamConsumer;
 import org.apache.maven.shared.utils.StringUtils;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.shared.utils.io.IOUtil;

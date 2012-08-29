@@ -27,11 +27,11 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.maven.it.util.cli.CommandLineException;
-import org.apache.maven.it.util.cli.CommandLineUtils;
-import org.apache.maven.it.util.cli.Commandline;
-import org.apache.maven.it.util.cli.StreamConsumer;
-import org.apache.maven.it.util.cli.WriterStreamConsumer;
+import org.apache.maven.shared.utils.cli.CommandLineException;
+import org.apache.maven.shared.utils.cli.CommandLineUtils;
+import org.apache.maven.shared.utils.cli.Commandline;
+import org.apache.maven.shared.utils.cli.StreamConsumer;
+import org.apache.maven.shared.utils.cli.WriterStreamConsumer;
 
 /**
  * @author Benjamin Bentmann

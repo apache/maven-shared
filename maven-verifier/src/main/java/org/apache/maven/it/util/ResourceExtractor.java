@@ -19,6 +19,9 @@ package org.apache.maven.it.util;
  * under the License.
  */
 
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.IOUtil;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -93,7 +96,7 @@ public class ResourceExtractor {
                     } else {
                         FileOutputStream fos = new FileOutputStream(destFile);
                         try {
-                            IOUtil.copy(z.getInputStream(ze), fos);
+                            IOUtil.copy( z.getInputStream( ze ), fos );
                         } finally {
                             IOUtil.close(fos);
                         }

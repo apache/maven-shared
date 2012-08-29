@@ -105,8 +105,8 @@ public class Maven3DependencyGraphBuilder
 
         return factory.createDependencyArtifact( artifact.getGroupId(), artifact.getArtifactId(),
                                                  VersionRange.createFromVersion( artifact.getVersion() ),
-                                                 artifact.getProperty("type", artifact.getExtension()), artifact.getClassifier(), dep.getScope(),
-                                                 dep.isOptional() );
+                                                 artifact.getProperty( "type", artifact.getExtension() ),
+                                                 artifact.getClassifier(), dep.getScope(), dep.isOptional() );
     }
 
     private DependencyNode buildDependencyNode( DependencyNode parent, org.sonatype.aether.graph.DependencyNode node,

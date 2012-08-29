@@ -78,7 +78,7 @@ package org.apache.maven.it.util.cli;
  * ====================================================================
  */
 
-import org.apache.maven.it.util.IOUtil;
+import org.apache.maven.shared.utils.io.IOUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -159,7 +159,6 @@ public class StreamPumper
         finally
         {
             IOUtil.close( in );
-
 
             synchronized ( this )
             {

@@ -20,14 +20,14 @@ package org.apache.maven.it;
  */
 
 import junit.framework.Assert;
-import org.apache.maven.it.util.FileUtils;
-import org.apache.maven.it.util.IOUtil;
-import org.apache.maven.it.util.StringUtils;
 import org.apache.maven.it.util.cli.CommandLineException;
 import org.apache.maven.it.util.cli.CommandLineUtils;
 import org.apache.maven.it.util.cli.Commandline;
 import org.apache.maven.it.util.cli.StreamConsumer;
 import org.apache.maven.it.util.cli.WriterStreamConsumer;
+import org.apache.maven.shared.utils.StringUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.IOUtil;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;

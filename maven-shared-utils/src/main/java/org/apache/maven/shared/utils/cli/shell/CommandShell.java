@@ -1,4 +1,4 @@
-package org.apache.maven.it.util.cli.shell;
+package org.apache.maven.shared.utils.cli.shell;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.

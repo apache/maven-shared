@@ -1,4 +1,4 @@
-package org.apache.maven.it.util.cli.shell;
+package org.apache.maven.shared.utils.cli.shell;
 
 /*
  * Copyright 2001-2006 The Apache Software Foundation.
@@ -16,8 +16,8 @@ package org.apache.maven.it.util.cli.shell;
  * limitations under the License.
  */
 
-import org.apache.maven.it.util.cli.CommandLineException;
-import org.apache.maven.it.util.cli.Commandline;
+import org.apache.maven.shared.utils.cli.CommandLineException;
+import org.apache.maven.shared.utils.cli.Commandline;
 
 import java.util.ArrayList;
 import java.util.Arrays;

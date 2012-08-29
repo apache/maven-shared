@@ -1,3 +1,5 @@
+package org.apache.maven.shared.utils.cli;
+
 /*
  * The MIT License
  *
@@ -22,30 +24,20 @@
  * SOFTWARE.
  */
 
-package org.apache.maven.it.util.cli;
-
-import java.io.PrintWriter;
-import java.io.Writer;
-
 /**
- * @author <a href="mailto:jason@maven.org">Jason van Zyl</a>
+ * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
  */
-public class WriterStreamConsumer
-    implements StreamConsumer
+public class CommandLineException
+    extends Exception
 {
-
-    private PrintWriter writer;
-
-    public WriterStreamConsumer( Writer writer )
+    public CommandLineException( String message )
     {
-        this.writer = new PrintWriter( writer );
+        super( message );
     }
 
-    public void consumeLine( String line )
+    public CommandLineException( String message, Throwable cause )
     {
-        writer.println( line );
-
-        writer.flush();
+        super( message, cause );
     }
 }

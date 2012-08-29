@@ -1,4 +1,4 @@
-package org.apache.maven.it.util.cli;
+package org.apache.maven.shared.utils.cli;
 
 /*
  * The MIT License
@@ -78,9 +78,9 @@ package org.apache.maven.it.util.cli;
  * ====================================================================
  */
 
-import org.apache.maven.it.util.cli.shell.CommandShell;
-import org.apache.maven.it.util.cli.shell.CmdShell;
-import org.apache.maven.it.util.cli.shell.Shell;
+import org.apache.maven.shared.utils.cli.shell.CommandShell;
+import org.apache.maven.shared.utils.cli.shell.CmdShell;
+import org.apache.maven.shared.utils.cli.shell.Shell;
 
 import java.io.File;
 import java.io.IOException;

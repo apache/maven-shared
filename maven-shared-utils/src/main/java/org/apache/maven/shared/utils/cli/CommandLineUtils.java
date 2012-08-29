@@ -1,4 +1,4 @@
-package org.apache.maven.it.util.cli;
+package org.apache.maven.shared.utils.cli;
 
 /*
  * The MIT License

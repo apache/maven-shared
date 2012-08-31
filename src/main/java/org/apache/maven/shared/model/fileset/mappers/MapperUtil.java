@@ -20,7 +20,7 @@ package org.apache.maven.shared.model.fileset.mappers;
  */
 
 import org.apache.maven.shared.model.fileset.Mapper;
-import org.codehaus.plexus.util.IOUtil;
+import org.apache.maven.shared.utils.io.IOUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

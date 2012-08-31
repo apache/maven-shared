@@ -25,7 +25,7 @@ import org.apache.commons.validator.UrlValidator;
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.util.HtmlTools;
 
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

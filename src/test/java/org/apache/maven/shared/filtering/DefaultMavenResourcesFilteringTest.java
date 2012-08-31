@@ -25,8 +25,8 @@ import org.apache.maven.settings.Settings;
 import org.codehaus.plexus.PlexusTestCase;
 import org.codehaus.plexus.interpolation.PrefixedObjectValueSource;
 import org.codehaus.plexus.interpolation.ValueSource;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.IOUtil;
 
 import java.io.File;
 import java.io.FileInputStream;

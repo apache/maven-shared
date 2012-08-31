@@ -32,8 +32,8 @@ import org.codehaus.plexus.interpolation.SingleResponseValueSource;
 import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.interpolation.multi.MultiDelimiterStringSearchInterpolator;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.StringUtils;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
 import java.io.File;

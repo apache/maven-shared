@@ -26,8 +26,8 @@ import org.codehaus.plexus.interpolation.Interpolator;
 import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
 import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.FileUtils.FilterWrapper;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
 
 import java.io.File;
 import java.io.Reader;

@@ -20,7 +20,7 @@ package org.apache.maven.shared.filtering;
  */
 
 import java.util.regex.Pattern;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.StringUtils;
 
 /**
  * @author Olivier Lamy

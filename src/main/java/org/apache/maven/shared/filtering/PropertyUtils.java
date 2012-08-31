@@ -19,8 +19,8 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.io.IOUtil;
+import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.File;
 import java.io.FileInputStream;

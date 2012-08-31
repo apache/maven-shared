@@ -28,8 +28,8 @@ import java.util.Properties;
 
 import org.apache.maven.model.Resource;
 import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.IOUtil;
 
 /**
  * @author Olivier Lamy

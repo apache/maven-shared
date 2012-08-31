@@ -20,10 +20,10 @@ package org.apache.maven.shared.invoker;
  */
 
 import junit.framework.TestCase;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.Os;
-import org.codehaus.plexus.util.cli.Commandline;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.IOUtil;
+import org.apache.maven.shared.utils.Os;
+import org.apache.maven.shared.utils.cli.Commandline;
 
 import java.io.File;
 import java.io.FileWriter;

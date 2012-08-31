@@ -30,8 +30,8 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
-import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.apache.maven.shared.utils.StringUtils;
+import org.apache.maven.shared.utils.cli.CommandLineUtils;
 
 public class DefaultInvokerTest
     extends TestCase

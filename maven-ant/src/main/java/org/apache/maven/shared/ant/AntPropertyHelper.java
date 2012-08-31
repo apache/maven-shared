@@ -22,7 +22,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.tools.ant.PropertyHelper;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
-import org.codehaus.plexus.util.introspection.ReflectionValueExtractor;
+import org.apache.maven.shared.utils.introspection.ReflectionValueExtractor;
 
 import java.io.File;
 import java.util.Hashtable;

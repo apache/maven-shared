@@ -31,9 +31,9 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.maven.shared.model.fileset.FileSet;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.Commandline;
+import org.apache.maven.shared.utils.cli.CommandLineException;
+import org.apache.maven.shared.utils.cli.Commandline;
+import org.apache.maven.shared.utils.io.FileUtils;
 
 /**
  * Test the FileSet
@@ -88,7 +88,7 @@ public class FileSetUtilsTest
     /**
      * @throws IOException if any
      * @throws InterruptedException if any
-     * @throws CommandLineException if any
+     * @throws org.apache.maven.shared.utils.cli.CommandLineException if any
      */
     public void testIncludesDontFollowSymlinks()
         throws IOException, InterruptedException, CommandLineException

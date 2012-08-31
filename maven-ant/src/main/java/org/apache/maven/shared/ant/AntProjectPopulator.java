@@ -11,7 +11,7 @@ import org.apache.maven.shared.ant.components.AntTargetConverter;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.Artifact;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.StringUtils;
 
 import java.util.List;
 import java.util.Collection;

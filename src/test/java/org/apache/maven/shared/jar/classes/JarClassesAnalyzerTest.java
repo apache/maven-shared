@@ -56,7 +56,6 @@ public class JarClassesAnalyzerTest
 
         assertTrue( "classes.imports", jclass.getImports().contains( "org.apache.maven.jxr.JXR" ) );
         assertTrue( "classes.imports", jclass.getImports().contains( "org.apache.oro.text.perl.Perl5Util" ) );
-        assertTrue( "classes.imports", jclass.getImports().contains( "org.codehaus.plexus.util.IOUtil" ) );
         assertTrue( "classes.packages", jclass.getPackages().contains( "org.apache.maven.jxr.pacman" ) );
     }
 

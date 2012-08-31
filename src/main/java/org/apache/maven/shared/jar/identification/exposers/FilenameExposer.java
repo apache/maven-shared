@@ -22,7 +22,7 @@ package org.apache.maven.shared.jar.identification.exposers;
 import org.apache.maven.shared.jar.JarAnalyzer;
 import org.apache.maven.shared.jar.identification.JarIdentification;
 import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
-import org.codehaus.plexus.util.FileUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

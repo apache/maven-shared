@@ -21,7 +21,7 @@ package org.apache.maven.shared.jar;
 
 import org.apache.maven.shared.jar.classes.JarClasses;
 import org.apache.maven.shared.jar.identification.JarIdentification;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.File;
 import java.util.Collections;

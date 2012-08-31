@@ -24,7 +24,7 @@ import org.apache.maven.shared.jar.JarData;
 import org.codehaus.plexus.digest.DigesterException;
 import org.codehaus.plexus.digest.StreamingDigester;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.util.IOUtil;
+import org.apache.maven.shared.utils.io.IOUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

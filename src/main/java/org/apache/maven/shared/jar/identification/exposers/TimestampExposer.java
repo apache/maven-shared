@@ -24,7 +24,7 @@ import org.apache.commons.collections.bag.HashBag;
 import org.apache.maven.shared.jar.JarAnalyzer;
 import org.apache.maven.shared.jar.identification.JarIdentification;
 import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

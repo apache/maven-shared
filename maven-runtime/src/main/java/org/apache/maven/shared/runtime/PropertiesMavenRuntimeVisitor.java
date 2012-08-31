@@ -28,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import org.codehaus.plexus.util.IOUtil;
+import org.apache.maven.shared.utils.io.IOUtil;
 
 /**
  * A visitor that parses and collects Maven project property files.

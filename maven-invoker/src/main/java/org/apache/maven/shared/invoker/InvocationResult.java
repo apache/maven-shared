@@ -19,7 +19,7 @@ package org.apache.maven.shared.invoker;
  * under the License.
  */
 
-import org.codehaus.plexus.util.cli.CommandLineException;
+import org.apache.maven.shared.utils.cli.CommandLineException;
 
 /**
  * Describes the result of a Maven invocation.

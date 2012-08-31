@@ -19,8 +19,8 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.Commandline;
+import org.apache.maven.shared.utils.cli.CommandLineException;
+import org.apache.maven.shared.utils.cli.Commandline;
 
 /**
  * Describes the result of a JarSigner invocation.

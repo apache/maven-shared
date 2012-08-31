@@ -22,9 +22,9 @@ package org.apache.maven.shared.invoker;
 import java.io.File;
 import java.io.InputStream;
 
-import org.codehaus.plexus.util.cli.CommandLineException;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.codehaus.plexus.util.cli.Commandline;
+import org.apache.maven.shared.utils.cli.CommandLineException;
+import org.apache.maven.shared.utils.cli.CommandLineUtils;
+import org.apache.maven.shared.utils.cli.Commandline;
 
 /**
  * Class intended to be used by clients who wish to invoke a forked Maven process from their applications

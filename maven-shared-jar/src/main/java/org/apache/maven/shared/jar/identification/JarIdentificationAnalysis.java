@@ -20,7 +20,7 @@ package org.apache.maven.shared.jar.identification;
  */
 
 import org.apache.maven.shared.jar.JarAnalyzer;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.StringUtils;
 
 import java.util.Collections;
 import java.util.Iterator;

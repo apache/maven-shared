@@ -54,7 +54,6 @@ public class ImportVisitorTest
         assertNotContainsRegex( "Import List", "[\\[\\)\\(\\;]", imports );
 
         assertTrue( "imports", imports.contains( "org.apache.maven.jxr.pacman.PackageType" ) );
-        assertTrue( "imports", imports.contains( "org.codehaus.plexus.util.IOUtil" ) );
         assertTrue( "imports", imports.contains( "org.apache.oro.text.perl.Perl5Util" ) );
     }
 

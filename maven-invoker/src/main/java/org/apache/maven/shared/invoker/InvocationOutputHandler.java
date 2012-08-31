@@ -19,7 +19,7 @@ package org.apache.maven.shared.invoker;
  * under the License.
  */
 
-import org.codehaus.plexus.util.cli.StreamConsumer;
+import org.apache.maven.shared.utils.cli.StreamConsumer;
 
 /**
  * Receives the standard/error output from a Maven invocation.

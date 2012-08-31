@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.codehaus.plexus.PlexusTestCase;
-import org.codehaus.plexus.util.FileUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
 
 /**
  * @author <a href="mailto:olamy@apache.org">olamy</a>

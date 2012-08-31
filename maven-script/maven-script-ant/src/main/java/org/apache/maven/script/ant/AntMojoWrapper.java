@@ -36,7 +36,7 @@ import org.codehaus.plexus.component.configurator.ComponentConfigurationExceptio
 import org.codehaus.plexus.component.factory.ant.AntComponentExecutionException;
 import org.codehaus.plexus.component.factory.ant.AntScriptInvoker;
 import org.codehaus.plexus.component.repository.ComponentRequirement;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;

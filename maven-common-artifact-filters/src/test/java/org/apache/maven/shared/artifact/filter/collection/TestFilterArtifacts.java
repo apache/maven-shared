@@ -31,7 +31,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.maven.plugin.testing.ArtifactStubFactory;
-import org.codehaus.plexus.util.FileUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
 
 /**
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>

@@ -22,7 +22,7 @@ package org.apache.maven.shared.runtime;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.StringUtils;
 
 /**
  * Provides various utility methods for working with classes.

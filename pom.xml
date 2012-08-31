@@ -77,6 +77,11 @@
       <artifactId>maven-plugin-api</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-shared-utils</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
 
     <!-- test -->
     <dependency>

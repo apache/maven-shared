@@ -22,8 +22,8 @@ package org.apache.maven.model.converter;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.v3_0_0.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.io.IOUtil;
+import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.Reader;
 import java.io.StringReader;

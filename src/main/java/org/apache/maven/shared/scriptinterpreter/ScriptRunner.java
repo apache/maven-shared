@@ -20,8 +20,8 @@ package org.apache.maven.shared.scriptinterpreter;
  */
 
 import org.apache.maven.plugin.logging.Log;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.File;
 import java.io.IOException;

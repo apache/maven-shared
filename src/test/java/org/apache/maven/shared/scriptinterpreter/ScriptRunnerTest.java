@@ -20,7 +20,7 @@ package org.apache.maven.shared.scriptinterpreter;
 
 import junit.framework.TestCase;
 import org.apache.maven.plugin.logging.SystemStreamLog;
-import org.codehaus.plexus.util.FileUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
 
 import java.io.File;
 import java.util.HashMap;

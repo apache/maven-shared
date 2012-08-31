@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
-import org.codehaus.plexus.util.StringUtils;
+import org.apache.maven.shared.utils.StringUtils;
 
 /**
  * This is the common base class of ClassifierFilter and TypeFilter
@@ -54,7 +54,7 @@ public abstract class AbstractArtifactFeatureFilter
     /**
      * This function determines if filtering needs to be performed. Includes are processed before Excludes.
      * 
-     * @param dependencies the set of dependencies to filter.
+     * @param artifacts the set of dependencies to filter.
      * @return a Set of filtered dependencies.
      */
     public Set filter( Set artifacts )
@@ -77,8 +77,8 @@ public abstract class AbstractArtifactFeatureFilter
     /**
      * Processes the dependencies list and includes the dependencies that match a filter in the list.
      * 
-     * @param depends List of dependencies.
-     * @param includes List of types or classifiers to include.
+     * @param artifacts List of dependencies.
+     * @param theIncludes List of types or classifiers to include.
      * @return a set of filtered artifacts.
      */
     private Set filterIncludes( Set artifacts, List theIncludes )

@@ -20,7 +20,7 @@ package org.apache.maven.shared.io.location;
  */
 
 import org.apache.maven.shared.io.TestUtils;
-import org.codehaus.plexus.util.IOUtil;
+import org.apache.maven.shared.utils.io.IOUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

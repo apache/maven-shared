@@ -28,7 +28,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.codehaus.plexus.util.IOUtil;
+import org.apache.maven.shared.utils.io.IOUtil;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.codehaus.plexus.util.WriterFactory;
 

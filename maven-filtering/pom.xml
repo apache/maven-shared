@@ -106,6 +106,7 @@
       <artifactId>maven-shared-utils</artifactId>
       <version>0.1-SNAPSHOT</version>
     </dependency>
+
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-container-default</artifactId>

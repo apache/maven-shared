@@ -20,7 +20,7 @@ package org.apache.maven.shared.io.scan;
  */
 
 import org.apache.maven.shared.io.scan.mapping.SourceMapping;
-import org.codehaus.plexus.util.DirectoryScanner;
+import org.apache.maven.shared.utils.io.DirectoryScanner;
 
 import java.io.File;
 import java.util.ArrayList;

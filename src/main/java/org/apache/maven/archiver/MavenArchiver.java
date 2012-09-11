@@ -106,7 +106,7 @@ public class MavenArchiver
     {
         boolean hasManifestEntries = !config.isManifestEntriesEmpty();
         Map<String, String> entries =
-            hasManifestEntries ? config.getManifestEntries() : Collections.EMPTY_MAP;
+            hasManifestEntries ? config.getManifestEntries() : Collections.<String, String>emptyMap();
 
         Manifest manifest = getManifest( session, project, config.getManifest(), entries );
 

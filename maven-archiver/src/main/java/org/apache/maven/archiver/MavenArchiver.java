@@ -105,8 +105,9 @@ public class MavenArchiver
         throws ManifestException, DependencyResolutionRequiredException
     {
         boolean hasManifestEntries = !config.isManifestEntriesEmpty();
-        @SuppressWarnings ("unchecked") Map<String, String> entries =
-            hasManifestEntries ? config.getManifestEntries() : Collections.<String, String>EMPTY_MAP;
+        Map<String, String> entries =
+            hasManifestEntries ? config.getManifestEntries() : Collections.EMPTY_MAP;
+
         Manifest manifest = getManifest( session, project, config.getManifest(), entries );
 
         // any custom manifest entries in the archive configuration manifest?

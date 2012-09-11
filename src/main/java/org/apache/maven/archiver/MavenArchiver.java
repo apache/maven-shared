@@ -19,14 +19,6 @@ package org.apache.maven.archiver;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.execution.MavenSession;
@@ -44,6 +36,15 @@ import org.codehaus.plexus.interpolation.RecursionInterceptor;
 import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
 import org.apache.maven.shared.utils.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
@@ -84,14 +85,16 @@ public class MavenArchiver
      * Return a pre-configured manifest
      *
      * @param project the project
-     * @param config the configuration to use
+     * @param config  the configuration to use
+     * @return a manifest, clients are recommended to use java.util.jar.Manifest datatype.
+     * @throws org.apache.maven.artifact.DependencyResolutionRequiredException
+     *          .
+     * @throws org.codehaus.plexus.archiver.jar.ManifestException
+     *          .
      * @todo Add user attributes list and user groups list
      * @deprecated
-     * @return a manifest, clients are recommended to use java.util.jar.Manifest datatype.
-     * @throws org.apache.maven.artifact.DependencyResolutionRequiredException .
-     * @throws org.codehaus.plexus.archiver.jar.ManifestException .
      */
-    @SuppressWarnings( "UnusedDeclaration" )
+    @SuppressWarnings ("UnusedDeclaration")
     public Manifest getManifest( MavenProject project, MavenArchiveConfiguration config )
         throws ManifestException, DependencyResolutionRequiredException
     {
@@ -102,8 +105,8 @@ public class MavenArchiver
         throws ManifestException, DependencyResolutionRequiredException
     {
         boolean hasManifestEntries = !config.isManifestEntriesEmpty();
-        @SuppressWarnings( "unchecked" )
-        Map<String, String> entries = hasManifestEntries ? config.getManifestEntries() : Collections.EMPTY_MAP;
+        @SuppressWarnings ("unchecked") Map<String, String> entries =
+            hasManifestEntries ? config.getManifestEntries() : Collections.<String, String>EMPTY_MAP;
         Manifest manifest = getManifest( session, project, config.getManifest(), entries );
 
         // any custom manifest entries in the archive configuration manifest?
@@ -162,7 +165,7 @@ public class MavenArchiver
      *
      * @todo Add user attributes list and user groups list
      */
-    @SuppressWarnings( { "JavaDoc", "UnusedDeclaration" } )
+    @SuppressWarnings ({ "JavaDoc", "UnusedDeclaration" })
     public Manifest getManifest( MavenProject project, ManifestConfiguration config )
         throws ManifestException, DependencyResolutionRequiredException
     {
@@ -218,8 +221,7 @@ public class MavenArchiver
         {
             StringBuilder classpath = new StringBuilder();
 
-            @SuppressWarnings( "unchecked" )
-            List<String> artifacts = project.getRuntimeClasspathElements();
+            @SuppressWarnings ("unchecked") List<String> artifacts = project.getRuntimeClasspathElements();
             String classpathPrefix = config.getClasspathPrefix();
             String layoutType = config.getClasspathLayoutType();
             String layout = config.getCustomClasspathLayout();
@@ -231,8 +233,8 @@ public class MavenArchiver
                 File f = new File( artifactFile );
                 if ( f.getAbsoluteFile().isFile() )
                 {
-                    @SuppressWarnings( "unchecked" )
-                    Artifact artifact = findArtifactWithFile( project.getArtifacts(), f );
+                    @SuppressWarnings ("unchecked") Artifact artifact =
+                        findArtifactWithFile( project.getArtifacts(), f );
 
                     if ( classpath.length() > 0 )
                     {
@@ -394,7 +396,7 @@ public class MavenArchiver
         {
             // TODO: this is only for applets - should we distinguish them as a packaging?
             StringBuilder extensionsList = new StringBuilder();
-            @SuppressWarnings( "unchecked" ) Set<Artifact> artifacts = (Set<Artifact>)project.getArtifacts();
+            @SuppressWarnings ("unchecked") Set<Artifact> artifacts = (Set<Artifact>) project.getArtifacts();
 
             for ( Artifact artifact : artifacts )
             {
@@ -465,7 +467,7 @@ public class MavenArchiver
         }
     }
 
-    @SuppressWarnings( "UnusedDeclaration" )
+    @SuppressWarnings ("UnusedDeclaration")
     public JarArchiver getArchiver()
     {
         return archiver;
@@ -484,7 +486,7 @@ public class MavenArchiver
     /**
      * @deprecated
      */
-    @SuppressWarnings( "JavaDoc" )
+    @SuppressWarnings ("JavaDoc")
     public void createArchive( MavenProject project, MavenArchiveConfiguration archiveConfiguration )
         throws ArchiverException, ManifestException, IOException, DependencyResolutionRequiredException
     {
@@ -563,7 +565,7 @@ public class MavenArchiver
         // make the archiver index the jars on the classpath, if we are adding that to the manifest
         if ( archiveConfiguration.getManifest().isAddClasspath() )
         {
-            @SuppressWarnings( "unchecked" ) List<String> artifacts = project.getRuntimeClasspathElements();
+            @SuppressWarnings ("unchecked") List<String> artifacts = project.getRuntimeClasspathElements();
             for ( String artifact : artifacts )
             {
                 File f = new File( artifact );

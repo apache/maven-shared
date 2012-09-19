@@ -559,6 +559,8 @@ public class MavenArchiver
 
         archiver.setCompress( archiveConfiguration.isCompress() );
 
+        archiver.setRecompressAddedZips( archiveConfiguration.isRecompressAddedZips() );
+
         archiver.setIndex( archiveConfiguration.isIndex() );
 
         archiver.setDestFile( archiveFile );

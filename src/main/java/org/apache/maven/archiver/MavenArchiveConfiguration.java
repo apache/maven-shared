@@ -36,6 +36,8 @@ public class MavenArchiveConfiguration
 {
     private boolean compress = true;
 
+    private boolean recompressAddedZips = true;
+
     private boolean index;
 
     private boolean addMavenDescriptor = true;
@@ -61,6 +63,16 @@ public class MavenArchiveConfiguration
     public boolean isCompress()
     {
         return compress;
+    }
+
+    public boolean isRecompressAddedZips()
+    {
+        return recompressAddedZips;
+    }
+
+    public void setRecompressAddedZips( boolean recompressAddedZips )
+    {
+        this.recompressAddedZips = recompressAddedZips;
     }
 
     public boolean isIndex()

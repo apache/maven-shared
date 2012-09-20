@@ -109,7 +109,7 @@ public class DefaultMavenFileFilter
                 {
                     getLogger().debug( "filtering " + from.getPath() + " to " + to.getPath() );
                 }
-                FileUtils.FilterWrapper[] wrappers = (FileUtils.FilterWrapper[]) filterWrappers.toArray(
+                FileUtils.FilterWrapper[] wrappers = filterWrappers.toArray(
                     new FileUtils.FilterWrapper[filterWrappers.size()] );
                 FileUtils.copyFile( from, to, encoding, wrappers );
             }

@@ -28,7 +28,7 @@ import org.codehaus.plexus.PlexusTestCase;
 import org.apache.maven.shared.utils.io.FileUtils;
 
 /**
- * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * @author Olivier Lamy
  * @version $Id$
  */
 public class DefaultMavenFileFilterTest

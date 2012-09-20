@@ -29,7 +29,7 @@ import org.apache.maven.project.MavenProject;
  *   with {@link MavenReportExecutor}.
  *   The goal is to store some informations regarding the current maven execution.
  * </p>
- * @author <a href="mailto:olamy@apache.org">olamy</a>
+ * @author Olivier Lamy
  * @since 3.0-beta-1
  * @version $Id$
  */

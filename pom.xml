@@ -37,6 +37,7 @@ under the License.
   <modules>
     <module>maven-shared-components</module>
     <module>maven-shared-utils</module>
+    <module>maven-shared-incremental</module>
     <module>file-management</module>
     <module>maven-ant</module>
     <module>maven-archiver</module>

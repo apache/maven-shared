@@ -24,12 +24,14 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.utils.ArrayUtils;
 import org.apache.maven.shared.utils.io.DirectoryScanResult;
 import org.apache.maven.shared.utils.io.DirectoryScanner;
 import org.apache.maven.shared.utils.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Various helper methods to support incremental builds
@@ -42,6 +44,7 @@ public class IncrementalBuildHelper
      */
     private static final String MAVEN_STATUS_ROOT = "maven-status";
     public static final String CREATED_FILES_LST_FILENAME = "createdFiles.lst";
+    private static final String INPUT_FILES_LST_FILENAME = "inputFiles.lst";
 
     /**
      * Needed for storing the status for the incremental build support.
@@ -59,20 +62,50 @@ public class IncrementalBuildHelper
      */
     private DirectoryScanner directoryScanner;
 
-    private String[] filesBeforeAction;
+    /**
+     * Once the {@link #beforeRebuildExecution(java.io.File)} gots called
+     * this will contain the list of files in the build directory.
+     */
+    private String[] filesBeforeAction = ArrayUtils.EMPTY_STRING_ARRAY;
 
     public IncrementalBuildHelper( MojoExecution mojoExecution, MavenSession mavenSession )
     {
-        this( mojoExecution, mavenSession.getCurrentProject() );
+        this( mojoExecution, getMavenProject( mavenSession ) );
     }
-
 
     public IncrementalBuildHelper( MojoExecution mojoExecution, MavenProject mavenProject )
     {
+        if ( mavenProject == null )
+        {
+            throw new IllegalArgumentException( "MavenProject must not be null!" );
+        }
+        if ( mojoExecution == null )
+        {
+            throw new IllegalArgumentException( "MojoExecution must not be null!" );
+        }
+
         this.mavenProject = mavenProject;
         this.mojoExecution = mojoExecution;
     }
 
+    /**
+     * small helper method to allow for the nullcheck in the ct invocation
+     */
+    private static MavenProject getMavenProject( MavenSession mavenSession )
+    {
+        if ( mavenSession == null )
+        {
+            throw new IllegalArgumentException( "MavenSession must not be null!" );
+        }
+
+        return mavenSession.getCurrentProject();
+    }
+
+    /**
+     * Get the existing DirectoryScanner used by this helper,
+     * or create new a DirectoryScanner if none is yet set.
+     * The DirectoryScanner is used for detecting changes in a directory
+     */
     public DirectoryScanner getDirectoryScanner()
     {
         if ( directoryScanner == null )
@@ -84,6 +117,17 @@ public class IncrementalBuildHelper
     }
 
     /**
+     * Set the DirectoryScanner which shall get used by this build helper.
+     * @param directoryScanner
+     */
+    public void setDirectoryScanner( DirectoryScanner directoryScanner )
+    {
+        this.directoryScanner = directoryScanner;
+    }
+
+    /**
+     * We use a specific status directory for each mojo execution to store state
+     * which is needed during the next build invocation run.
      * @return the directory for storing status information of the current mojo execution.
      */
     public File getMojoStatusDirectory() throws MojoExecutionException
@@ -95,6 +139,9 @@ public class IncrementalBuildHelper
 
         File buildOutputDirectory = new File( mavenProject.getBuild().getDirectory() );
 
+        //X TODO the executionId contains -cli and -mojoname
+        //X we should remove those postfixes as it should not make
+        //X any difference whether being run on the cli or via build
         String mojoStatusPath = MAVEN_STATUS_ROOT + File.separator
                                 + mojoExecution.getMojoDescriptor().getPluginDescriptor().getArtifactId() + File.separator
                                 + mojoExecution.getMojoDescriptor().getGoal() + File.separator
@@ -108,6 +155,103 @@ public class IncrementalBuildHelper
         }
 
         return mojoStatusDir;
+    }
+
+    /**
+     * Detect whether the list of detected files has changed since the last build.
+     * We simply load the list of files for the previous build from a status file
+     * and compare it with the new list. Afterwards we store the new list in the status file.
+     *
+     * @param inputFiles
+     * @return <code>true</code> if the set of inputFiles got changed since the last build.
+     * @throws MojoExecutionException
+     */
+    public boolean inputFileTreeChanged( Set<File> inputFiles ) throws MojoExecutionException
+    {
+        File mojoConfigBase = getMojoStatusDirectory();
+        File mojoConfigFile = new File( mojoConfigBase, INPUT_FILES_LST_FILENAME );
+
+        String[] oldInputFiles = ArrayUtils.EMPTY_STRING_ARRAY;
+
+        if ( mojoConfigFile.exists() )
+        {
+            try
+            {
+                oldInputFiles = FileUtils.fileReadArray( mojoConfigFile );
+            }
+            catch( IOException e )
+            {
+                throw new MojoExecutionException( "Error reading old mojo status " + mojoConfigFile, e );
+            }
+        }
+
+        String[] inputFileNames = new String[ inputFiles.size() ];
+        int i = 0;
+        for ( File inputFile : inputFiles )
+        {
+            inputFileNames[ i++ ] = inputFile.getAbsolutePath();
+        }
+
+        DirectoryScanResult dsr = DirectoryScanner.diffFiles( oldInputFiles, inputFileNames );
+
+
+        try
+        {
+            FileUtils.fileWriteArray( mojoConfigFile, inputFileNames );
+        }
+        catch( IOException e )
+        {
+            throw new MojoExecutionException( "Error while storing the mojo status", e );
+        }
+
+        return ( dsr.getFilesAdded().length > 0 || dsr.getFilesRemoved().length > 0 );
+    }
+
+    /**
+     * Detect whether the list of detected files picked up by the DirectoryScanner
+     * has changed since the last build.
+     * We simply load the list of files for the previous build from a status file
+     * and compare it with the result of the new DirectoryScanner#scan().
+     * Afterwards we store the new list in the status file.
+     *
+     * @param dirScanner
+     * @return <code>true</code> if the set of inputFiles got changed since the last build.
+     * @throws MojoExecutionException
+     */
+    public boolean inputFileTreeChanged( DirectoryScanner dirScanner ) throws MojoExecutionException
+    {
+        File mojoConfigBase = getMojoStatusDirectory();
+        File mojoConfigFile = new File( mojoConfigBase, INPUT_FILES_LST_FILENAME );
+
+        String[] oldInputFiles = ArrayUtils.EMPTY_STRING_ARRAY;
+
+        if ( mojoConfigFile.exists() )
+        {
+            try
+            {
+                oldInputFiles = FileUtils.fileReadArray( mojoConfigFile );
+            }
+            catch( IOException e )
+            {
+                throw new MojoExecutionException( "Error reading old mojo status " + mojoConfigFile, e );
+            }
+        }
+
+        dirScanner.scan();
+
+        try
+        {
+            // store away the list of input files
+            FileUtils.fileWriteArray( mojoConfigFile, dirScanner.getIncludedFiles() );
+        }
+        catch( IOException e )
+        {
+            throw new MojoExecutionException( "Error while storing new mojo status" + mojoConfigFile, e );
+        }
+
+        DirectoryScanResult dsr = dirScanner.diffIncludedFiles( oldInputFiles );
+
+        return ( dsr.getFilesAdded().length > 0 || dsr.getFilesRemoved().length > 0 );
     }
 
     /**
@@ -132,7 +276,7 @@ public class IncrementalBuildHelper
     public String[] beforeRebuildExecution( File outputDirectory ) throws MojoExecutionException
     {
         File mojoConfigBase = getMojoStatusDirectory();
-        File mojoConfigFile = new File( mojoConfigBase, "createdFiles.lst" );
+        File mojoConfigFile = new File( mojoConfigBase, CREATED_FILES_LST_FILENAME );
 
         String[] oldFiles;
 
@@ -141,7 +285,7 @@ public class IncrementalBuildHelper
             oldFiles = FileUtils.fileReadArray( mojoConfigFile );
             for ( String oldFileName : oldFiles )
             {
-                File oldFile = new File( oldFileName );
+                File oldFile = new File( outputDirectory, oldFileName );
                 oldFile.delete();
             }
         }
@@ -156,8 +300,8 @@ public class IncrementalBuildHelper
         if ( outputDirectory.exists() )
         {
             diffScanner.scan();
+            filesBeforeAction = diffScanner.getIncludedFiles();
         }
-        filesBeforeAction = diffScanner.getIncludedFiles();
 
         return oldFiles;
     }

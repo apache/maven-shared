@@ -50,7 +50,7 @@ public class FileLogger
     private boolean shouldFinalize = true;
 
     /**
-     * The optional mojo logger to additionally write messages to, can be <code>nulll</code>.
+     * The optional mojo logger to additionally write messages to, can be <code>null</code>.
      */
     private final Log log;
 

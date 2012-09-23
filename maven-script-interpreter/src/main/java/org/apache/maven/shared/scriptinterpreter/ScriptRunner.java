@@ -103,7 +103,7 @@ public class ScriptRunner
     }
 
     /**
-     * Sets a global variable for the script interpeter.
+     * Sets a global variable for the script interpreter.
      *
      * @param name  The name of the variable, must not be <code>null</code>.
      * @param value The value of the variable, may be <code>null</code>.
@@ -215,8 +215,6 @@ public class ScriptRunner
         globalVariables.put( "basedir", scriptFile.getParentFile() );
         globalVariables.put( "context", context );
 
-        PrintStream out = ( logger != null ) ? logger.getPrintStream() : null;
-
         ScriptInterpreter interpreter = getInterpreter( scriptFile );
         if ( getLog().isDebugEnabled() )
         {
@@ -246,6 +244,9 @@ public class ScriptRunner
             {
                 logger.consumeLine( "Running " + scriptDescription + ": " + scriptFile );
             }
+
+            PrintStream out = ( logger != null ) ? logger.getPrintStream() : null;
+
             result = interpreter.evaluateScript( script, classPath, globalVariables, out );
             if ( logger != null )
             {

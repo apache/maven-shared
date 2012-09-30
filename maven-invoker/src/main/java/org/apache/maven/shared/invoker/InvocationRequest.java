@@ -256,6 +256,14 @@ public interface InvocationRequest
      */
     boolean isShowVersion();
 
+    /**
+     * Get the value of the {@code threads} argument.
+     * 
+     * @return the value of the {@code threads} argument or {@code null} if not set
+     * @since 2.0.12
+     */
+    String getThreads();
+
     // ----------------------------------------------------------------------
     // Reactor Failure Mode
     // ----------------------------------------------------------------------
@@ -520,4 +528,13 @@ public interface InvocationRequest
      */
     InvocationRequest setShowVersion( boolean showVersion );
 
+    /**
+     * Thread count, for instance 2.0C where C is core multiplied
+     * Equivalent of {@code -T} or {@code --threads} 
+     * 
+     * @param threads the threadcount
+     * @return This invocation request.
+     * @since 2.0.12
+     */
+    InvocationRequest setThreads( String threads );
 }

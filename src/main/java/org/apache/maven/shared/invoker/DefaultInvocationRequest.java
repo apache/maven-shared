@@ -44,7 +44,7 @@ public class DefaultInvocationRequest
 
     private String failureBehavior = REACTOR_FAIL_FAST;
 
-    private List goals;
+    private List<String> goals;
 
     private InputStream inputStream;
 
@@ -76,11 +76,11 @@ public class DefaultInvocationRequest
 
     private File javaHome;
 
-    private List profiles;
+    private List<String> profiles;
 
     private boolean nonPluginUpdates;
 
-    private Map shellEnvironments;
+    private Map<String, String> shellEnvironments;
 
     private String mavenOpts;
     
@@ -118,7 +118,7 @@ public class DefaultInvocationRequest
         return failureBehavior;
     }
 
-    public List getGoals()
+    public List<String> getGoals()
     {
         return goals;
     }
@@ -208,7 +208,7 @@ public class DefaultInvocationRequest
         return this;
     }
 
-    public InvocationRequest setGoals( List goals )
+    public InvocationRequest setGoals( List<String> goals )
     {
         this.goals = goals;
         return this;
@@ -323,12 +323,12 @@ public class DefaultInvocationRequest
         return this;
     }
 
-    public List getProfiles()
+    public List<String> getProfiles()
     {
         return profiles;
     }
 
-    public InvocationRequest setProfiles( List profiles )
+    public InvocationRequest setProfiles( List<String> profiles )
     {
         this.profiles = profiles;
         return this;
@@ -349,15 +349,15 @@ public class DefaultInvocationRequest
     {
         if ( this.shellEnvironmentInherited )
         {
-            this.shellEnvironments = new HashMap();
+            this.shellEnvironments = new HashMap<String, String>();
         }
         this.shellEnvironments.put( name, value );
         return this;
     }
 
-    public Map getShellEnvironments()
+    public Map<String, String> getShellEnvironments()
     {
-        return shellEnvironments == null ? Collections.EMPTY_MAP : shellEnvironments;
+        return shellEnvironments == null ? Collections.<String, String>emptyMap(): shellEnvironments;
     }
 
     public String getMavenOpts()

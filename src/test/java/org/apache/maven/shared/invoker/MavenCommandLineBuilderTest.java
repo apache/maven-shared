@@ -19,12 +19,6 @@ package org.apache.maven.shared.invoker;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.maven.shared.utils.io.FileUtils;
-import org.apache.maven.shared.utils.io.IOUtil;
-import org.apache.maven.shared.utils.Os;
-import org.apache.maven.shared.utils.cli.Commandline;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -32,16 +26,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+
+import junit.framework.TestCase;
+
+import org.apache.maven.shared.utils.Os;
+import org.apache.maven.shared.utils.cli.Commandline;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.IOUtil;
 
 public class MavenCommandLineBuilderTest
     extends TestCase
 {
 
-    private List toDelete = new ArrayList();
+    private List<File> toDelete = new ArrayList<File>();
 
     private Properties sysProps;
 
@@ -456,7 +456,7 @@ public class MavenCommandLineBuilderTest
         
         tcb.setReactorBehavior( newRequest().activateReactor( includes, excludes ), cli );
         
-        Set args = new HashSet();
+        Set<String> args = new HashSet<String>();
         args.add( "-r" );
         args.add( "-D" );
         args.add( "maven.reactor.includes=foo,bar" );
@@ -525,7 +525,7 @@ public class MavenCommandLineBuilderTest
 
         tcb.setReactorBehavior( newRequest().setFailureBehavior( InvocationRequest.REACTOR_FAIL_FAST ), cli );
 
-        Set banned = new HashSet();
+        Set<String> banned = new HashSet<String>();
         banned.add( "-fae" );
         banned.add( "-fn" );
 
@@ -558,7 +558,7 @@ public class MavenCommandLineBuilderTest
 
         assertEquals( projectDir, cli.getWorkingDirectory() );
 
-        Set args = new HashSet();
+        Set<String> args = new HashSet<String>();
         args.add( "-f" );
         args.add( "non-standard-pom.xml" );
 
@@ -591,7 +591,7 @@ public class MavenCommandLineBuilderTest
 
         assertEquals( projectDir, cli.getWorkingDirectory() );
 
-        Set args = new HashSet();
+        Set<String> args = new HashSet<String>();
         args.add( "-f" );
         args.add( "non-standard-pom.xml" );
 
@@ -624,7 +624,7 @@ public class MavenCommandLineBuilderTest
 
         assertEquals( projectDir, cli.getWorkingDirectory() );
 
-        Set args = new HashSet();
+        Set<String> args = new HashSet<String>();
         args.add( "-f" );
         args.add( "pom.xml" );
 
@@ -657,7 +657,7 @@ public class MavenCommandLineBuilderTest
 
         assertEquals( projectDir, cli.getWorkingDirectory() );
 
-        Set args = new HashSet();
+        Set<String> args = new HashSet<String>();
         args.add( "-f" );
         args.add( "pom.xml" );
 
@@ -688,7 +688,7 @@ public class MavenCommandLineBuilderTest
 
         assertEquals( projectDir, cli.getWorkingDirectory() );
 
-        Set args = new HashSet();
+        Set<String> args = new HashSet<String>();
         args.add( "-f" );
         args.add( "pom.xml" );
 
@@ -719,7 +719,7 @@ public class MavenCommandLineBuilderTest
 
         assertEquals( projectDir, cli.getWorkingDirectory() );
 
-        Set args = new HashSet();
+        Set<String> args = new HashSet<String>();
         args.add( "-f" );
         args.add( "non-standard-pom.xml" );
 
@@ -747,7 +747,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setSettingsLocation( newRequest().setUserSettingsFile( settingsFile ), cli );
 
-        Set args = new HashSet();
+        Set<String> args = new HashSet<String>();
         args.add( "-s" );
         args.add( settingsFile.getCanonicalPath() );
 
@@ -809,7 +809,7 @@ public class MavenCommandLineBuilderTest
 
         Commandline cli = new Commandline();
 
-        List goals = new ArrayList();
+        List<String> goals = new ArrayList<String>();
         goals.add( "test" );
 
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
@@ -825,14 +825,14 @@ public class MavenCommandLineBuilderTest
 
         Commandline cli = new Commandline();
 
-        List goals = new ArrayList();
+        List<String> goals = new ArrayList<String>();
         goals.add( "test" );
         goals.add( "clean" );
 
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setGoals( newRequest().setGoals( goals ), cli );
 
-        assertArgumentsPresent( new HashSet( goals ), cli );
+        assertArgumentsPresent( new HashSet<String>( goals ), cli );
         assertArgumentsPresentInOrder( goals, cli );
     }
 
@@ -852,8 +852,8 @@ public class MavenCommandLineBuilderTest
 
         request.setBaseDirectory( projectDir );
 
-        Set expectedArgs = new HashSet();
-        Set bannedArgs = new HashSet();
+        Set<String> expectedArgs = new HashSet<String>();
+        Set<String> bannedArgs = new HashSet<String>();
 
         createDummyFile( projectDir, "pom.xml" );
 
@@ -872,7 +872,7 @@ public class MavenCommandLineBuilderTest
 
         expectedArgs.add( "-o" );
 
-        List goals = new ArrayList();
+        List<String> goals = new ArrayList<String>();
 
         goals.add( "post-clean" );
         goals.add( "deploy" );
@@ -923,7 +923,7 @@ public class MavenCommandLineBuilderTest
 
         createDummyFile( projectDir, "pom.xml" );
 
-        List goals = new ArrayList();
+        List<String> goals = new ArrayList<String>();
 
         goals.add( "clean" );
         request.setGoals( goals );
@@ -957,7 +957,7 @@ public class MavenCommandLineBuilderTest
 
         InvocationRequest request = newRequest();
 
-        List profiles = new ArrayList();
+        List<String> profiles = new ArrayList<String>();
         profiles.add( profile1 );
         profiles.add( profile2 );
 
@@ -984,10 +984,8 @@ public class MavenCommandLineBuilderTest
     {
         System.setProperties( sysProps );
 
-        for ( Iterator it = toDelete.iterator(); it.hasNext(); )
+        for ( File file : toDelete )
         {
-            File file = (File) it.next();
-
             if ( file.exists() )
             {
                 if ( file.isDirectory() )
@@ -1016,7 +1014,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( Arrays.asList( expected ), cli );
     }
 
-    private void assertArgumentsPresentInOrder( List expected, Commandline cli )
+    private void assertArgumentsPresentInOrder( List<String> expected, Commandline cli )
     {
         String[] arguments = cli.getArguments();
 
@@ -1034,28 +1032,24 @@ public class MavenCommandLineBuilderTest
             + Arrays.asList( arguments ), expected.size(), expectedCounter );
     }
 
-    private void assertArgumentsPresent( Set requiredArgs, Commandline cli )
+    private void assertArgumentsPresent( Set<String> requiredArgs, Commandline cli )
     {
         String[] argv = cli.getArguments();
-        List args = Arrays.asList( argv );
+        List<String> args = Arrays.asList( argv );
 
-        for ( Iterator it = requiredArgs.iterator(); it.hasNext(); )
+        for ( String arg : requiredArgs )
         {
-            String arg = (String) it.next();
-
             assertTrue( "Command-line argument: \'" + arg + "\' is missing in " + args, args.contains( arg ) );
         }
     }
 
-    private void assertArgumentsNotPresent( Set bannedArgs, Commandline cli )
+    private void assertArgumentsNotPresent( Set<String> bannedArgs, Commandline cli )
     {
         String[] argv = cli.getArguments();
-        List args = Arrays.asList( argv );
+        List<String> args = Arrays.asList( argv );
 
-        for ( Iterator it = bannedArgs.iterator(); it.hasNext(); )
+        for ( String arg : bannedArgs )
         {
-            String arg = (String) it.next();
-
             assertFalse( "Command-line argument: \'" + arg + "\' should not be present.", args.contains( arg ) );
         }
     }

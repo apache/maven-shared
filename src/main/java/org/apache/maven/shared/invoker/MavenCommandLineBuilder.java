@@ -100,6 +100,8 @@ public class MavenCommandLineBuilder
 
         setGoals( request, cli );
 
+        setThreads( request, cli );
+
         return cli;
     }
 
@@ -448,6 +450,17 @@ public class MavenCommandLineBuilder
         {
             cli.createArg().setValue( "-V" );
         }
+    }
+
+    protected void setThreads( InvocationRequest request, Commandline cli )
+    {
+        String threads = request.getThreads();
+        if ( StringUtils.isNotEmpty( threads ) )
+        {
+            cli.createArg().setValue( "-T" );
+            cli.createArg().setValue( threads );
+        }
+        
     }
 
     protected File findMavenExecutable()

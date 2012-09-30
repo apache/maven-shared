@@ -90,6 +90,8 @@ public class DefaultInvocationRequest
     
     private boolean showVersion;
 
+    private String threads;
+
     public InvocationRequest activateReactor( String[] includes, String[] excludes )
     {
         activatedReactor = true;
@@ -400,6 +402,23 @@ public class DefaultInvocationRequest
     public InvocationRequest setShowVersion( boolean showVersion )
     {
         this.showVersion = showVersion;
+        return this;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public String getThreads()
+    {
+        return threads;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public InvocationRequest setThreads( String threads )
+    {
+        this.threads = threads;
         return this;
     }
 

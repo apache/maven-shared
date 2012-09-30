@@ -189,17 +189,15 @@ public class MavenCommandLineBuilder
             cli.addEnvironment( "MAVEN_OPTS", request.getMavenOpts() );
         }
 
-        for ( Iterator iterator = request.getShellEnvironments().keySet().iterator(); iterator.hasNext(); )
+        for ( Map.Entry<String, String> entry : request.getShellEnvironments().entrySet() )
         {
-            String key = (String) iterator.next();
-            String value = (String) request.getShellEnvironments().get( key );
-            cli.addEnvironment( key, value );
+            cli.addEnvironment( entry.getKey(), entry.getValue() );
         }
     }
 
     protected void setProfiles( InvocationRequest request, Commandline cli )
     {
-        List profiles = request.getProfiles();
+        List<String> profiles = request.getProfiles();
 
         if ( ( profiles != null ) && !profiles.isEmpty() )
         {
@@ -211,7 +209,7 @@ public class MavenCommandLineBuilder
 
     protected void setGoals( InvocationRequest request, Commandline cli )
     {
-        List goals = request.getGoals();
+        List<String> goals = request.getGoals();
 
         if ( ( goals != null ) && !goals.isEmpty() )
         {

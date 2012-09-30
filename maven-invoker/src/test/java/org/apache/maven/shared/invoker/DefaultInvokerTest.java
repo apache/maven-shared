@@ -49,7 +49,7 @@ public class DefaultInvokerTest
 
         request.setDebug( true );
 
-        List goals = new ArrayList();
+        List<String> goals = new ArrayList<String>();
         goals.add( "clean" );
         goals.add( "package" );
 
@@ -72,7 +72,7 @@ public class DefaultInvokerTest
 
         request.setDebug( true );
 
-        List goals = new ArrayList();
+        List<String> goals = new ArrayList<String>();
         goals.add( "clean" );
         goals.add( "package" );
 
@@ -99,7 +99,7 @@ public class DefaultInvokerTest
 
         request.setDebug( true );
 
-        List goals = new ArrayList();
+        List<String> goals = new ArrayList<String>();
         goals.add( "clean" );
 
         request.setGoals( goals );
@@ -125,7 +125,7 @@ public class DefaultInvokerTest
 
         request.setDebug( true );
 
-        List goals = new ArrayList();
+        List<String> goals = new ArrayList<String>();
         goals.add( "validate" );
 
         request.setGoals( goals );
@@ -151,7 +151,7 @@ public class DefaultInvokerTest
 
         request.setDebug( true );
 
-        List goals = new ArrayList();
+        List<String> goals = new ArrayList<String>();
         goals.add( "validate" );
 
         request.setGoals( goals );
@@ -180,7 +180,7 @@ public class DefaultInvokerTest
 
         request.setDebug( true );
 
-        List goals = new ArrayList();
+        List<String> goals = new ArrayList<String>();
         goals.add( "validate" );
 
         request.setGoals( goals );

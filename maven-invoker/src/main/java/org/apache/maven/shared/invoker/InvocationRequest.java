@@ -211,7 +211,7 @@ public interface InvocationRequest
      * 
      * @return The goals for the Maven invocation or <code>null</code> if not set.
      */
-    List getGoals();
+    List<String> getGoals();
 
     /**
      * Gets the path to the user settings for the Maven invocation.
@@ -233,14 +233,14 @@ public interface InvocationRequest
      * 
      * @return The profiles for the Maven invocation or <code>null</code> if not set.
      */
-    List getProfiles();
+    List<String> getProfiles();
 
     /**
      * Gets the environment variables for the Maven invocation.
      * 
      * @return The environment variables for the Maven invocation or <code>null</code> if not set.
      */
-    Map getShellEnvironments();
+    Map<String, String> getShellEnvironments();
 
     /**
      * Gets the value of the <code>MAVEN_OPTS</code> environment variable.
@@ -440,7 +440,7 @@ public interface InvocationRequest
      * @param goals The goals for the Maven invocation, may be <code>null</code> to execute the POMs default goal.
      * @return This invocation request.
      */
-    InvocationRequest setGoals( List goals );
+    InvocationRequest setGoals( List<String> goals );
 
     /**
      * Sets the profiles for the Maven invocation.
@@ -448,7 +448,7 @@ public interface InvocationRequest
      * @param profiles The profiles for the Maven invocation, may be <code>null</code> to use the default profiles.
      * @return This invocation request.
      */
-    InvocationRequest setProfiles( List profiles );
+    InvocationRequest setProfiles( List<String> profiles );
 
     /**
      * Specifies whether the environment variables of the current process should be propagated to the Maven invocation.

@@ -146,6 +146,26 @@ public class MavenCommandLineBuilder
             cli.createArg().setValue( "-s" );
             cli.createArg().setValue( userSettingsFile.getPath() );
         }
+        
+        File globalSettingsFile = request.getGlobalSettingsFile();
+
+        if ( globalSettingsFile != null )
+        {
+            try
+            {
+                File canSet = globalSettingsFile.getCanonicalFile();
+                globalSettingsFile = canSet;
+            }
+            catch ( IOException e )
+            {
+                logger.debug( "Failed to canonicalize global settings path: " + globalSettingsFile.getAbsolutePath()
+                    + ". Using as-is.", e );
+            }
+
+            cli.createArg().setValue( "-gs" );
+            cli.createArg().setValue( globalSettingsFile.getPath() );
+        }
+
     }
 
     protected void setShellEnvironment( InvocationRequest request, Commandline cli )

@@ -246,6 +246,14 @@ public interface InvocationRequest
     File getUserSettingsFile();
 
     /**
+     * Gets the path to the global settings for the Maven invocation.
+     * 
+     * @return The path to the global settings for the Maven invocation or <code>null</code> to load the global settings
+     *         from the default location.
+     */
+    File getGlobalSettingsFile();
+
+    /**
      * Gets the checksum mode of the Maven invocation.
      * 
      * @return The checksum mode, one of {@link #CHECKSUM_POLICY_WARN} and {@link #CHECKSUM_POLICY_FAIL}.
@@ -499,6 +507,15 @@ public interface InvocationRequest
      * @return This invocation request.
      */
     InvocationRequest setUserSettingsFile( File userSettings );
+
+    /**
+     * Sets the path to the global settings for the Maven invocation.
+     * 
+     * @param globalSettings The path to the global settings for the Maven invocation, may be <code>null</code> to load
+     *            the global settings from the default location.
+     * @return This invocation request.
+     */
+    InvocationRequest setGlobalSettingsFile( File globalSettings );
 
     /**
      * Sets the checksum mode of the Maven invocation.

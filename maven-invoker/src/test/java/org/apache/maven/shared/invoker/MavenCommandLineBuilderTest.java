@@ -783,7 +783,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, args );
     }
 
-    public void testShouldSpecifyCustomSettingsLocationFromRequest()
+    public void testShouldSpecifyCustomUserSettingsLocationFromRequest()
         throws Exception
     {
         logTestStart();
@@ -806,6 +806,34 @@ public class MavenCommandLineBuilderTest
 
         Set<String> args = new HashSet<String>();
         args.add( "-s" );
+        args.add( settingsFile.getCanonicalPath() );
+
+        assertArgumentsPresent( cli, args );
+    }
+    
+    public void testShouldSpecifyCustomGlobalSettingsLocationFromRequest()
+        throws Exception
+    {
+        logTestStart();
+
+        File tmpDir = getTempDir();
+        File base = new File( tmpDir, "invoker-tests" );
+
+        toDelete.add( base );
+
+        File projectDir = new File( base, "custom-settings" ).getCanonicalFile();
+
+        projectDir.mkdirs();
+
+        File settingsFile = createDummyFile( projectDir, "settings.xml" );
+
+        Commandline cli = new Commandline();
+
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        tcb.setSettingsLocation( newRequest().setGlobalSettingsFile( settingsFile ), cli );
+
+        Set<String> args = new HashSet<String>();
+        args.add( "-gs" );
         args.add( settingsFile.getCanonicalPath() );
 
         assertArgumentsPresent( cli, args );

@@ -70,6 +70,8 @@ public class DefaultInvocationRequest
 
     private File userSettings;
 
+    private File globalSettings;
+
     private String globalChecksumPolicy;
 
     private String pomFilename;
@@ -302,10 +304,21 @@ public class DefaultInvocationRequest
     {
         return userSettings;
     }
-
+    
     public InvocationRequest setUserSettingsFile( File userSettings )
     {
         this.userSettings = userSettings;
+        return this;
+    }
+
+    public File getGlobalSettingsFile()
+    {
+        return globalSettings;
+    }
+
+    public InvocationRequest setGlobalSettingsFile( File globalSettings )
+    {
+        this.globalSettings = globalSettings;
         return this;
     }
 

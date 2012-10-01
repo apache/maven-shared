@@ -110,6 +110,14 @@ public interface InvocationRequest
     boolean isAlsoMakeDependents();
 
     /**
+     * Get the value of {@code resume-from}
+     * 
+     * @return specified reactor project to resume from
+     * @since 2.0.12
+     */
+    String getResumeFrom();
+
+    /**
      * Gets the debug mode of the Maven invocation. By default, Maven is executed in normal mode.
      * 
      * @return <code>true</code> if Maven should be executed in debug mode, <code>false</code> if the normal mode
@@ -627,4 +635,15 @@ public interface InvocationRequest
      * @since 2.0.12
      */
     InvocationRequest setAlsoMakeDependents( boolean alsoMakeDependents );
+
+    /**
+     * Resume reactor from specified project.
+     * Equivalent of {@code -rf} or {@code --resume-from}
+     * 
+     * @param resumeFrom set the project to resume from
+     * @return This invocation request
+     * @since 2.0.12
+     */
+    InvocationRequest setResumeFrom( String resumeFrom );
+    
 }

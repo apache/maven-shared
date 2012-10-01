@@ -98,6 +98,8 @@ public class DefaultInvocationRequest
 
     private boolean alsoMakeDependents;
 
+    private String resumeFrom;
+
     private boolean showVersion;
 
     private String threads;
@@ -505,4 +507,21 @@ public class DefaultInvocationRequest
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String getResumeFrom()
+    {
+        return resumeFrom;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public InvocationRequest setResumeFrom( String resumeFrom )
+    {
+        this.resumeFrom = resumeFrom;
+        return this;
+    }
+    
 }

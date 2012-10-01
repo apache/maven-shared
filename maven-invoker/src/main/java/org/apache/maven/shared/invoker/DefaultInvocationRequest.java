@@ -71,6 +71,8 @@ public class DefaultInvocationRequest
     private File userSettings;
 
     private File globalSettings;
+    
+    private File toolchains;
 
     private String globalChecksumPolicy;
 
@@ -322,6 +324,17 @@ public class DefaultInvocationRequest
         return this;
     }
 
+    public File getToolchainsFile()
+    {
+        return toolchains;
+    }
+    
+    public InvocationRequest setToolchainsFile( File toolchains )
+    {
+        this.toolchains = toolchains;
+        return this;
+    }
+    
     public String getGlobalChecksumPolicy()
     {
         return globalChecksumPolicy;

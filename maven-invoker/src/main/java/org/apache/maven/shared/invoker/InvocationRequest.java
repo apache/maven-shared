@@ -250,8 +250,17 @@ public interface InvocationRequest
      * 
      * @return The path to the global settings for the Maven invocation or <code>null</code> to load the global settings
      *         from the default location.
+     * @since 2.0.12
      */
     File getGlobalSettingsFile();
+    
+    /**
+     * Gets the path to the custom toolchains file
+     * 
+     * @return The path to the custom toolchains file or <code>null</code> to load the toolchains from the default location
+     * @since 2.0.12
+     */
+    File getToolchainsFile();
 
     /**
      * Gets the checksum mode of the Maven invocation.
@@ -514,9 +523,19 @@ public interface InvocationRequest
      * @param globalSettings The path to the global settings for the Maven invocation, may be <code>null</code> to load
      *            the global settings from the default location.
      * @return This invocation request.
+     * @since 2.0.12
      */
     InvocationRequest setGlobalSettingsFile( File globalSettings );
 
+    /**
+     * Sets the alternate path for the user toolchains file
+     * Equivalent of {@code -t} or {@code --toolchains}
+     * 
+     * @param toolchains the alternate path for the user toolchains file
+     * @return This invocation request
+     * @since 2.0.12
+     */
+    InvocationRequest setToolchainsFile( File toolchains );
     /**
      * Sets the checksum mode of the Maven invocation.
      * 

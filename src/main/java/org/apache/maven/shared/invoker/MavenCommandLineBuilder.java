@@ -94,6 +94,8 @@ public class MavenCommandLineBuilder
 
         setSettingsLocation( request, cli );
 
+        setToolchainsLocation( request, cli );
+        
         setProperties( request, cli );
 
         setProfiles( request, cli );
@@ -101,7 +103,7 @@ public class MavenCommandLineBuilder
         setGoals( request, cli );
 
         setThreads( request, cli );
-
+        
         return cli;
     }
 
@@ -166,6 +168,28 @@ public class MavenCommandLineBuilder
             cli.createArg().setValue( globalSettingsFile.getPath() );
         }
 
+    }
+    
+    protected void setToolchainsLocation( InvocationRequest request, Commandline cli )
+    {
+        File toolchainsFile = request.getToolchainsFile();
+
+        if ( toolchainsFile != null )
+        {
+            try
+            {
+                File canSet = toolchainsFile.getCanonicalFile();
+                toolchainsFile = canSet;
+            }
+            catch ( IOException e )
+            {
+                logger.debug( "Failed to canonicalize toolchains path: " + toolchainsFile.getAbsolutePath()
+                    + ". Using as-is.", e );
+            }
+
+            cli.createArg().setValue( "-t" );
+            cli.createArg().setValue( toolchainsFile.getPath() );
+        }
     }
 
     protected void setShellEnvironment( InvocationRequest request, Commandline cli )

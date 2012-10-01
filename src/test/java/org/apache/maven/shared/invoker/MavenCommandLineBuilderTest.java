@@ -839,6 +839,33 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, args );
     }
 
+    public void testShouldSpecifyCustomToolchainsLocationFromRequest()
+        throws Exception
+    {
+        logTestStart();
+
+        File tmpDir = getTempDir();
+        File base = new File( tmpDir, "invoker-tests" );
+
+        toDelete.add( base );
+
+        File projectDir = new File( base, "custom-toolchains" ).getCanonicalFile();
+
+        projectDir.mkdirs();
+
+        File toolchainsFile = createDummyFile( projectDir, "toolchains.xml" );
+
+        Commandline cli = new Commandline();
+
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        tcb.setToolchainsLocation( newRequest().setToolchainsFile( toolchainsFile ), cli );
+
+        Set<String> args = new HashSet<String>();
+        args.add( "-t" );
+        args.add( toolchainsFile.getCanonicalPath() );
+
+        assertArgumentsPresent( cli, args );
+    }
     public void testShouldSpecifyCustomPropertyFromRequest()
         throws IOException
     {

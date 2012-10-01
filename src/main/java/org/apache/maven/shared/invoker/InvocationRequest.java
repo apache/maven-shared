@@ -84,6 +84,30 @@ public interface InvocationRequest
      */
     public String[] getActivatedReactorExcludes();
 
+    /**
+     * A list of specified reactor projects to build instead of all projects. 
+     * A project can be specified by [groupId]:artifactId or by its relative path.
+     * 
+     * @return the list of projects to add to reactor build, otherwise {@code null}
+     * @since 2.0.12
+     */
+    public List<String> getProjects();
+
+    /**
+     * Get the value of the {@code also-make} argument.
+     * 
+     * @return {@code true} if the argument {@code also-make} was specified, otherwise {@code false}
+     * @since 2.0.12
+     */
+    boolean isAlsoMake();
+
+    /**
+     * Get the value of the {@code also-make-dependents}
+     * 
+     * @return {@code true} if the argument {@code also-make-dependents} was specified, otherwise {@code false}
+     * @since 2.0.12
+     */
+    boolean isAlsoMakeDependents();
 
     /**
      * Gets the debug mode of the Maven invocation. By default, Maven is executed in normal mode.
@@ -537,4 +561,34 @@ public interface InvocationRequest
      * @since 2.0.12
      */
     InvocationRequest setThreads( String threads );
+
+    /**
+     * Sets the reactor project list.
+     * Equivalent of {@code -P} or {@code --projects}
+     * 
+     * @param projects the reactor project list 
+     * @return This invocation request.
+     * @since 2.0.12
+     */
+    InvocationRequest setProjects( List<String> projects );
+
+    /**
+     * Enable the 'also make' mode.
+     * Equivalent of {@code -am} or {@code --also-make}
+     * 
+     * @param alsoMake enable 'also make' mode 
+     * @return This invocation request.
+     * @since 2.0.12
+     */
+    InvocationRequest setAlsoMake( boolean alsoMake );
+
+	/**
+     * Enable the 'also make dependents' mode.
+     * Equivalent of {@code -amd} or {@code --also-make-dependents}
+     * 
+     * @param alsoMake enable 'also make' mode 
+     * @return This invocation request.
+     * @since 2.0.12
+     */
+    InvocationRequest setAlsoMakeDependents( boolean alsoMakeDependents );
 }

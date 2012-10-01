@@ -44,6 +44,12 @@ under the License.
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED/component/13271</url>
   </issueManagement>
+  
+  <contributors>
+    <contributor>
+      <name>Lucien Weller</name>
+    </contributor>
+  </contributors>
 
   <dependencies>
     <dependency>

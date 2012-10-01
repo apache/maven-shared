@@ -440,8 +440,6 @@ public class MavenCommandLineBuilderTest
         tcb.setReactorBehavior( newRequest().activateReactor( null, null ), cli );
 
         assertArgumentsPresent( cli, Collections.singleton( "-r" ) );
-
-        
     }
     
     public void testActivateReactorIncludesExcludes()
@@ -463,6 +461,68 @@ public class MavenCommandLineBuilderTest
         args.add( "maven.reactor.excludes=baz,quz" );
 
         assertArgumentsPresent( cli, args );
+    }
+    
+    public void testAlsoMake()
+    {
+        logTestStart();
+        
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        Commandline cli = new Commandline();
+
+        tcb.setReactorBehavior( newRequest().setAlsoMake( true ), cli );
+
+        //-am is only useful with -pl
+        assertArgumentsNotPresent( cli, Collections.singleton( "-am" ) );
+    }
+
+    public void testProjectsAndAlsoMake()
+    {
+        logTestStart();
+        
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        Commandline cli = new Commandline();
+
+        tcb.setReactorBehavior( newRequest().setProjects( Collections.singletonList( "proj1" ) ).setAlsoMake( true ), cli );
+
+        assertArgumentsPresentInOrder( cli, "-pl", "proj1", "-am" );
+    }
+
+    public void testAlsoMakeDependents()
+    {
+        logTestStart();
+        
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        Commandline cli = new Commandline();
+
+        tcb.setReactorBehavior( newRequest().setAlsoMakeDependents( true ), cli );
+
+        //-amd is only useful with -pl
+        assertArgumentsNotPresent( cli, Collections.singleton( "-amd" ) );
+    }
+
+    public void testProjectsAndAlsoMakeDependents()
+    {
+        logTestStart();
+        
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        Commandline cli = new Commandline();
+
+        tcb.setReactorBehavior( newRequest().setProjects( Collections.singletonList( "proj1" ) ).setAlsoMakeDependents( true ), cli );
+
+        assertArgumentsPresentInOrder( cli, "-pl", "proj1", "-amd" );
+    }
+
+    public void testProjectsAndAlsoMakeAndAlsoMakeDependents()
+    {
+        logTestStart();
+        
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        Commandline cli = new Commandline();
+
+        tcb.setReactorBehavior( newRequest().setProjects( Collections.singletonList( "proj1" ) ).setAlsoMake( true ).setAlsoMakeDependents( true ), cli );
+
+        assertArgumentsPresentInOrder( cli, "-pl", "proj1", "-am", "-amd" );
     }
 
     public void testShouldSetStrictChecksumPolityFlagFromRequest()

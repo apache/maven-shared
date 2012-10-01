@@ -88,6 +88,12 @@ public class DefaultInvocationRequest
 
     private String[] activatedReactorIncludes, activatedReactorExcludes;
     
+    private List<String> projects;
+
+    private boolean alsoMake;
+
+    private boolean alsoMakeDependents;
+
     private boolean showVersion;
 
     private String threads;
@@ -419,6 +425,57 @@ public class DefaultInvocationRequest
     public InvocationRequest setThreads( String threads )
     {
         this.threads = threads;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<String> getProjects()
+    {
+        return projects;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public InvocationRequest setProjects( List<String> projects )
+    {
+        this.projects = projects;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isAlsoMake()
+    {
+        return alsoMake;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public InvocationRequest setAlsoMake( boolean alsoMake )
+    {
+        this.alsoMake = alsoMake;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isAlsoMakeDependents()
+    {
+        return alsoMakeDependents;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public InvocationRequest setAlsoMakeDependents( boolean alsoMakeDependents )
+    {
+        this.alsoMakeDependents = alsoMakeDependents;
         return this;
     }
 

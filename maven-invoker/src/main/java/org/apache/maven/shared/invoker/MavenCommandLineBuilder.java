@@ -398,6 +398,23 @@ public class MavenCommandLineBuilder
                 cli.createArg().setValue( "maven.reactor.excludes=" + StringUtils.join( excludes, "," ) );
             }
         }
+
+        List<String> projectList = request.getProjects();
+        if ( projectList != null )
+        {
+            cli.createArg().setValue( "-pl" );
+            cli.createArg().setValue( StringUtils.join( projectList.iterator(), "," ) );
+
+            if ( request.isAlsoMake() )
+            {
+                cli.createArg().setValue( "-am" );
+            }
+
+            if ( request.isAlsoMakeDependents() )
+            {
+                cli.createArg().setValue( "-amd" );
+            }
+        }
     }
 
     protected void setFlags( InvocationRequest request, Commandline cli )
@@ -450,7 +467,7 @@ public class MavenCommandLineBuilder
         {
             cli.createArg().setValue( "-V" );
         }
-    }
+	}
 
     protected void setThreads( InvocationRequest request, Commandline cli )
     {

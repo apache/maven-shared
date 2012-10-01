@@ -525,6 +525,18 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-pl", "proj1", "-am", "-amd" );
     }
 
+    public void testShouldSetResumeFrom()
+    {
+        logTestStart();
+
+        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
+        Commandline cli = new Commandline();
+
+        tcb.setReactorBehavior( newRequest().setResumeFrom( ":module3" ), cli );
+
+        assertArgumentsPresentInOrder( cli, "-rf", ":module3"  );
+    }
+
     public void testShouldSetStrictChecksumPolityFlagFromRequest()
     {
         logTestStart();

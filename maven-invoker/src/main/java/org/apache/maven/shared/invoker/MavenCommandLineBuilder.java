@@ -443,6 +443,12 @@ public class MavenCommandLineBuilder
             }
         }
 
+        if( StringUtils.isNotEmpty( request.getResumeFrom() ) )
+        {
+            cli.createArg().setValue( "-rf" );
+            cli.createArg().setValue( request.getResumeFrom() );
+        }
+
         List<String> projectList = request.getProjects();
         if ( projectList != null )
         {

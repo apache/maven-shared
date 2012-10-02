@@ -352,6 +352,7 @@ public interface InvocationRequest
 
     /**
      * Sets the interaction mode of the Maven invocation.
+     * <em>Inverse</em> equivalent of {@code -B} and {@code --batch-mode} 
      * 
      * @param interactive <code>true</code> if Maven should be executed in interactive mode, <code>false</code> if
      *            the batch mode is used.
@@ -361,6 +362,7 @@ public interface InvocationRequest
 
     /**
      * Sets the network mode of the Maven invocation.
+     * Equivalent of {@code -o} and {@code --offline}
      * 
      * @param offline <code>true</code> if Maven should be executed in offline mode, <code>false</code> if the
      *            online mode is used.
@@ -370,6 +372,7 @@ public interface InvocationRequest
 
     /**
      * Sets the debug mode of the Maven invocation.
+     * Equivalent of {@code -X} and {@code --debug}
      * 
      * @param debug <code>true</code> if Maven should be executed in debug mode, <code>false</code> if the normal
      *            mode should be used.
@@ -379,6 +382,7 @@ public interface InvocationRequest
 
     /**
      * Sets the exception output mode of the Maven invocation.
+     * Equivalent of {@code -e} and {@code --errors}
      * 
      * @param showErrors <code>true</code> if Maven should print stack traces, <code>false</code> otherwise.
      * @return This invocation request.
@@ -387,6 +391,7 @@ public interface InvocationRequest
 
     /**
      * Specifies whether Maven should enforce an update check for plugins and snapshots.
+     * Equivalent of {@code -U} and {@code --update-snapshots}
      * 
      * @param updateSnapshots <code>true</code> if plugins and snapshots should be updated, <code>false</code>
      *            otherwise.
@@ -396,6 +401,7 @@ public interface InvocationRequest
 
     /**
      * Sets the failure mode of the Maven invocation.
+     * Equivalent of {@code -ff} and {@code --fail-fast}, {@code -fae} and {@code --fail-at-end}, {@code -fn} and {@code --fail-never} 
      * 
      * @param failureBehavior The failure mode, must be one of {@link #REACTOR_FAIL_FAST}, {@link #REACTOR_FAIL_AT_END}
      *            and {@link #REACTOR_FAIL_NEVER}.
@@ -501,6 +507,7 @@ public interface InvocationRequest
 
     /**
      * Sets the profiles for the Maven invocation.
+     * Equivalent of {@code -P} and {@code --active-profiles}
      * 
      * @param profiles The profiles for the Maven invocation, may be <code>null</code> to use the default profiles.
      * @return This invocation request.
@@ -518,7 +525,8 @@ public interface InvocationRequest
 
     /**
      * Sets the path to the user settings for the Maven invocation.
-     * 
+     * Equivalent of {@code -s} and {@code --settings}
+     *  
      * @param userSettings The path to the user settings for the Maven invocation, may be <code>null</code> to load
      *            the user settings from the default location.
      * @return This invocation request.
@@ -527,6 +535,7 @@ public interface InvocationRequest
 
     /**
      * Sets the path to the global settings for the Maven invocation.
+     * Equivalent of {@code -gs} and {@code --global-settings}
      * 
      * @param globalSettings The path to the global settings for the Maven invocation, may be <code>null</code> to load
      *            the global settings from the default location.
@@ -538,6 +547,9 @@ public interface InvocationRequest
     /**
      * Sets the alternate path for the user toolchains file
      * Equivalent of {@code -t} or {@code --toolchains}
+     * <p>
+     * <strong>note: </strong>available since Maven3
+     * </p>
      * 
      * @param toolchains the alternate path for the user toolchains file
      * @return This invocation request
@@ -546,6 +558,7 @@ public interface InvocationRequest
     InvocationRequest setToolchainsFile( File toolchains );
     /**
      * Sets the checksum mode of the Maven invocation.
+     * Equivalent of {@code -c} or {@code --lax-checksums}, {@code -C} or {@code --strict-checksums} 
      * 
      * @param globalChecksumPolicy The checksum mode, must be one of {@link #CHECKSUM_POLICY_WARN} and
      *            {@link #CHECKSUM_POLICY_FAIL}.
@@ -555,7 +568,10 @@ public interface InvocationRequest
 
     /**
      * Specifies whether Maven should check for plugin updates.
-     * 
+     * <p>
+     * Equivalent of {@code -npu} or {@code --no-plugin-updates}<br/> 
+     * <strong>note: </strong>Ineffective with Maven3, only kept for backward compatibility
+     * </p>
      * @param nonPluginUpdates <code>true</code> if plugin updates should be suppressed, <code>false</code>
      *            otherwise.
      * @return This invocation request.
@@ -564,6 +580,7 @@ public interface InvocationRequest
 
     /**
      * Sets the recursion behavior of a reactor invocation.
+     * <em>Inverse</em> equivalent of {@code -N} and {@code --non-recursive}
      * 
      * @param recursive <code>true</code> if sub modules should be build, <code>false</code> otherwise.
      * @return This invocation request.
@@ -589,16 +606,21 @@ public interface InvocationRequest
     InvocationRequest setMavenOpts( String mavenOpts );
     
     /**
-     * enable displaying version without stopping the build (-V cli option)
+     * enable displaying version without stopping the build
+     * Equivalent of {@code -V} or {@code --show-version}
+     * 
      * @param showVersion enable displaying version 
-     * @since 2.0.11
      * @return This invocation request.
+     * @since 2.0.11
      */
     InvocationRequest setShowVersion( boolean showVersion );
 
     /**
      * Thread count, for instance 2.0C where C is core multiplied
-     * Equivalent of {@code -T} or {@code --threads} 
+     * Equivalent of {@code -T} or {@code --threads}
+     * <p>
+     * <strong>note: </strong>available since Maven3
+     * </p>
      * 
      * @param threads the threadcount
      * @return This invocation request.

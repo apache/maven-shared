@@ -34,6 +34,13 @@ under the License.
   <name>Maven Shared Components Aggregator</name>
   <description>Maven shared components Aggregator</description>
   <url>http://maven.apache.org/shared/</url>
+
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/</url>
+  </scm>
+
   <modules>
     <module>maven-shared-components</module>
     <module>maven-shared-utils</module>

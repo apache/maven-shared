@@ -1105,7 +1105,17 @@ public class MavenCommandLineBuilderTest
 
         assertArgumentsPresentInOrder( commandline, "-P", profile1 + "," + profile2 );
     }
-
+    
+    public void testMvnCommand() throws Exception
+    {
+        MavenCommandLineBuilder commandLineBuilder = new MavenCommandLineBuilder();
+        File mavenExecutable = new File ( "mvnDebug" );
+        commandLineBuilder.setMavenExecutable( mavenExecutable );
+        File executable = commandLineBuilder.findMavenExecutable();
+        assertTrue( "Expected executable to exist",  executable.exists() );
+        assertTrue( "Expected executable to be absolute", executable.isAbsolute() );
+    }
+    
     public void setUp()
     {
         sysProps = System.getProperties();

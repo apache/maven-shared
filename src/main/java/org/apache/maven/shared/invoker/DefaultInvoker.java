@@ -50,6 +50,8 @@ public class DefaultInvoker
 
     private File mavenHome;
 
+    private File mavenExecutable;
+
     private InvocationOutputHandler outputHandler = DEFAULT_OUTPUT_HANDLER;
 
     private InputStream inputStream;
@@ -78,6 +80,13 @@ public class DefaultInvoker
         {
             cliBuilder.setMavenHome( getMavenHome() );
         }
+        
+        File mavenExecutable = getMavenExecutable();
+        if ( mavenExecutable != null )
+        {
+            cliBuilder.setMavenExecutable( mavenExecutable );
+        }
+        
 
         File workingDirectory = getWorkingDirectory();
         if ( workingDirectory != null )
@@ -194,6 +203,17 @@ public class DefaultInvoker
     {
         this.mavenHome = mavenHome;
 
+        return this;
+    }
+
+    public File getMavenExecutable()
+    {
+        return mavenExecutable;
+    }
+
+    public Invoker setMavenExecutable( File mavenExecutable )
+    {
+        this.mavenExecutable = mavenExecutable;
         return this;
     }
 

@@ -96,6 +96,21 @@ public interface Invoker
     Invoker setMavenHome( File mavenHome );
 
     /**
+     * Get the customized File of the Maven executable.
+     * 
+     * @return the custom Maven executable, otherwise {@code null} 
+     */
+    File getMavenExecutable();
+
+    /**
+     * {@code mavenExecutable} can either be a file relative to ${maven.home}/bin/ or an absolute file.
+     * 
+     * @param mavenExecutable the executable
+     * @return This invoker instance
+     */
+    Invoker setMavenExecutable( File mavenExecutable );
+
+    /**
      * Sets the path to the base directory of the local repository to use for the Maven invocation.
      * 
      * @param localRepositoryDirectory The path to the base directory of the local repository or <code>null</code> to
@@ -147,5 +162,4 @@ public interface Invoker
      * @return This invoker instance.
      */
     Invoker setErrorHandler( InvocationOutputHandler errorHandler );
-
 }

@@ -61,6 +61,8 @@ Maven Invoker
     
     * API Logger
     
+    * Maven Executable
+    
     []
     
   * Request Options:
@@ -97,6 +99,10 @@ Maven Invoker
     * Build Goals
     
     * Settings Location (<<<settings.xml>>> file path)
+    
+    * Threadcount ( since Maven3 with -T )
+    
+    * Toolchains location ( since Maven3 with -t )
 
     []
     

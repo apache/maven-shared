@@ -47,7 +47,7 @@ public class MavenCommandLineBuilder
 
     private File mavenHome;
 
-    private File mvnCommand;
+    private File mavenExecutable;
 
     private Properties systemEnvVars;
 
@@ -564,34 +564,41 @@ public class MavenCommandLineBuilder
 
         logger.debug( "Using ${maven.home} of: \'" + mavenHome + "\'." );
 
-        if ( mvnCommand == null )
+        if ( mavenExecutable == null || !mavenExecutable.isAbsolute() )
         {
-            if ( Os.isFamily( "windows" ) )
+            String executable;
+            if( mavenExecutable != null )
             {
-                mvnCommand = new File( mavenHome, "/bin/mvn.bat" );
+                executable = mavenExecutable.getPath();
+            }
+            else if ( Os.isFamily( "windows" ) )
+            {
+                executable = "mvn.bat";
             }
             else
             {
-                mvnCommand = new File( mavenHome, "/bin/mvn" );
+                executable = "mvn";
             }
-
+            
+            mavenExecutable = new File( mavenHome, "/bin/" + executable );
+            
             try
             {
-                File canonicalMvn = mvnCommand.getCanonicalFile();
-                mvnCommand = canonicalMvn;
+                File canonicalMvn = mavenExecutable.getCanonicalFile();
+                mavenExecutable = canonicalMvn;
             }
             catch ( IOException e )
             {
-                logger.debug( "Failed to canonicalize maven executable: " + mvnCommand + ". Using as-is.", e );
+                logger.debug( "Failed to canonicalize maven executable: " + mavenExecutable + ". Using as-is.", e );
             }
 
-            if ( !mvnCommand.exists() )
+            if ( !mavenExecutable.isFile() )
             {
-                throw new CommandLineConfigurationException( "Maven executable not found at: " + mvnCommand );
+                throw new CommandLineConfigurationException( "Maven executable not found at: " + mavenExecutable );
             }
         }
 
-        return mvnCommand;
+        return mavenExecutable;
     }
 
     /**
@@ -662,6 +669,21 @@ public class MavenCommandLineBuilder
     public void setWorkingDirectory( File workingDirectory )
     {
         this.workingDirectory = workingDirectory;
+    }
+
+    /**
+     * {@code mavenExecutable} can either be relative to ${maven.home}/bin/ or absolute 
+     * 
+     * @param mavenExecutable the executable
+     */
+    public void setMavenExecutable( File mavenExecutable )
+    {
+        this.mavenExecutable = mavenExecutable;
+    }
+
+    public File getMavenExecutable()
+    {
+        return mavenExecutable;
     }
 
 }

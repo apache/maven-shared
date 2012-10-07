@@ -125,28 +125,6 @@ under the License.
       </build>
     </profile>
     <profile>
-      <id>reporting</id>
-      <reporting>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-changes-plugin</artifactId>
-            <version>2.7.1</version>
-            <configuration>
-              <issueLinkTemplate>%URL%/%ISSUE%</issueLinkTemplate>
-            </configuration>
-            <reportSets>
-              <reportSet>
-                <reports>
-                  <report>changes-report</report>
-                </reports>
-              </reportSet>
-            </reportSets>
-          </plugin>
-        </plugins>
-      </reporting>
-    </profile>
-    <profile>
       <id>apache-release</id>
       <build>
         <plugins>

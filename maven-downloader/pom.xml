@@ -21,19 +21,17 @@ under the License.
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>maven-shared-components</artifactId>
     <groupId>org.apache.maven.shared</groupId>
+    <artifactId>maven-shared-components</artifactId>
     <version>18</version>
     <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
 
-  <groupId>org.apache.maven.shared</groupId>
   <artifactId>maven-downloader</artifactId>
   <version>1.2-SNAPSHOT</version>
 
   <name>Maven Downloader</name>
   <description>Provide a super simple interface for downloading a single artifact.</description>
-  <url>http://maven.apache.org</url>
 
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-downloader</connection>
@@ -68,11 +66,11 @@ under the License.
     <plugins>
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-maven-plugin</artifactId>
+        <artifactId>plexus-component-metadata</artifactId>
         <executions>
           <execution>
             <goals>
-              <goal>descriptor</goal>
+              <goal>generate-metadata</goal>
             </goals>
           </execution>
         </executions>

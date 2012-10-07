@@ -89,7 +89,7 @@ public interface InvocationRequest
      * A project can be specified by [groupId]:artifactId or by its relative path.
      * 
      * @return the list of projects to add to reactor build, otherwise {@code null}
-     * @since 2.0.12
+     * @since 2.1
      */
     public List<String> getProjects();
 
@@ -97,7 +97,7 @@ public interface InvocationRequest
      * Get the value of the {@code also-make} argument.
      * 
      * @return {@code true} if the argument {@code also-make} was specified, otherwise {@code false}
-     * @since 2.0.12
+     * @since 2.1
      */
     boolean isAlsoMake();
 
@@ -105,7 +105,7 @@ public interface InvocationRequest
      * Get the value of the {@code also-make-dependents}
      * 
      * @return {@code true} if the argument {@code also-make-dependents} was specified, otherwise {@code false}
-     * @since 2.0.12
+     * @since 2.1
      */
     boolean isAlsoMakeDependents();
 
@@ -113,7 +113,7 @@ public interface InvocationRequest
      * Get the value of {@code resume-from}
      * 
      * @return specified reactor project to resume from
-     * @since 2.0.12
+     * @since 2.1
      */
     String getResumeFrom();
 
@@ -258,7 +258,7 @@ public interface InvocationRequest
      * 
      * @return The path to the global settings for the Maven invocation or <code>null</code> to load the global settings
      *         from the default location.
-     * @since 2.0.12
+     * @since 2.1
      */
     File getGlobalSettingsFile();
     
@@ -266,7 +266,7 @@ public interface InvocationRequest
      * Gets the path to the custom toolchains file
      * 
      * @return The path to the custom toolchains file or <code>null</code> to load the toolchains from the default location
-     * @since 2.0.12
+     * @since 2.1
      */
     File getToolchainsFile();
 
@@ -309,7 +309,7 @@ public interface InvocationRequest
      * Get the value of the {@code threads} argument.
      * 
      * @return the value of the {@code threads} argument or {@code null} if not set
-     * @since 2.0.12
+     * @since 2.1
      */
     String getThreads();
 
@@ -540,7 +540,7 @@ public interface InvocationRequest
      * @param globalSettings The path to the global settings for the Maven invocation, may be <code>null</code> to load
      *            the global settings from the default location.
      * @return This invocation request.
-     * @since 2.0.12
+     * @since 2.1
      */
     InvocationRequest setGlobalSettingsFile( File globalSettings );
 
@@ -553,7 +553,7 @@ public interface InvocationRequest
      * 
      * @param toolchains the alternate path for the user toolchains file
      * @return This invocation request
-     * @since 2.0.12
+     * @since 2.1
      */
     InvocationRequest setToolchainsFile( File toolchains );
     /**
@@ -624,7 +624,7 @@ public interface InvocationRequest
      * 
      * @param threads the threadcount
      * @return This invocation request.
-     * @since 2.0.12
+     * @since 2.1
      */
     InvocationRequest setThreads( String threads );
 
@@ -634,7 +634,7 @@ public interface InvocationRequest
      * 
      * @param projects the reactor project list 
      * @return This invocation request.
-     * @since 2.0.12
+     * @since 2.1
      */
     InvocationRequest setProjects( List<String> projects );
 
@@ -644,7 +644,7 @@ public interface InvocationRequest
      * 
      * @param alsoMake enable 'also make' mode 
      * @return This invocation request.
-     * @since 2.0.12
+     * @since 2.1
      */
     InvocationRequest setAlsoMake( boolean alsoMake );
 
@@ -654,7 +654,7 @@ public interface InvocationRequest
      * 
      * @param alsoMake enable 'also make' mode 
      * @return This invocation request.
-     * @since 2.0.12
+     * @since 2.1
      */
     InvocationRequest setAlsoMakeDependents( boolean alsoMakeDependents );
 
@@ -664,7 +664,7 @@ public interface InvocationRequest
      * 
      * @param resumeFrom set the project to resume from
      * @return This invocation request
-     * @since 2.0.12
+     * @since 2.1
      */
     InvocationRequest setResumeFrom( String resumeFrom );
     

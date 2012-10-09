@@ -24,9 +24,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
-
 import org.apache.maven.shared.utils.cli.CommandLineException;
 import org.apache.maven.shared.utils.cli.CommandLineUtils;
 import org.apache.maven.shared.utils.cli.Commandline;
@@ -79,9 +77,9 @@ class ForkedLauncher
 
         if ( envVars != null )
         {
-            for ( Iterator i = envVars.keySet().iterator(); i.hasNext(); )
+            for ( Object o : envVars.keySet() )
             {
-                String key = (String) i.next();
+                String key = (String) o;
 
                 cmd.addEnvironment( key, (String) envVars.get( key ) );
             }
@@ -96,9 +94,9 @@ class ForkedLauncher
 
         cmd.setWorkingDirectory( workingDirectory );
 
-        for ( int i = 0; i < cliArgs.length; i++ )
+        for ( String cliArg : cliArgs )
         {
-            cmd.createArgument().setValue( cliArgs[i] );
+            cmd.createArg().setValue( cliArg );
         }
 
         Writer logWriter = new FileWriter( logFile );

@@ -29,7 +29,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import org.apache.maven.shared.utils.io.IOUtil;
-import org.codehaus.plexus.util.ReaderFactory;
+import org.apache.maven.shared.utils.ReaderFactory;
 import org.codehaus.plexus.util.WriterFactory;
 
 public final class TestUtils

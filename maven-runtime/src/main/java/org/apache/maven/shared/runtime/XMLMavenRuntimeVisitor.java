@@ -33,7 +33,7 @@ import org.apache.maven.project.DuplicateProjectException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectSorter;
 import org.apache.maven.shared.utils.io.IOUtil;
-import org.codehaus.plexus.util.ReaderFactory;
+import org.apache.maven.shared.utils.ReaderFactory;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 

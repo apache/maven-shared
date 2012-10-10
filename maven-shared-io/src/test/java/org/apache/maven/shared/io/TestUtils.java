@@ -106,7 +106,7 @@ public final class TestUtils
     {
         StringWriter buffer = new StringWriter();
 
-        Reader reader = new XmlStreamReader( file );
+        Reader reader = ReaderFactory.newXmlReader( file );
 
         IOUtil.copy( reader, buffer );
 

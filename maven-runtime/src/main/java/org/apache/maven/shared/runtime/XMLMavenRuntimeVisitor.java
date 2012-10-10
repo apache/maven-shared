@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.io.input.XmlStreamReader;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.project.DuplicateProjectException;
@@ -147,7 +148,7 @@ class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
 
             in = connection.getInputStream();
 
-            Model model = reader.read( ReaderFactory.newXmlReader( in ) );
+            Model model = reader.read( new XmlStreamReader( in ) );
 
             return new MavenProject( model );
         }

@@ -69,7 +69,7 @@ public interface MavenResourcesFiltering
      *
      * @return {@link List} of {@link String}
      */
-    List getDefaultNonFilteredFileExtensions();
+    List<String> getDefaultNonFilteredFileExtensions();
 
     /**
      * @param fileName                      the file name

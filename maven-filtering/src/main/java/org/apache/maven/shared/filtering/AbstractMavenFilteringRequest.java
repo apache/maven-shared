@@ -19,14 +19,13 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.project.MavenProject;
-
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
+
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.project.MavenProject;
 
 /**
  * @since 1.0-beta-3
@@ -239,7 +238,7 @@ public class AbstractMavenFilteringRequest
     /**
      * @since 1.0-beta-2
      */
-    public List getProjectStartExpressions()
+    public List<String> getProjectStartExpressions()
     {
         return projectStartExpressions;
     }
@@ -248,7 +247,7 @@ public class AbstractMavenFilteringRequest
      * @param projectStartExpressions
      * @since 1.0-beta-2
      */
-    public void setProjectStartExpressions( List projectStartExpressions )
+    public void setProjectStartExpressions( List<String> projectStartExpressions )
     {
         this.projectStartExpressions = projectStartExpressions;
     }

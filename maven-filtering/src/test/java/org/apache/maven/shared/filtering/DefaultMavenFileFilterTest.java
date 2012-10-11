@@ -110,11 +110,11 @@ public class DefaultMavenFileFilterTest
 
         File testDir = new File(getBasedir(), "src/test/units-files/MSHARED-177");
 
-        List filters = new ArrayList();
+        List<String> filters = new ArrayList<String>();
 
-        filters.add(new File(testDir, "first_filter_file.properties").getAbsolutePath());
-        filters.add(new File(testDir, "second_filter_file.properties").getAbsolutePath());
-        filters.add(new File(testDir, "third_filter_file.properties").getAbsolutePath());
+        filters.add( new File( testDir, "first_filter_file.properties" ).getAbsolutePath() );
+        filters.add( new File( testDir, "second_filter_file.properties" ).getAbsolutePath() );
+        filters.add( new File( testDir, "third_filter_file.properties" ).getAbsolutePath() );
 
         final Properties filterProperties = new Properties();
 

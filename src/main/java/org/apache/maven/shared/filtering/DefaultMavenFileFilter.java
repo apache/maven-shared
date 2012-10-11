@@ -19,9 +19,21 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Properties;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
+import org.apache.maven.shared.utils.StringUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
 import org.codehaus.plexus.interpolation.InterpolationPostProcessor;
 import org.codehaus.plexus.interpolation.PrefixAwareRecursionInterceptor;
 import org.codehaus.plexus.interpolation.PrefixedObjectValueSource;
@@ -32,19 +44,7 @@ import org.codehaus.plexus.interpolation.SingleResponseValueSource;
 import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.interpolation.multi.MultiDelimiterStringSearchInterpolator;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.apache.maven.shared.utils.io.FileUtils;
-import org.apache.maven.shared.utils.StringUtils;
 import org.sonatype.plexus.build.incremental.BuildContext;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * @author Olivier Lamy
@@ -81,7 +81,7 @@ public class DefaultMavenFileFilter
     public void copyFile( MavenFileFilterRequest mavenFileFilterRequest )
         throws MavenFilteringException
     {
-        List filterWrappers = getDefaultFilterWrappers( mavenFileFilterRequest );
+        List<FilterWrapper> filterWrappers = getDefaultFilterWrappers( mavenFileFilterRequest );
 
         copyFile( mavenFileFilterRequest.getFrom(), mavenFileFilterRequest.getTo(),
                   mavenFileFilterRequest.isFiltering(), filterWrappers, mavenFileFilterRequest.getEncoding() );
@@ -212,7 +212,8 @@ public class DefaultMavenFileFilter
         {
             if ( request.isInjectProjectBuildFilters() )
             {
-                List<String> buildFilters = new ArrayList( request.getMavenProject().getBuild().getFilters() );
+                @SuppressWarnings( "unchecked" )
+                List<String> buildFilters = new ArrayList<String>( request.getMavenProject().getBuild().getFilters() );
                 buildFilters.removeAll( request.getFileFilters() );
 
                 loadProperties( filterProperties, buildFilters, baseProps );
@@ -270,9 +271,8 @@ public class DefaultMavenFileFilter
             Properties workProperties = new Properties();
             workProperties.putAll( baseProps );
 
-            for ( Iterator iterator = propertiesFilePaths.iterator(); iterator.hasNext(); )
+            for ( String filterFile : propertiesFilePaths )
             {
-                String filterFile = (String) iterator.next();
                 if ( StringUtils.isEmpty( filterFile ) )
                 {
                     // skip empty file name

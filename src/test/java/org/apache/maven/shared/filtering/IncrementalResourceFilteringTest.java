@@ -28,11 +28,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.maven.model.Resource;
-import org.codehaus.plexus.PlexusTestCase;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.shared.utils.io.IOUtil;
+import org.codehaus.plexus.PlexusTestCase;
 import org.sonatype.plexus.build.incremental.ThreadBuildContext;
 import org.sonatype.plexus.build.incremental.test.TestIncrementalBuildContext;
 
@@ -65,7 +66,7 @@ public class IncrementalResourceFilteringTest
         assertTime( "time", "file02.txt" );
 
         // only one file is expected to change
-        HashSet changedFiles = new HashSet();
+        Set<String> changedFiles = new HashSet<String>();
         changedFiles.add( "file01.txt" );
 
         TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, changedFiles, new HashMap() );
@@ -78,7 +79,7 @@ public class IncrementalResourceFilteringTest
         assertTrue( ctx.getRefreshFiles().contains( new File( outputDirectory, "file01.txt" ) ) );
 
         // one file is expected to be deleted
-        HashSet deletedFiles = new HashSet();
+        Set<String> deletedFiles = new HashSet<String>();
         deletedFiles.add( "file01.txt" );
 
         ctx = new TestIncrementalBuildContext( unitDirectory, new HashSet(), changedFiles, new HashMap() );
@@ -99,7 +100,7 @@ public class IncrementalResourceFilteringTest
         filter( "time" );
 
         // all files are reprocessed after contents of output directory changed (e.g. was deleted)
-        HashSet changedFiles = new HashSet();
+        Set<String> changedFiles = new HashSet<String>();
         changedFiles.add( "target/IncrementalResourceFilteringTest" );
         TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, changedFiles, new HashMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
@@ -120,7 +121,7 @@ public class IncrementalResourceFilteringTest
         filter( "time" );
 
         // all files are reprocessed after content of filters changes
-        HashSet changedFiles = new HashSet();
+        Set<String> changedFiles = new HashSet<String>();
         changedFiles.add( "filters.txt" );
         TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, changedFiles, new HashMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
@@ -141,7 +142,7 @@ public class IncrementalResourceFilteringTest
         filter( "time" );
 
         // all files are reprocessed after content of filters changes
-        HashSet deletedFiles = new HashSet();
+        Set<String> deletedFiles = new HashSet<String>();
         deletedFiles.add( "filters.txt" );
         TestIncrementalBuildContext ctx =
             new TestIncrementalBuildContext( unitDirectory, new HashSet(), deletedFiles, new HashMap() );
@@ -192,12 +193,12 @@ public class IncrementalResourceFilteringTest
         String unitFilesDir = new File( unitDirectory, "files" ).getPath();
 
         Resource resource = new Resource();
-        List resources = new ArrayList();
+        List<Resource> resources = new ArrayList<Resource>();
         resources.add( resource );
         resource.setDirectory( unitFilesDir );
         resource.setFiltering( true );
 
-        List filtersFile = new ArrayList();
+        List<String> filtersFile = new ArrayList<String>();
         filtersFile.add( new File( unitDirectory, "filters.txt" ).getPath() );
 
         mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,

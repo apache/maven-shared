@@ -76,15 +76,15 @@ public class MuliLinesMavenResourcesFilteringTest
         String unitFilesDir = getBasedir() + "/src/test/units-files/MRESOURCES-104";
 
         Resource resource = new Resource();
-        List resources = new ArrayList();
+        List<Resource> resources = new ArrayList<Resource>();
         resources.add( resource );
         resource.setDirectory( unitFilesDir );
         resource.setFiltering( true );
 
-        List filtersFile = new ArrayList();
+        List<String> filtersFile = new ArrayList<String>();
         filtersFile.add( getBasedir() + "/src/test/units-files/MRESOURCES-104/test.properties" );
 
-        List nonFilteredFileExtensions = Collections.singletonList( "gif" );
+        List<String> nonFilteredFileExtensions = Collections.singletonList( "gif" );
 
         MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, outputDirectory,
                                                                                        mavenProject, "UTF-8",

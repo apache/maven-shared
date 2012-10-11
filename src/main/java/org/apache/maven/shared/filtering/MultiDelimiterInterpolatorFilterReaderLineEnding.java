@@ -19,19 +19,18 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
+import java.io.BufferedReader;
+import java.io.FilterReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.codehaus.plexus.interpolation.InterpolationException;
 import org.codehaus.plexus.interpolation.Interpolator;
 import org.codehaus.plexus.interpolation.RecursionInterceptor;
 import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
 import org.codehaus.plexus.interpolation.multi.DelimiterSpecification;
-
-import java.io.BufferedReader;
-import java.io.FilterReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 
 /**
  * A FilterReader implementation, that works with Interpolator interface instead of it's own interpolation
@@ -87,7 +86,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      */
     private boolean preserveEscapeString = false;
 
-    private LinkedHashSet delimiters = new LinkedHashSet();
+    private LinkedHashSet<DelimiterSpecification> delimiters = new LinkedHashSet<DelimiterSpecification>();
 
     private String beginToken;
 
@@ -149,12 +148,11 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
         return delimiters.remove( DelimiterSpecification.parse( delimiterSpec ) );
     }
 
-    public MultiDelimiterInterpolatorFilterReaderLineEnding setDelimiterSpecs( HashSet specs )
+    public MultiDelimiterInterpolatorFilterReaderLineEnding setDelimiterSpecs( Set<String> specs )
     {
         delimiters.clear();
-        for ( Iterator it = specs.iterator(); it.hasNext(); )
+        for ( String spec : specs )
         {
-            String spec = (String) it.next();
             delimiters.add( DelimiterSpecification.parse( spec ) );
             markLength += spec.length() * 2;
         }
@@ -275,9 +273,8 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
 
         // have we found a delimiter?
         int max = 0;
-        for ( Iterator it = delimiters.iterator(); it.hasNext(); )
+        for ( DelimiterSpecification spec : delimiters )
         {
-            DelimiterSpecification spec = (DelimiterSpecification) it.next();
             String begin = spec.getBegin();
 
             // longest match wins
@@ -491,10 +488,8 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
             markLength += escapeString.length();
 
         }
-        for ( Iterator it = delimiters.iterator(); it.hasNext(); )
+        for ( DelimiterSpecification spec : delimiters )
         {
-
-            DelimiterSpecification spec = (DelimiterSpecification) it.next();
             markLength += spec.getBegin().length();
             markLength += spec.getEnd().length();
 

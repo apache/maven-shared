@@ -72,14 +72,14 @@ public class EscapeStringTest
             .getName() );
 
         Resource resource = new Resource();
-        List resources = new ArrayList();
+        List<Resource> resources = new ArrayList<Resource>();
         resources.add( resource );
         resource.setDirectory( unitDirectory.getPath() );
         resource.setFiltering( true );
 
-        List filtersFile = new ArrayList();
+        List<String> filtersFile = new ArrayList<String>();
 
-        List nonFilteredFileExtensions = Collections.singletonList( "gif" );
+        List<String> nonFilteredFileExtensions = Collections.singletonList( "gif" );
 
         MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, outputDirectory,
                                                                                        mavenProject, "UTF-8",

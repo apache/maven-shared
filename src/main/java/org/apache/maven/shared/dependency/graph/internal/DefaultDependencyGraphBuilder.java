@@ -54,7 +54,7 @@ public class DefaultDependencyGraphBuilder
     {
         try
         {
-            String hint = isMaven2x() ? "maven2" : "maven3";
+            String hint = isMaven31() ? "maven31" : isMaven2x() ? "maven2" : "maven3";
             getLogger().debug( "building " + hint + " dependency graph for " + project.getId() );
 
             DependencyGraphBuilder effectiveGraphBuilder =
@@ -76,6 +76,23 @@ public class DefaultDependencyGraphBuilder
         try
         {
             Class.forName( "org.apache.maven.project.DependencyResolutionRequest" ); // Maven 3 specific
+
+            return false;
+        }
+        catch ( ClassNotFoundException e )
+        {
+            return true;
+        }
+    }
+
+    /**
+     * Check the current Maven version to see if it's Maven 3.1.
+     */
+    protected static boolean isMaven31()
+    {
+        try
+        {
+            Class.forName( "org.eclipse.aether.artifact.Artifact" ); // Maven 3.1 specific
 
             return false;
         }

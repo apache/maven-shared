@@ -24,7 +24,6 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.utils.ArrayUtils;
 import org.apache.maven.shared.utils.io.DirectoryScanResult;
 import org.apache.maven.shared.utils.io.DirectoryScanner;
 import org.apache.maven.shared.utils.io.FileUtils;
@@ -66,7 +65,7 @@ public class IncrementalBuildHelper
      * Once the {@link #beforeRebuildExecution(java.io.File)} gots called
      * this will contain the list of files in the build directory.
      */
-    private String[] filesBeforeAction = ArrayUtils.EMPTY_STRING_ARRAY;
+    private String[] filesBeforeAction = new String[0];
 
     public IncrementalBuildHelper( MojoExecution mojoExecution, MavenSession mavenSession )
     {
@@ -171,7 +170,7 @@ public class IncrementalBuildHelper
         File mojoConfigBase = getMojoStatusDirectory();
         File mojoConfigFile = new File( mojoConfigBase, INPUT_FILES_LST_FILENAME );
 
-        String[] oldInputFiles = ArrayUtils.EMPTY_STRING_ARRAY;
+        String[] oldInputFiles = new String[0];
 
         if ( mojoConfigFile.exists() )
         {
@@ -223,7 +222,7 @@ public class IncrementalBuildHelper
         File mojoConfigBase = getMojoStatusDirectory();
         File mojoConfigFile = new File( mojoConfigBase, INPUT_FILES_LST_FILENAME );
 
-        String[] oldInputFiles = ArrayUtils.EMPTY_STRING_ARRAY;
+        String[] oldInputFiles = new String[0];
 
         if ( mojoConfigFile.exists() )
         {

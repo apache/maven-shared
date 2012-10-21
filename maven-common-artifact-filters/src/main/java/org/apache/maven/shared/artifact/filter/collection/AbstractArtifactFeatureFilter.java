@@ -21,7 +21,6 @@ package org.apache.maven.shared.artifact.filter.collection;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -38,12 +37,12 @@ public abstract class AbstractArtifactFeatureFilter
     extends AbstractArtifactsFilter
 {
     /** The list of types or classifiers to include */
-    private List includes;
+    private List<String> includes;
 
     /**
      * The list of types or classifiers to exclude (ignored if includes != null)
      */
-    private List excludes;
+    private List<String> excludes;
 
     public AbstractArtifactFeatureFilter( String include, String exclude)
     {
@@ -57,9 +56,9 @@ public abstract class AbstractArtifactFeatureFilter
      * @param artifacts the set of dependencies to filter.
      * @return a Set of filtered dependencies.
      */
-    public Set filter( Set artifacts )
+    public Set<Artifact> filter( Set<Artifact> artifacts )
     {
-        Set results = artifacts;
+        Set<Artifact>results = artifacts;
 
         if ( this.includes != null && !this.includes.isEmpty() )
         {
@@ -81,19 +80,14 @@ public abstract class AbstractArtifactFeatureFilter
      * @param theIncludes List of types or classifiers to include.
      * @return a set of filtered artifacts.
      */
-    private Set filterIncludes( Set artifacts, List theIncludes )
+    private Set<Artifact> filterIncludes( Set<Artifact> artifacts, List<String> theIncludes )
     {
-        Set result = new HashSet();
+        Set<Artifact> result = new HashSet<Artifact>();
 
-        Iterator includeIter = theIncludes.iterator();
-        while ( includeIter.hasNext() )
+        for ( String include : theIncludes )
         {
-            String include = (String) includeIter.next();
-            Iterator iter = artifacts.iterator();
-            while ( iter.hasNext() )
+            for ( Artifact artifact : artifacts )
             {
-                Artifact artifact = (Artifact) iter.next();
-
                 // if the classifier or type of the artifact
                 // matches the feature
                 // to include, add to the
@@ -114,24 +108,20 @@ public abstract class AbstractArtifactFeatureFilter
      * @param excludes List of types or classifiers to exclude.
      * @return a set of filtered artifacts.
      */
-    private Set filterExcludes( Set artifacts, List theExcludes )
+    private Set<Artifact> filterExcludes( Set<Artifact> artifacts, List<String> theExcludes )
     {
-        Set result = new HashSet();
+        Set<Artifact> result = new HashSet<Artifact>();
 
-        Iterator iter = artifacts.iterator();
-        while ( iter.hasNext() )
+        for ( Artifact artifact : artifacts )
         {
             boolean exclude = false;
-            Artifact artifact = (Artifact) iter.next();
             String artifactFeature = getArtifactFeature( artifact );
 
             // look through all types or classifiers. If no
             // matches are found
             // then it can be added to the results.
-            Iterator excludeIter = theExcludes.iterator();
-            while ( excludeIter.hasNext() )
+            for ( String excludeFeature : theExcludes )
             {
-                String excludeFeature = (String) excludeIter.next();
                 if ( compareFeatures( artifactFeature, excludeFeature ) )
                 {
                     exclude = true;
@@ -175,7 +165,7 @@ public abstract class AbstractArtifactFeatureFilter
     /**
      * @return Returns the excludes.
      */
-    public List getExcludes()
+    public List<String> getExcludes()
     {
         return this.excludes;
     }
@@ -183,7 +173,7 @@ public abstract class AbstractArtifactFeatureFilter
     /**
      * @return Returns the includes.
      */
-    public List getIncludes()
+    public List<String> getIncludes()
     {
         return this.includes;
     }

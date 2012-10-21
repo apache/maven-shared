@@ -34,7 +34,7 @@ public abstract class AbstractArtifactsFilter
      */
     public boolean isArtifactIncluded( Artifact artifact ) throws ArtifactFilterException
     {
-        Set set = new HashSet();
+        Set<Artifact> set = new HashSet<Artifact>();
         set.add( artifact );
 
         set = filter( set );

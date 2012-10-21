@@ -23,7 +23,6 @@ package org.apache.maven.shared.artifact.filter.collection;
  * 
  */
 
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
@@ -57,11 +56,9 @@ public class TestClassifierFilter
     public void testFiltering()
         throws Exception
     {
-        Set result = filtering();
-        Iterator iter = result.iterator();
-        while ( iter.hasNext() )
+        Set<Artifact> result = filtering();
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertTrue( artifact.getClassifier().equals( "one" ) || artifact.getClassifier().equals( "two" ) );
         }
     }
@@ -69,11 +66,9 @@ public class TestClassifierFilter
     public void testFiltering2()
         throws Exception
     {
-        Set result = filtering2();
-        Iterator iter = result.iterator();
-        while ( iter.hasNext() )
+        Set<Artifact> result = filtering2();
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertTrue( artifact.getClassifier().equals( "two" ) || artifact.getClassifier().equals( "four" ) );
         }
     }

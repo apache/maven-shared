@@ -22,8 +22,6 @@ package org.apache.maven.shared.artifact.filter.collection;
  * 
  */
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -37,11 +35,11 @@ import org.apache.maven.plugin.testing.ArtifactStubFactory;
 public class TestProjectTransitivityFilter
     extends TestCase
 {
-    Set artifacts = new HashSet();
+    Set<Artifact> artifacts;
 
-    Set directArtifacts = new HashSet();
+    Set<Artifact> directArtifacts;
     
-    Set classifiedArtifacts = new HashSet();
+    Set<Artifact> classifiedArtifacts;
 
     protected void setUp()
         throws Exception
@@ -60,7 +58,7 @@ public class TestProjectTransitivityFilter
     {
         ProjectTransitivityFilter filter = new ProjectTransitivityFilter( directArtifacts, false );
 
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
 
         assertEquals( 11, result.size() );
     }
@@ -71,14 +69,12 @@ public class TestProjectTransitivityFilter
         assertFalse( filter.isExcludeTransitive() );
         filter.setExcludeTransitive( true );
         assertTrue( filter.isExcludeTransitive() );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
 
         assertEquals( 2, result.size() );
 
-        Iterator iter = result.iterator();
-        while ( iter.hasNext() )
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertTrue( artifact.getArtifactId().equals( "release" ) || artifact.getArtifactId().equals( "snapshot" ) );
         }
     }
@@ -87,7 +83,7 @@ public class TestProjectTransitivityFilter
     {
         ProjectTransitivityFilter filter = new ProjectTransitivityFilter( classifiedArtifacts, true );
 
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
 
         assertEquals( 4, result.size() );
     }

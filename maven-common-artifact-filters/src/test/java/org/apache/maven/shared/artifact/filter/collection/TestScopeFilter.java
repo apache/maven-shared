@@ -22,8 +22,6 @@ package org.apache.maven.shared.artifact.filter.collection;
  * 
  */
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -39,7 +37,7 @@ import org.apache.maven.plugin.testing.SilentLog;
 public class TestScopeFilter
     extends TestCase
 {
-    Set artifacts = new HashSet();
+    Set<Artifact> artifacts;
 
     Log log = new SilentLog();
 
@@ -56,9 +54,7 @@ public class TestScopeFilter
         throws ArtifactFilterException
     {
         ScopeFilter filter = new ScopeFilter( Artifact.SCOPE_COMPILE, null );
-        Set result;
-
-        result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 3, result.size() );
 
     }
@@ -67,8 +63,7 @@ public class TestScopeFilter
         throws ArtifactFilterException
     {
         ScopeFilter filter = new ScopeFilter( Artifact.SCOPE_RUNTIME, null );
-        Set result;
-        result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 2, result.size() );
 
     }
@@ -77,7 +72,7 @@ public class TestScopeFilter
         throws ArtifactFilterException
     {
         ScopeFilter filter = new ScopeFilter( Artifact.SCOPE_TEST, null );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 5, result.size() );
     }
 
@@ -86,12 +81,10 @@ public class TestScopeFilter
     {
 
         ScopeFilter filter = new ScopeFilter( Artifact.SCOPE_PROVIDED, null );
-        Set result = filter.filter( artifacts );
-        Iterator iter = result.iterator();
+        Set<Artifact> result = filter.filter( artifacts );
         assertTrue( result.size() > 0 );
-        while ( iter.hasNext() )
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertEquals( Artifact.SCOPE_PROVIDED, artifact.getScope() );
         }
     }
@@ -101,12 +94,10 @@ public class TestScopeFilter
     {
 
         ScopeFilter filter = new ScopeFilter( Artifact.SCOPE_SYSTEM, null );
-        Set result = filter.filter( artifacts );
-        Iterator iter = result.iterator();
+        Set<Artifact> result = filter.filter( artifacts );
         assertTrue( result.size() > 0 );
-        while ( iter.hasNext() )
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertEquals( Artifact.SCOPE_SYSTEM, artifact.getScope() );
         }
     }
@@ -115,7 +106,7 @@ public class TestScopeFilter
         throws ArtifactFilterException
     {
         ScopeFilter filter = new ScopeFilter( null, null );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 5, result.size() );
     }
 
@@ -123,7 +114,7 @@ public class TestScopeFilter
         throws ArtifactFilterException
     {
         ScopeFilter filter = new ScopeFilter( "", "" );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 5, result.size() );
     }
 
@@ -131,15 +122,13 @@ public class TestScopeFilter
         throws ArtifactFilterException
     {
         ScopeFilter filter = new ScopeFilter( "", Artifact.SCOPE_PROVIDED );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertNotNull( result );
         assertTrue( result.size() > 0 );
-        Iterator iter = result.iterator();
         assertNotNull( result );
         assertTrue( result.size() > 0 );
-        while ( iter.hasNext() )
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertFalse( Artifact.SCOPE_PROVIDED.equalsIgnoreCase( artifact.getScope() ) );
         }
     }
@@ -148,13 +137,11 @@ public class TestScopeFilter
         throws ArtifactFilterException
     {
         ScopeFilter filter = new ScopeFilter( "", Artifact.SCOPE_SYSTEM );
-        Set result = filter.filter( artifacts );
-        Iterator iter = result.iterator();
+        Set<Artifact> result = filter.filter( artifacts );
         assertNotNull( result );
         assertTrue( result.size() > 0 );
-        while ( iter.hasNext() )
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertFalse( Artifact.SCOPE_SYSTEM.equalsIgnoreCase( artifact.getScope() ) );
         }
     }
@@ -163,7 +150,7 @@ public class TestScopeFilter
         throws ArtifactFilterException
     {
         ScopeFilter filter = new ScopeFilter( "", Artifact.SCOPE_COMPILE );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 2, result.size() );
     }
 

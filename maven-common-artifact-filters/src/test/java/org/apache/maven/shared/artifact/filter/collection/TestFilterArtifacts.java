@@ -30,6 +30,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.testing.ArtifactStubFactory;
 import org.apache.maven.shared.utils.io.FileUtils;
 
@@ -57,7 +58,8 @@ public class TestFilterArtifacts
         FileUtils.deleteDirectory( outputFolder );
 
         ArtifactStubFactory fact = new ArtifactStubFactory( outputFolder, false );
-        Set artifacts = fact.getReleaseAndSnapshotArtifacts();
+        @SuppressWarnings( "unchecked" )
+        Set<Artifact> artifacts = fact.getReleaseAndSnapshotArtifacts();
         FilterArtifacts fa = new FilterArtifacts();
 
         fa.filter( artifacts );
@@ -68,7 +70,7 @@ public class TestFilterArtifacts
         fa.filter( artifacts );
         assertEquals( 0, fa.getFilters().size() );
 
-        ArrayList filters = new ArrayList();
+        ArrayList<ArtifactsFilter> filters = new ArrayList<ArtifactsFilter>();
         filters.add( null );
         filters.add( null );
         fa.setFilters( filters );
@@ -80,7 +82,7 @@ public class TestFilterArtifacts
 
     public void testArtifactFilter()
     {
-        Set a = new HashSet();
+        Set<Artifact> a = new HashSet<Artifact>();
         FilterArtifacts fa = new FilterArtifacts();
         ArtifactsFilter scope = new ScopeFilter( "compile", "system" );
         ArtifactsFilter type = new TypeFilter( "jar", "war" );
@@ -99,7 +101,7 @@ public class TestFilterArtifacts
         assertTrue( fa.getFilters().get( 1 ) instanceof ProjectTransitivityFilter );
         assertTrue( fa.getFilters().get( 2 ) instanceof TypeFilter );
 
-        ArrayList list = new ArrayList();
+        ArrayList<ArtifactsFilter> list = new ArrayList<ArtifactsFilter>();
         list.addAll( fa.getFilters() );
 
         fa.clearFilters();
@@ -118,10 +120,11 @@ public class TestFilterArtifacts
         File outputFolder = new File( "target/filters/" );
         FileUtils.deleteDirectory( outputFolder );
         ArtifactStubFactory fact = new ArtifactStubFactory( outputFolder, false );
-        Set artifacts = fact.getClassifiedArtifacts();
+        @SuppressWarnings( "unchecked" )
+        Set<Artifact> artifacts = fact.getClassifiedArtifacts();
         FilterArtifacts fa = new FilterArtifacts();
         fa.addFilter( new ClassifierFilter( "", "four" ) );
-        Set results = fa.filter( artifacts );
+        Set<Artifact> results = fa.filter( artifacts );
         assertEquals( 3, results.size() );
         fa.addFilter( new ClassifierFilter( "two,three", "" ) );
         results = fa.filter( artifacts );

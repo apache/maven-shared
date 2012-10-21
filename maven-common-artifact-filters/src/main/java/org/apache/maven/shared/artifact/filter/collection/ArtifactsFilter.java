@@ -33,7 +33,7 @@ import org.apache.maven.artifact.Artifact;
  */
 public interface ArtifactsFilter
 {
-    Set filter( Set artifacts )
+    Set<Artifact> filter( Set<Artifact> artifacts )
         throws ArtifactFilterException;
 
     boolean isArtifactIncluded( Artifact artifact )

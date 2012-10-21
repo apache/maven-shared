@@ -1,3 +1,5 @@
+package org.apache.maven.shared.artifact.filter;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,10 +18,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.shared.artifact.filter;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
@@ -63,7 +63,7 @@ public class ScopeArtifactFilter
 
     private boolean systemScopeHit = false;
 
-    private List filteredArtifactIds = new ArrayList();
+    private List<String> filteredArtifactIds = new ArrayList<String>();
     
     /**
      * Constructor that is meant to be used with fine-grained manipulation to 
@@ -172,10 +172,8 @@ public class ScopeArtifactFilter
         {
             StringBuffer buffer = new StringBuffer( "The following artifacts were removed by this filter: " );
 
-            for ( Iterator it = filteredArtifactIds.iterator(); it.hasNext(); )
+            for ( String artifactId : filteredArtifactIds )
             {
-                String artifactId = (String) it.next();
-
                 buffer.append( '\n' ).append( artifactId );
             }
 

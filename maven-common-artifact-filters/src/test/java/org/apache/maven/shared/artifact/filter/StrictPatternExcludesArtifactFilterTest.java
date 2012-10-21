@@ -28,14 +28,15 @@ import java.util.List;
  * @version $Id$
  * @see StrictPatternExcludesArtifactFilter
  */
-public class StrictPatternExcludesArtifactFilterTest extends AbstractStrictPatternArtifactFilterTest
+public class StrictPatternExcludesArtifactFilterTest
+    extends AbstractStrictPatternArtifactFilterTest
 {
     // AbstractStrictPatternArtifactFilterTest methods ------------------------
 
     /*
      * @see org.apache.maven.shared.artifact.filter.AbstractStrictPatternArtifactFilterTest#createFilter(java.util.List)
      */
-    protected AbstractStrictPatternArtifactFilter createFilter( List patterns )
+    protected AbstractStrictPatternArtifactFilter createFilter( List<String> patterns )
     {
         return new StrictPatternExcludesArtifactFilter( patterns );
     }

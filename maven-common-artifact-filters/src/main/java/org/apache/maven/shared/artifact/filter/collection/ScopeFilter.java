@@ -20,10 +20,10 @@ package org.apache.maven.shared.artifact.filter.collection;
  */
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.shared.utils.StringUtils;
 
@@ -55,10 +55,10 @@ public class ScopeFilter
      * @return a Set of filtered dependencies.
      * @throws ArtifactFilterException
      */
-    public Set filter( Set artifacts)
+    public Set<Artifact> filter( Set<Artifact> artifacts)
         throws ArtifactFilterException
     {
-        Set results = artifacts;
+        Set<Artifact> results = artifacts;
 
         if ( StringUtils.isNotEmpty( includeScope ) )
         {
@@ -69,7 +69,7 @@ public class ScopeFilter
                 throw new ArtifactFilterException( "Invalid Scope in includeScope: " + includeScope );
             }
 
-            results = new HashSet();
+            results = new HashSet<Artifact>();
 
             if ( Artifact.SCOPE_PROVIDED.equals( includeScope ) || Artifact.SCOPE_SYSTEM.equals( includeScope ) )
             {
@@ -77,12 +77,10 @@ public class ScopeFilter
             }
             else
             {
-                ScopeArtifactFilter saf = new ScopeArtifactFilter( includeScope );
+                ArtifactFilter saf = new ScopeArtifactFilter( includeScope );
 
-                Iterator iter = artifacts.iterator();
-                while ( iter.hasNext() )
+                for ( Artifact artifact : artifacts )
                 {
-                    Artifact artifact = (Artifact) iter.next();
                     if ( saf.include( artifact ) )
                     {
                         results.add( artifact );
@@ -98,7 +96,7 @@ public class ScopeFilter
             {
                 throw new ArtifactFilterException( "Invalid Scope in excludeScope: " + excludeScope );
             }
-            results = new HashSet();
+            results = new HashSet<Artifact>();
             // plexus ScopeArtifactFilter doesn't handle the provided scope so
             // we
             // need special handling for it.
@@ -108,12 +106,10 @@ public class ScopeFilter
             }
             else if ( !Artifact.SCOPE_PROVIDED.equals( excludeScope ) && !Artifact.SCOPE_SYSTEM.equals( excludeScope ) )
             {
-                ScopeArtifactFilter saf = new ScopeArtifactFilter( excludeScope );
+                ArtifactFilter saf = new ScopeArtifactFilter( excludeScope );
 
-                Iterator iter = artifacts.iterator();
-                while ( iter.hasNext() )
+                for ( Artifact artifact : artifacts )
                 {
-                    Artifact artifact = (Artifact) iter.next();
                     if ( !saf.include( artifact ) )
                     {
                         results.add( artifact );
@@ -129,13 +125,11 @@ public class ScopeFilter
         return results;
     }
 
-    private Set includeSingleScope( Set artifacts, String scope )
+    private Set<Artifact> includeSingleScope( Set<Artifact> artifacts, String scope )
     {
-        HashSet results = new HashSet();
-        Iterator iter = artifacts.iterator();
-        while ( iter.hasNext() )
+        Set<Artifact> results = new HashSet<Artifact>();
+        for ( Artifact artifact : artifacts )
         {
-            Artifact artifact = (Artifact) iter.next();
             if ( scope.equals( artifact.getScope() ) )
             {
                 results.add( artifact );
@@ -144,13 +138,11 @@ public class ScopeFilter
         return results;
     }
 
-    private Set excludeSingleScope( Set artifacts, String scope )
+    private Set<Artifact> excludeSingleScope( Set<Artifact> artifacts, String scope )
     {
-        HashSet results = new HashSet();
-        Iterator iter = artifacts.iterator();
-        while ( iter.hasNext() )
+        Set<Artifact> results = new HashSet<Artifact>();
+        for ( Artifact artifact : artifacts )
         {
-            Artifact artifact = (Artifact) iter.next();
             if ( !scope.equals( artifact.getScope() ) )
             {
                 results.add( artifact );

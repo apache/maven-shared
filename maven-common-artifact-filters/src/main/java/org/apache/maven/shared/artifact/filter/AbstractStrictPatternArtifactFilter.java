@@ -25,15 +25,12 @@ import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * Filter to include or exclude artifacts from a list of patterns. The artifact pattern syntax is of the form:
  * 
- * <pre>
- * [groupId]:[artifactId]:[type]:[version]
- * </pre>
+ * <pre>[groupId]:[artifactId]:[type]:[version]</pre>
  * 
  * <p>
  * Where each pattern segment is optional and supports full and partial <code>*</code> wildcards. An empty pattern
@@ -55,7 +52,7 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
     /**
      * The list of artifact patterns to match, as described above.
      */
-    private final List patterns;
+    private final List<String> patterns;
 
     /**
      * Whether this filter should include or exclude artifacts that match the patterns.
@@ -74,7 +71,7 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
      *            <code>true</code> to include artifacts that match the patterns, or <code>false</code> to exclude
      *            them
      */
-    public AbstractStrictPatternArtifactFilter( List patterns, boolean include )
+    public AbstractStrictPatternArtifactFilter( List<String> patterns, boolean include )
     {
         this.patterns = patterns;
         this.include = include;
@@ -89,13 +86,12 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
     {
         boolean matched = false;
 
-        for ( Iterator i = patterns.iterator(); i.hasNext() & !matched; )
+        for ( String pattern : patterns )
         {
-            String pattern = (String) i.next();
-
             if ( include( artifact, pattern ) )
             {
                 matched = true;
+                break;
             }
         }
 

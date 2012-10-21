@@ -24,7 +24,6 @@ package org.apache.maven.shared.artifact.filter.collection;
  */
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
@@ -45,7 +44,6 @@ public class TestGroupIdFilter
         filterClass = GroupIdFilter.class;
         ArtifactStubFactory factory = new ArtifactStubFactory( null, false );
         artifacts = factory.getGroupIdArtifacts();
-
     }
 
     public void testParsing()
@@ -57,11 +55,9 @@ public class TestGroupIdFilter
     public void testFiltering()
         throws Exception
     {
-        Set result = filtering();
-        Iterator iter = result.iterator();
-        while ( iter.hasNext() )
+        Set<Artifact> result = filtering();
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertTrue( artifact.getGroupId().equals( "one" ) || artifact.getGroupId().equals( "two" ) );
         }
     }
@@ -69,11 +65,9 @@ public class TestGroupIdFilter
     public void testFiltering2()
         throws Exception
     {
-        Set result = filtering2();
-        Iterator iter = result.iterator();
-        while ( iter.hasNext() )
+        Set<Artifact> result = filtering2();
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertTrue( artifact.getGroupId().equals( "two" ) || artifact.getGroupId().equals( "four" ) );
         }
     }
@@ -88,14 +82,12 @@ public class TestGroupIdFilter
         throws Exception
     {
         // include o* from groupIds one,two should leave one
-        Set result = filtering();
+        Set<Artifact> result = filtering();
         assertEquals( 1, result.size() );
         GroupIdFilter filter = new GroupIdFilter( "o", null );
         result = filter.filter( result );
-        Iterator iter = result.iterator();
-        while ( iter.hasNext() )
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertTrue( artifact.getGroupId().equals( "one" ) );
 
         }
@@ -105,10 +97,8 @@ public class TestGroupIdFilter
         assertEquals( 1, result.size() );
         filter = new GroupIdFilter( null, "on" );
         result = filter.filter( result );
-        iter = result.iterator();
-        while ( iter.hasNext() )
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertTrue( artifact.getGroupId().equals( "two" ) );
 
         }
@@ -122,7 +112,7 @@ public class TestGroupIdFilter
 
         assertEquals( 4, artifacts.size() );
 
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
 
         assertEquals( 2, result.size() );
     }
@@ -135,7 +125,7 @@ public class TestGroupIdFilter
 
         assertEquals( 4, artifacts.size() );
 
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
 
         assertEquals( 2, result.size() );
     }

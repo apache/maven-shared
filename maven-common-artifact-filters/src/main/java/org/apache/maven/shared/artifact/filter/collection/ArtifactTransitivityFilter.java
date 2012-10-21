@@ -21,7 +21,6 @@ package org.apache.maven.shared.artifact.filter.collection;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -45,16 +44,17 @@ public class ArtifactTransitivityFilter
     extends AbstractArtifactsFilter
 {
 
-    Collection transitiveArtifacts;
+    Collection<Artifact> transitiveArtifacts;
 
     ArtifactFactory factory;
 
     ArtifactRepository local;
 
-    List remote;
+    List<ArtifactRepository> remote;
 
+    @SuppressWarnings( "unchecked" )
     public ArtifactTransitivityFilter( Artifact artifact, ArtifactFactory factory, ArtifactRepository local,
-                                       List remote, MavenProjectBuilder builder )
+                                       List<ArtifactRepository> remote, MavenProjectBuilder builder )
         throws ProjectBuildingException, InvalidDependencyVersionException
     {
         this.factory = factory;
@@ -73,8 +73,9 @@ public class ArtifactTransitivityFilter
 
     }
 
+    @SuppressWarnings( "unchecked" )
     public ArtifactTransitivityFilter( Dependency dependency, ArtifactFactory factory, ArtifactRepository local,
-                                       List remote, MavenProjectBuilder builder )
+                                       List<ArtifactRepository> remote, MavenProjectBuilder builder )
         throws ProjectBuildingException, InvalidDependencyVersionException
     {
 
@@ -95,14 +96,12 @@ public class ArtifactTransitivityFilter
 
     }
 
-    public Set filter( Set artifacts )
+    public Set<Artifact> filter( Set<Artifact> artifacts )
     {
 
-        Set result = new HashSet();
-        Iterator iterator = artifacts.iterator();
-        while ( iterator.hasNext() )
+        Set<Artifact> result = new HashSet<Artifact>();
+        for ( Artifact artifact : artifacts )
         {
-            Artifact artifact = (Artifact) iterator.next();
             if ( artifactIsATransitiveDependency( artifact ) )
             {
                 result.add( artifact );
@@ -120,12 +119,10 @@ public class ArtifactTransitivityFilter
     public boolean artifactIsATransitiveDependency( Artifact artifact )
     {
         boolean result = false;
-        Iterator iterator = transitiveArtifacts.iterator();
-        while ( iterator.hasNext() )
+        for ( Artifact trans : transitiveArtifacts )
         {
-            Artifact trans = (Artifact) iterator.next();
-            if ( trans.getGroupId().equals( artifact.getGroupId() ) &&
-                trans.getArtifactId().equals( artifact.getArtifactId() ) )
+            if ( trans.getGroupId().equals( artifact.getGroupId() )
+                && trans.getArtifactId().equals( artifact.getArtifactId() ) )
             {
                 result = true;
                 break;

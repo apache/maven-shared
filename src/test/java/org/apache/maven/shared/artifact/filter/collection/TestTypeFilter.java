@@ -22,8 +22,6 @@ package org.apache.maven.shared.artifact.filter.collection;
  * 
  */
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +36,7 @@ import org.apache.maven.plugin.testing.ArtifactStubFactory;
 public class TestTypeFilter
     extends TestCase
 {
-    Set artifacts = new HashSet();
+    Set<Artifact> artifacts;
 
     protected void setUp()
         throws Exception
@@ -52,8 +50,8 @@ public class TestTypeFilter
     public void testTypeParsing()
     {
         TypeFilter filter = new TypeFilter( "war,jar", "sources,zip," );
-        List includes = filter.getIncludes();
-        List excludes = filter.getExcludes();
+        List<String> includes = filter.getIncludes();
+        List<String> excludes = filter.getExcludes();
 
         assertEquals( 2, includes.size() );
         assertEquals( 2, excludes.size() );
@@ -66,13 +64,11 @@ public class TestTypeFilter
     public void testFiltering()
     {
         TypeFilter filter = new TypeFilter( "war,jar", "war,zip," );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 1, result.size() );
 
-        Iterator iter = result.iterator();
-        while ( iter.hasNext() )
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertTrue( artifact.getType().equals( "jar" ) );
         }
     }
@@ -80,13 +76,11 @@ public class TestTypeFilter
     public void testFiltering2()
     {
         TypeFilter filter = new TypeFilter( null, "war,jar," );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 3, result.size() );
 
-        Iterator iter = result.iterator();
-        while ( iter.hasNext() )
+        for ( Artifact artifact : result )
         {
-            Artifact artifact = (Artifact) iter.next();
             assertTrue( !artifact.getType().equals( "war" ) && !artifact.getType().equals( "jar" ) );
         }
     }
@@ -94,7 +88,7 @@ public class TestTypeFilter
     public void testFiltering3()
     {
         TypeFilter filter = new TypeFilter( null, null );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 5, result.size() );
     }
 }

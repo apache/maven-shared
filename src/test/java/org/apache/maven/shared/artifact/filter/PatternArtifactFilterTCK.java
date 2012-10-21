@@ -1,3 +1,5 @@
+package org.apache.maven.shared.artifact.filter;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.shared.artifact.filter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,9 +37,9 @@ public abstract class PatternArtifactFilterTCK
 
     private final MockManager mockManager = new MockManager();
 
-    protected abstract ArtifactFilter createFilter( List patterns );
+    protected abstract ArtifactFilter createFilter( List<String> patterns );
 
-    protected abstract ArtifactFilter createFilter( List patterns, boolean actTransitively );
+    protected abstract ArtifactFilter createFilter( List<String> patterns, boolean actTransitively );
 
     protected abstract boolean isInclusionExpected();
 
@@ -55,7 +56,7 @@ public abstract class PatternArtifactFilterTCK
 
         mockManager.replayAll();
 
-        final List patterns = new ArrayList();
+        final List<String> patterns = new ArrayList<String>();
         patterns.add( groupId1 + ":" + artifactId1 + ":*" );
         patterns.add( groupId2 + ":" + artifactId2 + ":*" );
 
@@ -88,7 +89,7 @@ public abstract class PatternArtifactFilterTCK
 
         mockManager.replayAll();
 
-        final List patterns = new ArrayList();
+        final List<String> patterns = new ArrayList<String>();
         patterns.add( groupId1 + "*" );
         patterns.add( groupId2 + "*" );
 
@@ -162,7 +163,7 @@ public abstract class PatternArtifactFilterTCK
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
 
         mockManager.replayAll();
-        final List patterns = new ArrayList();
+        final List<String> patterns = new ArrayList<String>();
 
         patterns.add( "otherGroup:" + artifactId + ":jar" );
         patterns.add( "otherGroup:" + artifactId );
@@ -190,7 +191,7 @@ public abstract class PatternArtifactFilterTCK
 
         mockManager.replayAll();
 
-        final List patterns = new ArrayList();
+        final List<String> patterns = new ArrayList<String>();
 
         patterns.add( groupId + "otherArtifact:jar" );
         patterns.add( groupId + "otherArtifact" );
@@ -218,7 +219,7 @@ public abstract class PatternArtifactFilterTCK
 
         mockManager.replayAll();
 
-        final List patterns = new ArrayList();
+        final List<String> patterns = new ArrayList<String>();
 
         patterns.add( "otherGroup:otherArtifact:jar" );
         patterns.add( "otherGroup:otherArtifact" );
@@ -245,8 +246,8 @@ public abstract class PatternArtifactFilterTCK
         final String rootDepTrailItem = "current:project:jar:1.0";
         final String depTrailItem = "otherGroup:otherArtifact";
 
-        final List depTrail = Arrays.asList( new String[] { rootDepTrailItem, depTrailItem + ":jar:1.0" } );
-        final List patterns = Collections.singletonList( depTrailItem );
+        final List<String> depTrail = Arrays.asList( new String[] { rootDepTrailItem, depTrailItem + ":jar:1.0" } );
+        final List<String> patterns = Collections.singletonList( depTrailItem );
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId, depTrail );
 
@@ -274,8 +275,8 @@ public abstract class PatternArtifactFilterTCK
         final String rootDepTrailItem = "current:project:jar:1.0";
         final String depTrailItem = "otherGroup:otherArtifact";
 
-        final List depTrail = Arrays.asList( new String[] { rootDepTrailItem, depTrailItem + ":jar:1.0" } );
-        final List patterns = Collections.singletonList( "otherGroup*" );
+        final List<String> depTrail = Arrays.asList( new String[] { rootDepTrailItem, depTrailItem + ":jar:1.0" } );
+        final List<String> patterns = Collections.singletonList( "otherGroup*" );
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId, depTrail );
 
@@ -304,7 +305,7 @@ public abstract class PatternArtifactFilterTCK
 
         mockManager.replayAll();
 
-        final List patterns = new ArrayList();
+        final List<String> patterns = new ArrayList<String>();
 
         patterns.add( "!group:artifact:jar" );
 
@@ -331,7 +332,7 @@ public abstract class PatternArtifactFilterTCK
 
         mockManager.replayAll();
 
-        final List patterns = new ArrayList();
+        final List<String> patterns = new ArrayList<String>();
 
         patterns.add( "group:*:jar" );
 
@@ -358,7 +359,7 @@ public abstract class PatternArtifactFilterTCK
 
         mockManager.replayAll();
 
-        final List patterns = new ArrayList();
+        final List<String> patterns = new ArrayList<String>();
 
         patterns.add( "*:artifact:*" );
 
@@ -385,7 +386,7 @@ public abstract class PatternArtifactFilterTCK
 
         mockManager.replayAll();
 
-        final List patterns = new ArrayList();
+        final List<String> patterns = new ArrayList<String>();
 
         patterns.add( "group:some-*-id" );
 
@@ -412,7 +413,7 @@ public abstract class PatternArtifactFilterTCK
 
         mockManager.replayAll();
 
-        final List patterns = new ArrayList();
+        final List<String> patterns = new ArrayList<String>();
 
         patterns.add( "some.group*" );
 
@@ -440,12 +441,12 @@ public abstract class PatternArtifactFilterTCK
         final String otherType = "ejb";
 
         final String depTrailItem = otherGroup + ":" + otherArtifact + ":" + otherType + ":version";
-        final List depTrail = Collections.singletonList( depTrailItem );
-        final List patterns = Collections.singletonList( "*:jar:*" );
+        final List<String> depTrail = Collections.singletonList( depTrailItem );
+        final List<String> patterns = Collections.singletonList( "*:jar:*" );
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId, "jar", depTrail );
         final ArtifactMockAndControl otherMac =
-            new ArtifactMockAndControl( otherGroup, otherArtifact, otherType, Collections.EMPTY_LIST );
+            new ArtifactMockAndControl( otherGroup, otherArtifact, otherType, Collections.<String> emptyList() );
 
         mockManager.replayAll();
 
@@ -513,17 +514,17 @@ public abstract class PatternArtifactFilterTCK
 
         String version;
 
-        List dependencyTrail;
+        List<String> dependencyTrail;
 
         String type;
 
-        ArtifactMockAndControl( final String groupId, final String artifactId, final List depTrail )
+        ArtifactMockAndControl( final String groupId, final String artifactId, final List<String> depTrail )
         {
             this( groupId, artifactId, "jar", depTrail );
         }
 
         ArtifactMockAndControl( final String groupId, final String artifactId, final String type,
-                                final List dependencyTrail )
+                                final List<String> dependencyTrail )
         {
             this.groupId = groupId;
             this.artifactId = artifactId;

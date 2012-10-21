@@ -24,8 +24,10 @@ package org.apache.maven.shared.artifact.filter.collection;
  */
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+
+import org.apache.maven.artifact.Artifact;
 
 /**
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
@@ -33,11 +35,11 @@ import java.util.Set;
  */
 public class FilterArtifacts
 {
-    private ArrayList filters = new ArrayList();
+    private List<ArtifactsFilter> filters;
 
     public FilterArtifacts()
     {
-        filters = new ArrayList();
+        filters = new ArrayList<ArtifactsFilter>();
     }
 
     /**
@@ -77,15 +79,13 @@ public class FilterArtifacts
         }
     }
 
-    public Set filter( Set artifacts )
+    public Set<Artifact> filter( Set<Artifact> artifacts )
         throws ArtifactFilterException
     {
         // apply filters
-        Iterator filterIterator = filters.iterator();
-        while ( filterIterator.hasNext() )
+        for ( ArtifactsFilter filter : filters )
         {
             // log(artifacts,log);
-            ArtifactsFilter filter = (ArtifactsFilter) filterIterator.next();
             try
             {
                 artifacts = filter.filter( artifacts );
@@ -103,7 +103,7 @@ public class FilterArtifacts
     /**
      * @return Returns the filters.
      */
-    public ArrayList getFilters()
+    public List<ArtifactsFilter> getFilters()
     {
         return this.filters;
     }
@@ -111,7 +111,7 @@ public class FilterArtifacts
     /**
      * @param filters The filters to set.
      */
-    public void setFilters( ArrayList filters )
+    public void setFilters( List<ArtifactsFilter> filters )
     {
         this.filters = filters;
     }

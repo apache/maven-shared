@@ -30,7 +30,8 @@ import java.util.List;
  * @see AbstractStrictPatternArtifactFilter
  * @see PatternExcludesArtifactFilter
  */
-public class StrictPatternExcludesArtifactFilter extends AbstractStrictPatternArtifactFilter
+public class StrictPatternExcludesArtifactFilter
+    extends AbstractStrictPatternArtifactFilter
 {
     /**
      * Creates a new filter that excludes artifacts that match the specified patterns.
@@ -38,7 +39,7 @@ public class StrictPatternExcludesArtifactFilter extends AbstractStrictPatternAr
      * @param patterns
      *            the list of artifact patterns to match, as described above
      */
-    public StrictPatternExcludesArtifactFilter( List patterns )
+    public StrictPatternExcludesArtifactFilter( List<String> patterns )
     {
         super( patterns, false );
     }

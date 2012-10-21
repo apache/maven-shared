@@ -403,7 +403,7 @@ public abstract class AbstractStrictPatternArtifactFilterTest extends TestCase
      */
     protected void assertFilter( boolean expected, String pattern )
     {
-        List patterns = Collections.singletonList( pattern );
+        List<String> patterns = Collections.singletonList( pattern );
         AbstractStrictPatternArtifactFilter filter = createFilter( patterns );
 
         assertEquals( expected, filter.include( artifact ) );
@@ -416,5 +416,5 @@ public abstract class AbstractStrictPatternArtifactFilterTest extends TestCase
      *            the list of artifact patterns that the filter should match
      * @return the filter to test
      */
-    protected abstract AbstractStrictPatternArtifactFilter createFilter( List patterns );
+    protected abstract AbstractStrictPatternArtifactFilter createFilter( List<String> patterns );
 }

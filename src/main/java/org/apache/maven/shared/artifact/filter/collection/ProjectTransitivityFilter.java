@@ -20,7 +20,6 @@ package org.apache.maven.shared.artifact.filter.collection;
  */
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
@@ -35,28 +34,26 @@ public class ProjectTransitivityFilter
 
     private boolean excludeTransitive;
 
-    private Set directDependencies;
+    private Set<Artifact> directDependencies;
 
-    public ProjectTransitivityFilter( Set directDependencies, boolean excludeTransitive )
+    public ProjectTransitivityFilter( Set<Artifact> directDependencies, boolean excludeTransitive )
     {
         this.excludeTransitive = excludeTransitive;
         this.directDependencies = directDependencies;
     }
 
-    public Set filter( Set artifacts )
+    public Set<Artifact> filter( Set<Artifact> artifacts )
     {
         // why not just take the directDependencies here?
         // because if this filter is run after some other process, the
         // set of artifacts may not be the same as the directDependencies.
-        Set result = artifacts;
+        Set<Artifact> result = artifacts;
 
         if ( excludeTransitive )
         {
-            result = new HashSet();
-            Iterator iterator = artifacts.iterator();
-            while ( iterator.hasNext() )
+            result = new HashSet<Artifact>();
+            for ( Artifact artifact : artifacts )
             {
-                Artifact artifact = (Artifact) iterator.next();
                 if ( artifactIsADirectDependency( artifact ) )
                 {
                     result.add( artifact );
@@ -74,18 +71,14 @@ public class ProjectTransitivityFilter
      */
     public boolean artifactIsADirectDependency( Artifact artifact )
     {
-        boolean result = false;
-        Iterator iterator = this.directDependencies.iterator();
-        while ( iterator.hasNext() )
+        for ( Artifact dependency : this.directDependencies )
         {
-            Artifact dependency = (Artifact) iterator.next();
             if ( dependency.equals( artifact ) )
             {
-                result = true;
-                break;
+                return true;
             }
         }
-        return result;
+        return false;
     }
 
     /**

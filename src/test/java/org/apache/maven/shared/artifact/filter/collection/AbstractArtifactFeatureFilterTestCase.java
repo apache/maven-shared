@@ -29,6 +29,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.maven.artifact.Artifact;
+
 import junit.framework.TestCase;
 
 /**
@@ -42,9 +44,9 @@ import junit.framework.TestCase;
 public abstract class AbstractArtifactFeatureFilterTestCase
     extends TestCase
 {
-    protected Set artifacts = new HashSet();
+    protected Set<Artifact> artifacts = new HashSet<Artifact>();
 
-    protected Class filterClass;
+    protected Class<?> filterClass;
 
     protected void setUp()
         throws Exception
@@ -53,14 +55,14 @@ public abstract class AbstractArtifactFeatureFilterTestCase
 
     }
 
-    private Object createObjectViaReflection( Class clazz, Object[] conArgs )
+    private Object createObjectViaReflection( Class<?> clazz, Object[] conArgs )
         throws SecurityException, NoSuchMethodException, IllegalArgumentException, InstantiationException,
         IllegalAccessException, InvocationTargetException
     {
-        Class[] argslist = new Class[2];
+        Class<?>[] argslist = new Class<?>[2];
         argslist[0] = String.class;
         argslist[1] = String.class;
-        Constructor ct = clazz.getConstructor( argslist );
+        Constructor<?> ct = clazz.getConstructor( argslist );
         return ct.newInstance( conArgs );
     }
 
@@ -75,8 +77,8 @@ public abstract class AbstractArtifactFeatureFilterTestCase
 
         AbstractArtifactFeatureFilter filter =
             (AbstractArtifactFeatureFilter) createObjectViaReflection( filterClass, conArgs );
-        List includes = filter.getIncludes();
-        List excludes = filter.getExcludes();
+        List<String> includes = filter.getIncludes();
+        List<String> excludes = filter.getExcludes();
 
         assertEquals( 2, includes.size() );
         assertEquals( 2, excludes.size() );
@@ -89,14 +91,14 @@ public abstract class AbstractArtifactFeatureFilterTestCase
     public abstract void testFiltering()
         throws Exception;
 
-    public Set filtering()
+    public Set<Artifact> filtering()
         throws SecurityException, IllegalArgumentException, NoSuchMethodException, InstantiationException,
         IllegalAccessException, InvocationTargetException
     {
         Object[] conArgs = new Object[] { "one,two", "one,three," };
         AbstractArtifactFeatureFilter filter =
             (AbstractArtifactFeatureFilter) createObjectViaReflection( filterClass, conArgs );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 1, result.size() );
         return result;
     }
@@ -104,14 +106,14 @@ public abstract class AbstractArtifactFeatureFilterTestCase
     public abstract void testFiltering2()
         throws Exception;
 
-    public Set filtering2()
+    public Set<Artifact> filtering2()
         throws SecurityException, IllegalArgumentException, NoSuchMethodException, InstantiationException,
         IllegalAccessException, InvocationTargetException
     {
         Object[] conArgs = new Object[] { null, "one,three," };
         AbstractArtifactFeatureFilter filter =
             (AbstractArtifactFeatureFilter) createObjectViaReflection( filterClass, conArgs );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 2, result.size() );
         return result;
 
@@ -127,7 +129,7 @@ public abstract class AbstractArtifactFeatureFilterTestCase
         Object[] conArgs = new Object[] { null, null };
         AbstractArtifactFeatureFilter filter =
             (AbstractArtifactFeatureFilter) createObjectViaReflection( filterClass, conArgs );
-        Set result = filter.filter( artifacts );
+        Set<Artifact> result = filter.filter( artifacts );
         assertEquals( 4, result.size() );
     }
 }

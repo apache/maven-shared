@@ -1,3 +1,5 @@
+package org.apache.maven.shared.artifact.filter;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,11 +18,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.shared.artifact.filter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -41,32 +41,30 @@ import org.codehaus.plexus.logging.Logger;
 public class PatternIncludesArtifactFilter
     implements ArtifactFilter, StatisticsReportingArtifactFilter
 {
-    private final List positivePatterns;
+    private final List<String> positivePatterns;
 
-    private final List negativePatterns;
+    private final List<String> negativePatterns;
 
     private final boolean actTransitively;
 
-    private final Set patternsTriggered = new HashSet();
+    private final Set<String> patternsTriggered = new HashSet<String>();
 
-    private final List filteredArtifactIds = new ArrayList();
+    private final List<String> filteredArtifactIds = new ArrayList<String>();
 
-    public PatternIncludesArtifactFilter( final List patterns )
+    public PatternIncludesArtifactFilter( final List<String> patterns )
     {
         this( patterns, false );
     }
 
-    public PatternIncludesArtifactFilter( final List patterns, final boolean actTransitively )
+    public PatternIncludesArtifactFilter( final List<String> patterns, final boolean actTransitively )
     {
         this.actTransitively = actTransitively;
-        final List pos = new ArrayList();
-        final List neg = new ArrayList();
+        final List<String> pos = new ArrayList<String>();
+        final List<String> neg = new ArrayList<String>();
         if ( ( patterns != null ) && !patterns.isEmpty() )
         {
-            for ( final Iterator it = patterns.iterator(); it.hasNext(); )
+            for ( String pattern : patterns )
             {
-                final String pattern = (String) it.next();
-
                 if ( pattern.startsWith( "!" ) )
                 {
                     neg.add( pattern.substring( 1 ) );
@@ -128,7 +126,7 @@ public class PatternIncludesArtifactFilter
         }
     }
 
-    private boolean match( final Artifact artifact, final List patterns )
+    private boolean match( final Artifact artifact, final List<String> patterns )
     {
         final String shortId = ArtifactUtils.versionlessKey( artifact );
         final String id = artifact.getDependencyConflictId();
@@ -151,13 +149,13 @@ public class PatternIncludesArtifactFilter
 
         if ( actTransitively )
         {
-            final List depTrail = artifact.getDependencyTrail();
+            @SuppressWarnings( "unchecked" )
+            final List<String> depTrail = artifact.getDependencyTrail();
 
             if ( ( depTrail != null ) && depTrail.size() > 1 )
             {
-                for ( final Iterator iterator = depTrail.iterator(); iterator.hasNext(); )
+                for ( String trailItem : depTrail )
                 {
-                    final String trailItem = (String) iterator.next();
                     if ( matchAgainst( trailItem, patterns, true ) )
                     {
                         return true;
@@ -169,12 +167,10 @@ public class PatternIncludesArtifactFilter
         return false;
     }
 
-    private boolean matchAgainst( final String value, final List patterns, final boolean regionMatch )
+    private boolean matchAgainst( final String value, final List<String> patterns, final boolean regionMatch )
     {
-        for ( final Iterator iterator = patterns.iterator(); iterator.hasNext(); )
+        for ( String pattern : patterns )
         {
-            final String pattern = (String) iterator.next();
-
             final String[] patternTokens = pattern.split( ":" );
             final String[] tokens = value.split( ":" );
 
@@ -303,7 +299,7 @@ public class PatternIncludesArtifactFilter
         // if there are no patterns, there is nothing to report.
         if ( !positivePatterns.isEmpty() || !negativePatterns.isEmpty() )
         {
-            final List missed = new ArrayList();
+            final List<String> missed = new ArrayList<String>();
             missed.addAll( positivePatterns );
             missed.addAll( negativePatterns );
 
@@ -317,10 +313,8 @@ public class PatternIncludesArtifactFilter
                 buffer.append( getFilterDescription() );
                 buffer.append( ':' );
 
-                for ( final Iterator it = missed.iterator(); it.hasNext(); )
+                for ( String pattern : missed )
                 {
-                    final String pattern = (String) it.next();
-
                     buffer.append( "\no  \'" ).append( pattern ).append( "\'" );
                 }
 
@@ -340,10 +334,8 @@ public class PatternIncludesArtifactFilter
     protected String getPatternsAsString()
     {
         final StringBuffer buffer = new StringBuffer();
-        for ( final Iterator it = positivePatterns.iterator(); it.hasNext(); )
+        for ( String pattern : positivePatterns )
         {
-            final String pattern = (String) it.next();
-
             buffer.append( "\no \'" ).append( pattern ).append( "\'" );
         }
 
@@ -362,10 +354,8 @@ public class PatternIncludesArtifactFilter
             final StringBuffer buffer =
                 new StringBuffer( "The following artifacts were removed by this " + getFilterDescription() + ": " );
 
-            for ( final Iterator it = filteredArtifactIds.iterator(); it.hasNext(); )
+            for ( String artifactId : filteredArtifactIds )
             {
-                final String artifactId = (String) it.next();
-
                 buffer.append( '\n' ).append( artifactId );
             }
 
@@ -378,7 +368,7 @@ public class PatternIncludesArtifactFilter
         // if there are no patterns, there is nothing to report.
         if ( !positivePatterns.isEmpty() || !negativePatterns.isEmpty() )
         {
-            final List missed = new ArrayList();
+            final List<String> missed = new ArrayList<String>();
             missed.addAll( positivePatterns );
             missed.addAll( negativePatterns );
 

@@ -65,6 +65,12 @@ under the License.
     </dependency>
      -->
     <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-component-annotations</artifactId>
+      <version>1.5.5</version>
+      <scope>provided</scope> <!-- only required to generate components.xml -->
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.2</version>

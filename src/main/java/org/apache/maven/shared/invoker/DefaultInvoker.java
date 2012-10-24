@@ -22,16 +22,15 @@ package org.apache.maven.shared.invoker;
 import java.io.File;
 import java.io.InputStream;
 
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 
 /**
- * Class intended to be used by clients who wish to invoke a forked Maven process from their applications
- * 
  * @author jdcasey
- * @plexus.component role="org.apache.maven.shared.invoker.Invoker" role-hint="default"
  */
+@Component( role = Invoker.class, hint = "default", description="Class intended to be used by clients who wish to invoke a forked Maven process from their applications" )
 public class DefaultInvoker
     implements Invoker
 {

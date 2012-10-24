@@ -32,10 +32,10 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.apache.maven.shared.utils.Os;
-import org.apache.maven.shared.utils.cli.Commandline;
-import org.apache.maven.shared.utils.io.FileUtils;
-import org.apache.maven.shared.utils.io.IOUtil;
+import org.codehaus.plexus.util.Os;
+import org.codehaus.plexus.util.cli.Commandline;
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
 
 public class MavenCommandLineBuilderTest
     extends TestCase

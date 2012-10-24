@@ -77,9 +77,7 @@ if ( result.getExitCode() != 0 )
   
 +---+
 // we will always call the same goals...
-private static final String[] GOALS_ARRAY = { "clean", "site-deploy" };
-
-private static final List PUBLISH_GOALS = Arrays.asList( GOALS_ARRAY );
+private static final List<String> PUBLISH_GOALS = Arrays.asList( "clean", "site-deploy" );
 
 // define a field for the Invoker instance.
 private final Invoker invoker;
@@ -87,10 +85,10 @@ private final Invoker invoker;
 // now, instantiate the invoker in the class constructor...
 public SomeClass( File localRepositoryDir )
 {
-    Invoker i = new DefaultInvoker();
-    i.setLocalRepositoryDirectory( localRepositoryDir );
+    Invoker newInvoker = new DefaultInvoker();
+    newInvoker.setLocalRepositoryDirectory( localRepositoryDir );
     
-    this.invoker = i;
+    this.invoker = newInvoker;
 }
 
 // this method will be called repeatedly, and fire off new builds...

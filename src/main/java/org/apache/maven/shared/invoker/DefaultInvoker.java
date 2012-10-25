@@ -28,9 +28,11 @@ import org.codehaus.plexus.util.cli.CommandLineUtils;
 import org.codehaus.plexus.util.cli.Commandline;
 
 /**
+ * Class intended to be used by clients who wish to invoke a forked Maven process from their applications
+ * 
  * @author jdcasey
  */
-@Component( role = Invoker.class, hint = "default", description="Class intended to be used by clients who wish to invoke a forked Maven process from their applications" )
+@Component( role = Invoker.class, hint = "default" )
 public class DefaultInvoker
     implements Invoker
 {

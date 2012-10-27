@@ -800,7 +800,7 @@ public class Verifier
 
             StreamConsumer err = new WriterStreamConsumer( logWriter );
 
-            System.out.println( "Command: " + Commandline.toString( cli.getCommandline() ) );
+            System.out.println( "Command: " + CommandLineUtils.toString( cli.getCommandline() ) );
 
             int ret = CommandLineUtils.executeCommandLine( cli, out, err );
 
@@ -1301,7 +1301,7 @@ public class Verifier
 
             try
             {
-                args.addAll( Arrays.asList( Commandline.translateCommandline( resolvedArg ) ) );
+                args.addAll( Arrays.asList( CommandLineUtils.translateCommandline( resolvedArg ) ) );
             }
             catch ( Exception e )
             {

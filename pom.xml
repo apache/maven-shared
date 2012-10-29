@@ -131,26 +131,7 @@
             <exclude>**/*.versionsBackup</exclude>
             <exclude>.gitignore</exclude>
             <exclude>src/test/resources/directorywalker/**/*</exclude>
-            <exclude>readme.md</exclude>
             <exclude>dependency-reduced-pom.xml</exclude>
-            <exclude>findbugs-exclude.xml</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>.git/**/*</exclude>
-            <exclude>.idea/**/*</exclude>
-            <exclude>**/.svn/**/*</exclude>
-            <exclude>**/*.iml</exclude>
-            <exclude>**/*.ipr</exclude>
-            <exclude>**/*.iws</exclude>
-            <exclude>**/*.versionsBackup</exclude>
-            <exclude>.gitignore</exclude>
-            <exclude>src/test/resources/directorywalker/**/*</exclude>
           </excludes>
         </configuration>
       </plugin>

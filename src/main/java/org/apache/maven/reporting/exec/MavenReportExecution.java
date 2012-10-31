@@ -41,7 +41,6 @@ import org.apache.maven.reporting.MavenReport;
  * </p>
  * 
  * @author Olivier Lamy
- * @since 3.0-beta-1
  */
 public class MavenReportExecution
 {

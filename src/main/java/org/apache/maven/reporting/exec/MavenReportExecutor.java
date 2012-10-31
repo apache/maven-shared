@@ -26,7 +26,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 /**
  *
  * @author Olivier Lamy
- * @since 3.0-beta-1
  */
 public interface MavenReportExecutor
 {

@@ -30,7 +30,6 @@ import org.apache.maven.project.MavenProject;
  *   The goal is to store some informations regarding the current maven execution.
  * </p>
  * @author Olivier Lamy
- * @since 3.0-beta-1
  * @version $Id$
  */
 public class MavenReportExecutorRequest

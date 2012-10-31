@@ -97,7 +97,6 @@ import org.sonatype.aether.util.filter.ExclusionsDependencyFilter;
  *   </ul>
  * </p>
  * @author Olivier Lamy
- * @since 3.0-beta-1
  */
 @Component( role = MavenReportExecutor.class )
 public class DefaultMavenReportExecutor

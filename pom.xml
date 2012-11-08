@@ -68,7 +68,6 @@ under the License.
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-annotations</artifactId>
       <version>1.5.5</version>
-      <scope>provided</scope> <!-- only required to generate components.xml -->
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -102,7 +101,6 @@ under the License.
         <executions>
           <execution>
             <id>create-component-descriptor</id>
-            <phase>generate-resources</phase>
             <goals>
               <goal>generate-metadata</goal>
             </goals>

@@ -27,7 +27,7 @@
   </parent>
 
   <artifactId>maven-shared-incremental</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <name>Maven Incremental Build support utilities</name>
   <description>
     Various utility classes and plexus components for supporting 
@@ -35,9 +35,9 @@
   </description>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-incremental-1.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-incremental-1.0</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-shared-incremental-1.0</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-incremental</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-incremental</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-incremental</url>
   </scm>
 
   <issueManagement>

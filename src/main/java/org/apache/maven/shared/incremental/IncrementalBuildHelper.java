@@ -19,7 +19,6 @@ package org.apache.maven.shared.incremental;
  * under the License.
  */
 
-
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -34,12 +33,11 @@ import java.util.Set;
 
 /**
  * Various helper methods to support incremental builds
- *
  */
 public class IncrementalBuildHelper
 {
     /**
-     * the root directory to store status information about maven executions in.
+     * the root directory to store status information about Maven executions in.
      */
     private static final String MAVEN_STATUS_ROOT = "maven-status";
     public static final String CREATED_FILES_LST_FILENAME = "createdFiles.lst";
@@ -62,7 +60,7 @@ public class IncrementalBuildHelper
     private DirectoryScanner directoryScanner;
 
     /**
-     * Once the {@link #beforeRebuildExecution(java.io.File)} gots called
+     * Once the {@link #beforeRebuildExecution(java.io.File)} got called,
      * this will contain the list of files in the build directory.
      */
     private String[] filesBeforeAction = new String[0];
@@ -125,11 +123,12 @@ public class IncrementalBuildHelper
     }
 
     /**
-     * We use a specific status directory for each mojo execution to store state
+     * We use a specific status directory for each Mojo execution to store state
      * which is needed during the next build invocation run.
-     * @return the directory for storing status information of the current mojo execution.
+     * @return the directory for storing status information of the current Mojo execution.
      */
-    public File getMojoStatusDirectory() throws MojoExecutionException
+    public File getMojoStatusDirectory()
+        throws MojoExecutionException
     {
         if ( mojoExecution == null )
         {
@@ -165,7 +164,8 @@ public class IncrementalBuildHelper
      * @return <code>true</code> if the set of inputFiles got changed since the last build.
      * @throws MojoExecutionException
      */
-    public boolean inputFileTreeChanged( Set<File> inputFiles ) throws MojoExecutionException
+    public boolean inputFileTreeChanged( Set<File> inputFiles )
+        throws MojoExecutionException
     {
         File mojoConfigBase = getMojoStatusDirectory();
         File mojoConfigFile = new File( mojoConfigBase, INPUT_FILES_LST_FILENAME );
@@ -193,7 +193,6 @@ public class IncrementalBuildHelper
 
         DirectoryScanResult dsr = DirectoryScanner.diffFiles( oldInputFiles, inputFileNames );
 
-
         try
         {
             FileUtils.fileWriteArray( mojoConfigFile, inputFileNames );
@@ -217,7 +216,8 @@ public class IncrementalBuildHelper
      * @return <code>true</code> if the set of inputFiles got changed since the last build.
      * @throws MojoExecutionException
      */
-    public boolean inputFileTreeChanged( DirectoryScanner dirScanner ) throws MojoExecutionException
+    public boolean inputFileTreeChanged( DirectoryScanner dirScanner )
+        throws MojoExecutionException
     {
         File mojoConfigBase = getMojoStatusDirectory();
         File mojoConfigFile = new File( mojoConfigBase, INPUT_FILES_LST_FILENAME );
@@ -254,7 +254,7 @@ public class IncrementalBuildHelper
     }
 
     /**
-     * <p>This method shall get invoked before the actual mojo task gets triggered,
+     * <p>This method shall get invoked before the actual Mojo task gets triggered,
      * e.g. the actual compile in maven-compiler-plugin.</p>
      *
      * <p><b>Attention:</b> This method shall only get invoked if the plugin re-creates <b>all</b> the output.</p>
@@ -263,7 +263,7 @@ public class IncrementalBuildHelper
      * This step is necessary to prevent left-overs. After that we take a 'directory snapshot'
      * (list of all files which exist in the outputDirectory after the clean). </p>
      *
-     * <p>After the actual mojo task got executed you should invoke the method
+     * <p>After the actual Mojo task got executed you should invoke the method
      * {@link #afterRebuildExecution()} to collect the list of files which got changed
      * by this task.</p>
      *
@@ -272,7 +272,8 @@ public class IncrementalBuildHelper
      * @return all files which got created in the previous build and have been deleted now.
      * @throws MojoExecutionException
      */
-    public String[] beforeRebuildExecution( File outputDirectory ) throws MojoExecutionException
+    public String[] beforeRebuildExecution( File outputDirectory )
+        throws MojoExecutionException
     {
         File mojoConfigBase = getMojoStatusDirectory();
         File mojoConfigFile = new File( mojoConfigBase, CREATED_FILES_LST_FILENAME );
@@ -313,7 +314,8 @@ public class IncrementalBuildHelper
      *
      * @throws MojoExecutionException
      */
-    public void afterRebuildExecution() throws MojoExecutionException
+    public void afterRebuildExecution()
+        throws MojoExecutionException
     {
         DirectoryScanner diffScanner = getDirectoryScanner();
         // now scan the same directory again and create a diff

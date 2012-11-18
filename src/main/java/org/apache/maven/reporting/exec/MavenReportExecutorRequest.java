@@ -25,9 +25,9 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * <p>
- *   Bean which contains necessay informations for build {@link MavenReportExecution} 
+ *   Bean which contains necessary informations for build {@link MavenReportExecution} 
  *   with {@link MavenReportExecutor}.
- *   The goal is to store some informations regarding the current maven execution.
+ *   The goal is to store some informations regarding the current Maven execution.
  * </p>
  * @author Olivier Lamy
  * @version $Id$

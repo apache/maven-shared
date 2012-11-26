@@ -162,11 +162,11 @@ public class IncrementalBuildHelper
      * We simply load the list of files for the previous build from a status file
      * and compare it with the new list. Afterwards we store the new list in the status file.
      *
-     * @param inputFiles
+     * @param incrementalBuildHelperRequest
      * @return <code>true</code> if the set of inputFiles got changed since the last build.
      * @throws MojoExecutionException
      */
-    public boolean inputFileTreeChanged( Set<File> inputFiles )
+    public boolean inputFileTreeChanged( IncrementalBuildHelperRequest incrementalBuildHelperRequest )
         throws MojoExecutionException
     {
         File mojoConfigBase = getMojoStatusDirectory();
@@ -186,9 +186,9 @@ public class IncrementalBuildHelper
             }
         }
 
-        String[] inputFileNames = new String[ inputFiles.size() ];
+        String[] inputFileNames = new String[ incrementalBuildHelperRequest.getInputFiles().size() ];
         int i = 0;
-        for ( File inputFile : inputFiles )
+        for ( File inputFile : incrementalBuildHelperRequest.getInputFiles() )
         {
             inputFileNames[ i++ ] = inputFile.getAbsolutePath();
         }
@@ -270,11 +270,11 @@ public class IncrementalBuildHelper
      * by this task.</p>
      *
      *
-     * @param outputDirectory
+     * @param incrementalBuildHelperRequest
      * @return all files which got created in the previous build and have been deleted now.
      * @throws MojoExecutionException
      */
-    public String[] beforeRebuildExecution( File outputDirectory )
+    public String[] beforeRebuildExecution( IncrementalBuildHelperRequest incrementalBuildHelperRequest )
         throws MojoExecutionException
     {
         File mojoConfigBase = getMojoStatusDirectory();
@@ -287,7 +287,7 @@ public class IncrementalBuildHelper
             oldFiles = FileUtils.fileReadArray( mojoConfigFile );
             for ( String oldFileName : oldFiles )
             {
-                File oldFile = new File( outputDirectory, oldFileName );
+                File oldFile = new File( incrementalBuildHelperRequest.getOutputDirectory(), oldFileName );
                 oldFile.delete();
             }
         }
@@ -298,8 +298,8 @@ public class IncrementalBuildHelper
 
         // we remember all files which currently exist in the output directory
         DirectoryScanner diffScanner = getDirectoryScanner();
-        diffScanner.setBasedir( outputDirectory );
-        if ( outputDirectory.exists() )
+        diffScanner.setBasedir( incrementalBuildHelperRequest.getOutputDirectory() );
+        if ( incrementalBuildHelperRequest.getOutputDirectory().exists() )
         {
             diffScanner.scan();
             filesBeforeAction = diffScanner.getIncludedFiles();
@@ -310,7 +310,7 @@ public class IncrementalBuildHelper
 
     /**
      * <p>This method collects and stores all information about files changed since
-     * the call to {@link #beforeRebuildExecution(java.io.File)}.</p>
+     * the call to {@link #beforeRebuildExecution(org.apache.maven.shared.incremental.IncrementalBuildHelperRequest)}.</p>
      *
      * <p><b>Attention:</b> This method shall only get invoked if the plugin re-creates <b>all</b> the output.</p>
      *
@@ -318,7 +318,7 @@ public class IncrementalBuildHelper
      *
      * @throws MojoExecutionException
      */
-    public void afterRebuildExecution( Set<File> sources )
+    public void afterRebuildExecution( IncrementalBuildHelperRequest incrementalBuildHelperRequest )
         throws MojoExecutionException
     {
         DirectoryScanner diffScanner = getDirectoryScanner();
@@ -345,7 +345,7 @@ public class IncrementalBuildHelper
         {
             try
             {
-                FileUtils.fileWriteArray( mojoConfigFile, toArrayOfPath( sources ));
+                FileUtils.fileWriteArray( mojoConfigFile, toArrayOfPath( incrementalBuildHelperRequest.getInputFiles() ));
             }
             catch ( IOException e )
             {

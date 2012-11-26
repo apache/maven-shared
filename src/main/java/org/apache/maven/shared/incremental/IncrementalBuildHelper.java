@@ -43,6 +43,8 @@ public class IncrementalBuildHelper
     public static final String CREATED_FILES_LST_FILENAME = "createdFiles.lst";
     private static final String INPUT_FILES_LST_FILENAME = "inputFiles.lst";
 
+    private static final String[] EMPTY_ARRAY = new String[0];
+
     /**
      * Needed for storing the status for the incremental build support.
      */
@@ -355,7 +357,10 @@ public class IncrementalBuildHelper
 
     private String[] toArrayOfPath( Set<File> files )
     {
-
+        if (files == null || files.isEmpty())
+        {
+            return EMPTY_ARRAY;
+        }
         String[] paths = new String[files.size()];
 
         int i = 0;

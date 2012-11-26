@@ -312,9 +312,11 @@ public class IncrementalBuildHelper
      *
      * <p><b>Attention:</b> This method shall only get invoked if the plugin re-creates <b>all</b> the output.</p>
      *
+     * @param sources file sources to store if create files are not yet stored
+     *
      * @throws MojoExecutionException
      */
-    public void afterRebuildExecution()
+    public void afterRebuildExecution( Set<File> sources )
         throws MojoExecutionException
     {
         DirectoryScanner diffScanner = getDirectoryScanner();
@@ -329,10 +331,41 @@ public class IncrementalBuildHelper
         {
             FileUtils.fileWriteArray( mojoConfigFile, scanResult.getFilesAdded() );
         }
-        catch( IOException e )
+        catch ( IOException e )
         {
             throw new MojoExecutionException( "Error while storing the mojo status", e );
         }
 
+        // in case of clean compile the file is not created so next compile won't see it
+        // we mus create it here
+        mojoConfigFile = new File( mojoConfigBase, INPUT_FILES_LST_FILENAME );
+        if ( !mojoConfigFile.exists() )
+        {
+            try
+            {
+                FileUtils.fileWriteArray( mojoConfigFile, toArrayOfPath( sources ));
+            }
+            catch ( IOException e )
+            {
+                throw new MojoExecutionException( "Error while storing the mojo status", e );
+            }
+        }
+
+    }
+
+    private String[] toArrayOfPath( Set<File> files )
+    {
+
+        String[] paths = new String[files.size()];
+
+        int i = 0;
+
+        for ( File file : files )
+        {
+            paths[i] = file.getPath();
+            i++;
+        }
+
+        return paths;
     }
 }

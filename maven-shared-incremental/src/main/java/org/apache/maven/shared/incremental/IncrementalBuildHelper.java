@@ -62,7 +62,7 @@ public class IncrementalBuildHelper
     private DirectoryScanner directoryScanner;
 
     /**
-     * Once the {@link #beforeRebuildExecution(java.io.File)} got called,
+     * Once the {@link #beforeRebuildExecution(org.apache.maven.shared.incremental.IncrementalBuildHelperRequest)} got called,
      * this will contain the list of files in the build directory.
      */
     private String[] filesBeforeAction = new String[0];
@@ -266,7 +266,7 @@ public class IncrementalBuildHelper
      * (list of all files which exist in the outputDirectory after the clean). </p>
      *
      * <p>After the actual Mojo task got executed you should invoke the method
-     * {@link #afterRebuildExecution()} to collect the list of files which got changed
+     * {@link #afterRebuildExecution(org.apache.maven.shared.incremental.IncrementalBuildHelperRequest)} to collect the list of files which got changed
      * by this task.</p>
      *
      *
@@ -314,7 +314,7 @@ public class IncrementalBuildHelper
      *
      * <p><b>Attention:</b> This method shall only get invoked if the plugin re-creates <b>all</b> the output.</p>
      *
-     * @param sources file sources to store if create files are not yet stored
+     * @param incrementalBuildHelperRequest will contains file sources to store if create files are not yet stored
      *
      * @throws MojoExecutionException
      */

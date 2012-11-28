@@ -28,6 +28,10 @@ under the License.
       <!--item name="FAQ" href="faq.html"/-->
     </menu>
 
+    <menu name="Reference">
+      <item name="fileSet XML descriptor" href="fileset.html"/>
+    </menu>
+
     <menu name="Examples">
       <item name="In a MOJO" href="examples/mojo.html"/>
     </menu>

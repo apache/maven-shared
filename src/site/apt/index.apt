@@ -41,6 +41,6 @@ Maven File Management API
   To provide you with better understanding on some usages of this API,
   you can take a look into the following examples:
 
-  * {{{examples/mojo.html}Using the API in a Maven Plugin}}
+  * {{{./examples/mojo.html}Using the API in a Maven Plugin}}
 
   []

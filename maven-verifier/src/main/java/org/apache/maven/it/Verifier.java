@@ -113,7 +113,7 @@ public class Verifier
 
     private boolean debugJvm = false;
 
-    private static MavenLauncher embeddedLauncher;
+    private static ThreadLocal<MavenLauncher> embeddedLauncher = new ThreadLocal<MavenLauncher>();
 
     public Verifier( String basedir )
         throws VerificationException
@@ -153,7 +153,9 @@ public class Verifier
         this.debug = debug;
 
         this.forkJvm = forkJvm;
-        this.forkMode = System.getProperty( "verifier.forkMode" );
+        this.
+
+            forkMode = System.getProperty( "verifier.forkMode" );
 
         if ( !debug )
         {
@@ -1332,7 +1334,7 @@ public class Verifier
             {
                 initEmbeddedLauncher();
 
-                ret = embeddedLauncher.run( cliArgs, getBasedir(), logFile );
+                ret = embeddedLauncher.get().run( cliArgs, getBasedir(), logFile );
             }
             else
             {
@@ -1364,15 +1366,15 @@ public class Verifier
     private void initEmbeddedLauncher()
         throws LauncherException
     {
-        if ( embeddedLauncher == null )
+        if ( embeddedLauncher.get() == null )
         {
             if ( StringUtils.isEmpty( defaultMavenHome ) )
             {
-                embeddedLauncher = new Classpath3xLauncher();
+                embeddedLauncher.set( new Classpath3xLauncher());
             }
             else
             {
-                embeddedLauncher = new Embedded3xLauncher( defaultMavenHome );
+                embeddedLauncher.set( new Embedded3xLauncher( defaultMavenHome ));
             }
         }
     }

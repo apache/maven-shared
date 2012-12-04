@@ -68,7 +68,7 @@ import java.util.regex.Pattern;
  * @author Jason van Zyl
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id$
- * @noinspection UseOfSystemOutOrSystemErr, RefusedBequest
+ * @noinspection UseOfSystemOutOrSystemErr, RefusedBequest, UnusedDeclaration
  */
 public class Verifier
 {
@@ -86,7 +86,7 @@ public class Verifier
 
     private PrintStream originalErr;
 
-    private List cliOptions = new ArrayList();
+    private List<String> cliOptions = new ArrayList<String>();
 
     private Properties systemProperties = new Properties();
 
@@ -248,11 +248,10 @@ public class Verifier
     {
         List lines = loadFile( getBasedir(), "expected-results.txt", false );
 
-        for ( Iterator i = lines.iterator(); i.hasNext(); )
-        {
-            String line = (String) i.next();
+        for (Object line1 : lines) {
+            String line = (String) line1;
 
-            verifyExpectedResult( line );
+            verifyExpectedResult(line);
         }
 
         if ( chokeOnErrorOutput )
@@ -264,17 +263,12 @@ public class Verifier
     public void verifyErrorFreeLog()
         throws VerificationException
     {
-        List lines;
-        lines = loadFile( getBasedir(), getLogFileName(), false );
+        List<String> lines = loadFile(getBasedir(), getLogFileName(), false);
 
-        for ( Iterator i = lines.iterator(); i.hasNext(); )
-        {
-            String line = (String) i.next();
-
+        for (String line : lines) {
             // A hack to keep stupid velocity resource loader errors from triggering failure
-            if ( line.indexOf( "[ERROR]" ) >= 0 && !isVelocityError( line ) )
-            {
-                throw new VerificationException( "Error in execution: " + line );
+            if (line.contains("[ERROR]") && !isVelocityError(line)) {
+                throw new VerificationException("Error in execution: " + line);
             }
         }
     }
@@ -288,36 +282,23 @@ public class Verifier
      */
     private static boolean isVelocityError( String line )
     {
-        if ( line.indexOf( "VM_global_library.vm" ) >= 0 )
-        {
-            return true;
-        }
-        if ( line.indexOf( "VM #" ) >= 0 && line.indexOf( "macro" ) >= 0 )
-        {
-            // [ERROR] VM #displayTree: error : too few arguments to macro. Wanted 2 got 0
-            return true;
-        }
-        return false;
+        return line.contains("VM_global_library.vm") || line.contains("VM #") && line.contains("macro");
     }
 
     /**
      * Throws an exception if the text is not present in the log.
      *
-     * @param text
+     * @param text the text to assert present
      * @throws VerificationException
      */
     public void verifyTextInLog( String text )
         throws VerificationException
     {
-        List lines;
-        lines = loadFile( getBasedir(), getLogFileName(), false );
+        List<String> lines = loadFile(getBasedir(), getLogFileName(), false);
 
         boolean result = false;
-        for ( Iterator i = lines.iterator(); i.hasNext(); )
-        {
-            String line = (String) i.next();
-            if ( line.indexOf( text ) >= 0 )
-            {
+        for (String line : lines) {
+            if (line.contains(text)) {
                 result = true;
                 break;
             }
@@ -371,10 +352,10 @@ public class Verifier
      * @throws IOException If the file could not be loaded.
      * @since 1.2
      */
-    public List loadLines( String filename, String encoding )
+    public List<String> loadLines( String filename, String encoding )
         throws IOException
     {
-        List lines = new ArrayList();
+        List<String> lines = new ArrayList<String>();
 
         File file = new File( getBasedir(), filename );
 
@@ -407,16 +388,16 @@ public class Verifier
         return lines;
     }
 
-    public List loadFile( String basedir, String filename, boolean hasCommand )
+    public List<String> loadFile( String basedir, String filename, boolean hasCommand )
         throws VerificationException
     {
         return loadFile( new File( basedir, filename ), hasCommand );
     }
 
-    public List loadFile( File file, boolean hasCommand )
+    public List<String> loadFile( File file, boolean hasCommand )
         throws VerificationException
     {
-        List lines = new ArrayList();
+        List<String> lines = new ArrayList<String>();
 
         BufferedReader reader = null;
 
@@ -458,7 +439,7 @@ public class Verifier
         return lines;
     }
 
-    private List replaceArtifacts( String line, boolean hasCommand )
+    private List<String> replaceArtifacts( String line, boolean hasCommand )
     {
         String MARKER = "${artifact:";
         int index = line.indexOf( MARKER );
@@ -475,7 +456,7 @@ public class Verifier
             newLine += getArtifactPath( artifact );
             newLine += line.substring( index + 1 );
 
-            List l = new ArrayList();
+            List<String> l = new ArrayList<String>();
             l.add( newLine );
 
             int endIndex = newLine.lastIndexOf( '/' );
@@ -507,7 +488,7 @@ public class Verifier
         }
     }
 
-    private static void addMetadataToList( File dir, boolean hasCommand, List l, String command )
+    private static void addMetadataToList( File dir, boolean hasCommand, List<String> l, String command )
     {
         if ( dir.exists() && dir.isDirectory() )
         {
@@ -520,15 +501,11 @@ public class Verifier
                 }
             } );
 
-            for ( int i = 0; i < files.length; i++ )
-            {
-                if ( hasCommand )
-                {
-                    l.add( command + " " + new File( dir, files[i] ).getPath() );
-                }
-                else
-                {
-                    l.add( new File( dir, files[i] ).getPath() );
+            for (String file : files) {
+                if (hasCommand) {
+                    l.add(command + " " + new File(dir, file).getPath());
+                } else {
+                    l.add(new File(dir, file).getPath());
                 }
             }
         }
@@ -616,9 +593,9 @@ public class Verifier
         return localRepo + "/" + repositoryPath;
     }
 
-    public List getArtifactFileNameList( String org, String name, String version, String ext )
+    public List<String> getArtifactFileNameList( String org, String name, String version, String ext )
     {
-        List files = new ArrayList();
+        List<String> files = new ArrayList<String>();
         String artifactPath = getArtifactPath( org, name, version, ext );
         File dir = new File( artifactPath );
         files.add( artifactPath );
@@ -653,7 +630,7 @@ public class Verifier
      */
     public String getArtifactMetadataPath( String gid, String aid, String version, String filename )
     {
-        StringBuffer buffer = new StringBuffer( 256 );
+        StringBuilder buffer = new StringBuilder( 256 );
 
         buffer.append( localRepo );
         buffer.append( '/' );
@@ -710,13 +687,12 @@ public class Verifier
                 return;
             }
 
-            List lines = loadFile( f, true );
+            List<String> lines = loadFile( f, true );
 
-            for ( Iterator i = lines.iterator(); i.hasNext(); )
-            {
-                String line = resolveCommandLineArg( (String) i.next() );
+            for (String line1 : lines) {
+                String line = resolveCommandLineArg(line1);
 
-                executeCommand( line );
+                executeCommand(line);
             }
         }
         catch ( VerificationException e )
@@ -861,11 +837,9 @@ public class Verifier
     public void deleteArtifact( String org, String name, String version, String ext )
         throws IOException
     {
-        List files = getArtifactFileNameList( org, name, version, ext );
-        for ( Iterator i = files.iterator(); i.hasNext(); )
-        {
-            String fileName = (String) i.next();
-            FileUtils.forceDelete( new File( fileName ) );
+        List<String> files = getArtifactFileNameList( org, name, version, ext );
+        for (String fileName : files) {
+            FileUtils.forceDelete(new File(fileName));
         }
     }
 
@@ -961,20 +935,19 @@ public class Verifier
      * @throws IOException If the file could not be filtered.
      * @since 1.2
      */
-    public File filterFile( String srcPath, String dstPath, String fileEncoding, Map filterProperties )
+    public File filterFile( String srcPath, String dstPath, String fileEncoding, Map<String, Object> filterProperties )
         throws IOException
     {
         File srcFile = new File( getBasedir(), srcPath );
         String data = FileUtils.fileRead( srcFile, fileEncoding );
 
-        for ( Iterator it = filterProperties.keySet().iterator(); it.hasNext(); )
-        {
-            String token = (String) it.next();
-            String value = String.valueOf( filterProperties.get( token ) );
-            data = StringUtils.replace( data, token, value );
+        for (String token : filterProperties.keySet()) {
+            String value = String.valueOf(filterProperties.get(token));
+            data = StringUtils.replace(data, token, value);
         }
 
         File dstFile = new File( getBasedir(), dstPath );
+        //noinspection ResultOfMethodCallIgnored
         dstFile.getParentFile().mkdirs();
         FileUtils.fileWrite( dstFile.getPath(), fileEncoding, data );
 
@@ -1061,17 +1034,12 @@ public class Verifier
 
     private void verifyArtifactPresence( boolean wanted, String org, String name, String version, String ext )
     {
-        List files = getArtifactFileNameList( org, name, version, ext );
-        for ( Iterator i = files.iterator(); i.hasNext(); )
-        {
-            String fileName = (String) i.next();
-            try
-            {
-                verifyExpectedResult( fileName, wanted );
-            }
-            catch ( VerificationException e )
-            {
-                Assert.fail( e.getMessage() );
+        List<String> files = getArtifactFileNameList( org, name, version, ext );
+        for (String fileName : files) {
+            try {
+                verifyExpectedResult(fileName, wanted);
+            } catch (VerificationException e) {
+                Assert.fail(e.getMessage());
             }
         }
     }
@@ -1183,10 +1151,8 @@ public class Verifier
 
                     if ( candidates != null )
                     {
-                        for ( int i = 0; i < candidates.length; i++ )
-                        {
-                            if ( candidates[i].matches( shortNamePattern ) )
-                            {
+                        for (String candidate : candidates) {
+                            if (candidate.matches(shortNamePattern)) {
                                 found = true;
                                 break;
                             }
@@ -1237,10 +1203,10 @@ public class Verifier
     public void executeGoal( String goal, Map envVars )
         throws VerificationException
     {
-        executeGoals( Arrays.asList( new String[]{ goal } ), envVars );
+        executeGoals( Arrays.asList(goal), envVars );
     }
 
-    public void executeGoals( List goals )
+    public void executeGoals( List<String> goals )
         throws VerificationException
     {
         executeGoals( goals, environmentVariables );
@@ -1272,10 +1238,10 @@ public class Verifier
         }
     }
 
-    public void executeGoals( List goals, Map envVars )
+    public void executeGoals( List<String> goals, Map envVars )
         throws VerificationException
     {
-        List allGoals = new ArrayList();
+        List<String> allGoals = new ArrayList<String>();
 
         if ( autoclean )
         {
@@ -1287,24 +1253,20 @@ public class Verifier
 
         allGoals.addAll( goals );
 
-        List args = new ArrayList();
+        List<String> args = new ArrayList<String>();
 
         int ret;
 
         File logFile = new File( getBasedir(), getLogFileName() );
 
-        for ( Iterator it = cliOptions.iterator(); it.hasNext(); )
-        {
-            String key = String.valueOf( it.next() );
+        for (Object cliOption : cliOptions) {
+            String key = String.valueOf(cliOption);
 
-            String resolvedArg = resolveCommandLineArg( key );
+            String resolvedArg = resolveCommandLineArg(key);
 
-            try
-            {
-                args.addAll( Arrays.asList( CommandLineUtils.translateCommandline( resolvedArg ) ) );
-            }
-            catch ( Exception e )
-            {
+            try {
+                args.addAll(Arrays.asList(CommandLineUtils.translateCommandline(resolvedArg)));
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -1318,11 +1280,10 @@ public class Verifier
             args.add( "--debug" );
         }
 
-        for ( Iterator i = systemProperties.keySet().iterator(); i.hasNext(); )
-        {
-            String key = (String) i.next();
-            String value = systemProperties.getProperty( key );
-            args.add( "-D" + key + "=" + value );
+        for (Object o : systemProperties.keySet()) {
+            String key = (String) o;
+            String value = systemProperties.getProperty(key);
+            args.add("-D" + key + "=" + value);
         }
 
         /*
@@ -1331,8 +1292,7 @@ public class Verifier
          * setup for the current build. In particular, using "maven.repo.local" will make sure the forked builds use
          * the same local repo as the parent build even if a custom user settings is provided.
          */
-        boolean useMavenRepoLocal =
-            Boolean.valueOf( verifierProperties.getProperty( "use.mavenRepoLocal", "true" ) ).booleanValue();
+        boolean useMavenRepoLocal = Boolean.valueOf(verifierProperties.getProperty("use.mavenRepoLocal", "true"));
 
         if ( useMavenRepoLocal )
         {
@@ -1343,12 +1303,12 @@ public class Verifier
 
         try
         {
-            String[] cliArgs = (String[]) args.toArray( new String[args.size()] );
+            String[] cliArgs = args.toArray( new String[args.size()] );
 
             boolean fork;
             if ( forkJvm != null )
             {
-                fork = forkJvm.booleanValue();
+                fork = forkJvm;
             }
             else if ( envVars.isEmpty() && "auto".equalsIgnoreCase( forkMode ) )
             {
@@ -1448,6 +1408,7 @@ public class Verifier
         }
 
         List logLines = loadFile( logFile, false );
+        //noinspection ResultOfMethodCallIgnored
         logFile.delete();
 
         String version = extractMavenVersion( logLines );
@@ -1500,7 +1461,7 @@ public class Verifier
     private String resolveCommandLineArg( String key )
     {
         String result = key.replaceAll( "\\$\\{basedir\\}", getBasedir() );
-        if ( result.indexOf( "\\\\" ) >= 0 )
+        if (result.contains("\\\\"))
         {
             result = result.replaceAll( "\\\\", "\\" );
         }
@@ -1509,19 +1470,17 @@ public class Verifier
         return result;
     }
 
-    private static List discoverIntegrationTests( String directory )
+    private static List<String> discoverIntegrationTests( String directory )
         throws VerificationException
     {
         try
         {
-            ArrayList tests = new ArrayList();
+            ArrayList<String> tests = new ArrayList<String>();
 
-            List subTests = FileUtils.getFiles( new File( directory ), "**/goals.txt", null );
+            List<File> subTests = FileUtils.getFiles( new File( directory ), "**/goals.txt", null );
 
-            for ( Iterator i = subTests.iterator(); i.hasNext(); )
-            {
-                File testCase = (File) i.next();
-                tests.add( testCase.getParent() );
+            for (File testCase : subTests) {
+                tests.add(testCase.getParent());
             }
 
             return tests;
@@ -1570,9 +1529,9 @@ public class Verifier
     {
         String basedir = System.getProperty( "user.dir" );
 
-        List tests = null;
+        List<String> tests = null;
 
-        List argsList = new ArrayList();
+        List<String> argsList = new ArrayList<String>();
 
         String settingsFile = null;
 
@@ -1636,39 +1595,27 @@ public class Verifier
         }
         else
         {
-            tests = new ArrayList( argsList.size() );
+            tests = new ArrayList<String>( argsList.size() );
             NumberFormat fmt = new DecimalFormat( "0000" );
-            for ( int i = 0; i < argsList.size(); i++ )
-            {
-                String test = (String) argsList.get( i );
-                if ( test.endsWith( "," ) )
-                {
-                    test = test.substring( 0, test.length() - 1 );
+            for (String test : argsList) {
+                if (test.endsWith(",")) {
+                    test = test.substring(0, test.length() - 1);
                 }
 
-                if ( StringUtils.isNumeric( test ) )
-                {
+                if (StringUtils.isNumeric(test)) {
 
-                    test = "it" + fmt.format( Integer.valueOf( test ) );
-                    test.trim();
-                    tests.add( test );
-                }
-                else if ( "it".startsWith( test ) )
-                {
+                    test = "it" + fmt.format(Integer.valueOf(test));
+                    tests.add(test.trim());
+                } else if ("it".startsWith(test)) {
                     test = test.trim();
-                    if ( test.length() > 0 )
-                    {
-                        tests.add( test );
+                    if (test.length() > 0) {
+                        tests.add(test);
                     }
-                }
-                else if ( FileUtils.fileExists( test ) && new File( test ).isDirectory() )
-                {
-                    tests.addAll( discoverIntegrationTests( test ) );
-                }
-                else
-                {
+                } else if (FileUtils.fileExists(test) && new File(test).isDirectory()) {
+                    tests.addAll(discoverIntegrationTests(test));
+                } else {
                     System.err.println(
-                        "[WARNING] rejecting " + test + " as an invalid test or test source directory" );
+                            "[WARNING] rejecting " + test + " as an invalid test or test source directory");
                 }
             }
         }
@@ -1680,48 +1627,41 @@ public class Verifier
 
         int exitCode = 0;
 
-        List failed = new ArrayList();
-        for ( Iterator i = tests.iterator(); i.hasNext(); )
-        {
-            String test = (String) i.next();
-
-            System.out.print( test + "... " );
+        List<String> failed = new ArrayList<String>();
+        for (String test : tests) {
+            System.out.print(test + "... ");
 
             String dir = basedir + "/" + test;
 
-            if ( !new File( dir, "goals.txt" ).exists() )
-            {
-                System.err.println( "Test " + test + " in " + dir + " does not exist" );
+            if (!new File(dir, "goals.txt").exists()) {
+                System.err.println("Test " + test + " in " + dir + " does not exist");
 
-                System.exit( 2 );
+                System.exit(2);
             }
 
-            Verifier verifier = new Verifier( dir );
-            verifier.findLocalRepo( settingsFile );
+            Verifier verifier = new Verifier(dir);
+            verifier.findLocalRepo(settingsFile);
 
-            System.out.println( "Using default local repository: " + verifier.localRepo );
+            System.out.println("Using default local repository: " + verifier.localRepo);
 
-            try
-            {
-                runIntegrationTest( verifier );
-            }
-            catch ( Throwable e )
-            {
+            try {
+                runIntegrationTest(verifier);
+            } catch (Throwable e) {
                 verifier.resetStreams();
 
-                System.out.println( "FAILED" );
+                System.out.println("FAILED");
 
                 verifier.displayStreamBuffers();
 
-                System.out.println( ">>>>>> Error Stacktrace:" );
-                e.printStackTrace( System.out );
-                System.out.println( "<<<<<< Error Stacktrace" );
+                System.out.println(">>>>>> Error Stacktrace:");
+                e.printStackTrace(System.out);
+                System.out.println("<<<<<< Error Stacktrace");
 
                 verifier.displayLogFile();
 
                 exitCode = 1;
 
-                failed.add( test );
+                failed.add(test);
             }
         }
 
@@ -1756,6 +1696,7 @@ public class Verifier
 
         if ( !repoDir.exists() )
         {
+            //noinspection ResultOfMethodCallIgnored
             repoDir.mkdirs();
         }
 
@@ -1775,11 +1716,11 @@ public class Verifier
         Properties controlProperties = verifier.loadProperties( "verifier.properties" );
 
         boolean chokeOnErrorOutput =
-            Boolean.valueOf( controlProperties.getProperty( "failOnErrorOutput", "true" ) ).booleanValue();
+                Boolean.valueOf(controlProperties.getProperty("failOnErrorOutput", "true"));
 
-        List goals = verifier.loadFile( verifier.getBasedir(), "goals.txt", false );
+        List<String> goals = verifier.loadFile( verifier.getBasedir(), "goals.txt", false );
 
-        List cliOptions = verifier.loadFile( verifier.getBasedir(), "cli-options.txt", false );
+        List<String> cliOptions = verifier.loadFile( verifier.getBasedir(), "cli-options.txt", false );
 
         verifier.setCliOptions( cliOptions );
 
@@ -1860,7 +1801,7 @@ public class Verifier
             printParseError( "Fatal Error", spe );
         }
 
-        private final void printParseError( String type, SAXParseException spe )
+        private void printParseError( String type, SAXParseException spe )
         {
             System.err.println(
                 type + " [line " + spe.getLineNumber() + ", row " + spe.getColumnNumber() + "]: " + spe.getMessage() );
@@ -1913,7 +1854,7 @@ public class Verifier
         return cliOptions;
     }
 
-    public void setCliOptions( List cliOptions )
+    public void setCliOptions( List<String> cliOptions )
     {
         this.cliOptions = cliOptions;
     }
@@ -2036,7 +1977,7 @@ public class Verifier
 
     public void setForkJvm( boolean forkJvm )
     {
-        this.forkJvm = Boolean.valueOf( forkJvm );
+        this.forkJvm = forkJvm;
     }
 
     public boolean isDebugJvm()

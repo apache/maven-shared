@@ -59,27 +59,32 @@ public class ResourceExtractor {
     public static File extractResourcePath(Class cl, String resourcePath, File tempDir, boolean alwaysExtract)
             throws IOException {
         File dest = new File(tempDir, resourcePath);
+        return extractResourceToDestination(cl, resourcePath, dest,  alwaysExtract);
+    }
+
+    public static File extractResourceToDestination(Class cl, String resourcePath, File destination, boolean alwaysExtract)
+            throws IOException {
         URL url = cl.getResource(resourcePath);
         if (url == null) throw new IllegalArgumentException("Resource not found: " + resourcePath);
         if ("jar".equalsIgnoreCase(url.getProtocol())) {
             File jarFile = getJarFileFromUrl(url);
-            extractResourcePathFromJar(cl, jarFile, resourcePath, dest);
+            extractResourcePathFromJar(cl, jarFile, resourcePath, destination);
         } else {
             try {
                 File resourceFile = new File(new URI(url.toExternalForm()));
                 if (!alwaysExtract) return resourceFile;
                 if (resourceFile.isDirectory()) {
-                    FileUtils.copyDirectoryStructure(resourceFile, dest);
+                    FileUtils.copyDirectoryStructure(resourceFile, destination);
                 } else {
-                    FileUtils.copyFile(resourceFile, dest);
+                    FileUtils.copyFile(resourceFile, destination);
                 }
             } catch (URISyntaxException e) {
                 throw new RuntimeException("Couldn't convert URL to File:" + url, e);
             }
         }
-        return dest;
+        return destination;
     }
-    
+
     private static void extractResourcePathFromJar(Class cl, File jarFile, String resourcePath, File dest) throws IOException {
         ZipFile z = new ZipFile(jarFile, ZipFile.OPEN_READ);
         String zipStyleResourcePath = resourcePath.substring(1) + "/"; 

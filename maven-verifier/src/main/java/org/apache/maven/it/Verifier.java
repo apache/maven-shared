@@ -949,14 +949,15 @@ public class Verifier
      * @throws IOException If the file could not be filtered.
      * @since 1.2
      */
-    public File filterFile( String srcPath, String dstPath, String fileEncoding, Map<String, Object> filterProperties )
+    public File filterFile( String srcPath, String dstPath, String fileEncoding, Properties filterProperties )
         throws IOException
     {
         File srcFile = new File( getBasedir(), srcPath );
         String data = FileUtils.fileRead( srcFile, fileEncoding );
 
-        for ( String token : filterProperties.keySet() )
+        for ( Iterator it = filterProperties.keySet().iterator(); it.hasNext(); )
         {
+            String token = (String) it.next();
             String value = String.valueOf( filterProperties.get( token ) );
             data = StringUtils.replace( data, token, value );
         }

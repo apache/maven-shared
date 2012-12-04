@@ -949,7 +949,7 @@ public class Verifier
      * @throws IOException If the file could not be filtered.
      * @since 1.2
      */
-    public File filterFile( String srcPath, String dstPath, String fileEncoding, Properties filterProperties )
+    public File filterFile( String srcPath, String dstPath, String fileEncoding, Map filterProperties )
         throws IOException
     {
         File srcFile = new File( getBasedir(), srcPath );

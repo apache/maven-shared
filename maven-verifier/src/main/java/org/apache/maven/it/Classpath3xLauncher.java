@@ -30,7 +30,7 @@ import java.util.Properties;
 /**
  * Launches an embedded Maven 3.x instance from the current class path, i.e. the Maven 3.x dependencies are assumed to
  * be present on the class path.
- * 
+ *
  * @author Benjamin Bentmann
  */
 class Classpath3xLauncher
@@ -88,7 +88,7 @@ class Classpath3xLauncher
             Thread.currentThread().setContextClassLoader( mavenCli.getClass().getClassLoader() );
             try
             {
-                Object result = doMain.invoke( mavenCli, new Object[] { cliArgs, workingDirectory, out, out } );
+                Object result = doMain.invoke( mavenCli, new Object[]{ cliArgs, workingDirectory, out, out } );
 
                 return ( (Number) result ).intValue();
             }

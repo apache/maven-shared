@@ -37,7 +37,7 @@ import java.util.Properties;
 
 /**
  * Launches an embedded Maven 3.x instance from some Maven installation directory.
- * 
+ *
  * @author Benjamin Bentmann
  */
 class Embedded3xLauncher
@@ -70,9 +70,9 @@ class Embedded3xLauncher
 
             Object launcher = launcherClass.newInstance();
 
-            Method configure = launcherClass.getMethod( "configure", new Class[] { InputStream.class } );
+            Method configure = launcherClass.getMethod( "configure", new Class[]{ InputStream.class } );
 
-            configure.invoke( launcher, new Object[] { new FileInputStream( config ) } );
+            configure.invoke( launcher, new Object[]{ new FileInputStream( config ) } );
 
             Method getWorld = launcherClass.getMethod( "getWorld", null );
             Object classWorld = getWorld.invoke( launcher, null );
@@ -80,8 +80,8 @@ class Embedded3xLauncher
             Method getMainClass = launcherClass.getMethod( "getMainClass", null );
             Class cliClass = (Class) getMainClass.invoke( launcher, null );
 
-            Constructor newMavenCli = cliClass.getConstructor( new Class[] { classWorld.getClass() } );
-            mavenCli = newMavenCli.newInstance( new Object[] { classWorld } );
+            Constructor newMavenCli = cliClass.getConstructor( new Class[]{ classWorld.getClass() } );
+            mavenCli = newMavenCli.newInstance( new Object[]{ classWorld } );
 
             Class[] parameterTypes = { String[].class, String.class, PrintStream.class, PrintStream.class };
             doMain = cliClass.getMethod( "doMain", parameterTypes );
@@ -174,7 +174,7 @@ class Embedded3xLauncher
             Thread.currentThread().setContextClassLoader( mavenCli.getClass().getClassLoader() );
             try
             {
-                Object result = doMain.invoke( mavenCli, new Object[] { cliArgs, workingDirectory, out, out } );
+                Object result = doMain.invoke( mavenCli, new Object[]{ cliArgs, workingDirectory, out, out } );
 
                 return ( (Number) result ).intValue();
             }

@@ -40,6 +40,13 @@
     <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-incremental</url>
   </scm>
 
+  <distributionManagement>
+    <site>
+      <id>apache.website.svnpub</id>
+      <url>scm:svn:${svnUrl}</url>
+    </site>
+  </distributionManagement>
+
   <issueManagement>
     <system>jira</system>
     <url>https://jira.codehaus.org/browse/MSHARED/component/15650</url>
@@ -47,6 +54,12 @@
 
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
+
+    <maven.sites.cache>${user.home}/maven-sites</maven.sites.cache>
+    <siteFilePath>${maven.sites.cache}/shared/${project.artifactId}-${project.version}</siteFilePath>
+    <scmPubCheckoutDirectory>${siteFilePath}-content</scmPubCheckoutDirectory>
+    <svnUrl>https://svn.apache.org/repos/infra/websites/production/maven/content/shared-archives/${project.artifactId}-${project.version}</svnUrl>
+
   </properties>
 
   <dependencies>
@@ -130,6 +143,58 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <skipDeploy>true</skipDeploy>
+        </configuration>
+        <executions>
+          <execution>
+            <id>stage-for-scm-publish</id>
+            <phase>post-site</phase>
+            <goals>
+              <goal>stage</goal>
+            </goals>
+            <configuration>
+              <skipDeploy>false</skipDeploy>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-publish-plugin</artifactId>
+        <version>1.0-beta-2</version>
+        <configuration>
+          <checkinComment>Apache ${project.name} site deployment</checkinComment>
+        </configuration>
+        <executions>
+          <execution>
+            <id>scm-publish</id>
+            <phase>site-deploy</phase>
+            <goals>
+              <goal>publish-scm</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>site-release</id>
+      <properties>
+
+        <siteFilePath>${maven.sites.cache}/shared/${project.artifactId}</siteFilePath>
+        <scmPubCheckoutDirectory>${siteFilePath}-content</scmPubCheckoutDirectory>
+        <svnUrl>https://svn.apache.org/repos/infra/websites/production/maven/content/shared/${project.artifactId}</svnUrl>
+
+      </properties>
+    </profile>
+  </profiles>
+
 </project>

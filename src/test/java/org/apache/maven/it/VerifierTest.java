@@ -19,6 +19,7 @@ package org.apache.maven.it;
  * under the License.
  */
 
+import java.io.File;
 import java.util.Arrays;
 
 import junit.framework.TestCase;
@@ -37,6 +38,15 @@ public class VerifierTest
         assertEquals( "3.0", Verifier.extractMavenVersion( Arrays.asList(
             new String[]{ "Apache Maven 3.0 (r1004208; 2010-10-04 13:50:56+0200)", "Java version: 1.5.0_22",
                 "OS name: \"windows 7\" version: \"6.1\" arch: \"x86\" Family: \"windows\"" } ) ) );
+    }
+
+    public void testFileInJarPresent()
+        throws VerificationException
+    {
+        File file = new File( "src/test/resources/mshared104.jar!fud.xml" );
+        Verifier verifier = new Verifier( "src/test/resources" );
+        verifier.assertFilePresent( "mshared104.jar!/pom.xml" );
+        verifier.assertFileNotPresent( "mshared104.jar!/fud.xml" );
     }
 
 }

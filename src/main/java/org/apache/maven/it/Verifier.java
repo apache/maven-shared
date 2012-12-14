@@ -1119,7 +1119,10 @@ public class Verifier
             }
             catch ( IOException e )
             {
-                throw new VerificationException( "Error looking for JAR resource", e );
+                if ( wanted )
+                {
+                    throw new VerificationException( "Error looking for JAR resource: " + line );
+                }
             }
             finally
             {

@@ -34,7 +34,7 @@ under the License.
 
   <name>Apache Maven Shared Components POM</name>
   <description>This project consists of a POM that contains settings that are likely to be useful to any Maven Shared Component that is building and releasing code with Maven 2/3.</description>
-  <url>http://maven.apache.org/pom/maven-shared-component/</url>
+  <url>http://maven.apache.org/pom/maven-shared-components/</url>
 
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-components</connection>
@@ -52,19 +52,32 @@ under the License.
   <distributionManagement>
     <site>
       <id>apache.website</id>
-      <url>scp://people.apache.org/www/maven.apache.org/pom/maven-shared-components/</url>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/content/${maven.site.path}</url>
     </site>
   </distributionManagement>
+
+  <properties>
+    <maven.site.path>pom-archives/maven-shared-components-${project.version}</maven.site.path>
+  </properties>
 
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
         <configuration>
           <siteDirectory>${basedir}/src/site-docs</siteDirectory>
-          <stagingSiteURL>scp://people.apache.org/www/maven.apache.org/pom/maven-shared-components-${project.version}/</stagingSiteURL>
         </configuration>
       </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>site-release</id>
+      <properties>
+        <maven.site.path>pom/maven-shared-components</maven.site.path>
+      </properties>
+    </profile>
+  </profiles>
 </project>

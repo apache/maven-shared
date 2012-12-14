@@ -46,6 +46,7 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.maven.shared.utils.StringUtils;
 import org.apache.maven.shared.utils.cli.CommandLineException;
 import org.apache.maven.shared.utils.cli.CommandLineUtils;
@@ -151,8 +152,6 @@ public class Verifier
     {
         this.basedir = basedir;
 
-        this.debug = debug;
-
         this.forkJvm = forkJvm;
         this.
 
@@ -162,12 +161,10 @@ public class Verifier
         {
             originalOut = System.out;
 
-            System.setOut( new PrintStream( outStream ) );
-
             originalErr = System.err;
-
-            System.setErr( new PrintStream( errStream ) );
         }
+
+        setDebug( debug );
 
         findLocalRepo( settingsFile );
         findDefaultMavenHome();
@@ -2005,6 +2002,13 @@ public class Verifier
     public void setDebug( boolean debug )
     {
         this.debug = debug;
+
+        if ( !debug )
+        {
+            System.setOut( new PrintStream( outStream ) );
+
+            System.setErr( new PrintStream( errStream ) );
+        }
     }
 
     public boolean isMavenDebug()

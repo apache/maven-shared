@@ -75,7 +75,7 @@ Manifest Sections
 +-----+
 Manifest-Version: 1.0
 Archiver-Version: Plexus Archiver
-Created-By: Apache Maven
+Created-By: Apache Maven ${maven.version}
 Built-By: ${user.name}
 Build-Jdk: ${java.version}
 

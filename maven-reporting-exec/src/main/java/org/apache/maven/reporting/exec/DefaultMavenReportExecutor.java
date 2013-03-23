@@ -29,7 +29,6 @@ import java.util.Map.Entry;
 
 import org.apache.maven.artifact.repository.DefaultRepositoryRequest;
 import org.apache.maven.artifact.repository.RepositoryRequest;
-import org.apache.maven.artifact.resolver.filter.ExclusionSetFilter;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.lifecycle.LifecycleExecutor;
 import org.apache.maven.model.Plugin;
@@ -49,7 +48,6 @@ import org.apache.maven.plugin.version.PluginVersionResolver;
 import org.apache.maven.plugin.version.PluginVersionResult;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReport;
-import org.codehaus.classworlds.ClassRealm;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
@@ -57,42 +55,44 @@ import org.codehaus.plexus.logging.Logger;
 import org.apache.maven.shared.utils.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomUtils;
+import org.sonatype.aether.RepositorySystemSession;
+import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.util.filter.ExclusionsDependencyFilter;
 
 /**
  * <p>
  *   This component will build some {@link MavenReportExecution} from {@link MavenReportExecutorRequest}.
- *   If a {@link MavenReport} need to fork a lifecycle, this fork is executed here. 
+ *   If a {@link MavenReport} needs to fork a lifecycle, this fork is executed here. 
  *   It will ask the core to get some informations in order to correctly setup {@link MavenReport}.
  * </p>
  * <p>
- *   <b>Note</b> if no version is defined in the report plugin the version will be search 
+ *   <b>Note</b> if no version is defined in the report plugin, the version will be searched
  *   with method {@link #getPluginVersion(ReportPlugin, RepositoryRequest, MavenReportExecutorRequest)}
  *   Steps to find a plugin version stop after each step if a non <code>null</code> value has been found:
- *   <ul>
- *     <li>use the one defined in the reportPlugin configuration</li>
- *     <li>search similar (same groupId and artifactId) mojo in the build/plugins section of the pom</li>
- *     <li>search similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom</li>
- *     <li>ask {@link PluginVersionResolver} to get a version and display a warning as it's not a recommended use</li>  
- *   </ul>
+ *   <ol>
+ *     <li>use the one defined in the reportPlugin configuration,</li>
+ *     <li>search similar (same groupId and artifactId) mojo in the build/plugins section of the pom,</li>
+ *     <li>search similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom,</li>
+ *     <li>ask {@link PluginVersionResolver} to get a version and display a warning as it's not a recommended use.</li>  
+ *   </ol>
  * </p>
  * <p>
- *   Following steps are done
+ *   Following steps are done:
  *   <ul>
- *     <li>get {@link PluginDescriptor} from the {@link MavenPluginManager#getPluginDescriptor(Plugin, RepositoryRequest)}</li>
+ *     <li>get {@link PluginDescriptor} from the {@link MavenPluginManager#getPluginDescriptor(Plugin, RepositoryRequest, RepositorySystemSession)}</li>
  *     <li>setup a {@link ClassLoader} with the Mojo Site plugin {@link ClassLoader} as parent for the report execution. 
- *       You must note some classes are imported from the current Site Mojo {@link ClassRealm} see {@link #IMPORTS}.
- *       The artifact resolution excludes the following artifacts (with using an {@link ExclusionSetFilter}: 
+ *       You must note some classes are imported from the current Site Mojo ClassRealm: see {@link #IMPORTS}.
+ *       The artifact resolution excludes the following artifacts, corresponding to imported classes: 
  *       doxia-site-renderer, doxia-sink-api, maven-reporting-api.
- *       done using {@link MavenPluginManager#setupPluginRealm(PluginDescriptor, org.apache.maven.execution.MavenSession, ClassLoader, List, org.apache.maven.artifact.resolver.filter.ArtifactFilter)}
+ *       Done using {@link MavenPluginManager#setupPluginRealm(PluginDescriptor, MavenSession, ClassLoader, List, DependencyFilter)}
  *     </li>
  *     <li>
- *       setup the mojo using {@link MavenPluginManager#getConfiguredMojo(Class, org.apache.maven.execution.MavenSession, MojoExecution)}
+ *       setup the mojo using {@link MavenPluginManager#getConfiguredMojo(Class, MavenSession, MojoExecution)}
  *     </li>
  *     <li>
- *       verify with {@link LifecycleExecutor#calculateForkedExecutions(MojoExecution, org.apache.maven.execution.MavenSession)}
- *       if any forked execution is needed: if yes executes the forked execution here
+ *       verify with {@link LifecycleExecutor#calculateForkedExecutions(MojoExecution, MavenSession)}
+ *       if any forked execution is needed: if yes, executes the forked execution here
  *     </li>
  *   </ul>
  * </p>
@@ -124,7 +124,7 @@ public class DefaultMavenReportExecutor
                                                                "org.apache.maven.doxia.logging.LogEnabled",
                                                                "org.apache.maven.doxia.logging.Log" );
 
-    private static final ExclusionsDependencyFilter EXCLUDES =
+    private static final DependencyFilter EXCLUDES =
         new ExclusionsDependencyFilter( Arrays.asList( "doxia-site-renderer", "doxia-sink-api", "maven-reporting-api" ) );
 
     public List<MavenReportExecution> buildMavenReports( MavenReportExecutorRequest mavenReportExecutorRequest )

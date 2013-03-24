@@ -19,3 +19,4 @@
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.text.contains( '[INFO] Resolved distributionManagement site URL for org.apache.maven.shared.project.utils.it.multimodule-hierarchical:multimodule:pom:0.0.1-SNAPSHOT: http://localhost/multimodule')
 assert buildLog.text.contains( '[INFO] Resolved distributionManagement site URL for org.apache.maven.shared.project.utils.it.multimodule-hierarchical:module:pom:0.0.1-SNAPSHOT: http://localhost/multimodule/module' )
+assert buildLog.text.contains( '[INFO] Resolved distributionManagement site URL for org.apache.maven.shared.project.utils.it.multimodule-hierarchical:submodule:pom:0.0.1-SNAPSHOT: http://localhost/multimodule/module/submodule' )

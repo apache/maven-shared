@@ -68,13 +68,13 @@ import org.sonatype.aether.util.filter.ExclusionsDependencyFilter;
  * </p>
  * <p>
  *   <b>Note</b> if no version is defined in the report plugin, the version will be searched
- *   with method {@link #getPluginVersion(ReportPlugin, RepositoryRequest, MavenReportExecutorRequest)}
+ *   with method {@link #getPluginVersion(ReportPlugin, MavenReportExecutorRequest)}
  *   Steps to find a plugin version stop after each step if a non <code>null</code> value has been found:
  *   <ol>
  *     <li>use the one defined in the reportPlugin configuration,</li>
  *     <li>search similar (same groupId and artifactId) mojo in the build/plugins section of the pom,</li>
  *     <li>search similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom,</li>
- *     <li>ask {@link PluginVersionResolver} to get a version and display a warning as it's not a recommended use.</li>  
+ *     <li>ask {@link PluginVersionResolver} to get a fallback version and display a warning as it's not a recommended use.</li>  
  *   </ol>
  * </p>
  * <p>
@@ -178,7 +178,7 @@ public class DefaultMavenReportExecutor
         repositoryRequest.setLocalRepository( mavenReportExecutorRequest.getLocalRepository() );
         repositoryRequest.setRemoteRepositories( mavenReportExecutorRequest.getProject().getPluginArtifactRepositories() );
 
-        plugin.setVersion( getPluginVersion( reportPlugin, repositoryRequest, mavenReportExecutorRequest ) );
+        plugin.setVersion( getPluginVersion( reportPlugin, mavenReportExecutorRequest ) );
 
         mergePluginToReportPlugin( mavenReportExecutorRequest, plugin, reportPlugin );
 
@@ -442,20 +442,18 @@ public class DefaultMavenReportExecutor
      * Resolve report plugin version. 
      * Steps to find a plugin version stop after each step if a non <code>null</code> value has been found:
      * <ol>
-     *   <li>use the one defined in the reportPlugin configuration</li>
-     *   <li>search similar (same groupId and artifactId) mojo in the build/plugins section of the pom</li>
-     *   <li>search similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom</li>
-     *   <li>ask {@link PluginVersionResolver} to get a version and display a warning as it's not a recommended use</li>  
+     *   <li>use the one defined in the reportPlugin configuration,</li>
+     *   <li>search similar (same groupId and artifactId) mojo in the build/plugins section of the pom,</li>
+     *   <li>search similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom,</li>
+     *   <li>ask {@link PluginVersionResolver} to get a fallback version and display a warning as it's not a recommended use.</li>  
      * </ol>
      *
      * @param reportPlugin the report plugin to resolve the version
-     * @param repositoryRequest TODO: unused, to be removed?
      * @param mavenReportExecutorRequest the current report execution context
      * @return the report plugin version
      * @throws PluginVersionResolutionException
      */
-    protected String getPluginVersion( ReportPlugin reportPlugin, RepositoryRequest repositoryRequest,
-                                       MavenReportExecutorRequest mavenReportExecutorRequest )
+    protected String getPluginVersion( ReportPlugin reportPlugin, MavenReportExecutorRequest mavenReportExecutorRequest )
         throws PluginVersionResolutionException
     {
         String reportPluginKey = reportPlugin.getGroupId() + ':' + reportPlugin.getArtifactId();

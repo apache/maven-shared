@@ -58,7 +58,6 @@ import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.repository.RemoteRepository;
-import org.sonatype.aether.util.filter.ExclusionsDependencyFilter;
 
 /**
  * <p>
@@ -109,6 +108,9 @@ public class DefaultMavenReportExecutor
     protected MavenPluginManager mavenPluginManager;
 
     @Requirement
+    protected MavenPluginManagerHelper mavenPluginManagerHelper;
+
+    @Requirement
     protected LifecycleExecutor lifecycleExecutor;
 
     @Requirement
@@ -124,8 +126,8 @@ public class DefaultMavenReportExecutor
                                                                "org.apache.maven.doxia.logging.LogEnabled",
                                                                "org.apache.maven.doxia.logging.Log" );
 
-    private static final DependencyFilter EXCLUDES =
-        new ExclusionsDependencyFilter( Arrays.asList( "doxia-site-renderer", "doxia-sink-api", "maven-reporting-api" ) );
+    private static final List<String> EXCLUDES = Arrays.asList( "doxia-site-renderer", "doxia-sink-api",
+                                                                "maven-reporting-api" );
 
     public List<MavenReportExecution> buildMavenReports( MavenReportExecutorRequest mavenReportExecutorRequest )
         throws MojoExecutionException
@@ -188,7 +190,7 @@ public class DefaultMavenReportExecutor
         List<RemoteRepository> remoteRepositories = session.getCurrentProject().getRemotePluginRepositories();
 
         PluginDescriptor pluginDescriptor =
-            mavenPluginManager.getPluginDescriptor( plugin, remoteRepositories, session.getRepositorySession() );
+            mavenPluginManagerHelper.getPluginDescriptor( plugin, remoteRepositories, session );
 
         Map<String, PlexusConfiguration> goalsWithConfiguration = new LinkedHashMap<String, PlexusConfiguration>();
 
@@ -263,8 +265,9 @@ public class DefaultMavenReportExecutor
 
             mojoExecution.setMojoDescriptor( mojoDescriptor );
 
-            mavenPluginManager.setupPluginRealm( pluginDescriptor, mavenReportExecutorRequest.getMavenSession(),
-                                                 Thread.currentThread().getContextClassLoader(), IMPORTS, EXCLUDES );
+            mavenPluginManagerHelper.setupPluginRealm( pluginDescriptor, mavenReportExecutorRequest.getMavenSession(),
+                                                       Thread.currentThread().getContextClassLoader(), IMPORTS,
+                                                       EXCLUDES );
             MavenReport mavenReport =
                 getConfiguredMavenReport( mojoExecution, pluginDescriptor, mavenReportExecutorRequest );
 

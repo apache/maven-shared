@@ -29,7 +29,7 @@
 
   <groupId>org.apache.maven.reporting</groupId>
   <artifactId>maven-reporting-exec</artifactId>
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.1-SNAPSHOT</version>
 
   <name>Maven Reporting Executor</name>
   <description>Classes to manage report plugin executions with Maven 3.</description>
@@ -108,7 +108,19 @@
       <groupId>org.sonatype.aether</groupId>
       <artifactId>aether-util</artifactId>
       <version>1.7</version>
+    </dependency>
+
+    <!-- Eclipse Aether for Maven 3.1.x -->
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-api</artifactId>
+      <version>0.9.0.M2</version>
       <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-util</artifactId>
+      <version>0.9.0.M2</version>
     </dependency>
 
     <!-- test -->

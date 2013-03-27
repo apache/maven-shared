@@ -42,7 +42,6 @@ public final class ProjectUtils
         {
             MavenProject parent = project.getParent();
 
-            // Are collectedProject the resolved modules?
             @SuppressWarnings( "unchecked" )
             List<MavenProject> collectedProjects = (List<MavenProject>) parent.getCollectedProjects();
             
@@ -59,5 +58,36 @@ public final class ProjectUtils
         {
             return true;
         }
+    }
+    
+    /**
+     * Return {@code true} if this project has modules, but is <strong>never</strong> the parent of one of them.<br/>
+     * 
+     * Return {@code false} if this project has no modules, or if 1 or more modules have this project as its parent.
+     * 
+     * @param project
+     * @return {@code true} if project is an aggregator, {@code false} if project is standalone or hybrid 
+     */
+    public static boolean isAggregator( MavenProject project )
+    {
+        @SuppressWarnings( "unchecked" )
+        List<MavenProject> collectedProjects = (List<MavenProject>) project.getCollectedProjects();
+
+        if( collectedProjects.isEmpty() )
+        {
+            return false;
+        }
+        else
+        {
+            for ( MavenProject collectedProject : collectedProjects )
+            {
+                if( project.getId().equals( collectedProject.getId() ) )
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
     }
 }

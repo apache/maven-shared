@@ -105,7 +105,7 @@ public class DefaultMavenPluginManagerHelper
         {
             try
             {
-                Class.forName( "org.sonatype.aether.graph.DependencyFilter" );
+                Thread.currentThread().getContextClassLoader().loadClass( "org.sonatype.aether.graph.DependencyFilter" );
                 isEclipseAether = false;
             }
             catch ( ClassNotFoundException e )

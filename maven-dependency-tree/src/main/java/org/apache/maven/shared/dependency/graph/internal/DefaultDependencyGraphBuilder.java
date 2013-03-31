@@ -75,7 +75,7 @@ public class DefaultDependencyGraphBuilder
     {
         try
         {
-            Class.forName( "org.apache.maven.project.DependencyResolutionRequest" ); // Maven 3 specific
+            Thread.currentThread().getContextClassLoader().loadClass( "org.apache.maven.project.DependencyResolutionRequest" ); // Maven 3 specific
 
             return false;
         }

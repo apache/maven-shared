@@ -542,7 +542,7 @@ public class MavenCommandLineBuilder
                 if ( !mavenHome.isDirectory() )
                 {
                     File binDir = mavenHome.getParentFile();
-                    if ( "bin".equals( binDir.getName() ) )
+                    if ( binDir != null && "bin".equals( binDir.getName() ) )
                     {
                         // ah, they specified the mvn
                         // executable instead...

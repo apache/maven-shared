@@ -222,40 +222,8 @@ public class DefaultMavenReportExecutor
 
             MojoExecution mojoExecution = new MojoExecution( plugin, entry.getKey(), "report:" + entry.getKey() );
 
-            mojoExecution.setConfiguration( convert( mojoDescriptor ) );
-
-            if ( reportPlugin.getConfiguration() != null || entry.getValue() != null )
-            {
-                Xpp3Dom reportConfiguration =
-                    reportPlugin.getConfiguration() == null ? new Xpp3Dom( "fake" )
-                                    : convert( reportPlugin.getConfiguration() );
-
-                // MSITE-512 configuration from ReportSet must win
-                Xpp3Dom mergedConfigurationWithReportSet =
-                    Xpp3DomUtils.mergeXpp3Dom( convert( entry.getValue() ), reportConfiguration );
-
-                Xpp3Dom mergedConfiguration =
-                    Xpp3DomUtils.mergeXpp3Dom( mergedConfigurationWithReportSet, convert( mojoDescriptor ) );
-
-                Xpp3Dom cleanedConfiguration = new Xpp3Dom( "configuration" );
-                if ( mergedConfiguration.getChildren() != null )
-                {
-                    for ( Xpp3Dom parameter : mergedConfiguration.getChildren() )
-                    {
-                        if ( mojoDescriptor.getParameterMap().containsKey( parameter.getName() ) )
-                        {
-                            cleanedConfiguration.addChild( parameter );
-                        }
-                    }
-                }
-                if ( getLog().isDebugEnabled() )
-                {
-                    getLog().debug( "mojoExecution mergedConfiguration: " + mergedConfiguration );
-                    getLog().debug( "mojoExecution cleanedConfiguration: " + cleanedConfiguration );
-                }
-
-                mojoExecution.setConfiguration( cleanedConfiguration );
-            }
+            mojoExecution.setConfiguration( mergeConfiguration( mojoDescriptor.getMojoConfiguration(), reportPlugin.getConfiguration(),
+                                                   entry.getValue(), mojoDescriptor.getParameterMap().keySet() ) );
 
             mojoExecution.setMojoDescriptor( mojoDescriptor );
 
@@ -403,10 +371,42 @@ public class DefaultMavenReportExecutor
         }
     }
 
-    private Xpp3Dom convert( MojoDescriptor mojoDescriptor )
+    private Xpp3Dom mergeConfiguration( PlexusConfiguration mojoConf, PlexusConfiguration pluginConf,
+                                        PlexusConfiguration reportSetConf, Set<String> parameters )
     {
-        PlexusConfiguration config = mojoDescriptor.getMojoConfiguration();
-        return ( config != null ) ? convert( config ) : new Xpp3Dom( "configuration" );
+        Xpp3Dom mojoConfig = ( mojoConf != null ) ? convert( mojoConf ) : new Xpp3Dom( "configuration" );
+
+        if ( pluginConf != null || reportSetConf != null )
+        {
+            Xpp3Dom reportConfiguration = pluginConf == null ? new Xpp3Dom( "fake" ) : convert( pluginConf );
+
+            // MSITE-512 configuration from ReportSet must win
+            Xpp3Dom mergedConfigurationWithReportSet =
+                Xpp3DomUtils.mergeXpp3Dom( convert( reportSetConf ), reportConfiguration );
+
+            Xpp3Dom mergedConfiguration = Xpp3DomUtils.mergeXpp3Dom( mergedConfigurationWithReportSet, mojoConfig );
+
+            Xpp3Dom cleanedConfiguration = new Xpp3Dom( "configuration" );
+            if ( mergedConfiguration.getChildren() != null )
+            {
+                for ( Xpp3Dom parameter : mergedConfiguration.getChildren() )
+                {
+                    if ( parameters.contains( parameter.getName() ) )
+                    {
+                        cleanedConfiguration.addChild( parameter );
+                    }
+                }
+            }
+            if ( getLog().isDebugEnabled() )
+            {
+                getLog().debug( "mojoExecution mergedConfiguration: " + mergedConfiguration );
+                getLog().debug( "mojoExecution cleanedConfiguration: " + cleanedConfiguration );
+            }
+
+            mojoConfig = cleanedConfiguration;
+        }
+
+        return mojoConfig;
     }
 
     private Xpp3Dom convert( PlexusConfiguration config )

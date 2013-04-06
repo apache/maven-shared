@@ -22,12 +22,13 @@ package org.apache.maven.reporting.exec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
-import org.apache.maven.artifact.repository.DefaultRepositoryRequest;
 import org.apache.maven.artifact.repository.RepositoryRequest;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.lifecycle.LifecycleExecutor;
@@ -67,7 +68,7 @@ import org.sonatype.aether.repository.RemoteRepository;
  * </p>
  * <p>
  *   <b>Note</b> if no version is defined in the report plugin, the version will be searched
- *   with method {@link #getPluginVersion(ReportPlugin, MavenReportExecutorRequest)}
+ *   with method {@link #resolvePluginVersion(ReportPlugin, MavenReportExecutorRequest)}
  *   Steps to find a plugin version stop after each step if a non <code>null</code> value has been found:
  *   <ol>
  *     <li>use the one defined in the reportPlugin configuration,</li>
@@ -138,49 +139,40 @@ public class DefaultMavenReportExecutor
         }
         getLog().debug( "DefaultMavenReportExecutor.buildMavenReports()" );
 
-        List<String> reportPluginKeys = new ArrayList<String>();
-        List<MavenReportExecution> reports = new ArrayList<MavenReportExecution>();
+        Set<String> reportPluginKeys = new HashSet<String>();
+        List<MavenReportExecution> reportExecutions = new ArrayList<MavenReportExecution>();
 
         String pluginKey = "";
         try
         {
             for ( ReportPlugin reportPlugin : mavenReportExecutorRequest.getReportPlugins() )
             {
-                pluginKey = reportPlugin.getGroupId() + ":" + reportPlugin.getArtifactId();
+                pluginKey = reportPlugin.getGroupId() + ':' + reportPlugin.getArtifactId();
 
-                buildReportPlugin( mavenReportExecutorRequest, reportPlugin, reportPluginKeys, reports );
+                if ( !reportPluginKeys.add( pluginKey ) )
+                {
+                    logger.info( "plugin " + pluginKey + " will be executed more than one time" );
+                }
+
+                reportExecutions.addAll( buildReportPlugin( mavenReportExecutorRequest, reportPlugin ) );
             }
-            return reports;
         }
         catch ( Exception e )
         {
             throw new MojoExecutionException( "failed to get report for " + pluginKey, e );
         }
+
+        return reportExecutions;
     }
 
-    protected void buildReportPlugin( MavenReportExecutorRequest mavenReportExecutorRequest, ReportPlugin reportPlugin,
-                                      List<String> reportPluginKeys, List<MavenReportExecution> reports )
+    protected List<MavenReportExecution> buildReportPlugin( MavenReportExecutorRequest mavenReportExecutorRequest,
+                                                            ReportPlugin reportPlugin )
         throws Exception
     {
         Plugin plugin = new Plugin();
         plugin.setGroupId( reportPlugin.getGroupId() );
         plugin.setArtifactId( reportPlugin.getArtifactId() );
-
-        String pluginKey = reportPlugin.getGroupId() + ":" + reportPlugin.getArtifactId();
-        if ( reportPluginKeys.contains( pluginKey ) )
-        {
-            logger.info( "plugin " + pluginKey + " will be executed more than one time" );
-        }
-        else
-        {
-            reportPluginKeys.add( pluginKey );
-        }
-
-        RepositoryRequest repositoryRequest = new DefaultRepositoryRequest();
-        repositoryRequest.setLocalRepository( mavenReportExecutorRequest.getLocalRepository() );
-        repositoryRequest.setRemoteRepositories( mavenReportExecutorRequest.getProject().getPluginArtifactRepositories() );
-
-        plugin.setVersion( getPluginVersion( reportPlugin, mavenReportExecutorRequest ) );
+        plugin.setVersion( resolvePluginVersion( reportPlugin, mavenReportExecutorRequest ) );
 
         mergePluginToReportPlugin( mavenReportExecutorRequest, plugin, reportPlugin );
 
@@ -196,6 +188,7 @@ public class DefaultMavenReportExecutor
 
         if ( reportPlugin.getReportSets().isEmpty() && reportPlugin.getReports().isEmpty() )
         {
+            // by default, execute every reports (goals)
             List<MojoDescriptor> mojoDescriptors = pluginDescriptor.getMojos();
             for ( MojoDescriptor mojoDescriptor : mojoDescriptors )
             {
@@ -218,6 +211,7 @@ public class DefaultMavenReportExecutor
             }
         }
 
+        List<MavenReportExecution> reports = new ArrayList<MavenReportExecution>();
         for ( Entry<String, PlexusConfiguration> entry : goalsWithConfiguration.entrySet() )
         {
             MojoDescriptor mojoDescriptor = pluginDescriptor.getMojo( entry.getKey() );
@@ -291,6 +285,8 @@ public class DefaultMavenReportExecutor
                 reports.add( mavenReportExecution );
             }
         }
+
+        return reports;
     }
 
     private boolean canGenerateReport( MavenReport mavenReport, MojoExecution mojoExecution )
@@ -456,7 +452,7 @@ public class DefaultMavenReportExecutor
      * @return the report plugin version
      * @throws PluginVersionResolutionException
      */
-    protected String getPluginVersion( ReportPlugin reportPlugin, MavenReportExecutorRequest mavenReportExecutorRequest )
+    protected String resolvePluginVersion( ReportPlugin reportPlugin, MavenReportExecutorRequest mavenReportExecutorRequest )
         throws PluginVersionResolutionException
     {
         String reportPluginKey = reportPlugin.getGroupId() + ':' + reportPlugin.getArtifactId();

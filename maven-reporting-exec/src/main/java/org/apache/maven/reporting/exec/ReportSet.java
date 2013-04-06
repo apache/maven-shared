@@ -25,7 +25,7 @@ import java.util.List;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 
 /**
- * Represents a set of reports and configuration to be used to generate them.
+ * Represents a set of reports and a configuration to be used to generate them.
  */
 public class ReportSet
 {

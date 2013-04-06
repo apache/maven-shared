@@ -24,11 +24,9 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 
 /**
- * <p>
- *   Bean which contains necessary informations for build {@link MavenReportExecution} 
- *   with {@link MavenReportExecutor}.
- *   The goal is to store some informations regarding the current Maven execution.
- * </p>
+ * Bean which contains necessary informations to build {@link MavenReportExecution} with {@link MavenReportExecutor}.
+ * The goal is to store some informations regarding the current Maven execution.
+ * 
  * @author Olivier Lamy
  * @version $Id$
  */
@@ -81,5 +79,4 @@ public class MavenReportExecutorRequest
     {
         this.reportPlugins = reportPlugins;
     }
-
 }

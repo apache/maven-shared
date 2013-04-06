@@ -27,14 +27,11 @@ import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 
 /**
- * <p>
  * Represents a reporting plugin and its executions. It basically contains similar informations
- * as a {@link Plugin} but in order to decoupled reporting stuff from core some values are copied.
- * </p>
+ * as a {@link Plugin}, but in order to decouple reporting stuff from core, some values are copied.
  */
 public class ReportPlugin
 {
-
     private String groupId = "org.apache.maven.plugins";
 
     private String artifactId;
@@ -111,7 +108,4 @@ public class ReportPlugin
     {
         this.reports = reports;
     }
-
-    
-
 }

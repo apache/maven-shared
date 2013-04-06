@@ -33,7 +33,7 @@ Maven Reporting Executor
 +----
 
   Notice: this is the model from plugins in <<<\<reporting\>>>> section of POM without <<<\<inherited\>>>> element
-  and with <<<\<reports\>>>> list that simplifies reports configuration in usual cases.
+  and with immediate <<<\<reports\>>>> list (ie not in <<<\<reportSet\>>>>) that simplifies reports configuration in usual cases.
 
   Maven 3 core makes an automatic transformation of <<<\<reporting\>>>> POM section to <<<maven-site-plugin>>>
   configuration through the

@@ -23,10 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.maven.artifact.repository.RepositoryRequest;
@@ -184,7 +181,7 @@ public class DefaultMavenReportExecutor
         PluginDescriptor pluginDescriptor =
             mavenPluginManagerHelper.getPluginDescriptor( plugin, remoteRepositories, session );
 
-        Map<String, PlexusConfiguration> goalsWithConfiguration = new LinkedHashMap<String, PlexusConfiguration>();
+        List<GoalWithConf> goalsWithConfiguration = new ArrayList<GoalWithConf>();
 
         if ( reportPlugin.getReportSets().isEmpty() && reportPlugin.getReports().isEmpty() )
         {
@@ -192,7 +189,8 @@ public class DefaultMavenReportExecutor
             List<MojoDescriptor> mojoDescriptors = pluginDescriptor.getMojos();
             for ( MojoDescriptor mojoDescriptor : mojoDescriptors )
             {
-                goalsWithConfiguration.put( mojoDescriptor.getGoal(), mojoDescriptor.getConfiguration() );
+                goalsWithConfiguration.add( new GoalWithConf( mojoDescriptor.getGoal(),
+                                                              mojoDescriptor.getConfiguration() ) );
             }
         }
         else
@@ -201,29 +199,31 @@ public class DefaultMavenReportExecutor
             {
                 for ( String report : reportSet.getReports() )
                 {
-                    goalsWithConfiguration.put( report, reportSet.getConfiguration() );
+                    goalsWithConfiguration.add( new GoalWithConf( report, reportSet.getConfiguration() ) );
                 }
             }
 
             for ( String report : reportPlugin.getReports() )
             {
-                goalsWithConfiguration.put( report, reportPlugin.getConfiguration() );
+                goalsWithConfiguration.add( new GoalWithConf( report, reportPlugin.getConfiguration() ) );
             }
         }
 
         List<MavenReportExecution> reports = new ArrayList<MavenReportExecution>();
-        for ( Entry<String, PlexusConfiguration> entry : goalsWithConfiguration.entrySet() )
+        for ( GoalWithConf report : goalsWithConfiguration )
         {
-            MojoDescriptor mojoDescriptor = pluginDescriptor.getMojo( entry.getKey() );
+            MojoDescriptor mojoDescriptor = pluginDescriptor.getMojo( report.getGoal() );
             if ( mojoDescriptor == null )
             {
-                throw new MojoNotFoundException( entry.getKey(), pluginDescriptor );
+                throw new MojoNotFoundException( report.getGoal(), pluginDescriptor );
             }
 
-            MojoExecution mojoExecution = new MojoExecution( plugin, entry.getKey(), "report:" + entry.getKey() );
+            MojoExecution mojoExecution = new MojoExecution( plugin, report.getGoal(), "report:" + report.getGoal() );
 
-            mojoExecution.setConfiguration( mergeConfiguration( mojoDescriptor.getMojoConfiguration(), reportPlugin.getConfiguration(),
-                                                   entry.getValue(), mojoDescriptor.getParameterMap().keySet() ) );
+            mojoExecution.setConfiguration( mergeConfiguration( mojoDescriptor.getMojoConfiguration(),
+                                                                reportPlugin.getConfiguration(),
+                                                                report.getConfiguration(),
+                                                                mojoDescriptor.getParameterMap().keySet() ) );
 
             mojoExecution.setMojoDescriptor( mojoDescriptor );
 
@@ -578,5 +578,27 @@ public class DefaultMavenReportExecutor
                 buildPlugin.getDependencies().addAll( configuredPlugin.getDependencies() );
             }
         }
-    }   
+    }
+
+    private static class GoalWithConf
+    {
+        private final String goal;
+        private final PlexusConfiguration configuration;
+
+        public GoalWithConf( String goal, PlexusConfiguration configuration )
+        {
+            this.goal = goal;
+            this.configuration = configuration;
+        }
+
+        public String getGoal()
+        {
+            return goal;
+        }
+
+        public PlexusConfiguration getConfiguration()
+        {
+            return configuration;
+        }
+    }
 }

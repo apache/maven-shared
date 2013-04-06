@@ -75,6 +75,39 @@ public class TestDefaultMavenReportExecutor
     public void testSimpleBuildReports()
         throws Exception
     {
+        ReportSet reportSet = new ReportSet();
+        reportSet.getReports().add( "test-javadoc" );
+        reportSet.getReports().add( "javadoc" );
+
+        List<MavenReportExecution> mavenReportExecutions = buildReports( reportSet );
+
+        assertNotNull( mavenReportExecutions );
+        assertEquals( 2, mavenReportExecutions.size() );
+        assertEquals( "testapidocs/index", mavenReportExecutions.get( 0 ).getMavenReport().getOutputName() );
+        assertEquals( "apidocs/index", mavenReportExecutions.get( 1 ).getMavenReport().getOutputName() );
+    }
+
+    public void testMultipleReportSets()
+        throws Exception
+    {
+        ReportSet reportSet = new ReportSet();
+        reportSet.getReports().add( "javadoc" );
+        ReportSet reportSet2 = new ReportSet();
+        reportSet2.getReports().add( "test-javadoc" );
+        reportSet2.getReports().add( "javadoc" );
+
+        List<MavenReportExecution> mavenReportExecutions = buildReports( reportSet, reportSet2 );
+
+        assertNotNull( mavenReportExecutions );
+        assertEquals( 3, mavenReportExecutions.size() );
+        assertEquals( "apidocs/index", mavenReportExecutions.get( 0 ).getMavenReport().getOutputName() );
+        assertEquals( "testapidocs/index", mavenReportExecutions.get( 1 ).getMavenReport().getOutputName() );
+        assertEquals( "apidocs/index", mavenReportExecutions.get( 2 ).getMavenReport().getOutputName() );
+    }
+
+    private List<MavenReportExecution> buildReports( ReportSet... javadocReportSets )
+        throws Exception
+    {
         ClassLoader orig = Thread.currentThread().getContextClassLoader();
         ClassRealm realm = getContainer().getContainerRealm();
 
@@ -99,10 +132,10 @@ public class TestDefaultMavenReportExecutor
             reportPlugin.setArtifactId( "maven-javadoc-plugin" );
             reportPlugin.setVersion( "2.7" );
 
-            ReportSet reportSet = new ReportSet();
-            reportSet.getReports().add( "test-javadoc" );
-            reportSet.getReports().add( "javadoc" );
-            reportPlugin.getReportSets().add( reportSet );
+            for ( ReportSet reportSet : javadocReportSets )
+            {
+                reportPlugin.getReportSets().add( reportSet );
+            }
 
             List<ReportPlugin> reportPlugins = Lists.newArrayList( reportPlugin );
 
@@ -110,13 +143,7 @@ public class TestDefaultMavenReportExecutor
 
             MavenReportExecutor mavenReportExecutor = lookup( MavenReportExecutor.class );
 
-            List<MavenReportExecution> mavenReportExecutions =
-                mavenReportExecutor.buildMavenReports( mavenReportExecutorRequest );
-
-            assertNotNull( mavenReportExecutions );
-            assertEquals( 2, mavenReportExecutions.size() );
-            assertEquals( "testapidocs/index", mavenReportExecutions.get( 0 ).getMavenReport().getOutputName() );
-            assertEquals( "apidocs/index", mavenReportExecutions.get( 1 ).getMavenReport().getOutputName() );
+            return mavenReportExecutor.buildMavenReports( mavenReportExecutorRequest );
         }
         finally
         {

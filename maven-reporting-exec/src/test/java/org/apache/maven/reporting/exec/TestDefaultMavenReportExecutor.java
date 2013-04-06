@@ -51,7 +51,6 @@ import org.sonatype.aether.repository.WorkspaceReader;
 import org.sonatype.aether.repository.WorkspaceRepository;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -78,7 +77,7 @@ public class TestDefaultMavenReportExecutor
     {
         ClassLoader orig = Thread.currentThread().getContextClassLoader();
         ClassRealm realm = getContainer().getContainerRealm();
-        System.out.println( "realm " + Arrays.asList( realm.getURLs() ) );
+
         Thread.currentThread().setContextClassLoader( realm );
         try
         {
@@ -158,8 +157,8 @@ public class TestDefaultMavenReportExecutor
         request.setLocalRepositoryPath( getLocalArtifactRepository().getBasedir() );
         request.setCacheNotFound( false );
 
-        request.setLoggingLevel( MavenExecutionRequest.LOGGING_LEVEL_DEBUG );
-        getContainer().lookup( Logger.class ).setThreshold( 0 );
+        request.setLoggingLevel( MavenExecutionRequest.LOGGING_LEVEL_INFO );
+        getContainer().lookup( Logger.class ).setThreshold( 1 );
 
         request.setSystemProperties( System.getProperties() );
 

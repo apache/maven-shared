@@ -25,7 +25,7 @@ under the License.
   <parent>
     <groupId>org.apache.maven</groupId>
     <artifactId>maven-parent</artifactId>
-    <version>23</version>
+    <version>24-SNAPSHOT</version>
     <relativePath>../../pom/maven/pom.xml</relativePath>
   </parent>
 
@@ -54,12 +54,12 @@ under the License.
   <distributionManagement>
     <site>
       <id>apache.website</id>
-      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/content/shared</url>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/content/shared-archives</url>
     </site>
   </distributionManagement>
 
   <properties>
-    <maven.site.path>shared-archives/${project.artifactId}-${project.version}</maven.site.path>
+    <maven.site.path>shared-archives/${project.artifactId}</maven.site.path><!-- no "-LATEST" to match distributionManagement url -->
   </properties>
 
   <repositories>
@@ -130,12 +130,8 @@ under the License.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-publish-plugin</artifactId>
-        <version>1.0-beta-2</version>
         <configuration>
           <content>${project.reporting.outputDirectory}</content>
-          <pubScmUrl>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/content/${maven.site.path}</pubScmUrl>
-          <checkoutDirectory>${maven.site.cache}/${maven.site.path}</checkoutDirectory>
-          <tryUpdate>true</tryUpdate>
         </configuration>
         <executions>
           <execution>
@@ -149,13 +145,4 @@ under the License.
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>site-release</id>
-      <properties>
-        <maven.site.path>shared/${project.artifactId}</maven.site.path>
-      </properties>
-    </profile>
-  </profiles>
 </project>

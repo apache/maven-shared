@@ -233,7 +233,8 @@ public class DefaultMavenReportExecutor
                 if ( userDefinedReports )
                 {
                     // reports were explicitly written in the POM
-                    logger.warn( mojoExecution.getPlugin().getId() + ':' + report.getGoal() + " is not a report" );
+                    logger.warn( "ignoring " + mojoExecution.getPlugin().getId() + ':' + report.getGoal()
+                        + " goal since it is not a report: should be removed from reporting configuration in POM" );
                 }
                 continue;
             }

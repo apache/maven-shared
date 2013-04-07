@@ -185,7 +185,7 @@ public class DefaultMavenReportExecutor
 
         if ( reportPlugin.getReportSets().isEmpty() && reportPlugin.getReports().isEmpty() )
         {
-            // by default, execute every reports (goals)
+            // by default, use every goal, which will be filtered later to only keep reporting goals
             List<MojoDescriptor> mojoDescriptors = pluginDescriptor.getMojos();
             for ( MojoDescriptor mojoDescriptor : mojoDescriptors )
             {
@@ -220,23 +220,24 @@ public class DefaultMavenReportExecutor
 
             MojoExecution mojoExecution = new MojoExecution( plugin, report.getGoal(), "report:" + report.getGoal() );
 
-            mojoExecution.setConfiguration( mergeConfiguration( mojoDescriptor.getMojoConfiguration(),
-                                                                reportPlugin.getConfiguration(),
-                                                                report.getConfiguration(),
-                                                                mojoDescriptor.getParameterMap().keySet() ) );
-
             mojoExecution.setMojoDescriptor( mojoDescriptor );
 
             mavenPluginManagerHelper.setupPluginRealm( pluginDescriptor, mavenReportExecutorRequest.getMavenSession(),
                                                        Thread.currentThread().getContextClassLoader(), IMPORTS,
                                                        EXCLUDES );
-            MavenReport mavenReport =
-                getConfiguredMavenReport( mojoExecution, pluginDescriptor, mavenReportExecutorRequest );
 
-            if ( mavenReport == null )
+            if ( !isMavenReport( mojoExecution, pluginDescriptor ) )
             {
                 continue;
             }
+
+            mojoExecution.setConfiguration( mergeConfiguration( mojoDescriptor.getMojoConfiguration(),
+                                                                reportPlugin.getConfiguration(),
+                                                                report.getConfiguration(),
+                                                                mojoDescriptor.getParameterMap().keySet() ) );
+
+            MavenReport mavenReport =
+                            getConfiguredMavenReport( mojoExecution, pluginDescriptor, mavenReportExecutorRequest );
 
             MavenReportExecution mavenReportExecution =
                 new MavenReportExecution( mojoExecution.getPlugin(), mavenReport, pluginDescriptor.getClassRealm() );
@@ -278,11 +279,6 @@ public class DefaultMavenReportExecutor
     {
         try
         {
-            if ( !isMavenReport( mojoExecution, pluginDescriptor ) )
-            {
-                return null;
-            }
-
             Mojo mojo = mavenPluginManager.getConfiguredMojo( Mojo.class,
                                                               mavenReportExecutorRequest.getMavenSession(),
                                                               mojoExecution );

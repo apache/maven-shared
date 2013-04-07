@@ -195,17 +195,17 @@ public class DefaultMavenReportExecutor
         }
         else
         {
+            for ( String report : reportPlugin.getReports() )
+            {
+                goalsWithConfiguration.add( new GoalWithConf( report, reportPlugin.getConfiguration() ) );
+            }
+
             for ( ReportSet reportSet : reportPlugin.getReportSets() )
             {
                 for ( String report : reportSet.getReports() )
                 {
                     goalsWithConfiguration.add( new GoalWithConf( report, reportSet.getConfiguration() ) );
                 }
-            }
-
-            for ( String report : reportPlugin.getReports() )
-            {
-                goalsWithConfiguration.add( new GoalWithConf( report, reportPlugin.getConfiguration() ) );
             }
         }
 

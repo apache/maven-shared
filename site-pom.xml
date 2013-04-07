@@ -25,7 +25,7 @@ under the License.
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>19</version>
+    <version>20-SNAPSHOT</version>
     <relativePath>./pom.xml</relativePath>
   </parent>
 
@@ -57,7 +57,7 @@ under the License.
   </distributionManagement>
 
   <properties>
-    <maven.site.path>pom-archives/maven-shared-components-${project.version}</maven.site.path>
+    <maven.site.path>pom-archives/maven-shared-components-LATEST</maven.site.path>
   </properties>
 
   <build>
@@ -71,13 +71,4 @@ under the License.
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <profile>
-      <id>site-release</id>
-      <properties>
-        <maven.site.path>pom/maven-shared-components</maven.site.path>
-      </properties>
-    </profile>
-  </profiles>
 </project>

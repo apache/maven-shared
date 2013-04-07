@@ -183,9 +183,11 @@ public class DefaultMavenReportExecutor
 
         List<GoalWithConf> goalsWithConfiguration = new ArrayList<GoalWithConf>();
 
+        boolean userDefinedReports = true;
         if ( reportPlugin.getReportSets().isEmpty() && reportPlugin.getReports().isEmpty() )
         {
             // by default, use every goal, which will be filtered later to only keep reporting goals
+            userDefinedReports = false;
             List<MojoDescriptor> mojoDescriptors = pluginDescriptor.getMojos();
             for ( MojoDescriptor mojoDescriptor : mojoDescriptors )
             {
@@ -228,6 +230,11 @@ public class DefaultMavenReportExecutor
 
             if ( !isMavenReport( mojoExecution, pluginDescriptor ) )
             {
+                if ( userDefinedReports )
+                {
+                    // reports were explicitly written in the POM
+                    logger.warn( mojoExecution.getPlugin().getId() + ':' + report.getGoal() + " is not a report" );
+                }
                 continue;
             }
 

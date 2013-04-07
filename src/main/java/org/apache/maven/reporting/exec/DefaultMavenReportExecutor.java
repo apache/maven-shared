@@ -197,16 +197,32 @@ public class DefaultMavenReportExecutor
         }
         else
         {
+            Set<String> goals = new HashSet<String>();
             for ( String report : reportPlugin.getReports() )
             {
-                goalsWithConfiguration.add( new GoalWithConf( report, reportPlugin.getConfiguration() ) );
+                if ( goals.add( report ) )
+                {
+                    goalsWithConfiguration.add( new GoalWithConf( report, reportPlugin.getConfiguration() ) );
+                }
+                else
+                {
+                    logger.warn( report + " report is declared twice in default reports" );
+                }
             }
 
             for ( ReportSet reportSet : reportPlugin.getReportSets() )
             {
+                goals = new HashSet<String>();
                 for ( String report : reportSet.getReports() )
                 {
-                    goalsWithConfiguration.add( new GoalWithConf( report, reportSet.getConfiguration() ) );
+                    if ( goals.add( report ) )
+                    {
+                        goalsWithConfiguration.add( new GoalWithConf( report, reportSet.getConfiguration() ) );
+                    }
+                    else
+                    {
+                        logger.warn( report + " report is declared twice in " + reportSet.getId() + " reportSet" );
+                    }
                 }
             }
         }

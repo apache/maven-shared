@@ -36,13 +36,13 @@ Maven Reporting Executor
   Notice this is the model from plugins in
   {{{/ref/current/maven-model/maven.html#class_reporting}<<<\<reporting\>>>> section of POM}}:
 
-  [[a]] without <<<\<inherited\>>>> element,
+  * without <<<\<inherited\>>>> element,
   
-  [[b]] without support for reporting plugins configuration inheritance (see {{{http://jira.codehaus.org/browse/MSITE-484}MSITE-484}}),
+  * without support for reporting plugins configuration inheritance (see {{{http://jira.codehaus.org/browse/MSITE-484}MSITE-484}}),
 
-  [[c]] with additional <<<\<reports\>>>> list outside <<<\<reportSet\>>>> that simplifies reports configuration in usual cases,
+  * with additional <<<\<reports\>>>> list outside <<<\<reportSet\>>>> that simplifies reports configuration in usual cases,
 
-  [[d]] with support for report plugins without explicit version: version is determed by
+  * with support for report plugins without explicit version: version is determed by
 
     [[1]] searching similar (same groupId and artifactId) mojo in the build/plugins section of the pom,
  
@@ -57,5 +57,5 @@ Maven Reporting Executor
 
   Maven 3 core makes an automatic transformation of <<<\<reporting\>>>> POM section to <<<maven-site-plugin>>>
   configuration through the
-  {{{http://maven.apache.org/ref/current/maven-model-builder/apidocs/org/apache/maven/model/plugin/ReportingConverter.html}ReportingConverter}}
+  {{{/ref/current/maven-model-builder/apidocs/org/apache/maven/model/plugin/ReportingConverter.html}ReportingConverter}}
   component.

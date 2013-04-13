@@ -3,17 +3,18 @@
  -----
  Hervé Boutemy
  -----
- 2011-07-06
+ 2013-04-13
  -----
 
 Maven Reporting Executor
 
-  Classes to manage report plugin executions with Maven 3.
-
-  Report plugins can be configured in <<<\<configuration\>>>> element of <<<maven-site-plugin>>> or any other
+  Classes to manage report plugin executions with Maven 3, through
+  {{{./apidocs/org/apache/maven/reporting/exec/MavenReportExecutor.html}MavenReportExecutor}}
+  ({{{./apidocs/org/apache/maven/reporting/exec/DefaultMavenReportExecutor.html}implementation}}):
+  report plugins can be configured in <<<\<configuration\>>>> element of <<<maven-site-plugin>>> or any other
   report building plugin with following XML model:
 
-+----
++----+
 <reportPlugins>
   <plugin>
     <groupId/>
@@ -30,10 +31,29 @@ Maven Reporting Executor
     </reportSets>
   </plugin>
 </reportPlugins>
-+----
++----+
 
-  Notice: this is the model from plugins in <<<\<reporting\>>>> section of POM without <<<\<inherited\>>>> element
-  and with immediate <<<\<reports\>>>> list (ie not in <<<\<reportSet\>>>>) that simplifies reports configuration in usual cases.
+  Notice this is the model from plugins in
+  {{{/ref/current/maven-model/maven.html#class_reporting}<<<\<reporting\>>>> section of POM}}:
+
+  [[a]] without <<<\<inherited\>>>> element,
+  
+  [[b]] without support for reporting plugins configuration inheritance (see {{{http://jira.codehaus.org/browse/MSITE-484}MSITE-484}}),
+
+  [[c]] with additional <<<\<reports\>>>> list outside <<<\<reportSet\>>>> that simplifies reports configuration in usual cases,
+
+  [[d]] with support for report plugins without explicit version: version is determed by
+
+    [[1]] searching similar (same groupId and artifactId) mojo in the build/plugins section of the pom,
+ 
+    [[2]] searching similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom,
+
+    [[3]] asking {{{/ref/current/maven-core/apidocs/org/apache/maven/plugin/version/PluginVersionResolver.html}PluginVersionResolver}}
+    to get a fallback version and display a warning as it's not a recommended use.
+
+    []
+
+  []
 
   Maven 3 core makes an automatic transformation of <<<\<reporting\>>>> POM section to <<<maven-site-plugin>>>
   configuration through the

@@ -12,7 +12,8 @@ Maven Reporting Executor
   {{{./apidocs/org/apache/maven/reporting/exec/MavenReportExecutor.html}MavenReportExecutor}}
   ({{{./apidocs/org/apache/maven/reporting/exec/DefaultMavenReportExecutor.html}implementation}}):
   report plugins can be configured in <<<\<configuration\>>>> element of <<<maven-site-plugin>>> or any other
-  report building plugin with following XML model:
+  report building plugin with following XML model corresponding to plugin's
+  <<<List<{{{./apidocs/org/apache/maven/reporting/exec/ReportPlugin.html}ReportPlugin}}>>>> parameter:
 
 +----+
 <reportPlugins>

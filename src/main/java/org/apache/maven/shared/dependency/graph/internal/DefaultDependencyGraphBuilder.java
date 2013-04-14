@@ -73,16 +73,7 @@ public class DefaultDependencyGraphBuilder
      */
     protected static boolean isMaven2x()
     {
-        try
-        {
-            Thread.currentThread().getContextClassLoader().loadClass( "org.apache.maven.project.DependencyResolutionRequest" ); // Maven 3 specific
-
-            return false;
-        }
-        catch ( ClassNotFoundException e )
-        {
-            return true;
-        }
+        return !canFindCoreClass( "org.apache.maven.project.DependencyResolutionRequest" ); // Maven 3 specific
     }
 
     /**
@@ -90,15 +81,20 @@ public class DefaultDependencyGraphBuilder
      */
     protected static boolean isMaven31()
     {
+        return canFindCoreClass( "org.eclipse.aether.artifact.Artifact" ); // Maven 3.1 specific
+    }
+
+    private static boolean canFindCoreClass( String className)
+    {
         try
         {
-            Class.forName( "org.eclipse.aether.artifact.Artifact" ); // Maven 3.1 specific
+            Thread.currentThread().getContextClassLoader().loadClass( className );
 
-            return false;
+            return true;
         }
         catch ( ClassNotFoundException e )
         {
-            return true;
+            return false;
         }
     }
 

@@ -40,7 +40,10 @@ import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.util.graph.manager.DependencyManagerUtils;
 import org.eclipse.aether.version.VersionConstraint;
 
 /**
@@ -66,15 +69,31 @@ public class Maven31DependencyGraphBuilder
         try
         {
             ProjectBuildingRequest projectBuildingRequest =
-                (ProjectBuildingRequest) invoke( project, "getProjectBuildingRequest" );
+                (ProjectBuildingRequest) invoke( project.getClass(), project, "getProjectBuildingRequest" );
+
+            RepositorySystemSession session =
+                (RepositorySystemSession) invoke( ProjectBuildingRequest.class, projectBuildingRequest,
+                                                  "getRepositorySession" );
+
+            if ( Boolean.TRUE != ( (Boolean) session.getConfigProperties().get( DependencyManagerUtils.NODE_DATA_PREMANAGED_VERSION ) ) )
+            {
+                DefaultRepositorySystemSession newSession = new DefaultRepositorySystemSession( session );
+                newSession.setConfigProperty( DependencyManagerUtils.NODE_DATA_PREMANAGED_VERSION, true );
+                session = newSession;
+            }
 
             DependencyResolutionRequest request =
-                new DefaultDependencyResolutionRequest( project, projectBuildingRequest.getRepositorySession() );
+                new DefaultDependencyResolutionRequest();
+            request.setMavenProject( project );
+            invoke( request, "setRepositorySession", RepositorySystemSession.class, session );
 
             DependencyResolutionResult result = resolver.resolve( request );
 
-            return buildDependencyNode( null, (org.eclipse.aether.graph.DependencyNode) result.getDependencyGraph(),
-                                        project.getArtifact(), filter );
+            org.eclipse.aether.graph.DependencyNode graph =
+                (org.eclipse.aether.graph.DependencyNode) invoke( DependencyResolutionResult.class, result,
+                                                                  "getDependencyGraph" );
+
+            return buildDependencyNode( null, graph, project.getArtifact(), filter );
         }
         catch ( DependencyResolutionException e )
         {
@@ -94,10 +113,16 @@ public class Maven31DependencyGraphBuilder
         }
     }
 
-    private Object invoke( Object object, String method )
+    private Object invoke( Class<?> clazz, Object object, String method )
         throws IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
-        return object.getClass().getMethod( method ).invoke( object );
+        return clazz.getMethod( method ).invoke( object );
+    }
+
+    private Object invoke( Object object, String method, Class<?> clazz, Object arg )
+        throws IllegalAccessException, InvocationTargetException, NoSuchMethodException
+    {
+        return object.getClass().getMethod( method, clazz ).invoke( object, arg );
     }
 
     private Artifact getDependencyArtifact( Dependency dep )
@@ -113,8 +138,11 @@ public class Maven31DependencyGraphBuilder
     private DependencyNode buildDependencyNode( DependencyNode parent, org.eclipse.aether.graph.DependencyNode node,
                                                 Artifact artifact, ArtifactFilter filter )
     {
+        String premanagedVersion = DependencyManagerUtils.getPremanagedVersion( node );
+        String premanagedScope = DependencyManagerUtils.getPremanagedScope( node );
+
         DefaultDependencyNode current =
-            new DefaultDependencyNode( parent, artifact, node.getPremanagedVersion(), node.getPremanagedScope(),
+            new DefaultDependencyNode( parent, artifact, premanagedVersion, premanagedScope,
                                        getVersionSelectedFromRange( node.getVersionConstraint() ) );
 
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );

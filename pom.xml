@@ -43,10 +43,17 @@
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED/component/14716</url>
   </issueManagement>
+  <distributionManagement>
+    <site>
+      <id>apache.website</id>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/content/${maven.site.path}</url>
+    </site>
+  </distributionManagement>
 
   <properties>
     <mavenVersion>3.0</mavenVersion>
     <plexusVersion>1.5.4</plexusVersion>
+    <maven.site.path>shared-archives/maven-reporting-exec-LATEST</maven.site.path>
   </properties>
 
   <dependencies>

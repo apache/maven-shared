@@ -34,7 +34,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <outputFile>target/tree-M2.txt</outputFile>
   </properties>
 
   <dependencyManagement>
@@ -74,7 +73,7 @@
           <artifactId>maven-dependency-plugin</artifactId>
           <version>2.6</version>
           <configuration>
-            <outputFile>${outputFile}</outputFile>
+            <outputFile>target/tree.txt</outputFile>
           </configuration>
           <dependencies>
             <dependency>
@@ -87,19 +86,4 @@
       </plugins>
     </pluginManagement>
   </build>
-
-  <profiles>
-    <profile>
-      <id>maven-3</id>
-      <activation>
-        <file>
-          <!--  This employs that the basedir expression is only recognized by Maven 3.x (see MNG-2363) -->
-          <exists>${basedir}</exists>
-        </file>
-      </activation>
-      <properties>
-        <outputFile>target/tree-M3.txt</outputFile>
-      </properties>
-    </profile>    
-  </profiles>
 </project>

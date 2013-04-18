@@ -113,7 +113,7 @@ public class Maven3DependencyGraphBuilder
                                                 Artifact artifact, ArtifactFilter filter )
     {
         DefaultDependencyNode current =
-            new DefaultDependencyNode( parent, artifact, node.getPremanagedVersion(), node.getPremanagedScope(),
+            new DefaultDependencyNode( parent, artifact, null /*node.getPremanagedVersion()*/, null /*node.getPremanagedScope()*/,
                                        getVersionSelectedFromRange( node.getVersionConstraint() ) );
 
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );

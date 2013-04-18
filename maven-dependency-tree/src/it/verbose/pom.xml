@@ -24,12 +24,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.apache.maven.its.dependency-tree</groupId>
-  <artifactId>test</artifactId>
+  <artifactId>verbose</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>Test</name>
+  <name>VerboseTest</name>
   <description>
-    Test dependency-tree with actual Maven version through dependency:tree (easier than shade, or MPIR:dependencies)
+    Test verbose dependency-tree with actual Maven version through old dependency:tree 2.4, before the feature was removed.
   </description>
 
   <properties>

@@ -75,12 +75,12 @@ public class Maven31DependencyGraphBuilder
                 (RepositorySystemSession) invoke( ProjectBuildingRequest.class, projectBuildingRequest,
                                                   "getRepositorySession" );
 
-            if ( Boolean.TRUE != ( (Boolean) session.getConfigProperties().get( DependencyManagerUtils.NODE_DATA_PREMANAGED_VERSION ) ) )
+            /*if ( Boolean.TRUE != ( (Boolean) session.getConfigProperties().get( DependencyManagerUtils.NODE_DATA_PREMANAGED_VERSION ) ) )
             {
                 DefaultRepositorySystemSession newSession = new DefaultRepositorySystemSession( session );
                 newSession.setConfigProperty( DependencyManagerUtils.NODE_DATA_PREMANAGED_VERSION, true );
                 session = newSession;
-            }
+            }*/
 
             DependencyResolutionRequest request =
                 new DefaultDependencyResolutionRequest();
@@ -138,8 +138,8 @@ public class Maven31DependencyGraphBuilder
     private DependencyNode buildDependencyNode( DependencyNode parent, org.eclipse.aether.graph.DependencyNode node,
                                                 Artifact artifact, ArtifactFilter filter )
     {
-        String premanagedVersion = DependencyManagerUtils.getPremanagedVersion( node );
-        String premanagedScope = DependencyManagerUtils.getPremanagedScope( node );
+        String premanagedVersion = null; //DependencyManagerUtils.getPremanagedVersion( node );
+        String premanagedScope = null; //DependencyManagerUtils.getPremanagedScope( node );
 
         DefaultDependencyNode current =
             new DefaultDependencyNode( parent, artifact, premanagedVersion, premanagedScope,

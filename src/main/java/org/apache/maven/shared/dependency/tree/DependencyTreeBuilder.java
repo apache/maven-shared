@@ -27,8 +27,10 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Builds a tree of dependencies for a given Maven 2 project. Notice that it doesn't fail with Maven 3
- * but the result isn't reliable.
+ * Builds a tree of dependencies for a given Maven 2 project. Notice that it doesn't fail with Maven 3,
+ * but when Maven 2 and Maven 3 don't calculate the same transitive dependency result, the tree calculated
+ * with this component is consistent with Maven 2 even if run with Maven 3 (see
+ * <a href="http://jira.codehaus.org/browse/MSHARED-167">MSHARED-167</a>.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$

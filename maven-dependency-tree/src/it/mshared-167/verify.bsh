@@ -1,0 +1,26 @@
+import java.io.*;
+
+import org.codehaus.plexus.util.*;
+
+File outputFile = new File( basedir, "target/tree-M2.txt" );
+File expectedFile = new File( basedir, "expected-M2.txt" );
+if ( ! outputFile.exists() )
+{
+  outputFile = new File( basedir, "target/tree-M3.txt" );
+  expectedFile = new File( basedir, "expected-M3.txt" );
+}
+
+String actual = FileUtils.fileRead( outputFile );
+String expected = FileUtils.fileRead( expectedFile );
+
+actual = actual.replaceAll( "[\n\r]+", "\n" );
+expected = expected.replaceAll( "[\n\r]+", "\n" );
+
+System.out.println( "Checking dependency tree..." );
+
+if ( !actual.equals( expected ) )
+{
+    throw new Exception( "Unexpected dependency tree" );
+}
+
+return true;

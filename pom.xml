@@ -42,9 +42,16 @@
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED/component/13264</url>
   </issueManagement>
+  <distributionManagement>
+    <site>
+      <id>apache.website</id>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/content/${maven.site.path}</url>
+    </site>
+  </distributionManagement>
 
   <properties>
     <mavenVersion>2.2.0</mavenVersion>
+    <maven.site.path>shared-archives/maven-dependency-tree-LATEST</maven.site.path>
   </properties>
 
   <contributors>

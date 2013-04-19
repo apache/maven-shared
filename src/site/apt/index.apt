@@ -3,7 +3,7 @@
  -----
  Hervé Boutemy
  -----
- 2012-06-11
+ 2013-04-19
  -----
 
 Maven Dependency Tree
@@ -11,7 +11,9 @@ Maven Dependency Tree
   A tree-based API for resolution of Maven project dependencies.
 
   Component entry point is <<<{{{./apidocs/org/apache/maven/shared/dependency/graph/DependencyGraphBuilder.html}DependencyGraphBuilder}}>>>,
-  which will delegate to appropriate implementation for either Maven 2 or Maven 3.
+  which will delegate to appropriate implementation for either Maven 2, Maven 3.0.x or Maven 3.1.x.
 
-  Older Maven 2-specific component entry point is <<<{{{./apidocs/org/apache/maven/shared/dependency/tree/DependencyTreeBuilder.html}DependencyTreeBuilder}}>>>,
-  which only works with Maven 2 but computes wrong information with Maven 3: see {{{http://jira.codehaus.org/browse/MSHARED-167}MSHARED-167}}.
+  Older Maven 2-specific component entry point is
+  <<<{{{./apidocs/org/apache/maven/shared/dependency/tree/DependencyTreeBuilder.html}DependencyTreeBuilder}}>>>,
+  which is consistent with Maven 2 even when used with Maven 3, which can cause inconsistent results between resolved list (consistent
+  with Maven 3) and resolved tree (consistent with Maven 2): see {{{http://jira.codehaus.org/browse/MSHARED-167}MSHARED-167}}.

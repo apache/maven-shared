@@ -33,6 +33,12 @@
   <name>Maven Verifier Component</name>
   <description>Provides a test harness for Maven integration tests.</description>
 
+  <contributors>
+    <contributor>
+      <name>Mikolaj Izdebski</name>
+    </contributor>
+  </contributors>
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-verifier</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-verifier</developerConnection>

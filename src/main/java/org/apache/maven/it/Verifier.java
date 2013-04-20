@@ -182,15 +182,8 @@ public class Verifier
 
         if ( defaultMavenHome == null )
         {
-            try
-            {
-                Properties envVars = CommandLineUtils.getSystemEnvVars();
-                defaultMavenHome = envVars.getProperty( "M2_HOME" );
-            }
-            catch ( IOException e )
-            {
-                throw new VerificationException( "Cannot read system environment variables.", e );
-            }
+            Properties envVars = CommandLineUtils.getSystemEnvVars();
+            defaultMavenHome = envVars.getProperty( "M2_HOME" );
         }
 
         if ( defaultMavenHome == null )

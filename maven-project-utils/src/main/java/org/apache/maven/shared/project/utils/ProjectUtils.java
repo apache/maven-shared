@@ -38,26 +38,24 @@ public final class ProjectUtils
      */
     public static boolean isRootProject( MavenProject project )
     {
-        if( project.hasParent() )
-        {
-            MavenProject parent = project.getParent();
-
-            @SuppressWarnings( "unchecked" )
-            List<MavenProject> collectedProjects = (List<MavenProject>) parent.getCollectedProjects();
-            
-            for( MavenProject collectedProject :  collectedProjects )
-            {
-                if( project.getId().equals( collectedProject.getId() ) )
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        else 
+        if ( !project.hasParent() )
         {
             return true;
         }
+
+        MavenProject parent = project.getParent();
+
+        @SuppressWarnings( "unchecked" )
+        List<MavenProject> collectedProjects = (List<MavenProject>) parent.getCollectedProjects();
+
+        for ( MavenProject collectedProject : collectedProjects )
+        {
+            if ( project.getId().equals( collectedProject.getId() ) )
+            {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
@@ -73,21 +71,18 @@ public final class ProjectUtils
         @SuppressWarnings( "unchecked" )
         List<MavenProject> collectedProjects = (List<MavenProject>) project.getCollectedProjects();
 
-        if( collectedProjects.isEmpty() )
+        if ( collectedProjects.isEmpty() )
         {
             return false;
         }
-        else
+
+        for ( MavenProject collectedProject : collectedProjects )
         {
-            for ( MavenProject collectedProject : collectedProjects )
+            if ( project.getId().equals( collectedProject.getId() ) )
             {
-                if( project.getId().equals( collectedProject.getId() ) )
-                {
-                    return false;
-                }
+                return false;
             }
-            return true;
         }
-        
+        return true;
     }
 }

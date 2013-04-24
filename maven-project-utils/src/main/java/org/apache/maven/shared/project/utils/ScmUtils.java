@@ -28,6 +28,13 @@ public final class ScmUtils
     {
     }
 
+    /**
+     * Resolve the scm connection, based on the type of project and inheritence.
+     * 
+     * @param project the Maven project
+     * @return the resolved SCM connection, otherwise an empty String
+     * @since 1.0
+     */
     public static String resolveScmConnection( MavenProject project )
     {
         String scmConnection = getScmConnection( project.getModel() );
@@ -46,6 +53,13 @@ public final class ScmUtils
         return scmConnection;
     }
 
+    /**
+     * Resolve the scm developer connection, based on the type of project and inheritence.
+     * 
+     * @param project the Maven Project
+     * @return the resolved SCM developer connection, otherwise an empty String
+     * @since 1.0
+     */
     public static String resolveScmDeveloperConnection( MavenProject project )
     {
         String scmDeveloperConnection = getScmDeveloperConnection( project.getModel() );

@@ -35,12 +35,12 @@ public final class ScmUtils
         if ( scmConnection == null )
         {
             // prevent null-value
-            scmConnection = "" + getScmConnection( project );
+            scmConnection = String.valueOf( getScmConnection( project ) );
             
             if ( !ProjectUtils.isRootProject( project ) )
             {
                 // assuming that folder matches the moduleName
-                scmConnection += "/" + project.getFile().getParentFile().getName();
+                scmConnection += '/' + project.getFile().getParentFile().getName();
             }
         }
         return scmConnection;
@@ -53,12 +53,12 @@ public final class ScmUtils
         if ( siteUrl == null )
         {
             // prevent null-value
-            siteUrl = "" + getScmDeveloperConnection( project );
+            siteUrl = String.valueOf( getScmDeveloperConnection( project ) );
             
             if ( !ProjectUtils.isRootProject( project ) )
             {
                 // assuming that folder matches the moduleName
-                siteUrl += "/" + project.getFile().getParentFile().getName();
+                siteUrl += '/' + project.getFile().getParentFile().getName();
             }
         }
         return siteUrl;
@@ -66,50 +66,38 @@ public final class ScmUtils
 
     protected static String getScmConnection( Model model )
     {
-        if ( model.getScm() != null )
-        {
-            return model.getScm().getConnection();
-        }
-        else
+        if ( model.getScm() == null )
         {
             return null;
         }
+        return model.getScm().getConnection();
     }
 
     protected static String getScmConnection( MavenProject project )
     {
-        if ( project.getScm() != null )
-        {
-            return project.getScm().getConnection();
-        }
-        else
+        if ( project.getScm() == null )
         {
             return null;
         }
+        return project.getScm().getConnection();
     }
 
     protected static String getScmDeveloperConnection( Model model )
     {
-        if ( model.getScm() != null )
-        {
-            return model.getScm().getDeveloperConnection();
-        }
-        else
+        if ( model.getScm() == null )
         {
             return null;
         }
+        return model.getScm().getDeveloperConnection();
     }
 
     protected static String getScmDeveloperConnection( MavenProject project )
     {
-        if ( project.getScm() != null )
-        {
-            return project.getScm().getDeveloperConnection();
-        }
-        else
+        if ( project.getScm() == null )
         {
             return null;
         }
+        return project.getScm().getDeveloperConnection();
     }
 
 }

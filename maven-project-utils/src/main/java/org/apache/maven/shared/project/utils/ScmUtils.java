@@ -35,7 +35,7 @@ public final class ScmUtils
         if ( scmConnection == null )
         {
             // prevent null-value
-            scmConnection = String.valueOf( getScmConnection( project ) );
+            scmConnection = defaultString( getScmConnection( project ) );
             
             if ( !ProjectUtils.isRootProject( project ) )
             {
@@ -48,20 +48,20 @@ public final class ScmUtils
 
     public static String resolveScmDeveloperConnection( MavenProject project )
     {
-        String siteUrl = getScmDeveloperConnection( project.getModel() );
+        String scmDeveloperConnection = getScmDeveloperConnection( project.getModel() );
 
-        if ( siteUrl == null )
+        if ( scmDeveloperConnection == null )
         {
             // prevent null-value
-            siteUrl = String.valueOf( getScmDeveloperConnection( project ) );
+            scmDeveloperConnection = defaultString( getScmDeveloperConnection( project ) );
             
             if ( !ProjectUtils.isRootProject( project ) )
             {
                 // assuming that folder matches the moduleName
-                siteUrl += '/' + project.getFile().getParentFile().getName();
+                scmDeveloperConnection += '/' + project.getFile().getParentFile().getName();
             }
         }
-        return siteUrl;
+        return scmDeveloperConnection;
     }
 
     protected static String getScmConnection( Model model )
@@ -100,4 +100,9 @@ public final class ScmUtils
         return project.getScm().getDeveloperConnection();
     }
 
+    public static String defaultString( String value )
+    {
+        return ( value == null ? "" : value );
+    }
+    
 }

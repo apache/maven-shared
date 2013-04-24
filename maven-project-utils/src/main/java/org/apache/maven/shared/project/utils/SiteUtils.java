@@ -31,16 +31,16 @@ public final class SiteUtils
     
     public static String resolveDistributionManagementSiteUrl( MavenProject project )
     {
-        String siteUrl = getDistributionManagementSiteUrl( project.getModel() ); 
-        
-        if( siteUrl == null  )
+        String siteUrl = getDistributionManagementSiteUrl( project.getModel() );
+
+        if ( siteUrl == null )
         {
             // prevent null-value
-            siteUrl = "" + getDistributionManagementSiteUrl( project );
-            if( !ProjectUtils.isRootProject( project ) )
+            siteUrl = String.valueOf( getDistributionManagementSiteUrl( project ) );
+            if ( !ProjectUtils.isRootProject( project ) )
             {
                 // assuming that folder matches the moduleName
-                siteUrl += "/" + project.getFile().getParentFile().getName(); 
+                siteUrl += '/' + project.getFile().getParentFile().getName();
             }
         }
         return siteUrl;
@@ -53,26 +53,20 @@ public final class SiteUtils
      */
     protected static final String getDistributionManagementSiteUrl( Model model )
     {
-        if( model.getDistributionManagement() != null && model.getDistributionManagement().getSite() != null )
-        {
-            return model.getDistributionManagement().getSite().getUrl();
-        }
-        else
+        if ( model.getDistributionManagement() == null || model.getDistributionManagement().getSite() == null )
         {
             return null;
         }
+        return model.getDistributionManagement().getSite().getUrl();
     }
 
     protected static final String getDistributionManagementSiteUrl( MavenProject project )
     {
-        if( project.getDistributionManagement() != null && project.getDistributionManagement().getSite() != null )
-        {
-            return project.getDistributionManagement().getSite().getUrl();
-        }
-        else
+        if ( project.getDistributionManagement() == null || project.getDistributionManagement().getSite() == null )
         {
             return null;
         }
+        return project.getDistributionManagement().getSite().getUrl();
     }
 
 }

@@ -52,10 +52,13 @@ public final class ProjectUtils
         {
             if ( project.getId().equals( collectedProject.getId() ) )
             {
-                return true;
+                // project is a module of its parent
+                return false;
             }
         }
-        return false;
+
+        // project isn't a module of its parent
+        return true;
     }
     
     /**

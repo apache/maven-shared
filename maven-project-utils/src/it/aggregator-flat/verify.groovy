@@ -20,3 +20,10 @@ File buildLog = new File( basedir, 'build.log' )
 assert buildLog.text.contains( '[INFO] Resolved distributionManagement site URL for org.apache.maven.shared.project.utils.it.aggregator-flat:aggregator:pom:0.0.1-SNAPSHOT: http://localhost/aggregator')
 // aggregator is not the parent of this project, so should use its own site URL
 assert buildLog.text.contains( '[INFO] Resolved distributionManagement site URL for org.apache.maven.shared.project.utils.it.aggregator-flat:project:pom:0.0.1-SNAPSHOT: null' )
+
+assert buildLog.text.contains( '[INFO] Resolved scm connection for org.apache.maven.shared.project.utils.it.aggregator-flat:aggregator:pom:0.0.1-SNAPSHOT: scm:local:/project' );
+assert buildLog.text.contains( '[INFO] Resolved scm developer connection for org.apache.maven.shared.project.utils.it.aggregator-flat:aggregator:pom:0.0.1-SNAPSHOT: scm:local:/sproject' );
+
+def LS = System.getProperty( "line.separator" )
+assert buildLog.text.contains( "[INFO] Resolved scm connection for org.apache.maven.shared.project.utils.it.aggregator-flat:project:pom:0.0.1-SNAPSHOT: ${LS}" );
+assert buildLog.text.contains( "[INFO] Resolved scm developer connection for org.apache.maven.shared.project.utils.it.aggregator-flat:project:pom:0.0.1-SNAPSHOT: ${LS}" );

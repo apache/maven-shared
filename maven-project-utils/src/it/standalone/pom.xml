@@ -12,4 +12,8 @@
     </site>
   </distributionManagement>
 
+  <scm>
+    <connection>scm:local:/project</connection>
+    <developerConnection>scm:local:/sproject</developerConnection>
+  </scm>
 </project>

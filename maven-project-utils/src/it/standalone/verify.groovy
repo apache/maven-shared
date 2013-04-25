@@ -18,3 +18,6 @@
  */
 File buildLog = new File( basedir, 'build.log' )
 assert buildLog.text.contains( '[INFO] Resolved distributionManagement site URL for org.apache.maven.shared.project.utils.it.standalone:standalone:pom:0.0.1-SNAPSHOT: http://localhost/standalone')
+
+assert buildLog.text.contains( '[INFO] Resolved scm connection for org.apache.maven.shared.project.utils.it.standalone:standalone:pom:0.0.1-SNAPSHOT: scm:local:/project' )
+assert buildLog.text.contains( '[INFO] Resolved scm developer connection for org.apache.maven.shared.project.utils.it.standalone:standalone:pom:0.0.1-SNAPSHOT: scm:local:/sproject' )

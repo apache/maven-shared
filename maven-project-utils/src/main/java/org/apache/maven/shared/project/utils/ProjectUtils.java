@@ -48,12 +48,15 @@ public final class ProjectUtils
         @SuppressWarnings( "unchecked" )
         List<MavenProject> collectedProjects = (List<MavenProject>) parent.getCollectedProjects();
 
-        for ( MavenProject collectedProject : collectedProjects )
+        if ( collectedProjects != null )
         {
-            if ( project.getId().equals( collectedProject.getId() ) )
+            for ( MavenProject collectedProject : collectedProjects )
             {
-                // project is a module of its parent
-                return false;
+                if ( project.getId().equals( collectedProject.getId() ) )
+                {
+                    // project is a module of its parent
+                    return false;
+                }
             }
         }
 

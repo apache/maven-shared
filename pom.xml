@@ -56,6 +56,7 @@ under the License.
     <module>maven-invoker</module>
     <module>maven-model-converter</module>
     <module>maven-osgi</module>
+    <module>maven-project-utils</module>
     <module>maven-reporting-api</module>
     <module>maven-reporting-impl</module>
     <module>maven-repository-builder</module>

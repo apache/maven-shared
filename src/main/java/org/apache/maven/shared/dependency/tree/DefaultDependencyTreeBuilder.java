@@ -140,6 +140,12 @@ public class DefaultDependencyTreeBuilder
                                     metadataSource, null, collector );
     }
 
+    public DependencyNode buildDependencyTree( MavenProject project, ArtifactRepository repository, ArtifactFilter filter )
+        throws DependencyTreeBuilderException
+    {
+        return buildDependencyTree( project, repository, factory, metadataSource, filter, collector );
+    }
+
     // protected methods ------------------------------------------------------
 
     protected ArtifactResolutionResult getArtifactResolutionResult()

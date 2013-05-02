@@ -94,6 +94,15 @@ public interface DependencyTreeBuilder
                                         ArtifactCollector collector )
         throws DependencyTreeBuilderException;
 
+    /**
+     * @deprecated doesn't work with Maven 3
+     */
     DependencyNode buildDependencyTree( MavenProject project )
+        throws DependencyTreeBuilderException;
+
+    /**
+     * @since 2.1
+     */
+    DependencyNode buildDependencyTree( MavenProject project, ArtifactRepository repository, ArtifactFilter filter )
         throws DependencyTreeBuilderException;
 }

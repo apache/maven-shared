@@ -36,9 +36,9 @@ public class SerializingDependencyNodeVisitor
     // classes ----------------------------------------------------------------
 
     /**
-     * Provides tokens to use when serializing the dependency tree.
+     * Provides tokens to use when serializing the dependency graph.
      */
-    public static class TreeTokens
+    public static class GraphTokens
     {
         private final String nodeIndent;
 
@@ -48,7 +48,7 @@ public class SerializingDependencyNodeVisitor
 
         private final String lastFillIndent;
 
-        public TreeTokens( String nodeIndent, String lastNodeIndent, String fillIndent, String lastFillIndent )
+        public GraphTokens( String nodeIndent, String lastNodeIndent, String fillIndent, String lastFillIndent )
         {
             this.nodeIndent = nodeIndent;
             this.lastNodeIndent = lastNodeIndent;
@@ -70,20 +70,20 @@ public class SerializingDependencyNodeVisitor
     // constants --------------------------------------------------------------
 
     /**
-     * Whitespace tokens to use when outputing the dependency tree.
+     * Whitespace tokens to use when outputing the dependency graph.
      */
-    public static final TreeTokens WHITESPACE_TOKENS = new TreeTokens( "   ", "   ", "   ", "   " );
+    public static final GraphTokens WHITESPACE_TOKENS = new GraphTokens( "   ", "   ", "   ", "   " );
 
     /**
-     * The standard ASCII tokens to use when outputing the dependency tree.
+     * The standard ASCII tokens to use when outputing the dependency graph.
      */
-    public static final TreeTokens STANDARD_TOKENS = new TreeTokens( "+- ", "\\- ", "|  ", "   " );
+    public static final GraphTokens STANDARD_TOKENS = new GraphTokens( "+- ", "\\- ", "|  ", "   " );
 
     /**
-     * The extended ASCII tokens to use when outputing the dependency tree.
+     * The extended ASCII tokens to use when outputing the dependency graph.
      */
-    public static final TreeTokens EXTENDED_TOKENS =
-        new TreeTokens( "\u00c3\u00c4 ", "\u00c0\u00c4 ", "\u00b3  ", "   " );
+    public static final GraphTokens EXTENDED_TOKENS =
+        new GraphTokens( "\u00c3\u00c4 ", "\u00c0\u00c4 ", "\u00b3  ", "   " );
 
     // fields -----------------------------------------------------------------
 
@@ -93,9 +93,9 @@ public class SerializingDependencyNodeVisitor
     private final PrintWriter writer;
 
     /**
-     * The tokens to use when serializing the dependency tree.
+     * The tokens to use when serializing the dependency graph.
      */
-    private final TreeTokens tokens;
+    private final GraphTokens tokens;
 
     /**
      * The depth of the currently visited dependency node.
@@ -122,9 +122,9 @@ public class SerializingDependencyNodeVisitor
      * @param writer
      *            the writer to serialize to
      * @param tokens
-     *            the tokens to use when serializing the dependency tree
+     *            the tokens to use when serializing the dependency graph
      */
-    public SerializingDependencyNodeVisitor( Writer writer, TreeTokens tokens )
+    public SerializingDependencyNodeVisitor( Writer writer, GraphTokens tokens )
     {
         if ( writer instanceof PrintWriter )
         {

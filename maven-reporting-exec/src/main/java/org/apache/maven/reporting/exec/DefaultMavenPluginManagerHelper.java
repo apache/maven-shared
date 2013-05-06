@@ -34,7 +34,6 @@ import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
-import org.sonatype.aether.repository.RemoteRepository;
 
 /**
  * {@link MavenPluginManager} helper to deal with API changes between Maven 3.0.x and 3.1.x, ie switch from Sonatype Aether
@@ -129,15 +128,15 @@ public class DefaultMavenPluginManagerHelper
         }
     }
 
-    public PluginDescriptor getPluginDescriptor( Plugin plugin, List<RemoteRepository> repositories,
-                                                 MavenSession session )
+    public PluginDescriptor getPluginDescriptor( Plugin plugin, MavenSession session )
         throws PluginResolutionException, PluginDescriptorParsingException, InvalidPluginDescriptorException
     {
         try
         {
             Object repositorySession = getRepositorySession.invoke( session );
+            List<?> remoteRepositories = session.getCurrentProject().getRemotePluginRepositories();
 
-            return (PluginDescriptor) getPluginDescriptor.invoke( mavenPluginManager, plugin, repositories,
+            return (PluginDescriptor) getPluginDescriptor.invoke( mavenPluginManager, plugin, remoteRepositories,
                                                                   repositorySession );
         }
         catch ( IllegalArgumentException e )

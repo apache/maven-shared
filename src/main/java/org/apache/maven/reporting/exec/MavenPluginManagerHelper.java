@@ -29,7 +29,6 @@ import org.apache.maven.plugin.PluginContainerException;
 import org.apache.maven.plugin.PluginDescriptorParsingException;
 import org.apache.maven.plugin.PluginResolutionException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
-import org.sonatype.aether.repository.RemoteRepository;
 
 /**
  * {@link MavenPluginManager} helper to deal with API changes between Maven 3.0.x and 3.1.x.
@@ -39,7 +38,7 @@ import org.sonatype.aether.repository.RemoteRepository;
  */
 public interface MavenPluginManagerHelper
 {
-    PluginDescriptor getPluginDescriptor( Plugin plugin, List<RemoteRepository> repositories, MavenSession session )
+    PluginDescriptor getPluginDescriptor( Plugin plugin, MavenSession session )
         throws PluginResolutionException, PluginDescriptorParsingException, InvalidPluginDescriptorException;
 
     void setupPluginRealm( PluginDescriptor pluginDescriptor, MavenSession session, ClassLoader parent,

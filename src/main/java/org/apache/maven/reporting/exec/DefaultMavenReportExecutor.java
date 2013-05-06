@@ -55,7 +55,6 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.graph.DependencyFilter;
-import org.sonatype.aether.repository.RemoteRepository;
 
 /**
  * <p>
@@ -176,10 +175,8 @@ public class DefaultMavenReportExecutor
         logger.info( "configuring report plugin " + plugin.getId() );
 
         MavenSession session = mavenReportExecutorRequest.getMavenSession();
-        List<RemoteRepository> remoteRepositories = session.getCurrentProject().getRemotePluginRepositories();
 
-        PluginDescriptor pluginDescriptor =
-            mavenPluginManagerHelper.getPluginDescriptor( plugin, remoteRepositories, session );
+        PluginDescriptor pluginDescriptor = mavenPluginManagerHelper.getPluginDescriptor( plugin, session );
 
         List<GoalWithConf> goalsWithConfiguration = new ArrayList<GoalWithConf>();
 

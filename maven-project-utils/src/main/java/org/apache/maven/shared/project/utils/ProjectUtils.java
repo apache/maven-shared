@@ -74,6 +74,11 @@ public final class ProjectUtils
 
     public static MavenProject getRootProject( MavenProject project )
     {
+        if ( project == null )
+        {
+            return null;
+        }
+        
         MavenProject current = project;
 
         while ( !isRootProject( current ) )

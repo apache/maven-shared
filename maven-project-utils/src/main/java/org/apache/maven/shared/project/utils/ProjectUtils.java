@@ -59,11 +59,31 @@ public final class ProjectUtils
                 }
             }
         }
+        else
+        {
+            if ( parent.getModules().size() > 0 )
+            {
+                // problem: parent has modules, but they aren't collected (ie not in the reactor)
+                // can't really tell if current project is root or not
+            }
+        }
 
         // project isn't a module of its parent
         return true;
     }
-    
+
+    public static MavenProject getRootProject( MavenProject project )
+    {
+        MavenProject current = project;
+
+        while ( !isRootProject( current ) )
+        {
+            current = current.getParent();
+        }
+
+        return current;
+    }
+
     /**
      * Return {@code true} if this project has modules, but is <strong>never</strong> the parent of one of them.<br/>
      * 

@@ -123,8 +123,8 @@ public final class ProjectUtils
      * Returns all modules of a project, including does specified in profiles, both active and inactive.
      * The key of the returned Map is the name of the module, the value is the source of the module (the project or a specific profile). 
      * 
-     * @param project
-     * @return
+     * @param project the project
+     * @return all modules, never {@code null}
      */
     public static Map<String, String> getAllModules( MavenProject project )
     {

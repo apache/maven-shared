@@ -1,7 +1,11 @@
 package org.apache.maven.shared.project.utils;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.maven.model.Profile;
 import org.apache.maven.project.MavenProject;
 
 /*
@@ -59,13 +63,11 @@ public final class ProjectUtils
                 }
             }
         }
-        else
+        
+        if ( parent.getModules().size() > 0 )
         {
-            if ( parent.getModules().size() > 0 )
-            {
-                // problem: parent has modules, but they aren't collected (ie not in the reactor)
-                // can't really tell if current project is root or not
-            }
+            // problem: parent has modules, but they aren't collected (ie not in the reactor)
+            // can't really tell if current project is root or not
         }
 
         // project isn't a module of its parent
@@ -115,5 +117,31 @@ public final class ProjectUtils
             }
         }
         return true;
+    }
+    
+    /**
+     * Returns all modules of a project, including does specified in profiles, both active and inactive.
+     * The key of the returned Map is the name of the module, the value is the source of the module (the project or a specific profile). 
+     * 
+     * @param project
+     * @return
+     */
+    public static Map<String, String> getAllModules( MavenProject project )
+    {
+        Map<String, String> modules = new LinkedHashMap<String, String>();
+
+        for ( String module : project.getModel().getModules() )
+        {
+            modules.put( module, "project" ); // id?
+        }
+
+        for ( Profile profile : project.getModel().getProfiles() )
+        {
+            for ( String module : profile.getModules() )
+            {
+                modules.put( module, "profile(id:" + profile.getId() + ")" );
+            }
+        }
+        return Collections.unmodifiableMap( modules );
     }
 }

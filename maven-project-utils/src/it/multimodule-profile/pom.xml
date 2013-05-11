@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.apache.maven.shared.project.utils.it.profile-module</groupId>
+  <artifactId>profile</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  
+  <distributionManagement>
+    <site>
+      <url>http://localhost/profile</url>
+    </site>
+  </distributionManagement>
+  
+  <scm>
+    <connection>scm:local:/project</connection>
+    <developerConnection>scm:local:/sproject</developerConnection>
+  </scm>
+  
+  <profiles>
+    <profile>
+      <id>profile</id>
+      <modules>
+        <module>module</module>
+      </modules>
+    </profile>
+  </profiles>
+</project>

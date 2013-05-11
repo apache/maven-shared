@@ -1,5 +1,6 @@
 package org.apache.maven.shared.project.utils;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -64,10 +65,21 @@ public final class ProjectUtils
             }
         }
         
-        if ( parent.getModules().size() > 0 )
+        // problem: parent has modules, but they aren't collected (ie not in the reactor)
+        // (not) being a rootProject must never depend on reactor projects or active profiles
+        for ( String module : getAllModules( parent ).keySet() )
         {
-            // problem: parent has modules, but they aren't collected (ie not in the reactor)
-            // can't really tell if current project is root or not
+            File moduleFile = new File( parent.getBasedir(), module );
+            if ( moduleFile.isDirectory() )
+            {
+                moduleFile = new File( moduleFile, "pom.xml" );
+            }
+
+            if ( moduleFile.equals( project.getFile() ) )
+            {
+                // project is a module of its parent
+                return false;
+            }
         }
 
         // project isn't a module of its parent

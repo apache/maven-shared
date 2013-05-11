@@ -4,10 +4,10 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.project.utils.ScmUtils;
+import org.apache.maven.shared.project.utils.ProjectUtils;
 
-@Mojo( name="resolve-scm" )
-public class ResolveScmMojo
+@Mojo( name="resolve-project" )
+public class ResolveProjectMojo
     extends AbstractMojo
 {
     @Parameter( defaultValue = "${project}", required = true, readonly = true )
@@ -15,7 +15,7 @@ public class ResolveScmMojo
 
     public void execute()
     {
-        getLog().info( "Resolved scm connection for " + project.getId() + ": " + ScmUtils.resolveScmConnection( project ) );
-        getLog().info( "Resolved scm developer connection for " + project.getId() + ": " + ScmUtils.resolveScmDeveloperConnection( project ) );
+        getLog().info( project.getId() + " is root project: " + ProjectUtils.isRootProject( project ) );
+        getLog().info( project.getId() + " is aggregator: " + ProjectUtils.isAggregator( project ) );
     }
 }

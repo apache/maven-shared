@@ -50,22 +50,6 @@ public final class ProjectUtils
 
         MavenProject parent = project.getParent();
 
-        @SuppressWarnings( "unchecked" )
-        List<MavenProject> collectedProjects = (List<MavenProject>) parent.getCollectedProjects();
-
-        if ( collectedProjects != null )
-        {
-            for ( MavenProject collectedProject : collectedProjects )
-            {
-                if ( project.getId().equals( collectedProject.getId() ) )
-                {
-                    // project is a module of its parent
-                    return false;
-                }
-            }
-        }
-        
-        // problem: parent has modules, but they aren't collected (ie not in the reactor)
         // (not) being a rootProject must never depend on reactor projects or active profiles
         for ( String module : getAllModules( parent ).keySet() )
         {

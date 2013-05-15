@@ -15,6 +15,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.MavenProjectHelper;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 /*
@@ -113,6 +114,8 @@ public final class ProjectUtils
             return false;
         }
 
+        MavenXpp3Reader reader = new MavenXpp3Reader();
+        
         for ( String module : modules )
         {
             File moduleFile = new File( project.getBasedir(), module );
@@ -122,11 +125,13 @@ public final class ProjectUtils
                 moduleFile = new File( moduleFile, "pom.xml" );
             }
 
-            MavenXpp3Reader reader = new MavenXpp3Reader();
+            FileReader moduleReader = null; 
             
             try
             {
-                Model model = reader.read( new FileReader( moduleFile ) );
+                moduleReader = new FileReader( moduleFile );
+                
+                Model model = reader.read( moduleReader );
                 
                 if ( model.getParent() != null && model.getParent().getId().equals( project.getId() ) )
                 {
@@ -147,6 +152,10 @@ public final class ProjectUtils
             {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+            }
+            finally
+            {
+                IOUtil.close( moduleReader );
             }
             
         }

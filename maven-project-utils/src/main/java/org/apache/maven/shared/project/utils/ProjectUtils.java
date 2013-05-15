@@ -73,6 +73,13 @@ public final class ProjectUtils
         return true;
     }
 
+    /**
+     * Go through the ancestors to find the rootProject of this project.
+     * 
+     * @param project the project
+     * @return the root project
+     * @see ProjectUtils#isRootProject(MavenProject)
+     */
     public static MavenProject getRootProject( MavenProject project )
     {
         if ( project == null )

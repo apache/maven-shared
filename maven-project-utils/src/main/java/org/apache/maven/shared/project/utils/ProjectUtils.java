@@ -60,11 +60,7 @@ public final class ProjectUtils
         // (not) being a rootProject must never depend on reactor projects or active profiles
         for ( String module : getAllModules( parent ).keySet() )
         {
-            File moduleFile = new File( parent.getBasedir(), module );
-            if ( moduleFile.isDirectory() )
-            {
-                moduleFile = new File( moduleFile, "pom.xml" );
-            }
+            File moduleFile = getModuleFile( parent, module );
 
             if ( moduleFile.equals( project.getFile() ) )
             {
@@ -116,12 +112,7 @@ public final class ProjectUtils
         
         for ( String module : modules )
         {
-            File moduleFile = new File( project.getBasedir(), module );
-            
-            if ( moduleFile.isDirectory() )
-            {
-                moduleFile = new File( moduleFile, "pom.xml" );
-            }
+            File moduleFile = getModuleFile( project, module );
 
             FileReader moduleReader = null; 
             
@@ -158,6 +149,17 @@ public final class ProjectUtils
             
         }
         return true;
+    }
+
+    private static File getModuleFile( MavenProject project, String module )
+    {
+        File moduleFile = new File( project.getBasedir(), module );
+        
+        if ( moduleFile.isDirectory() )
+        {
+            moduleFile = new File( moduleFile, "pom.xml" );
+        }
+        return moduleFile;
     }
     
     /**

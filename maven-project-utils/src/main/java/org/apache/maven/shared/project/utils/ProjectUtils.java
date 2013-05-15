@@ -1,13 +1,21 @@
 package org.apache.maven.shared.project.utils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.maven.model.Model;
 import org.apache.maven.model.Profile;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.project.MavenProjectHelper;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -30,7 +38,7 @@ import org.apache.maven.project.MavenProject;
 
 public final class ProjectUtils
 {
-
+    
     private ProjectUtils()
     {
     }
@@ -97,27 +105,57 @@ public final class ProjectUtils
      */
     public static boolean isAggregator( MavenProject project )
     {
-        @SuppressWarnings( "unchecked" )
-        List<MavenProject> collectedProjects = (List<MavenProject>) project.getCollectedProjects();
+     // (not) being an aggregator must never depend on reactor projects or active profiles
+        Set<String> modules = getAllModules( project ).keySet();
 
-        if ( collectedProjects.isEmpty() )
+        if ( modules.isEmpty() )
         {
             return false;
         }
 
-        for ( MavenProject collectedProject : collectedProjects )
+        for ( String module : modules )
         {
-            if ( project.getId().equals( collectedProject.getId() ) )
+            File moduleFile = new File( project.getBasedir(), module );
+            
+            if ( moduleFile.isDirectory() )
             {
-                return false;
+                moduleFile = new File( moduleFile, "pom.xml" );
             }
+
+            MavenXpp3Reader reader = new MavenXpp3Reader();
+            
+            try
+            {
+                Model model = reader.read( new FileReader( moduleFile ) );
+                
+                if ( model.getParent() != null && model.getParent().getId().equals( project.getId() ) )
+                {
+                    return false;
+                }
+            }
+            catch ( FileNotFoundException e )
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch ( IOException e )
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            catch ( XmlPullParserException e )
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            
         }
         return true;
     }
     
     /**
      * Returns all modules of a project, including does specified in profiles, both active and inactive.
-     * The key of the returned Map is the name of the module, the value is the source of the module (the project or a specific profile). 
+     * The key of the returned Map is the name of the module, the value refers to the source of the module (the project or a specific profile). 
      * 
      * @param project the project
      * @return all modules, never {@code null}

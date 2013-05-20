@@ -19,7 +19,6 @@ package org.apache.maven.it;
  * under the License.
  */
 
-import java.io.File;
 import java.util.Arrays;
 
 import junit.framework.TestCase;
@@ -43,7 +42,7 @@ public class VerifierTest
     public void testFileInJarPresent()
         throws VerificationException
     {
-        File file = new File( "src/test/resources/mshared104.jar!fud.xml" );
+        //File file = new File( "src/test/resources/mshared104.jar!fud.xml" );
         Verifier verifier = new Verifier( "src/test/resources" );
         verifier.assertFilePresent( "mshared104.jar!/pom.xml" );
         verifier.assertFileNotPresent( "mshared104.jar!/fud.xml" );

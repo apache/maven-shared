@@ -36,7 +36,7 @@ import org.apache.maven.shared.utils.io.IOUtil;
 public class ResourceExtractor
 {
 
-    public static File simpleExtractResources( Class cl, String resourcePath )
+    public static File simpleExtractResources( Class<?> cl, String resourcePath )
         throws IOException
     {
         String tempDirPath = System.getProperty( "maven.test.tmpdir", System.getProperty( "java.io.tmpdir" ) );
@@ -56,20 +56,20 @@ public class ResourceExtractor
         return extractResourcePath( ResourceExtractor.class, resourcePath, dest );
     }
 
-    public static File extractResourcePath( Class cl, String resourcePath, File dest )
+    public static File extractResourcePath( Class<?> cl, String resourcePath, File dest )
         throws IOException
     {
         return extractResourcePath( cl, resourcePath, dest, false );
     }
 
-    public static File extractResourcePath( Class cl, String resourcePath, File tempDir, boolean alwaysExtract )
+    public static File extractResourcePath( Class<?> cl, String resourcePath, File tempDir, boolean alwaysExtract )
         throws IOException
     {
         File dest = new File( tempDir, resourcePath );
         return extractResourceToDestination( cl, resourcePath, dest, alwaysExtract );
     }
 
-    public static File extractResourceToDestination( Class cl, String resourcePath, File destination,
+    public static File extractResourceToDestination( Class<?> cl, String resourcePath, File destination,
                                                      boolean alwaysExtract )
         throws IOException
     {
@@ -109,7 +109,7 @@ public class ResourceExtractor
         return destination;
     }
 
-    private static void extractResourcePathFromJar( Class cl, File jarFile, String resourcePath, File dest )
+    private static void extractResourcePathFromJar( Class<?> cl, File jarFile, String resourcePath, File dest )
         throws IOException
     {
         ZipFile z = new ZipFile( jarFile, ZipFile.OPEN_READ );
@@ -118,9 +118,9 @@ public class ResourceExtractor
         if ( ze != null )
         {
             // DGF If it's a directory, then we need to look at all the entries
-            for ( Enumeration entries = z.entries(); entries.hasMoreElements(); )
+            for ( Enumeration<? extends ZipEntry> entries = z.entries(); entries.hasMoreElements(); )
             {
-                ze = (ZipEntry) entries.nextElement();
+                ze = entries.nextElement();
                 if ( ze.getName().startsWith( zipStyleResourcePath ) )
                 {
                     String relativePath = ze.getName().substring( zipStyleResourcePath.length() );

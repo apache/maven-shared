@@ -239,12 +239,10 @@ public class Verifier
     public void verify( boolean chokeOnErrorOutput )
         throws VerificationException
     {
-        List lines = loadFile( getBasedir(), "expected-results.txt", false );
+        List<String> lines = loadFile( getBasedir(), "expected-results.txt", false );
 
-        for ( Object line1 : lines )
+        for ( String line : lines )
         {
-            String line = (String) line1;
-
             verifyExpectedResult( line );
         }
 
@@ -939,15 +937,14 @@ public class Verifier
      * @throws IOException If the file could not be filtered.
      * @since 1.2
      */
-    public File filterFile( String srcPath, String dstPath, String fileEncoding, Map filterProperties )
+    public File filterFile( String srcPath, String dstPath, String fileEncoding, Map<String, String> filterProperties )
         throws IOException
     {
         File srcFile = new File( getBasedir(), srcPath );
         String data = FileUtils.fileRead( srcFile, fileEncoding );
 
-        for ( Iterator it = filterProperties.keySet().iterator(); it.hasNext(); )
+        for ( String token : filterProperties.keySet() )
         {
-            String token = (String) it.next();
             String value = String.valueOf( filterProperties.get( token ) );
             data = StringUtils.replace( data, token, value );
         }
@@ -1215,7 +1212,7 @@ public class Verifier
         executeGoal( goal, environmentVariables );
     }
 
-    public void executeGoal( String goal, Map envVars )
+    public void executeGoal( String goal, Map<Object, Object> envVars )
         throws VerificationException
     {
         executeGoals( Arrays.asList( goal ), envVars );
@@ -1253,7 +1250,7 @@ public class Verifier
         }
     }
 
-    public void executeGoals( List<String> goals, Map envVars )
+    public void executeGoals( List<String> goals, Map<Object, Object> envVars )
         throws VerificationException
     {
         List<String> allGoals = new ArrayList<String>();
@@ -1415,7 +1412,7 @@ public class Verifier
         try
         {
             // disable EMMA runtime controller port allocation, should be harmless if EMMA is not used
-            Map envVars = Collections.singletonMap( "MAVEN_OPTS", "-Demma.rt.control=false" );
+            Map<?,?> envVars = Collections.singletonMap( "MAVEN_OPTS", "-Demma.rt.control=false" );
             launcher.run( new String[]{ "--version" }, envVars, null, logFile );
         }
         catch ( LauncherException e )
@@ -1427,7 +1424,7 @@ public class Verifier
             throw new VerificationException( "IO Error communicating with commandline " + e.toString(), e );
         }
 
-        List logLines = loadFile( logFile, false );
+        List<String> logLines = loadFile( logFile, false );
         //noinspection ResultOfMethodCallIgnored
         logFile.delete();
 
@@ -1445,15 +1442,15 @@ public class Verifier
         }
     }
 
-    static String extractMavenVersion( List logLines )
+    static String extractMavenVersion( List<String> logLines )
     {
         String version = null;
 
         final Pattern MAVEN_VERSION = Pattern.compile( "(?i).*Maven [^0-9]*([0-9]\\S*).*" );
 
-        for ( Iterator it = logLines.iterator(); version == null && it.hasNext(); )
+        for ( Iterator<String> it = logLines.iterator(); version == null && it.hasNext(); )
         {
-            String line = (String) it.next();
+            String line = it.next();
 
             Matcher m = MAVEN_VERSION.matcher( line );
             if ( m.matches() )
@@ -1884,7 +1881,7 @@ public class Verifier
         }
     }
 
-    public List getCliOptions()
+    public List<String> getCliOptions()
     {
         return cliOptions;
     }

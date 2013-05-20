@@ -66,7 +66,7 @@ class Embedded3xLauncher
         Thread.currentThread().setContextClassLoader( bootLoader );
         try
         {
-            Class launcherClass = bootLoader.loadClass( "org.codehaus.plexus.classworlds.launcher.Launcher" );
+            Class<?> launcherClass = bootLoader.loadClass( "org.codehaus.plexus.classworlds.launcher.Launcher" );
 
             Object launcher = launcherClass.newInstance();
 
@@ -78,12 +78,12 @@ class Embedded3xLauncher
             Object classWorld = getWorld.invoke( launcher, null );
 
             Method getMainClass = launcherClass.getMethod( "getMainClass", null );
-            Class cliClass = (Class) getMainClass.invoke( launcher, null );
+            Class<?> cliClass = (Class<?>) getMainClass.invoke( launcher, null );
 
-            Constructor newMavenCli = cliClass.getConstructor( new Class[]{ classWorld.getClass() } );
+            Constructor<?> newMavenCli = cliClass.getConstructor( new Class[]{ classWorld.getClass() } );
             mavenCli = newMavenCli.newInstance( new Object[]{ classWorld } );
 
-            Class[] parameterTypes = { String[].class, String.class, PrintStream.class, PrintStream.class };
+            Class<?>[] parameterTypes = { String[].class, String.class, PrintStream.class, PrintStream.class };
             doMain = cliClass.getMethod( "doMain", parameterTypes );
         }
         catch ( ClassNotFoundException e )
@@ -120,7 +120,7 @@ class Embedded3xLauncher
     {
         File bootDir = new File( mavenHome, "boot" );
 
-        List urls = new ArrayList();
+        List<URL> urls = new ArrayList<URL>();
 
         addUrls( urls, bootDir );
 
@@ -134,7 +134,7 @@ class Embedded3xLauncher
         return new URLClassLoader( ucp, ClassLoader.getSystemClassLoader().getParent() );
     }
 
-    private static void addUrls( List urls, File directory )
+    private static void addUrls( List<URL> urls, File directory )
     {
         File[] jars = directory.listFiles();
 

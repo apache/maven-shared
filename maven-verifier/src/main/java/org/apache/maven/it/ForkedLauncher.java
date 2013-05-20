@@ -63,7 +63,7 @@ class ForkedLauncher
         }
     }
 
-    public int run( String[] cliArgs, Map envVars, String workingDirectory, File logFile )
+    public int run( String[] cliArgs, Map<?, ?> envVars, String workingDirectory, File logFile )
         throws IOException, LauncherException
     {
         Commandline cmd = new Commandline();
@@ -122,7 +122,7 @@ class ForkedLauncher
     public int run( String[] cliArgs, String workingDirectory, File logFile )
         throws IOException, LauncherException
     {
-        return run( cliArgs, Collections.EMPTY_MAP, workingDirectory, logFile );
+        return run( cliArgs, Collections.<Object, Object> emptyMap(), workingDirectory, logFile );
     }
 
 }

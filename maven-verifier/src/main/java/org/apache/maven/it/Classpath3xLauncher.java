@@ -48,11 +48,11 @@ class Classpath3xLauncher
 
         try
         {
-            Class cliClass = coreLoader.loadClass( "org.apache.maven.cli.MavenCli" );
+            Class<?> cliClass = coreLoader.loadClass( "org.apache.maven.cli.MavenCli" );
 
             mavenCli = cliClass.newInstance();
 
-            Class[] parameterTypes = { String[].class, String.class, PrintStream.class, PrintStream.class };
+            Class<?>[] parameterTypes = { String[].class, String.class, PrintStream.class, PrintStream.class };
             doMain = cliClass.getMethod( "doMain", parameterTypes );
         }
         catch ( ClassNotFoundException e )

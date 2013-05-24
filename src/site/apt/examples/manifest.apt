@@ -90,11 +90,15 @@ Implementation-Title: ${project.name}
 Implementation-Version: ${project.version}
 Implementation-Vendor-Id: ${project.groupId}
 Implementation-Vendor: ${project.organization.name}
+Implementation-URL: ${project.url}
 +-----+
 
  <<Note:>> If your pom.xml does not have an <<<\<organization\>>>>/<<<\<name\>>>>
  element, then the <<<Specification-Vendor>>> and <<<Implementation-Vendor>>>
  entries will <<not>> be in the manifest.
+
+ <<Note:>> If your pom.xml does not have a <<<\<url\>>>> element, referenced through interpolation,
+ then the <<<Implementation-URL>>> entry will <<not>> be in the manifest.
 
  <<Note:>> If your pom.xml does not have a <<<\<name\>>>> element, then the
  <<<Specification-Title>>> and <<<Implementation-Title>>> entries will have

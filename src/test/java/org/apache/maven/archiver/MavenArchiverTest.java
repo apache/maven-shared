@@ -453,6 +453,7 @@ public class MavenArchiverTest
         assertEquals( "0.1", manifest.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
         assertEquals( "org.apache.dummy", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR_ID ) );
         assertEquals( "Apache", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR ) );
+        assertEquals( "http://maven.apache.org", manifest.get( Attributes.Name.IMPLEMENTATION_URL ) );
 
         assertEquals( System.getProperty( "java.version" ), manifest.get( new Attributes.Name( "Build-Jdk" ) ) );
         assertEquals( System.getProperty( "user.name" ), manifest.get( new Attributes.Name( "Built-By" ) ) );
@@ -502,6 +503,7 @@ public class MavenArchiverTest
         assertEquals( "0.1", manifest.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
         assertEquals( "org.apache.dummy", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR_ID ) );
         assertEquals( "Apache", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR ) );
+        assertEquals( "http://maven.apache.org", manifest.get( Attributes.Name.IMPLEMENTATION_URL ) );
 
         assertEquals( "org.apache.maven.Foo", manifest.get( Attributes.Name.MAIN_CLASS ) );
 
@@ -839,6 +841,7 @@ public class MavenArchiverTest
         build.setOutputDirectory( "target" );
         project.setBuild( build );
         project.setName( "archiver test" );
+        project.setUrl( "http://maven.apache.org" );
         Organization organization = new Organization();
         organization.setName( "Apache" );
         project.setOrganization( organization );

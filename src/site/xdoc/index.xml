@@ -200,11 +200,12 @@ Implementation-Title: ${project.name}
 Implementation-Version: ${project.version}
 Implementation-Vendor-Id: ${project.groupId}
 Implementation-Vendor: ${project.organization.name}
+Implementation-URL: ${project.url}
               </source>
               The default value is <code>false</code>.
             </td>
             <td>boolean</td>
-            <td>2.1</td>
+            <td>2.1 and 2.6</td>
           </tr>
           <tr>
             <td>addDefaultSpecificationEntries</td>

@@ -158,7 +158,7 @@ public final class ProjectUtils
         return true;
     }
 
-    private static File getModuleFile( MavenProject project, String module )
+    public static File getModuleFile( MavenProject project, String module )
     {
         File moduleFile = new File( project.getBasedir(), module );
         

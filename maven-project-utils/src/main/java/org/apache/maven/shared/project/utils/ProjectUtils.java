@@ -1,7 +1,6 @@
 package org.apache.maven.shared.project.utils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collections;
@@ -122,23 +121,10 @@ public final class ProjectUtils
         {
             File moduleFile = getModuleFile( project, module );
 
-            FileReader moduleReader = null; 
-            
+            Model model = null;
             try
             {
-                moduleReader = new FileReader( moduleFile );
-                
-                Model model = reader.read( moduleReader );
-                
-                if ( model.getParent() != null && model.getParent().getId().equals( project.getId() ) )
-                {
-                    return false;
-                }
-            }
-            catch ( FileNotFoundException e )
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                model = readModel( reader, moduleFile );
             }
             catch ( IOException e )
             {
@@ -150,13 +136,34 @@ public final class ProjectUtils
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            finally
+
+            if ( model.getParent() != null && model.getParent().getId().equals( project.getId() ) )
             {
-                IOUtil.close( moduleReader );
+                return false;
             }
-            
+
         }
         return true;
+    }
+
+    private static Model readModel( MavenXpp3Reader reader, File moduleFile ) throws IOException, XmlPullParserException
+    {
+        FileReader moduleReader = null;
+        
+        Model model = null;
+        
+        try
+        {
+            moduleReader = new FileReader( moduleFile );
+            
+            model = reader.read( moduleReader );
+        }
+        finally
+        {
+            IOUtil.close( moduleReader );
+        }
+        
+        return model;
     }
 
     public static File getModuleFile( MavenProject project, String module )
@@ -179,21 +186,30 @@ public final class ProjectUtils
      */
     public static Map<String, String> getAllModules( MavenProject project )
     {
-        Map<String, String> modules = new LinkedHashMap<String, String>();
+        Model model = project.getModel();
+        
+        Map<String, String> modules = getAllModules( model );
+        
+        return Collections.unmodifiableMap( modules );
+    }
 
-        for ( String module : project.getModel().getModules() )
+    private static Map<String, String> getAllModules( Model model )
+    {
+        Map<String, String> modules = new LinkedHashMap<String, String>();
+        
+        for ( String module : model.getModules() )
         {
             modules.put( module, "project" ); // id?
         }
 
-        for ( Profile profile : project.getModel().getProfiles() )
+        for ( Profile profile : model.getProfiles() )
         {
             for ( String module : profile.getModules() )
             {
                 modules.put( module, "profile(id:" + profile.getId() + ")" );
             }
         }
-        return Collections.unmodifiableMap( modules );
+        return modules;
     }
     
     // Don't make this method public, it has nothing to do with a MavenProject.

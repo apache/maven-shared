@@ -188,9 +188,7 @@ public final class ProjectUtils
     {
         Model model = project.getModel();
         
-        Map<String, String> modules = getAllModules( model );
-        
-        return Collections.unmodifiableMap( modules );
+        return getAllModules( model );
     }
 
     private static Map<String, String> getAllModules( Model model )
@@ -209,7 +207,8 @@ public final class ProjectUtils
                 modules.put( module, "profile(id:" + profile.getId() + ")" );
             }
         }
-        return modules;
+        
+        return Collections.unmodifiableMap( modules );
     }
     
     // Don't make this method public, it has nothing to do with a MavenProject.

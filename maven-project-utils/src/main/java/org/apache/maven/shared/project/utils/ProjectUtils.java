@@ -37,6 +37,8 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 public final class ProjectUtils
 {
+    // This instance is often used, including in recursive methods, so initiate it for general usage
+    private static final MavenXpp3Reader POM_READER = new MavenXpp3Reader();
     
     private ProjectUtils()
     {
@@ -115,8 +117,6 @@ public final class ProjectUtils
             return false;
         }
 
-        MavenXpp3Reader reader = new MavenXpp3Reader();
-        
         for ( String module : modules )
         {
             File moduleFile = getModuleFile( project, module );
@@ -124,7 +124,7 @@ public final class ProjectUtils
             Model model = null;
             try
             {
-                model = readModel( reader, moduleFile );
+                model = readModel( moduleFile );
             }
             catch ( IOException e )
             {
@@ -146,7 +146,7 @@ public final class ProjectUtils
         return true;
     }
 
-    private static Model readModel( MavenXpp3Reader reader, File moduleFile ) throws IOException, XmlPullParserException
+    private static Model readModel( File moduleFile ) throws IOException, XmlPullParserException
     {
         FileReader moduleReader = null;
         
@@ -156,7 +156,7 @@ public final class ProjectUtils
         {
             moduleReader = new FileReader( moduleFile );
             
-            model = reader.read( moduleReader );
+            model = POM_READER.read( moduleReader );
         }
         finally
         {
@@ -168,7 +168,12 @@ public final class ProjectUtils
 
     public static File getModuleFile( MavenProject project, String module )
     {
-        File moduleFile = new File( project.getBasedir(), module );
+        return getModuleFile( project.getBasedir(), module );
+    }
+    
+    private static File getModuleFile( File basedir, String module )
+    {
+        File moduleFile = new File( basedir, module );
         
         if ( moduleFile.isDirectory() )
         {
@@ -176,6 +181,7 @@ public final class ProjectUtils
         }
         return moduleFile;
     }
+
     
     /**
      * Returns all modules of a project, including does specified in profiles, both active and inactive.
@@ -209,6 +215,55 @@ public final class ProjectUtils
         }
         
         return Collections.unmodifiableMap( modules );
+    }
+    
+    /**
+     * Returns the upper most folder of this projects and all of its descendants (i.e. modules, their modules, etc.).
+     * 
+     * @param project the project
+     * @return the shared folder
+     */
+    public static File getSharedFolder( MavenProject project )
+    {
+        if( project == null )
+        {
+            return null;
+        }
+        
+        try
+        {
+            return getSharedFolder( project.getBasedir(), project.getModel() );
+        }
+        catch ( IOException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch ( XmlPullParserException e )
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return null; //@todo fix exception handling
+    }
+    
+    private static final File getSharedFolder( File baseDirectory, Model model ) throws IOException, XmlPullParserException
+    {
+        File sharedFolder = baseDirectory;
+        
+        for( String module : getAllModules( model ).keySet() )
+        {
+            File moduleFile = getModuleFile( baseDirectory, module );
+            
+            Model submodel = readModel( moduleFile );
+            
+            File modulesSharedFolder = getSharedFolder( moduleFile.getParentFile(), submodel );
+            
+            sharedFolder = getSharedFolder( sharedFolder, modulesSharedFolder );
+        }
+        
+        return sharedFolder;
     }
     
     // Don't make this method public, it has nothing to do with a MavenProject.

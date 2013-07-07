@@ -1,6 +1,9 @@
 package org.apache.maven.shared.project.utils;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import java.io.File;
 
 import org.junit.Test;
 
@@ -25,11 +28,94 @@ import org.junit.Test;
 
 public class ProjectUtilsTest
 {
+    private static final File ROOT_FOLDER = new File( "." );
 
     @Test
     public void getRootProjectForNull()
     {
         assertNull( ProjectUtils.getRootProject( null ) );
+    }
+
+    @Test
+    public void getSharedFolderNullDirectories()
+        throws Exception
+    {
+        assertNull( ProjectUtils.getSharedFolder( null, null ) );
+    }
+
+    @Test
+    public void getSharedFolderNullLeftFolder()
+        throws Exception
+    {
+        assertNull( ProjectUtils.getSharedFolder( null, ROOT_FOLDER ) );
+    }
+
+    @Test
+    public void getSharedFolderNullRightFolder()
+        throws Exception
+    {
+        assertNull( ProjectUtils.getSharedFolder( ROOT_FOLDER, null ) );
+    }
+
+    
+    @Test
+    public void getSharedFolderSameDirectory()
+        throws Exception
+    {
+        File folder = ROOT_FOLDER;
+
+        assertEquals( folder, ProjectUtils.getSharedFolder( folder, folder ) );
+    }
+
+    @Test
+    public void getSharedFolderSameFile()
+        throws Exception
+    {
+        File pomFile = new File( "pom.xml" );
+
+        assertEquals( pomFile.getParentFile(), ProjectUtils.getSharedFolder( pomFile, pomFile ) );
+    }
+
+    @Test
+    public void getSharedFolderDeeperLeftFolder()
+        throws Exception
+    {
+        File lhsFolder = new File( ROOT_FOLDER, "src" );
+        File rhsFolder = ROOT_FOLDER;
+
+        assertEquals( rhsFolder, ProjectUtils.getSharedFolder( lhsFolder, rhsFolder ) );
+    }
+
+    @Test
+    public void getSharedFolderDeeperRightFolder()
+        throws Exception
+    {
+        File lhsFolder = ROOT_FOLDER;
+        File rhsFolder = new File( ROOT_FOLDER, "src" );
+
+        assertEquals( lhsFolder, ProjectUtils.getSharedFolder( lhsFolder, rhsFolder ) );
+    }
+
+    @Test
+    public void getSharedFolderFileAndDeeperLeftFolder()
+        throws Exception
+    {
+        File folder = ROOT_FOLDER;
+        File lhsFolder = new File( folder, "src" );
+        File rhsFolder = new File( folder, "pom.xml" );
+
+        assertEquals( folder, ProjectUtils.getSharedFolder( lhsFolder, rhsFolder ) );
+    }
+
+    @Test
+    public void getSharedFolderFileAndDeeperRightFolder()
+        throws Exception
+    {
+        File folder = ROOT_FOLDER;
+        File lhsFolder = new File( folder, "pom.xml" );
+        File rhsFolder = new File( folder, "src" );
+
+        assertEquals( folder, ProjectUtils.getSharedFolder( lhsFolder, rhsFolder ) );
     }
 
 }

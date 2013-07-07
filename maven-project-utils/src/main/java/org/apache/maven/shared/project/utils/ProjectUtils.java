@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Profile;
@@ -193,5 +194,42 @@ public final class ProjectUtils
             }
         }
         return Collections.unmodifiableMap( modules );
+    }
+    
+    // Don't make this method public, it has nothing to do with a MavenProject.
+    // If required on more places, create a separate Utils-class
+    protected static final File getSharedFolder( File lhs, File rhs )
+    {
+        File sharedFolder = null;
+
+        Stack<File> lhsStack = new Stack<File>();
+        
+        File lhsAncestor = lhs;
+        
+        while ( lhsAncestor != null )
+        {
+            lhsAncestor = lhsStack.push( lhsAncestor ).getParentFile();
+        }
+
+        Stack<File> rhsStack = new Stack<File>();
+        
+        File rhsAncestor = rhs;
+        
+        while ( rhsAncestor != null )
+        {
+            rhsAncestor = rhsStack.push( rhsAncestor ).getParentFile();
+        }
+        
+        while ( !lhsStack.isEmpty() && !rhsStack.isEmpty() )
+        {
+            File nextFile = lhsStack.pop();
+            
+            if( nextFile.isDirectory() && nextFile.equals( rhsStack.pop() ) )
+            {
+                sharedFolder = nextFile;
+            }
+        }
+        
+        return sharedFolder;
     }
 }

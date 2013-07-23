@@ -29,6 +29,9 @@
 
 ${project.name}
 
+  <<Note: This shared component has retired from the Apache Maven project, but
+ has moved to the {{{http://archiva.apache.org/}Apache Archiva}} project.>>
+
   This shared component is used to convert Maven POMs between version 3
   (used by Maven 1.x) and version 4 (used by Maven 2.0). It is used by
   {{{http://maven.apache.org/plugins/maven-one-plugin/}Maven One Plugin}} and
@@ -54,8 +57,8 @@ ${project.name}
   a Maven 1 model, a Maven 2 model and a Maven 1 <<<Properties>>> object as
   parameters. If you want to add a new plugin configuration converter it is
   recommended that you extend <<<AbstractPluginConfigurationConverter>>>. Have
-  a look at some of
-  {{{https://svn.apache.org/repos/asf/maven/shared/trunk/maven-model-converter/src/main/java/org/apache/maven/model/converter/plugins/}the other implementations}}
+  a look at some of the other implementations in our SCM in the directory
+  <<</src/main/java/org/apache/maven/model/converter/plugins/>>>
   to get a feel for what is needed. You basically need to implement the method
   <<<buildConfiguration(...)>>> to build a DOM configuration object.
 
@@ -73,6 +76,7 @@ ${project.name}
   <<<AbstractPluginRelocator>>> to make your work easier. You simply need to
   specify the old and new groupId and artifactId. Read the
   {{{apidocs/org/apache/maven/model/converter/relocators/AbstractPluginRelocator.html}Javadocs}}
-  for some important notes. You can also save yourself some work by studying
-  {{{https://svn.apache.org/repos/asf/maven/shared/trunk/maven-model-converter/src/main/java/org/apache/maven/model/converter/relocators/}the other implementations}}
+  for some important notes. You can also save yourself some work by studying the
+  other implementations in our SCM in the directory
+  <<</src/main/java/org/apache/maven/model/converter/relocators/>>>
   and picking the best from them.

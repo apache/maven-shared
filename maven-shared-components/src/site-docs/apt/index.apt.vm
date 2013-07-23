@@ -1,9 +1,9 @@
  -----
- Maven Shared Components POM
+ Introduction
  -----
  Hervé Boutemy
  -----
- 2012-05-03
+ 2013-07-24
  -----
 
 ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -26,12 +26,12 @@
 ~~ NOTE: For help with the syntax of this file, see:
 ~~ http://maven.apache.org/doxia/references/apt-format.html
 
-Maven Shared Components POM
+${project.name}
 
     This POM is the common parent of all of the {{{/shared/}Maven Shared Components}}
     in the Apache Maven project.
 
-History
+* History
 
     As of version 17, this POM sets the Java source and target versions to 1.5. Thus any component
     moved to version 17+ of this POM moves to requiring Java 1.5.

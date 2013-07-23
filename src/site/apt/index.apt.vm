@@ -12,4 +12,4 @@ ${project.name}
 
 * Using the Utilities
 
-  Instructions on how to use the utilities can be found in the {{{apidocs/index.html} Javadoc Overview}}.
+  Instructions on how to use the utilities can be found in the {{{./apidocs/index.html} Javadoc Overview}}.

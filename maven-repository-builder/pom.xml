@@ -30,7 +30,7 @@ under the License.
   <artifactId>maven-repository-builder</artifactId>
   <version>1.0-alpha-3-SNAPSHOT</version>
 
-  <name>Maven Repository Builder</name>
+  <name>Apache Maven Repository Builder</name>
 
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</connection>

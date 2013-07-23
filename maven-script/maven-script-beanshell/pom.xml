@@ -41,5 +41,22 @@ under the License.
       <artifactId>plexus-bsh-factory</artifactId>
       <version>1.0-alpha-9</version>
     </dependency>
+    <!--
+      The dependency above has a bad dependency in its path:
+          1) org.apache.maven:maven-script-beanshell:jar:2.1-SNAPSHOT
+          2) org.codehaus.plexus:plexus-bsh-factory:jar:1.0-alpha-9
+          3) org.codehaus.plexus:plexus-container-default:jar:1.0-alpha-46
+          4) org.apache.xbean:xbean-reflect:jar:3.4-SNAPSHOT
+      So we override
+          org.apache.xbean:xbean-reflect:jar:3.4-SNAPSHOT
+      with
+          org.apache.xbean:xbean-reflect:jar:3.4
+      here to make it build.
+    -->
+    <dependency>
+      <groupId>org.apache.xbean</groupId>
+      <artifactId>xbean-reflect</artifactId>
+      <version>3.4</version>
+    </dependency>
   </dependencies>
 </project>

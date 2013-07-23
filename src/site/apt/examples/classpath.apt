@@ -27,23 +27,23 @@ Set Up The Classpath
 
 * {Contents}
 
-  * {{{#Add}Add A Class-Path Entry To The Manifest}}
+  * {{{Add}Add A Class-Path Entry To The Manifest}}
   
-  * {{{#Make}Make The Jar Executable}}
+  * {{{Make}Make The Jar Executable}}
   
-  * {{{#Prefix}Altering The Classpath: Defining a Classpath Directory Prefix}}
+  * {{{Prefix}Altering The Classpath: Defining a Classpath Directory Prefix}}
   
-  * {{{#Repository}Altering The Classpath: Using a Maven Repository-Style Classpath}}
+  * {{{Repository}Altering The Classpath: Using a Maven Repository-Style Classpath}}
   
-  * {{{#Custom}Altering The Classpath: Using a Custom Classpath Format}}
+  * {{{Custom}Altering The Classpath: Using a Custom Classpath Format}}
   
-  * {{{#Snapshot}Handling Snapshot Versions}}
+  * {{{Snapshot}Handling Snapshot Versions}}
   
   []
 
 * {Add} A Class-Path Entry To The Manifest
 
- \[{{{#Contents}Top}}\]
+ \[{{{Contents}Top}}\]
 
  Maven Archiver can add the classpath of your project to the manifest. This is
  done with the <<<\<addClasspath\>>>> configuration element.
@@ -99,7 +99,7 @@ Class-Path: plexus-utils-1.1.jar commons-lang-2.1.jar
 
 * {Make} The Jar Executable
 
-  \[{{{#Contents}Top}}\]
+  \[{{{Contents}Top}}\]
 
  If you want to create an executable jar file, you need to configure Maven
  Archiver accordingly. You need to tell it which main class to use. This is
@@ -160,7 +160,7 @@ Class-Path: plexus-utils-1.1.jar commons-lang-2.1.jar
 
 * Altering The Classpath: Defining a Classpath Directory {Prefix}
 
-  \[{{{#Contents}Top}}\]
+  \[{{{Contents}Top}}\]
 
  Sometimes it is useful to be able to alter the classpath, for example when
  {{{http://maven.apache.org/plugins/maven-war-plugin/examples/skinny-wars.html}creating skinny war-files}}.
@@ -209,7 +209,7 @@ Class-Path: lib/plexus-utils-1.1.jar lib/commons-lang-2.1.jar
 
 * Altering The Classpath: Using a Maven {Repository}-Style Classpath
 
-  \[{{{#Contents}Top}}\]
+  \[{{{Contents}Top}}\]
 
   <(Since: 2.3, see below)>
 
@@ -272,7 +272,7 @@ Class-Path: lib/org/codehaus/plexus/plexus-utils/1.1/plexus-utils-1.1.jar lib/co
 
 * Altering The Classpath: Using a {Custom} Classpath Format
 
-  \[{{{#Contents}Top}}\]
+  \[{{{Contents}Top}}\]
 
   <(Since: 2.4)>
 
@@ -357,7 +357,7 @@ Class-Path: WEB-INF/lib/org/codehaus/plexus/plexus-utils-1.1.jar WEB-INF/lib/com
 
 * Handling {Snapshot} Versions
 
-  \[{{{#Contents}Top}}\]
+  \[{{{Contents}Top}}\]
 
   <(Since 2.4)>
 

@@ -75,7 +75,7 @@ ${project.name}
   If you want to implement a new relocator you can extend the class
   <<<AbstractPluginRelocator>>> to make your work easier. You simply need to
   specify the old and new groupId and artifactId. Read the
-  {{{apidocs/org/apache/maven/model/converter/relocators/AbstractPluginRelocator.html}Javadocs}}
+  {{{./apidocs/org/apache/maven/model/converter/relocators/AbstractPluginRelocator.html}Javadocs}}
   for some important notes. You can also save yourself some work by studying the
   other implementations in our SCM in the directory
   <<</src/main/java/org/apache/maven/model/converter/relocators/>>>

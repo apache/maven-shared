@@ -24,7 +24,7 @@
     <author email="dennisl@apache.org">Dennis Lundberg</author>
   </properties>
   <body>
-    <section name="Apache Maven Archiver">
+    <section name="${project.name}">
       <p>
         The Maven Archiver is mainly used by plugins to handle packaging. The
         version numbers referenced in the Since column on this page are the
@@ -196,11 +196,11 @@
             <td>
               If the manifest will contain these entries:
               <source>
-Implementation-Title: ${project.name}
-Implementation-Version: ${project.version}
-Implementation-Vendor-Id: ${project.groupId}
-Implementation-Vendor: ${project.organization.name}
-Implementation-URL: ${project.url}
+Implementation-Title: \${project.name}
+Implementation-Version: \${project.version}
+Implementation-Vendor-Id: \${project.groupId}
+Implementation-Vendor: \${project.organization.name}
+Implementation-URL: \${project.url}
               </source>
               The default value is <code>false</code>.
             </td>
@@ -212,9 +212,9 @@ Implementation-URL: ${project.url}
             <td>
               If the manifest will contain these entries:
               <source>
-Specification-Title: ${project.name}
-Specification-Version: ${project.version}
-Specification-Vendor: ${project.organization.name}
+Specification-Title: \${project.name}
+Specification-Version: \${project.version}
+Specification-Vendor: \${project.organization.name}
               </source>
               The default value is <code>false</code>.
             </td>
@@ -341,9 +341,9 @@ Specification-Vendor: ${project.organization.name}
           following content:
         </p>
         <source>
-version=${project.version}
-groupId=${project.groupId}
-artifactId=${project.artifactId}
+version=\${project.version}
+groupId=\${project.groupId}
+artifactId=\${project.artifactId}
         </source>
       </subsection>
     </section>

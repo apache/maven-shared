@@ -26,10 +26,11 @@
     <version>19</version>
     <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
+
   <artifactId>maven-jarsigner</artifactId>
   <version>1.1-SNAPSHOT</version>
-  <name>Maven Jarsigner</name>
 
+  <name>Apache Maven Jarsigner</name>
   <description>A component to assist in signing jars.</description>
 
   <prerequisites>

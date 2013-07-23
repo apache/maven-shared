@@ -1,12 +1,12 @@
  -----
- Maven Reporting API
+ Introduction
  -----
  Hervé Boutemy
  -----
- 2010-05-08
+ 2013-07-24
  -----
 
-Maven Reporting API
+${project.name}
 
   API to manage report generation.
 

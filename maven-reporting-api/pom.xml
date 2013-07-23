@@ -33,7 +33,7 @@ under the License.
   <artifactId>maven-reporting-api</artifactId>
   <version>3.1-SNAPSHOT</version>
 
-  <name>Maven Reporting API</name>
+  <name>Apache Maven Reporting API</name>
   <description>API to manage report generation.</description>
 
   <developers>

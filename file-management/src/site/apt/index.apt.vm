@@ -3,7 +3,7 @@
  ------
  Vincent Siveton
  ------
- November 2007
+ 2013-07-23
  ------
 
 ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -26,7 +26,7 @@
 ~~ NOTE: For help with the syntax of this file, see:
 ~~ http://maven.apache.org/doxia/references/apt-format.html
 
-Maven File Management API
+${project.name}
 
   The Maven File Management API provides an API to collect files from a given directory using
   several include/exclude rules.

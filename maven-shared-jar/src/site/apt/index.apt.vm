@@ -3,10 +3,10 @@
  -----
  Brett Porter
  -----
- 2 July 2007
+ 2013-07-24
  -----
 
-Maven JAR Utilities
+${project.name}
 
   Utilities that help identify the contents of a JAR, including Java class analysis and Maven metadata analysis.
 

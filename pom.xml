@@ -30,7 +30,7 @@
   <artifactId>maven-shared-io</artifactId>
   <version>1.2-SNAPSHOT</version>
 
-  <name>Maven Shared I/O API</name>
+  <name>Apache Maven Shared I/O API</name>
   <description>API for I/O support like logging, download or file scanning.</description>
 
   <prerequisites>

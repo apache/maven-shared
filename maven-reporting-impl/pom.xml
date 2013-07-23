@@ -31,7 +31,7 @@
   <artifactId>maven-reporting-impl</artifactId>
   <version>2.3-SNAPSHOT</version>
 
-  <name>Maven Reporting Implementation</name>
+  <name>Apache Maven Reporting Implementation</name>
   <description>Abstract classes to manage report generation.</description>
 
   <developers>

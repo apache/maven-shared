@@ -3,10 +3,10 @@
  -----
  Hervé Boutemy
  -----
- 2012-02-06
+ 2013-07-24
  -----
 
-Maven Reporting Implementation
+${project.name}
 
   Abstract classes to manage report generation, which can be run both:
   

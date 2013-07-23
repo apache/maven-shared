@@ -3,7 +3,7 @@
  ------
  Dennis Lundberg
  ------
- 2008-03-11
+ 2013-07-23
  ------
 
  ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -27,7 +27,7 @@
  ~~ http://maven.apache.org/doxia/references/apt-format.html
 
 
-Maven Model Converter
+${project.name}
 
   This shared component is used to convert Maven POMs between version 3
   (used by Maven 1.x) and version 4 (used by Maven 2.0). It is used by

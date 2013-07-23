@@ -30,7 +30,7 @@
   <artifactId>maven-model-converter</artifactId>
   <version>2.3-SNAPSHOT</version>
 
-  <name>Maven Model Converter</name>
+  <name>Apache Maven Model Converter</name>
   <description>Converts between version 3.0.0 and version 4.0.0 models.</description>
 
   <scm>

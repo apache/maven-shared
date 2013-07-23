@@ -24,7 +24,7 @@
     <author email="dennisl@apache.org">Dennis Lundberg</author>
   </properties>
   <body>
-    <section name="Maven Archiver">
+    <section name="Apache Maven Archiver">
       <p>
         The Maven Archiver is mainly used by plugins to handle packaging. The
         version numbers referenced in the Since column on this page are the

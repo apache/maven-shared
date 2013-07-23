@@ -17,7 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd' xmlns='http://maven.apache.org/POM/4.0.0'>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -28,15 +28,15 @@
   </parent>
 
   <artifactId>maven-model-converter</artifactId>
-  <version>2.3-SNAPSHOT</version>
+  <version>2.3</version>
 
   <name>Apache Maven Model Converter (RETIRED)</name>
   <description>Converts between version 3.0.0 and version 4.0.0 models.</description>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-model-converter</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-model-converter</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-model-converter</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-model-converter-2.3</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-model-converter-2.3</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-model-converter-2.3</url>
   </scm>
   <issueManagement>
     <system>jira</system>

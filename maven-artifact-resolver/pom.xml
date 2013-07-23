@@ -32,7 +32,7 @@ under the License.
   <artifactId>maven-artifact-resolver</artifactId>
   <version>1.1-SNAPSHOT</version>
 
-  <name>Maven Artifact Resolution API</name>
+  <name>Apache Maven Artifact Resolution API</name>
   <description>
     Provides a component for plugins to easily resolve project dependencies.
   </description>

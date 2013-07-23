@@ -30,7 +30,7 @@
   <artifactId>maven-osgi</artifactId>
   <version>0.3.0-SNAPSHOT</version>
 
-  <name>Maven OSGi integration</name>
+  <name>Apache Maven OSGi Integration</name>
   <description>Library for Maven-OSGi integration</description>
 
   <scm>

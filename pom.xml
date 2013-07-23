@@ -34,7 +34,7 @@ under the License.
   <version>20-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Maven Shared Components</name>
+  <name>Apache Maven Shared Components</name>
   <description>Maven shared components</description>
   <url>http://maven.apache.org/shared/</url>
 

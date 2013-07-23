@@ -1,12 +1,12 @@
  -----
- Maven Dependency Tree
+ Introduction
  -----
  Hervé Boutemy
  -----
- 2013-04-19
+ 2013-07-23
  -----
 
-Maven Dependency Tree
+${project.name}
 
   A tree-based API for resolution of Maven project dependencies.
 

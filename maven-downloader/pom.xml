@@ -30,7 +30,7 @@ under the License.
   <artifactId>maven-downloader</artifactId>
   <version>1.2-SNAPSHOT</version>
 
-  <name>Maven Downloader</name>
+  <name>Apache Maven Downloader</name>
   <description>Provide a super simple interface for downloading a single artifact.</description>
 
   <scm>

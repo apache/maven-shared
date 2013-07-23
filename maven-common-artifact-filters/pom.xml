@@ -30,7 +30,7 @@
   <artifactId>maven-common-artifact-filters</artifactId>
   <version>1.5-SNAPSHOT</version>
 
-  <name>Maven Common Artifact Filters</name>
+  <name>Apache Maven Common Artifact Filters</name>
   <description>A collection of ready-made filters to control inclusion/exclusion of artifacts during dependency resolution.</description>
 
   <scm>

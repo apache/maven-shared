@@ -32,7 +32,7 @@
   <version>1.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Maven Filtering</name>
+  <name>Apache Maven Filtering</name>
   <description>A component to assist in filtering of resource files with properties from a Maven project.</description>
 
   <prerequisites>

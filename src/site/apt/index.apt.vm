@@ -3,7 +3,7 @@
  ------
  Olivier Lamy
  ------
- 2011-01-05
+ 2013-07-24
  ------
 
  ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +23,7 @@
  ~~ specific language governing permissions and limitations
  ~~ under the License.
 
-Maven Filtering
+${project.name}
 
   These Plexus components have been built from the filtering process/code in Maven Resources Plugin.
 

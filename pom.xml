@@ -28,7 +28,8 @@
 
   <artifactId>maven-script-interpreter</artifactId>
   <version>1.2-SNAPSHOT</version>
-  <name>Maven Script Interpreter</name>
+
+  <name>Apache Maven Script Interpreter</name>
   <description>This component provides some utilities to interpret/execute some scripts for various implementations: groovy or beanshell.</description>
 
   <scm>

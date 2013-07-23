@@ -30,7 +30,7 @@ under the License.
   <artifactId>maven-ant</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>Maven Ant</name>
+  <name>Apache Maven Ant</name>
   <description>Runs ant scripts embedded in the POM</description>
 
   <developers>

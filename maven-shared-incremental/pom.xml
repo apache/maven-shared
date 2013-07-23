@@ -28,7 +28,8 @@
 
   <artifactId>maven-shared-incremental</artifactId>
   <version>1.2-SNAPSHOT</version>
-  <name>Maven Incremental Build support utilities</name>
+
+  <name>Apache Maven Incremental Build Support Utilities</name>
   <description>
     Various utility classes and plexus components for supporting 
     incremental build functionality in maven plugins.

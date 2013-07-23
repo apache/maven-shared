@@ -33,7 +33,7 @@
   <artifactId>maven-shared-resources</artifactId>
   <version>2-SNAPSHOT</version>
 
-  <name>Maven Shared Resources</name>
+  <name>Apache Maven Shared Resources</name>
   <description>A collection of templates that are specific to the Maven project.</description>
 
   <scm>

@@ -3,7 +3,7 @@
  ------
  Dennis Lundberg
  ------
- 2011-05-01
+ 2013-07-24
  ------
 
 ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -23,7 +23,7 @@
 ~~ specific language governing permissions and limitations
 ~~ under the License.
 
-Maven Shared Resources
+${project.name}
 
   This is a collection of templates that are specific to the Maven project. They
   are probably not of interest to projects other than Apache Maven.

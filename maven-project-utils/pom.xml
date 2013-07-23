@@ -33,8 +33,7 @@ under the License.
   <artifactId>maven-project-utils</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>Maven Project Utils</name>
-
+  <name>Apache Maven Project Utils</name>
   <description>
     Utils for Maven Projects, such as resolving multimodule paths
   </description>

@@ -34,7 +34,7 @@
   <version>1.0-alpha-4-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Maven Runtime</name>
+  <name>Apache Maven Runtime</name>
   <description>
     Maven Runtime allows introspection of Maven project metadata at runtime.  Basic artifact information or full Maven 
     project metadata can be obtained for all projects within a given class loader, optionally sorted into dependency 

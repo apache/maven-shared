@@ -4,11 +4,10 @@
  Mark Hobson
  <markh@apache.org>
  ------
- 19 May 2008
+ 2013-07-24
  ------
 
-
-Maven Runtime
+${project.name}
 
  Maven Runtime allows introspection of Maven project metadata at runtime.  Basic artifact information or full Maven 
  project metadata can be obtained for all projects within a given class loader, optionally sorted into dependency order,

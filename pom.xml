@@ -32,7 +32,7 @@ under the License.
   <artifactId>file-management</artifactId>
   <version>1.2.2-SNAPSHOT</version>
 
-  <name>Maven File Management API</name>
+  <name>Apache Maven File Management API</name>
   <description>API to collect files from a given directory using several include/exclude rules.</description>
 
   <contributors>

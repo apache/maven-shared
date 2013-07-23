@@ -652,7 +652,7 @@ public interface InvocationRequest
      * Enable the 'also make dependents' mode.
      * Equivalent of {@code -amd} or {@code --also-make-dependents}
      * 
-     * @param alsoMake enable 'also make' mode 
+     * @param alsoMakeDependents enable 'also make' mode
      * @return This invocation request.
      * @since 2.1
      */

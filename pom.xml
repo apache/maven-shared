@@ -54,7 +54,6 @@ under the License.
     <module>maven-downloader</module>
     <module>maven-filtering</module>
     <module>maven-invoker</module>
-    <module>maven-model-converter</module>
     <module>maven-osgi</module>
     <module>maven-plugin-enforcer</module>
     <module>maven-project-utils</module>

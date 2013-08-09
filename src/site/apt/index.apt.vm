@@ -1,0 +1,85 @@
+ ------
+ Introduction
+ ------
+ Dennis Lundberg
+ ------
+ 2013-08-09
+ ------
+
+ ~~ Licensed to the Apache Software Foundation (ASF) under one
+ ~~ or more contributor license agreements.  See the NOTICE file
+ ~~ distributed with this work for additional information
+ ~~ regarding copyright ownership.  The ASF licenses this file
+ ~~ to you under the Apache License, Version 2.0 (the
+ ~~ "License"); you may not use this file except in compliance
+ ~~ with the License.  You may obtain a copy of the License at
+ ~~
+ ~~   http://www.apache.org/licenses/LICENSE-2.0
+ ~~
+ ~~ Unless required by applicable law or agreed to in writing,
+ ~~ software distributed under the License is distributed on an
+ ~~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~~ KIND, either express or implied.  See the License for the
+ ~~ specific language governing permissions and limitations
+ ~~ under the License.
+
+${project.name}
+
+  These classes originates from the file name mapping code in Maven WAR Plugin.
+
+  The goal is to provide a shared component for all plugins that need to do
+  mapping.
+
+
+* MappingUtils
+
+  This class ha a single method <<<evaluateFileNameMapping>>> that take an
+  expression and an <<<Artifact>>> as parameters. It returns a <<<String>>>
+  which is the result of interpolating the values from the <<<Artifact>>>
+  object into the expression.
+
+  Here is a bit of code from the WAR Plugin showing how you can use it:
+
++-----
+    protected String getFileName( Artifact artifact )
+    {
+        if ( getOutputFileNameMapping() != null )
+        {
+            // The user has specified a custom file name mapping expression
+            return MappingUtils.evaluateFileNameMapping( getOutputFileNameMapping(), artifact );
+        }
+
+        String classifier = artifact.getClassifier();
+        if ( ( classifier != null ) && !( "".equals( classifier.trim() ) ) )
+        {
+            // The artifact has a classifier - use the default expression for artifacts with classifier
+            return MappingUtils.evaluateFileNameMapping( MappingUtils.DEFAULT_FILE_NAME_MAPPING_CLASSIFIER,
+                                                         artifact );
+        }
+        else
+        {
+            // The artifact does not have a classifier - use the default expression for artifacts
+            return MappingUtils.evaluateFileNameMapping( MappingUtils.DEFAULT_FILE_NAME_MAPPING, artifact );
+        }
+    }
++-----
+
+
+* DashClassifierValueSource
+
+  This is an implementation of the <<<ValueSource>>> interface, and can be used
+  for interpolation. <<<MappingUtils>>> uses it internally. It adds these two
+  tokens to an <<<Interpolator>>>:
+
+  * <<<dashClassifier>>>
+
+  * <<<dashClassifier?>>>
+
+  []
+
+  You can invoke it like this:
+
++-----
+        Interpolator interpolator = StringSearchInterpolator());
+        interpolator.addValueSource( new DashClassifierValueSource( artifact.getClassifier() ) );
++-----

@@ -26,7 +26,7 @@ import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
 
 /**
  * <p>
- * Utilities used to evaluate expression.
+ * Utilities used to evaluate an expression.
  * </p>
  * <p>
  * The expression might use any field of the {@link Artifact} interface. Some

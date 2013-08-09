@@ -29,7 +29,6 @@ import org.codehaus.plexus.interpolation.PropertiesBasedValueSource;
  * <code>dashClassifier?</code>.
  *
  * @version $Id$
- * @since 2.5
  */
 public class DashClassifierValueSource
     extends PropertiesBasedValueSource

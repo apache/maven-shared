@@ -64,6 +64,9 @@ ${project.name}
     }
 +-----
 
+  Have a look at the
+  {{{http://maven.apache.org/plugins/maven-war-plugin/examples/file-name-mapping.html}documentation for Maven WAR Plugin}}
+  for some examples of expressions that can be used.
 
 * DashClassifierValueSource
 

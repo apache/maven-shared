@@ -25,19 +25,26 @@ import org.codehaus.plexus.interpolation.ObjectBasedValueSource;
 import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
 
 /**
+ * <p>
  * Utilities used to evaluate expression.
- * <p/>
- * TODO: this comes from the assembly plugin; refactor when it's shared.
- * <p/>
+ * </p>
+ * <p>
  * The expression might use any field of the {@link Artifact} interface. Some
  * examples might be:
+ * </p>
  * <ul>
  * <li>@{artifactId}@-@{version}@@{dashClassifier?}@.@{extension}@</li>
  * <li>@{artifactId}@-@{version}@.@{extension}@</li>
  * <li>@{artifactId}@.@{extension}@</li>
  * </ul>
+ * <p>
+ * Although parts of this code comes from the Assembly Plugin, it cannot be
+ * shared with the Assembly Plugin. The reason for this is that the Assembly
+ * Plugin always uses a prefix for the expressions, whereas this code does not.
+ * <p/>
  *
  * @author Stephane Nicoll
+ * @author Dennis Lundberg
  * @version $Id$
  */
 public class MappingUtils

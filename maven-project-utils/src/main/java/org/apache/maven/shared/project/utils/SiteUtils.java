@@ -1,5 +1,8 @@
 package org.apache.maven.shared.project.utils;
 
+import java.io.File;
+import java.util.Map;
+
 import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
 
@@ -28,8 +31,19 @@ public final class SiteUtils
     private SiteUtils()
     {
     }
-    
+
     public static String resolveDistributionManagementSiteUrl( MavenProject project )
+    {
+        return resolveDistributionManagementSiteUrl( project, true );
+    }
+    
+    /**
+     * 
+     * @param project
+     * @param useModuleName use the moduleName instead of the artifactId
+     * @return
+     */
+    public static String resolveDistributionManagementSiteUrl( MavenProject project, boolean useModuleName )
     {
         String siteUrl = getDistributionManagementSiteUrl( project.getModel() );
 
@@ -39,8 +53,24 @@ public final class SiteUtils
             siteUrl = String.valueOf( getDistributionManagementSiteUrl( project ) );
             if ( !ProjectUtils.isRootProject( project ) )
             {
-                // assuming that folder matches the moduleName
-                siteUrl += '/' + project.getFile().getParentFile().getName();
+                if( useModuleName )
+                {
+                    Map<String, String> modules = ProjectUtils.getAllModules( project.getParent() );
+                    
+                    for( String module : modules.keySet() )
+                    {
+                        if( new File( project.getParent().getBasedir(), module ).equals( project.getFile() ) )
+                        {
+                            return siteUrl + '/' + module;
+                        }
+                    }
+                    // project is not a module of its parent, so use project's directoryname
+                    siteUrl += '/' + project.getFile().getParentFile().getName();
+                }
+                else
+                {
+                    siteUrl += '/' + project.getArtifactId();
+                }
             }
         }
         return siteUrl;

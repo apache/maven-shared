@@ -165,6 +165,23 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>0.10</version>
+        <configuration>
+          <excludes>
+            <!--
+              These files contains the expected output of this component and can not contain a license header.
+            -->
+            <exclude>src/it/maven-version/expected.txt</exclude>
+            <exclude>src/it/mshared-167/expected-M2.txt</exclude>
+            <exclude>src/it/mshared-167/expected-M3.txt</exclude>
+            <exclude>src/it/verbose/expected-default.txt</exclude>
+            <exclude>src/it/verbose/expected-verbose.txt</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 

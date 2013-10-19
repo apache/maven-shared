@@ -37,85 +37,85 @@ public class ProjectUtilsTest
     }
 
     @Test
-    public void getSharedFolderNullDirectories()
+    public void getJoinedFolderNullDirectories()
         throws Exception
     {
-        assertNull( ProjectUtils.getSharedFolder( null, null ) );
+        assertNull( ProjectUtils.getJoinedFolder( null, null ) );
     }
 
     @Test
-    public void getSharedFolderNullLeftFolder()
+    public void getJoinedFolderNullLeftFolder()
         throws Exception
     {
-        assertNull( ProjectUtils.getSharedFolder( null, ROOT_FOLDER ) );
+        assertNull( ProjectUtils.getJoinedFolder( null, ROOT_FOLDER ) );
     }
 
     @Test
-    public void getSharedFolderNullRightFolder()
+    public void getJoinedFolderNullRightFolder()
         throws Exception
     {
-        assertNull( ProjectUtils.getSharedFolder( ROOT_FOLDER, null ) );
+        assertNull( ProjectUtils.getJoinedFolder( ROOT_FOLDER, null ) );
     }
 
     
     @Test
-    public void getSharedFolderSameDirectory()
+    public void getJoinedFolderSameDirectory()
         throws Exception
     {
         File folder = ROOT_FOLDER;
 
-        assertEquals( folder, ProjectUtils.getSharedFolder( folder, folder ) );
+        assertEquals( folder, ProjectUtils.getJoinedFolder( folder, folder ) );
     }
 
     @Test
-    public void getSharedFolderSameFile()
+    public void getJoinedFolderSameFile()
         throws Exception
     {
         File pomFile = new File( "pom.xml" );
 
-        assertEquals( pomFile.getParentFile(), ProjectUtils.getSharedFolder( pomFile, pomFile ) );
+        assertEquals( pomFile.getParentFile(), ProjectUtils.getJoinedFolder( pomFile, pomFile ) );
     }
 
     @Test
-    public void getSharedFolderDeeperLeftFolder()
+    public void getJoinedFolderDeeperLeftFolder()
         throws Exception
     {
         File lhsFolder = new File( ROOT_FOLDER, "src" );
         File rhsFolder = ROOT_FOLDER;
 
-        assertEquals( rhsFolder, ProjectUtils.getSharedFolder( lhsFolder, rhsFolder ) );
+        assertEquals( rhsFolder, ProjectUtils.getJoinedFolder( lhsFolder, rhsFolder ) );
     }
 
     @Test
-    public void getSharedFolderDeeperRightFolder()
+    public void getJoinedFolderDeeperRightFolder()
         throws Exception
     {
         File lhsFolder = ROOT_FOLDER;
         File rhsFolder = new File( ROOT_FOLDER, "src" );
 
-        assertEquals( lhsFolder, ProjectUtils.getSharedFolder( lhsFolder, rhsFolder ) );
+        assertEquals( lhsFolder, ProjectUtils.getJoinedFolder( lhsFolder, rhsFolder ) );
     }
 
     @Test
-    public void getSharedFolderFileAndDeeperLeftFolder()
+    public void getJoinedFolderFileAndDeeperLeftFolder()
         throws Exception
     {
         File folder = ROOT_FOLDER;
         File lhsFolder = new File( folder, "src" );
         File rhsFolder = new File( folder, "pom.xml" );
 
-        assertEquals( folder, ProjectUtils.getSharedFolder( lhsFolder, rhsFolder ) );
+        assertEquals( folder, ProjectUtils.getJoinedFolder( lhsFolder, rhsFolder ) );
     }
 
     @Test
-    public void getSharedFolderFileAndDeeperRightFolder()
+    public void getJoinedFolderFileAndDeeperRightFolder()
         throws Exception
     {
         File folder = ROOT_FOLDER;
         File lhsFolder = new File( folder, "pom.xml" );
         File rhsFolder = new File( folder, "src" );
 
-        assertEquals( folder, ProjectUtils.getSharedFolder( lhsFolder, rhsFolder ) );
+        assertEquals( folder, ProjectUtils.getJoinedFolder( lhsFolder, rhsFolder ) );
     }
 
 }

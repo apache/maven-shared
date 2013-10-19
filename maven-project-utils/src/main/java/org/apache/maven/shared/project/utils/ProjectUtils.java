@@ -223,7 +223,7 @@ public final class ProjectUtils
      * @param project the project
      * @return the shared folder
      */
-    public static File getSharedFolder( MavenProject project )
+    public static File getJoinedFolder( MavenProject project )
     {
         if( project == null )
         {
@@ -232,7 +232,7 @@ public final class ProjectUtils
         
         try
         {
-            return getSharedFolder( project.getBasedir(), project.getModel() );
+            return getJoinedFolder( project.getBasedir(), project.getModel() );
         }
         catch ( IOException e )
         {
@@ -248,9 +248,9 @@ public final class ProjectUtils
         return null; //@todo fix exception handling
     }
     
-    private static final File getSharedFolder( File baseDirectory, Model model ) throws IOException, XmlPullParserException
+    private static final File getJoinedFolder( File baseDirectory, Model model ) throws IOException, XmlPullParserException
     {
-        File sharedFolder = baseDirectory;
+        File joinedFolder = baseDirectory;
         
         for( String module : getAllModules( model ).keySet() )
         {
@@ -258,19 +258,19 @@ public final class ProjectUtils
             
             Model submodel = readModel( moduleFile );
             
-            File modulesSharedFolder = getSharedFolder( moduleFile.getParentFile(), submodel );
+            File modulesJoinedFolder = getJoinedFolder( moduleFile.getParentFile(), submodel );
             
-            sharedFolder = getSharedFolder( sharedFolder, modulesSharedFolder );
+            joinedFolder = getJoinedFolder( joinedFolder, modulesJoinedFolder );
         }
         
-        return sharedFolder;
+        return joinedFolder;
     }
     
     // Don't make this method public, it has nothing to do with a MavenProject.
     // If required on more places, create a separate Utils-class
-    protected static final File getSharedFolder( File lhs, File rhs )
+    protected static final File getJoinedFolder( File lhs, File rhs )
     {
-        File sharedFolder = null;
+        File joinedFolder = null;
 
         Stack<File> lhsStack = new Stack<File>();
         
@@ -296,10 +296,10 @@ public final class ProjectUtils
             
             if( nextFile.isDirectory() && nextFile.equals( rhsStack.pop() ) )
             {
-                sharedFolder = nextFile;
+                joinedFolder = nextFile;
             }
         }
         
-        return sharedFolder;
+        return joinedFolder;
     }
 }

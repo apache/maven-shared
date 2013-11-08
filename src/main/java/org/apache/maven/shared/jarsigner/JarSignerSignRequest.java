@@ -79,6 +79,16 @@ public class JarSignerSignRequest
     /**
      * See <a href="http://java.sun.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
      */
+    private String tsaLocation;
+
+    /**
+     * See <a href="http://java.sun.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     */
+    private String tsaAlias;
+
+    /**
+     * See <a href="http://java.sun.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     */
     protected File signedjar;
 
 
@@ -127,6 +137,16 @@ public class JarSignerSignRequest
         return alias;
     }
 
+    public String getTsaLocation()
+    {
+        return tsaLocation;
+    }
+
+    public String getTsaAlias()
+    {
+        return tsaAlias;
+    }
+
     public void setKeystore( String keystore )
     {
         this.keystore = keystore;
@@ -170,6 +190,16 @@ public class JarSignerSignRequest
     public void setAlias( String alias )
     {
         this.alias = alias;
+    }
+
+    public void setTsaLocation( String tsaLocation )
+    {
+        this.tsaLocation = tsaLocation;
+    }
+
+    public void setTsaAlias( String tsaAlias )
+    {
+        this.tsaAlias = tsaAlias;
     }
 
     public File getSignedjar()

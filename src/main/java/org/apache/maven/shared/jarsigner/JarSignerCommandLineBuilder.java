@@ -172,6 +172,20 @@ public class JarSignerCommandLineBuilder
             cli.createArg().setValue( sigfile );
         }
 
+        String tsaLocation = request.getTsaLocation();
+        if ( StringUtils.isNotBlank( tsaLocation ) )
+        {
+            cli.createArg().setValue( "-tsa" );
+            cli.createArg().setValue( tsaLocation );
+        }
+
+        String tsaAlias = request.getTsaAlias();
+        if ( StringUtils.isNotBlank( tsaAlias ) )
+        {
+            cli.createArg().setValue( "-tsacert" );
+            cli.createArg().setValue( tsaAlias );
+        }
+
         File signedjar = request.getSignedjar();
         if ( signedjar != null )
         {

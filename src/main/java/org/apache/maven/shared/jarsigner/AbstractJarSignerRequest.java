@@ -34,13 +34,13 @@ public abstract class AbstractJarSignerRequest
     implements JarSignerRequest
 {
     /**
-     * See <a href="http://java.sun.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
      */
     private boolean verbose;
 
     /**
      * The maximum memory available to the JAR signer, e.g. <code>256M</code>. See <a
-     * href="http://java.sun.com/javase/6/docs/technotes/tools/windows/java.html#Xms">-Xmx</a> for more details.
+     * href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/java.html#Xms">-Xmx</a> for more details.
      */
     private String maxMemory;
 

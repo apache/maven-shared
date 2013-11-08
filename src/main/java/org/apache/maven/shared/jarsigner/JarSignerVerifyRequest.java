@@ -30,7 +30,7 @@ public class JarSignerVerifyRequest
     extends AbstractJarSignerRequest
 {
     /**
-     * See <a href="http://java.sun.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
      */
     private boolean certs;
 

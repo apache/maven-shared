@@ -104,7 +104,7 @@ public class JarSignerUtil
                     continue;
                 }
 
-                zos.putNextEntry( ze );
+                zos.putNextEntry(new ZipEntry(ze.getName()));
 
                 IOUtil.copy( zis, zos );
             }

@@ -34,7 +34,7 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * Useful methods.
- *
+ * 
  * @author tchemit <chemit@codelutin.com>
  * @version $Id$
  * @since 1.0
@@ -50,7 +50,7 @@ public class JarSignerUtil
     /**
      * Checks whether the specified file is a JAR file. For our purposes, a ZIP file is a ZIP stream with at least one
      * entry.
-     *
+     * 
      * @param file The file to check, must not be <code>null</code>.
      * @return <code>true</code> if the file looks like a ZIP file, <code>false</code> otherwise.
      */
@@ -79,7 +79,7 @@ public class JarSignerUtil
     /**
      * Removes any existing signatures from the specified JAR file. We will stream from the input JAR directly to the
      * output JAR to retain as much metadata from the original JAR as possible.
-     *
+     * 
      * @param jarFile The JAR file to unsign, must not be <code>null</code>.
      * @throws java.io.IOException
      */
@@ -104,7 +104,7 @@ public class JarSignerUtil
                     continue;
                 }
 
-                zos.putNextEntry(new ZipEntry(ze.getName()));
+                zos.putNextEntry( new ZipEntry( ze.getName() ) );
 
                 IOUtil.copy( zis, zos );
             }
@@ -122,12 +122,10 @@ public class JarSignerUtil
 
     /**
      * Scans an archive for existing signatures.
-     *
+     * 
      * @param jarFile The archive to scan, must not be <code>null</code>.
-     *
-     * @return <code>true</code>, if the archive contains at least one signature file; <code>false</code>, if the
-     * archive does not contain any signature files.
-     *
+     * @return <code>true</code>, if the archive contains at least one signature file; <code>false</code>, if the archive
+     *         does not contain any signature files.
      * @throws IOException if scanning <code>jarFile</code> fails.
      */
     public static boolean isArchiveSigned( final File jarFile )
@@ -180,7 +178,7 @@ public class JarSignerUtil
     /**
      * Checks whether the specified JAR file entry denotes a signature-related file, i.e. matches
      * <code>META-INF/*.SF</code>, <code>META-INF/*.DSA</code> or <code>META-INF/*.RSA</code>.
-     *
+     * 
      * @param entryName The name of the JAR file entry to check, must not be <code>null</code>.
      * @return <code>true</code> if the entry is related to a signature, <code>false</code> otherwise.
      */

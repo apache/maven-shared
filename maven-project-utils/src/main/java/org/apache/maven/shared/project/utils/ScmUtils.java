@@ -1,5 +1,8 @@
 package org.apache.maven.shared.project.utils;
 
+import java.io.File;
+import java.util.Map;
+
 import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
 
@@ -30,6 +33,7 @@ public final class ScmUtils
 
     /**
      * Resolve the scm connection, based on the type of project and inheritence.
+     * This method assumes that the connection ends with the path and can be extended.
      * 
      * @param project the Maven project
      * @return the resolved SCM connection, otherwise an empty String
@@ -43,10 +47,19 @@ public final class ScmUtils
         {
             // prevent null-value
             scmConnection = defaultString( getScmConnection( project ) );
-            
+
             if ( !ProjectUtils.isRootProject( project ) )
             {
-                // assuming that folder matches the moduleName
+                Map<String, String> modules = ProjectUtils.getAllModules( project.getParent() );
+
+                for ( String module : modules.keySet() )
+                {
+                    if ( new File( project.getParent().getBasedir(), module ).equals( project.getFile() ) )
+                    {
+                        return scmConnection + '/' + module;
+                    }
+                }
+                // project is not a module of its parent, so use project's directoryname
                 scmConnection += '/' + project.getFile().getParentFile().getName();
             }
         }
@@ -55,6 +68,7 @@ public final class ScmUtils
 
     /**
      * Resolve the scm developer connection, based on the type of project and inheritence.
+     * This method assumes that the developer connection ends with the path and can be extended.
      * 
      * @param project the Maven Project
      * @return the resolved SCM developer connection, otherwise an empty String
@@ -68,10 +82,19 @@ public final class ScmUtils
         {
             // prevent null-value
             scmDeveloperConnection = defaultString( getScmDeveloperConnection( project ) );
-            
+
             if ( !ProjectUtils.isRootProject( project ) )
             {
-                // assuming that folder matches the moduleName
+                Map<String, String> modules = ProjectUtils.getAllModules( project.getParent() );
+
+                for ( String module : modules.keySet() )
+                {
+                    if ( new File( project.getParent().getBasedir(), module ).equals( project.getFile() ) )
+                    {
+                        return scmDeveloperConnection + '/' + module;
+                    }
+                }
+                // project is not a module of its parent, so use project's directoryname
                 scmDeveloperConnection += '/' + project.getFile().getParentFile().getName();
             }
         }
@@ -118,5 +141,5 @@ public final class ScmUtils
     {
         return ( value == null ? "" : value );
     }
-    
+
 }

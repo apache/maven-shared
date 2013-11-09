@@ -1,11 +1,19 @@
 package org.apache.maven.shared.project.utils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.io.IOException;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Scm;
 import org.apache.maven.project.MavenProject;
 import org.junit.Test;
+
+import edu.emory.mathcs.backport.java.util.Collections;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -33,14 +41,64 @@ public class ScmUtilsTest
     public void resolveScmConnection()
     {
         MavenProject project = new MavenProject();
-        assertEquals( "",  ScmUtils.resolveScmConnection( project ) );
+        assertEquals( "", ScmUtils.resolveScmConnection( project ) );
     }
 
     @Test
     public void resolveScmDeveloperConnection()
     {
         MavenProject project = new MavenProject();
-        assertEquals( "",  ScmUtils.resolveScmDeveloperConnection( project ) );
+        assertEquals( "", ScmUtils.resolveScmDeveloperConnection( project ) );
+    }
+
+    @Test
+    public void resolveScmConnectionByParent() throws IOException
+    {
+        MavenProject parent = mock( MavenProject.class );
+        Model parentModel = mock( Model.class );
+        when( parentModel.getModules() ).thenReturn( Collections.singletonList( "module" ) );
+        when( parent.getModel() ).thenReturn( parentModel );
+        File parentBasedir = File.createTempFile( "tmpBasedir", null );
+        when( parent.getBasedir() ).thenReturn( parentBasedir );
+
+        MavenProject project = mock( MavenProject.class );
+        when( project.hasParent() ).thenReturn( true );
+        when( project.getParent() ).thenReturn( parent );
+        when( project.getFile() ).thenReturn( new File( parentBasedir, "module" ) );
+        Scm scm = mock( Scm.class );
+        when( scm.getConnection() ).thenReturn( "parent" );
+        when( project.getScm() ).thenReturn( scm );
+
+        Model projectModel = mock( Model.class );
+
+        when( project.getModel() ).thenReturn( projectModel );
+
+        assertEquals( "parent/module", ScmUtils.resolveScmConnection( project ) );
+    }
+
+    @Test
+    public void resolveScmDeveloperConnectionByParent() throws IOException
+    {
+        MavenProject parent = mock( MavenProject.class );
+        Model parentModel = mock( Model.class );
+        when( parentModel.getModules() ).thenReturn( Collections.singletonList( "module" ) );
+        when( parent.getModel() ).thenReturn( parentModel );
+        File parentBasedir = File.createTempFile( "tmpBasedir", null );
+        when( parent.getBasedir() ).thenReturn( parentBasedir );
+
+        MavenProject project = mock( MavenProject.class );
+        when( project.hasParent() ).thenReturn( true );
+        when( project.getParent() ).thenReturn( parent );
+        when( project.getFile() ).thenReturn( new File( parentBasedir, "module" ) );
+        Scm scm = mock( Scm.class );
+        when( scm.getDeveloperConnection() ).thenReturn( "parent" );
+        when( project.getScm() ).thenReturn( scm );
+
+        Model projectModel = mock( Model.class );
+
+        when( project.getModel() ).thenReturn( projectModel );
+
+        assertEquals( "parent/module", ScmUtils.resolveScmDeveloperConnection( project ) );
     }
 
     @Test

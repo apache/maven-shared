@@ -19,6 +19,7 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
+import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.apache.maven.shared.utils.Os;
 import org.apache.maven.shared.utils.StringUtils;
@@ -37,9 +38,9 @@ import java.util.Map;
  *
  * @author tchemit <chemit@codelutin.com>
  * @version $Id$
- * @plexus.component role="org.apache.maven.shared.jarsigner.JarSigner" role-hint="default"
  * @since 1.0
  */
+@Component( role = JarSigner.class, hint = "default" )
 public class DefaultJarSigner
     extends AbstractLogEnabled
     implements JarSigner

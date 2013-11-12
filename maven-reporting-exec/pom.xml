@@ -53,7 +53,7 @@
   <properties>
     <mavenVersion>3.0</mavenVersion>
     <plexusVersion>1.5.4</plexusVersion>
-    <maven.site.path>shared-archives/maven-reporting-exec-LATEST</maven.site.path>
+    <maven.site.path>shared-archives/${project.artifactId}-LATEST</maven.site.path>
   </properties>
 
   <dependencies>

@@ -41,14 +41,24 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-resources/</developerConnection>
     <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-resources/</url>
   </scm>
-
   <issueManagement>
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED/component/14715</url>
   </issueManagement>
+  <distributionManagement>
+    <site>
+      <id>apache.website</id>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/content/${maven.site.path}</url>
+    </site>
+  </distributionManagement>
 
   <ciManagement>
     <system>Jenkins</system>
     <url>https://builds.apache.org/hudson/job/maven-shared/</url>
   </ciManagement>
+
+  <properties>
+    <maven.site.path>shared-archives/${project.artifactId}-LATEST</maven.site.path>
+  </properties>
+
 </project>

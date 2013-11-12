@@ -44,12 +44,22 @@ under the License.
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED/component/13271</url>
   </issueManagement>
-  
+  <distributionManagement>
+    <site>
+      <id>apache.website</id>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/content/${maven.site.path}</url>
+    </site>
+  </distributionManagement>
+
   <contributors>
     <contributor>
       <name>Lucien Weller</name>
     </contributor>
   </contributors>
+
+  <properties>
+    <maven.site.path>shared-archives/${project.artifactId}-LATEST</maven.site.path>
+  </properties>
 
   <dependencies>
     <dependency>

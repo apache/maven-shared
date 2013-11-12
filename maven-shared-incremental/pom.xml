@@ -40,14 +40,20 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-incremental</developerConnection>
     <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-incremental</url>
   </scm>
-
   <issueManagement>
     <system>jira</system>
     <url>https://jira.codehaus.org/browse/MSHARED/component/15650</url>
   </issueManagement>
+  <distributionManagement>
+    <site>
+      <id>apache.website</id>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/content/${maven.site.path}</url>
+    </site>
+  </distributionManagement>
 
   <properties>
     <mavenVersion>2.2.1</mavenVersion>
+    <maven.site.path>shared-archives/${project.artifactId}-LATEST</maven.site.path>
   </properties>
 
   <dependencies>

@@ -42,6 +42,16 @@
     <system>jira</system>
     <url>http://jira.codehaus.org/browse/MSHARED/component/13273</url>
   </issueManagement>
+  <distributionManagement>
+    <site>
+      <id>apache.website</id>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/content/${maven.site.path}</url>
+    </site>
+  </distributionManagement>
+
+  <properties>
+    <maven.site.path>shared-archives/${project.artifactId}-LATEST</maven.site.path>
+  </properties>
 
   <dependencies>
     <dependency>

@@ -92,6 +92,13 @@ public interface JarSignerRequest
     StreamConsumer getSystemErrorStreamConsumer();
 
     /**
+     * Gets the value of the command line tool parameter <pre>protected</pre>
+     * @return true iff the password must be given via a protected
+     * authentication path such as a dedicated PIN reader
+     */
+    boolean isProtectedAuthenticationPath();
+
+    /**
      * Sets the new given value to the field {@code verbose} of the request.
      *
      * @param verbose the new value of the field {@code verbose}.
@@ -140,5 +147,11 @@ public interface JarSignerRequest
      */
     void setSystemErrorStreamConsumer( StreamConsumer systemErrorStreamConsumer );
 
+    /**
+     * Sets the value of the command line tool parameter <pre>protected</pre>
+     * @param protectedAuthenticationPath iff the password must be given via a protected
+     * authentication path such as a dedicated PIN reader
+     */
+    void setProtectedAuthenticationPath(boolean protectedAuthenticationPath);
 
 }

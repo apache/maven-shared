@@ -70,6 +70,11 @@ public abstract class AbstractJarSignerRequest
     private StreamConsumer systemErrorStreamConsumer;
 
     /**
+     * See <a href="http://java.sun.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     */
+    protected boolean protectedAuthenticationPath;
+
+    /**
      * {@inheritDoc}
      */
     public boolean isVerbose()
@@ -128,6 +133,14 @@ public abstract class AbstractJarSignerRequest
     /**
      * {@inheritDoc}
      */
+    public boolean isProtectedAuthenticationPath()
+    {
+      return protectedAuthenticationPath;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void setVerbose( boolean verbose )
     {
         this.verbose = verbose;
@@ -179,5 +192,13 @@ public abstract class AbstractJarSignerRequest
     public void setSystemErrorStreamConsumer( StreamConsumer systemErrorStreamConsumer )
     {
         this.systemErrorStreamConsumer = systemErrorStreamConsumer;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setProtectedAuthenticationPath(boolean protect)
+    {
+      this.protectedAuthenticationPath = protect;
     }
 }

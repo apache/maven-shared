@@ -65,6 +65,11 @@ public class JarSignerCommandLineBuilder
             cli.createArg().setValue( "-verbose" );
         }
 
+        if (request.isProtectedAuthenticationPath())
+        {
+            cli.createArg().setValue( "-protected" );
+        }
+
         String maxMemory = request.getMaxMemory();
         if ( StringUtils.isNotEmpty( maxMemory ) )
         {

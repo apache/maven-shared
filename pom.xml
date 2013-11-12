@@ -37,11 +37,20 @@
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-script-interpreter</developerConnection>
     <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-script-interpreter</url>
   </scm>
-
   <issueManagement>
     <system>jira</system>
     <url>https://jira.codehaus.org/browse/MSHARED/component/15256</url>
   </issueManagement>
+  <distributionManagement>
+    <site>
+      <id>apache.website</id>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/content/${maven.site.path}</url>
+    </site>
+  </distributionManagement>
+
+  <properties>
+    <maven.site.path>shared-archives/${project.artifactId}-LATEST</maven.site.path>
+  </properties>
 
   <dependencies>
     <dependency>

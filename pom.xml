@@ -93,7 +93,6 @@
         <executions>
           <execution>
             <id>create-component-descriptor</id>
-            <phase>generate-resources</phase>
             <goals>
               <goal>generate-metadata</goal>
             </goals>

@@ -69,71 +69,113 @@ public abstract class AbstractJarSignerRequest
      */
     private StreamConsumer systemErrorStreamConsumer;
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isVerbose()
     {
         return verbose;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getMaxMemory()
     {
         return maxMemory;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String[] getArguments()
     {
         return arguments;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public File getWorkingDirectory()
     {
         return workingDirectory;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public File getArchive()
     {
         return archive;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public StreamConsumer getSystemOutStreamConsumer()
     {
         return systemOutStreamConsumer;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public StreamConsumer getSystemErrorStreamConsumer()
     {
         return systemErrorStreamConsumer;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setVerbose( boolean verbose )
     {
         this.verbose = verbose;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setMaxMemory( String maxMemory )
     {
         this.maxMemory = maxMemory;
     }
 
-    public void setArguments( String[] arguments )
+    /**
+     * {@inheritDoc}
+     */
+    public void setArguments( String... arguments )
     {
         this.arguments = arguments;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setWorkingDirectory( File workingDirectory )
     {
         this.workingDirectory = workingDirectory;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setArchive( File archive )
     {
         this.archive = archive;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setSystemOutStreamConsumer( StreamConsumer systemOutStreamConsumer )
     {
         this.systemOutStreamConsumer = systemOutStreamConsumer;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setSystemErrorStreamConsumer( StreamConsumer systemErrorStreamConsumer )
     {
         this.systemErrorStreamConsumer = systemErrorStreamConsumer;

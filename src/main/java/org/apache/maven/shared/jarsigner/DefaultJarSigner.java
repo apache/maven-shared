@@ -19,14 +19,14 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.apache.maven.shared.utils.Os;
 import org.apache.maven.shared.utils.StringUtils;
 import org.apache.maven.shared.utils.cli.CommandLineException;
 import org.apache.maven.shared.utils.cli.CommandLineUtils;
 import org.apache.maven.shared.utils.cli.Commandline;
 import org.apache.maven.shared.utils.cli.StreamConsumer;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +51,9 @@ public class DefaultJarSigner
      */
     protected String jarSignerFile;
 
+    /**
+     * {@inheritDoc}
+     */
     public JarSignerResult execute( JarSignerRequest request )
         throws JarSignerException
     {
@@ -104,6 +107,9 @@ public class DefaultJarSigner
         InputStream systemIn = new InputStream()
         {
 
+            /**
+             * {@inheritDoc}
+             */
             public int read()
             {
                 return -1;
@@ -117,6 +123,9 @@ public class DefaultJarSigner
             systemOut = new StreamConsumer()
             {
 
+                /**
+                 * {@inheritDoc}
+                 */
                 public void consumeLine( final String line )
                 {
                     if ( verbose )
@@ -139,6 +148,9 @@ public class DefaultJarSigner
             systemErr = new StreamConsumer()
             {
 
+                /**
+                 * {@inheritDoc}
+                 */
                 public void consumeLine( final String line )
                 {
                     getLogger().warn( line );
@@ -178,8 +190,7 @@ public class DefaultJarSigner
     {
         String command = "jarsigner" + ( Os.isFamily( Os.FAMILY_WINDOWS ) ? ".exe" : "" );
 
-        String executable =
-            findExecutable( command, System.getProperty( "java.home" ), new String[]{ "../bin", "bin", "../sh" } );
+        String executable = findExecutable( command, System.getProperty( "java.home" ), "../bin", "bin", "../sh" );
 
         if ( executable == null )
         {
@@ -188,9 +199,13 @@ public class DefaultJarSigner
 
             String[] variables = { "JDK_HOME", "JAVA_HOME" };
 
-            for ( int i = 0; i < variables.length && executable == null; i++ )
+            for ( String variable : variables )
             {
-                executable = findExecutable( command, env.get( variables[i] ), new String[]{ "bin", "sh" } );
+                executable = findExecutable( command, env.get( variable ), "bin", "sh" );
+                if ( executable != null )
+                {
+                    break;
+                }
             }
 
         }
@@ -211,21 +226,23 @@ public class DefaultJarSigner
      * @param subDirs The sub directories of the home directory to search in, must not be <code>null</code>.
      * @return The (absolute) path to the command if found, <code>null</code> otherwise.
      */
-    protected String findExecutable( String command, String homeDir, String[] subDirs )
+    protected String findExecutable( String command, String homeDir, String... subDirs )
     {
+        String result = null;
         if ( StringUtils.isNotEmpty( homeDir ) )
         {
-            for ( int i = 0; i < subDirs.length; i++ )
+            for ( String subDir : subDirs )
             {
-                File file = new File( new File( homeDir, subDirs[i] ), command );
+                File file = new File( new File( homeDir, subDir ), command );
 
                 if ( file.isFile() )
                 {
-                    return file.getAbsolutePath();
+                    result = file.getAbsolutePath();
+                    break;
                 }
             }
         }
 
-        return null;
+        return result;
     }
 }

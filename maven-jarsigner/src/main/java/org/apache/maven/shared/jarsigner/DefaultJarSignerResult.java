@@ -54,16 +54,25 @@ public class DefaultJarSignerResult
         // hide constructor
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public int getExitCode()
     {
         return exitCode;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Commandline getCommandline()
     {
         return commandline;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public CommandLineException getExecutionException()
     {
         return executionException;

@@ -110,7 +110,7 @@ public interface JarSignerRequest
      *
      * @param arguments the new value of the field {@code arguments}.
      */
-    void setArguments( String[] arguments );
+    void setArguments( String... arguments );
 
     /**
      * Sets the new given value to the field {@code workingDirectory} of the request.

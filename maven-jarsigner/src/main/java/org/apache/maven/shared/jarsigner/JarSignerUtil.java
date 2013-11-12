@@ -34,7 +34,7 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * Useful methods.
- * 
+ *
  * @author tchemit <chemit@codelutin.com>
  * @version $Id$
  * @since 1.0
@@ -50,18 +50,19 @@ public class JarSignerUtil
     /**
      * Checks whether the specified file is a JAR file. For our purposes, a ZIP file is a ZIP stream with at least one
      * entry.
-     * 
+     *
      * @param file The file to check, must not be <code>null</code>.
      * @return <code>true</code> if the file looks like a ZIP file, <code>false</code> otherwise.
      */
     public static boolean isZipFile( final File file )
     {
+        boolean result = false;
         try
         {
             ZipInputStream zis = new ZipInputStream( new FileInputStream( file ) );
             try
             {
-                return zis.getNextEntry() != null;
+                result = zis.getNextEntry() != null;
             }
             finally
             {
@@ -73,13 +74,13 @@ public class JarSignerUtil
             // ignore, will fail below
         }
 
-        return false;
+        return result;
     }
 
     /**
      * Removes any existing signatures from the specified JAR file. We will stream from the input JAR directly to the
      * output JAR to retain as much metadata from the original JAR as possible.
-     * 
+     *
      * @param jarFile The JAR file to unsign, must not be <code>null</code>.
      * @throws java.io.IOException
      */
@@ -122,7 +123,7 @@ public class JarSignerUtil
 
     /**
      * Scans an archive for existing signatures.
-     * 
+     *
      * @param jarFile The archive to scan, must not be <code>null</code>.
      * @return <code>true</code>, if the archive contains at least one signature file; <code>false</code>, if the archive
      *         does not contain any signature files.
@@ -165,7 +166,7 @@ public class JarSignerUtil
                     in.close();
                 }
             }
-            catch ( final IOException e )
+            catch ( IOException e )
             {
                 if ( !suppressExceptionOnClose )
                 {
@@ -178,12 +179,13 @@ public class JarSignerUtil
     /**
      * Checks whether the specified JAR file entry denotes a signature-related file, i.e. matches
      * <code>META-INF/*.SF</code>, <code>META-INF/*.DSA</code> or <code>META-INF/*.RSA</code>.
-     * 
+     *
      * @param entryName The name of the JAR file entry to check, must not be <code>null</code>.
      * @return <code>true</code> if the entry is related to a signature, <code>false</code> otherwise.
      */
     private static boolean isSignatureFile( String entryName )
     {
+        boolean result = false;
         if ( entryName.regionMatches( true, 0, "META-INF", 0, 8 ) )
         {
             entryName = entryName.replace( '\\', '/' );
@@ -192,22 +194,22 @@ public class JarSignerUtil
             {
                 if ( entryName.regionMatches( true, entryName.length() - 3, ".SF", 0, 3 ) )
                 {
-                    return true;
+                    result = true;
                 }
-                if ( entryName.regionMatches( true, entryName.length() - 4, ".DSA", 0, 4 ) )
+                else if ( entryName.regionMatches( true, entryName.length() - 4, ".DSA", 0, 4 ) )
                 {
-                    return true;
+                    result = true;
                 }
-                if ( entryName.regionMatches( true, entryName.length() - 4, ".RSA", 0, 4 ) )
+                else if ( entryName.regionMatches( true, entryName.length() - 4, ".RSA", 0, 4 ) )
                 {
-                    return true;
+                    result = true;
                 }
-                if ( entryName.regionMatches( true, entryName.length() - 3, ".EC", 0, 3 ) )
+                else if ( entryName.regionMatches( true, entryName.length() - 3, ".EC", 0, 3 ) )
                 {
-                    return true;
+                    result = true;
                 }
             }
         }
-        return false;
+        return result;
     }
 }

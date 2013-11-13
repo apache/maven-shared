@@ -40,6 +40,16 @@ public abstract class AbstractJarSignerRequest
     private boolean verbose;
 
     /**
+     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     */
+    private String keystore;
+
+    /**
+     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     */
+    private String alias;
+
+    /**
      * The maximum memory available to the JAR signer, e.g. <code>256M</code>. See <a
      * href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/java.html#Xms">-Xmx</a> for more details.
      */
@@ -71,6 +81,22 @@ public abstract class AbstractJarSignerRequest
     public boolean isVerbose()
     {
         return verbose;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getKeystore()
+    {
+        return keystore;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getAlias()
+    {
+        return alias;
     }
 
     /**
@@ -119,6 +145,22 @@ public abstract class AbstractJarSignerRequest
     public void setVerbose( boolean verbose )
     {
         this.verbose = verbose;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setKeystore( String keystore )
+    {
+        this.keystore = keystore;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setAlias( String alias )
+    {
+        this.alias = alias;
     }
 
     /**

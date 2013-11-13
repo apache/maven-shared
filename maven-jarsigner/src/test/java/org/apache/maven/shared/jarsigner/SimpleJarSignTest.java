@@ -78,6 +78,8 @@ public class SimpleJarSignTest
         request.setCerts( true );
         request.setVerbose( true );
         request.setArchive( new File( "target/ssimple.jar" ) );
+        request.setKeystore( "src/test/keystore" );
+        request.setAlias( "foo_alias" );
 
         jarSignerResult = jarSigner.execute( request );
         assertEquals( "not exit code 0 " + jarSignerResult.getExecutionException(), 0, jarSignerResult.getExitCode() );

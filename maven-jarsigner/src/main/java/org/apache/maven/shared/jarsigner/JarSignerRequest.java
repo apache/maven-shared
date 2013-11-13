@@ -19,7 +19,7 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
-import org.apache.maven.shared.utils.cli.StreamConsumer;
+import org.apache.maven.shared.utils.cli.javatool.JavaToolRequest;
 
 import java.io.File;
 
@@ -31,6 +31,7 @@ import java.io.File;
  * @since 1.0
  */
 public interface JarSignerRequest
+    extends JavaToolRequest
 {
 
     /**
@@ -72,29 +73,10 @@ public interface JarSignerRequest
     File getArchive();
 
     /**
-     * Gets the value of the {@code systemOutStreamConsumer} field.
-     * <p/>
-     * This option field if filled is used by the commandline tool to consume system ouput stream of the jarsigner
-     * command.
-     *
-     * @return the value of the {@code systemOutStreamConsumer} field.
-     */
-    StreamConsumer getSystemOutStreamConsumer();
-
-    /**
-     * Gets the value of the {@code systemErrorStreamConsumer} field.
-     * <p/>
-     * This option field if filled is used by the commandline tool to consume system error stream of the jarsigner
-     * command.
-     *
-     * @return the value of the {@code systemErrorStreamConsumer} field.
-     */
-    StreamConsumer getSystemErrorStreamConsumer();
-
-    /**
      * Gets the value of the command line tool parameter <pre>protected</pre>
+     *
      * @return true iff the password must be given via a protected
-     * authentication path such as a dedicated PIN reader
+     *         authentication path such as a dedicated PIN reader
      */
     boolean isProtectedAuthenticationPath();
 
@@ -134,24 +116,11 @@ public interface JarSignerRequest
     void setArchive( File archive );
 
     /**
-     * Sets the new given value to the field {@code systemOutStreamConsumer} of the request.
-     *
-     * @param systemOutStreamConsumer the new value of the field {@code systemOutStreamConsumer}.
-     */
-    void setSystemOutStreamConsumer( StreamConsumer systemOutStreamConsumer );
-
-    /**
-     * Sets the new given value to the field {@code systemErrorStreamConsumer} of the request.
-     *
-     * @param systemErrorStreamConsumer the new value of the field {@code systemErrorStreamConsumer}.
-     */
-    void setSystemErrorStreamConsumer( StreamConsumer systemErrorStreamConsumer );
-
-    /**
      * Sets the value of the command line tool parameter <pre>protected</pre>
+     *
      * @param protectedAuthenticationPath iff the password must be given via a protected
-     * authentication path such as a dedicated PIN reader
+     *                                    authentication path such as a dedicated PIN reader
      */
-    void setProtectedAuthenticationPath(boolean protectedAuthenticationPath);
+    void setProtectedAuthenticationPath( boolean protectedAuthenticationPath );
 
 }

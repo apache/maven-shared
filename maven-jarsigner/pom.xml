@@ -54,7 +54,7 @@
   </distributionManagement>
 
   <properties>
-    <mavenVersion>2.0.6</mavenVersion>
+    <mavenVersion>2.1.0</mavenVersion>
     <maven.site.path>shared-archives/${project.artifactId}-LATEST</maven.site.path>
   </properties>
 
@@ -62,7 +62,7 @@
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-shared-utils</artifactId>
-      <version>0.3</version>
+      <version>0.5-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -75,6 +75,11 @@
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-container-default</artifactId>
       <version>1.0-alpha-9-stable-1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-toolchain</artifactId>
+      <version>${mavenVersion}</version>
     </dependency>
 
     <dependency>

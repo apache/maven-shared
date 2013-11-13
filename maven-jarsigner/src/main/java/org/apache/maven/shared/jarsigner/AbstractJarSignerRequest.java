@@ -19,7 +19,7 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
-import org.apache.maven.shared.utils.cli.StreamConsumer;
+import org.apache.maven.shared.utils.cli.javatool.AbstractJavaToolRequest;
 
 import java.io.File;
 
@@ -31,6 +31,7 @@ import java.io.File;
  * @since 1.0
  */
 public abstract class AbstractJarSignerRequest
+    extends AbstractJavaToolRequest
     implements JarSignerRequest
 {
     /**
@@ -58,16 +59,6 @@ public abstract class AbstractJarSignerRequest
      * Archive to treat.
      */
     private File archive;
-
-    /**
-     * Optional system out stream consumer used by the commandline execution.
-     */
-    private StreamConsumer systemOutStreamConsumer;
-
-    /**
-     * Optional system error stream consumer used by the commandline execution.
-     */
-    private StreamConsumer systemErrorStreamConsumer;
 
     /**
      * See <a href="http://java.sun.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
@@ -117,25 +108,9 @@ public abstract class AbstractJarSignerRequest
     /**
      * {@inheritDoc}
      */
-    public StreamConsumer getSystemOutStreamConsumer()
-    {
-        return systemOutStreamConsumer;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public StreamConsumer getSystemErrorStreamConsumer()
-    {
-        return systemErrorStreamConsumer;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public boolean isProtectedAuthenticationPath()
     {
-      return protectedAuthenticationPath;
+        return protectedAuthenticationPath;
     }
 
     /**
@@ -181,24 +156,8 @@ public abstract class AbstractJarSignerRequest
     /**
      * {@inheritDoc}
      */
-    public void setSystemOutStreamConsumer( StreamConsumer systemOutStreamConsumer )
+    public void setProtectedAuthenticationPath( boolean protect )
     {
-        this.systemOutStreamConsumer = systemOutStreamConsumer;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setSystemErrorStreamConsumer( StreamConsumer systemErrorStreamConsumer )
-    {
-        this.systemErrorStreamConsumer = systemErrorStreamConsumer;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setProtectedAuthenticationPath(boolean protect)
-    {
-      this.protectedAuthenticationPath = protect;
+        this.protectedAuthenticationPath = protect;
     }
 }

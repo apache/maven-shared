@@ -19,8 +19,7 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
-import org.apache.maven.shared.utils.cli.CommandLineException;
-import org.apache.maven.shared.utils.cli.Commandline;
+import org.apache.maven.shared.utils.cli.javatool.AbstractJavaToolResult;
 
 /**
  * Describes the result of a JarSigner invocation.
@@ -30,21 +29,9 @@ import org.apache.maven.shared.utils.cli.Commandline;
  * @since 1.0
  */
 public class DefaultJarSignerResult
+    extends AbstractJavaToolResult
     implements JarSignerResult
 {
-
-    /**
-     * The exception that prevented to execute the command line, will be <code>null</code> if jarSigner could be
-     * successfully started.
-     */
-    private CommandLineException executionException;
-
-    /**
-     * The exit code reported by the Maven invocation.
-     */
-    private int exitCode = Integer.MIN_VALUE;
-
-    private Commandline commandline;
 
     /**
      * Creates a new invocation result
@@ -52,54 +39,5 @@ public class DefaultJarSignerResult
     DefaultJarSignerResult()
     {
         // hide constructor
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public int getExitCode()
-    {
-        return exitCode;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Commandline getCommandline()
-    {
-        return commandline;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public CommandLineException getExecutionException()
-    {
-        return executionException;
-    }
-
-    /**
-     * Sets the exit code reported by the Jarsigner invocation.
-     *
-     * @param exitCode The exit code reported by the JarSigner invocation.
-     */
-    void setExitCode( int exitCode )
-    {
-        this.exitCode = exitCode;
-    }
-
-    /**
-     * Sets the exception that prevented to execute the command line.
-     *
-     * @param executionException The exception that prevented to execute the command line, may be <code>null</code>.
-     */
-    void setExecutionException( CommandLineException executionException )
-    {
-        this.executionException = executionException;
-    }
-
-    void setCommandline( Commandline commandline )
-    {
-        this.commandline = commandline;
     }
 }

@@ -19,19 +19,11 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
-import org.apache.maven.shared.utils.Os;
-import org.apache.maven.shared.utils.StringUtils;
-import org.apache.maven.shared.utils.cli.CommandLineException;
-import org.apache.maven.shared.utils.cli.CommandLineUtils;
 import org.apache.maven.shared.utils.cli.Commandline;
 import org.apache.maven.shared.utils.cli.StreamConsumer;
+import org.apache.maven.shared.utils.cli.javatool.AbstractJavaTool;
+import org.apache.maven.shared.utils.cli.javatool.JavaToolException;
 import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Map;
 
 /**
  * Default implementation of component {@link JarSigner}.
@@ -42,84 +34,56 @@ import java.util.Map;
  */
 @Component( role = JarSigner.class, hint = "default" )
 public class DefaultJarSigner
-    extends AbstractLogEnabled
+    extends AbstractJavaTool<JarSignerRequest, JarSignerResult>
     implements JarSigner
 {
 
-    /**
-     * The location of the jarSigner executable file.
-     */
-    protected String jarSignerFile;
-
-    /**
-     * {@inheritDoc}
-     */
-    public JarSignerResult execute( JarSignerRequest request )
-        throws JarSignerException
+    public DefaultJarSigner()
     {
-
-        if ( jarSignerFile == null )
-        {
-
-            // find the jar singer to use
-            try
-            {
-                jarSignerFile = findJarSignerExecutable();
-            }
-            catch ( IOException e )
-            {
-                throw new JarSignerException( "Error finding jar signer executable. Reason: " + e.getMessage(), e );
-            }
-        }
-
-        // creates the command line
-        Commandline cli = createCommandLine( request );
-
-        // execute it
-        return executeCommandLine( cli, request );
+        super( "jarsigner" );
     }
 
-    protected Commandline createCommandLine( JarSignerRequest request )
-        throws JarSignerException
+    @Override
+    protected JarSignerResult createResult()
+    {
+        return new DefaultJarSignerResult();
+    }
+
+    @Override
+    protected Commandline createCommandLine( JarSignerRequest request, String javaToolFile )
+        throws JavaToolException
     {
         JarSignerCommandLineBuilder cliBuilder = new JarSignerCommandLineBuilder();
         cliBuilder.setLogger( getLogger() );
-        cliBuilder.setJarSignerFile( jarSignerFile );
+        cliBuilder.setJarSignerFile( javaToolFile );
         try
         {
-            return cliBuilder.build( request );
+            Commandline cli = cliBuilder.build( request );
+            if ( request.isVerbose() )
+            {
+                getLogger().info( cli.toString() );
+            }
+            else
+            {
+                getLogger().debug( cli.toString() );
+            }
+            return cli;
         }
         catch ( CommandLineConfigurationException e )
         {
-            throw new JarSignerException( "Error configuring command-line. Reason: " + e.getMessage(), e );
+            throw new JavaToolException( "Error configuring command-line. Reason: " + e.getMessage(), e );
         }
     }
 
-    protected JarSignerResult executeCommandLine( Commandline cli, JarSignerRequest request )
+    protected StreamConsumer createSystemOutStreamConsumer( JarSignerRequest request )
     {
-        if ( getLogger().isDebugEnabled() )
-        {
-            getLogger().debug( "Executing: " + cli );
-        }
-
-        final boolean verbose = request.isVerbose();
-
-        InputStream systemIn = new InputStream()
-        {
-
-            /**
-             * {@inheritDoc}
-             */
-            public int read()
-            {
-                return -1;
-            }
-
-        };
         StreamConsumer systemOut = request.getSystemOutStreamConsumer();
 
         if ( systemOut == null )
         {
+
+            final boolean verbose = request.isVerbose();
+
             systemOut = new StreamConsumer()
             {
 
@@ -140,109 +104,7 @@ public class DefaultJarSigner
 
             };
         }
-
-        StreamConsumer systemErr = request.getSystemErrorStreamConsumer();
-
-        if ( systemErr == null )
-        {
-            systemErr = new StreamConsumer()
-            {
-
-                /**
-                 * {@inheritDoc}
-                 */
-                public void consumeLine( final String line )
-                {
-                    getLogger().warn( line );
-                }
-
-            };
-        }
-
-        DefaultJarSignerResult result = new DefaultJarSignerResult();
-        result.setCommandline( cli );
-
-        if ( verbose )
-        {
-            getLogger().info( cli.toString() );
-        }
-        else
-        {
-            getLogger().debug( cli.toString() );
-        }
-
-        try
-        {
-            int resultCode = CommandLineUtils.executeCommandLine( cli, systemIn, systemOut, systemErr );
-
-            result.setExitCode( resultCode );
-        }
-        catch ( CommandLineException e )
-        {
-            result.setExecutionException( e );
-        }
-
-        return result;
+        return systemOut;
     }
 
-    protected String findJarSignerExecutable()
-        throws IOException
-    {
-        String command = "jarsigner" + ( Os.isFamily( Os.FAMILY_WINDOWS ) ? ".exe" : "" );
-
-        String executable = findExecutable( command, System.getProperty( "java.home" ), "../bin", "bin", "../sh" );
-
-        if ( executable == null )
-        {
-
-            Map<String, String> env = System.getenv();
-
-            String[] variables = { "JDK_HOME", "JAVA_HOME" };
-
-            for ( String variable : variables )
-            {
-                executable = findExecutable( command, env.get( variable ), "bin", "sh" );
-                if ( executable != null )
-                {
-                    break;
-                }
-            }
-
-        }
-
-        if ( executable == null )
-        {
-            executable = command;
-        }
-
-        return executable;
-    }
-
-    /**
-     * Finds the specified command in any of the given sub directories of the specified JDK/JRE home directory.
-     *
-     * @param command The command to find, must not be <code>null</code>.
-     * @param homeDir The home directory to search in, may be <code>null</code>.
-     * @param subDirs The sub directories of the home directory to search in, must not be <code>null</code>.
-     * @return The (absolute) path to the command if found, <code>null</code> otherwise.
-     */
-    protected String findExecutable( String command, String homeDir, String... subDirs )
-    {
-        String result = null;
-        if ( StringUtils.isNotEmpty( homeDir ) )
-        {
-            for ( String subDir : subDirs )
-            {
-                File file = new File( new File( homeDir, subDir ), command );
-
-                if ( file.isFile() )
-                {
-                    result = file.getAbsolutePath();
-                    break;
-                }
-            }
-        }
-
-        return result;
-    }
 }

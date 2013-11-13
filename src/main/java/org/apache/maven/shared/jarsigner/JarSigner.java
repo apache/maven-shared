@@ -19,6 +19,8 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
+import org.apache.maven.shared.utils.cli.javatool.JavaTool;
+
 /**
  * Provides a facade to invoke JarSigner tool.
  *
@@ -27,16 +29,7 @@ package org.apache.maven.shared.jarsigner;
  * @since 1.0
  */
 public interface JarSigner
+    extends JavaTool<JarSignerRequest, JarSignerResult>
 {
-
-    /**
-     * Executes JarSigner tool using the parameters specified by the given invocation request.
-     *
-     * @param request The invocation request to execute, must not be <code>null</code>.
-     * @return The result of the JarSigner invocation, never <code>null</code>.
-     * @throws JarSignerException if something fails while init the command
-     */
-    JarSignerResult execute( JarSignerRequest request )
-        throws JarSignerException;
 
 }

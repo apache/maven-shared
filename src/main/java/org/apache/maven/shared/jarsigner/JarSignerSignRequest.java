@@ -34,11 +34,6 @@ public class JarSignerSignRequest
     /**
      * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
      */
-    private String keystore;
-
-    /**
-     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
-     */
     private String storepass;
 
     /**
@@ -71,10 +66,6 @@ public class JarSignerSignRequest
      */
     private String providerArg;
 
-    /**
-     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
-     */
-    private String alias;
 
     /**
      * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
@@ -91,11 +82,6 @@ public class JarSignerSignRequest
      */
     protected File signedjar;
 
-
-    public String getKeystore()
-    {
-        return keystore;
-    }
 
     public String getStorepass()
     {
@@ -132,10 +118,6 @@ public class JarSignerSignRequest
         return providerArg;
     }
 
-    public String getAlias()
-    {
-        return alias;
-    }
 
     public String getTsaLocation()
     {
@@ -145,11 +127,6 @@ public class JarSignerSignRequest
     public String getTsaAlias()
     {
         return tsaAlias;
-    }
-
-    public void setKeystore( String keystore )
-    {
-        this.keystore = keystore;
     }
 
     public void setStorepass( String storepass )
@@ -185,11 +162,6 @@ public class JarSignerSignRequest
     public void setProviderArg( String providerArg )
     {
         this.providerArg = providerArg;
-    }
-
-    public void setAlias( String alias )
-    {
-        this.alias = alias;
     }
 
     public void setTsaLocation( String tsaLocation )

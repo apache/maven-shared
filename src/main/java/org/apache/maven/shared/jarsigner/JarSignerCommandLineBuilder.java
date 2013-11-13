@@ -65,7 +65,14 @@ public class JarSignerCommandLineBuilder
             cli.createArg().setValue( "-verbose" );
         }
 
-        if (request.isProtectedAuthenticationPath())
+        String keystore = request.getKeystore();
+        if ( !StringUtils.isEmpty( keystore ) )
+        {
+            cli.createArg().setValue( "-keystore" );
+            cli.createArg().setValue( keystore );
+        }
+
+        if ( request.isProtectedAuthenticationPath() )
         {
             cli.createArg().setValue( "-protected" );
         }
@@ -90,6 +97,14 @@ public class JarSignerCommandLineBuilder
         if ( request instanceof JarSignerVerifyRequest )
         {
             build( (JarSignerVerifyRequest) request, cli );
+        }
+
+        cli.createArg().setFile( request.getArchive() );
+
+        String alias = request.getAlias();
+        if ( !StringUtils.isEmpty( alias ) )
+        {
+            cli.createArg().setValue( alias );
         }
 
         return cli;
@@ -121,13 +136,6 @@ public class JarSignerCommandLineBuilder
 
     protected void build( JarSignerSignRequest request, Commandline cli )
     {
-        String keystore = request.getKeystore();
-        if ( !StringUtils.isEmpty( keystore ) )
-        {
-            cli.createArg().setValue( "-keystore" );
-            cli.createArg().setValue( keystore );
-        }
-
         String storepass = request.getStorepass();
         if ( !StringUtils.isEmpty( storepass ) )
         {
@@ -197,18 +205,9 @@ public class JarSignerCommandLineBuilder
             cli.createArg().setValue( "-signedjar" );
             cli.createArg().setValue( signedjar.getAbsolutePath() );
         }
-        cli.createArg().setFile( request.getArchive() );
-
-        String alias = request.getAlias();
-        if ( !StringUtils.isEmpty( alias ) )
-        {
-            cli.createArg().setValue( alias );
-        }
-
-
     }
 
-    protected Commandline build( JarSignerVerifyRequest request, Commandline cli )
+    protected void build( JarSignerVerifyRequest request, Commandline cli )
         throws CommandLineConfigurationException
     {
         cli.createArg( true ).setValue( "-verify" );
@@ -217,8 +216,5 @@ public class JarSignerCommandLineBuilder
         {
             cli.createArg().setValue( "-certs" );
         }
-
-        cli.createArg().setFile( request.getArchive() );
-        return cli;
     }
 }

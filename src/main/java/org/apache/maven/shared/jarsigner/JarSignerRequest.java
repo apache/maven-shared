@@ -39,8 +39,21 @@ public interface JarSignerRequest
      *
      * @return the value of the {@code verbose} field.
      */
-
     boolean isVerbose();
+
+    /**
+     * Gets the value of the {@code keystore} field.
+     *
+     * @return the value of the {@code keystore} field.
+     */
+    String getKeystore();
+
+    /**
+     * Gets the value of the {@code alias} field.
+     *
+     * @return the value of the {@code alias} field.
+     */
+    String getAlias();
 
     /**
      * Gets the value of the {@code maxMemory} field.
@@ -86,6 +99,20 @@ public interface JarSignerRequest
      * @param verbose the new value of the field {@code verbose}.
      */
     void setVerbose( boolean verbose );
+
+    /**
+     * Sets the new given value to the field {@code keystore} of the request.
+     *
+     * @param keystore the new value of the field {@code keystore}.
+     */
+    void setKeystore( String keystore);
+
+    /**
+     * Sets the new given value to the field {@code alias} of the request.
+     *
+     * @param alias the new value of the field {@code alias}.
+     */
+    void setAlias( String alias);
 
     /**
      * Sets the new given value to the field {@code maxMemory} of the request.

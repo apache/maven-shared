@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
 import java.util.Map;
+
 import org.apache.maven.shared.utils.cli.CommandLineException;
 import org.apache.maven.shared.utils.cli.CommandLineUtils;
 import org.apache.maven.shared.utils.cli.Commandline;
@@ -42,14 +43,17 @@ class ForkedLauncher
 
     private final String executable;
 
+    private final Map<Object, Object> envVars;
+
     public ForkedLauncher( String mavenHome )
     {
-        this( mavenHome, false );
+        this( mavenHome, Collections.<Object, Object> emptyMap(), false );
     }
 
-    public ForkedLauncher( String mavenHome, boolean debugJvm )
+    public ForkedLauncher( String mavenHome, Map<Object,Object> envVars, boolean debugJvm )
     {
         this.mavenHome = mavenHome;
+        this.envVars = envVars;
 
         String script = debugJvm ? "mvnDebug" : "mvn";
 
@@ -122,7 +126,7 @@ class ForkedLauncher
     public int run( String[] cliArgs, String workingDirectory, File logFile )
         throws IOException, LauncherException
     {
-        return run( cliArgs, Collections.<Object, Object> emptyMap(), workingDirectory, logFile );
+        return run( cliArgs, envVars, workingDirectory, logFile );
     }
 
 }

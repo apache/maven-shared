@@ -39,6 +39,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -90,7 +91,7 @@ public class Verifier
 
     private Properties systemProperties = new Properties();
 
-    private Properties environmentVariables = new Properties();
+    private Map<String, String> environmentVariables = new HashMap<String, String>();
 
     private Properties verifierProperties = new Properties();
 
@@ -960,6 +961,19 @@ public class Verifier
     }
 
     /**
+     * There are 226 references to this method in Maven core ITs. In most (all?) cases it is used together with
+     * {@link #newDefaultFilterProperties()}. Need to remove both methods and update all clients eventually/
+     * 
+     * @deprecated use {@link #filterFile(String, String, String, Map)}
+     */
+    @SuppressWarnings( { "rawtypes", "unchecked" } )
+    public File filterFile( String srcPath, String dstPath, String fileEncoding, Properties filterProperties )
+        throws IOException
+    {
+        return filterFile( srcPath, dstPath, fileEncoding, (Map) filterProperties );
+    }
+
+    /**
      * Gets a new copy of the default filter properties. These default filter properties map the tokens "@basedir@" and
      * "@baseurl@" to the test's base directory and its base <code>file:</code> URL, respectively.
      *
@@ -1214,7 +1228,7 @@ public class Verifier
         executeGoal( goal, environmentVariables );
     }
 
-    public void executeGoal( String goal, Map<Object, Object> envVars )
+    public void executeGoal( String goal, Map<String, String> envVars )
         throws VerificationException
     {
         executeGoals( Arrays.asList( goal ), envVars );
@@ -1252,7 +1266,7 @@ public class Verifier
         }
     }
 
-    public void executeGoals( List<String> goals, Map<Object, Object> envVars )
+    public void executeGoals( List<String> goals, Map<String, String> envVars )
         throws VerificationException
     {
         List<String> allGoals = new ArrayList<String>();
@@ -1348,7 +1362,7 @@ public class Verifier
         }
     }
 
-    private MavenLauncher getMavenLauncher( Map<Object, Object> envVars )
+    private MavenLauncher getMavenLauncher( Map<String, String> envVars )
         throws LauncherException
     {
         boolean fork;
@@ -1437,7 +1451,7 @@ public class Verifier
     {
         try
         {
-            return getMavenLauncher( Collections.emptyMap() ).getMavenVersion();
+            return getMavenLauncher( Collections.<String, String> emptyMap() ).getMavenVersion();
         }
         catch ( LauncherException e )
         {
@@ -1905,12 +1919,12 @@ public class Verifier
         }
     }
 
-    public Properties getEnvironmentVariables()
+    public Map<String, String> getEnvironmentVariables()
     {
         return environmentVariables;
     }
 
-    public void setEnvironmentVariables( Properties environmentVariables )
+    public void setEnvironmentVariables( Map<String, String> environmentVariables )
     {
         this.environmentVariables = environmentVariables;
     }
@@ -1919,7 +1933,7 @@ public class Verifier
     {
         if ( value != null )
         {
-            environmentVariables.setProperty( key, value );
+            environmentVariables.put( key, value );
         }
         else
         {

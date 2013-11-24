@@ -39,12 +39,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -1403,69 +1401,18 @@ public class Verifier
     public String getMavenVersion()
         throws VerificationException
     {
-        ForkedLauncher launcher = new ForkedLauncher( defaultMavenHome );
-
-        File logFile;
         try
         {
-            logFile = File.createTempFile( "maven", "log" );
-        }
-        catch ( IOException e )
-        {
-            throw new VerificationException( "Error creating temp file", e );
-        }
-
-        try
-        {
-            // disable EMMA runtime controller port allocation, should be harmless if EMMA is not used
-            Map<?,?> envVars = Collections.singletonMap( "MAVEN_OPTS", "-Demma.rt.control=false" );
-            launcher.run( new String[]{ "--version" }, envVars, null, logFile );
+            return getMavenLauncher( Collections.emptyMap() ).getMavenVersion();
         }
         catch ( LauncherException e )
         {
-            throw new VerificationException( "Error running commandline " + e.toString(), e );
+            throw new VerificationException( e );
         }
         catch ( IOException e )
         {
-            throw new VerificationException( "IO Error communicating with commandline " + e.toString(), e );
+            throw new VerificationException( e );
         }
-
-        List<String> logLines = loadFile( logFile, false );
-        //noinspection ResultOfMethodCallIgnored
-        logFile.delete();
-
-        String version = extractMavenVersion( logLines );
-
-        if ( version == null )
-        {
-            throw new VerificationException(
-                "Illegal maven output: String 'Maven version: ' not found in the following output:\n"
-                    + StringUtils.join( logLines.iterator(), "\n" ) );
-        }
-        else
-        {
-            return version;
-        }
-    }
-
-    static String extractMavenVersion( List<String> logLines )
-    {
-        String version = null;
-
-        final Pattern MAVEN_VERSION = Pattern.compile( "(?i).*Maven [^0-9]*([0-9]\\S*).*" );
-
-        for ( Iterator<String> it = logLines.iterator(); version == null && it.hasNext(); )
-        {
-            String line = it.next();
-
-            Matcher m = MAVEN_VERSION.matcher( line );
-            if ( m.matches() )
-            {
-                version = m.group( 1 );
-            }
-        }
-
-        return version;
     }
 
     private static String getLogContents( File logFile )

@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.maven.shared.utils.io.IOUtil;
+
 /**
  * Launches an embedded Maven 3.x instance from some Maven installation directory.
  * 
@@ -249,6 +251,38 @@ class Embedded3xLauncher
                 out.close();
             }
         }
+    }
+
+    public String getMavenVersion()
+        throws LauncherException
+    {
+        Properties props = new Properties();
+
+        InputStream is =
+            mavenCli.getClass().getResourceAsStream( "/META-INF/maven/org.apache.maven/maven-core/pom.properties" );
+        if ( is != null )
+        {
+            try
+            {
+                props.load( is );
+            }
+            catch ( IOException e )
+            {
+                throw new LauncherException( "Failed to read Maven version", e );
+            }
+            finally
+            {
+                IOUtil.close( is );
+            }
+        }
+
+        String version = props.getProperty( "version" );
+        if ( version != null )
+        {
+            return version;
+        }
+
+        throw new LauncherException( "Could not determine embedded Maven version" );
     }
 
 }

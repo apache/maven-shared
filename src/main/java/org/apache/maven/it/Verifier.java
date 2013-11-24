@@ -106,6 +106,10 @@ public class Verifier
 
     private String defaultMavenHome;
 
+    private String defaultClassworldConf;
+
+    private String defaultClasspath;
+
     // will launch mvn with --debug 
     private boolean mavenDebug = false;
 
@@ -174,6 +178,8 @@ public class Verifier
     private void findDefaultMavenHome()
         throws VerificationException
     {
+        defaultClasspath = System.getProperty("maven.bootclasspath");
+        defaultClassworldConf = System.getProperty("classworlds.conf");
         defaultMavenHome = System.getProperty( "maven.home" );
 
         if ( defaultMavenHome == null )
@@ -1397,9 +1403,33 @@ public class Verifier
             }
             else
             {
-                embeddedLauncher = Embedded3xLauncher.createFromMavenHome( defaultMavenHome );
+                embeddedLauncher =
+                    Embedded3xLauncher.createFromMavenHome( defaultMavenHome, defaultClassworldConf, getClasspath() );
             }
         }
+    }
+
+    private List<URL> getClasspath()
+        throws LauncherException
+    {
+        if ( defaultClasspath == null )
+        {
+            return null;
+        }
+        ArrayList<URL> classpath = new ArrayList<URL>();
+        StringTokenizer st = new StringTokenizer( defaultClasspath, File.pathSeparator );
+        while ( st.hasMoreTokens() )
+        {
+            try
+            {
+                classpath.add( new File( st.nextToken() ).toURI().toURL() );
+            }
+            catch ( MalformedURLException e )
+            {
+                throw new LauncherException( "Invalid launcher classpath " + defaultClasspath, e );
+            }
+        }
+        return classpath;
     }
 
     public String getMavenVersion()

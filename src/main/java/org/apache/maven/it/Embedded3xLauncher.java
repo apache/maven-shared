@@ -59,7 +59,7 @@ class Embedded3xLauncher
     /**
      * Launches an embedded Maven 3.x instance from some Maven installation directory.
      */
-    public static Embedded3xLauncher createFromMavenHome( String mavenHome )
+    public static Embedded3xLauncher createFromMavenHome( String mavenHome, String classworldConf, List<URL> classpath )
         throws LauncherException
     {
         if ( mavenHome == null || mavenHome.length() <= 0 )
@@ -69,9 +69,17 @@ class Embedded3xLauncher
 
         System.setProperty( "maven.home", mavenHome );
 
-        File config = new File( mavenHome, "bin/m2.conf" );
+        File config;
+        if ( classworldConf != null )
+        {
+            config = new File( classworldConf );
+        }
+        else
+        {
+            config = new File( mavenHome, "bin/m2.conf" );
+        }
 
-        ClassLoader bootLoader = getBootLoader( mavenHome );
+        ClassLoader bootLoader = getBootLoader( mavenHome, classpath );
 
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader( bootLoader );
@@ -167,13 +175,17 @@ class Embedded3xLauncher
         }
     }
 
-    private static ClassLoader getBootLoader( String mavenHome )
+    private static ClassLoader getBootLoader( String mavenHome, List<URL> classpath )
     {
-        File bootDir = new File( mavenHome, "boot" );
+        List<URL> urls = classpath;
 
-        List<URL> urls = new ArrayList<URL>();
+        if ( urls == null )
+        {
+            urls = new ArrayList<URL>();
 
-        addUrls( urls, bootDir );
+            File bootDir = new File( mavenHome, "boot" );
+            addUrls( urls, bootDir );
+        }
 
         if ( urls.isEmpty() )
         {

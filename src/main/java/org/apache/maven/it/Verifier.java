@@ -1395,7 +1395,7 @@ public class Verifier
             }
             else
             {
-                embeddedLauncher = new Embedded3xLauncher( defaultMavenHome );
+                embeddedLauncher = Embedded3xLauncher.createFromMavenHome( defaultMavenHome );
             }
         }
     }

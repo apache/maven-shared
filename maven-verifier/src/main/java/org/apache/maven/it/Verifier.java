@@ -47,6 +47,12 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import junit.framework.Assert;
+
 import org.apache.maven.shared.utils.StringUtils;
 import org.apache.maven.shared.utils.cli.CommandLineException;
 import org.apache.maven.shared.utils.cli.CommandLineUtils;
@@ -55,12 +61,6 @@ import org.apache.maven.shared.utils.cli.StreamConsumer;
 import org.apache.maven.shared.utils.cli.WriterStreamConsumer;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.shared.utils.io.IOUtil;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import junit.framework.Assert;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -1322,6 +1322,33 @@ public class Verifier
         {
             String[] cliArgs = args.toArray( new String[args.size()] );
 
+            MavenLauncher launcher = getMavenLauncher( envVars );
+
+            ret = launcher.run( cliArgs, getBasedir(), logFile );
+        }
+        catch ( LauncherException e )
+        {
+            throw new VerificationException( "Failed to execute Maven: " + e.getMessage(), e );
+        }
+        catch ( IOException e )
+        {
+            throw new VerificationException( e );
+        }
+
+        if ( ret > 0 )
+        {
+            System.err.println( "Exit code: " + ret );
+
+            throw new VerificationException(
+                "Exit code was non-zero: " + ret + "; command line and log = \n" + new File( defaultMavenHome,
+                                                                                             "bin/mvn" ) + " "
+                    + StringUtils.join( args.iterator(), " " ) + "\n" + getLogContents( logFile ) );
+        }
+    }
+
+    private MavenLauncher getMavenLauncher( Map<Object,Object> envVars )
+        throws LauncherException
+    {
             boolean fork;
             if ( forkJvm != null )
             {
@@ -1349,33 +1376,12 @@ public class Verifier
             {
                 initEmbeddedLauncher();
 
-                ret = embeddedLauncher.run( cliArgs, getBasedir(), logFile );
+                return embeddedLauncher;
             }
             else
             {
-                ForkedLauncher launcher = new ForkedLauncher( defaultMavenHome, debugJvm );
-
-                ret = launcher.run( cliArgs, envVars, getBasedir(), logFile );
+                return new ForkedLauncher( defaultMavenHome, envVars, debugJvm );
             }
-        }
-        catch ( LauncherException e )
-        {
-            throw new VerificationException( "Failed to execute Maven: " + e.getMessage(), e );
-        }
-        catch ( IOException e )
-        {
-            throw new VerificationException( e );
-        }
-
-        if ( ret > 0 )
-        {
-            System.err.println( "Exit code: " + ret );
-
-            throw new VerificationException(
-                "Exit code was non-zero: " + ret + "; command line and log = \n" + new File( defaultMavenHome,
-                                                                                             "bin/mvn" ) + " "
-                    + StringUtils.join( args.iterator(), " " ) + "\n" + getLogContents( logFile ) );
-        }
     }
 
     private void initEmbeddedLauncher()

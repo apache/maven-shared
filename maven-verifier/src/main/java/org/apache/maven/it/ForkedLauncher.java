@@ -49,14 +49,14 @@ class ForkedLauncher
 
     private final String executable;
 
-    private final Map<Object, Object> envVars;
+    private final Map<String, String> envVars;
 
     public ForkedLauncher( String mavenHome )
     {
-        this( mavenHome, Collections.<Object, Object> emptyMap(), false );
+        this( mavenHome, Collections.<String, String> emptyMap(), false );
     }
 
-    public ForkedLauncher( String mavenHome, Map<Object, Object> envVars, boolean debugJvm )
+    public ForkedLauncher( String mavenHome, Map<String, String> envVars, boolean debugJvm )
     {
         this.mavenHome = mavenHome;
         this.envVars = envVars;
@@ -73,7 +73,7 @@ class ForkedLauncher
         }
     }
 
-    public int run( String[] cliArgs, Map<?, ?> envVars, String workingDirectory, File logFile )
+    public int run( String[] cliArgs, Map<String, String> envVars, String workingDirectory, File logFile )
         throws IOException, LauncherException
     {
         Commandline cmd = new Commandline();
@@ -87,11 +87,9 @@ class ForkedLauncher
 
         if ( envVars != null )
         {
-            for ( Object o : envVars.keySet() )
+            for ( Map.Entry<String, String> envVar : envVars.entrySet() )
             {
-                String key = (String) o;
-
-                cmd.addEnvironment( key, (String) envVars.get( key ) );
+                cmd.addEnvironment( envVar.getKey(), envVar.getValue() );
             }
         }
 
@@ -149,7 +147,7 @@ class ForkedLauncher
         }
 
         // disable EMMA runtime controller port allocation, should be harmless if EMMA is not used
-        Map<?, ?> envVars = Collections.singletonMap( "MAVEN_OPTS", "-Demma.rt.control=false" );
+        Map<String, String> envVars = Collections.singletonMap( "MAVEN_OPTS", "-Demma.rt.control=false" );
         run( new String[] { "--version" }, envVars, null, logFile );
 
         List<String> logLines = FileUtils.loadFile( logFile );

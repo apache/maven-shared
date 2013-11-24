@@ -151,9 +151,7 @@ public class Verifier
         this.basedir = basedir;
 
         this.forkJvm = forkJvm;
-        this.
-
-            forkMode = System.getProperty( "verifier.forkMode" );
+        this.forkMode = System.getProperty( "verifier.forkMode" );
 
         if ( !debug )
         {
@@ -1344,42 +1342,48 @@ public class Verifier
         }
     }
 
-    private MavenLauncher getMavenLauncher( Map<Object,Object> envVars )
+    private MavenLauncher getMavenLauncher( Map<Object, Object> envVars )
         throws LauncherException
     {
-            boolean fork;
-            if ( forkJvm != null )
-            {
-                fork = forkJvm;
-            }
-            else if ( envVars.isEmpty() && "auto".equalsIgnoreCase( forkMode ) )
-            {
-                fork = false;
+        boolean fork;
+        if ( forkJvm != null )
+        {
+            fork = forkJvm;
+        }
+        else if ( ( envVars.isEmpty() && "auto".equalsIgnoreCase( forkMode ) )
+            || "embedded".equalsIgnoreCase( forkMode ) )
+        {
+            fork = false;
 
-                try
-                {
-                    initEmbeddedLauncher();
-                }
-                catch ( Exception e )
-                {
-                    fork = true;
-                }
+            try
+            {
+                initEmbeddedLauncher();
             }
-            else
+            catch ( Exception e )
             {
                 fork = true;
             }
+        }
+        else
+        {
+            fork = true;
+        }
 
-            if ( !fork )
+        if ( !fork )
+        {
+            if ( !envVars.isEmpty() )
             {
-                initEmbeddedLauncher();
+                throw new LauncherException( "Environment variables are not supported in embedded runtime" );
+            }
 
-                return embeddedLauncher;
-            }
-            else
-            {
-                return new ForkedLauncher( defaultMavenHome, envVars, debugJvm );
-            }
+            initEmbeddedLauncher();
+
+            return embeddedLauncher;
+        }
+        else
+        {
+            return new ForkedLauncher( defaultMavenHome, envVars, debugJvm );
+        }
     }
 
     private void initEmbeddedLauncher()

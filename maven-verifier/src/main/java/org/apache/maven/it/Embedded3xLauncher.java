@@ -127,6 +127,44 @@ class Embedded3xLauncher
         }
     }
 
+    /**
+     * Launches an embedded Maven 3.x instance from the current class path, i.e. the Maven 3.x dependencies are assumed
+     * to be present on the class path.
+     */
+    public static Embedded3xLauncher createFromClasspath()
+        throws LauncherException
+    {
+        ClassLoader coreLoader = Thread.currentThread().getContextClassLoader();
+
+        try
+        {
+            Class<?> cliClass = coreLoader.loadClass( "org.apache.maven.cli.MavenCli" );
+
+            Object mavenCli = cliClass.newInstance();
+
+            Class<?>[] parameterTypes = { String[].class, String.class, PrintStream.class, PrintStream.class };
+            Method doMain = cliClass.getMethod( "doMain", parameterTypes );
+
+            return new Embedded3xLauncher( mavenCli, doMain );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            throw new LauncherException( e.getMessage(), e );
+        }
+        catch ( NoSuchMethodException e )
+        {
+            throw new LauncherException( e.getMessage(), e );
+        }
+        catch ( InstantiationException e )
+        {
+            throw new LauncherException( e.getMessage(), e );
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new LauncherException( e.getMessage(), e );
+        }
+    }
+
     private static ClassLoader getBootLoader( String mavenHome )
     {
         File bootDir = new File( mavenHome, "boot" );

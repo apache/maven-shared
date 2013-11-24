@@ -1391,7 +1391,7 @@ public class Verifier
         {
             if ( StringUtils.isEmpty( defaultMavenHome ) )
             {
-                embeddedLauncher = new Classpath3xLauncher();
+                embeddedLauncher = Embedded3xLauncher.createFromClasspath();
             }
             else
             {

@@ -30,11 +30,11 @@ public class VerifierTest
     public void testExtractMavenVersion()
     {
         assertEquals( "2.0.6",
-                      Verifier.extractMavenVersion( Arrays.asList( new String[]{ "Maven version: 2.0.6" } ) ) );
-        assertEquals( "2.0.10", Verifier.extractMavenVersion( Arrays.asList(
+                      ForkedLauncher.extractMavenVersion( Arrays.asList( new String[]{ "Maven version: 2.0.6" } ) ) );
+        assertEquals( "2.0.10", ForkedLauncher.extractMavenVersion( Arrays.asList(
             new String[]{ "Maven version: 2.0.10", "Java version: 1.5.0_22",
                 "OS name: \"windows 7\" version: \"6.1\" arch: \"x86\" Family: \"windows\"" } ) ) );
-        assertEquals( "3.0", Verifier.extractMavenVersion( Arrays.asList(
+        assertEquals( "3.0", ForkedLauncher.extractMavenVersion( Arrays.asList(
             new String[]{ "Apache Maven 3.0 (r1004208; 2010-10-04 13:50:56+0200)", "Java version: 1.5.0_22",
                 "OS name: \"windows 7\" version: \"6.1\" arch: \"x86\" Family: \"windows\"" } ) ) );
     }

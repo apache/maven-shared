@@ -24,13 +24,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.maven.shared.utils.StringUtils;
 import org.apache.maven.shared.utils.cli.CommandLineException;
 import org.apache.maven.shared.utils.cli.CommandLineUtils;
 import org.apache.maven.shared.utils.cli.Commandline;
 import org.apache.maven.shared.utils.cli.StreamConsumer;
 import org.apache.maven.shared.utils.cli.WriterStreamConsumer;
+import org.apache.maven.shared.utils.io.FileUtils;
 
 /**
  * @author Benjamin Bentmann
@@ -50,7 +56,7 @@ class ForkedLauncher
         this( mavenHome, Collections.<Object, Object> emptyMap(), false );
     }
 
-    public ForkedLauncher( String mavenHome, Map<Object,Object> envVars, boolean debugJvm )
+    public ForkedLauncher( String mavenHome, Map<Object, Object> envVars, boolean debugJvm )
     {
         this.mavenHome = mavenHome;
         this.envVars = envVars;
@@ -127,6 +133,61 @@ class ForkedLauncher
         throws IOException, LauncherException
     {
         return run( cliArgs, envVars, workingDirectory, logFile );
+    }
+
+    public String getMavenVersion()
+        throws IOException, LauncherException
+    {
+        File logFile;
+        try
+        {
+            logFile = File.createTempFile( "maven", "log" );
+        }
+        catch ( IOException e )
+        {
+            throw new LauncherException( "Error creating temp file", e );
+        }
+
+        // disable EMMA runtime controller port allocation, should be harmless if EMMA is not used
+        Map<?, ?> envVars = Collections.singletonMap( "MAVEN_OPTS", "-Demma.rt.control=false" );
+        run( new String[] { "--version" }, envVars, null, logFile );
+
+        List<String> logLines = FileUtils.loadFile( logFile );
+        // noinspection ResultOfMethodCallIgnored
+        logFile.delete();
+
+        String version = extractMavenVersion( logLines );
+
+        if ( version == null )
+        {
+            throw new LauncherException(
+                                         "Illegal maven output: String 'Maven version: ' not found in the following output:\n"
+                                             + StringUtils.join( logLines.iterator(), "\n" ) );
+        }
+        else
+        {
+            return version;
+        }
+    }
+
+    static String extractMavenVersion( List<String> logLines )
+    {
+        String version = null;
+
+        final Pattern MAVEN_VERSION = Pattern.compile( "(?i).*Maven [^0-9]*([0-9]\\S*).*" );
+
+        for ( Iterator<String> it = logLines.iterator(); version == null && it.hasNext(); )
+        {
+            String line = it.next();
+
+            Matcher m = MAVEN_VERSION.matcher( line );
+            if ( m.matches() )
+            {
+                version = m.group( 1 );
+            }
+        }
+
+        return version;
     }
 
 }

@@ -26,17 +26,24 @@ import junit.framework.TestCase;
 public class VerifierTest
     extends TestCase
 {
+    private void check( String expected, String... lines )
+    {
+        assertEquals( expected, ForkedLauncher.extractMavenVersion( Arrays.asList( lines ) ) );
+    }
 
     public void testExtractMavenVersion()
     {
-        assertEquals( "2.0.6",
-                      ForkedLauncher.extractMavenVersion( Arrays.asList( new String[]{ "Maven version: 2.0.6" } ) ) );
-        assertEquals( "2.0.10", ForkedLauncher.extractMavenVersion( Arrays.asList(
-            new String[]{ "Maven version: 2.0.10", "Java version: 1.5.0_22",
-                "OS name: \"windows 7\" version: \"6.1\" arch: \"x86\" Family: \"windows\"" } ) ) );
-        assertEquals( "3.0", ForkedLauncher.extractMavenVersion( Arrays.asList(
-            new String[]{ "Apache Maven 3.0 (r1004208; 2010-10-04 13:50:56+0200)", "Java version: 1.5.0_22",
-                "OS name: \"windows 7\" version: \"6.1\" arch: \"x86\" Family: \"windows\"" } ) ) );
+        check( "2.0.6", "Maven version: 2.0.6" );
+
+        check( "2.0.10", "Maven version: 2.0.10", "Java version: 1.5.0_22",
+               "OS name: \"windows 7\" version: \"6.1\" arch: \"x86\" Family: \"windows\"" );
+
+        check( "3.0", "Apache Maven 3.0 (r1004208; 2010-10-04 13:50:56+0200)", "Java version: 1.5.0_22",
+               "OS name: \"windows 7\" version: \"6.1\" arch: \"x86\" Family: \"windows\"" );
+
+        check( "3.0.5", "Apache Maven 3.0.5 (r01de14724cdef164cd33c7c8c2fe155faf9602da; 2013-02-19 14:51:28+0100)",
+               "Java version: 1.7.0_25",
+               "OS name: \"linux\" version: \"3.11.0-13-generic\" arch: \"amd64\" Family: \"unix\"" );
     }
 
     public void testFileInJarPresent()

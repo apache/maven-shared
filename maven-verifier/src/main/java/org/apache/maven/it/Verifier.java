@@ -179,8 +179,8 @@ public class Verifier
     private void findDefaultMavenHome()
         throws VerificationException
     {
-        defaultClasspath = System.getProperty("maven.bootclasspath");
-        defaultClassworldConf = System.getProperty("classworlds.conf");
+        defaultClasspath = System.getProperty( "maven.bootclasspath" );
+        defaultClassworldConf = System.getProperty( "classworlds.conf" );
         defaultMavenHome = System.getProperty( "maven.home" );
 
         if ( defaultMavenHome == null )

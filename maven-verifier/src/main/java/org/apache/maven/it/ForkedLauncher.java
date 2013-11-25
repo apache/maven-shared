@@ -158,9 +158,8 @@ class ForkedLauncher
 
         if ( version == null )
         {
-            throw new LauncherException(
-                                         "Illegal maven output: String 'Maven version: ' not found in the following output:\n"
-                                             + StringUtils.join( logLines.iterator(), "\n" ) );
+            throw new LauncherException( "Illegal Maven output: String 'Maven' not found in the following output:\n"
+                + StringUtils.join( logLines.iterator(), "\n" ) );
         }
         else
         {
@@ -172,13 +171,13 @@ class ForkedLauncher
     {
         String version = null;
 
-        final Pattern MAVEN_VERSION = Pattern.compile( "(?i).*Maven.*? ([0-9]\\.\\S*).*" );
+        final Pattern mavenVersion = Pattern.compile( "(?i).*Maven.*? ([0-9]\\.\\S*).*" );
 
         for ( Iterator<String> it = logLines.iterator(); version == null && it.hasNext(); )
         {
             String line = it.next();
 
-            Matcher m = MAVEN_VERSION.matcher( line );
+            Matcher m = mavenVersion.matcher( line );
             if ( m.matches() )
             {
                 version = m.group( 1 );

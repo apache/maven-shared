@@ -438,9 +438,10 @@ public class Verifier
         return lines;
     }
 
+    private final static String MARKER = "${artifact:";
+
     private List<String> replaceArtifacts( String line, boolean hasCommand )
     {
-        String MARKER = "${artifact:";
         int index = line.indexOf( MARKER );
         if ( index >= 0 )
         {

@@ -44,6 +44,11 @@ public class VerifierTest
         check( "3.0.5", "Apache Maven 3.0.5 (r01de14724cdef164cd33c7c8c2fe155faf9602da; 2013-02-19 14:51:28+0100)",
                "Java version: 1.7.0_25",
                "OS name: \"linux\" version: \"3.11.0-13-generic\" arch: \"amd64\" Family: \"unix\"" );
+
+        check( "3.2-SNAPSHOT",
+               "Apache Maven with Log4j 2 3.2-SNAPSHOT (bc5e99f9f0aaf7d5b2431ff5d602ca3bb38559d5; 2013-11-25 21:17:33+0100)",
+               "Java version: 1.7.0_25",
+               "OS name: \"linux\" version: \"3.11.0-13-generic\" arch: \"amd64\" Family: \"unix\"" );
     }
 
     public void testFileInJarPresent()

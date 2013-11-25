@@ -172,7 +172,7 @@ class ForkedLauncher
     {
         String version = null;
 
-        final Pattern MAVEN_VERSION = Pattern.compile( "(?i).*Maven [^0-9]*([0-9]\\S*).*" );
+        final Pattern MAVEN_VERSION = Pattern.compile( "(?i).*Maven.*? ([0-9]\\.\\S*).*" );
 
         for ( Iterator<String> it = logLines.iterator(); version == null && it.hasNext(); )
         {

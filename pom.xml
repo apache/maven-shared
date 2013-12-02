@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>maven-verifier</artifactId>
-  <version>1.5</version>
+  <version>1.5-SNAPSHOT</version>
 
   <name>Apache Maven Verifier Component</name>
   <description>Provides a test harness for Maven integration tests.</description>

@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.apache.maven.artifact.manager.WagonManager;
-import org.apache.maven.shared.io.MockManager;
 import org.apache.maven.shared.io.TestUtils;
 import org.apache.maven.shared.io.logging.DefaultMessageHolder;
 import org.apache.maven.shared.io.logging.MessageHolder;
@@ -40,19 +39,14 @@ import org.apache.maven.wagon.events.TransferListener;
 import org.apache.maven.wagon.proxy.ProxyInfo;
 import org.apache.maven.wagon.repository.Repository;
 import org.codehaus.plexus.PlexusTestCase;
-import org.easymock.MockControl;
+
+import static org.easymock.EasyMock.*;
 
 public class DefaultDownloadManagerTest
     extends PlexusTestCase
 {
 
-    private MockManager mockManager;
-
-    private MockControl wagonManagerControl;
-
     private WagonManager wagonManager;
-
-    private MockControl wagonControl;
 
     private Wagon wagon;
 
@@ -61,17 +55,8 @@ public class DefaultDownloadManagerTest
     {
         super.setUp();
 
-        mockManager = new MockManager();
-
-        wagonManagerControl = MockControl.createControl( WagonManager.class );
-        mockManager.add( wagonManagerControl );
-
-        wagonManager = (WagonManager) wagonManagerControl.getMock();
-
-        wagonControl = MockControl.createControl( Wagon.class );
-        mockManager.add( wagonControl );
-
-        wagon = (Wagon) wagonControl.getMock();
+        wagonManager = createMock( WagonManager.class );
+        wagon = createMock( Wagon.class );
     }
 
     public void testShouldConstructWithNoParamsAndHaveNonNullMessageHolder()
@@ -81,18 +66,11 @@ public class DefaultDownloadManagerTest
 
     public void testShouldConstructWithWagonManager()
     {
-        MockManager mockManager = new MockManager();
-
-        MockControl ctl = MockControl.createControl( WagonManager.class );
-        mockManager.add( ctl );
-
-        WagonManager wagonManager = (WagonManager) ctl.getMock();
-
-        mockManager.replayAll();
+        replay( wagonManager );
 
         new DefaultDownloadManager( wagonManager );
 
-        mockManager.verifyAll();
+        verify( wagonManager );
     }
 
     public void testShouldLookupInstanceDefaultRoleHint()
@@ -103,14 +81,7 @@ public class DefaultDownloadManagerTest
 
     public void testShouldFailToDownloadMalformedURL()
     {
-        MockManager mockManager = new MockManager();
-
-        MockControl ctl = MockControl.createControl( WagonManager.class );
-        mockManager.add( ctl );
-
-        WagonManager wagonManager = (WagonManager) ctl.getMock();
-
-        mockManager.replayAll();
+        replay( wagonManager );
 
         DownloadManager mgr = new DefaultDownloadManager( wagonManager );
 
@@ -125,7 +96,7 @@ public class DefaultDownloadManagerTest
             assertTrue( e.getMessage().indexOf( "invalid URL" ) > -1 );
         }
 
-        mockManager.verifyAll();
+        verify( wagonManager );
     }
 
     public void testShouldDownloadFromTempFileWithNoTransferListeners()
@@ -136,13 +107,13 @@ public class DefaultDownloadManagerTest
 
         setupDefaultMockConfiguration();
 
-        mockManager.replayAll();
+        replay( wagon, wagonManager );
 
         DownloadManager downloadManager = new DefaultDownloadManager( wagonManager );
 
         downloadManager.download( tempFile.toURL().toExternalForm(), new DefaultMessageHolder() );
 
-        mockManager.verifyAll();
+        verify( wagon, wagonManager );
     }
 
     public void testShouldDownloadFromTempFileTwiceAndUseCache()
@@ -153,7 +124,7 @@ public class DefaultDownloadManagerTest
 
         setupDefaultMockConfiguration();
 
-        mockManager.replayAll();
+        replay( wagon, wagonManager );
 
         DownloadManager downloadManager = new DefaultDownloadManager( wagonManager );
 
@@ -167,7 +138,7 @@ public class DefaultDownloadManagerTest
         assertEquals( 1, mh.size() );
         assertTrue( mh.render().indexOf( "Using cached" ) > -1 );
 
-        mockManager.verifyAll();
+        verify( wagon, wagonManager );
     }
 
     public void testShouldDownloadFromTempFileWithOneTransferListener()
@@ -178,23 +149,20 @@ public class DefaultDownloadManagerTest
 
         setupDefaultMockConfiguration();
 
-        MockControl transferListenerControl = MockControl.createControl( TransferListener.class );
-        mockManager.add( transferListenerControl );
-
-        TransferListener transferListener = (TransferListener) transferListenerControl.getMock();
+        TransferListener transferListener = createMock( TransferListener.class );
 
         wagon.addTransferListener( transferListener );
 
         wagon.removeTransferListener( transferListener );
 
-        mockManager.replayAll();
+        replay( wagon, wagonManager, transferListener );
 
         DownloadManager downloadManager = new DefaultDownloadManager( wagonManager );
 
         downloadManager.download( tempFile.toURL().toExternalForm(), Collections.singletonList( transferListener ),
                                   new DefaultMessageHolder() );
 
-        mockManager.verifyAll();
+        verify( wagon, wagonManager, transferListener );
     }
 
     public void testShouldFailToDownloadWhenWagonProtocolNotFound()
@@ -205,7 +173,7 @@ public class DefaultDownloadManagerTest
 
         setupMocksWithWagonManagerGetException( new UnsupportedProtocolException( "not supported" ) );
 
-        mockManager.replayAll();
+        replay( wagon, wagonManager );
 
         DownloadManager downloadManager = new DefaultDownloadManager( wagonManager );
 
@@ -220,7 +188,7 @@ public class DefaultDownloadManagerTest
             assertTrue( TestUtils.toString( e ).indexOf( "UnsupportedProtocolException" ) > -1 );
         }
 
-        mockManager.verifyAll();
+        verify( wagon, wagonManager );
     }
 
     public void testShouldFailToDownloadWhenWagonConnectThrowsConnectionException()
@@ -231,7 +199,7 @@ public class DefaultDownloadManagerTest
 
         setupMocksWithWagonConnectionException( new ConnectionException( "connect error" ) );
 
-        mockManager.replayAll();
+        replay( wagon, wagonManager );
 
         DownloadManager downloadManager = new DefaultDownloadManager( wagonManager );
 
@@ -246,7 +214,7 @@ public class DefaultDownloadManagerTest
             assertTrue( TestUtils.toString( e ).indexOf( "ConnectionException" ) > -1 );
         }
 
-        mockManager.verifyAll();
+        verify( wagon, wagonManager );
     }
 
     public void testShouldFailToDownloadWhenWagonConnectThrowsAuthenticationException()
@@ -257,7 +225,7 @@ public class DefaultDownloadManagerTest
 
         setupMocksWithWagonConnectionException( new AuthenticationException( "bad credentials" ) );
 
-        mockManager.replayAll();
+        replay( wagon, wagonManager );
 
         DownloadManager downloadManager = new DefaultDownloadManager( wagonManager );
 
@@ -272,7 +240,7 @@ public class DefaultDownloadManagerTest
             assertTrue( TestUtils.toString( e ).indexOf( "AuthenticationException" ) > -1 );
         }
 
-        mockManager.verifyAll();
+        verify( wagon, wagonManager );
     }
 
     public void testShouldFailToDownloadWhenWagonGetThrowsTransferFailedException()
@@ -283,7 +251,7 @@ public class DefaultDownloadManagerTest
 
         setupMocksWithWagonGetException( new TransferFailedException( "bad transfer" ) );
 
-        mockManager.replayAll();
+        replay( wagon, wagonManager );
 
         DownloadManager downloadManager = new DefaultDownloadManager( wagonManager );
 
@@ -298,7 +266,7 @@ public class DefaultDownloadManagerTest
             assertTrue( TestUtils.toString( e ).indexOf( "TransferFailedException" ) > -1 );
         }
 
-        mockManager.verifyAll();
+        verify( wagon, wagonManager );
     }
 
     public void testShouldFailToDownloadWhenWagonGetThrowsResourceDoesNotExistException()
@@ -309,7 +277,7 @@ public class DefaultDownloadManagerTest
 
         setupMocksWithWagonGetException( new ResourceDoesNotExistException( "bad resource" ) );
 
-        mockManager.replayAll();
+        replay( wagon, wagonManager );
 
         DownloadManager downloadManager = new DefaultDownloadManager( wagonManager );
 
@@ -324,7 +292,7 @@ public class DefaultDownloadManagerTest
             assertTrue( TestUtils.toString( e ).indexOf( "ResourceDoesNotExistException" ) > -1 );
         }
 
-        mockManager.verifyAll();
+        verify( wagon, wagonManager );
     }
 
     public void testShouldFailToDownloadWhenWagonGetThrowsAuthorizationException()
@@ -335,7 +303,7 @@ public class DefaultDownloadManagerTest
 
         setupMocksWithWagonGetException( new AuthorizationException( "bad transfer" ) );
 
-        mockManager.replayAll();
+        replay( wagon, wagonManager );
 
         DownloadManager downloadManager = new DefaultDownloadManager( wagonManager );
 
@@ -350,7 +318,7 @@ public class DefaultDownloadManagerTest
             assertTrue( TestUtils.toString( e ).indexOf( "AuthorizationException" ) > -1 );
         }
 
-        mockManager.verifyAll();
+        verify( wagon, wagonManager );
     }
 
     public void testShouldFailToDownloadWhenWagonDisconnectThrowsConnectionException()
@@ -361,7 +329,7 @@ public class DefaultDownloadManagerTest
 
         setupMocksWithWagonDisconnectException( new ConnectionException( "not connected" ) );
 
-        mockManager.replayAll();
+        replay( wagon, wagonManager );
 
         DownloadManager downloadManager = new DefaultDownloadManager( wagonManager );
 
@@ -371,33 +339,27 @@ public class DefaultDownloadManagerTest
 
         assertTrue( mh.render().indexOf( "ConnectionException" ) > -1 );
 
-        mockManager.verifyAll();
+        verify( wagon, wagonManager );
     }
 
     private void setupDefaultMockConfiguration()
     {
         try
         {
-            wagonManager.getWagon( "file" );
-            wagonManagerControl.setReturnValue( wagon );
+            expect( wagonManager.getWagon( "file" ) ).andReturn( wagon );
         }
         catch ( UnsupportedProtocolException e )
         {
             fail( "This shouldn't happen!!" );
         }
 
-        wagonManager.getAuthenticationInfo( "" );
-        wagonManagerControl.setMatcher( MockControl.ALWAYS_MATCHER );
-        wagonManagerControl.setReturnValue( null );
+        expect( wagonManager.getAuthenticationInfo( anyString() ) ).andReturn( null );
 
-        wagonManager.getProxy( "" );
-        wagonManagerControl.setMatcher( MockControl.ALWAYS_MATCHER );
-        wagonManagerControl.setReturnValue( null );
+        expect( wagonManager.getProxy( anyString() ) ).andReturn( null );
 
         try
         {
-            wagon.connect( new Repository(), new AuthenticationInfo(), new ProxyInfo() );
-            wagonControl.setMatcher( MockControl.ALWAYS_MATCHER );
+            wagon.connect( anyObject( Repository.class ) , anyObject( AuthenticationInfo.class ), anyObject( ProxyInfo.class ) );
         }
         catch ( ConnectionException e )
         {
@@ -410,8 +372,7 @@ public class DefaultDownloadManagerTest
 
         try
         {
-            wagon.get( "file:///some/path", new File( "." ) );
-            wagonControl.setMatcher( MockControl.ALWAYS_MATCHER );
+            wagon.get( anyString(), anyObject( File.class ) );
         }
         catch ( TransferFailedException e )
         {
@@ -440,8 +401,7 @@ public class DefaultDownloadManagerTest
     {
         try
         {
-            wagonManager.getWagon( "file" );
-            wagonManagerControl.setThrowable( error );
+            expect( wagonManager.getWagon( "file" ) ).andThrow( error );
         }
         catch ( UnsupportedProtocolException e )
         {
@@ -453,27 +413,21 @@ public class DefaultDownloadManagerTest
     {
         try
         {
-            wagonManager.getWagon( "file" );
-            wagonManagerControl.setReturnValue( wagon );
+            expect( wagonManager.getWagon( "file" ) ).andReturn( wagon );
         }
         catch ( UnsupportedProtocolException e )
         {
             fail( "This shouldn't happen!!" );
         }
 
-        wagonManager.getAuthenticationInfo( "" );
-        wagonManagerControl.setMatcher( MockControl.ALWAYS_MATCHER );
-        wagonManagerControl.setReturnValue( null );
+        expect( wagonManager.getAuthenticationInfo( anyString() ) ).andReturn( null );
 
-        wagonManager.getProxy( "" );
-        wagonManagerControl.setMatcher( MockControl.ALWAYS_MATCHER );
-        wagonManagerControl.setReturnValue( null );
+        expect( wagonManager.getProxy( anyString() ) ).andReturn( null );
 
         try
         {
-            wagon.connect( new Repository(), new AuthenticationInfo(), new ProxyInfo() );
-            wagonControl.setMatcher( MockControl.ALWAYS_MATCHER );
-            wagonControl.setThrowable( error );
+            wagon.connect( anyObject( Repository.class ) , anyObject( AuthenticationInfo.class ), anyObject( ProxyInfo.class ) );
+            expectLastCall().andThrow( error );
         }
         catch ( ConnectionException e )
         {
@@ -489,26 +443,20 @@ public class DefaultDownloadManagerTest
     {
         try
         {
-            wagonManager.getWagon( "file" );
-            wagonManagerControl.setReturnValue( wagon );
+            expect( wagonManager.getWagon( "file" ) ).andReturn( wagon );
         }
         catch ( UnsupportedProtocolException e )
         {
             fail( "This shouldn't happen!!" );
         }
 
-        wagonManager.getAuthenticationInfo( "" );
-        wagonManagerControl.setMatcher( MockControl.ALWAYS_MATCHER );
-        wagonManagerControl.setReturnValue( null );
+        expect( wagonManager.getAuthenticationInfo( anyString() ) ).andReturn( null );
 
-        wagonManager.getProxy( "" );
-        wagonManagerControl.setMatcher( MockControl.ALWAYS_MATCHER );
-        wagonManagerControl.setReturnValue( null );
+        expect( wagonManager.getProxy( anyString() ) ).andReturn( null );
 
         try
         {
-            wagon.connect( new Repository(), new AuthenticationInfo(), new ProxyInfo() );
-            wagonControl.setMatcher( MockControl.ALWAYS_MATCHER );
+            wagon.connect( anyObject( Repository.class ) , anyObject( AuthenticationInfo.class ), anyObject( ProxyInfo.class ) );
         }
         catch ( ConnectionException e )
         {
@@ -521,9 +469,8 @@ public class DefaultDownloadManagerTest
 
         try
         {
-            wagon.get( "file:///some/path", new File( "." ) );
-            wagonControl.setMatcher( MockControl.ALWAYS_MATCHER );
-            wagonControl.setThrowable( error );
+            wagon.get( anyString(), anyObject( File.class ) );
+            expectLastCall().andThrow( error );
         }
         catch ( TransferFailedException e )
         {
@@ -552,26 +499,20 @@ public class DefaultDownloadManagerTest
     {
         try
         {
-            wagonManager.getWagon( "file" );
-            wagonManagerControl.setReturnValue( wagon );
+            expect( wagonManager.getWagon( "file" ) ).andReturn( wagon );
         }
         catch ( UnsupportedProtocolException e )
         {
             fail( "This shouldn't happen!!" );
         }
 
-        wagonManager.getAuthenticationInfo( "" );
-        wagonManagerControl.setMatcher( MockControl.ALWAYS_MATCHER );
-        wagonManagerControl.setReturnValue( null );
+        expect( wagonManager.getAuthenticationInfo( anyString() ) ).andReturn( null );
 
-        wagonManager.getProxy( "" );
-        wagonManagerControl.setMatcher( MockControl.ALWAYS_MATCHER );
-        wagonManagerControl.setReturnValue( null );
+        expect( wagonManager.getProxy( anyString() ) ).andReturn( null );
 
         try
         {
-            wagon.connect( new Repository(), new AuthenticationInfo(), new ProxyInfo() );
-            wagonControl.setMatcher( MockControl.ALWAYS_MATCHER );
+            wagon.connect( anyObject( Repository.class ) , anyObject( AuthenticationInfo.class ), anyObject( ProxyInfo.class ) );
         }
         catch ( ConnectionException e )
         {
@@ -584,8 +525,7 @@ public class DefaultDownloadManagerTest
 
         try
         {
-            wagon.get( "file:///some/path", new File( "." ) );
-            wagonControl.setMatcher( MockControl.ALWAYS_MATCHER );
+            wagon.get( anyString(), anyObject( File.class ) );
         }
         catch ( TransferFailedException e )
         {
@@ -603,7 +543,7 @@ public class DefaultDownloadManagerTest
         try
         {
             wagon.disconnect();
-            wagonControl.setThrowable( error );
+            expectLastCall().andThrow( error );
         }
         catch ( ConnectionException e )
         {

@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.maven.shared.io.MockManager;
 import org.apache.maven.shared.io.logging.DefaultMessageHolder;
 import org.apache.maven.shared.io.logging.MessageHolder;
-import org.easymock.MockControl;
 
 import junit.framework.TestCase;
+
+import static org.easymock.EasyMock.*;
 
 public class LocatorTest
     extends TestCase
@@ -61,21 +61,10 @@ public class LocatorTest
 
     public void testSetStrategiesShouldClearAnyPreExistingStrategiesOut()
     {
-        MockManager mgr = new MockManager();
+        LocatorStrategy originalStrategy = createMock( LocatorStrategy.class );
+        LocatorStrategy replacementStrategy = createMock( LocatorStrategy.class );
 
-        MockControl originalStrategyControl = MockControl.createControl( LocatorStrategy.class );
-
-        mgr.add( originalStrategyControl );
-
-        LocatorStrategy originalStrategy = (LocatorStrategy) originalStrategyControl.getMock();
-
-        MockControl replacementStrategyControl = MockControl.createControl( LocatorStrategy.class );
-
-        mgr.add( replacementStrategyControl );
-
-        LocatorStrategy replacementStrategy = (LocatorStrategy) replacementStrategyControl.getMock();
-
-        mgr.replayAll();
+        replay( originalStrategy, replacementStrategy );
 
         Locator locator = new Locator();
         locator.addStrategy( originalStrategy );
@@ -87,20 +76,14 @@ public class LocatorTest
         assertFalse( strategies.contains( originalStrategy ) );
         assertTrue( strategies.contains( replacementStrategy ) );
 
-        mgr.verifyAll();
+        verify( originalStrategy, replacementStrategy );
     }
 
     public void testShouldRemovePreviouslyAddedStrategy()
     {
-        MockManager mgr = new MockManager();
+        LocatorStrategy originalStrategy = createMock( LocatorStrategy.class );
 
-        MockControl originalStrategyControl = MockControl.createControl( LocatorStrategy.class );
-
-        mgr.add( originalStrategyControl );
-
-        LocatorStrategy originalStrategy = (LocatorStrategy) originalStrategyControl.getMock();
-
-        mgr.replayAll();
+        replay( originalStrategy );
 
         Locator locator = new Locator();
         locator.addStrategy( originalStrategy );
@@ -115,7 +98,7 @@ public class LocatorTest
 
         assertFalse( strategies.contains( originalStrategy ) );
 
-        mgr.verifyAll();
+        verify( originalStrategy );
     }
 
     public void testResolutionFallsThroughStrategyStackAndReturnsNullIfNotResolved()

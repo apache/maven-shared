@@ -28,14 +28,12 @@ import junit.framework.TestCase;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.shared.tools.easymock.MockManager;
-import org.easymock.MockControl;
+
+import static org.easymock.EasyMock.*;
 
 public abstract class PatternArtifactFilterTCK
     extends TestCase
 {
-
-    private final MockManager mockManager = new MockManager();
 
     protected abstract ArtifactFilter createFilter( List<String> patterns );
 
@@ -54,7 +52,7 @@ public abstract class PatternArtifactFilterTCK
         final ArtifactMockAndControl mac1 = new ArtifactMockAndControl( groupId1, artifactId1 );
         final ArtifactMockAndControl mac2 = new ArtifactMockAndControl( groupId2, artifactId2 );
 
-        mockManager.replayAll();
+        replay( mac1.getMock(), mac2.getMock() );
 
         final List<String> patterns = new ArrayList<String>();
         patterns.add( groupId1 + ":" + artifactId1 + ":*" );
@@ -73,7 +71,7 @@ public abstract class PatternArtifactFilterTCK
             assertTrue( filter.include( mac2.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac1.getMock(), mac2.getMock() );
     }
 
     public void testShouldTriggerBothPatternsWithNonColonWildcards()
@@ -87,7 +85,7 @@ public abstract class PatternArtifactFilterTCK
         final ArtifactMockAndControl mac1 = new ArtifactMockAndControl( groupId1, artifactId1 );
         final ArtifactMockAndControl mac2 = new ArtifactMockAndControl( groupId2, artifactId2 );
 
-        mockManager.replayAll();
+        replay( mac1.getMock(), mac2.getMock() );
 
         final List<String> patterns = new ArrayList<String>();
         patterns.add( groupId1 + "*" );
@@ -106,7 +104,7 @@ public abstract class PatternArtifactFilterTCK
             assertTrue( filter.include( mac2.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac1.getMock(), mac2.getMock() );
     }
 
     public void testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId()
@@ -116,7 +114,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
 
         final ArtifactFilter filter = createFilter( Collections.singletonList( groupId + ":" + artifactId ) );
 
@@ -129,7 +127,7 @@ public abstract class PatternArtifactFilterTCK
             assertTrue( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId()
@@ -139,7 +137,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
 
         final ArtifactFilter filter = createFilter( Collections.singletonList( groupId + ":" + artifactId + ":jar" ) );
 
@@ -152,7 +150,7 @@ public abstract class PatternArtifactFilterTCK
             assertTrue( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testShouldNotIncludeWhenGroupIdDiffers()
@@ -162,7 +160,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
         final List<String> patterns = new ArrayList<String>();
 
         patterns.add( "otherGroup:" + artifactId + ":jar" );
@@ -179,7 +177,7 @@ public abstract class PatternArtifactFilterTCK
             assertFalse( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testShouldNotIncludeWhenArtifactIdDiffers()
@@ -189,7 +187,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
 
         final List<String> patterns = new ArrayList<String>();
 
@@ -207,7 +205,7 @@ public abstract class PatternArtifactFilterTCK
             assertFalse( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testShouldNotIncludeWhenBothIdElementsDiffer()
@@ -217,7 +215,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
 
         final List<String> patterns = new ArrayList<String>();
 
@@ -235,7 +233,7 @@ public abstract class PatternArtifactFilterTCK
             assertFalse( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled()
@@ -251,7 +249,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId, depTrail );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
 
         final ArtifactFilter filter = createFilter( patterns, true );
 
@@ -264,7 +262,7 @@ public abstract class PatternArtifactFilterTCK
             assertTrue( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard()
@@ -280,7 +278,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId, depTrail );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
 
         final ArtifactFilter filter = createFilter( patterns, true );
 
@@ -293,7 +291,7 @@ public abstract class PatternArtifactFilterTCK
             assertTrue( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testShouldNotIncludeWhenNegativeMatch()
@@ -303,7 +301,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
 
         final List<String> patterns = new ArrayList<String>();
 
@@ -320,7 +318,7 @@ public abstract class PatternArtifactFilterTCK
             assertFalse( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testShouldIncludeWhenWildcardMatchesInsideSequence()
@@ -330,7 +328,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
 
         final List<String> patterns = new ArrayList<String>();
 
@@ -347,7 +345,7 @@ public abstract class PatternArtifactFilterTCK
             assertTrue( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testShouldIncludeWhenWildcardMatchesOutsideSequence()
@@ -357,7 +355,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
 
         final List<String> patterns = new ArrayList<String>();
 
@@ -374,7 +372,7 @@ public abstract class PatternArtifactFilterTCK
             assertTrue( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId()
@@ -384,7 +382,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
 
         final List<String> patterns = new ArrayList<String>();
 
@@ -401,7 +399,7 @@ public abstract class PatternArtifactFilterTCK
             assertTrue( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testShouldIncludeWhenWildcardCoversPartOfGroupIdAndEverythingElse()
@@ -411,7 +409,7 @@ public abstract class PatternArtifactFilterTCK
 
         final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
 
-        mockManager.replayAll();
+        replay( mac.getMock() );
 
         final List<String> patterns = new ArrayList<String>();
 
@@ -428,7 +426,7 @@ public abstract class PatternArtifactFilterTCK
             assertTrue( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock() );
     }
 
     public void testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent()
@@ -448,7 +446,7 @@ public abstract class PatternArtifactFilterTCK
         final ArtifactMockAndControl otherMac =
             new ArtifactMockAndControl( otherGroup, otherArtifact, otherType, Collections.<String> emptyList() );
 
-        mockManager.replayAll();
+        replay( mac.getMock(), otherMac.getMock() );
 
         final ArtifactFilter filter = createFilter( patterns, true );
 
@@ -463,7 +461,7 @@ public abstract class PatternArtifactFilterTCK
             assertTrue( filter.include( mac.artifact ) );
         }
 
-        mockManager.verifyAll();
+        verify( mac.getMock(), otherMac.getMock() );
     }
 
     // FIXME: Not sure what this is even trying to test.
@@ -504,8 +502,6 @@ public abstract class PatternArtifactFilterTCK
 
     private final class ArtifactMockAndControl
     {
-        MockControl control;
-
         Artifact artifact;
 
         String groupId;
@@ -531,10 +527,7 @@ public abstract class PatternArtifactFilterTCK
             this.dependencyTrail = dependencyTrail;
             this.type = type;
 
-            control = MockControl.createControl( Artifact.class );
-            mockManager.add( control );
-
-            artifact = (Artifact) control.getMock();
+            artifact = createNiceMock( Artifact.class );
 
             enableGetDependencyConflictId();
             enableGetGroupIdArtifactIdAndVersion();
@@ -551,35 +544,31 @@ public abstract class PatternArtifactFilterTCK
             this( groupId, artifactId, "jar", null );
         }
 
+        Artifact getMock()
+        {
+            return artifact;
+        }
+
         void enableGetId()
         {
-            artifact.getId();
-            control.setReturnValue( groupId + ":" + artifactId + ":" + type + ":version", MockControl.ZERO_OR_MORE );
+            expect( artifact.getId() ).andReturn( groupId + ":" + artifactId + ":" + type + ":version" ).anyTimes();
         }
 
         void enableGetDependencyTrail()
         {
-            artifact.getDependencyTrail();
-            control.setReturnValue( dependencyTrail, MockControl.ZERO_OR_MORE );
+            expect( artifact.getDependencyTrail() ).andReturn( dependencyTrail ).anyTimes();
         }
 
         void enableGetDependencyConflictId()
         {
-            artifact.getDependencyConflictId();
-            control.setReturnValue( groupId + ":" + artifactId + ":" + type, MockControl.ONE_OR_MORE );
+            expect( artifact.getDependencyConflictId() ).andReturn( groupId + ":" + artifactId + ":" + type ).atLeastOnce();
         }
 
         void enableGetGroupIdArtifactIdAndVersion()
         {
-            artifact.getGroupId();
-            control.setReturnValue( groupId, MockControl.ONE_OR_MORE );
-
-            artifact.getArtifactId();
-            control.setReturnValue( artifactId, MockControl.ONE_OR_MORE );
-
-            artifact.getVersion();
-            control.setReturnValue( version, MockControl.ZERO_OR_MORE );
-
+            expect( artifact.getGroupId() ).andReturn( groupId ).atLeastOnce();
+            expect( artifact.getArtifactId() ).andReturn( artifactId ).atLeastOnce();
+            expect( artifact.getVersion() ).andReturn( version ).anyTimes();
         }
     }
 

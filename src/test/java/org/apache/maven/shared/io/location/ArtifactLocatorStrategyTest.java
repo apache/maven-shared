@@ -31,68 +31,49 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
-import org.apache.maven.shared.io.MockManager;
 import org.apache.maven.shared.io.logging.DefaultMessageHolder;
 import org.apache.maven.shared.io.logging.MessageHolder;
-import org.easymock.MockControl;
+
+import static org.easymock.EasyMock.*;
 
 public class ArtifactLocatorStrategyTest
     extends TestCase
 {
 
-    private MockManager mockManager = new MockManager();
-
-    private MockControl factoryControl;
-
     private ArtifactFactory factory;
 
-    private MockControl resolverControl;
-
     private ArtifactResolver resolver;
-
-    private MockControl localRepositoryControl;
 
     private ArtifactRepository localRepository;
 
     public void setUp()
     {
-        factoryControl = MockControl.createControl( ArtifactFactory.class );
-        mockManager.add( factoryControl );
-
-        factory = (ArtifactFactory) factoryControl.getMock();
-
-        resolverControl = MockControl.createControl( ArtifactResolver.class );
-        mockManager.add( resolverControl );
-
-        resolver = (ArtifactResolver) resolverControl.getMock();
-
-        localRepositoryControl = MockControl.createControl( ArtifactRepository.class );
-        mockManager.add( localRepositoryControl );
-
-        localRepository = (ArtifactRepository) localRepositoryControl.getMock();
+        factory = createMock( ArtifactFactory.class );
+        resolver = createMock( ArtifactResolver.class );
+        localRepository = createMock( ArtifactRepository.class );
     }
 
     public void testShouldConstructWithoutDefaultArtifactType()
     {
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository );
 
         new ArtifactLocatorStrategy( factory, resolver, localRepository, Collections.EMPTY_LIST );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository );
     }
 
     public void testShouldConstructWithDefaultArtifactType()
     {
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository );
 
         new ArtifactLocatorStrategy( factory, resolver, localRepository, Collections.EMPTY_LIST, "zip" );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository );
     }
 
     public void testShouldFailToResolveSpecWithOneToken()
     {
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository );
 
         LocatorStrategy strategy = new ArtifactLocatorStrategy( factory, resolver, localRepository,
                                                                 Collections.EMPTY_LIST, "zip" );
@@ -103,12 +84,12 @@ public class ArtifactLocatorStrategyTest
         assertNull( location );
         assertEquals( 1, mh.size() );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository );
     }
 
     public void testShouldFailToResolveSpecWithTwoTokens()
     {
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository );
 
         LocatorStrategy strategy = new ArtifactLocatorStrategy( factory, resolver, localRepository,
                                                                 Collections.EMPTY_LIST, "zip" );
@@ -119,7 +100,7 @@ public class ArtifactLocatorStrategyTest
         assertNull( location );
         assertEquals( 1, mh.size() );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository );
     }
 
     public void testShouldResolveSpecWithThreeTokensUsingDefaultType()
@@ -128,17 +109,12 @@ public class ArtifactLocatorStrategyTest
         File tempFile = File.createTempFile( "artifact-location.", ".temp" );
         tempFile.deleteOnExit();
 
-        MockControl artifactControl = MockControl.createControl( Artifact.class );
-        mockManager.add( artifactControl );
-
-        Artifact artifact = (Artifact) artifactControl.getMock();
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-
-        factory.createArtifact( "group", "artifact", "version", null, "jar" );
-        factoryControl.setReturnValue( artifact );
+        Artifact artifact = createMock( Artifact.class );
+        
+        expect( artifact.getFile() ).andReturn( tempFile );
+        expect( artifact.getFile() ).andReturn( tempFile );
+        
+        expect( factory.createArtifact( "group", "artifact", "version", null, "jar" ) ).andReturn( artifact );
 
         try
         {
@@ -155,7 +131,7 @@ public class ArtifactLocatorStrategyTest
             fail( "This should NEVER happen. It's a mock!" );
         }
 
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository, artifact );
 
         LocatorStrategy strategy = new ArtifactLocatorStrategy( factory, resolver, localRepository,
                                                                 Collections.EMPTY_LIST );
@@ -168,7 +144,7 @@ public class ArtifactLocatorStrategyTest
 
         assertSame( tempFile, location.getFile() );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository, artifact );
     }
 
     public void testShouldResolveSpecWithThreeTokensUsingCustomizedDefaultType()
@@ -177,17 +153,12 @@ public class ArtifactLocatorStrategyTest
         File tempFile = File.createTempFile( "artifact-location.", ".temp" );
         tempFile.deleteOnExit();
 
-        MockControl artifactControl = MockControl.createControl( Artifact.class );
-        mockManager.add( artifactControl );
-
-        Artifact artifact = (Artifact) artifactControl.getMock();
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-
-        factory.createArtifact( "group", "artifact", "version", null, "zip" );
-        factoryControl.setReturnValue( artifact );
+        Artifact artifact = createMock( Artifact.class );
+        
+        expect( artifact.getFile() ).andReturn( tempFile );
+        expect( artifact.getFile() ).andReturn( tempFile );
+        
+        expect( factory.createArtifact( "group", "artifact", "version", null, "zip" ) ).andReturn( artifact );
 
         try
         {
@@ -204,7 +175,7 @@ public class ArtifactLocatorStrategyTest
             fail( "This should NEVER happen. It's a mock!" );
         }
 
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository, artifact );
 
         LocatorStrategy strategy = new ArtifactLocatorStrategy( factory, resolver, localRepository,
                                                                 Collections.EMPTY_LIST, "zip" );
@@ -217,7 +188,7 @@ public class ArtifactLocatorStrategyTest
 
         assertSame( tempFile, location.getFile() );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository, artifact );
     }
 
     public void testShouldResolveSpecWithFourTokens()
@@ -226,17 +197,12 @@ public class ArtifactLocatorStrategyTest
         File tempFile = File.createTempFile( "artifact-location.", ".temp" );
         tempFile.deleteOnExit();
 
-        MockControl artifactControl = MockControl.createControl( Artifact.class );
-        mockManager.add( artifactControl );
-
-        Artifact artifact = (Artifact) artifactControl.getMock();
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-
-        factory.createArtifact( "group", "artifact", "version", null, "zip" );
-        factoryControl.setReturnValue( artifact );
+        Artifact artifact = createMock( Artifact.class );
+        
+        expect( artifact.getFile() ).andReturn( tempFile );
+        expect( artifact.getFile() ).andReturn( tempFile );
+        
+        expect( factory.createArtifact( "group", "artifact", "version", null, "zip" ) ).andReturn( artifact );
 
         try
         {
@@ -253,7 +219,7 @@ public class ArtifactLocatorStrategyTest
             fail( "This should NEVER happen. It's a mock!" );
         }
 
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository, artifact );
 
         LocatorStrategy strategy = new ArtifactLocatorStrategy( factory, resolver, localRepository,
                                                                 Collections.EMPTY_LIST );
@@ -266,7 +232,7 @@ public class ArtifactLocatorStrategyTest
 
         assertSame( tempFile, location.getFile() );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository, artifact );
     }
 
     public void testShouldResolveSpecWithFiveTokens()
@@ -275,17 +241,13 @@ public class ArtifactLocatorStrategyTest
         File tempFile = File.createTempFile( "artifact-location.", ".temp" );
         tempFile.deleteOnExit();
 
-        MockControl artifactControl = MockControl.createControl( Artifact.class );
-        mockManager.add( artifactControl );
-
-        Artifact artifact = (Artifact) artifactControl.getMock();
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-
-        factory.createArtifactWithClassifier( "group", "artifact", "version", "zip", "classifier" );
-        factoryControl.setReturnValue( artifact );
+        Artifact artifact = createMock( Artifact.class );
+        
+        expect( artifact.getFile() ).andReturn( tempFile );
+        expect( artifact.getFile() ).andReturn( tempFile );
+        
+        expect( factory.createArtifactWithClassifier( "group", "artifact", "version", "zip", "classifier" ) )
+                .andReturn( artifact );
 
         try
         {
@@ -302,7 +264,7 @@ public class ArtifactLocatorStrategyTest
             fail( "This should NEVER happen. It's a mock!" );
         }
 
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository, artifact );
 
         LocatorStrategy strategy = new ArtifactLocatorStrategy( factory, resolver, localRepository,
                                                                 Collections.EMPTY_LIST );
@@ -315,7 +277,7 @@ public class ArtifactLocatorStrategyTest
 
         assertSame( tempFile, location.getFile() );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository, artifact );
     }
 
     public void testShouldResolveSpecWithFiveTokensAndEmptyTypeToken()
@@ -324,17 +286,13 @@ public class ArtifactLocatorStrategyTest
         File tempFile = File.createTempFile( "artifact-location.", ".temp" );
         tempFile.deleteOnExit();
 
-        MockControl artifactControl = MockControl.createControl( Artifact.class );
-        mockManager.add( artifactControl );
-
-        Artifact artifact = (Artifact) artifactControl.getMock();
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-
-        factory.createArtifactWithClassifier( "group", "artifact", "version", "jar", "classifier" );
-        factoryControl.setReturnValue( artifact );
+        Artifact artifact = createMock( Artifact.class );
+        
+        expect( artifact.getFile() ).andReturn( tempFile );
+        expect( artifact.getFile() ).andReturn( tempFile );
+        
+        expect( factory.createArtifactWithClassifier( "group", "artifact", "version", "jar", "classifier" ) )
+                .andReturn( artifact );
 
         try
         {
@@ -351,7 +309,7 @@ public class ArtifactLocatorStrategyTest
             fail( "This should NEVER happen. It's a mock!" );
         }
 
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository, artifact );
 
         LocatorStrategy strategy = new ArtifactLocatorStrategy( factory, resolver, localRepository,
                                                                 Collections.EMPTY_LIST );
@@ -364,7 +322,7 @@ public class ArtifactLocatorStrategyTest
 
         assertSame( tempFile, location.getFile() );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository, artifact );
     }
 
     public void testShouldResolveSpecWithMoreThanFiveTokens()
@@ -373,17 +331,13 @@ public class ArtifactLocatorStrategyTest
         File tempFile = File.createTempFile( "artifact-location.", ".temp" );
         tempFile.deleteOnExit();
 
-        MockControl artifactControl = MockControl.createControl( Artifact.class );
-        mockManager.add( artifactControl );
-
-        Artifact artifact = (Artifact) artifactControl.getMock();
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-        artifact.getFile();
-        artifactControl.setReturnValue( tempFile );
-
-        factory.createArtifactWithClassifier( "group", "artifact", "version", "zip", "classifier" );
-        factoryControl.setReturnValue( artifact );
+        Artifact artifact = createMock( Artifact.class );
+        
+        expect( artifact.getFile() ).andReturn( tempFile );
+        expect( artifact.getFile() ).andReturn( tempFile );
+        
+        expect( factory.createArtifactWithClassifier( "group", "artifact", "version", "zip", "classifier" ) )
+                .andReturn( artifact );
 
         try
         {
@@ -400,7 +354,7 @@ public class ArtifactLocatorStrategyTest
             fail( "This should NEVER happen. It's a mock!" );
         }
 
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository, artifact );
 
         LocatorStrategy strategy = new ArtifactLocatorStrategy( factory, resolver, localRepository,
                                                                 Collections.EMPTY_LIST );
@@ -415,23 +369,18 @@ public class ArtifactLocatorStrategyTest
 
         assertSame( tempFile, location.getFile() );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository, artifact );
     }
 
     public void testShouldNotResolveSpecToArtifactWithNullFile()
         throws IOException
     {
-        MockControl artifactControl = MockControl.createControl( Artifact.class );
-        mockManager.add( artifactControl );
-
-        Artifact artifact = (Artifact) artifactControl.getMock();
-        artifact.getFile();
-        artifactControl.setReturnValue( null );
-        artifact.getId();
-        artifactControl.setReturnValue( "<some-artifact-id>" );
-
-        factory.createArtifact( "group", "artifact", "version", null, "jar" );
-        factoryControl.setReturnValue( artifact );
+        Artifact artifact = createMock( Artifact.class );
+        
+        expect( artifact.getFile() ).andReturn( null );
+        expect( artifact.getId() ).andReturn( "<some-artifact-id>" );
+        
+        expect( factory.createArtifact( "group", "artifact", "version", null, "jar" )).andReturn( artifact );
 
         try
         {
@@ -448,7 +397,7 @@ public class ArtifactLocatorStrategyTest
             fail( "This should NEVER happen. It's a mock!" );
         }
 
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository, artifact );
 
         LocatorStrategy strategy = new ArtifactLocatorStrategy( factory, resolver, localRepository,
                                                                 Collections.EMPTY_LIST );
@@ -461,30 +410,25 @@ public class ArtifactLocatorStrategyTest
 
         assertTrue( mh.render().indexOf( "<some-artifact-id>" ) > -1 );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository, artifact );
     }
 
     public void testShouldNotResolveWhenArtifactNotFoundExceptionThrown()
         throws IOException
     {
-        MockControl artifactControl = MockControl.createControl( Artifact.class );
-        mockManager.add( artifactControl );
+        Artifact artifact = createMock( Artifact.class );
 
-        Artifact artifact = (Artifact) artifactControl.getMock();
+        expect( artifact.getId() ).andReturn( "<some-artifact-id>" );
 
-        artifact.getId();
-        artifactControl.setReturnValue( "<some-artifact-id>" );
-
-        factory.createArtifact( "group", "artifact", "version", null, "jar" );
-        factoryControl.setReturnValue( artifact );
+        expect( factory.createArtifact( "group", "artifact", "version", null, "jar" ) ).andReturn( artifact );
 
         try
         {
             resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
-            resolverControl.setThrowable( new ArtifactNotFoundException( "not found", "group", "artifact", "version",
-                                                                         "jar", Collections.EMPTY_LIST,
-                                                                         "http://nowhere.com", Collections.EMPTY_LIST,
-                                                                         new NullPointerException() ) );
+            expectLastCall().andThrow( new ArtifactNotFoundException( "not found", "group", "artifact", "version",
+                                                                               "jar", Collections.EMPTY_LIST,
+                                                                               "http://nowhere.com", Collections.EMPTY_LIST,
+                                                                                new NullPointerException() ) );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -497,7 +441,7 @@ public class ArtifactLocatorStrategyTest
             fail( "This should NEVER happen. It's a mock!" );
         }
 
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository, artifact );
 
         LocatorStrategy strategy = new ArtifactLocatorStrategy( factory, resolver, localRepository,
                                                                 Collections.EMPTY_LIST );
@@ -511,30 +455,25 @@ public class ArtifactLocatorStrategyTest
         assertTrue( mh.render().indexOf( "<some-artifact-id>" ) > -1 );
         assertTrue( mh.render().indexOf( "not found" ) > -1 );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository, artifact );
     }
 
     public void testShouldNotResolveWhenArtifactResolutionExceptionThrown()
         throws IOException
     {
-        MockControl artifactControl = MockControl.createControl( Artifact.class );
-        mockManager.add( artifactControl );
+        Artifact artifact = createMock( Artifact.class );
 
-        Artifact artifact = (Artifact) artifactControl.getMock();
+        expect( artifact.getId() ).andReturn( "<some-artifact-id>" );
 
-        artifact.getId();
-        artifactControl.setReturnValue( "<some-artifact-id>" );
-
-        factory.createArtifact( "group", "artifact", "version", null, "jar" );
-        factoryControl.setReturnValue( artifact );
+        expect( factory.createArtifact( "group", "artifact", "version", null, "jar" ) ).andReturn( artifact );
 
         try
         {
             resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
-            resolverControl.setThrowable( new ArtifactResolutionException( "resolution failed", "group", "artifact",
-                                                                           "version", "jar", Collections.EMPTY_LIST,
-                                                                           Collections.EMPTY_LIST,
-                                                                           new NullPointerException() ) );
+            expectLastCall().andThrow( new ArtifactResolutionException( "resolution failed", "group", "artifact",
+                                                                                 "version", "jar", Collections.EMPTY_LIST,
+                                                                                 Collections.EMPTY_LIST,
+                                                                                 new NullPointerException() ) );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -547,7 +486,7 @@ public class ArtifactLocatorStrategyTest
             fail( "This should NEVER happen. It's a mock!" );
         }
 
-        mockManager.replayAll();
+        replay( factory, resolver, localRepository, artifact );
 
         LocatorStrategy strategy = new ArtifactLocatorStrategy( factory, resolver, localRepository,
                                                                 Collections.EMPTY_LIST );
@@ -561,7 +500,7 @@ public class ArtifactLocatorStrategyTest
         assertTrue( mh.render().indexOf( "<some-artifact-id>" ) > -1 );
         assertTrue( mh.render().indexOf( "resolution failed" ) > -1 );
 
-        mockManager.verifyAll();
+        verify( factory, resolver, localRepository, artifact );
     }
 
 }

@@ -23,9 +23,9 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.shared.tools.easymock.MockManager;
 import org.codehaus.plexus.PlexusTestCase;
-import org.easymock.MockControl;
+
+import static org.easymock.EasyMock.*;
 
 public class ScopeArtifactFilterTest
     extends PlexusTestCase
@@ -42,8 +42,6 @@ public class ScopeArtifactFilterTest
         
         assertFalse( filter.include( excluded ) );
     }
-
-    private MockManager mockManager = new MockManager();
 
     public void testNullScopeDisabled()
     {
@@ -267,90 +265,63 @@ public class ScopeArtifactFilterTest
 
     private void verifyIncluded( String filterScope, String artifactScope )
     {
-        ArtifactMockAndControl mac = new ArtifactMockAndControl( artifactScope );
+        Artifact artifact = createMockArtifact( artifactScope );
 
-        mockManager.replayAll();
+        replay( artifact );
 
         ArtifactFilter filter = new ScopeArtifactFilter( filterScope );
 
         assertTrue( "Artifact scope: " + artifactScope + " NOT included using filter scope: " + filterScope, filter
-            .include( mac.artifact ) );
+            .include( artifact ) );
 
-        mockManager.verifyAll();
-
-        // enable multiple calls to this method within a single test.
-        mockManager.clear();
+        verify( artifact );
     }
 
     private void verifyExcluded( String filterScope, String artifactScope )
     {
-        ArtifactMockAndControl mac = new ArtifactMockAndControl( artifactScope );
-
-        mockManager.replayAll();
+        Artifact artifact = createMockArtifact( artifactScope );
+        
+        replay( artifact );
 
         ArtifactFilter filter = new ScopeArtifactFilter( filterScope );
 
         assertFalse( "Artifact scope: " + artifactScope + " NOT excluded using filter scope: " + filterScope, filter
-            .include( mac.artifact ) );
+            .include( artifact ) );
 
-        mockManager.verifyAll();
-
-        // enable multiple calls to this method within a single test.
-        mockManager.clear();
+        verify( artifact );
     }
 
     private void verifyIncluded( ScopeArtifactFilter filter, String artifactScope )
     {
-        ArtifactMockAndControl mac = new ArtifactMockAndControl( artifactScope );
+        Artifact artifact = createMockArtifact( artifactScope );
+                
+        replay( artifact );
 
-        mockManager.replayAll();
+        assertTrue( "Artifact scope: " + artifactScope + " SHOULD BE included", filter.include( artifact ) );
 
-        assertTrue( "Artifact scope: " + artifactScope + " SHOULD BE included", filter
-            .include( mac.artifact ) );
-
-        mockManager.verifyAll();
-
-        // enable multiple calls to this method within a single test.
-        mockManager.clear();
+        verify( artifact );
     }
 
     private void verifyExcluded( ScopeArtifactFilter filter, String artifactScope )
     {
-        ArtifactMockAndControl mac = new ArtifactMockAndControl( artifactScope );
+        Artifact artifact = createMockArtifact( artifactScope );
+                
+        replay( artifact );
 
-        mockManager.replayAll();
+        assertFalse( "Artifact scope: " + artifactScope + " SHOULD BE excluded", filter.include( artifact ) );
 
-        assertFalse( "Artifact scope: " + artifactScope + " SHOULD BE excluded", filter
-            .include( mac.artifact ) );
-
-        mockManager.verifyAll();
-
-        // enable multiple calls to this method within a single test.
-        mockManager.clear();
+        verify( artifact );
     }
 
-    private final class ArtifactMockAndControl
+    private Artifact createMockArtifact( String scope )
     {
-        Artifact artifact;
+        Artifact artifact = createMock( Artifact.class );
 
-        MockControl control;
+        expect( artifact.getScope() ).andReturn( scope ).anyTimes();
+        expect( artifact.getId() ).andReturn( "group:artifact:type:version" ).anyTimes();
+        expect( artifact.getVersionRange() ).andReturn( null ).anyTimes();
 
-        ArtifactMockAndControl( String scope )
-        {
-            control = MockControl.createControl( Artifact.class );
-            mockManager.add( control );
-
-            artifact = (Artifact) control.getMock();
-
-            artifact.getScope();
-            control.setReturnValue( scope, MockControl.ZERO_OR_MORE );
-            
-            artifact.getId();
-            control.setReturnValue( "group:artifact:type:version", MockControl.ZERO_OR_MORE );
-            
-            artifact.getVersionRange();
-            control.setReturnValue( null, MockControl.ZERO_OR_MORE );
-        }
+        return artifact;
     }
 
 }

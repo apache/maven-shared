@@ -34,19 +34,13 @@ import org.codehaus.plexus.component.annotations.Component;
  */
 @Component( role = JarSigner.class, hint = "default" )
 public class DefaultJarSigner
-    extends AbstractJavaTool<JarSignerRequest, JarSignerResult>
+    extends AbstractJavaTool<JarSignerRequest>
     implements JarSigner
 {
 
     public DefaultJarSigner()
     {
         super( "jarsigner" );
-    }
-
-    @Override
-    protected JarSignerResult createResult()
-    {
-        return new DefaultJarSignerResult();
     }
 
     @Override

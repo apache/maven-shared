@@ -29,7 +29,7 @@ import org.apache.maven.shared.utils.cli.javatool.JavaTool;
  * @since 1.0
  */
 public interface JarSigner
-    extends JavaTool<JarSignerRequest, JarSignerResult>
+    extends JavaTool<JarSignerRequest>
 {
 
 }

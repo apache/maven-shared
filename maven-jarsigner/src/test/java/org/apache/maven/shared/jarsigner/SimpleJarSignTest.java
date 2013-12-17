@@ -18,6 +18,7 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
+import org.apache.maven.shared.utils.cli.javatool.JavaToolResult;
 import org.codehaus.plexus.PlexusTestCase;
 import org.apache.maven.shared.utils.io.FileUtils;
 
@@ -47,7 +48,7 @@ public class SimpleJarSignTest
 
         JarSigner jarSigner = (JarSigner) lookup( JarSigner.class.getName() );
 
-        JarSignerResult jarSignerResult = jarSigner.execute( jarSignerRequest );
+        JavaToolResult jarSignerResult = jarSigner.execute( jarSignerRequest );
         assertEquals( "not exit code 0 " + jarSignerResult.getExecutionException(), 0, jarSignerResult.getExitCode() );
 
 
@@ -70,7 +71,7 @@ public class SimpleJarSignTest
 
         JarSigner jarSigner = (JarSigner) lookup( JarSigner.class.getName() );
 
-        JarSignerResult jarSignerResult = jarSigner.execute( jarSignerRequest );
+        JavaToolResult jarSignerResult = jarSigner.execute( jarSignerRequest );
 
         assertEquals( "not exit code 0 " + jarSignerResult.getExecutionException(), 0, jarSignerResult.getExitCode() );
 

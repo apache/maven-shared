@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>maven-jarsigner</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
 
   <name>Apache Maven Jarsigner</name>
   <description>A component to assist in signing jars.</description>
@@ -38,9 +38,9 @@
   </prerequisites>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-jarsigner</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-jarsigner</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-jarsigner</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-jarsigner-1.2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-jarsigner-1.2</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-jarsigner-1.2</url>
   </scm>
   <issueManagement>
     <system>jira</system>
@@ -62,7 +62,7 @@
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-shared-utils</artifactId>
-      <version>0.5-SNAPSHOT</version>
+      <version>0.5</version>
     </dependency>
 
     <dependency>

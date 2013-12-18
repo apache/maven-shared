@@ -46,14 +46,14 @@ ${project.name}
 
 +---------
 
-    JarSignerSignRequest jarSignerRequest = new JarSignerSignRequest();
-    jarSignerRequest.setArchive( target );
-    jarSignerRequest.setKeystore( "src/test/keystore" );
-    jarSignerRequest.setVerbose( true );
-    jarSignerRequest.setAlias( "foo_alias" );
-    jarSignerRequest.setKeypass( "key-passwd" );
-    jarSignerRequest.setStorepass( "changeit" );
-    jarSignerRequest.setSignedjar( new File( "target/ssimple.jar" ) );
+    JarSignerSignRequest request = new JarSignerSignRequest();
+    request.setArchive( target );
+    request.setKeystore( "src/test/keystore" );
+    request.setVerbose( true );
+    request.setAlias( "foo_alias" );
+    request.setKeypass( "key-passwd" );
+    request.setStorepass( "changeit" );
+    request.setSignedjar( new File( "target/ssimple.jar" ) );
 
 +---------
 
@@ -61,11 +61,11 @@ ${project.name}
 
 +---------
 
-    JarSignerResult jarSignerResult = jarSigner.execute( jarSignerRequest );
+    JavaToolResult result = jarSigner.execute( jarSignerRequest );
     // control the execution result
-    jarSignerResult.getExitCode()
+    result.getExitCode()
     // get exception
-    jarSignerResult.getExecutionException()
+    result.getExecutionException()
 
 +---------
 
@@ -76,17 +76,19 @@ ${project.name}
 +----------
     JarSignerVerifyRequest request = new JarSignerVerifyRequest();
     request.setCerts( true );
+    request.setKeystore( "src/test/keystore" );
     request.setVerbose( true );
+    request.setAlias( "foo_alias" );
     request.setArchive( new File( "target/ssimple.jar" ) );
 +----------
 
   Now you can use the component to verify your signe jar:
 
 +----------
-    JarSignerResult jarSignerResult = jarSigner.execute( request );
+    JavaToolResult result = jarSigner.execute( request );
     // control the execution result
-    jarSignerResult.getExitCode()
+    result.getExitCode()
     // get exception
-    jarSignerResult.getExecutionException()
+    result.getExecutionException()
 +----------
 

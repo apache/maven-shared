@@ -31,6 +31,12 @@ public class VerifierTest
         assertEquals( expected, ForkedLauncher.extractMavenVersion( Arrays.asList( lines ) ) );
     }
 
+    public void testSunBug9009028ForJdk(){
+        final String version = System.getProperty("java.version");
+        System.setProperties(null);
+        assertEquals( version, System.getProperty("java.version"));
+    }
+
     public void testExtractMavenVersion()
     {
         check( "2.0.6", "Maven version: 2.0.6" );

@@ -33,9 +33,9 @@ public class VerifierTest
 
     public void testSunBug9009028ForJdk()
     {
-        final String version = System.getProperty("java.version");
-        System.setProperties(null);
-        assertEquals( version, System.getProperty("java.version"));
+        final String version = System.getProperty( "java.version" );
+        System.setProperties( null );
+        assertEquals( version, System.getProperty( "java.version" ) );
     }
 
     public void testExtractMavenVersion()

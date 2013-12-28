@@ -23,6 +23,8 @@ import junit.framework.TestCase;
 import org.apache.maven.shared.utils.io.FileUtils;
 
 import java.io.File;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
 
 /**
  * Created on 11/8/13.
@@ -52,9 +54,28 @@ public class JarSignerUtilTest
 
         assertTrue( JarSignerUtil.isArchiveSigned( target ) );
 
+        // check that manifest contains some digest attributes
+        JarFile originalJarFile = new JarFile( file );
+        Manifest originalManifest = originalJarFile.getManifest();
+        originalJarFile.close();
+
+        Manifest originalCleanManifest = JarSignerUtil.buildUnsignedManifest( originalManifest );
+        assertFalse( originalManifest.equals( originalCleanManifest ) );
+        assertTrue( originalCleanManifest.equals( JarSignerUtil.buildUnsignedManifest( originalCleanManifest ) ) );
+
         JarSignerUtil.unsignArchive( target );
 
         assertFalse( JarSignerUtil.isArchiveSigned( target ) );
+
+        // check that manifest has no digest entry
+        // see https://jira.codehaus.org/browse/MSHARED-314
+        JarFile jarFile = new JarFile( target );
+        Manifest manifest = jarFile.getManifest();
+        jarFile.close();
+        Manifest cleanManifest = JarSignerUtil.buildUnsignedManifest( manifest );
+        assertTrue( manifest.equals( cleanManifest ) );
+        assertTrue( manifest.equals( originalCleanManifest ) );
+
 
     }
 }

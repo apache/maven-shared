@@ -28,6 +28,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -82,7 +85,7 @@ public class JarSignerUtil
      * output JAR to retain as much metadata from the original JAR as possible.
      *
      * @param jarFile The JAR file to unsign, must not be <code>null</code>.
-     * @throws java.io.IOException
+     * @throws IOException
      */
     public static void unsignArchive( File jarFile )
         throws IOException
@@ -107,6 +110,18 @@ public class JarSignerUtil
 
                 zos.putNextEntry( new ZipEntry( ze.getName() ) );
 
+                if ( isManifestFile( ze.getName() ) )
+                {
+
+                    // build a new manifest while removing all digest entries
+                    // see https://jira.codehaus.org/browse/MSHARED-314
+                    Manifest oldManifest = new Manifest( zis );
+                    Manifest newManifest = buildUnsignedManifest( oldManifest );
+                    newManifest.write( zos );
+
+                    continue;
+                }
+
                 IOUtil.copy( zis, zos );
             }
 
@@ -122,11 +137,48 @@ public class JarSignerUtil
     }
 
     /**
+     * Build a new manifest from the given one removing any signing information inside it.
+     *
+     * This is done by removing any attributes containing some digest informations.
+     * If a entry has then no more attributes, then it will not be readd in the result manifest.
+     *
+     * @param manifest manifest to clean
+     * @return the build manifest with no digest attributes
+     * @since 1.3
+     */
+    protected static Manifest buildUnsignedManifest( Manifest manifest ) {
+
+        Manifest result = new Manifest( manifest );
+        result.getMainAttributes().clear();
+
+        for ( Map.Entry<String, Attributes> entry : manifest.getEntries().entrySet() )
+        {
+            Attributes oldAttributes = entry.getValue();
+            Attributes newAttributes = new Attributes();
+            for ( Map.Entry<Object, Object> objectEntry : oldAttributes.entrySet() )
+            {
+                String attributeKey = String.valueOf( objectEntry.getKey() );
+                if ( !attributeKey.contains( "-Digest" ) )
+                {
+                    // can add this attribute
+                    newAttributes.put( objectEntry.getKey(), objectEntry.getValue() );
+                }
+            }
+            if ( !newAttributes.isEmpty() )
+            {
+                // can add this entry
+                result.getEntries().put( entry.getKey(), newAttributes );
+            }
+        }
+        return result;
+    }
+
+    /**
      * Scans an archive for existing signatures.
      *
      * @param jarFile The archive to scan, must not be <code>null</code>.
      * @return <code>true</code>, if the archive contains at least one signature file; <code>false</code>, if the archive
-     *         does not contain any signature files.
+     * does not contain any signature files.
      * @throws IOException if scanning <code>jarFile</code> fails.
      */
     public static boolean isArchiveSigned( final File jarFile )
@@ -183,7 +235,7 @@ public class JarSignerUtil
      * @param entryName The name of the JAR file entry to check, must not be <code>null</code>.
      * @return <code>true</code> if the entry is related to a signature, <code>false</code> otherwise.
      */
-    private static boolean isSignatureFile( String entryName )
+    protected static boolean isSignatureFile( String entryName )
     {
         boolean result = false;
         if ( entryName.regionMatches( true, 0, "META-INF", 0, 8 ) )
@@ -205,6 +257,24 @@ public class JarSignerUtil
                     result = true;
                 }
                 else if ( entryName.regionMatches( true, entryName.length() - 3, ".EC", 0, 3 ) )
+                {
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
+
+    protected static boolean isManifestFile( String entryName )
+    {
+        boolean result = false;
+        if ( entryName.regionMatches( true, 0, "META-INF", 0, 8 ) )
+        {
+            entryName = entryName.replace( '\\', '/' );
+
+            if ( entryName.indexOf( '/' ) == 8 && entryName.lastIndexOf( '/' ) == 8 )
+            {
+                if ( entryName.regionMatches( true, entryName.length() - 11, "MANIFEST.MF", 0, 11 ) )
                 {
                     result = true;
                 }

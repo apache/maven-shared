@@ -149,7 +149,7 @@ public class JarSignerUtil
     protected static Manifest buildUnsignedManifest( Manifest manifest ) {
 
         Manifest result = new Manifest( manifest );
-        result.getMainAttributes().clear();
+        result.getEntries().clear();
 
         for ( Map.Entry<String, Attributes> entry : manifest.getEntries().entrySet() )
         {

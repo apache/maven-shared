@@ -104,7 +104,6 @@ public class JarSignerUtil
             {
                 if ( isSignatureFile( ze.getName() ) )
                 {
-
                     continue;
                 }
 
@@ -137,16 +136,17 @@ public class JarSignerUtil
     }
 
     /**
-     * Build a new manifest from the given one removing any signing information inside it.
+     * Build a new manifest from the given one, removing any signing information inside it.
      *
-     * This is done by removing any attributes containing some digest informations.
-     * If a entry has then no more attributes, then it will not be readd in the result manifest.
+     * This is done by removing any attributes containing some digest information.
+     * If an entry has then no more attributes, then it will not be written in the result manifest.
      *
      * @param manifest manifest to clean
      * @return the build manifest with no digest attributes
      * @since 1.3
      */
-    protected static Manifest buildUnsignedManifest( Manifest manifest ) {
+    protected static Manifest buildUnsignedManifest( Manifest manifest )
+    {
 
         Manifest result = new Manifest( manifest );
         result.getEntries().clear();
@@ -230,7 +230,8 @@ public class JarSignerUtil
 
     /**
      * Checks whether the specified JAR file entry denotes a signature-related file, i.e. matches
-     * <code>META-INF/*.SF</code>, <code>META-INF/*.DSA</code> or <code>META-INF/*.RSA</code>.
+     * <code>META-INF/*.SF</code>, <code>META-INF/*.DSA</code>, <code>META-INF/*.RSA</code> or
+     * <code>META-INF/*.EC</code>.
      *
      * @param entryName The name of the JAR file entry to check, must not be <code>null</code>.
      * @return <code>true</code> if the entry is related to a signature, <code>false</code> otherwise.

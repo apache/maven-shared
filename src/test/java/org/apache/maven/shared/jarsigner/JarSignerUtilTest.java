@@ -19,10 +19,8 @@ package org.apache.maven.shared.jarsigner;
  * under the License.
  */
 
-import junit.framework.TestCase;
-import org.apache.maven.shared.utils.io.FileUtils;
-
 import java.io.File;
+import java.io.IOException;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -34,7 +32,7 @@ import java.util.jar.Manifest;
  * @since 1.1
  */
 public class JarSignerUtilTest
-    extends TestCase
+    extends AbstractJarSignerTest
 {
 
     // Fix MSHARED-277
@@ -42,24 +40,15 @@ public class JarSignerUtilTest
         throws Exception
     {
 
-        File file = new File( "src/test/javax.persistence_2.0.5.v201212031355.jar" );
-        File target = new File( "target/", file.getName() );
-
-        if ( target.exists() )
-        {
-            FileUtils.forceDelete( target );
-        }
-
-        FileUtils.copyFile( file, target );
+        File target = prepareTestJar( "javax.persistence_2.0.5.v201212031355.jar" );
 
         assertTrue( JarSignerUtil.isArchiveSigned( target ) );
 
         // check that manifest contains some digest attributes
-        JarFile originalJarFile = new JarFile( file );
-        Manifest originalManifest = originalJarFile.getManifest();
-        originalJarFile.close();
+        Manifest originalManifest = readManifest( target );
 
         Manifest originalCleanManifest = JarSignerUtil.buildUnsignedManifest( originalManifest );
+
         assertFalse( originalManifest.equals( originalCleanManifest ) );
         assertTrue( originalCleanManifest.equals( JarSignerUtil.buildUnsignedManifest( originalCleanManifest ) ) );
 
@@ -69,13 +58,24 @@ public class JarSignerUtilTest
 
         // check that manifest has no digest entry
         // see https://jira.codehaus.org/browse/MSHARED-314
-        JarFile jarFile = new JarFile( target );
-        Manifest manifest = jarFile.getManifest();
-        jarFile.close();
+        Manifest manifest = readManifest( target );
+
         Manifest cleanManifest = JarSignerUtil.buildUnsignedManifest( manifest );
+
         assertTrue( manifest.equals( cleanManifest ) );
         assertTrue( manifest.equals( originalCleanManifest ) );
 
+    }
 
+    private Manifest readManifest( File file )
+        throws IOException
+    {
+        JarFile jarFile = new JarFile( file );
+
+        Manifest manifest = jarFile.getManifest();
+
+        jarFile.close();
+
+        return manifest;
     }
 }

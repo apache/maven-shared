@@ -20,8 +20,6 @@ package org.apache.maven.shared.jarsigner;
  */
 
 import org.apache.maven.shared.utils.cli.javatool.JavaToolResult;
-import org.codehaus.plexus.PlexusTestCase;
-import org.apache.maven.shared.utils.io.FileUtils;
 
 import java.io.File;
 
@@ -29,67 +27,23 @@ import java.io.File;
  * @author Olivier Lamy
  */
 public class SimpleJarSignTest
-    extends PlexusTestCase
+    extends AbstractJarSignerTest
 {
+    private JarSigner jarSigner;
+
+    public void setUp()
+        throws Exception
+    {
+        super.setUp();
+
+        jarSigner = (JarSigner) lookup( JarSigner.class.getName() );
+    }
 
     public void testSimpleSign()
         throws Exception
     {
-        File file = new File( "src/test/simple.jar" );
-        File target = new File( "target/simple.jar" );
+        File target = prepareTestJar( "simple.jar" );
 
-        if ( target.exists() )
-        {
-            FileUtils.forceDelete( target );
-        }
-
-        FileUtils.copyFile( file, target );
-
-        JarSignerSignRequest jarSignerRequest = buildJarSignerRequest( target );
-
-        JarSigner jarSigner = (JarSigner) lookup( JarSigner.class.getName() );
-
-        JavaToolResult jarSignerResult = jarSigner.execute( jarSignerRequest );
-        assertEquals( "not exit code 0 " + jarSignerResult.getExecutionException(), 0, jarSignerResult.getExitCode() );
-
-
-    }
-
-    public void testSimpleSignAdVerify()
-        throws Exception
-    {
-        File file = new File( "src/test/simple.jar" );
-        File target = new File( "target/simple.jar" );
-
-        if ( target.exists() )
-        {
-            FileUtils.forceDelete( target );
-        }
-
-        FileUtils.copyFile( file, target );
-
-        JarSignerSignRequest jarSignerRequest = buildJarSignerRequest( target );
-
-        JarSigner jarSigner = (JarSigner) lookup( JarSigner.class.getName() );
-
-        JavaToolResult jarSignerResult = jarSigner.execute( jarSignerRequest );
-
-        assertEquals( "not exit code 0 " + jarSignerResult.getExecutionException(), 0, jarSignerResult.getExitCode() );
-
-        JarSignerVerifyRequest request = new JarSignerVerifyRequest();
-        request.setCerts( true );
-        request.setVerbose( true );
-        request.setArchive( new File( "target/ssimple.jar" ) );
-        request.setKeystore( "src/test/keystore" );
-        request.setAlias( "foo_alias" );
-
-        jarSignerResult = jarSigner.execute( request );
-        assertEquals( "not exit code 0 " + jarSignerResult.getExecutionException(), 0, jarSignerResult.getExitCode() );
-
-    }
-
-    protected JarSignerSignRequest buildJarSignerRequest( File target )
-    {
         JarSignerSignRequest jarSignerRequest = new JarSignerSignRequest();
         jarSignerRequest.setArchive( target );
         jarSignerRequest.setKeystore( "src/test/keystore" );
@@ -98,6 +52,26 @@ public class SimpleJarSignTest
         jarSignerRequest.setKeypass( "key-passwd" );
         jarSignerRequest.setStorepass( "changeit" );
         jarSignerRequest.setSignedjar( new File( "target/ssimple.jar" ) );
-        return jarSignerRequest;
+
+        JavaToolResult jarSignerResult = jarSigner.execute( jarSignerRequest );
+
+        assertEquals( "not exit code 0 " + jarSignerResult.getExecutionException(), 0, jarSignerResult.getExitCode() );
+    }
+
+    public void testSimpleSignAndVerify()
+        throws Exception
+    {
+        testSimpleSign();
+
+        JarSignerVerifyRequest request = new JarSignerVerifyRequest();
+        request.setCerts( true );
+        request.setVerbose( true );
+        request.setArchive( new File( "target/ssimple.jar" ) );
+        request.setKeystore( "src/test/keystore" );
+        request.setAlias( "foo_alias" );
+
+        JavaToolResult jarSignerResult = jarSigner.execute( request );
+
+        assertEquals( "not exit code 0 " + jarSignerResult.getExecutionException(), 0, jarSignerResult.getExitCode() );
     }
 }

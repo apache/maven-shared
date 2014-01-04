@@ -240,49 +240,35 @@ public class JarSignerUtil
      */
     protected static boolean isSignatureFile( String entryName )
     {
-        boolean result = false;
         if ( entryName.regionMatches( true, 0, "META-INF", 0, 8 ) )
         {
             entryName = entryName.replace( '\\', '/' );
 
             if ( entryName.indexOf( '/' ) == 8 && entryName.lastIndexOf( '/' ) == 8 )
             {
-                if ( entryName.regionMatches( true, entryName.length() - 3, ".SF", 0, 3 ) )
-                {
-                    result = true;
-                }
-                else if ( entryName.regionMatches( true, entryName.length() - 4, ".DSA", 0, 4 ) )
-                {
-                    result = true;
-                }
-                else if ( entryName.regionMatches( true, entryName.length() - 4, ".RSA", 0, 4 ) )
-                {
-                    result = true;
-                }
-                else if ( entryName.regionMatches( true, entryName.length() - 3, ".EC", 0, 3 ) )
-                {
-                    result = true;
-                }
+                return endsWithIgnoreCase( entryName, ".SF" ) || endsWithIgnoreCase( entryName, ".DSA" )
+                    || endsWithIgnoreCase( entryName, ".RSA" ) || endsWithIgnoreCase( entryName, ".EC" );
             }
         }
-        return result;
+        return false;
     }
 
     protected static boolean isManifestFile( String entryName )
     {
-        boolean result = false;
         if ( entryName.regionMatches( true, 0, "META-INF", 0, 8 ) )
         {
             entryName = entryName.replace( '\\', '/' );
 
             if ( entryName.indexOf( '/' ) == 8 && entryName.lastIndexOf( '/' ) == 8 )
             {
-                if ( entryName.regionMatches( true, entryName.length() - 11, "MANIFEST.MF", 0, 11 ) )
-                {
-                    result = true;
-                }
+                return endsWithIgnoreCase( entryName, "/MANIFEST.MF" );
             }
         }
-        return result;
+        return false;
+    }
+
+    private static boolean endsWithIgnoreCase( String str, String searchStr )
+    {
+        return str.regionMatches( true, str.length() - searchStr.length(), searchStr, 0, searchStr.length() );
     }
 }

@@ -21,6 +21,8 @@ package org.apache.maven.shared.jarsigner;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -46,10 +48,11 @@ public class JarSignerUtilTest
 
         // check that manifest contains some digest attributes
         Manifest originalManifest = readManifest( target );
+        assertTrue( containsDigest( originalManifest ) );
 
         Manifest originalCleanManifest = JarSignerUtil.buildUnsignedManifest( originalManifest );
+        assertFalse( containsDigest( originalCleanManifest ) );
 
-        assertFalse( originalManifest.equals( originalCleanManifest ) );
         assertTrue( originalCleanManifest.equals( JarSignerUtil.buildUnsignedManifest( originalCleanManifest ) ) );
 
         JarSignerUtil.unsignArchive( target );
@@ -61,6 +64,7 @@ public class JarSignerUtilTest
         Manifest manifest = readManifest( target );
 
         Manifest cleanManifest = JarSignerUtil.buildUnsignedManifest( manifest );
+        assertFalse( containsDigest( cleanManifest ) );
 
         assertTrue( manifest.equals( cleanManifest ) );
         assertTrue( manifest.equals( originalCleanManifest ) );
@@ -77,5 +81,23 @@ public class JarSignerUtilTest
         jarFile.close();
 
         return manifest;
+    }
+
+    private boolean containsDigest( Manifest manifest )
+    {
+        for ( Map.Entry<String, Attributes> entry : manifest.getEntries().entrySet() )
+        {
+            Attributes attr = entry.getValue();
+
+            for ( Map.Entry<Object, Object> objectEntry : attr.entrySet() )
+            {
+                String attributeKey = String.valueOf( objectEntry.getKey() );
+                if ( attributeKey.endsWith( "-Digest" ) )
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -105,14 +105,14 @@ public interface JarSignerRequest
      *
      * @param keystore the new value of the field {@code keystore}.
      */
-    void setKeystore( String keystore);
+    void setKeystore( String keystore );
 
     /**
      * Sets the new given value to the field {@code alias} of the request.
      *
      * @param alias the new value of the field {@code alias}.
      */
-    void setAlias( String alias);
+    void setAlias( String alias );
 
     /**
      * Sets the new given value to the field {@code maxMemory} of the request.

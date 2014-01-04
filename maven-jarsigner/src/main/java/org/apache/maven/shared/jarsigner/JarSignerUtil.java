@@ -147,29 +147,31 @@ public class JarSignerUtil
      */
     protected static Manifest buildUnsignedManifest( Manifest manifest )
     {
-
         Manifest result = new Manifest( manifest );
         result.getEntries().clear();
 
-        for ( Map.Entry<String, Attributes> entry : manifest.getEntries().entrySet() )
+        for ( Map.Entry<String, Attributes> manifestEntry : manifest.getEntries().entrySet() )
         {
-            Attributes oldAttributes = entry.getValue();
+            Attributes oldAttributes = manifestEntry.getValue();
             Attributes newAttributes = new Attributes();
-            for ( Map.Entry<Object, Object> objectEntry : oldAttributes.entrySet() )
+
+            for ( Map.Entry<Object, Object> attributesEntry : oldAttributes.entrySet() )
             {
-                String attributeKey = String.valueOf( objectEntry.getKey() );
-                if ( !attributeKey.contains( "-Digest" ) )
+                String attributeKey = String.valueOf( attributesEntry.getKey() );
+                if ( !attributeKey.endsWith( "-Digest" ) )
                 {
                     // can add this attribute
-                    newAttributes.put( objectEntry.getKey(), objectEntry.getValue() );
+                    newAttributes.put( attributesEntry.getKey(), attributesEntry.getValue() );
                 }
             }
+
             if ( !newAttributes.isEmpty() )
             {
                 // can add this entry
-                result.getEntries().put( entry.getKey(), newAttributes );
+                result.getEntries().put( manifestEntry.getKey(), newAttributes );
             }
         }
+
         return result;
     }
 

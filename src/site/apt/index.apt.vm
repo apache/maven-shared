@@ -82,7 +82,7 @@ ${project.name}
     request.setArchive( new File( "target/ssimple.jar" ) );
 +----------
 
-  Now you can use the component to verify your signe jar:
+  Now you can use the component to verify your signed jar:
 
 +----------
     JavaToolResult result = jarSigner.execute( request );

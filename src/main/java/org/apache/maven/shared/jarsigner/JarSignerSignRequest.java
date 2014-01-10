@@ -31,10 +31,6 @@ import java.io.File;
 public class JarSignerSignRequest
     extends AbstractJarSignerRequest
 {
-    /**
-     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
-     */
-    private String storepass;
 
     /**
      * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
@@ -45,11 +41,6 @@ public class JarSignerSignRequest
      * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
      */
     private String sigfile;
-
-    /**
-     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
-     */
-    private String storetype;
 
     /**
      * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
@@ -83,11 +74,6 @@ public class JarSignerSignRequest
     protected File signedjar;
 
 
-    public String getStorepass()
-    {
-        return storepass;
-    }
-
     public String getKeypass()
     {
         return keypass;
@@ -96,11 +82,6 @@ public class JarSignerSignRequest
     public String getSigfile()
     {
         return sigfile;
-    }
-
-    public String getStoretype()
-    {
-        return storetype;
     }
 
     public String getProviderName()
@@ -118,7 +99,6 @@ public class JarSignerSignRequest
         return providerArg;
     }
 
-
     public String getTsaLocation()
     {
         return tsaLocation;
@@ -129,11 +109,6 @@ public class JarSignerSignRequest
         return tsaAlias;
     }
 
-    public void setStorepass( String storepass )
-    {
-        this.storepass = storepass;
-    }
-
     public void setKeypass( String keypass )
     {
         this.keypass = keypass;
@@ -142,11 +117,6 @@ public class JarSignerSignRequest
     public void setSigfile( String sigfile )
     {
         this.sigfile = sigfile;
-    }
-
-    public void setStoretype( String storetype )
-    {
-        this.storetype = storetype;
     }
 
     public void setProviderName( String providerName )

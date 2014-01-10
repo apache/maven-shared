@@ -49,6 +49,20 @@ public interface JarSignerRequest
     String getKeystore();
 
     /**
+     * Gets the value of the {@code storetype} field.
+     *
+     * @return the value of the {@code storetype} field.
+     */
+    String getStoretype();
+
+    /**
+     * Gets the value of the {@code storepass} field.
+     *
+     * @return the value of the {@code storepass} field.
+     */
+    String getStorepass();
+
+    /**
      * Gets the value of the {@code alias} field.
      *
      * @return the value of the {@code alias} field.
@@ -106,6 +120,20 @@ public interface JarSignerRequest
      * @param keystore the new value of the field {@code keystore}.
      */
     void setKeystore( String keystore );
+
+    /**
+     * Sets the new given value to the field {@code storetype} of the request.
+     *
+     * @param storetype the new value of the field {@code storetype}.
+     */
+    void setStoretype( String storetype );
+
+    /**
+     * Sets the new given value to the field {@code storepass} of the request.
+     *
+     * @param storepass the new value of the field {@code storepass}.
+     */
+    void setStorepass( String storepass );
 
     /**
      * Sets the new given value to the field {@code alias} of the request.

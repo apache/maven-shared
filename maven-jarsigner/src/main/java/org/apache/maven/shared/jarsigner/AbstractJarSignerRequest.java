@@ -47,6 +47,16 @@ public abstract class AbstractJarSignerRequest
     /**
      * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
      */
+    private String storetype;
+
+    /**
+     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     */
+    private String storepass;
+
+    /**
+     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     */
     private String alias;
 
     /**
@@ -89,6 +99,22 @@ public abstract class AbstractJarSignerRequest
     public String getKeystore()
     {
         return keystore;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getStoretype()
+    {
+        return storetype;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getStorepass()
+    {
+        return storepass;
     }
 
     /**
@@ -153,6 +179,22 @@ public abstract class AbstractJarSignerRequest
     public void setKeystore( String keystore )
     {
         this.keystore = keystore;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setStoretype( String storetype )
+    {
+        this.storetype = storetype;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setStorepass( String storepass )
+    {
+        this.storepass = storepass;
     }
 
     /**

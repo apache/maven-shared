@@ -426,7 +426,7 @@ public class ArtifactLocatorStrategyTest
         {
             resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
             expectLastCall().andThrow( new ArtifactNotFoundException( "not found", "group", "artifact", "version",
-                                                                               "jar", Collections.EMPTY_LIST,
+                                                                               "jar", null, Collections.EMPTY_LIST,
                                                                                "http://nowhere.com", Collections.EMPTY_LIST,
                                                                                 new NullPointerException() ) );
         }
@@ -471,7 +471,7 @@ public class ArtifactLocatorStrategyTest
         {
             resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
             expectLastCall().andThrow( new ArtifactResolutionException( "resolution failed", "group", "artifact",
-                                                                                 "version", "jar", Collections.EMPTY_LIST,
+                                                                                 "version", "jar", null, Collections.EMPTY_LIST,
                                                                                  Collections.EMPTY_LIST,
                                                                                  new NullPointerException() ) );
         }

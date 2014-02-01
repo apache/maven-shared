@@ -214,7 +214,12 @@ public class DefaultMavenFileFilter
             {
                 @SuppressWarnings( "unchecked" )
                 List<String> buildFilters = new ArrayList<String>( request.getMavenProject().getBuild().getFilters() );
-                buildFilters.removeAll( request.getFileFilters() );
+
+                // JDK-8015656: (coll) unexpected NPE from removeAll 
+                if ( request.getFileFilters() != null )
+                {
+                    buildFilters.removeAll( request.getFileFilters() );
+                }
 
                 loadProperties( filterProperties, buildFilters, baseProps );
             }

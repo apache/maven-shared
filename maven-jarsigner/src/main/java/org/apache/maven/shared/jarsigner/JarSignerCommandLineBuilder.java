@@ -20,6 +20,7 @@ package org.apache.maven.shared.jarsigner;
  */
 
 import org.apache.maven.shared.utils.StringUtils;
+import org.apache.maven.shared.utils.cli.Arg;
 import org.apache.maven.shared.utils.cli.Commandline;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
@@ -140,14 +141,18 @@ public class JarSignerCommandLineBuilder
         if ( !StringUtils.isEmpty( storepass ) )
         {
             cli.createArg().setValue( "-storepass" );
-            cli.createArg().setValue( storepass );
+            Arg arg = cli.createArg();
+            arg.setValue( storepass );
+            arg.setMask( true );
         }
 
         String keypass = request.getKeypass();
         if ( !StringUtils.isEmpty( keypass ) )
         {
             cli.createArg().setValue( "-keypass" );
-            cli.createArg().setValue( keypass );
+            Arg arg = cli.createArg();
+            arg.setValue( keypass );
+            arg.setMask( true );
         }
 
         String storetype = request.getStoretype();

@@ -202,7 +202,9 @@ public class DefaultMavenFileFilter
 
         final Properties filterProperties = new Properties();
 
-        loadProperties( filterProperties, request.getFileFilters(), baseProps );
+        File basedir = request.getMavenProject() != null ? request.getMavenProject().getBasedir() : new File( "." ); 
+
+        loadProperties( filterProperties, basedir, request.getFileFilters(), baseProps );
         if ( filterProperties.size() < 1 )
         {
             filterProperties.putAll( baseProps );
@@ -221,7 +223,7 @@ public class DefaultMavenFileFilter
                     buildFilters.removeAll( request.getFileFilters() );
                 }
 
-                loadProperties( filterProperties, buildFilters, baseProps );
+                loadProperties( filterProperties, basedir, buildFilters, baseProps );
             }
 
             // Project properties
@@ -266,9 +268,9 @@ public class DefaultMavenFileFilter
     }
 
     /**
-     * protected only for testing reason !
+     * default visibility only for testing reason !
      */
-    protected void loadProperties( Properties filterProperties, List<String> propertiesFilePaths, Properties baseProps )
+    void loadProperties( Properties filterProperties, File basedir, List<String> propertiesFilePaths, Properties baseProps )
         throws MavenFilteringException
     {
         if ( propertiesFilePaths != null )
@@ -285,8 +287,8 @@ public class DefaultMavenFileFilter
                 }
                 try
                 {
-                    // TODO new File should be new File(mavenProject.getBasedir(), filterfile ) ?
-                    Properties properties = PropertyUtils.loadPropertyFile( new File( filterFile ), workProperties );
+                    File propFile = FileUtils.resolveFile( basedir, filterFile );
+                    Properties properties = PropertyUtils.loadPropertyFile( propFile, workProperties );
                     filterProperties.putAll( properties );
                     workProperties.putAll( properties );
                 }

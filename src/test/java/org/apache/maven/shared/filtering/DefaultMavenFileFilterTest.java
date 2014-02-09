@@ -20,12 +20,18 @@ package org.apache.maven.shared.filtering;
  */
 
 import java.io.File;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import org.codehaus.plexus.PlexusTestCase;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
+import org.apache.maven.shared.utils.io.IOUtil;
+import org.codehaus.plexus.PlexusTestCase;
 
 /**
  * @author Olivier Lamy
@@ -34,6 +40,8 @@ import org.apache.maven.shared.utils.io.FileUtils;
 public class DefaultMavenFileFilterTest
     extends PlexusTestCase
 {
+    
+    
 
     File to = new File( getBasedir(), "target/reflection-test.properties" );
 
@@ -108,7 +116,7 @@ public class DefaultMavenFileFilterTest
     {
         DefaultMavenFileFilter mavenFileFilter = new DefaultMavenFileFilter();
 
-        File testDir = new File(getBasedir(), "src/test/units-files/MSHARED-177");
+        File testDir = new File( getBasedir(), "src/test/units-files/MSHARED-177" );
 
         List<String> filters = new ArrayList<String>();
 
@@ -118,8 +126,31 @@ public class DefaultMavenFileFilterTest
 
         final Properties filterProperties = new Properties();
 
-        mavenFileFilter.loadProperties(filterProperties, filters, new Properties() );
+        mavenFileFilter.loadProperties( filterProperties, new File( getBasedir() ), filters, new Properties() );
 
         assertTrue( filterProperties.getProperty( "third_filter_key" ).equals( "first and second" ) );
+    }
+    
+
+    // MSHARED-161: DefaultMavenFileFilter.getDefaultFilterWrappers loads
+    // filters from the current directory instead of using basedir
+    public void testMavenBasedir()
+        throws Exception
+    {
+        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+
+        AbstractMavenFilteringRequest req = new AbstractMavenFilteringRequest();
+        req.setFileFilters( Collections.singletonList( "src/main/filters/filefilter.properties" ) );
+
+        MavenProject mavenProject = new StubMavenProject( new File( "src/test/units-files/MSHARED-161" ) );
+        mavenProject.getBuild().setFilters( Collections.singletonList( "src/main/filters/buildfilter.properties" ) );
+        req.setMavenProject( mavenProject );
+        req.setInjectProjectBuildFilters( true );
+
+        List<FilterWrapper> wrappers = mavenFileFilter.getDefaultFilterWrappers( req );
+        
+        Reader reader = wrappers.get(0).getReader( new StringReader( "${filefilter} ${buildfilter}" ) );
+        
+        assertEquals( "true true", IOUtil.toString( reader ) );
     }
 }

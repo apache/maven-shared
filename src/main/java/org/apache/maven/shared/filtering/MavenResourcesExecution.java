@@ -95,7 +95,7 @@ public class MavenResourcesExecution
      * @param mavenSession
      */
     public MavenResourcesExecution( List<Resource> resources, File outputDirectory, MavenProject mavenProject,
-                                    String encoding, List fileFilters, List<String> nonFilteredFileExtensions,
+                                    String encoding, List<String> fileFilters, List<String> nonFilteredFileExtensions,
                                     MavenSession mavenSession )
     {
         super( mavenProject, fileFilters, encoding, mavenSession );
@@ -374,7 +374,7 @@ public class MavenResourcesExecution
         return mre;
     }
 
-    private List copyList( List lst )
+    private <T> List<T> copyList( List<T> lst )
     {
         if ( lst == null )
         {
@@ -382,11 +382,11 @@ public class MavenResourcesExecution
         }
         else if ( lst.isEmpty() )
         {
-            return new ArrayList();
+            return new ArrayList<T>();
         }
         else
         {
-            return new ArrayList( lst );
+            return new ArrayList<T>( lst );
         }
     }
 

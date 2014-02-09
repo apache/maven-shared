@@ -23,7 +23,9 @@ import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -152,5 +154,26 @@ public class DefaultMavenFileFilterTest
         Reader reader = wrappers.get(0).getReader( new StringReader( "${filefilter} ${buildfilter}" ) );
         
         assertEquals( "true true", IOUtil.toString( reader ) );
+    }
+
+    // MSHARED-198: custom delimiters doesn't work as expected
+    public void testCustomDelimiters()
+        throws Exception
+    {
+        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+
+        AbstractMavenFilteringRequest req = new AbstractMavenFilteringRequest();
+        Properties additionalProperties = new Properties();
+        additionalProperties.setProperty( "FILTER.a.ME", "DONE" );
+        req.setAdditionalProperties( additionalProperties );
+        req.setDelimiters( new LinkedHashSet<String>( Arrays.asList( "aaa*aaa", "abc*abc" ) ) );
+
+        List<FilterWrapper> wrappers = mavenFileFilter.getDefaultFilterWrappers( req );
+
+        Reader reader = wrappers.get( 0 ).getReader( new StringReader( "aaaFILTER.a.MEaaa" ) );
+        assertEquals( "DONE", IOUtil.toString( reader ) );
+
+        reader = wrappers.get( 0 ).getReader( new StringReader( "abcFILTER.a.MEabc" ) );
+        assertEquals( "DONE", IOUtil.toString( reader ) );
     }
 }

@@ -176,4 +176,20 @@ public class DefaultMavenFileFilterTest
         reader = wrappers.get( 0 ).getReader( new StringReader( "abcFILTER.a.MEabc" ) );
         assertEquals( "DONE", IOUtil.toString( reader ) );
     }
+    
+    // MSHARED-199: Filtering doesn't work if 2 delimiters are used on the same line, the first one being left open
+    public void testLineWithSingleAtAndExpression() throws Exception
+    {
+        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+
+        AbstractMavenFilteringRequest req = new AbstractMavenFilteringRequest();
+        Properties additionalProperties = new Properties();
+        additionalProperties.setProperty( "foo", "bar" );
+        req.setAdditionalProperties( additionalProperties );
+
+        List<FilterWrapper> wrappers = mavenFileFilter.getDefaultFilterWrappers( req );
+
+        Reader reader = wrappers.get( 0 ).getReader( new StringReader( "toto@titi.com ${foo}" ) );
+        assertEquals( "toto@titi.com bar", IOUtil.toString( reader ) );
+    }
 }

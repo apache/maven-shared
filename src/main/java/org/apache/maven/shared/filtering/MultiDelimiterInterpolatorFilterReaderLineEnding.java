@@ -410,6 +410,12 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
                 throw error;
             }
         }
+        else
+        {
+            // no endtoken? Write current char and continue in search for next expression
+            in.reset();
+            return in.read();
+        }
 
         // write away the value if present, otherwise the key unmodified
         if ( value != null )

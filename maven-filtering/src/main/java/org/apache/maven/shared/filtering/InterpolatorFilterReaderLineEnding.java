@@ -311,7 +311,8 @@ public class InterpolatorFilterReaderLineEnding
         in.skip( beginToken.length() );
         ch = in.read();
 
-        int end = endToken.length();
+        int endTokenSize = endToken.length();
+        int end = endTokenSize;
         do
         {
             if ( ch == -1 )
@@ -327,7 +328,7 @@ public class InterpolatorFilterReaderLineEnding
 
             key.append( (char) ch );
 
-            if ( ch == this.endToken.charAt( end - 1 ) )
+            if ( ch == this.endToken.charAt( endTokenSize - end ) )
             {
                 end--;
                 if ( end == 0 )
@@ -337,7 +338,7 @@ public class InterpolatorFilterReaderLineEnding
             }
             else
             {
-                end = endToken.length();
+                end = endTokenSize;
             }
 
             ch = in.read();

@@ -808,5 +808,40 @@ public class DefaultMavenResourcesFilteringTest
 
         assertTrue( nonFilteredResult.equals( expectedNonFilteredResult ) );
     }
+    
+    // MSHARED-220: Apply filtering to filenames
+    public void testFilterFileName()
+        throws Exception
+    {
+
+        File baseDir = new File( "/foo/bar" );
+        StubMavenProject mavenProject = new StubMavenProject( baseDir );
+        mavenProject.setVersion( "1.0" );
+        mavenProject.setGroupId( "org.apache" );
+        mavenProject.setName( "test project" );
+
+        MavenResourcesFiltering mavenResourcesFiltering =
+            (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class.getName() );
+
+        String unitFilesDir = getBasedir() + "/src/test/units-files/maven-filename-filtering";
+
+        Resource resource = new Resource();
+        resource.setDirectory( unitFilesDir );
+        resource.setFiltering( true );
+        resource.addInclude( "${pom.version}*" );
+        resource.setTargetPath( "testTargetPath" );
+
+        MavenResourcesExecution mavenResourcesExecution =
+            new MavenResourcesExecution( Collections.singletonList( resource ), outputDirectory, mavenProject, "UTF-8", Collections.<String>emptyList(),
+                                         Collections.<String>emptyList(), new StubMavenSession() );
+        mavenResourcesExecution.setFilterFilenames( true );
+        mavenResourcesFiltering.filterResources( mavenResourcesExecution );
+
+        File targetPathFile = new File( outputDirectory, "testTargetPath" );
+
+        File[] files = targetPathFile.listFiles();
+        assertEquals( 1, files.length );
+        assertEquals( "1.0.txt", files[0].getName() );
+    }
 
 }

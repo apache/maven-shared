@@ -56,6 +56,8 @@ public class MavenResourcesExecution
 
     private boolean useDefaultFilterWrappers = false;
 
+    private boolean filterFilenames = false;
+
     /**
      * Overwrite existing files even if the destination files are newer.
      * <code>false</code> by default.
@@ -348,6 +350,26 @@ public class MavenResourcesExecution
     public void setIncludeEmptyDirs( boolean includeEmptyDirs )
     {
         this.includeEmptyDirs = includeEmptyDirs;
+    }
+
+    /**
+     * 
+     * @return {@code true} if filenames are filtered, otherwise {@code false}
+     * @since 1.2
+     */
+    public boolean isFilterFilenames()
+    {
+        return filterFilenames;
+    }
+
+    /**
+     * 
+     * @param filterFilenames {@code true} if filenames should be filtered, otherwise {@code false}
+     * @since 1.2
+     */
+    public void setFilterFilenames( boolean filterFilenames )
+    {
+        this.filterFilenames = filterFilenames;
     }
 
     public MavenResourcesExecution copyOf()

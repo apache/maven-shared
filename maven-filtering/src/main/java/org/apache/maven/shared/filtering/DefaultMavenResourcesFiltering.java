@@ -19,24 +19,29 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Resource;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.AbstractLogEnabled;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.apache.maven.shared.utils.io.FileUtils;
-import org.apache.maven.shared.utils.PathTool;
-import org.apache.maven.shared.utils.ReaderFactory;
-import org.codehaus.plexus.util.Scanner;
-import org.apache.maven.shared.utils.StringUtils;
-import org.sonatype.plexus.build.incremental.BuildContext;
-
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.model.Resource;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.utils.PathTool;
+import org.apache.maven.shared.utils.ReaderFactory;
+import org.apache.maven.shared.utils.StringUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
+import org.apache.maven.shared.utils.io.IOUtil;
+import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.codehaus.plexus.util.Scanner;
+import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * @author Olivier Lamy
@@ -251,9 +256,8 @@ public class DefaultMavenResourcesFiltering
 
                 File source = new File( resourceDirectory, name );
 
-                //File destinationFile = new File( outputDirectory, destination );
-
-                File destinationFile = getDestinationFile( outputDirectory, targetPath, name );
+                File destinationFile =
+                    getDestinationFile( outputDirectory, targetPath, name, mavenResourcesExecution );
 
                 boolean filteredExt =
                     filteredFileExtension( source.getName(), mavenResourcesExecution.getNonFilteredFileExtensions() );
@@ -276,7 +280,8 @@ public class DefaultMavenResourcesFiltering
 
             for ( String name : deletedFiles )
             {
-                File destinationFile = getDestinationFile( outputDirectory, targetPath, name );
+                File destinationFile =
+                    getDestinationFile( outputDirectory, targetPath, name, mavenResourcesExecution );
 
                 destinationFile.delete();
 
@@ -287,13 +292,19 @@ public class DefaultMavenResourcesFiltering
 
     }
 
-    private File getDestinationFile( File outputDirectory, String targetPath, String name )
+    private File getDestinationFile( File outputDirectory, String targetPath, String name, MavenResourcesExecution mavenResourcesExecution )
+        throws MavenFilteringException
     {
         String destination = name;
+        
+        if ( mavenResourcesExecution.isFilterFilenames() && mavenResourcesExecution.getFilterWrappers().size() > 0 )
+        {
+            destination = filterFileName( destination, mavenResourcesExecution.getFilterWrappers() );
+        }
 
         if ( targetPath != null )
         {
-            destination = targetPath + "/" + name;
+            destination = targetPath + "/" + destination;
         }
 
         File destinationFile = new File( destination );
@@ -391,6 +402,39 @@ public class DefaultMavenResourcesFiltering
         }
 
         return relOutDir;
+    }
+    
+    /*
+     * Filter the name of a file using the same mechanism for filtering the content of the file.
+     */
+    private String filterFileName( String name, List<FilterWrapper> wrappers )
+        throws MavenFilteringException
+    {
+
+        Reader reader = new StringReader( name );
+        for ( FilterWrapper wrapper : wrappers )
+        {
+            reader = wrapper.getReader( reader );
+        }
+
+        StringWriter writer = new StringWriter();
+
+        try
+        {
+            IOUtil.copy( reader, writer );
+        }
+        catch ( IOException e )
+        {
+            throw new MavenFilteringException( "Failed filtering filename" + name, e );
+        }
+
+        String filteredFilename = writer.toString();
+
+        if ( getLogger().isDebugEnabled() )
+        {
+            getLogger().debug( "renaming filename " + name + " to " + filteredFilename );
+        }
+        return filteredFilename;
     }
 
 }

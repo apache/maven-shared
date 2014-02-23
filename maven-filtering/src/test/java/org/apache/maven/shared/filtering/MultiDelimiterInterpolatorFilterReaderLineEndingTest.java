@@ -80,5 +80,22 @@ public class MultiDelimiterInterpolatorFilterReaderLineEndingTest extends Abstra
         
         assertEquals( "toto@titi.com bar", IOUtil.toString( reader ) );
     }
+    
+    // http://stackoverflow.com/questions/21786805/maven-war-plugin-customize-filter-delimitters-in-webresources/
+    @Test
+    public void testAtDollarExpression() throws Exception
+    {
+        when( interpolator.interpolate( eq( "${db.server}" ), eq( "" ), isA( RecursionInterceptor.class ) ) ).thenReturn( "DB_SERVER" );
+        when( interpolator.interpolate( eq( "${db.port}" ), eq( "" ), isA( RecursionInterceptor.class ) ) ).thenReturn( "DB_PORT" );
+        when( interpolator.interpolate( eq( "${db.name}" ), eq( "" ), isA( RecursionInterceptor.class ) ) ).thenReturn( "DB_NAME" );
+        
+        Reader in = new StringReader( "  url=\"jdbc:oracle:thin:\\@${db.server}:${db.port}:${db.name}\"" );
+        MultiDelimiterInterpolatorFilterReaderLineEnding reader =
+                        new MultiDelimiterInterpolatorFilterReaderLineEnding( in, interpolator, true );
+        reader.setEscapeString( "\\" );
+        reader.setDelimiterSpecs( new HashSet<String>( Arrays.asList( "${*}", "@" ) ) );
+        
+        assertEquals( "  url=\"jdbc:oracle:thin:@DB_SERVER:DB_PORT:DB_NAME\"", IOUtil.toString( reader ) );
+    }
 
 }

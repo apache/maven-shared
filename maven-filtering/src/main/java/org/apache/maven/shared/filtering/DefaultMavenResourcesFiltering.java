@@ -185,13 +185,12 @@ public class DefaultMavenResourcesFiltering
             {
                 String ls = System.getProperty( "line.separator" );
                 StringBuffer debugMessage =
-                    new StringBuffer( "resource with targetPath " + resource.getTargetPath() ).append( ls );
-                debugMessage.append( "directory " + resource.getDirectory() ).append( ls );
-                debugMessage.append( "excludes " + ( resource.getExcludes() == null
-                    ? " empty "
-                    : resource.getExcludes().toString() ) ).append( ls );
-                debugMessage.append(
-                    "includes " + ( resource.getIncludes() == null ? " empty " : resource.getIncludes().toString() ) );
+                    new StringBuffer( "resource with targetPath " ).append( resource.getTargetPath() ).append( ls );
+                debugMessage.append( "directory " ).append( resource.getDirectory() ).append( ls );
+                debugMessage.append( "excludes " ).append( resource.getExcludes() == null ? " empty "
+                                                                           : resource.getExcludes().toString() ).append( ls );
+                debugMessage.append( "includes " ).append( resource.getIncludes() == null ? " empty "
+                                                                           : resource.getIncludes().toString() );
                 getLogger().debug( debugMessage.toString() );
             }
 

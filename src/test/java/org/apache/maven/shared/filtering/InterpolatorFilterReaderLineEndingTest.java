@@ -37,4 +37,12 @@ public class InterpolatorFilterReaderLineEndingTest
     {
         return new InterpolatorFilterReaderLineEnding( in, interpolator, "abc", "abc", true );
     }
+    
+    @Override
+    protected Reader getDollarBracesReader( Reader in, Interpolator interpolator, String escapeString )
+    {
+        InterpolatorFilterReaderLineEnding reader = new InterpolatorFilterReaderLineEnding( in, interpolator, "${", "}", true );
+        reader.setEscapeString( escapeString );
+        return reader;
+    }
 }

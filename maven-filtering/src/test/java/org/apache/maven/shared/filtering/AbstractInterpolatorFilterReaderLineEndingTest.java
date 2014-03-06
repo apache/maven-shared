@@ -46,6 +46,41 @@ public abstract class AbstractInterpolatorFilterReaderLineEndingTest
     {
         MockitoAnnotations.initMocks( this );
     }
+    
+    @Test
+    public void testDefaults() throws Exception
+    {
+        when( interpolator.interpolate( eq( "${a}" ), eq( "" ), isA( RecursionInterceptor.class ) ) ).thenReturn( "DONE_A" );
+
+        Reader in = new StringReader( "text without expression" );
+        Reader reader = getDollarBracesReader( in, interpolator, "\\" );
+        assertEquals( "text without expression", IOUtil.toString( reader ) );
+
+        in = new StringReader( "valid expression ${a}" );
+        reader = getDollarBracesReader( in, interpolator, null );
+        assertEquals( "valid expression DONE_A", IOUtil.toString( reader ) );
+
+        in = new StringReader( "empty expression ${}" );
+        reader = getDollarBracesReader( in, interpolator, null );
+        assertEquals( "empty expression ${}", IOUtil.toString( reader ) );
+
+        in = new StringReader( "dollar space expression $ {a}" );
+        reader = getDollarBracesReader( in, interpolator, "\\" );
+        assertEquals( "dollar space expression $ {a}", IOUtil.toString( reader ) );
+
+        in = new StringReader( "space in expression ${ a}" );
+        reader = getDollarBracesReader( in, interpolator, "\\" );
+        assertEquals( "space in expression ${ a}", IOUtil.toString( reader ) );
+
+        in = new StringReader( "escape dollar with expression \\${a}" );
+        reader = getDollarBracesReader( in, interpolator, "\\" );
+        assertEquals( "escape dollar with expression ${a}", IOUtil.toString( reader ) );
+
+        in = new StringReader( "unknown expression ${unknown}" );
+        reader = getDollarBracesReader( in, interpolator, "\\" );
+        assertEquals( "unknown expression ${unknown}", IOUtil.toString( reader ) );
+    }
+    
 
     // MSHARED-198: custom delimiters doesn't work as expected
     @Test
@@ -68,5 +103,7 @@ public abstract class AbstractInterpolatorFilterReaderLineEndingTest
     protected abstract Reader getAbc_AbcReader( Reader in, Interpolator interpolator );
     
     protected abstract Reader getAaa_AaaReader( Reader in, Interpolator interpolator );
+    
+    protected abstract Reader getDollarBracesReader( Reader in, Interpolator interpolator, String escapeString );
 
 }

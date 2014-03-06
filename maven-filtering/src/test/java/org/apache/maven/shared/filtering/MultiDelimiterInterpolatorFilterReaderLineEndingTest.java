@@ -65,6 +65,15 @@ public class MultiDelimiterInterpolatorFilterReaderLineEndingTest extends Abstra
         reader.setDelimiterSpecs( Collections.singleton( "abc*abc" ) );
         return reader;
     }
+    
+    @Override
+    protected Reader getDollarBracesReader( Reader in, Interpolator interpolator, String escapeString )
+    {
+        MultiDelimiterInterpolatorFilterReaderLineEnding reader = new MultiDelimiterInterpolatorFilterReaderLineEnding( in, interpolator, true );
+        reader.setDelimiterSpecs( Collections.singleton( "${*}" ) );
+        reader.setEscapeString( escapeString );
+        return reader;
+    }
 
     // MSHARED-199: Filtering doesn't work if 2 delimiters are used on the same line, the first one being left open
     @Test

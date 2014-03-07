@@ -45,22 +45,6 @@ public class JarSignerSignRequest
     /**
      * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
      */
-    private String providerName;
-
-    /**
-     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
-     */
-    private String providerClass;
-
-    /**
-     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
-     */
-    private String providerArg;
-
-
-    /**
-     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
-     */
     private String tsaLocation;
 
     /**
@@ -84,21 +68,6 @@ public class JarSignerSignRequest
         return sigfile;
     }
 
-    public String getProviderName()
-    {
-        return providerName;
-    }
-
-    public String getProviderClass()
-    {
-        return providerClass;
-    }
-
-    public String getProviderArg()
-    {
-        return providerArg;
-    }
-
     public String getTsaLocation()
     {
         return tsaLocation;
@@ -117,21 +86,6 @@ public class JarSignerSignRequest
     public void setSigfile( String sigfile )
     {
         this.sigfile = sigfile;
-    }
-
-    public void setProviderName( String providerName )
-    {
-        this.providerName = providerName;
-    }
-
-    public void setProviderClass( String providerClass )
-    {
-        this.providerClass = providerClass;
-    }
-
-    public void setProviderArg( String providerArg )
-    {
-        this.providerArg = providerArg;
     }
 
     public void setTsaLocation( String tsaLocation )

@@ -60,6 +60,21 @@ public abstract class AbstractJarSignerRequest
     private String alias;
 
     /**
+     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     */
+    private String providerName;
+
+    /**
+     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     */
+    private String providerClass;
+
+    /**
+     * See <a href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     */
+    private String providerArg;
+
+    /**
      * The maximum memory available to the JAR signer, e.g. <code>256M</code>. See <a
      * href="http://docs.oracle.com/javase/6/docs/technotes/tools/windows/java.html#Xms">-Xmx</a> for more details.
      */
@@ -123,6 +138,30 @@ public abstract class AbstractJarSignerRequest
     public String getAlias()
     {
         return alias;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getProviderName()
+    {
+        return providerName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getProviderClass()
+    {
+        return providerClass;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getProviderArg()
+    {
+        return providerArg;
     }
 
     /**
@@ -195,6 +234,30 @@ public abstract class AbstractJarSignerRequest
     public void setStorepass( String storepass )
     {
         this.storepass = storepass;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setProviderName( String providerName )
+    {
+        this.providerName = providerName;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setProviderClass( String providerClass )
+    {
+        this.providerClass = providerClass;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setProviderArg( String providerArg )
+    {
+        this.providerArg = providerArg;
     }
 
     /**

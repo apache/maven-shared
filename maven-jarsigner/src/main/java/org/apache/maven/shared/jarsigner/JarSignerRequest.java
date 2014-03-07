@@ -63,6 +63,27 @@ public interface JarSignerRequest
     String getStorepass();
 
     /**
+     * Gets the value of the {@code providerName} field.
+     *
+     * @return the value of the {@code providerName} field.
+     */
+    String getProviderName();
+
+    /**
+     * Gets the value of the {@code providerClass} field.
+     *
+     * @return the value of the {@code providerClass} field.
+     */
+    String getProviderClass();
+
+    /**
+     * Gets the value of the {@code providerArg} field.
+     *
+     * @return the value of the {@code providerArg} field.
+     */
+    String getProviderArg();
+
+    /**
      * Gets the value of the {@code alias} field.
      *
      * @return the value of the {@code alias} field.
@@ -103,7 +124,7 @@ public interface JarSignerRequest
      * Gets the value of the command line tool parameter <pre>protected</pre>
      *
      * @return true iff the password must be given via a protected
-     *         authentication path such as a dedicated PIN reader
+     * authentication path such as a dedicated PIN reader
      */
     boolean isProtectedAuthenticationPath();
 
@@ -141,6 +162,27 @@ public interface JarSignerRequest
      * @param alias the new value of the field {@code alias}.
      */
     void setAlias( String alias );
+
+    /**
+     * Sets the new given value to the field {@code providerName} of the request.
+     *
+     * @param providerName the new value of the field {@code providerName}.
+     */
+    void setProviderName( String providerName );
+
+    /**
+     * Sets the new given value to the field {@code providerClass} of the request.
+     *
+     * @param providerClass the new value of the field {@code providerClass}.
+     */
+    public void setProviderClass( String providerClass );
+
+    /**
+     * Sets the new given value to the field {@code providerArg} of the request.
+     *
+     * @param providerArg the new value of the field {@code providerArg}.
+     */
+    void setProviderArg( String providerArg );
 
     /**
      * Sets the new given value to the field {@code maxMemory} of the request.

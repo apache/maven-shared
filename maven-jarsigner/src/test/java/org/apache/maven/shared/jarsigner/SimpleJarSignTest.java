@@ -69,6 +69,7 @@ public class SimpleJarSignTest
         request.setArchive( new File( "target/ssimple.jar" ) );
         request.setKeystore( "src/test/keystore" );
         request.setAlias( "foo_alias" );
+        request.setStorepass( "changeit" );
 
         JavaToolResult jarSignerResult = jarSigner.execute( request );
 

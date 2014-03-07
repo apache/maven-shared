@@ -73,6 +73,43 @@ public class JarSignerCommandLineBuilder
             cli.createArg().setValue( keystore );
         }
 
+        String storepass = request.getStorepass();
+        if ( !StringUtils.isEmpty( storepass ) )
+        {
+            cli.createArg().setValue( "-storepass" );
+            Arg arg = cli.createArg();
+            arg.setValue( storepass );
+            arg.setMask( true );
+        }
+
+        String storetype = request.getStoretype();
+        if ( !StringUtils.isEmpty( storetype ) )
+        {
+            cli.createArg().setValue( "-storetype" );
+            cli.createArg().setValue( storetype );
+        }
+
+        String providerName = request.getProviderName();
+        if ( !StringUtils.isEmpty( providerName ) )
+        {
+            cli.createArg().setValue( "-providerName" );
+            cli.createArg().setValue( providerName );
+        }
+
+        String providerClass = request.getProviderClass();
+        if ( !StringUtils.isEmpty( providerClass ) )
+        {
+            cli.createArg().setValue( "-providerClass" );
+            cli.createArg().setValue( providerClass );
+        }
+
+        String providerArg = request.getProviderArg();
+        if ( !StringUtils.isEmpty( providerArg ) )
+        {
+            cli.createArg().setValue( "-providerArg" );
+            cli.createArg().setValue( providerArg );
+        }
+
         if ( request.isProtectedAuthenticationPath() )
         {
             cli.createArg().setValue( "-protected" );
@@ -137,14 +174,6 @@ public class JarSignerCommandLineBuilder
 
     protected void build( JarSignerSignRequest request, Commandline cli )
     {
-        String storepass = request.getStorepass();
-        if ( !StringUtils.isEmpty( storepass ) )
-        {
-            cli.createArg().setValue( "-storepass" );
-            Arg arg = cli.createArg();
-            arg.setValue( storepass );
-            arg.setMask( true );
-        }
 
         String keypass = request.getKeypass();
         if ( !StringUtils.isEmpty( keypass ) )
@@ -153,34 +182,6 @@ public class JarSignerCommandLineBuilder
             Arg arg = cli.createArg();
             arg.setValue( keypass );
             arg.setMask( true );
-        }
-
-        String storetype = request.getStoretype();
-        if ( !StringUtils.isEmpty( storetype ) )
-        {
-            cli.createArg().setValue( "-storetype" );
-            cli.createArg().setValue( storetype );
-        }
-
-        String providerName = request.getProviderName();
-        if ( !StringUtils.isEmpty( providerName ) )
-        {
-            cli.createArg().setValue( "-providerName" );
-            cli.createArg().setValue( providerName );
-        }
-
-        String providerClass = request.getProviderClass();
-        if ( !StringUtils.isEmpty( providerClass ) )
-        {
-            cli.createArg().setValue( "-providerClass" );
-            cli.createArg().setValue( providerClass );
-        }
-
-        String providerArg = request.getProviderArg();
-        if ( !StringUtils.isEmpty( providerArg ) )
-        {
-            cli.createArg().setValue( "-providerArg" );
-            cli.createArg().setValue( providerArg );
         }
 
         String sigfile = request.getSigfile();

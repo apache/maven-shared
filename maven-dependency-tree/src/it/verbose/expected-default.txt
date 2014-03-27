@@ -9,7 +9,7 @@ org.apache.maven.its.dependency-tree:verbose:jar:1.0-SNAPSHOT
 |  \- org.codehaus.plexus:plexus-container-default:jar:1.0-alpha-9-stable-1:compile
 |     +- junit:junit:jar:3.8.1:compile
 |     \- classworlds:classworlds:jar:1.1-alpha-2:compile
-+- org.apache.maven:maven-profile:jar:2.0.4:test (scope not updated to compile)
++- org.apache.maven:maven-profile:jar:2.0.4:test
 +- org.apache.maven:maven-model:jar:2.0.7:runtime
 \- org.apache.xmlgraphics:batik-bridge:jar:1.7:compile
    +- org.apache.xmlgraphics:batik-anim:jar:1.7:compile
@@ -20,6 +20,7 @@ org.apache.maven.its.dependency-tree:verbose:jar:1.0-SNAPSHOT
    +- org.apache.xmlgraphics:batik-gvt:jar:1.7:compile
    +- org.apache.xmlgraphics:batik-parser:jar:1.7:compile
    +- org.apache.xmlgraphics:batik-script:jar:1.7:compile
+   |  \- org.apache.xmlgraphics:batik-js:jar:1.7:compile
    +- org.apache.xmlgraphics:batik-svg-dom:jar:1.7:compile
    +- org.apache.xmlgraphics:batik-util:jar:1.7:compile
    +- org.apache.xmlgraphics:batik-xml:jar:1.7:compile

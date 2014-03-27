@@ -148,11 +148,9 @@
           <settingsFile>src/it/settings.xml</settingsFile>
           <pomIncludes>
             <pomInclude>*/pom.xml</pomInclude>
+            <pomInclude>maven-version/pom.xml</pomInclude>
+            <pomInclude>mshared-167/pom.xml</pomInclude>
           </pomIncludes>
-          <pomExcludes><!-- failing actually with m-dependency 2.6: will require 2.8 -->
-            <pomExclude>maven-version/pom.xml</pomExclude>
-            <pomExclude>mshared-167/pom.xml</pomExclude>
-          </pomExcludes>
         </configuration>
         <executions>
           <execution>

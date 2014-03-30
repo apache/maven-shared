@@ -39,7 +39,7 @@ public class AbstractMavenReportTest
      * the command line. If the goal is run indirectly as part of a site generation, the output directory configured in
      * the Maven Site Plugin is used instead.
      *
-     * @parameter expression="${project.reporting.outputDirectory}"
+     * @parameter default-value="${project.reporting.outputDirectory}"
      * @required
      */
     protected File outputDirectory;
@@ -47,7 +47,7 @@ public class AbstractMavenReportTest
     /**
      * The Maven Project.
      *
-     * @parameter expression="${project}"
+     * @parameter default-value="${project}"
      * @required
      * @readonly
      */

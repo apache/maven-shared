@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>19</version>
+    <version>20</version>
     <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
 
@@ -54,7 +54,6 @@
 
   <properties>
     <mavenVersion>2.0.7</mavenVersion>
-    <maven.site.path>shared-archives/${project.artifactId}-LATEST</maven.site.path>
   </properties> 
 
   <dependencies>
@@ -110,35 +109,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.8.1</version>
-        <!-- TODO: move configuration to parent POM -->
-        <configuration>
-          <!-- TODO: not needed under javadoc plugin 2.3, once released -->
-          <overview>${basedir}/src/main/javadoc/overview.html</overview>
-          <tags>
-            <tag>
-              <name>todo</name>
-              <placement>a</placement>
-              <head>TODO:</head>
-            </tag>
-            <tag>
-              <name>plexus.requirement</name>
-              <placement>f</placement>
-              <head>Plexus Requirement:</head>
-            </tag>
-            <tag>
-              <name>plexus.component</name>
-              <placement>t</placement>
-              <head>Plexus Component:</head>
-            </tag>
-          </tags>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
 </project>

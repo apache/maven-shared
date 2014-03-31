@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>19</version>
+    <version>20</version>
     <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
 
@@ -55,7 +55,6 @@
 
   <properties>
     <mavenVersion>2.1.0</mavenVersion>
-    <maven.site.path>shared-archives/${project.artifactId}-LATEST</maven.site.path>
   </properties>
 
   <dependencies>
@@ -116,40 +115,5 @@
       </plugin>
     </plugins>
   </build>
-
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.7</version>
-        <configuration>
-          <dependencyLocationsEnabled>false</dependencyLocationsEnabled><!-- waiting for MPIR-267 -->
-        </configuration>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>index</report>
-              <report>summary</report>
-              <report>dependency-info</report>
-              <report>modules</report>
-              <report>license</report>
-              <report>project-team</report>
-              <report>scm</report>
-              <report>issue-tracking</report>
-              <report>mailing-list</report>
-              <report>dependency-management</report>
-              <report>dependencies</report>
-              <report>dependency-convergence</report>
-              <report>cim</report>
-              <report>plugin-management</report>
-              <report>plugins</report>
-              <report>distribution-management</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugins>
-  </reporting>
 
 </project>

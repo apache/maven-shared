@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.maven.shared</groupId>
     <artifactId>maven-shared-components</artifactId>
-    <version>19</version>
+    <version>20</version>
     <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
 
@@ -57,7 +57,6 @@
 
   <properties>
     <mavenVersion>2.0.6</mavenVersion>
-    <maven.site.path>shared-archives/${project.artifactId}-LATEST</maven.site.path>
   </properties>
 
   <dependencies>
@@ -86,18 +85,6 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.9.1</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
-
   <profiles>
     <profile>
       <id>reporting</id>
@@ -121,11 +108,6 @@
                 </reports>
               </reportSet>
             </reportSets>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9.1</version>
           </plugin>
         </plugins>
       </reporting>

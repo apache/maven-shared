@@ -32,7 +32,7 @@ public final class ScmUtils
     }
 
     /**
-     * Resolve the scm connection, based on the type of project and inheritence.
+     * Resolve the scm connection, based on the type of project and inheritance.
      * This method assumes that the connection ends with the path and can be extended.
      * 
      * @param project the Maven project
@@ -67,7 +67,7 @@ public final class ScmUtils
     }
 
     /**
-     * Resolve the scm developer connection, based on the type of project and inheritence.
+     * Resolve the scm developer connection, based on the type of project and inheritance.
      * This method assumes that the developer connection ends with the path and can be extended.
      * 
      * @param project the Maven Project

@@ -108,4 +108,11 @@ public class ReportPlugin
     {
         this.reports = reports;
     }
+
+    @Override
+    public String toString()
+    {
+        return "ReportPlugin(" + artifactId + "){version='" + version + "', reports=" + reports
+            + ", reportSets=" + reportSets + "}";
+    }
 }

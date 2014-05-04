@@ -74,7 +74,7 @@ public class ReportSet
     @Override
     public String toString()
     {
-        return getId();
+        return "ReportSet{id='" + getId() + "', reports=" + reports + "}";
     }
 
 }

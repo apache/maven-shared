@@ -22,8 +22,11 @@ package org.apache.maven.reporting.exec;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.reporting.MavenReport;
 
 /**
+ * This component will build {@link MavenReport}s.
+ * If a {@link MavenReport} needs to fork a lifecycle, this fork is executed.
  *
  * @author Olivier Lamy
  */
@@ -31,7 +34,7 @@ public interface MavenReportExecutor
 {
     /**
      * @param mavenReportExecutorRequest
-     * @return
+     * @return Maven report execution results
      * @throws MojoExecutionException
      */
     List<MavenReportExecution> buildMavenReports( MavenReportExecutorRequest mavenReportExecutorRequest )

@@ -31,16 +31,39 @@ import org.apache.maven.plugin.PluginResolutionException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 
 /**
- * {@link MavenPluginManager} helper to deal with API changes between Maven 3.0.x and 3.1.x.
+ * {@link MavenPluginManager} helper to deal with API changes between Maven 3.0.x and 3.1.x, ie switch from Sonatype Aether
+ * (in <code>org.sonatype.aether</code> package) to Eclipse Aether (in <code>org.eclipse.aether</code> package) for
+ * some parameters.
  * 
  * @author Hervé Boutemy
  * @since 1.1
  */
 public interface MavenPluginManagerHelper
 {
+    /**
+     * Helper for {@link MavenPluginManager#getPluginDescriptor(Plugin, List, org.eclipse.aether.RepositorySystemSession)}
+     * 
+     * @param plugin
+     * @param session
+     * @return
+     * @throws PluginResolutionException
+     * @throws PluginDescriptorParsingException
+     * @throws InvalidPluginDescriptorException
+     */
     PluginDescriptor getPluginDescriptor( Plugin plugin, MavenSession session )
         throws PluginResolutionException, PluginDescriptorParsingException, InvalidPluginDescriptorException;
 
+    /**
+     * Helper for {@link MavenPluginManager#setupPluginRealm(PluginDescriptor, MavenSession, ClassLoader, List, org.eclipse.aether.graph.DependencyFilter)
+     * 
+     * @param pluginDescriptor
+     * @param session
+     * @param parent
+     * @param imports
+     * @param excludeArtifactIds
+     * @throws PluginResolutionException
+     * @throws PluginContainerException
+     */
     void setupPluginRealm( PluginDescriptor pluginDescriptor, MavenSession session, ClassLoader parent,
                                   List<String> imports, List<String> excludeArtifactIds )
         throws PluginResolutionException, PluginContainerException;

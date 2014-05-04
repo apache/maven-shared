@@ -101,6 +101,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-annotations</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Sonatype Aether for Maven 3.0.x -->
@@ -114,6 +115,7 @@
       <groupId>org.sonatype.aether</groupId>
       <artifactId>aether-util</artifactId>
       <version>1.7</version>
+      <optional>true</optional>
     </dependency>
 
     <!-- Eclipse Aether for Maven 3.1.x -->
@@ -127,6 +129,7 @@
       <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-util</artifactId>
       <version>0.9.0.M2</version>
+      <optional>true</optional>
     </dependency>
 
     <!-- test -->

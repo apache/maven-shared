@@ -64,31 +64,34 @@ import org.sonatype.aether.graph.DependencyFilter;
  * </p>
  * <p>
  *   <b>Note</b> if no version is defined in the report plugin, the version will be searched
- *   with method {@link #resolvePluginVersion(ReportPlugin, MavenReportExecutorRequest)}
- *   Steps to find a plugin version stop after each step if a non <code>null</code> value has been found:
+ *   with {@link #resolvePluginVersion(ReportPlugin, MavenReportExecutorRequest) resolvePluginVersion(...)} method:
  *   <ol>
  *     <li>use the one defined in the reportPlugin configuration,</li>
  *     <li>search similar (same groupId and artifactId) mojo in the build/plugins section of the pom,</li>
  *     <li>search similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom,</li>
- *     <li>ask {@link PluginVersionResolver} to get a fallback version and display a warning as it's not a recommended use.</li>  
+ *     <li>ask {@link PluginVersionResolver} to get a fallback version (display a warning as it's not a recommended use).</li>  
  *   </ol>
  * </p>
  * <p>
  *   Following steps are done:
  *   <ul>
- *     <li>get {@link PluginDescriptor} from the {@link MavenPluginManager#getPluginDescriptor(Plugin, RepositoryRequest, RepositorySystemSession)}</li>
- *     <li>setup a {@link ClassLoader} with the Mojo Site plugin {@link ClassLoader} as parent for the report execution. 
- *       You must note some classes are imported from the current Site Mojo ClassRealm: see {@link #IMPORTS}.
- *       The artifact resolution excludes the following artifacts, corresponding to imported classes: 
- *       doxia-site-renderer, doxia-sink-api, maven-reporting-api.
- *       Done using {@link MavenPluginManager#setupPluginRealm(PluginDescriptor, MavenSession, ClassLoader, List, DependencyFilter)}
+ *     <li>get {@link PluginDescriptor} from the {@link MavenPluginManager} (through
+ *       {@link MavenPluginManagerHelper#getPluginDescriptor(Plugin, MavenSession) MavenPluginManagerHelper.getPluginDescriptor(...)}
+ *       to protect from core API change)</li>
+ *     <li>setup a {@link ClassLoader}, with the Site plugin Mojo classloader as parent for the report execution. <br>
+ *       Notice that some classes are imported from the current Site Mojo ClassRealm: see {@link #IMPORTS}.
+ *       Corresponding artifacts are excluded from the artifact resolution: 
+ *       <code>doxia-site-renderer</code>, <code>doxia-sink-api</code> and <code>maven-reporting-api</code>.<br>
+ *       Work is done using {@link MavenPluginManager} (through
+ *       {@link MavenPluginManagerHelper#setupPluginRealm(PluginDescriptor, MavenSession, ClassLoader, List, List) MavenPluginManagerHelper.setupPluginRealm(...)}
+ *       to protect from core API change)
  *     </li>
  *     <li>
- *       setup the mojo using {@link MavenPluginManager#getConfiguredMojo(Class, MavenSession, MojoExecution)}
+ *       setup the mojo using {@link MavenPluginManager#getConfiguredMojo(Class, MavenSession, MojoExecution) MavenPluginManager.getConfiguredMojo(...)}
  *     </li>
  *     <li>
- *       verify with {@link LifecycleExecutor#calculateForkedExecutions(MojoExecution, MavenSession)}
- *       if any forked execution is needed: if yes, executes the forked execution here
+ *       verify with {@link LifecycleExecutor#calculateForkedExecutions(MojoExecution, MavenSession) LifecycleExecutor.calculateForkedExecutions(...)}
+ *       if any forked execution is needed: if yes, execute the forked execution here
  *     </li>
  *   </ul>
  * </p>

@@ -35,13 +35,6 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 
-/**
- * {@link MavenPluginManager} helper to deal with API changes between Maven 3.0.x and 3.1.x, ie switch from Sonatype Aether
- * (in org.sonatype.aether package) to Eclipse Aether (in org.eclipse.aether package).
- * 
- * @author Hervé Boutemy
- * @since 1.1
- */
 @Component( role = MavenPluginManagerHelper.class )
 public class DefaultMavenPluginManagerHelper
     implements MavenPluginManagerHelper

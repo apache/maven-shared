@@ -28,6 +28,7 @@ import org.apache.maven.reporting.MavenReport;
  *   This class will store all necessary information for {@link MavenReport} execution:
  *   <ul>
  *     <li>a {@link MavenReport},</li>
+ *     <li>the goal name associated to the report,</li>
  *     <li>the associated {@link ClassLoader} for the Report Mojo execution,</li>
  *     <li>the {@link Plugin} associated to the {@link MavenReport}.</li>
  *   </ul> 
@@ -50,16 +51,24 @@ public class MavenReportExecution
 
     private Plugin plugin;
 
-    public MavenReportExecution( Plugin plugin, MavenReport mavenReport, ClassLoader classLoader )
+    private final String goal;
+
+    public MavenReportExecution( String goal, Plugin plugin, MavenReport mavenReport, ClassLoader classLoader )
     {
+        this.goal = goal;
         this.setPlugin( plugin );
         this.mavenReport = mavenReport;
         this.classLoader = classLoader;
     }
 
+    public MavenReportExecution( Plugin plugin, MavenReport mavenReport, ClassLoader classLoader )
+    {
+        this( null, plugin, mavenReport, classLoader );
+    }
+
     public MavenReportExecution( MavenReport mavenReport )
     {
-        this( null, mavenReport, null );
+        this( null, null, mavenReport, null );
     }
 
     public MavenReport getMavenReport()
@@ -90,5 +99,10 @@ public class MavenReportExecution
     public Plugin getPlugin()
     {
         return plugin;
+    }
+
+    public String getGoal()
+    {
+        return goal;
     }
 }

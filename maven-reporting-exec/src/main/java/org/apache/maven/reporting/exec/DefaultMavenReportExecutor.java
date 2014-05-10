@@ -261,7 +261,8 @@ public class DefaultMavenReportExecutor
                             getConfiguredMavenReport( mojoExecution, pluginDescriptor, mavenReportExecutorRequest );
 
             MavenReportExecution mavenReportExecution =
-                new MavenReportExecution( mojoExecution.getPlugin(), mavenReport, pluginDescriptor.getClassRealm() );
+                new MavenReportExecution( report.getGoal(), mojoExecution.getPlugin(), mavenReport,
+                                          pluginDescriptor.getClassRealm() );
 
             lifecycleExecutor.calculateForkedExecutions( mojoExecution, mavenReportExecutorRequest.getMavenSession() );
 

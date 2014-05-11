@@ -55,43 +55,41 @@ import org.codehaus.plexus.util.xml.Xpp3DomUtils;
 
 /**
  * <p>
- *   This component will build some {@link MavenReportExecution} from {@link MavenReportExecutorRequest}.
- *   If a {@link MavenReport} needs to fork a lifecycle, this fork is executed here. 
- *   It will ask the core to get some informations in order to correctly setup {@link MavenReport}.
+ * This component will build some {@link MavenReportExecution} from {@link MavenReportExecutorRequest}. If a
+ * {@link MavenReport} needs to fork a lifecycle, this fork is executed here. It will ask the core to get some
+ * informations in order to correctly setup {@link MavenReport}.
  * </p>
  * <p>
- *   <b>Note</b> if no version is defined in the report plugin, the version will be searched
- *   with {@link #resolvePluginVersion(ReportPlugin, MavenReportExecutorRequest) resolvePluginVersion(...)} method:
- *   <ol>
- *     <li>use the one defined in the reportPlugin configuration,</li>
- *     <li>search similar (same groupId and artifactId) mojo in the build/plugins section of the pom,</li>
- *     <li>search similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom,</li>
- *     <li>ask {@link PluginVersionResolver} to get a fallback version (display a warning as it's not a recommended use).</li>  
- *   </ol>
+ * <b>Note</b> if no version is defined in the report plugin, the version will be searched with
+ * {@link #resolvePluginVersion(ReportPlugin, MavenReportExecutorRequest) resolvePluginVersion(...)} method:
+ * <ol>
+ * <li>use the one defined in the reportPlugin configuration,</li>
+ * <li>search similar (same groupId and artifactId) mojo in the build/plugins section of the pom,</li>
+ * <li>search similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom,</li>
+ * <li>ask {@link PluginVersionResolver} to get a fallback version (display a warning as it's not a recommended use).</li>
+ * </ol>
  * </p>
  * <p>
- *   Following steps are done:
- *   <ul>
- *     <li>get {@link PluginDescriptor} from the {@link MavenPluginManager} (through
- *       {@link MavenPluginManagerHelper#getPluginDescriptor(Plugin, MavenSession) MavenPluginManagerHelper.getPluginDescriptor(...)}
- *       to protect from core API change)</li>
- *     <li>setup a {@link ClassLoader}, with the Site plugin Mojo classloader as parent for the report execution. <br>
- *       Notice that some classes are imported from the current Site Mojo ClassRealm: see {@link #IMPORTS}.
- *       Corresponding artifacts are excluded from the artifact resolution: 
- *       <code>doxia-site-renderer</code>, <code>doxia-sink-api</code> and <code>maven-reporting-api</code>.<br>
- *       Work is done using {@link MavenPluginManager} (through
- *       {@link MavenPluginManagerHelper#setupPluginRealm(PluginDescriptor, MavenSession, ClassLoader, List, List) MavenPluginManagerHelper.setupPluginRealm(...)}
- *       to protect from core API change)
- *     </li>
- *     <li>
- *       setup the mojo using {@link MavenPluginManager#getConfiguredMojo(Class, MavenSession, MojoExecution) MavenPluginManager.getConfiguredMojo(...)}
- *     </li>
- *     <li>
- *       verify with {@link LifecycleExecutor#calculateForkedExecutions(MojoExecution, MavenSession) LifecycleExecutor.calculateForkedExecutions(...)}
- *       if any forked execution is needed: if yes, execute the forked execution here
- *     </li>
- *   </ul>
+ * Following steps are done:
+ * <ul>
+ * <li>get {@link PluginDescriptor} from the {@link MavenPluginManager} (through
+ * {@link MavenPluginManagerHelper#getPluginDescriptor(Plugin, MavenSession)
+ * MavenPluginManagerHelper.getPluginDescriptor(...)} to protect from core API change)</li>
+ * <li>setup a {@link ClassLoader}, with the Site plugin Mojo classloader as parent for the report execution. <br>
+ * Notice that some classes are imported from the current Site Mojo ClassRealm: see {@link #IMPORTS}. Corresponding
+ * artifacts are excluded from the artifact resolution: <code>doxia-site-renderer</code>, <code>doxia-sink-api</code>
+ *  and <code>maven-reporting-api</code>.<br>
+ * Work is done using {@link MavenPluginManager} (through
+ * {@link MavenPluginManagerHelper#setupPluginRealm(PluginDescriptor, MavenSession, ClassLoader, List, List)
+ * MavenPluginManagerHelper.setupPluginRealm(...)} to protect from core API change)</li>
+ * <li>setup the mojo using {@link MavenPluginManager#getConfiguredMojo(Class, MavenSession, MojoExecution)
+ * MavenPluginManager.getConfiguredMojo(...)}</li>
+ * <li>verify with {@link LifecycleExecutor#calculateForkedExecutions(MojoExecution, MavenSession)
+ * LifecycleExecutor.calculateForkedExecutions(...)} if any forked execution is needed: if yes, execute the forked
+ * execution here</li>
+ * </ul>
  * </p>
+ * 
  * @author Olivier Lamy
  */
 @Component( role = MavenReportExecutor.class )
@@ -258,36 +256,38 @@ public class DefaultMavenReportExecutor
                                                                 mojoDescriptor.getParameterMap().keySet() ) );
 
             MavenReport mavenReport =
-                            getConfiguredMavenReport( mojoExecution, pluginDescriptor, mavenReportExecutorRequest );
+                getConfiguredMavenReport( mojoExecution, pluginDescriptor, mavenReportExecutorRequest );
 
             MavenReportExecution mavenReportExecution =
                 new MavenReportExecution( report.getGoal(), mojoExecution.getPlugin(), mavenReport,
                                           pluginDescriptor.getClassRealm() );
 
-            lifecycleExecutor.calculateForkedExecutions( mojoExecution, mavenReportExecutorRequest.getMavenSession() );
-
-            if ( !mojoExecution.getForkedExecutions().isEmpty() )
-            {
-                String msg = report.getGoal() + " report requires ";
-                if ( StringUtils.isNotEmpty( mojoDescriptor.getExecutePhase() ) )
-                {
-                    // forked phase
-                    String lifecycleId =
-                        StringUtils.isEmpty( mojoDescriptor.getExecuteLifecycle() ) ? ""
-                                        : ( '[' + mojoDescriptor.getExecuteLifecycle() + ']' );
-                    logger.info( msg + lifecycleId + mojoDescriptor.getExecutePhase() + " forked phase execution" );
-                }
-                else
-                {
-                    // forked goal
-                    logger.info( msg + mojoDescriptor.getExecuteGoal() + "forked goal execution" );
-                }
-
-                lifecycleExecutor.executeForkedExecutions( mojoExecution, mavenReportExecutorRequest.getMavenSession() );
-            }
-
             if ( canGenerateReport( mavenReport, mojoExecution ) )
             {
+                lifecycleExecutor.calculateForkedExecutions( mojoExecution,
+                                                             mavenReportExecutorRequest.getMavenSession() );
+
+                if ( !mojoExecution.getForkedExecutions().isEmpty() )
+                {
+                    String msg = report.getGoal() + " report requires ";
+                    if ( StringUtils.isNotEmpty( mojoDescriptor.getExecutePhase() ) )
+                    {
+                        // forked phase
+                        String lifecycleId =
+                            StringUtils.isEmpty( mojoDescriptor.getExecuteLifecycle() ) ? ""
+                                            : ( '[' + mojoDescriptor.getExecuteLifecycle() + ']' );
+                        logger.info( msg + lifecycleId + mojoDescriptor.getExecutePhase() + " forked phase execution" );
+                    }
+                    else
+                    {
+                        // forked goal
+                        logger.info( msg + mojoDescriptor.getExecuteGoal() + "forked goal execution" );
+                    }
+
+                    lifecycleExecutor.executeForkedExecutions( mojoExecution,
+                                                               mavenReportExecutorRequest.getMavenSession() );
+                }
+
                 reports.add( mavenReportExecution );
             }
         }
@@ -307,7 +307,7 @@ public class DefaultMavenReportExecutor
         finally
         {
             Thread.currentThread().setContextClassLoader( originalClassLoader );
-        } 
+        }
     }
 
     private MavenReport getConfiguredMavenReport( MojoExecution mojoExecution, PluginDescriptor pluginDescriptor,
@@ -316,9 +316,9 @@ public class DefaultMavenReportExecutor
     {
         try
         {
-            Mojo mojo = mavenPluginManager.getConfiguredMojo( Mojo.class,
-                                                              mavenReportExecutorRequest.getMavenSession(),
-                                                              mojoExecution );
+            Mojo mojo =
+                mavenPluginManager.getConfiguredMojo( Mojo.class, mavenReportExecutorRequest.getMavenSession(),
+                                                      mojoExecution );
 
             return (MavenReport) mojo;
         }
@@ -330,8 +330,8 @@ public class DefaultMavenReportExecutor
         catch ( PluginContainerException e )
         {
             /**
-             * ignore old plugin which are using removed PluginRegistry
-             * [INFO] Caused by: java.lang.NoClassDefFoundError: org/apache/maven/plugin/registry/PluginRegistry
+             * ignore old plugin which are using removed PluginRegistry [INFO] Caused by:
+             * java.lang.NoClassDefFoundError: org/apache/maven/plugin/registry/PluginRegistry
              */
             if ( e.getCause() != null && e.getCause() instanceof NoClassDefFoundError
                 && e.getMessage().contains( "PluginRegistry" ) )
@@ -367,7 +367,7 @@ public class DefaultMavenReportExecutor
         finally
         {
             Thread.currentThread().setContextClassLoader( originalClassLoader );
-        }       
+        }
 
         try
         {
@@ -471,21 +471,23 @@ public class DefaultMavenReportExecutor
     }
 
     /**
-     * Resolve report plugin version. 
-     * Steps to find a plugin version stop after each step if a non <code>null</code> value has been found:
+     * Resolve report plugin version. Steps to find a plugin version stop after each step if a non <code>null</code>
+     * value has been found:
      * <ol>
-     *   <li>use the one defined in the reportPlugin configuration,</li>
-     *   <li>search similar (same groupId and artifactId) mojo in the build/plugins section of the pom,</li>
-     *   <li>search similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom,</li>
-     *   <li>ask {@link PluginVersionResolver} to get a fallback version and display a warning as it's not a recommended use.</li>  
+     * <li>use the one defined in the reportPlugin configuration,</li>
+     * <li>search similar (same groupId and artifactId) mojo in the build/plugins section of the pom,</li>
+     * <li>search similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom,</li>
+     * <li>ask {@link PluginVersionResolver} to get a fallback version and display a warning as it's not a recommended
+     * use.</li>
      * </ol>
-     *
+     * 
      * @param reportPlugin the report plugin to resolve the version
      * @param mavenReportExecutorRequest the current report execution context
      * @return the report plugin version
      * @throws PluginVersionResolutionException
      */
-    protected String resolvePluginVersion( ReportPlugin reportPlugin, MavenReportExecutorRequest mavenReportExecutorRequest )
+    protected String resolvePluginVersion( ReportPlugin reportPlugin,
+                                           MavenReportExecutorRequest mavenReportExecutorRequest )
         throws PluginVersionResolutionException
     {
         String reportPluginKey = reportPlugin.getGroupId() + ':' + reportPlugin.getArtifactId();
@@ -539,7 +541,6 @@ public class DefaultMavenReportExecutor
             }
         }
 
-
         logger.warn( "Report plugin " + reportPluginKey + " has an empty version." );
         logger.warn( "" );
         logger.warn( "It is highly recommended to fix these problems"
@@ -551,7 +552,7 @@ public class DefaultMavenReportExecutor
         Plugin plugin = new Plugin();
         plugin.setGroupId( reportPlugin.getGroupId() );
         plugin.setArtifactId( reportPlugin.getArtifactId() );
-        
+
         PluginVersionRequest pluginVersionRequest =
             new DefaultPluginVersionRequest( plugin, mavenReportExecutorRequest.getMavenSession() );
 
@@ -567,7 +568,7 @@ public class DefaultMavenReportExecutor
      * Search similar (same groupId and artifactId) mojo as a given report plugin.
      * 
      * @param reportPlugin the report plugin to search for a similar mojo
-     * @param plugins the candidate mojos 
+     * @param plugins the candidate mojos
      * @return the first similar mojo
      */
     private Plugin find( ReportPlugin reportPlugin, List<Plugin> plugins )
@@ -590,12 +591,13 @@ public class DefaultMavenReportExecutor
     /**
      * TODO other stuff to merge ?
      * <p>
-     * this method will "merge" some part of the plugin declaration existing in the build section 
-     * to the fake plugin build for report execution:
+     * this method will "merge" some part of the plugin declaration existing in the build section to the fake plugin
+     * build for report execution:
      * <ul>
-     *   <li>dependencies</li>
+     * <li>dependencies</li>
      * </ul>
      * </p>
+     * 
      * @param mavenReportExecutorRequest
      * @param buildPlugin
      * @param reportPlugin
@@ -616,6 +618,7 @@ public class DefaultMavenReportExecutor
     private static class GoalWithConf
     {
         private final String goal;
+
         private final PlexusConfiguration configuration;
 
         public GoalWithConf( String goal, PlexusConfiguration configuration )

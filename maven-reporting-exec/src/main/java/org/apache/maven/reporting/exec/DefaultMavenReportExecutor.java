@@ -281,7 +281,7 @@ public class DefaultMavenReportExecutor
                     else
                     {
                         // forked goal
-                        logger.info( msg + mojoDescriptor.getExecuteGoal() + "forked goal execution" );
+                        logger.info( msg + mojoDescriptor.getExecuteGoal() + " forked goal execution" );
                     }
 
                     lifecycleExecutor.executeForkedExecutions( mojoExecution,

@@ -1,0 +1,3 @@
+org.apache.maven.its.dependency-tree:module-z-deps-y:jar:1.0-SNAPSHOT
+\- org.apache.maven.its.dependency-tree:module-y-deps-x:jar:1.0-SNAPSHOT:compile
+   \- org.apache.maven.its.dependency-tree:module-x:jar:1.0-SNAPSHOT:compile

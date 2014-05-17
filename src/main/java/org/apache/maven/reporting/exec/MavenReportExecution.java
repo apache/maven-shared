@@ -24,12 +24,12 @@ import org.apache.maven.reporting.MavenReport;
 
 /**
  * <p>
- *   Since Maven 3, reporting plugin {@link MavenReport} are not anymore executed by Maven core.
- *   This class will store all necessary information for {@link MavenReport} execution:
+ *   Since Maven 3, reporting plugin {@link MavenReport} are not anymore prepared by Maven core.
+ *   This class will store all necessary information for {@link MavenReport} generation:
  *   <ul>
  *     <li>a {@link MavenReport},</li>
  *     <li>the goal name associated to the report,</li>
- *     <li>the associated {@link ClassLoader} for the Report Mojo execution,</li>
+ *     <li>the associated {@link ClassLoader} for the report generation,</li>
  *     <li>the {@link Plugin} associated to the {@link MavenReport}.</li>
  *   </ul> 
  * </p>

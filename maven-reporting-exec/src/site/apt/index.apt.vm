@@ -75,7 +75,7 @@ ${project.name}
 
   []
 
-  Maven 3 core makes an automatic transformation of <<<\<reporting\>>>> POM section to <<<maven-site-plugin>>>
-  configuration through the
+  Maven 3 core makes an automatic transformation of <<<\<reporting\>>>> POM section (which supports configuration inheritance)
+  to <<<maven-site-plugin>>>'s <<<reportPlugins>>> configuration through the
   {{{/ref/current/maven-model-builder/apidocs/org/apache/maven/model/plugin/ReportingConverter.html}ReportingConverter}}
   component.

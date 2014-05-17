@@ -64,8 +64,8 @@ import org.codehaus.plexus.util.xml.Xpp3DomUtils;
  * {@link #resolvePluginVersion(ReportPlugin, MavenReportExecutorRequest) resolvePluginVersion(...)} method:
  * <ol>
  * <li>use the one defined in the reportPlugin configuration,</li>
- * <li>search similar (same groupId and artifactId) mojo in the build/plugins section of the pom,</li>
- * <li>search similar (same groupId and artifactId) mojo in the build/pluginManagement section of the pom,</li>
+ * <li>search similar (same groupId and artifactId) plugin in the build/plugins section of the pom,</li>
+ * <li>search similar (same groupId and artifactId) plugin in the build/pluginManagement section of the pom,</li>
  * <li>ask {@link PluginVersionResolver} to get a fallback version (display a warning as it's not a recommended use).</li>
  * </ol>
  * </p>
@@ -75,8 +75,8 @@ import org.codehaus.plexus.util.xml.Xpp3DomUtils;
  * <li>get {@link PluginDescriptor} from the {@link MavenPluginManager} (through
  * {@link MavenPluginManagerHelper#getPluginDescriptor(Plugin, MavenSession)
  * MavenPluginManagerHelper.getPluginDescriptor(...)} to protect from core API change)</li>
- * <li>setup a {@link ClassLoader}, with the Site plugin Mojo classloader as parent for the report execution. <br>
- * Notice that some classes are imported from the current Site Mojo ClassRealm: see {@link #IMPORTS}. Corresponding
+ * <li>setup a {@link ClassLoader}, with the Site plugin classloader as parent for the report execution. <br>
+ * Notice that some classes are imported from the current Site plugin ClassRealm: see {@link #IMPORTS}. Corresponding
  * artifacts are excluded from the artifact resolution: <code>doxia-site-renderer</code>, <code>doxia-sink-api</code>
  *  and <code>maven-reporting-api</code>.<br>
  * Work is done using {@link MavenPluginManager} (through
@@ -163,6 +163,7 @@ public class DefaultMavenReportExecutor
                                                             ReportPlugin reportPlugin )
         throws Exception
     {
+        // step 1: prepare the plugin
         Plugin plugin = new Plugin();
         plugin.setGroupId( reportPlugin.getGroupId() );
         plugin.setArtifactId( reportPlugin.getArtifactId() );
@@ -176,9 +177,11 @@ public class DefaultMavenReportExecutor
 
         PluginDescriptor pluginDescriptor = mavenPluginManagerHelper.getPluginDescriptor( plugin, session );
 
-        List<GoalWithConf> goalsWithConfiguration = new ArrayList<GoalWithConf>();
 
+        // step 2: prepare the goals
+        List<GoalWithConf> goalsWithConfiguration = new ArrayList<GoalWithConf>();
         boolean userDefinedReports = true;
+
         if ( reportPlugin.getReportSets().isEmpty() && reportPlugin.getReports().isEmpty() )
         {
             // by default, use every goal, which will be filtered later to only keep reporting goals
@@ -222,6 +225,8 @@ public class DefaultMavenReportExecutor
             }
         }
 
+
+        // step 3: prepare the reports
         List<MavenReportExecution> reports = new ArrayList<MavenReportExecution>();
         for ( GoalWithConf report : goalsWithConfiguration )
         {
@@ -351,10 +356,13 @@ public class DefaultMavenReportExecutor
     private boolean isMavenReport( MojoExecution mojoExecution, PluginDescriptor pluginDescriptor )
     {
         ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+
+        // get the plugin's goal Mojo class
         Class<?> mojoClass;
-        Thread.currentThread().setContextClassLoader( mojoExecution.getMojoDescriptor().getRealm() );
         try
         {
+            Thread.currentThread().setContextClassLoader( mojoExecution.getMojoDescriptor().getRealm() );
+
             mojoClass =
                 pluginDescriptor.getClassRealm().loadClass( mojoExecution.getMojoDescriptor().getImplementation() );
         }
@@ -369,6 +377,7 @@ public class DefaultMavenReportExecutor
             Thread.currentThread().setContextClassLoader( originalClassLoader );
         }
 
+        // check if it is a report
         try
         {
             Thread.currentThread().setContextClassLoader( mojoExecution.getMojoDescriptor().getRealm() );
@@ -404,6 +413,16 @@ public class DefaultMavenReportExecutor
         }
     }
 
+    /**
+     * Merge plugin configuration and reportset configuration to mojo configuration to get effective
+     * mojo configuration.
+     *
+     * @param mojoConf configuration done at mojo level
+     * @param pluginConf configuration done at build plugin level
+     * @param reportSetConf configuration done at reportset level
+     * @param parameters set of supported parameters: any other parameter will be removed
+     * @return the effective configuration to be used
+     */
     private Xpp3Dom mergeConfiguration( PlexusConfiguration mojoConf, PlexusConfiguration pluginConf,
                                         PlexusConfiguration reportSetConf, Set<String> parameters )
     {
@@ -411,14 +430,15 @@ public class DefaultMavenReportExecutor
 
         if ( pluginConf != null || reportSetConf != null )
         {
-            Xpp3Dom reportConfiguration = pluginConf == null ? new Xpp3Dom( "fake" ) : convert( pluginConf );
+            Xpp3Dom pluginConfiguration = pluginConf == null ? new Xpp3Dom( "fake" ) : convert( pluginConf );
 
             // MSITE-512 configuration from ReportSet must win
             Xpp3Dom mergedConfigurationWithReportSet =
-                Xpp3DomUtils.mergeXpp3Dom( convert( reportSetConf ), reportConfiguration );
+                Xpp3DomUtils.mergeXpp3Dom( convert( reportSetConf ), pluginConfiguration );
 
             Xpp3Dom mergedConfiguration = Xpp3DomUtils.mergeXpp3Dom( mergedConfigurationWithReportSet, mojoConfig );
 
+            // clean result
             Xpp3Dom cleanedConfiguration = new Xpp3Dom( "configuration" );
             if ( mergedConfiguration.getChildren() != null )
             {
@@ -429,11 +449,6 @@ public class DefaultMavenReportExecutor
                         cleanedConfiguration.addChild( parameter );
                     }
                 }
-            }
-            if ( getLog().isDebugEnabled() )
-            {
-                getLog().debug( "mojoExecution mergedConfiguration: " + mergedConfiguration );
-                getLog().debug( "mojoExecution cleanedConfiguration: " + cleanedConfiguration );
             }
 
             mojoConfig = cleanedConfiguration;
@@ -565,11 +580,11 @@ public class DefaultMavenReportExecutor
     }
 
     /**
-     * Search similar (same groupId and artifactId) mojo as a given report plugin.
+     * Search similar (same groupId and artifactId) plugin as a given report plugin.
      * 
-     * @param reportPlugin the report plugin to search for a similar mojo
-     * @param plugins the candidate mojos
-     * @return the first similar mojo
+     * @param reportPlugin the report plugin to search for a similar plugin
+     * @param plugins the candidate plugins
+     * @return the first similar plugin
      */
     private Plugin find( ReportPlugin reportPlugin, List<Plugin> plugins )
     {

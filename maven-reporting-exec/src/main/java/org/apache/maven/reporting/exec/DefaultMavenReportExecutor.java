@@ -231,7 +231,7 @@ public class DefaultMavenReportExecutor
                 throw new MojoNotFoundException( report.getGoal(), pluginDescriptor );
             }
 
-            MojoExecution mojoExecution = new MojoExecution( plugin, report.getGoal(), "report:" + report.getGoal() );
+            MojoExecution mojoExecution = new MojoExecution( plugin, report.getGoal(), null );
 
             mojoExecution.setMojoDescriptor( mojoDescriptor );
 

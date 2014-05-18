@@ -236,6 +236,13 @@ public class DefaultMavenReportExecutor
                 throw new MojoNotFoundException( report.getGoal(), pluginDescriptor );
             }
 
+            MavenProject project = mavenReportExecutorRequest.getProject();
+            if ( !userDefinedReports && mojoDescriptor.isAggregator() && !canAggregate( project ) )
+            {
+                // aggregator mojos automatically added from plugin are only run at execution root
+                continue;
+            }
+
             MojoExecution mojoExecution = new MojoExecution( plugin, report.getGoal(), null );
 
             mojoExecution.setMojoDescriptor( mojoDescriptor );
@@ -267,37 +274,43 @@ public class DefaultMavenReportExecutor
                 new MavenReportExecution( report.getGoal(), mojoExecution.getPlugin(), mavenReport,
                                           pluginDescriptor.getClassRealm() );
 
-            if ( canGenerateReport( mavenReport, mojoExecution ) )
+            lifecycleExecutor.calculateForkedExecutions( mojoExecution,
+                                                         mavenReportExecutorRequest.getMavenSession() );
+
+            if ( !mojoExecution.getForkedExecutions().isEmpty() )
             {
-                lifecycleExecutor.calculateForkedExecutions( mojoExecution,
-                                                             mavenReportExecutorRequest.getMavenSession() );
-
-                if ( !mojoExecution.getForkedExecutions().isEmpty() )
+                String msg = report.getGoal() + " report requires ";
+                if ( StringUtils.isNotEmpty( mojoDescriptor.getExecutePhase() ) )
                 {
-                    String msg = report.getGoal() + " report requires ";
-                    if ( StringUtils.isNotEmpty( mojoDescriptor.getExecutePhase() ) )
-                    {
-                        // forked phase
-                        String lifecycleId =
-                            StringUtils.isEmpty( mojoDescriptor.getExecuteLifecycle() ) ? ""
-                                            : ( '[' + mojoDescriptor.getExecuteLifecycle() + ']' );
-                        logger.info( msg + lifecycleId + mojoDescriptor.getExecutePhase() + " forked phase execution" );
-                    }
-                    else
-                    {
-                        // forked goal
-                        logger.info( msg + mojoDescriptor.getExecuteGoal() + " forked goal execution" );
-                    }
-
-                    lifecycleExecutor.executeForkedExecutions( mojoExecution,
-                                                               mavenReportExecutorRequest.getMavenSession() );
+                    // forked phase
+                    String lifecycleId =
+                        StringUtils.isEmpty( mojoDescriptor.getExecuteLifecycle() ) ? ""
+                                        : ( '[' + mojoDescriptor.getExecuteLifecycle() + ']' );
+                    logger.info( msg + lifecycleId + mojoDescriptor.getExecutePhase() + " forked phase execution" );
+                }
+                else
+                {
+                    // forked goal
+                    logger.info( msg + mojoDescriptor.getExecuteGoal() + " forked goal execution" );
                 }
 
+                lifecycleExecutor.executeForkedExecutions( mojoExecution,
+                                                           mavenReportExecutorRequest.getMavenSession() );
+            }
+
+            if ( canGenerateReport( mavenReport, mojoExecution ) )
+            {
                 reports.add( mavenReportExecution );
             }
         }
 
         return reports;
+    }
+
+    private boolean canAggregate( MavenProject project )
+    {
+        return project.isExecutionRoot() && "pom".equals( project.getPackaging() ) && ( project.getModules() != null )
+            && !project.getModules().isEmpty();
     }
 
     private boolean canGenerateReport( MavenReport mavenReport, MojoExecution mojoExecution )

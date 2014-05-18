@@ -45,8 +45,7 @@ public class ArtifactDependencyNodeFilter
     /**
      * Creates a dependency node filter that delegates to the specified artifact filter.
      * 
-     * @param filter
-     *            the artifact filter to delegate to
+     * @param filter the artifact filter to delegate to
      */
     public ArtifactDependencyNodeFilter( ArtifactFilter filter )
     {

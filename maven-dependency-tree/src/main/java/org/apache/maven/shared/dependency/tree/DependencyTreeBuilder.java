@@ -27,10 +27,10 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Builds a tree of dependencies for a given Maven 2 project. Notice that it doesn't fail with Maven 3,
- * but when Maven 2 and Maven 3 don't calculate the same transitive dependency result, the tree calculated
- * with this component is consistent with Maven 2 even if run with Maven 3 (see
- * <a href="http://jira.codehaus.org/browse/MSHARED-167">MSHARED-167</a>.
+ * Builds a tree of dependencies for a given Maven 2 project. Notice that it doesn't fail with Maven 3, but when Maven 2
+ * and Maven 3 don't calculate the same transitive dependency result, the tree calculated with this component is
+ * consistent with Maven 2 even if run with Maven 3 (see <a
+ * href="http://jira.codehaus.org/browse/MSHARED-167">MSHARED-167</a>.
  * 
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
@@ -49,19 +49,13 @@ public interface DependencyTreeBuilder
     /**
      * Builds a tree of dependencies for the specified Maven project.
      * 
-     * @param project
-     *            the Maven project
-     * @param repository
-     *            the artifact repository to resolve against
-     * @param factory
-     *            the artifact factory to use
-     * @param metadataSource
-     *            the artifact metadata source to use
-     * @param collector
-     *            the artifact collector to use
+     * @param project the Maven project
+     * @param repository the artifact repository to resolve against
+     * @param factory the artifact factory to use
+     * @param metadataSource the artifact metadata source to use
+     * @param collector the artifact collector to use
      * @return the dependency tree of the specified Maven project
-     * @throws DependencyTreeBuilderException
-     *             if the dependency tree cannot be resolved
+     * @throws DependencyTreeBuilderException if the dependency tree cannot be resolved
      * @deprecated As of 1.1, replaced by
      *             {@link #buildDependencyTree(MavenProject, ArtifactRepository, ArtifactFactory, ArtifactMetadataSource, ArtifactFilter, ArtifactCollector)}
      */
@@ -72,21 +66,14 @@ public interface DependencyTreeBuilder
     /**
      * Builds a tree of dependencies for the specified Maven project.
      * 
-     * @param project
-     *            the Maven project
-     * @param repository
-     *            the artifact repository to resolve against
-     * @param factory
-     *            the artifact factory to use
-     * @param metadataSource
-     *            the artifact metadata source to use
-     * @param filter
-     *            the artifact filter to use
-     * @param collector
-     *            the artifact collector to use
+     * @param project the Maven project
+     * @param repository the artifact repository to resolve against
+     * @param factory the artifact factory to use
+     * @param metadataSource the artifact metadata source to use
+     * @param filter the artifact filter to use
+     * @param collector the artifact collector to use
      * @return the dependency tree root node of the specified Maven project
-     * @throws DependencyTreeBuilderException
-     *             if the dependency tree cannot be resolved
+     * @throws DependencyTreeBuilderException if the dependency tree cannot be resolved
      * @since 1.1
      */
     DependencyNode buildDependencyTree( MavenProject project, ArtifactRepository repository, ArtifactFactory factory,

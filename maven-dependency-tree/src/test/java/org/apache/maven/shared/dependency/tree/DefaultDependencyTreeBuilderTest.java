@@ -112,7 +112,7 @@ public class DefaultDependencyTreeBuilderTest
      * \- g:a:t:1
      * </pre>
      * 
-     * @throws DependencyTreeBuilderException 
+     * @throws DependencyTreeBuilderException
      */
     public void testProjectWithDependency()
         throws DependencyTreeBuilderException
@@ -190,7 +190,8 @@ public class DefaultDependencyTreeBuilderTest
         child1ArtifactNode.addChild( transitiveArtifactNode );
         DependencyNode child2ArtifactNode = createNode( "g:b:t:1" );
         expectedRootNode.addChild( child2ArtifactNode );
-        child2ArtifactNode.addChild( createNode( "g:c:t:1", DependencyNode.OMITTED_FOR_DUPLICATE, transitiveArtifactNode.getArtifact() ) );
+        child2ArtifactNode.addChild( createNode( "g:c:t:1", DependencyNode.OMITTED_FOR_DUPLICATE,
+                                                 transitiveArtifactNode.getArtifact() ) );
 
         assertDependencyTree( expectedRootNode, project );
     }
@@ -224,7 +225,8 @@ public class DefaultDependencyTreeBuilderTest
         expectedRootNode.addChild( nearestArtifactNode );
         DependencyNode childArtifactNode = createNode( "g:b:t:1" );
         expectedRootNode.addChild( childArtifactNode );
-        childArtifactNode.addChild( createNode( "g:a:t:2", DependencyNode.OMITTED_FOR_CONFLICT, nearestArtifactNode.getArtifact() ) );
+        childArtifactNode.addChild( createNode( "g:a:t:2", DependencyNode.OMITTED_FOR_CONFLICT,
+                                                nearestArtifactNode.getArtifact() ) );
 
         assertDependencyTree( expectedRootNode, project );
     }
@@ -258,7 +260,8 @@ public class DefaultDependencyTreeBuilderTest
         expectedRootNode.addChild( childArtifactNode );
         DependencyNode farthestArtifactNode = createNode( "g:b:t:1" );
         expectedRootNode.addChild( farthestArtifactNode );
-        childArtifactNode.addChild( createNode( "g:b:t:2", DependencyNode.OMITTED_FOR_CONFLICT, farthestArtifactNode.getArtifact() ) );
+        childArtifactNode.addChild( createNode( "g:b:t:2", DependencyNode.OMITTED_FOR_CONFLICT,
+                                                farthestArtifactNode.getArtifact() ) );
 
         assertDependencyTree( expectedRootNode, project );
     }
@@ -293,8 +296,9 @@ public class DefaultDependencyTreeBuilderTest
         expectedRootNode.addChild( nearestArtifactNode );
         DependencyNode childArtifactNode = createNode( "g:a:t:1" );
         expectedRootNode.addChild( childArtifactNode );
-        childArtifactNode.addChild( createNode( "g:b:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, nearestArtifactNode.getArtifact() ) );
-        
+        childArtifactNode.addChild( createNode( "g:b:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE,
+                                                nearestArtifactNode.getArtifact() ) );
+
         assertDependencyTree( expectedRootNode, project );
     }
 
@@ -326,30 +330,20 @@ public class DefaultDependencyTreeBuilderTest
         MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } );
 
         /*
-         * TODO: Not entirely convinced that the expected tree is correct - I would have expected:
-         * 
-         * <pre>
-         * g:p:t:1
-         * \- g:a:t:1
-         *    +- g:b:t:1
-         *    |  \- (g:c:t:1:compile - omitted for duplicate)
-         *    \- g:c:t:1:compile (scope updated from test)
-         * </pre>
-         * 
+         * TODO: Not entirely convinced that the expected tree is correct - I would have expected: <pre> g:p:t:1 \-
+         * g:a:t:1 +- g:b:t:1 | \- (g:c:t:1:compile - omitted for duplicate) \- g:c:t:1:compile (scope updated from
+         * test) </pre>
          * @see http://www.mail-archive.com/dev@maven.apache.org/msg68011.html
          */
         /*
-        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
-        DependencyNode childArtifactNode = createNode( "g:a:t:1" );
-        expectedRootNode.addChild( childArtifactNode );
-        DependencyNode grandchildArtifactNode = createNode( "g:b:t:1" );
-        childArtifactNode.addChild( grandchildArtifactNode );
-        DependencyNode nearestArtifactNode = createNode( "g:c:t:1:compile" );
-        DependencyNode farthestArtifactNode = createNode( "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, nearestArtifactNode.getArtifact() );
-        grandchildArtifactNode.addChild( farthestArtifactNode );
-        nearestArtifactNode.setOriginalScope( "test" );
-        childArtifactNode.addChild( nearestArtifactNode );
-        */
+         * DependencyNode expectedRootNode = createNode( "g:p:t:1" ); DependencyNode childArtifactNode = createNode(
+         * "g:a:t:1" ); expectedRootNode.addChild( childArtifactNode ); DependencyNode grandchildArtifactNode =
+         * createNode( "g:b:t:1" ); childArtifactNode.addChild( grandchildArtifactNode ); DependencyNode
+         * nearestArtifactNode = createNode( "g:c:t:1:compile" ); DependencyNode farthestArtifactNode = createNode(
+         * "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, nearestArtifactNode.getArtifact() );
+         * grandchildArtifactNode.addChild( farthestArtifactNode ); nearestArtifactNode.setOriginalScope( "test" );
+         * childArtifactNode.addChild( nearestArtifactNode );
+         */
 
         DependencyNode expectedRootNode = createNode( "g:p:t:1" );
         DependencyNode childArtifactNode = createNode( "g:a:t:1" );
@@ -358,10 +352,11 @@ public class DefaultDependencyTreeBuilderTest
         childArtifactNode.addChild( grandchildArtifactNode );
         DependencyNode farthestArtifactNode = createNode( "g:c:t:1:compile" );
         grandchildArtifactNode.addChild( farthestArtifactNode );
-        DependencyNode nearestArtifactNode = createNode( "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, farthestArtifactNode.getArtifact() );
+        DependencyNode nearestArtifactNode =
+            createNode( "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, farthestArtifactNode.getArtifact() );
         nearestArtifactNode.setOriginalScope( "test" );
         childArtifactNode.addChild( nearestArtifactNode );
-        
+
         assertDependencyTree( expectedRootNode, project );
     }
 
@@ -393,41 +388,32 @@ public class DefaultDependencyTreeBuilderTest
         MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } );
 
         /*
-         * TODO: Not entirely convinced that the expected tree is correct - I would have expected:
-         * 
-         * <pre>
-         * g:p:t:1
-         * \- g:a:t:1
-         *    +- g:c:t:1:compile (scope updated from test)
-         *    \- g:b:t:1
-         *       \- (g:c:t:1:compile - omitted for duplicate)
+         * TODO: Not entirely convinced that the expected tree is correct - I would have expected: <pre> g:p:t:1 \-
+         * g:a:t:1 +- g:c:t:1:compile (scope updated from test) \- g:b:t:1 \- (g:c:t:1:compile - omitted for duplicate)
          * </pre>
-         * 
          * @see http://www.mail-archive.com/dev@maven.apache.org/msg68011.html
          */
         /*
-        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
-        DependencyNode childArtifactNode = createNode( "g:a:t:1" );
-        expectedRootNode.addChild( childArtifactNode );
-        DependencyNode nearestArtifactNode = createNode( "g:c:t:1:compile" );
-        nearestArtifactNode.setOriginalScope( "test" );
-        childArtifactNode.addChild( nearestArtifactNode );
-        DependencyNode grandchildArtifactNode = createNode( "g:b:t:1" );
-        childArtifactNode.addChild( grandchildArtifactNode );
-        grandchildArtifactNode.addChild( createNode( "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, nearestArtifactNode.getArtifact() ) );
-        */
-        
+         * DependencyNode expectedRootNode = createNode( "g:p:t:1" ); DependencyNode childArtifactNode = createNode(
+         * "g:a:t:1" ); expectedRootNode.addChild( childArtifactNode ); DependencyNode nearestArtifactNode = createNode(
+         * "g:c:t:1:compile" ); nearestArtifactNode.setOriginalScope( "test" ); childArtifactNode.addChild(
+         * nearestArtifactNode ); DependencyNode grandchildArtifactNode = createNode( "g:b:t:1" );
+         * childArtifactNode.addChild( grandchildArtifactNode ); grandchildArtifactNode.addChild( createNode(
+         * "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, nearestArtifactNode.getArtifact() ) );
+         */
+
         DependencyNode expectedRootNode = createNode( "g:p:t:1" );
         DependencyNode childArtifactNode = createNode( "g:a:t:1" );
         expectedRootNode.addChild( childArtifactNode );
         DependencyNode farthestArtifactNode = createNode( "g:c:t:1:compile" );
-        DependencyNode nearestArtifactNode = createNode( "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, farthestArtifactNode.getArtifact() );
+        DependencyNode nearestArtifactNode =
+            createNode( "g:c:t:1:compile", DependencyNode.OMITTED_FOR_DUPLICATE, farthestArtifactNode.getArtifact() );
         nearestArtifactNode.setOriginalScope( "test" );
         childArtifactNode.addChild( nearestArtifactNode );
         DependencyNode grandchildArtifactNode = createNode( "g:b:t:1" );
         childArtifactNode.addChild( grandchildArtifactNode );
         grandchildArtifactNode.addChild( farthestArtifactNode );
-        
+
         assertDependencyTree( expectedRootNode, project );
     }
 
@@ -467,7 +453,7 @@ public class DefaultDependencyTreeBuilderTest
 
     // TODO: see MNG-3548
     /**
-     * Tests building a tree for a project with a dependency that is duplicated and the version is also fixed in 
+     * Tests building a tree for a project with a dependency that is duplicated and the version is also fixed in
      * dependency management:
      * 
      * <pre>
@@ -481,36 +467,24 @@ public class DefaultDependencyTreeBuilderTest
      * @throws DependencyTreeBuilderException
      */
     /*
-    public void testProjectWithManagedTransitiveDependencyVersionAndDuplicate() throws DependencyTreeBuilderException
-    {
-        Artifact projectArtifact = createArtifact( "g:p:t:1" );
-        Artifact childArtifact = createArtifact( "g:a:t:1" );
-        Artifact grandchildArtifact = createArtifact( "g:b:t:1" );
-        Artifact farthestTransitiveArtifact = createArtifact( "g:c:t:1" );
-        Artifact nearestTransitiveArtifact = createArtifact( "g:c:t:1" );
-        Artifact managedTransitiveArtifact = createArtifact( "g:c:t:2" );
-        addArtifactMetadata( childArtifact, new Artifact[] { grandchildArtifact, nearestTransitiveArtifact } );
-        addArtifactMetadata( grandchildArtifact, farthestTransitiveArtifact );
-
-        MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } );
-        setManagedVersionMap( project, Collections.singleton( managedTransitiveArtifact ) );
-
-        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
-        DependencyNode childArtifactNode = createNode( "g:a:t:1" );
-        expectedRootNode.addChild( childArtifactNode );
-        DependencyNode grandchildArtifactNode = createNode( "g:b:t:2" );
-        childArtifactNode.addChild( grandchildArtifactNode );
-        DependencyNode managedTransitiveArtifactNode = createNode( "g:c:t:2" );
-        managedTransitiveArtifactNode.setPremanagedVersion( "1" );
-        childArtifactNode.addChild( managedTransitiveArtifactNode );
-        DependencyNode omittedManagedTransitiveArtifactNode = createNode( "g:c:t:2" );
-        omittedManagedTransitiveArtifactNode.setPremanagedVersion( "1" );
-        omittedManagedTransitiveArtifactNode.omitForConflict( managedTransitiveArtifact );
-        grandchildArtifactNode.addChild( omittedManagedTransitiveArtifactNode );
-
-        assertDependencyTree( expectedRootNode, project );
-    }
-    */
+     * public void testProjectWithManagedTransitiveDependencyVersionAndDuplicate() throws DependencyTreeBuilderException
+     * { Artifact projectArtifact = createArtifact( "g:p:t:1" ); Artifact childArtifact = createArtifact( "g:a:t:1" );
+     * Artifact grandchildArtifact = createArtifact( "g:b:t:1" ); Artifact farthestTransitiveArtifact = createArtifact(
+     * "g:c:t:1" ); Artifact nearestTransitiveArtifact = createArtifact( "g:c:t:1" ); Artifact managedTransitiveArtifact
+     * = createArtifact( "g:c:t:2" ); addArtifactMetadata( childArtifact, new Artifact[] { grandchildArtifact,
+     * nearestTransitiveArtifact } ); addArtifactMetadata( grandchildArtifact, farthestTransitiveArtifact );
+     * MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } ); setManagedVersionMap(
+     * project, Collections.singleton( managedTransitiveArtifact ) ); DependencyNode expectedRootNode = createNode(
+     * "g:p:t:1" ); DependencyNode childArtifactNode = createNode( "g:a:t:1" ); expectedRootNode.addChild(
+     * childArtifactNode ); DependencyNode grandchildArtifactNode = createNode( "g:b:t:2" ); childArtifactNode.addChild(
+     * grandchildArtifactNode ); DependencyNode managedTransitiveArtifactNode = createNode( "g:c:t:2" );
+     * managedTransitiveArtifactNode.setPremanagedVersion( "1" ); childArtifactNode.addChild(
+     * managedTransitiveArtifactNode ); DependencyNode omittedManagedTransitiveArtifactNode = createNode( "g:c:t:2" );
+     * omittedManagedTransitiveArtifactNode.setPremanagedVersion( "1" );
+     * omittedManagedTransitiveArtifactNode.omitForConflict( managedTransitiveArtifact );
+     * grandchildArtifactNode.addChild( omittedManagedTransitiveArtifactNode ); assertDependencyTree( expectedRootNode,
+     * project ); }
+     */
 
     /**
      * Tests building a tree for a project with one transitive dependency whose scope is fixed in dependency management:
@@ -579,7 +553,7 @@ public class DefaultDependencyTreeBuilderTest
 
         assertDependencyTree( expectedRootNode, project );
     }
-    
+
     /**
      * Tests building a tree for a project with a dependency that has conflicting versions and the version is also fixed
      * in dependency management:
@@ -611,14 +585,14 @@ public class DefaultDependencyTreeBuilderTest
         expectedRootNode.addChild( nearestArtifactNode );
         DependencyNode childArtifactNode = createNode( "g:b:t:1" );
         expectedRootNode.addChild( childArtifactNode );
-        DependencyNode managedTransitiveArtifactNode = createNode( "g:a:t:3", DependencyNode.OMITTED_FOR_CONFLICT, nearestArtifactNode.getArtifact() );
+        DependencyNode managedTransitiveArtifactNode =
+            createNode( "g:a:t:3", DependencyNode.OMITTED_FOR_CONFLICT, nearestArtifactNode.getArtifact() );
         managedTransitiveArtifactNode.setPremanagedVersion( "2" );
         childArtifactNode.addChild( managedTransitiveArtifactNode );
 
         assertDependencyTree( expectedRootNode, project );
     }
 
-    
     /**
      * Tests building a tree for a project with a dependency with version range
      * 
@@ -627,15 +601,15 @@ public class DefaultDependencyTreeBuilderTest
      * \- g:a:t:1
      * </pre>
      * 
-     * @throws InvalidVersionSpecificationException 
-     * @throws DependencyTreeBuilderException 
+     * @throws InvalidVersionSpecificationException
+     * @throws DependencyTreeBuilderException
      */
     public void testProjectWithVersionRange()
         throws InvalidVersionSpecificationException, DependencyTreeBuilderException
     {
         String range = "[1,2)";
         Artifact projectArtifact = createArtifact( "g:p:t:1" );
-        Artifact childArtifact = createArtifact( "g:a:t:" + range);
+        Artifact childArtifact = createArtifact( "g:a:t:" + range );
 
         MavenProject project = createProject( projectArtifact, new Artifact[] { childArtifact } );
 
@@ -655,35 +629,26 @@ public class DefaultDependencyTreeBuilderTest
 
     // TODO: reinstate when MNG-3236 fixed
     /*
-    public void testProjectWithFilter() throws DependencyTreeBuilderException, ArtifactResolutionException
-    {
-        Artifact projectArtifact = createArtifact( "g:p:t:1" );
-        Artifact child1Artifact = createArtifact( "g:a:t:1" );
-        Artifact child2Artifact = createArtifact( "g:b:t:1:test" );
-
-        MavenProject project = createProject( projectArtifact, new Artifact[] { child1Artifact, child2Artifact } );
-
-        DependencyNode expectedRootNode = createNode( "g:p:t:1" );
-        expectedRootNode.addChild( createNode( "g:a:t:1" ) );
-
-        ArtifactFilter artifactFilter = new ScopeArtifactFilter( Artifact.SCOPE_COMPILE );
-        
-        assertDependencyTree( expectedRootNode, project, artifactFilter );
-    }
-    */
+     * public void testProjectWithFilter() throws DependencyTreeBuilderException, ArtifactResolutionException { Artifact
+     * projectArtifact = createArtifact( "g:p:t:1" ); Artifact child1Artifact = createArtifact( "g:a:t:1" ); Artifact
+     * child2Artifact = createArtifact( "g:b:t:1:test" ); MavenProject project = createProject( projectArtifact, new
+     * Artifact[] { child1Artifact, child2Artifact } ); DependencyNode expectedRootNode = createNode( "g:p:t:1" );
+     * expectedRootNode.addChild( createNode( "g:a:t:1" ) ); ArtifactFilter artifactFilter = new ScopeArtifactFilter(
+     * Artifact.SCOPE_COMPILE ); assertDependencyTree( expectedRootNode, project, artifactFilter ); }
+     */
 
     // private methods --------------------------------------------------------
-    
+
     private DependencyNode createNode( String id )
     {
         return createNode( id, DependencyNode.INCLUDED, null );
     }
-    
+
     private DependencyNode createNode( String id, int state, Artifact relatedArtifact )
     {
         return new DependencyNode( createArtifact( id ), state, relatedArtifact );
     }
-    
+
     private Artifact createArtifact( String id )
     {
         String[] tokens = id.split( ":" );
@@ -693,7 +658,7 @@ public class DefaultDependencyTreeBuilderTest
         String type = get( tokens, 2, "jar" );
         String version = get( tokens, 3 );
         String scope = get( tokens, 4 );
-        
+
         VersionRange versionRange;
         try
         {
@@ -701,12 +666,12 @@ public class DefaultDependencyTreeBuilderTest
         }
         catch ( InvalidVersionSpecificationException e )
         {
-            throw new RuntimeException(e);
+            throw new RuntimeException( e );
         }
 
         return new DefaultArtifact( groupId, artifactId, versionRange, scope, type, null, new DefaultArtifactHandler() );
     }
-    
+
     private MavenProject createProject( Artifact projectArtifact, Artifact[] dependencyArtifacts )
     {
         MavenProject project = new MavenProject();
@@ -722,43 +687,43 @@ public class DefaultDependencyTreeBuilderTest
     {
         addArtifactMetadata( artifact, new Artifact[] { dependencyArtifact } );
     }
-    
+
     private void addArtifactMetadata( Artifact artifact, Artifact[] dependencyArtifacts )
     {
         addArtifactMetadata( artifact, new LinkedHashSet<Artifact>( Arrays.asList( dependencyArtifacts ) ) );
     }
-    
+
     private void addArtifactMetadata( Artifact artifact, Set<Artifact> dependencyArtifacts )
     {
         artifactMetadataSource.addArtifactMetadata( artifact, dependencyArtifacts );
     }
-    
+
     private void setManagedVersionMap( MavenProject project, Set<Artifact> managedArtifacts )
     {
         Map<String, Artifact> managedVersionMap = new HashMap<String, Artifact>();
-        
+
         for ( Artifact artifact : managedArtifacts )
         {
             String managementKey = getManagementKey( artifact );
-            
+
             managedVersionMap.put( managementKey, artifact );
         }
 
         project.setManagedVersionMap( managedVersionMap );
     }
-    
+
     private String getManagementKey( Artifact artifact )
     {
         return artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getType()
             + ( artifact.getClassifier() != null ? ":" + artifact.getClassifier() : "" );
     }
-    
+
     private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project )
         throws DependencyTreeBuilderException
     {
         assertDependencyTree( expectedRootNode, project, null );
     }
-    
+
     private void assertDependencyTree( DependencyNode expectedRootNode, MavenProject project,
                                        ArtifactFilter artifactFilter )
         throws DependencyTreeBuilderException
@@ -777,7 +742,7 @@ public class DefaultDependencyTreeBuilderTest
 
         assertTreeEquals( expectedRootNode, project, result );
     }
-    
+
     private void assertTreeEquals( DependencyNode dependencyNode, MavenProject project,
                                    ArtifactResolutionResult resolutionResult )
     {
@@ -803,7 +768,7 @@ public class DefaultDependencyTreeBuilderTest
             throw new AssertionFailedError( buffer.toString() );
         }
     }
-    
+
     private void assertNodesEquals( List<DependencyNode> dependencyNodes, List<ResolutionNode> resolutionNodes )
     {
         assertNodesEquals( dependencyNodes.iterator(), resolutionNodes.iterator() );
@@ -816,10 +781,10 @@ public class DefaultDependencyTreeBuilderTest
         {
             DependencyNode dependencyNode = dependencyNodesIterator.next();
             ResolutionNode resolutionNode = resolutionNodesIterator.next();
-            
+
             assertNodeEquals( dependencyNode, resolutionNode );
         }
-        
+
         if ( dependencyNodesIterator.hasNext() || resolutionNodesIterator.hasNext() )
         {
             fail( "Node list size differs" );
@@ -829,17 +794,17 @@ public class DefaultDependencyTreeBuilderTest
     private void assertNodeEquals( DependencyNode dependencyNode, ResolutionNode resolutionNode )
     {
         assertEquals( "Node state", dependencyNode.getState() == DependencyNode.INCLUDED, resolutionNode.isActive() );
-        
+
         assertEquals( "Node artifact", dependencyNode.getArtifact(), resolutionNode.getArtifact() );
-        
+
         assertNodesEquals( dependencyNode.getChildren().iterator(), resolutionNode.getChildrenIterator() );
     }
-    
+
     private String get( String[] array, int index )
     {
         return get( array, index, null );
     }
-    
+
     private String get( String[] array, int index, String defaultValue )
     {
         return ( index < array.length ) ? array[index] : defaultValue;

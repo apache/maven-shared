@@ -33,10 +33,9 @@ import java.util.Map;
 public interface DependencyGraphBuilder
 {
     /**
-     * Build the dependency graph from the repository.
-     *
-     * This is the same as {@link #buildDependencyGraph(org.apache.maven.project.MavenProject,
-     * org.apache.maven.artifact.resolver.filter.ArtifactFilter, java.util.Map)} with an empty reactorProjects Map.
+     * Build the dependency graph from the repository. This is the same as
+     * {@link #buildDependencyGraph(org.apache.maven.project.MavenProject, org.apache.maven.artifact.resolver.filter.ArtifactFilter, java.util.Map)}
+     * with an empty reactorProjects Map.
      *
      * @param project the project
      * @param filter artifact filter (can be <code>null</code>
@@ -51,12 +50,12 @@ public interface DependencyGraphBuilder
      *
      * @param project the project
      * @param filter artifact filter (can be <code>null</code>
-     * @param reactorProjects Map of those projects contained in the reactor.
-     *                        Key is made up of groupId-artifactId-version.
+     * @param reactorProjects Map of those projects contained in the reactor. Key is made up of
+     *            groupId-artifactId-version.
      * @return the dependency graph
      * @throws DependencyGraphBuilderException
      */
-    DependencyNode buildDependencyGraph(
-            MavenProject project, ArtifactFilter filter, Map<String, MavenProject> reactorProjects )
-            throws DependencyGraphBuilderException;
+    DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
+                                         Map<String, MavenProject> reactorProjects )
+        throws DependencyGraphBuilderException;
 }

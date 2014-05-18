@@ -65,9 +65,9 @@ public class DefaultDependencyTreeBuilder
     private ArtifactCollector collector;
 
     // fields -----------------------------------------------------------------
-    
+
     private ArtifactResolutionResult result;
-    
+
     // DependencyTreeBuilder methods ------------------------------------------
 
     /**
@@ -87,7 +87,7 @@ public class DefaultDependencyTreeBuilder
 
         return new DependencyTree( rootNode, collectingVisitor.getNodes() );
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -140,7 +140,8 @@ public class DefaultDependencyTreeBuilder
                                     metadataSource, null, collector );
     }
 
-    public DependencyNode buildDependencyTree( MavenProject project, ArtifactRepository repository, ArtifactFilter filter )
+    public DependencyNode buildDependencyTree( MavenProject project, ArtifactRepository repository,
+                                               ArtifactFilter filter )
         throws DependencyTreeBuilderException
     {
         return buildDependencyTree( project, repository, factory, metadataSource, filter, collector );

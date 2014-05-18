@@ -53,8 +53,7 @@ public class AncestorOrSelfDependencyNodeFilterTest
         throws Exception
     {
         /*
-         * p -> a -> c
-         *   -> b
+         * p -> a -> c -> b
          */
 
         rootNode = createNode( "g:p:t:1" );

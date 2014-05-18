@@ -69,66 +69,66 @@ public class DependencyNode
      * @since 1.1
      */
     public static final int OMITTED_FOR_CYCLE = 3;
-    
+
     // classes ----------------------------------------------------------------
-    
+
     /**
-     * Utility class to concatenate a number of parameters with separator tokens.   
+     * Utility class to concatenate a number of parameters with separator tokens.
      */
     private static class ItemAppender
     {
         private StringBuffer buffer;
-        
+
         private String startToken;
-        
+
         private String separatorToken;
-        
+
         private String endToken;
-        
+
         private boolean appended;
-        
+
         public ItemAppender( StringBuffer buffer, String startToken, String separatorToken, String endToken )
         {
             this.buffer = buffer;
             this.startToken = startToken;
             this.separatorToken = separatorToken;
             this.endToken = endToken;
-            
+
             appended = false;
         }
 
         public ItemAppender append( String item )
         {
             appendToken();
-            
+
             buffer.append( item );
-            
+
             return this;
         }
-        
+
         public ItemAppender append( String item1, String item2 )
         {
             appendToken();
-            
+
             buffer.append( item1 ).append( item2 );
-            
+
             return this;
         }
-        
+
         public void flush()
         {
             if ( appended )
             {
                 buffer.append( endToken );
-                
+
                 appended = false;
             }
         }
-        
+
         private void appendToken()
         {
             buffer.append( appended ? separatorToken : startToken );
-            
+
             appended = true;
         }
     }
@@ -151,8 +151,8 @@ public class DependencyNode
     private DependencyNode parent;
 
     /**
-     * The state of this dependency node. This can be either <code>INCLUDED</code>,
-     * <code>OMITTED_FOR_DUPLICATE</code>, <code>OMITTED_FOR_CONFLICT</code> or <code>OMITTED_FOR_CYCLE</code>.
+     * The state of this dependency node. This can be either <code>INCLUDED</code>, <code>OMITTED_FOR_DUPLICATE</code>,
+     * <code>OMITTED_FOR_CONFLICT</code> or <code>OMITTED_FOR_CYCLE</code>.
      * 
      * @see #INCLUDED
      * @see #OMITTED_FOR_DUPLICATE
@@ -163,11 +163,11 @@ public class DependencyNode
 
     /**
      * The artifact related to the state of this dependency node. For dependency nodes with a state of
-     * <code>OMITTED_FOR_DUPLICATE</code> or <code>OMITTED_FOR_CONFLICT</code>, this represents the artifact that
-     * was conflicted with. For dependency nodes of other states, this is always <code>null</code>.
+     * <code>OMITTED_FOR_DUPLICATE</code> or <code>OMITTED_FOR_CONFLICT</code>, this represents the artifact that was
+     * conflicted with. For dependency nodes of other states, this is always <code>null</code>.
      */
     private Artifact relatedArtifact;
-    
+
     /**
      * The scope of this node's artifact before it was updated due to conflicts, or <code>null</code> if the artifact
      * scope has not been updated.
@@ -175,8 +175,8 @@ public class DependencyNode
     private String originalScope;
 
     /**
-     * The scope that this node's artifact was attempted to be updated to due to conflicts, or <code>null</code> if
-     * the artifact scope has not failed being updated.
+     * The scope that this node's artifact was attempted to be updated to due to conflicts, or <code>null</code> if the
+     * artifact scope has not failed being updated.
      */
     private String failedUpdateScope;
 
@@ -185,7 +185,7 @@ public class DependencyNode
      * artifact version has not been managed.
      */
     private String premanagedVersion;
-    
+
     /**
      * The scope of this node's artifact before it was updated by dependency management, or <code>null</code> if the
      * artifact scope has not been managed.
@@ -193,7 +193,7 @@ public class DependencyNode
     private String premanagedScope;
 
     private VersionRange versionSelectedFromRange;
-    
+
     private List<ArtifactVersion> availableVersions;
 
     // constructors -----------------------------------------------------------
@@ -201,10 +201,8 @@ public class DependencyNode
     /**
      * Creates a new dependency node for the specified artifact with an included state.
      * 
-     * @param artifact
-     *            the artifact attached to the new dependency node
-     * @throws IllegalArgumentException
-     *             if the parameter constraints were violated
+     * @param artifact the artifact attached to the new dependency node
+     * @throws IllegalArgumentException if the parameter constraints were violated
      * @since 1.1
      */
     public DependencyNode( Artifact artifact )
@@ -215,13 +213,10 @@ public class DependencyNode
     /**
      * Creates a new dependency node for the specified artifact with the specified state.
      * 
-     * @param artifact
-     *            the artifact attached to the new dependency node
-     * @param state
-     *            the state of the new dependency node. This can be either <code>INCLUDED</code> or
+     * @param artifact the artifact attached to the new dependency node
+     * @param state the state of the new dependency node. This can be either <code>INCLUDED</code> or
      *            <code>OMITTED_FOR_CYCLE</code>.
-     * @throws IllegalArgumentException
-     *             if the parameter constraints were violated
+     * @throws IllegalArgumentException if the parameter constraints were violated
      * @since 1.1
      */
     public DependencyNode( Artifact artifact, int state )
@@ -232,19 +227,15 @@ public class DependencyNode
     /**
      * Creates a new dependency node for the specified artifact with the specified state and related artifact.
      * 
-     * @param artifact
-     *            the artifact attached to the new dependency node
-     * @param state
-     *            the state of the new dependency node. This can be either <code>INCLUDED</code>,
+     * @param artifact the artifact attached to the new dependency node
+     * @param state the state of the new dependency node. This can be either <code>INCLUDED</code>,
      *            <code>OMITTED_FOR_DUPLICATE</code>, <code>OMITTED_FOR_CONFLICT</code> or
      *            <code>OMITTED_FOR_CYCLE</code>.
-     * @param relatedArtifact
-     *            the artifact related to the state of this dependency node. For dependency nodes with a state of
-     *            <code>OMITTED_FOR_DUPLICATE</code> or <code>OMITTED_FOR_CONFLICT</code>, this represents the
+     * @param relatedArtifact the artifact related to the state of this dependency node. For dependency nodes with a
+     *            state of <code>OMITTED_FOR_DUPLICATE</code> or <code>OMITTED_FOR_CONFLICT</code>, this represents the
      *            artifact that was conflicted with. For dependency nodes of other states, this should always be
      *            <code>null</code>.
-     * @throws IllegalArgumentException
-     *             if the parameter constraints were violated
+     * @throws IllegalArgumentException if the parameter constraints were violated
      * @since 1.1
      */
     public DependencyNode( Artifact artifact, int state, Artifact relatedArtifact )
@@ -264,13 +255,13 @@ public class DependencyNode
         if ( requiresRelatedArtifact && relatedArtifact == null )
         {
             throw new IllegalArgumentException( "Related artifact is required for states "
-                            + "OMITTED_FOR_DUPLICATE and OMITTED_FOR_CONFLICT" );
+                + "OMITTED_FOR_DUPLICATE and OMITTED_FOR_CONFLICT" );
         }
 
         if ( !requiresRelatedArtifact && relatedArtifact != null )
         {
             throw new IllegalArgumentException( "Related artifact is only required for states "
-                            + "OMITTED_FOR_DUPLICATE and OMITTED_FOR_CONFLICT" );
+                + "OMITTED_FOR_DUPLICATE and OMITTED_FOR_CONFLICT" );
         }
 
         this.artifact = artifact;
@@ -279,7 +270,7 @@ public class DependencyNode
 
         children = new ArrayList<DependencyNode>();
     }
-    
+
     /**
      * Creates a new dependency node.
      * 
@@ -296,8 +287,7 @@ public class DependencyNode
     /**
      * Applies the specified dependency node visitor to this dependency node and its children.
      * 
-     * @param visitor
-     *            the dependency node visitor to use
+     * @param visitor the dependency node visitor to use
      * @return the visitor result of ending the visit to this node
      * @since 1.1
      */
@@ -320,8 +310,7 @@ public class DependencyNode
     /**
      * Adds the specified dependency node to this dependency node's children.
      * 
-     * @param child
-     *            the child dependency node to add
+     * @param child the child dependency node to add
      * @since 1.1
      */
     public void addChild( DependencyNode child )
@@ -333,8 +322,7 @@ public class DependencyNode
     /**
      * Removes the specified dependency node from this dependency node's children.
      * 
-     * @param child
-     *            the child dependency node to remove
+     * @param child the child dependency node to remove
      * @since 1.1
      */
     public void removeChild( DependencyNode child )
@@ -362,30 +350,29 @@ public class DependencyNode
     {
         return artifact;
     }
-    
+
     /**
      * Gets the depth of this dependency node within its hierarchy.
      * 
      * @return the depth
-     * @deprecated As of 1.1, depth is computed by node hierarchy. With the introduction of node
-     *             visitors and filters this method can give misleading results. For example, consider
-     *             serializing a tree with a filter using a visitor: this method would return the
-     *             unfiltered depth of a node, whereas the correct depth would be calculated by the
-     *             visitor.
+     * @deprecated As of 1.1, depth is computed by node hierarchy. With the introduction of node visitors and filters
+     *             this method can give misleading results. For example, consider serializing a tree with a filter using
+     *             a visitor: this method would return the unfiltered depth of a node, whereas the correct depth would
+     *             be calculated by the visitor.
      */
     public int getDepth()
     {
         int depth = 0;
-        
+
         DependencyNode node = getParent();
-        
+
         while ( node != null )
         {
             depth++;
-            
+
             node = node.getParent();
         }
-        
+
         return depth;
     }
 
@@ -418,8 +405,8 @@ public class DependencyNode
 
     /**
      * Gets the artifact related to the state of this dependency node. For dependency nodes with a state of
-     * <code>OMITTED_FOR_CONFLICT</code>, this represents the artifact that was conflicted with. For dependency nodes
-     * of other states, this is always <code>null</code>.
+     * <code>OMITTED_FOR_CONFLICT</code>, this represents the artifact that was conflicted with. For dependency nodes of
+     * other states, this is always <code>null</code>.
      * 
      * @return the related artifact
      * @since 1.1
@@ -428,7 +415,7 @@ public class DependencyNode
     {
         return relatedArtifact;
     }
-    
+
     /**
      * Gets the scope of this node's artifact before it was updated due to conflicts.
      * 
@@ -443,8 +430,7 @@ public class DependencyNode
     /**
      * Sets the scope of this node's artifact before it was updated due to conflicts.
      * 
-     * @param originalScope
-     *            the original scope, or <code>null</code> if the artifact scope has not been updated
+     * @param originalScope the original scope, or <code>null</code> if the artifact scope has not been updated
      * @since 1.1
      */
     public void setOriginalScope( String originalScope )
@@ -466,15 +452,15 @@ public class DependencyNode
     /**
      * Sets the scope that this node's artifact was attempted to be updated to due to conflicts.
      * 
-     * @param failedUpdateScope
-     *            the failed update scope, or <code>null</code> if the artifact scope has not failed being updated
+     * @param failedUpdateScope the failed update scope, or <code>null</code> if the artifact scope has not failed being
+     *            updated
      * @since 1.1
      */
     public void setFailedUpdateScope( String failedUpdateScope )
     {
         this.failedUpdateScope = failedUpdateScope;
     }
-    
+
     /**
      * Gets the version of this node's artifact before it was updated by dependency management.
      * 
@@ -489,15 +475,15 @@ public class DependencyNode
     /**
      * Sets the version of this node's artifact before it was updated by dependency management.
      * 
-     * @param premanagedVersion
-     *            the premanaged version, or <code>null</code> if the artifact version has not been managed
+     * @param premanagedVersion the premanaged version, or <code>null</code> if the artifact version has not been
+     *            managed
      * @since 1.1
      */
     public void setPremanagedVersion( String premanagedVersion )
     {
         this.premanagedVersion = premanagedVersion;
     }
-    
+
     /**
      * Gets the scope of this node's artifact before it was updated by dependency management.
      * 
@@ -508,12 +494,11 @@ public class DependencyNode
     {
         return premanagedScope;
     }
-    
+
     /**
      * Sets the scope of this node's artifact before it was updated by dependency management.
      * 
-     * @param premanagedScope
-     *            the premanaged scope, or <code>null</code> if the artifact scope has not been managed
+     * @param premanagedScope the premanaged scope, or <code>null</code> if the artifact scope has not been managed
      * @since 1.1
      */
     public void setPremanagedScope( String premanagedScope )
@@ -532,7 +517,7 @@ public class DependencyNode
     {
         return versionSelectedFromRange;
     }
-    
+
     public void setVersionSelectedFromRange( VersionRange versionSelectedFromRange )
     {
         this.versionSelectedFromRange = versionSelectedFromRange;
@@ -549,7 +534,7 @@ public class DependencyNode
     {
         return availableVersions;
     }
-    
+
     public void setAvailableVersions( List<ArtifactVersion> availableVersions )
     {
         this.availableVersions = availableVersions;
@@ -558,20 +543,16 @@ public class DependencyNode
     /**
      * Changes the state of this dependency node to be omitted for conflict or duplication, depending on the specified
      * related artifact.
-     * 
      * <p>
      * If the related artifact has a version equal to this dependency node's artifact, then this dependency node's state
      * is changed to <code>OMITTED_FOR_DUPLICATE</code>, otherwise it is changed to <code>OMITTED_FOR_CONFLICT</code>.
      * Omitting this dependency node also removes all of its children.
      * </p>
      * 
-     * @param relatedArtifact
-     *            the artifact that this dependency node conflicted with
-     * @throws IllegalStateException
-     *             if this dependency node's state is not <code>INCLUDED</code>
-     * @throws IllegalArgumentException
-     *             if the related artifact was <code>null</code> or had a different dependency conflict id to this
-     *             dependency node's artifact
+     * @param relatedArtifact the artifact that this dependency node conflicted with
+     * @throws IllegalStateException if this dependency node's state is not <code>INCLUDED</code>
+     * @throws IllegalArgumentException if the related artifact was <code>null</code> or had a different dependency
+     *             conflict id to this dependency node's artifact
      * @see #OMITTED_FOR_DUPLICATE
      * @see #OMITTED_FOR_CONFLICT
      * @since 1.1
@@ -616,13 +597,11 @@ public class DependencyNode
 
     /**
      * Changes the state of this dependency node to be omitted for a cycle in the dependency tree.
-     * 
      * <p>
      * Omitting this node sets its state to <code>OMITTED_FOR_CYCLE</code> and removes all of its children.
      * </p>
      * 
-     * @throws IllegalStateException
-     *             if this dependency node's state is not <code>INCLUDED</code>
+     * @throws IllegalStateException if this dependency node's state is not <code>INCLUDED</code>
      * @see #OMITTED_FOR_CYCLE
      * @since 1.1
      */
@@ -637,7 +616,7 @@ public class DependencyNode
 
         removeAllChildren();
     }
-    
+
     /**
      * Gets an iterator that returns this dependency node and it's children in preorder traversal.
      * 
@@ -690,40 +669,40 @@ public class DependencyNode
         }
 
         buffer.append( artifact );
-        
+
         ItemAppender appender = new ItemAppender( buffer, included ? " (" : " - ", "; ", included ? ")" : "" );
 
         if ( getPremanagedVersion() != null )
         {
             appender.append( "version managed from ", getPremanagedVersion() );
         }
-            
+
         if ( getPremanagedScope() != null )
         {
             appender.append( "scope managed from ", getPremanagedScope() );
         }
-        
+
         if ( getOriginalScope() != null )
         {
             appender.append( "scope updated from ", getOriginalScope() );
         }
-        
+
         if ( getFailedUpdateScope() != null )
         {
             appender.append( "scope not updated to ", getFailedUpdateScope() );
         }
-        
+
         if ( getVersionSelectedFromRange() != null )
         {
             appender.append( "version selected from range ", getVersionSelectedFromRange().toString() );
             appender.append( "available versions ", getAvailableVersions().toString() );
         }
-        
+
         switch ( state )
         {
             case INCLUDED:
                 break;
-                
+
             case OMITTED_FOR_DUPLICATE:
                 appender.append( "omitted for duplicate" );
                 break;
@@ -736,9 +715,9 @@ public class DependencyNode
                 appender.append( "omitted for cycle" );
                 break;
         }
-        
+
         appender.flush();
-        
+
         if ( !included )
         {
             buffer.append( ')' );
@@ -746,16 +725,14 @@ public class DependencyNode
 
         return buffer.toString();
     }
-    
+
     /**
      * Returns a string representation of this dependency node and its children, indented to the specified depth.
-     * 
      * <p>
      * As of 1.1, this method ignores the indentation depth and simply delegates to <code>toString()</code>.
      * </p>
      * 
-     * @param indentDepth
-     *            the indentation depth
+     * @param indentDepth the indentation depth
      * @return the string representation
      * @deprecated As of 1.1, replaced by {@link #toString()}
      */
@@ -763,7 +740,7 @@ public class DependencyNode
     {
         return toString();
     }
-    
+
     // Object methods ---------------------------------------------------------
 
     /**
@@ -772,16 +749,16 @@ public class DependencyNode
     public int hashCode()
     {
         // TODO: probably better using commons-lang HashCodeBuilder
-        
+
         int hashCode = 1;
-        
+
         hashCode = hashCode * 31 + getArtifact().hashCode();
         // DefaultArtifact.hashCode does not consider scope
         hashCode = hashCode * 31 + nullHashCode( getArtifact().getScope() );
 
         // TODO: use parent's artifact to prevent recursion - how can we improve this?
         hashCode = hashCode * 31 + nullHashCode( nullGetArtifact( getParent() ) );
-        
+
         hashCode = hashCode * 31 + getChildren().hashCode();
         hashCode = hashCode * 31 + getState();
         hashCode = hashCode * 31 + nullHashCode( getRelatedArtifact() );
@@ -799,7 +776,7 @@ public class DependencyNode
     public boolean equals( Object object )
     {
         // TODO: probably better using commons-lang EqualsBuilder
-        
+
         boolean equal;
 
         if ( object instanceof DependencyNode )
@@ -809,10 +786,10 @@ public class DependencyNode
             equal = getArtifact().equals( node.getArtifact() );
             // DefaultArtifact.hashCode does not consider scope
             equal &= nullEquals( getArtifact().getScope(), node.getArtifact().getScope() );
-            
+
             // TODO: use parent's artifact to prevent recursion - how can we improve this?
             equal &= nullEquals( nullGetArtifact( getParent() ), nullGetArtifact( node.getParent() ) );
-            
+
             equal &= getChildren().equals( node.getChildren() );
             equal &= getState() == node.getState();
             equal &= nullEquals( getRelatedArtifact(), node.getRelatedArtifact() );
@@ -863,8 +840,7 @@ public class DependencyNode
     /**
      * Computes a hash-code for the specified object.
      * 
-     * @param a
-     *            the object to compute a hash-code for, possibly <code>null</code>
+     * @param a the object to compute a hash-code for, possibly <code>null</code>
      * @return the computed hash-code
      */
     private int nullHashCode( Object a )
@@ -875,22 +851,19 @@ public class DependencyNode
     /**
      * Gets whether the specified objects are equal.
      * 
-     * @param a
-     *            the first object to compare, possibly <code>null</code>
-     * @param b
-     *            the second object to compare, possibly <code>null</code>
+     * @param a the first object to compare, possibly <code>null</code>
+     * @param b the second object to compare, possibly <code>null</code>
      * @return <code>true</code> if the specified objects are equal
      */
     private boolean nullEquals( Object a, Object b )
     {
         return ( a == null ? b == null : a.equals( b ) );
     }
-    
+
     /**
      * Gets the artifact for the specified node.
      * 
-     * @param node
-     *            the dependency node, possibly <code>null</code>
+     * @param node the dependency node, possibly <code>null</code>
      * @return the node's artifact, or <code>null</code> if the specified node was <code>null</code>
      */
     private static Artifact nullGetArtifact( DependencyNode node )

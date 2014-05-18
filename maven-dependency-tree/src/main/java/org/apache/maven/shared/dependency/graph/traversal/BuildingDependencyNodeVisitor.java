@@ -65,8 +65,8 @@ public class BuildingDependencyNodeVisitor
      * Creates a dependency node visitor that clones visited nodes into a new dependency tree, and then applies the
      * specified dependency node visitor on the resultant dependency tree.
      * 
-     * @param visitor
-     *            the dependency node visitor to apply on the resultant dependency tree, or <code>null</code> for none
+     * @param visitor the dependency node visitor to apply on the resultant dependency tree, or <code>null</code> for
+     *            none
      */
     public BuildingDependencyNodeVisitor( DependencyNodeVisitor visitor )
     {

@@ -42,9 +42,9 @@ public class ArtifactMetadataSourceStub
     implements ArtifactMetadataSource
 {
     // TODO: move to maven-plugin-testing-harness?
-    
+
     // fields -----------------------------------------------------------------
-    
+
     /**
      * Map of resolution groups by artifact.
      */
@@ -56,7 +56,7 @@ public class ArtifactMetadataSourceStub
     private final Map<Artifact, List<ArtifactVersion>> availableVersionsByArtifact;
 
     // constructors -----------------------------------------------------------
-    
+
     /**
      * Creates a new artifact metadata source stub.
      */
@@ -75,13 +75,13 @@ public class ArtifactMetadataSourceStub
         throws ArtifactMetadataRetrievalException
     {
         ResolutionGroup resolution = resolutionGroupsByArtifact.get( artifact );
-        
+
         // if we return null then the artifact gets excluded in DefaultArtifactCollector
         if ( resolution == null )
         {
             resolution = new ResolutionGroup( artifact, Collections.EMPTY_SET, Collections.EMPTY_LIST );
         }
-        
+
         return resolution;
     }
 
@@ -98,14 +98,12 @@ public class ArtifactMetadataSourceStub
     }
 
     // public methods ---------------------------------------------------------
-    
+
     /**
      * Adds the specified dependency artifacts for the specified artifact to this artifact metadata source stub.
      * 
-     * @param artifact
-     *            the artifact to add metadata to
-     * @param dependencyArtifacts
-     *            the set of artifacts to register as dependencies of the specified artifact
+     * @param artifact the artifact to add metadata to
+     * @param dependencyArtifacts the set of artifacts to register as dependencies of the specified artifact
      */
     public void addArtifactMetadata( Artifact artifact, Set<Artifact> dependencyArtifacts )
     {
@@ -117,10 +115,8 @@ public class ArtifactMetadataSourceStub
     /**
      * Adds versions for the specified artifact to this artifact metadata source stub.
      * 
-     * @param artifact
-     *            the artifact to add metadata to
-     * @param versions
-     *            the list of versions to register as available for the specified artifact
+     * @param artifact the artifact to add metadata to
+     * @param versions the list of versions to register as available for the specified artifact
      */
     public void addAvailableVersions( Artifact artifact, List<ArtifactVersion> versions )
     {

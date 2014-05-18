@@ -25,7 +25,8 @@ package org.apache.maven.shared.dependency.tree;
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
  */
-public class DependencyTreeBuilderException extends Exception
+public class DependencyTreeBuilderException
+    extends Exception
 {
     // constants --------------------------------------------------------------
 

@@ -45,7 +45,8 @@ public class DependencyTreeResolutionListenerTest
     /**
      * {@inheritDoc}
      */
-    protected void setUp() throws Exception
+    protected void setUp()
+        throws Exception
     {
         super.setUp();
 
@@ -195,7 +196,8 @@ public class DependencyTreeResolutionListenerTest
         listener.endProcessChildren( projectArtifact );
 
         DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
-        projectArtifactNode.addChild( new DependencyNode( depArtifact1, DependencyNode.OMITTED_FOR_DUPLICATE, depArtifact2 ) );
+        projectArtifactNode.addChild( new DependencyNode( depArtifact1, DependencyNode.OMITTED_FOR_DUPLICATE,
+                                                          depArtifact2 ) );
         projectArtifactNode.addChild( new DependencyNode( depArtifact2 ) );
 
         assertEquals( projectArtifactNode, listener.getRootNode() );
@@ -232,7 +234,8 @@ public class DependencyTreeResolutionListenerTest
         listener.endProcessChildren( projectArtifact );
 
         DependencyNode projectArtifactNode = new DependencyNode( projectArtifact );
-        DependencyNode depArtifact1Node = new DependencyNode( depArtifact1, DependencyNode.OMITTED_FOR_DUPLICATE, depArtifact2 );
+        DependencyNode depArtifact1Node =
+            new DependencyNode( depArtifact1, DependencyNode.OMITTED_FOR_DUPLICATE, depArtifact2 );
         projectArtifactNode.addChild( depArtifact1Node );
         DependencyNode depArtifact2Node = new DependencyNode( depArtifact2 );
         projectArtifactNode.addChild( depArtifact2Node );

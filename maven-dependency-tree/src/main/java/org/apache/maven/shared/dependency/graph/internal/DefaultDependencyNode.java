@@ -53,8 +53,7 @@ public class DefaultDependencyNode
     /**
      * Applies the specified dependency node visitor to this dependency node and its children.
      * 
-     * @param visitor
-     *            the dependency node visitor to use
+     * @param visitor the dependency node visitor to use
      * @return the visitor result of ending the visit to this node
      * @since 1.1
      */
@@ -114,77 +113,77 @@ public class DefaultDependencyNode
         StringBuffer buffer = new StringBuffer();
 
         buffer.append( artifact );
-        
+
         ItemAppender appender = new ItemAppender( buffer, " (", "; ", ")" );
 
         if ( getPremanagedVersion() != null )
         {
             appender.append( "version managed from ", getPremanagedVersion() );
         }
-            
+
         if ( getPremanagedScope() != null )
         {
             appender.append( "scope managed from ", getPremanagedScope() );
         }
-        
+
         if ( getVersionConstraint() != null )
         {
             appender.append( "version selected from constraint ", getVersionConstraint() );
         }
-        
+
         appender.flush();
 
         return buffer.toString();
     }
 
     /**
-     * Utility class to concatenate a number of parameters with separator tokens.   
+     * Utility class to concatenate a number of parameters with separator tokens.
      */
     private static class ItemAppender
     {
         private StringBuffer buffer;
-        
+
         private String startToken;
-        
+
         private String separatorToken;
-        
+
         private String endToken;
-        
+
         private boolean appended;
-        
+
         public ItemAppender( StringBuffer buffer, String startToken, String separatorToken, String endToken )
         {
             this.buffer = buffer;
             this.startToken = startToken;
             this.separatorToken = separatorToken;
             this.endToken = endToken;
-            
+
             appended = false;
         }
 
         public ItemAppender append( String item1, String item2 )
         {
             appendToken();
-            
+
             buffer.append( item1 ).append( item2 );
-            
+
             return this;
         }
-        
+
         public void flush()
         {
             if ( appended )
             {
                 buffer.append( endToken );
-                
+
                 appended = false;
             }
         }
-        
+
         private void appendToken()
         {
             buffer.append( appended ? separatorToken : startToken );
-            
+
             appended = true;
         }
     }

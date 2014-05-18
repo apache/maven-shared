@@ -47,10 +47,8 @@ public class AndDependencyNodeFilter
     /**
      * Creates a dependency node filter that logically ANDs together the two specified dependency node filters.
      * 
-     * @param filter1
-     *            the first dependency node filter to logically AND together
-     * @param filter2
-     *            the second dependency node filter to logically AND together
+     * @param filter1 the first dependency node filter to logically AND together
+     * @param filter2 the second dependency node filter to logically AND together
      */
     public AndDependencyNodeFilter( DependencyNodeFilter filter1, DependencyNodeFilter filter2 )
     {
@@ -60,8 +58,7 @@ public class AndDependencyNodeFilter
     /**
      * Creates a dependency node filter that logically ANDs together the specified dependency node filters.
      * 
-     * @param filters
-     *            the list of dependency node filters to logically AND together
+     * @param filters the list of dependency node filters to logically AND together
      */
     public AndDependencyNodeFilter( List<DependencyNodeFilter> filters )
     {

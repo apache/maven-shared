@@ -63,9 +63,9 @@ public class Maven2DependencyGraphBuilder
         }
     }
 
-    public DependencyNode buildDependencyGraph(
-            MavenProject project, ArtifactFilter filter, Map<String, MavenProject> reactorProjects )
-            throws DependencyGraphBuilderException
+    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
+                                                Map<String, MavenProject> reactorProjects )
+        throws DependencyGraphBuilderException
     {
         getLogger().warn( "Reactor projects ignored - reactor dependencies cannot be resolved in Maven2" );
         return buildDependencyGraph( project, filter );

@@ -42,23 +42,23 @@ import org.apache.maven.project.MavenProject;
 public final class ResolutionNodeUtils
 {
     // constructors -----------------------------------------------------------
-    
+
     private ResolutionNodeUtils()
     {
         // private constructor for utility class
     }
 
     // public methods ---------------------------------------------------------
-    
+
     public static List<ResolutionNode> getRootChildrenResolutionNodes( MavenProject project,
                                                                        ArtifactResolutionResult resolutionResult )
     {
         Set<ResolutionNode> resolutionNodes = resolutionResult.getArtifactResolutionNodes();
 
         // obtain root children nodes
-        
+
         Map<Artifact, ResolutionNode> rootChildrenResolutionNodesByArtifact = new HashMap<Artifact, ResolutionNode>();
-        
+
         for ( ResolutionNode resolutionNode : resolutionNodes )
         {
             if ( resolutionNode.isChildOfRootNode() )
@@ -66,31 +66,31 @@ public final class ResolutionNodeUtils
                 rootChildrenResolutionNodesByArtifact.put( resolutionNode.getArtifact(), resolutionNode );
             }
         }
-        
+
         // order root children by project dependencies
-        
+
         List<ResolutionNode> rootChildrenResolutionNodes = new ArrayList<ResolutionNode>();
-        
+
         for ( Iterator<Artifact> iterator = project.getDependencyArtifacts().iterator(); iterator.hasNext(); )
         {
             Artifact artifact = iterator.next();
             ResolutionNode resolutionNode = rootChildrenResolutionNodesByArtifact.get( artifact );
-            
+
             rootChildrenResolutionNodes.add( resolutionNode );
         }
 
         return rootChildrenResolutionNodes;
     }
-    
+
     public static String toString( MavenProject project, ArtifactResolutionResult result )
     {
         StringBuffer buffer = new StringBuffer();
-        
+
         append( buffer, project, result );
-        
+
         return buffer.toString();
     }
-    
+
     public static StringBuffer append( StringBuffer buffer, MavenProject project, ArtifactResolutionResult result )
     {
         ResolutionNode rootNode = new ResolutionNode( project.getArtifact(), Collections.EMPTY_LIST );
@@ -98,21 +98,21 @@ public final class ResolutionNodeUtils
 
         List<ResolutionNode> rootChildrenNodes = getRootChildrenResolutionNodes( project, result );
         append( buffer, rootChildrenNodes.iterator(), 1 );
-        
+
         return buffer;
     }
-    
+
     // private methods --------------------------------------------------------
-    
+
     private static StringBuffer append( StringBuffer buffer, Iterator<ResolutionNode> nodesIterator, int depth )
     {
         while ( nodesIterator.hasNext() )
         {
             ResolutionNode node = nodesIterator.next();
-            
+
             append( buffer, node, depth );
         }
-        
+
         return buffer;
     }
 
@@ -122,15 +122,15 @@ public final class ResolutionNodeUtils
         {
             buffer.append( "   " );
         }
-        
+
         buffer.append( node );
         buffer.append( System.getProperty( "line.separator" ) );
-        
+
         if ( node != null && node.isResolved() )
         {
             append( buffer, node.getChildrenIterator(), depth + 1 );
         }
-        
+
         return buffer;
     }
 }

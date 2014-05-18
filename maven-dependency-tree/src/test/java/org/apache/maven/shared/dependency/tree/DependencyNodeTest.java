@@ -28,7 +28,7 @@ import org.apache.maven.artifact.Artifact;
 
 /**
  * Tests <code>DependencyNode</code>.
- *  
+ * 
  * @author <a href="mailto:carlos@apache.org">Carlos Sanchez</a>
  * @author <a href="mailto:markhobson@gmail.com">Mark Hobson</a>
  * @version $Id$
@@ -45,10 +45,7 @@ public class DependencyNodeTest
         super.setUp();
 
         /*
-         *     ------1------
-         * ----2----       3
-         * 4       5       7
-         *         6
+         * ------1------ ----2---- 3 4 5 7 6
          */
 
         node1 = createNode( 1 );
@@ -95,12 +92,12 @@ public class DependencyNodeTest
         assertNode( it, node1 );
         assertFalse( it.hasNext() );
     }
-    
+
     public void testToNodeStringIncluded()
     {
         Artifact artifact = createArtifact( "g:a:t:1:s" );
         DependencyNode node = new DependencyNode( artifact );
-        
+
         assertEquals( "g:a:t:1:s", node.toNodeString() );
     }
 
@@ -109,7 +106,7 @@ public class DependencyNodeTest
         Artifact artifact = createArtifact( "g:a:t:1:s" );
         DependencyNode node = new DependencyNode( artifact );
         node.setPremanagedVersion( "2" );
-        
+
         assertEquals( "g:a:t:1:s (version managed from 2)", node.toNodeString() );
     }
 
@@ -118,7 +115,7 @@ public class DependencyNodeTest
         Artifact artifact = createArtifact( "g:a:t:1:s" );
         DependencyNode node = new DependencyNode( artifact );
         node.setPremanagedScope( "x" );
-        
+
         assertEquals( "g:a:t:1:s (scope managed from x)", node.toNodeString() );
     }
 
@@ -127,7 +124,7 @@ public class DependencyNodeTest
         Artifact artifact = createArtifact( "g:a:t:1:s" );
         DependencyNode node = new DependencyNode( artifact );
         node.setOriginalScope( "x" );
-        
+
         assertEquals( "g:a:t:1:s (scope updated from x)", node.toNodeString() );
     }
 
@@ -136,7 +133,7 @@ public class DependencyNodeTest
         Artifact artifact = createArtifact( "g:a:t:1:s" );
         Artifact duplicateArtifact = createArtifact( "g:a:t:1:s" );
         DependencyNode node = new DependencyNode( artifact, DependencyNode.OMITTED_FOR_DUPLICATE, duplicateArtifact );
-        
+
         assertEquals( "(g:a:t:1:s - omitted for duplicate)", node.toNodeString() );
     }
 
@@ -146,7 +143,7 @@ public class DependencyNodeTest
         Artifact duplicateArtifact = createArtifact( "g:a:t:1:s" );
         DependencyNode node = new DependencyNode( artifact, DependencyNode.OMITTED_FOR_DUPLICATE, duplicateArtifact );
         node.setOriginalScope( "x" );
-        
+
         assertEquals( "(g:a:t:1:s - scope updated from x; omitted for duplicate)", node.toNodeString() );
     }
 
@@ -154,16 +151,16 @@ public class DependencyNodeTest
     {
         Artifact artifact = createArtifact( "g:a:t:1:s" );
         Artifact conflictArtifact = createArtifact( "g:a:t:2:s" );
-        DependencyNode node = new DependencyNode(artifact, DependencyNode.OMITTED_FOR_CONFLICT, conflictArtifact);
-        
+        DependencyNode node = new DependencyNode( artifact, DependencyNode.OMITTED_FOR_CONFLICT, conflictArtifact );
+
         assertEquals( "(g:a:t:1:s - omitted for conflict with 2)", node.toNodeString() );
     }
 
     public void testToNodeStringOmittedForCycle()
     {
         Artifact artifact = createArtifact( "g:a:t:1:s" );
-        DependencyNode node = new DependencyNode(artifact, DependencyNode.OMITTED_FOR_CYCLE);
-        
+        DependencyNode node = new DependencyNode( artifact, DependencyNode.OMITTED_FOR_CYCLE );
+
         assertEquals( "(g:a:t:1:s - omitted for cycle)", node.toNodeString() );
     }
 
@@ -180,28 +177,28 @@ public class DependencyNodeTest
         assertLine( reader, 3, 1 );
         assertLine( reader, 7, 2 );
     }
-    
+
     public void testOmitForConflict()
     {
         Artifact relatedArtifact = createArtifact( createArtifactId( 2, "3" ) );
         node2.omitForConflict( relatedArtifact );
-        
+
         assertEquals( DependencyNode.OMITTED_FOR_CONFLICT, node2.getState() );
         assertEquals( relatedArtifact, node2.getRelatedArtifact() );
-        
+
         assertTrue( node2.getChildren().isEmpty() );
         assertNull( node4.getParent() );
         assertNull( node5.getParent() );
     }
-    
+
     public void testOmitForConflictWithDuplicate()
     {
         Artifact relatedArtifact = createArtifact( createArtifactId( 2 ) );
         node2.omitForConflict( relatedArtifact );
-        
+
         assertEquals( DependencyNode.OMITTED_FOR_DUPLICATE, node2.getState() );
         assertEquals( relatedArtifact, node2.getRelatedArtifact() );
-        
+
         assertTrue( node2.getChildren().isEmpty() );
         assertNull( node4.getParent() );
         assertNull( node5.getParent() );
@@ -210,14 +207,14 @@ public class DependencyNodeTest
     public void testOmitForCycle()
     {
         node2.omitForCycle();
-        
+
         assertEquals( DependencyNode.OMITTED_FOR_CYCLE, node2.getState() );
-        
+
         assertTrue( node2.getChildren().isEmpty() );
         assertNull( node4.getParent() );
         assertNull( node5.getParent() );
     }
-    
+
     /**
      * @deprecated
      */
@@ -255,9 +252,9 @@ public class DependencyNodeTest
     private DependencyNode createNode( DependencyNode parent, int i )
     {
         DependencyNode node = createNode( i );
-        
+
         parent.addChild( node );
-        
+
         return node;
     }
 
@@ -268,11 +265,11 @@ public class DependencyNodeTest
 
     private String createArtifactId( int i )
     {
-        return createArtifactId( i, Integer.toString( i ) ); 
+        return createArtifactId( i, Integer.toString( i ) );
     }
 
     private String createArtifactId( int i, String version )
     {
-        return "groupId" + i + ":artifactId" + i + ":jar:" + version + ":compile"; 
+        return "groupId" + i + ":artifactId" + i + ":jar:" + version + ":compile";
     }
 }

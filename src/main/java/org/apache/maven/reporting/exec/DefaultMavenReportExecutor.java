@@ -298,10 +298,8 @@ public class DefaultMavenReportExecutor
                                                            mavenReportExecutorRequest.getMavenSession() );
             }
 
-            if ( canGenerateReport( mavenReport, mojoExecution ) )
-            {
-                reports.add( mavenReportExecution );
-            }
+            // ok, report is ready to generate
+            reports.add( mavenReportExecution );
         }
 
         return reports;
@@ -311,21 +309,6 @@ public class DefaultMavenReportExecutor
     {
         return project.isExecutionRoot() && "pom".equals( project.getPackaging() ) && ( project.getModules() != null )
             && !project.getModules().isEmpty();
-    }
-
-    private boolean canGenerateReport( MavenReport mavenReport, MojoExecution mojoExecution )
-    {
-        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-        try
-        {
-            Thread.currentThread().setContextClassLoader( mojoExecution.getMojoDescriptor().getRealm() );
-
-            return mavenReport.canGenerateReport();
-        }
-        finally
-        {
-            Thread.currentThread().setContextClassLoader( originalClassLoader );
-        }
     }
 
     private MavenReport getConfiguredMavenReport( MojoExecution mojoExecution, PluginDescriptor pluginDescriptor,

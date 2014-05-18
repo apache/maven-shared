@@ -50,10 +50,8 @@ public class FilteringDependencyNodeVisitor
      * Creates a dependency node visitor that delegates nodes that are accepted by the specified filter to the specified
      * visitor.
      * 
-     * @param visitor
-     *            the dependency node visitor to delegate to
-     * @param filter
-     *            the dependency node filter to apply before delegation
+     * @param visitor the dependency node visitor to delegate to
+     * @param filter the dependency node filter to apply before delegation
      */
     public FilteringDependencyNodeVisitor( DependencyNodeVisitor visitor, DependencyNodeFilter filter )
     {

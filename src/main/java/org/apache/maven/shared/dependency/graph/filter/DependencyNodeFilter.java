@@ -33,8 +33,7 @@ public interface DependencyNodeFilter
     /**
      * Gets whether this filter accepts the specified dependency node.
      * 
-     * @param node
-     *            the dependency node to check
+     * @param node the dependency node to check
      * @return <code>true</code> if this filter accepts the specified dependency node
      */
     boolean accept( DependencyNode node );

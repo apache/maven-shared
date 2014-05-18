@@ -25,9 +25,8 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor;
 
 /**
- * Represents an artifact node within a Maven project's dependency graph. Notice there is no support
- * for ommitted nodes at the moment, only dependencies kept in the resolved dependency list are
- * available.
+ * Represents an artifact node within a Maven project's dependency graph. Notice there is no support for ommitted nodes
+ * at the moment, only dependencies kept in the resolved dependency list are available.
  *
  * @author Hervé Boutemy
  * @since 2.0
@@ -41,8 +40,7 @@ public interface DependencyNode
     /**
      * Applies the specified dependency node visitor to this dependency node and its children.
      * 
-     * @param visitor
-     *            the dependency node visitor to use
+     * @param visitor the dependency node visitor to use
      * @return the visitor result of ending the visit to this node
      * @since 1.1
      */

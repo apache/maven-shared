@@ -37,9 +37,9 @@ public class CollectingDependencyNodeVisitorTest
     extends AbstractDependencyNodeTest
 {
     // fields -----------------------------------------------------------------
-    
+
     private CollectingDependencyNodeVisitor visitor;
-    
+
     private DependencyNode node1;
 
     private DependencyNode node2;
@@ -47,7 +47,7 @@ public class CollectingDependencyNodeVisitorTest
     private DependencyNode node3;
 
     // TestCase methods -------------------------------------------------------
-    
+
     /**
      * {@inheritDoc}
      */
@@ -59,9 +59,9 @@ public class CollectingDependencyNodeVisitorTest
         node2 = createNode( "g:b:t:1" );
         node3 = createNode( "g:c:t:1" );
     }
-    
+
     // tests ------------------------------------------------------------------
-    
+
     public void testVisitSingleNode()
     {
         assertEmptyNodes();
@@ -86,17 +86,17 @@ public class CollectingDependencyNodeVisitorTest
     }
 
     // private methods --------------------------------------------------------
-    
+
     private void assertEmptyNodes()
     {
-        assertNodes( Collections.<DependencyNode>emptyList() );
+        assertNodes( Collections.<DependencyNode> emptyList() );
     }
-    
+
     private void assertNodes( DependencyNode node )
     {
         assertNodes( Collections.singletonList( node ) );
     }
-    
+
     private void assertNodes( List<DependencyNode> expectedNodes )
     {
         assertEquals( "Collected nodes", expectedNodes, visitor.getNodes() );

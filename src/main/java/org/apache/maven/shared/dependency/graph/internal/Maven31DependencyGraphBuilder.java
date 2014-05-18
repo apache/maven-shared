@@ -66,6 +66,7 @@ public class Maven31DependencyGraphBuilder
     private ArtifactFactory factory;
 
     private final Invoker invoker = new Invoker();
+
     private final ProjectReferenceKeyGenerator keyGenerator = new ProjectReferenceKeyGenerator();
 
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
@@ -74,23 +75,23 @@ public class Maven31DependencyGraphBuilder
         return buildDependencyGraph( project, filter, Collections.EMPTY_MAP );
     }
 
-    public DependencyNode buildDependencyGraph(
-            MavenProject project, ArtifactFilter filter, Map<String, MavenProject> reactorProjects )
-            throws DependencyGraphBuilderException
+    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
+                                                Map<String, MavenProject> reactorProjects )
+        throws DependencyGraphBuilderException
     {
         ProjectBuildingRequest projectBuildingRequest =
-                (ProjectBuildingRequest) invoker.invoke( project.getClass(), project, "getProjectBuildingRequest" );
+            (ProjectBuildingRequest) invoker.invoke( project.getClass(), project, "getProjectBuildingRequest" );
 
         RepositorySystemSession session =
-                (RepositorySystemSession) invoker.invoke( ProjectBuildingRequest.class, projectBuildingRequest,
-                        "getRepositorySession" );
+            (RepositorySystemSession) invoker.invoke( ProjectBuildingRequest.class, projectBuildingRequest,
+                                                      "getRepositorySession" );
 
-            /*if ( Boolean.TRUE != ( (Boolean) session.getConfigProperties().get( DependencyManagerUtils.NODE_DATA_PREMANAGED_VERSION ) ) )
-            {
-                DefaultRepositorySystemSession newSession = new DefaultRepositorySystemSession( session );
-                newSession.setConfigProperty( DependencyManagerUtils.NODE_DATA_PREMANAGED_VERSION, true );
-                session = newSession;
-            }*/
+        /*
+         * if ( Boolean.TRUE != ( (Boolean) session.getConfigProperties().get(
+         * DependencyManagerUtils.NODE_DATA_PREMANAGED_VERSION ) ) ) { DefaultRepositorySystemSession newSession = new
+         * DefaultRepositorySystemSession( session ); newSession.setConfigProperty(
+         * DependencyManagerUtils.NODE_DATA_PREMANAGED_VERSION, true ); session = newSession; }
+         */
 
         final DependencyResolutionRequest request = new DefaultDependencyResolutionRequest();
         request.setMavenProject( project );
@@ -98,15 +99,15 @@ public class Maven31DependencyGraphBuilder
 
         final DependencyResolutionResult result = resolveDependencies( request, reactorProjects );
         org.eclipse.aether.graph.DependencyNode graph =
-                ( org.eclipse.aether.graph.DependencyNode ) invoker.invoke( DependencyResolutionResult.class, result,
-                        "getDependencyGraph" );
+            (org.eclipse.aether.graph.DependencyNode) invoker.invoke( DependencyResolutionResult.class, result,
+                                                                      "getDependencyGraph" );
 
         return buildDependencyNode( null, graph, project.getArtifact(), filter );
     }
 
-    private DependencyResolutionResult resolveDependencies(DependencyResolutionRequest request,
-                                                           Map<String, MavenProject> reactorProjects)
-            throws DependencyGraphBuilderException
+    private DependencyResolutionResult resolveDependencies( DependencyResolutionRequest request,
+                                                            Map<String, MavenProject> reactorProjects )
+        throws DependencyGraphBuilderException
     {
         try
         {
@@ -126,13 +127,15 @@ public class Maven31DependencyGraphBuilder
             // NB There doesn't seem to be any way to apply this to Maven2DependencyGraphBuilder as there is no
             // concept of partial resolution like there is is 3 and 3.1
             final DependencyResolutionResult result = e.getResult();
-            final List<Dependency> reactorDeps = getReactorDependencies( reactorProjects, result.getUnresolvedDependencies() );
+            final List<Dependency> reactorDeps =
+                getReactorDependencies( reactorProjects, result.getUnresolvedDependencies() );
             invoker.invoke( result.getUnresolvedDependencies(), "removeAll", Collection.class, reactorDeps );
             invoker.invoke( result.getResolvedDependencies(), "addAll", Collection.class, reactorDeps );
 
-            if ( !result.getUnresolvedDependencies().isEmpty() ) {
+            if ( !result.getUnresolvedDependencies().isEmpty() )
+            {
                 throw new DependencyGraphBuilderException( "Could not resolve the following dependencies : "
-                        + result.getUnresolvedDependencies(), e );
+                    + result.getUnresolvedDependencies(), e );
             }
             getLogger().debug( "Resolved dependencies after ignoring reactor dependencies : " + reactorDeps );
             return result;
@@ -146,10 +149,11 @@ public class Maven31DependencyGraphBuilder
         {
             final Dependency dependency = (Dependency) untypedDependency;
             final org.eclipse.aether.artifact.Artifact depArtifact = dependency.getArtifact();
-            final String projectRefId = keyGenerator.getProjectReferenceKey(
-                    depArtifact.getGroupId(), depArtifact.getArtifactId(), depArtifact.getVersion()
-            );
-            if ( reactorProjects.containsKey( projectRefId ) ) {
+            final String projectRefId =
+                keyGenerator.getProjectReferenceKey( depArtifact.getGroupId(), depArtifact.getArtifactId(),
+                                                     depArtifact.getVersion() );
+            if ( reactorProjects.containsKey( projectRefId ) )
+            {
                 reactorDeps.add( dependency );
             }
         }
@@ -169,8 +173,8 @@ public class Maven31DependencyGraphBuilder
     private DependencyNode buildDependencyNode( DependencyNode parent, org.eclipse.aether.graph.DependencyNode node,
                                                 Artifact artifact, ArtifactFilter filter )
     {
-        String premanagedVersion = null; //DependencyManagerUtils.getPremanagedVersion( node );
-        String premanagedScope = null; //DependencyManagerUtils.getPremanagedScope( node );
+        String premanagedVersion = null; // DependencyManagerUtils.getPremanagedVersion( node );
+        String premanagedScope = null; // DependencyManagerUtils.getPremanagedScope( node );
 
         DefaultDependencyNode current =
             new DefaultDependencyNode( parent, artifact, premanagedVersion, premanagedScope,

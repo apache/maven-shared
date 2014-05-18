@@ -55,7 +55,7 @@ public abstract class AbstractDependencyNodeTest
         {
             return null;
         }
-        
+
         String[] tokens = id.split( ":" );
 
         return createArtifact( get( tokens, 0 ), get( tokens, 1 ), get( tokens, 2 ), get( tokens, 3 ), get( tokens, 4 ) );

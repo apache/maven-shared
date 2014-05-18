@@ -18,14 +18,14 @@ package org.apache.maven.shared.dependency.graph;
  * specific language governing permissions and limitations
  * under the License.
  */
- 
+
 import org.apache.maven.project.MavenProject;
 
 /**
- * Generates the key used by {@link org.apache.maven.project.MavenProject#getProjectReferences()}
- * , {@link org.apache.maven.execution.MavenSession#getProjectMap()} and the Map passed into
- * {@link org.apache.maven.shared.dependency.graph.DependencyGraphBuilder#buildDependencyGraph
- * (org.apache.maven.project.MavenProject, org.apache.maven.artifact.resolver.filter.ArtifactFilter, java.util.Map)}.
+ * Generates the key used by {@link org.apache.maven.project.MavenProject#getProjectReferences()} ,
+ * {@link org.apache.maven.execution.MavenSession#getProjectMap()} and the Map passed into
+ * {@link org.apache.maven.shared.dependency.graph.DependencyGraphBuilder#buildDependencyGraph (org.apache.maven.project.MavenProject, org.apache.maven.artifact.resolver.filter.ArtifactFilter, java.util.Map)}
+ * .
  */
 public final class ProjectReferenceKeyGenerator
 {

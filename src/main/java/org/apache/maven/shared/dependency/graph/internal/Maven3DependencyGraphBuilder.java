@@ -66,6 +66,7 @@ public class Maven3DependencyGraphBuilder
     private ArtifactFactory factory;
 
     private final Invoker invoker = new Invoker();
+
     private final ProjectReferenceKeyGenerator keyGenerator = new ProjectReferenceKeyGenerator();
 
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
@@ -74,24 +75,24 @@ public class Maven3DependencyGraphBuilder
         return buildDependencyGraph( project, filter, Collections.EMPTY_MAP );
     }
 
-    public DependencyNode buildDependencyGraph(
-            MavenProject project, ArtifactFilter filter, Map<String, MavenProject> reactorProjects )
-            throws DependencyGraphBuilderException
+    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
+                                                Map<String, MavenProject> reactorProjects )
+        throws DependencyGraphBuilderException
     {
         ProjectBuildingRequest projectBuildingRequest =
-                (ProjectBuildingRequest) invoke( project, "getProjectBuildingRequest" );
+            (ProjectBuildingRequest) invoke( project, "getProjectBuildingRequest" );
 
         DependencyResolutionRequest request =
-                new DefaultDependencyResolutionRequest( project, projectBuildingRequest.getRepositorySession() );
+            new DefaultDependencyResolutionRequest( project, projectBuildingRequest.getRepositorySession() );
 
         final DependencyResolutionResult result = resolveDependencies( request, reactorProjects );
 
         return buildDependencyNode( null, result.getDependencyGraph(), project.getArtifact(), filter );
     }
 
-    private DependencyResolutionResult resolveDependencies(DependencyResolutionRequest request,
-                                                           Map<String, MavenProject> reactorProjects)
-            throws DependencyGraphBuilderException
+    private DependencyResolutionResult resolveDependencies( DependencyResolutionRequest request,
+                                                            Map<String, MavenProject> reactorProjects )
+        throws DependencyGraphBuilderException
     {
         try
         {
@@ -111,37 +112,44 @@ public class Maven3DependencyGraphBuilder
             // NB There doesn't seem to be any way to apply this to Maven2DependencyGraphBuilder as there is no
             // concept of partial resolution like there is is 3 and 3.1
             final DependencyResolutionResult result = e.getResult();
-            final List<Dependency> reactorDeps = getReactorDependencies( reactorProjects, result.getUnresolvedDependencies() );
+            final List<Dependency> reactorDeps =
+                getReactorDependencies( reactorProjects, result.getUnresolvedDependencies() );
             invoker.invoke( result.getUnresolvedDependencies(), "removeAll", Collection.class, reactorDeps );
             invoker.invoke( result.getResolvedDependencies(), "addAll", Collection.class, reactorDeps );
 
-            if ( !result.getUnresolvedDependencies().isEmpty() ) {
+            if ( !result.getUnresolvedDependencies().isEmpty() )
+            {
                 throw new DependencyGraphBuilderException( "Could not resolve the following dependencies : "
-                        + result.getUnresolvedDependencies(), e );
+                    + result.getUnresolvedDependencies(), e );
             }
             getLogger().debug( "Resolved dependencies after ignoring reactor dependencies : " + reactorDeps );
             return result;
         }
     }
 
-    private List<org.sonatype.aether.graph.Dependency> getReactorDependencies( Map<String, MavenProject> reactorProjects, List<?> dependencies )
+    private List<org.sonatype.aether.graph.Dependency> getReactorDependencies( Map<String, MavenProject> reactorProjects,
+                                                                               List<?> dependencies )
     {
-        final List<org.sonatype.aether.graph.Dependency> reactorDeps = new ArrayList<org.sonatype.aether.graph.Dependency>();
+        final List<org.sonatype.aether.graph.Dependency> reactorDeps =
+            new ArrayList<org.sonatype.aether.graph.Dependency>();
         for ( final Object untypedDependency : dependencies )
         {
-            final org.sonatype.aether.graph.Dependency dependency = ( org.sonatype.aether.graph.Dependency ) untypedDependency;
+            final org.sonatype.aether.graph.Dependency dependency =
+                (org.sonatype.aether.graph.Dependency) untypedDependency;
             final org.sonatype.aether.artifact.Artifact depArtifact = dependency.getArtifact();
-            final String projectRefId = keyGenerator.getProjectReferenceKey(
-                    depArtifact.getGroupId(), depArtifact.getArtifactId(), depArtifact.getVersion()
-            );
-            if ( reactorProjects.containsKey( projectRefId ) ) {
+            final String projectRefId =
+                keyGenerator.getProjectReferenceKey( depArtifact.getGroupId(), depArtifact.getArtifactId(),
+                                                     depArtifact.getVersion() );
+            if ( reactorProjects.containsKey( projectRefId ) )
+            {
                 reactorDeps.add( dependency );
             }
         }
         return reactorDeps;
     }
 
-    private Object invoke( Object object, String method ) throws DependencyGraphBuilderException
+    private Object invoke( Object object, String method )
+        throws DependencyGraphBuilderException
     {
         try
         {
@@ -175,7 +183,11 @@ public class Maven3DependencyGraphBuilder
                                                 Artifact artifact, ArtifactFilter filter )
     {
         DefaultDependencyNode current =
-            new DefaultDependencyNode( parent, artifact, null /*node.getPremanagedVersion()*/, null /*node.getPremanagedScope()*/,
+            new DefaultDependencyNode( parent, artifact, null /* node.getPremanagedVersion() */, null /*
+                                                                                                       * node.
+                                                                                                       * getPremanagedScope
+                                                                                                       * ()
+                                                                                                       */,
                                        getVersionSelectedFromRange( node.getVersionConstraint() ) );
 
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );

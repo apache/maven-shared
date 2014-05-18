@@ -52,10 +52,8 @@ public class StateDependencyNodeFilter
     /**
      * Creates a dependency node filter that only accepts dependency nodes of the specified state.
      * 
-     * @param state
-     *            the state of dependency nodes to accept
-     * @throws IllegalArgumentException
-     *             if the specified state is invalid
+     * @param state the state of dependency nodes to accept
+     * @throws IllegalArgumentException if the specified state is invalid
      */
     public StateDependencyNodeFilter( int state )
     {

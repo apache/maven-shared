@@ -82,8 +82,8 @@ public class SerializingDependencyNodeVisitor
     /**
      * The extended ASCII tokens to use when outputing the dependency graph.
      */
-    public static final GraphTokens EXTENDED_TOKENS =
-        new GraphTokens( "\u00c3\u00c4 ", "\u00c0\u00c4 ", "\u00b3  ", "   " );
+    public static final GraphTokens EXTENDED_TOKENS = new GraphTokens( "\u00c3\u00c4 ", "\u00c0\u00c4 ", "\u00b3  ",
+                                                                       "   " );
 
     // fields -----------------------------------------------------------------
 
@@ -107,8 +107,7 @@ public class SerializingDependencyNodeVisitor
     /**
      * Creates a dependency node visitor that serializes visited nodes to the specified writer using whitespace tokens.
      * 
-     * @param writer
-     *            the writer to serialize to
+     * @param writer the writer to serialize to
      */
     public SerializingDependencyNodeVisitor( Writer writer )
     {
@@ -119,10 +118,8 @@ public class SerializingDependencyNodeVisitor
      * Creates a dependency node visitor that serializes visited nodes to the specified writer using the specified
      * tokens.
      * 
-     * @param writer
-     *            the writer to serialize to
-     * @param tokens
-     *            the tokens to use when serializing the dependency graph
+     * @param writer the writer to serialize to
+     * @param tokens the tokens to use when serializing the dependency graph
      */
     public SerializingDependencyNodeVisitor( Writer writer, GraphTokens tokens )
     {
@@ -171,8 +168,7 @@ public class SerializingDependencyNodeVisitor
     /**
      * Writes the necessary tokens to indent the specified dependency node to this visitor's writer.
      * 
-     * @param node
-     *            the dependency node to indent
+     * @param node the dependency node to indent
      */
     private void indent( DependencyNode node )
     {
@@ -190,14 +186,13 @@ public class SerializingDependencyNodeVisitor
     /**
      * Gets whether the specified dependency node is the last of its siblings.
      * 
-     * @param node
-     *            the dependency node to check
+     * @param node the dependency node to check
      * @return <code>true</code> if the specified dependency node is the last of its last siblings
      */
     private boolean isLast( DependencyNode node )
     {
         // TODO: remove node argument and calculate from visitor calls only
-        
+
         DependencyNode parent = node.getParent();
 
         boolean last;
@@ -219,16 +214,14 @@ public class SerializingDependencyNodeVisitor
     /**
      * Gets whether the specified dependency node ancestor is the last of its siblings.
      * 
-     * @param node
-     *            the dependency node whose ancestor to check
-     * @param ancestorDepth
-     *            the depth of the ancestor of the specified dependency node to check
+     * @param node the dependency node whose ancestor to check
+     * @param ancestorDepth the depth of the ancestor of the specified dependency node to check
      * @return <code>true</code> if the specified dependency node ancestor is the last of its siblings
      */
     private boolean isLast( DependencyNode node, int ancestorDepth )
     {
         // TODO: remove node argument and calculate from visitor calls only
-        
+
         int distance = depth - ancestorDepth;
 
         while ( distance-- > 0 )

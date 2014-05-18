@@ -65,47 +65,36 @@ public class SerializingDependencyNodeVisitorTest
 
         assertTree( "g:p:t:1" + NEWLINE, rootNode );
     }
-    
+
     public void testNodeWithChild()
     {
         DependencyNode rootNode = createNode( "g:p:t:1" );
         rootNode.addChild( createNode( "g:a:t:1" ) );
 
-        assertTree(
-            "g:p:t:1" + NEWLINE + 
-            "\\- g:a:t:1" + NEWLINE,
-            rootNode );
+        assertTree( "g:p:t:1" + NEWLINE + "\\- g:a:t:1" + NEWLINE, rootNode );
     }
-    
+
     public void testNodeWithMultipleChildren()
     {
         DependencyNode rootNode = createNode( "g:p:t:1" );
         rootNode.addChild( createNode( "g:a:t:1" ) );
         rootNode.addChild( createNode( "g:b:t:1" ) );
         rootNode.addChild( createNode( "g:c:t:1" ) );
-        
-        assertTree(
-            "g:p:t:1" + NEWLINE + 
-            "+- g:a:t:1" + NEWLINE + 
-            "+- g:b:t:1" + NEWLINE + 
-            "\\- g:c:t:1" + NEWLINE,
-            rootNode );
+
+        assertTree( "g:p:t:1" + NEWLINE + "+- g:a:t:1" + NEWLINE + "+- g:b:t:1" + NEWLINE + "\\- g:c:t:1" + NEWLINE,
+                    rootNode );
     }
-    
+
     public void testNodeWithGrandchild()
     {
         DependencyNode rootNode = createNode( "g:p:t:1" );
         DependencyNode childNode = createNode( "g:a:t:1" );
         rootNode.addChild( childNode );
         childNode.addChild( createNode( "g:b:t:1" ) );
-        
-        assertTree(
-            "g:p:t:1" + NEWLINE + 
-            "\\- g:a:t:1" + NEWLINE + 
-            "   \\- g:b:t:1" + NEWLINE,
-            rootNode );
+
+        assertTree( "g:p:t:1" + NEWLINE + "\\- g:a:t:1" + NEWLINE + "   \\- g:b:t:1" + NEWLINE, rootNode );
     }
-    
+
     public void testNodeWithMultipleGrandchildren()
     {
         DependencyNode rootNode = createNode( "g:p:t:1" );
@@ -115,16 +104,11 @@ public class SerializingDependencyNodeVisitorTest
         DependencyNode child2Node = createNode( "g:c:t:1" );
         rootNode.addChild( child2Node );
         child2Node.addChild( createNode( "g:d:t:1" ) );
-        
-        assertTree(
-            "g:p:t:1" + NEWLINE + 
-            "+- g:a:t:1" + NEWLINE + 
-            "|  \\- g:b:t:1" + NEWLINE +
-            "\\- g:c:t:1" + NEWLINE + 
-            "   \\- g:d:t:1" + NEWLINE,
-            rootNode );
+
+        assertTree( "g:p:t:1" + NEWLINE + "+- g:a:t:1" + NEWLINE + "|  \\- g:b:t:1" + NEWLINE + "\\- g:c:t:1" + NEWLINE
+            + "   \\- g:d:t:1" + NEWLINE, rootNode );
     }
-    
+
     // private methods --------------------------------------------------------
 
     private void assertTree( String expectedTree, DependencyNode actualNode )

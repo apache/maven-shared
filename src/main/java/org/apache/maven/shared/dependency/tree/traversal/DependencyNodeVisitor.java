@@ -33,8 +33,7 @@ public interface DependencyNodeVisitor
     /**
      * Starts the visit to the specified dependency node.
      * 
-     * @param node
-     *            the dependency node to visit
+     * @param node the dependency node to visit
      * @return <code>true</code> to visit the specified dependency node's children, <code>false</code> to skip the
      *         specified dependency node's children and proceed to its next sibling
      */
@@ -43,10 +42,9 @@ public interface DependencyNodeVisitor
     /**
      * Ends the visit to to the specified dependency node.
      * 
-     * @param node
-     *            the dependency node to visit
-     * @return <code>true</code> to visit the specified dependency node's next sibling, <code>false</code> to skip
-     *         the specified dependency node's next siblings and proceed to its parent
+     * @param node the dependency node to visit
+     * @return <code>true</code> to visit the specified dependency node's next sibling, <code>false</code> to skip the
+     *         specified dependency node's next siblings and proceed to its parent
      */
     boolean endVisit( DependencyNode node );
 }

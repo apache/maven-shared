@@ -52,8 +52,7 @@ public class AncestorOrSelfDependencyNodeFilter
      * Creates a dependency node filter that only accepts nodes that are ancestors of, or equal to, the specified list
      * of nodes.
      * 
-     * @param descendantNodes
-     *            the list of nodes to accept ancestors-or-self of
+     * @param descendantNodes the list of nodes to accept ancestors-or-self of
      */
     public AncestorOrSelfDependencyNodeFilter( List<DependencyNode> descendantNodes )
     {
@@ -83,12 +82,9 @@ public class AncestorOrSelfDependencyNodeFilter
     /**
      * Gets whether the first dependency node is an ancestor-or-self of the second.
      * 
-     * @param ancestorNode
-     *            the ancestor-or-self dependency node
-     * @param descendantNode
-     *            the dependency node to test
-     * @return <code>true</code> if <code>ancestorNode</code> is an ancestor, or equal to,
-     *         <code>descendantNode</code>
+     * @param ancestorNode the ancestor-or-self dependency node
+     * @param descendantNode the dependency node to test
+     * @return <code>true</code> if <code>ancestorNode</code> is an ancestor, or equal to, <code>descendantNode</code>
      */
     private boolean isAncestorOrSelf( DependencyNode ancestorNode, DependencyNode descendantNode )
     {

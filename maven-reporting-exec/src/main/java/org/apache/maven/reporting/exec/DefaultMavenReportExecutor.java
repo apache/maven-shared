@@ -279,19 +279,19 @@ public class DefaultMavenReportExecutor
 
             if ( !mojoExecution.getForkedExecutions().isEmpty() )
             {
-                String msg = report.getGoal() + " report requires ";
+                String msg = "preparing '" + report.getGoal() + "' report requires '";
                 if ( StringUtils.isNotEmpty( mojoDescriptor.getExecutePhase() ) )
                 {
                     // forked phase
                     String lifecycleId =
                         StringUtils.isEmpty( mojoDescriptor.getExecuteLifecycle() ) ? ""
                                         : ( '[' + mojoDescriptor.getExecuteLifecycle() + ']' );
-                    logger.info( msg + lifecycleId + mojoDescriptor.getExecutePhase() + " forked phase execution" );
+                    logger.info( msg + lifecycleId + mojoDescriptor.getExecutePhase() + "' forked phase execution" );
                 }
                 else
                 {
                     // forked goal
-                    logger.info( msg + mojoDescriptor.getExecuteGoal() + " forked goal execution" );
+                    logger.info( msg + mojoDescriptor.getExecuteGoal() + "' forked goal execution" );
                 }
 
                 lifecycleExecutor.executeForkedExecutions( mojoExecution,

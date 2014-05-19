@@ -21,13 +21,13 @@ import java.io.*;
 
 import org.codehaus.plexus.util.*;
 
-String actual = FileUtils.fileRead( new File( basedir, "moduleZDepsY/target/tree.txt" ) );
+String actual = FileUtils.fileRead( new File( basedir, "module-z-deps-y/target/tree.txt" ) );
 String expected = FileUtils.fileRead( new File( basedir, "expected-tree.txt" ) );
 
 actual = actual.replaceAll( "[\n\r]+", "\n" );
 expected = expected.replaceAll( "[\n\r]+", "\n" );
 
-System.out.println( "Checking dependency tree..." );
+System.out.println( "Checking module-z-deps-y dependency tree..." );
 
 if ( !actual.equals( expected ) )
 {

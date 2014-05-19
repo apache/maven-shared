@@ -26,6 +26,8 @@ import org.apache.maven.project.MavenProject;
  */
 final class ArtifactKey
 {
+    private static final int HASH_PRIME = 31;
+
     private final String groupId;
     private final String artifactId;
     private final String version;
@@ -76,8 +78,8 @@ final class ArtifactKey
     public int hashCode()
     {
         int result = groupId.hashCode();
-        result = 31 * result + artifactId.hashCode();
-        result = 31 * result + version.hashCode();
+        result = HASH_PRIME * result + artifactId.hashCode();
+        result = HASH_PRIME * result + version.hashCode();
         return result;
     }
 }

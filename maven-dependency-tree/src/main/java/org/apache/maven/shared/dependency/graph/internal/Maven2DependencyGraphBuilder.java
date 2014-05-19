@@ -50,6 +50,14 @@ public class Maven2DependencyGraphBuilder
     @Requirement
     private DependencyTreeBuilder treeBuilder;
 
+    /**
+     * Builds the dependency graph for Maven 2.
+     *
+     * @param project the project
+     * @param filter artifact filter (can be <code>null</code>)
+     * @return DependencyNode containing the dependency graph.
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
+     */
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
@@ -63,6 +71,17 @@ public class Maven2DependencyGraphBuilder
         }
     }
 
+    /**
+     * Builds the dependency graph for Maven 2.
+     *
+     * NB the reactor projects are ignored as Maven 2 is not able to resolve projects from the reactor.
+     *
+     * @param project           the project
+     * @param filter            artifact filter (can be <code>null</code>)
+     * @param reactorProjects   Ignored.
+     * @return DependencyNode containing the dependency graph.
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
+     */
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
                                                 Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException

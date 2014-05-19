@@ -67,12 +67,29 @@ public class Maven3DependencyGraphBuilder
 
     private final Invoker invoker = new Invoker();
 
+    /**
+     * Builds the dependency graph for Maven 3.
+     *
+     * @param project the project
+     * @param filter artifact filter (can be <code>null</code>)
+     * @return DependencyNode containing the dependency graph.
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
+     */
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
         return buildDependencyGraph( project, filter, Collections.EMPTY_LIST );
     }
 
+    /**
+     * Builds the dependency graph for Maven 3 including any dependencies from any projects in the reactor.
+     *
+     * @param project the project
+     * @param filter artifact filter (can be <code>null</code>)
+     * @param reactorProjects Collection of those projects contained in the reactor.
+     * @return DependencyNode containing the dependency graph.
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
+     */
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
                                                 Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
@@ -188,11 +205,9 @@ public class Maven3DependencyGraphBuilder
                                                 Artifact artifact, ArtifactFilter filter )
     {
         DefaultDependencyNode current =
-            new DefaultDependencyNode( parent, artifact, null /* node.getPremanagedVersion() */, null /*
-                                                                                                       * node.
-                                                                                                       * getPremanagedScope
-                                                                                                       * ()
-                                                                                                       */,
+            new DefaultDependencyNode( parent, artifact,
+                                       null /* node.getPremanagedVersion() */,
+                                       null /* node.getPremanagedScope() */,
                                        getVersionSelectedFromRange( node.getVersionConstraint() ) );
 
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );

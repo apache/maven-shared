@@ -33,8 +33,14 @@ import org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor;
  */
 public interface DependencyNode
 {
+    /**
+     * @return Artifact for this DependencyNode.
+     */
     Artifact getArtifact();
 
+    /**
+     * @return children of this DependencyNode.
+     */
     List<DependencyNode> getChildren();
 
     /**

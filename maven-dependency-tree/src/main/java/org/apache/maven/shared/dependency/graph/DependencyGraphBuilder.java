@@ -41,7 +41,7 @@ public interface DependencyGraphBuilder
      * @param project the project
      * @param filter artifact filter (can be <code>null</code>)
      * @return the dependency graph
-     * @throws DependencyGraphBuilderException
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
     DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException;
@@ -53,7 +53,7 @@ public interface DependencyGraphBuilder
      * @param filter artifact filter (can be <code>null</code>)
      * @param reactorProjects Collection of those projects contained in the reactor.
      * @return the dependency graph
-     * @throws DependencyGraphBuilderException
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
     DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
                                          Collection<MavenProject> reactorProjects )

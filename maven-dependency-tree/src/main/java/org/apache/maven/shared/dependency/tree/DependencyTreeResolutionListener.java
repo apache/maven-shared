@@ -30,7 +30,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ResolutionListener;
 import org.apache.maven.artifact.resolver.ResolutionListenerForDepMgmt;
 import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.shared.dependency.tree.traversal.CollectingDependencyNodeVisitor;
 import org.codehaus.plexus.logging.Logger;
 
 /**
@@ -313,7 +312,8 @@ public class DependencyTreeResolutionListener
      */
     public void restrictRange( Artifact artifact, Artifact replacement, VersionRange versionRange )
     {
-        log( "restrictRange: artifact=" + artifact + ", replacement=" + replacement + ", versionRange=" + versionRange );
+        log( "restrictRange: artifact=" + artifact + ", replacement=" + replacement
+                 + ", versionRange=" + versionRange );
 
         // TODO: track range restriction in node (MNG-3093)
     }
@@ -368,7 +368,9 @@ public class DependencyTreeResolutionListener
      * Gets a list of all dependency nodes in the computed dependency tree.
      * 
      * @return a list of dependency nodes
-     * @deprecated As of 1.1, use a {@link CollectingDependencyNodeVisitor} on the root dependency node
+     * @deprecated As of 1.1, use a
+     * {@link org.apache.maven.shared.dependency.tree.traversal.CollectingDependencyNodeVisitor}
+     * on the root dependency node
      */
     public Collection<DependencyNode> getNodes()
     {

@@ -32,11 +32,18 @@ public class DependencyGraphBuilderException
 
     // constructors -----------------------------------------------------------
 
+    /**
+     * @param message   Message indicating why dependency graph could not be resolved.
+     */
     public DependencyGraphBuilderException( String message )
     {
         super( message );
     }
 
+    /**
+     * @param message   Message indicating why dependency graph could not be resolved.
+     * @param cause     Throwable indicating at which point the graph failed to be resolved.
+     */
     public DependencyGraphBuilderException( String message, Throwable cause )
     {
         super( message, cause );

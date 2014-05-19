@@ -25,14 +25,11 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
-import org.apache.maven.shared.dependency.graph.ProjectReferenceKeyGenerator;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Resolves all the dependencies in the project immediately after the Project has been read.
@@ -64,18 +61,6 @@ public final class ResolveDependenciesLifecycleParticipant extends AbstractMaven
 
         final List<MavenProject> projects = session.getProjects();
 
-        // NB We could get this from session.getProjectMap() but it doesn't exist in Maven-2.2.1 or 3.0.4
-        final Map<String, MavenProject> reactorProjects = new HashMap<String, MavenProject>();
-        final ProjectReferenceKeyGenerator keyGenerator = new ProjectReferenceKeyGenerator();
-
-        log.debug( "Reactor projects:" );
-        for ( MavenProject project : projects )
-        {
-            log.debug( " - " + project );
-            reactorProjects.put( keyGenerator.getProjectReferenceKey( project ), project );
-        }
-        log.debug( "" );
-
         for ( MavenProject project : projects )
         {
             log.debug( "" );
@@ -84,7 +69,7 @@ public final class ResolveDependenciesLifecycleParticipant extends AbstractMaven
             try
             {
                 // No need to filter our search. We want to resolve all artifacts.
-                dependencyGraphBuilder.buildDependencyGraph( project, null, reactorProjects );
+                dependencyGraphBuilder.buildDependencyGraph( project, null, projects );
             }
             catch ( DependencyGraphBuilderException e )
             {

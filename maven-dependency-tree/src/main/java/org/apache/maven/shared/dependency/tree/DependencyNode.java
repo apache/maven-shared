@@ -42,6 +42,8 @@ public class DependencyNode
 {
     // constants --------------------------------------------------------------
 
+    private static final int HASH_PRIME = 31;
+
     /**
      * State that represents an included dependency node.
      * 
@@ -714,6 +716,9 @@ public class DependencyNode
             case OMITTED_FOR_CYCLE:
                 appender.append( "omitted for cycle" );
                 break;
+
+            default:
+                break;
         }
 
         appender.flush();
@@ -752,22 +757,22 @@ public class DependencyNode
 
         int hashCode = 1;
 
-        hashCode = hashCode * 31 + getArtifact().hashCode();
+        hashCode = hashCode * HASH_PRIME + getArtifact().hashCode();
         // DefaultArtifact.hashCode does not consider scope
-        hashCode = hashCode * 31 + nullHashCode( getArtifact().getScope() );
+        hashCode = hashCode * HASH_PRIME + nullHashCode( getArtifact().getScope() );
 
         // TODO: use parent's artifact to prevent recursion - how can we improve this?
-        hashCode = hashCode * 31 + nullHashCode( nullGetArtifact( getParent() ) );
+        hashCode = hashCode * HASH_PRIME + nullHashCode( nullGetArtifact( getParent() ) );
 
-        hashCode = hashCode * 31 + getChildren().hashCode();
-        hashCode = hashCode * 31 + getState();
-        hashCode = hashCode * 31 + nullHashCode( getRelatedArtifact() );
-        hashCode = hashCode * 31 + nullHashCode( getPremanagedVersion() );
-        hashCode = hashCode * 31 + nullHashCode( getPremanagedScope() );
-        hashCode = hashCode * 31 + nullHashCode( getOriginalScope() );
-        hashCode = hashCode * 31 + nullHashCode( getFailedUpdateScope() );
-        hashCode = hashCode * 31 + nullHashCode( getVersionSelectedFromRange() );
-        hashCode = hashCode * 31 + nullHashCode( getAvailableVersions() );
+        hashCode = hashCode * HASH_PRIME + getChildren().hashCode();
+        hashCode = hashCode * HASH_PRIME + getState();
+        hashCode = hashCode * HASH_PRIME + nullHashCode( getRelatedArtifact() );
+        hashCode = hashCode * HASH_PRIME + nullHashCode( getPremanagedVersion() );
+        hashCode = hashCode * HASH_PRIME + nullHashCode( getPremanagedScope() );
+        hashCode = hashCode * HASH_PRIME + nullHashCode( getOriginalScope() );
+        hashCode = hashCode * HASH_PRIME + nullHashCode( getFailedUpdateScope() );
+        hashCode = hashCode * HASH_PRIME + nullHashCode( getVersionSelectedFromRange() );
+        hashCode = hashCode * HASH_PRIME + nullHashCode( getAvailableVersions() );
 
         return hashCode;
     }

@@ -169,12 +169,10 @@
         <artifactId>apache-rat-plugin</artifactId>
         <configuration>
           <excludes>
-            <exclude>src/test/resources*/**</exclude>
-            <exclude>src/test/projects/**</exclude>
-            <exclude>src/test/remote-repo/**</exclude>             
-            <exclude>**/*.odg</exclude>
-            <exclude>**/download.cgi</exclude>
-            <exclude>src/it/*/*.txt</exclude>
+            <!--
+              These files contains the expected output of this component and can not contain a license header.
+            -->
+            <exclude>src/it/*/expected*.txt</exclude>
           </excludes>            
         </configuration>
         <executions>

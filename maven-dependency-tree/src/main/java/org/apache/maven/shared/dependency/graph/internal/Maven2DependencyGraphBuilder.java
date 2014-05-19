@@ -19,11 +19,6 @@ package org.apache.maven.shared.dependency.graph.internal;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
@@ -34,6 +29,11 @@ import org.apache.maven.shared.dependency.tree.DependencyTreeBuilderException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Wrapper around Maven 2 dependency tree builder.
@@ -64,7 +64,7 @@ public class Maven2DependencyGraphBuilder
     }
 
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
-                                                Map<String, MavenProject> reactorProjects )
+                                                Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
     {
         getLogger().warn( "Reactor projects ignored - reactor dependencies cannot be resolved in Maven2" );

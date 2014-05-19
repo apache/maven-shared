@@ -33,8 +33,8 @@ import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * Default dependency graph builder that detects current Maven version to delegate to either Maven 2 or Maven 3 specific
@@ -55,11 +55,11 @@ public class DefaultDependencyGraphBuilder
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, Collections.EMPTY_MAP );
+        return buildDependencyGraph( project, filter, Collections.EMPTY_LIST );
     }
 
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
-                                                Map<String, MavenProject> reactorProjects )
+                                                Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
     {
         try

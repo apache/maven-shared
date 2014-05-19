@@ -24,23 +24,18 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.apache.maven.its.dependency-tree</groupId>
-  <artifactId>multi-module</artifactId>
+  <artifactId>module-x</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-
-  <name>Reactor Resolution Test</name>
-  <description>
-    Test that dependency-tree with dependencies from reactor can be displayed.
-  </description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <modules>
-    <module>module-x</module>
-    <module>module-y-deps-x</module>
-    <module>module-z-deps-y</module>
-  </modules>
-
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.0</version>
+    </dependency>
+  </dependencies>
 </project>

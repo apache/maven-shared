@@ -43,9 +43,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Wrapper around Maven 3 dependency resolver.
@@ -125,9 +125,10 @@ public class Maven3DependencyGraphBuilder
             // NB There doesn't seem to be any way to apply this to Maven2DependencyGraphBuilder as there is no
             // concept of partial resolution like there is is 3 and 3.1
             final DependencyResolutionResult result = e.getResult();
+
             final List<Dependency> reactorDeps =
                 getReactorDependencies( reactorProjects, result.getUnresolvedDependencies() );
-            Invoker.invoke( result.getUnresolvedDependencies(), "removeAll", Collection.class, reactorDeps );
+            result.getUnresolvedDependencies().removeAll( reactorDeps );
             Invoker.invoke( result.getResolvedDependencies(), "addAll", Collection.class, reactorDeps );
 
             if ( !result.getUnresolvedDependencies().isEmpty() )
@@ -135,7 +136,9 @@ public class Maven3DependencyGraphBuilder
                 throw new DependencyGraphBuilderException( "Could not resolve the following dependencies : "
                     + result.getUnresolvedDependencies(), e );
             }
+
             getLogger().debug( "Resolved dependencies after ignoring reactor dependencies : " + reactorDeps );
+
             return result;
         }
     }
@@ -143,28 +146,27 @@ public class Maven3DependencyGraphBuilder
     private List<org.sonatype.aether.graph.Dependency> getReactorDependencies( Collection<MavenProject> reactorProjects,
                                                                                List<?> dependencies )
     {
-        // Create ProjectMap
-        final Map<ArtifactKey, MavenProject> projectMap = new HashMap<ArtifactKey, MavenProject>();
+        final Set<ArtifactKey> reactorProjectsIds = new HashSet<ArtifactKey>();
         for ( final MavenProject project : reactorProjects )
         {
-            projectMap.put( new ArtifactKey( project ), project );
+            reactorProjectsIds.add( new ArtifactKey( project ) );
         }
 
-        final List<org.sonatype.aether.graph.Dependency> reactorDeps =
-            new ArrayList<org.sonatype.aether.graph.Dependency>();
+        final List<Dependency> reactorDeps = new ArrayList<Dependency>();
         for ( final Object untypedDependency : dependencies )
         {
-            final org.sonatype.aether.graph.Dependency dependency =
-                (org.sonatype.aether.graph.Dependency) untypedDependency;
+            final Dependency dependency = (Dependency) untypedDependency;
             final org.sonatype.aether.artifact.Artifact depArtifact = dependency.getArtifact();
-            final ArtifactKey key = new ArtifactKey(
-                    depArtifact.getGroupId(), depArtifact.getArtifactId(), depArtifact.getVersion()
-            );
-            if ( projectMap.containsKey( key ) )
+
+            final ArtifactKey key =
+                new ArtifactKey( depArtifact.getGroupId(), depArtifact.getArtifactId(), depArtifact.getVersion() );
+
+            if ( reactorProjectsIds.contains( key ) )
             {
                 reactorDeps.add( dependency );
             }
         }
+
         return reactorDeps;
     }
 

@@ -43,9 +43,9 @@ import org.eclipse.aether.version.VersionConstraint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Wrapper around Eclipse Aether dependency resolver, used in Maven 3.1.
@@ -66,7 +66,7 @@ public class Maven31DependencyGraphBuilder
     private ArtifactFactory factory;
 
     /**
-     * Builds the dependency graph for Maven 3 point 1+.
+     * Builds the dependency graph for Maven 3.1+.
      *
      * @param project the project
      * @param filter artifact filter (can be <code>null</code>)
@@ -80,7 +80,7 @@ public class Maven31DependencyGraphBuilder
     }
 
     /**
-     * Builds the dependency graph for Maven 3 point 1+ including any dependencies from any projects in the reactor.
+     * Builds the dependency graph for Maven 3.1+ including any dependencies from any projects in the reactor.
      *
      * @param project the project
      * @param filter artifact filter (can be <code>null</code>)
@@ -129,8 +129,8 @@ public class Maven31DependencyGraphBuilder
         catch ( DependencyResolutionException e )
         {
             // Ignore any resolution failure for deps that are part of the reactor but have not yet been built.
-            // NB Typing has been removed because DependencyResolutionResult returns Sonatype aether in 3.0.4 and
-            // Eclipse aether in 3.1.1 and while dep-tree is a single module we can only compile against one of them.
+            // NB Typing has been removed because DependencyResolutionResult returns Sonatype Aether in 3.0.4 and
+            // Eclipse Aether in 3.1.1 and while dep-tree is a single module we can only compile against one of them.
             //
             // NB While applying this code to Maven3DependencyGraphBuilder is trivial it won't work because
             // in Maven 3, MavenProject.getProjectReferences isn't populated. So we would need to have the reactor
@@ -140,9 +140,10 @@ public class Maven31DependencyGraphBuilder
             // NB There doesn't seem to be any way to apply this to Maven2DependencyGraphBuilder as there is no
             // concept of partial resolution like there is is 3 and 3.1
             final DependencyResolutionResult result = e.getResult();
+
             final List<Dependency> reactorDeps =
                 getReactorDependencies( reactorProjects, result.getUnresolvedDependencies() );
-            Invoker.invoke( result.getUnresolvedDependencies(), "removeAll", Collection.class, reactorDeps );
+            result.getUnresolvedDependencies().removeAll( reactorDeps );
             Invoker.invoke( result.getResolvedDependencies(), "addAll", Collection.class, reactorDeps );
 
             if ( !result.getUnresolvedDependencies().isEmpty() )
@@ -150,18 +151,19 @@ public class Maven31DependencyGraphBuilder
                 throw new DependencyGraphBuilderException( "Could not resolve the following dependencies : "
                     + result.getUnresolvedDependencies(), e );
             }
+
             getLogger().debug( "Resolved dependencies after ignoring reactor dependencies : " + reactorDeps );
+
             return result;
         }
     }
 
     private List<Dependency> getReactorDependencies( Collection<MavenProject> reactorProjects, List<?> dependencies )
     {
-        // Create ProjectMap
-        final Map<ArtifactKey, MavenProject> projectMap = new HashMap<ArtifactKey, MavenProject>();
+        final Set<ArtifactKey> reactorProjectsIds = new HashSet<ArtifactKey>();
         for ( final MavenProject project : reactorProjects )
         {
-            projectMap.put( new ArtifactKey( project ), project );
+            reactorProjectsIds.add( new ArtifactKey( project ) );
         }
 
         final List<Dependency> reactorDeps = new ArrayList<Dependency>();
@@ -169,14 +171,16 @@ public class Maven31DependencyGraphBuilder
         {
             final Dependency dependency = (Dependency) untypedDependency;
             final org.eclipse.aether.artifact.Artifact depArtifact = dependency.getArtifact();
-            final ArtifactKey key = new ArtifactKey(
-                    depArtifact.getGroupId(), depArtifact.getArtifactId(), depArtifact.getVersion()
-            );
-            if ( projectMap.containsKey( key ) )
+
+            final ArtifactKey key =
+                new ArtifactKey( depArtifact.getGroupId(), depArtifact.getArtifactId(), depArtifact.getVersion() );
+
+            if ( reactorProjectsIds.contains( key ) )
             {
                 reactorDeps.add( dependency );
             }
         }
+
         return reactorDeps;
     }
 

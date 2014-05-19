@@ -65,8 +65,6 @@ public class Maven31DependencyGraphBuilder
     @Requirement
     private ArtifactFactory factory;
 
-    private final Invoker invoker = new Invoker();
-
     /**
      * Builds the dependency graph for Maven 3 point 1+.
      *
@@ -78,7 +76,7 @@ public class Maven31DependencyGraphBuilder
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, Collections.EMPTY_LIST );
+        return buildDependencyGraph( project, filter, Collections.<MavenProject>emptyList() );
     }
 
     /**
@@ -95,10 +93,10 @@ public class Maven31DependencyGraphBuilder
         throws DependencyGraphBuilderException
     {
         ProjectBuildingRequest projectBuildingRequest =
-            (ProjectBuildingRequest) invoker.invoke( project.getClass(), project, "getProjectBuildingRequest" );
+            (ProjectBuildingRequest) Invoker.invoke( project.getClass(), project, "getProjectBuildingRequest" );
 
         RepositorySystemSession session =
-            (RepositorySystemSession) invoker.invoke( ProjectBuildingRequest.class, projectBuildingRequest,
+            (RepositorySystemSession) Invoker.invoke( ProjectBuildingRequest.class, projectBuildingRequest,
                                                       "getRepositorySession" );
 
         /*
@@ -110,11 +108,11 @@ public class Maven31DependencyGraphBuilder
 
         final DependencyResolutionRequest request = new DefaultDependencyResolutionRequest();
         request.setMavenProject( project );
-        invoker.invoke( request, "setRepositorySession", RepositorySystemSession.class, session );
+        Invoker.invoke( request, "setRepositorySession", RepositorySystemSession.class, session );
 
         final DependencyResolutionResult result = resolveDependencies( request, reactorProjects );
         org.eclipse.aether.graph.DependencyNode graph =
-            (org.eclipse.aether.graph.DependencyNode) invoker.invoke( DependencyResolutionResult.class, result,
+            (org.eclipse.aether.graph.DependencyNode) Invoker.invoke( DependencyResolutionResult.class, result,
                                                                       "getDependencyGraph" );
 
         return buildDependencyNode( null, graph, project.getArtifact(), filter );
@@ -144,8 +142,8 @@ public class Maven31DependencyGraphBuilder
             final DependencyResolutionResult result = e.getResult();
             final List<Dependency> reactorDeps =
                 getReactorDependencies( reactorProjects, result.getUnresolvedDependencies() );
-            invoker.invoke( result.getUnresolvedDependencies(), "removeAll", Collection.class, reactorDeps );
-            invoker.invoke( result.getResolvedDependencies(), "addAll", Collection.class, reactorDeps );
+            Invoker.invoke( result.getUnresolvedDependencies(), "removeAll", Collection.class, reactorDeps );
+            Invoker.invoke( result.getResolvedDependencies(), "addAll", Collection.class, reactorDeps );
 
             if ( !result.getUnresolvedDependencies().isEmpty() )
             {

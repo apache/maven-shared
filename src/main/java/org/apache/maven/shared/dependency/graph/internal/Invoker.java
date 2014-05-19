@@ -28,7 +28,12 @@ import java.lang.reflect.InvocationTargetException;
  */
 final class Invoker
 {
-    public Object invoke( Class objectClazz, Object object, String method )
+    private Invoker()
+    {
+        // do not instantiate
+    }
+
+    public static Object invoke( Class<?> objectClazz, Object object, String method )
         throws DependencyGraphBuilderException
     {
         try
@@ -49,12 +54,12 @@ final class Invoker
         }
     }
 
-    public Object invoke( Object object, String method, Class<?> clazz, Object arg )
+    public static Object invoke( Object object, String method, Class<?> clazz, Object arg )
         throws DependencyGraphBuilderException
     {
         try
         {
-            final Class objectClazz = object.getClass();
+            final Class<?> objectClazz = object.getClass();
             return objectClazz.getMethod( method, clazz ).invoke( object, arg );
         }
         catch ( IllegalAccessException e )

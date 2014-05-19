@@ -33,8 +33,8 @@ import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * Default dependency graph builder that detects current Maven version to delegate to either Maven 2 or Maven 3 specific
@@ -52,14 +52,31 @@ public class DefaultDependencyGraphBuilder
 {
     protected PlexusContainer container;
 
+    /**
+     * Builds a dependency graph.
+     *
+     * @param project the project
+     * @param filter artifact filter (can be <code>null</code>)
+     * @return DependencyNode containing the dependency graph.
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
+     */
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, Collections.EMPTY_MAP );
+        return buildDependencyGraph( project, filter, Collections.EMPTY_LIST );
     }
 
+    /**
+     * Builds a dependency graph.
+     *
+     * @param project the project
+     * @param filter artifact filter (can be <code>null</code>)
+     * @param reactorProjects Collection of those projects contained in the reactor.
+     * @return DependencyNode containing the dependency graph.
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
+     */
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
-                                                Map<String, MavenProject> reactorProjects )
+                                                Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
     {
         try
@@ -80,7 +97,7 @@ public class DefaultDependencyGraphBuilder
     }
 
     /**
-     * Check the current Maven version to see if it's Maven 2.x.
+     * @return true if the current Maven is Maven 2.x.
      */
     protected static boolean isMaven2x()
     {
@@ -88,7 +105,7 @@ public class DefaultDependencyGraphBuilder
     }
 
     /**
-     * Check the current Maven version to see if it's Maven 3.1.
+     * @return true if the current Maven version is Maven 3.1.
      */
     protected static boolean isMaven31()
     {
@@ -109,6 +126,12 @@ public class DefaultDependencyGraphBuilder
         }
     }
 
+    /**
+     * Injects the Plexus content.
+     *
+     * @param context   Plexus context to inject.
+     * @throws ContextException if the PlexusContainer could not be located.
+     */
     public void contextualize( Context context )
         throws ContextException
     {

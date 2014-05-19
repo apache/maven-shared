@@ -133,6 +133,13 @@ public class DefaultDependencyTreeBuilder
         }
     }
 
+    /**
+     * Builds a dependency tree.
+     *
+     * @param project   MavenProject for which ot build the dependency tree.
+     * @return DependencyNode containing the dependency tree for the project.
+     * @throws DependencyTreeBuilderException if the dependency tree could not be built.
+     */
     public DependencyNode buildDependencyTree( MavenProject project )
         throws DependencyTreeBuilderException
     {
@@ -140,6 +147,15 @@ public class DefaultDependencyTreeBuilder
                                     metadataSource, null, collector );
     }
 
+    /**
+     * Builds a dependency tree.
+     *
+     * @param project       MavenProject for which ot build the dependency tree.
+     * @param repository    ArtifactRepository to search fro dependencies.
+     * @param filter        Filter to apply when searching for dependencies.
+     * @return DependencyNode containing the dependency tree for the project.
+     * @throws DependencyTreeBuilderException if the dependency tree could not be built.
+     */
     public DependencyNode buildDependencyTree( MavenProject project, ArtifactRepository repository,
                                                ArtifactFilter filter )
         throws DependencyTreeBuilderException

@@ -150,11 +150,7 @@
             <goal>install</goal> <!-- So that the multi-module-plugin is installed into the integration-test repo -->
           </goals>
           <pomIncludes>
-            <!--pomInclude>*/pom.xml</pomInclude-->
-            <pomInclude>maven-version/pom.xml</pomInclude>
-            <pomInclude>mshared-167/pom.xml</pomInclude>
-            <pomInclude>multi-module-plugin/pom.xml</pomInclude>
-            <pomInclude>multi-module-test/pom.xml</pomInclude>
+            <pomInclude>*/pom.xml</pomInclude>
           </pomIncludes>
         </configuration>
         <executions>
@@ -167,23 +163,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <version>0.10</version>
-        <configuration>
-          <excludes>
-            <!--
-              These files contains the expected output of this component and can not contain a license header.
-            -->
-            <exclude>src/it/maven-version/expected.txt</exclude>
-            <exclude>src/it/mshared-167/expected-M2.txt</exclude>
-            <exclude>src/it/mshared-167/expected-M3.txt</exclude>
-            <exclude>src/it/verbose/expected-default.txt</exclude>
-            <exclude>src/it/verbose/expected-verbose.txt</exclude>
-          </excludes>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.rat</groupId>

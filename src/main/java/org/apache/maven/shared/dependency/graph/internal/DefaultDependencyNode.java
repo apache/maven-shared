@@ -25,8 +25,10 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor;
 
-public class DefaultDependencyNode
-    implements DependencyNode
+/**
+ * Default implementation of a DependencyNode.
+ */
+public class DefaultDependencyNode implements DependencyNode
 {
     private final Artifact artifact;
 
@@ -40,6 +42,15 @@ public class DefaultDependencyNode
 
     private List<DependencyNode> children;
 
+    /**
+     * Constructs the DefaultDependencyNode.
+     *
+     * @param parent            Parent node.
+     * @param artifact          Artifact associated with this dependency.
+     * @param premanagedVersion
+     * @param premanagedScope
+     * @param versionConstraint
+     */
     public DefaultDependencyNode( DependencyNode parent, Artifact artifact, String premanagedVersion,
                                   String premanagedScope, String versionConstraint )
     {
@@ -73,21 +84,34 @@ public class DefaultDependencyNode
         return visitor.endVisit( this );
     }
 
+    /**
+     * @return Artifact for this DependencyNode.
+     */
     public Artifact getArtifact()
     {
         return artifact;
     }
 
+    /**
+     *
+     * @param children  List of DependencyNode to set as child nodes.
+     */
     public void setChildren( List<DependencyNode> children )
     {
         this.children = children;
     }
 
+    /**
+     * @return List of child nodes for this DependencyNode.
+     */
     public List<DependencyNode> getChildren()
     {
         return children;
     }
 
+    /**
+     * @return Parent of this DependencyNode.
+     */
     public DependencyNode getParent()
     {
         return parent;
@@ -108,6 +132,9 @@ public class DefaultDependencyNode
         return versionConstraint;
     }
 
+    /**
+     * @return Stringified representation of this DependencyNode.
+     */
     public String toNodeString()
     {
         StringBuffer buffer = new StringBuffer();

@@ -57,7 +57,8 @@ public interface DependencyTreeBuilder
      * @return the dependency tree of the specified Maven project
      * @throws DependencyTreeBuilderException if the dependency tree cannot be resolved
      * @deprecated As of 1.1, replaced by
-     *             {@link #buildDependencyTree(MavenProject, ArtifactRepository, ArtifactFactory, ArtifactMetadataSource, ArtifactFilter, ArtifactCollector)}
+     * {@link #buildDependencyTree(MavenProject, ArtifactRepository, ArtifactFactory, ArtifactMetadataSource,
+     * ArtifactFilter, ArtifactCollector)}
      */
     DependencyTree buildDependencyTree( MavenProject project, ArtifactRepository repository, ArtifactFactory factory,
                                         ArtifactMetadataSource metadataSource, ArtifactCollector collector )

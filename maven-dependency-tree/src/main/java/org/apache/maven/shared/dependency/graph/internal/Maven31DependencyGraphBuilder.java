@@ -33,7 +33,6 @@ import org.apache.maven.project.ProjectDependenciesResolver;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
-import org.apache.maven.shared.dependency.graph.ProjectReferenceKeyGenerator;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
@@ -44,6 +43,7 @@ import org.eclipse.aether.version.VersionConstraint;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,16 +67,31 @@ public class Maven31DependencyGraphBuilder
 
     private final Invoker invoker = new Invoker();
 
-    private final ProjectReferenceKeyGenerator keyGenerator = new ProjectReferenceKeyGenerator();
-
+    /**
+     * Builds the dependency graph for Maven 3 point 1+.
+     *
+     * @param project the project
+     * @param filter artifact filter (can be <code>null</code>)
+     * @return DependencyNode containing the dependency graph.
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
+     */
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, Collections.EMPTY_MAP );
+        return buildDependencyGraph( project, filter, Collections.EMPTY_LIST );
     }
 
+    /**
+     * Builds the dependency graph for Maven 3 point 1+ including any dependencies from any projects in the reactor.
+     *
+     * @param project the project
+     * @param filter artifact filter (can be <code>null</code>)
+     * @param reactorProjects Collection of those projects contained in the reactor.
+     * @return DependencyNode containing the dependency graph.
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
+     */
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
-                                                Map<String, MavenProject> reactorProjects )
+                                                Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
     {
         ProjectBuildingRequest projectBuildingRequest =
@@ -106,7 +121,7 @@ public class Maven31DependencyGraphBuilder
     }
 
     private DependencyResolutionResult resolveDependencies( DependencyResolutionRequest request,
-                                                            Map<String, MavenProject> reactorProjects )
+                                                            Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
     {
         try
@@ -142,17 +157,24 @@ public class Maven31DependencyGraphBuilder
         }
     }
 
-    private List<Dependency> getReactorDependencies( Map<String, MavenProject> reactorProjects, List<?> dependencies )
+    private List<Dependency> getReactorDependencies( Collection<MavenProject> reactorProjects, List<?> dependencies )
     {
+        // Create ProjectMap
+        final Map<ArtifactKey, MavenProject> projectMap = new HashMap<ArtifactKey, MavenProject>();
+        for ( final MavenProject project : reactorProjects )
+        {
+            projectMap.put( new ArtifactKey( project ), project );
+        }
+
         final List<Dependency> reactorDeps = new ArrayList<Dependency>();
         for ( final Object untypedDependency : dependencies )
         {
             final Dependency dependency = (Dependency) untypedDependency;
             final org.eclipse.aether.artifact.Artifact depArtifact = dependency.getArtifact();
-            final String projectRefId =
-                keyGenerator.getProjectReferenceKey( depArtifact.getGroupId(), depArtifact.getArtifactId(),
-                                                     depArtifact.getVersion() );
-            if ( reactorProjects.containsKey( projectRefId ) )
+            final ArtifactKey key = new ArtifactKey(
+                    depArtifact.getGroupId(), depArtifact.getArtifactId(), depArtifact.getVersion()
+            );
+            if ( projectMap.containsKey( key ) )
             {
                 reactorDeps.add( dependency );
             }

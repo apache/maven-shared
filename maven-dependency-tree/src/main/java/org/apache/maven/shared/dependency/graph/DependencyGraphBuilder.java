@@ -22,7 +22,7 @@ package org.apache.maven.shared.dependency.graph;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
 
-import java.util.Map;
+import java.util.Collection;
 
 /**
  * Maven project dependency graph builder API, neutral against Maven 2 or Maven 3.
@@ -34,13 +34,14 @@ public interface DependencyGraphBuilder
 {
     /**
      * Build the dependency graph from the repository. This is the same as
-     * {@link #buildDependencyGraph(org.apache.maven.project.MavenProject, org.apache.maven.artifact.resolver.filter.ArtifactFilter, java.util.Map)}
+     * {@link #buildDependencyGraph(org.apache.maven.project.MavenProject,
+     *  org.apache.maven.artifact.resolver.filter.ArtifactFilter, java.util.Collection)}
      * with an empty reactorProjects Map.
      *
      * @param project the project
      * @param filter artifact filter (can be <code>null</code>)
      * @return the dependency graph
-     * @throws DependencyGraphBuilderException
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
     DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException;
@@ -50,12 +51,11 @@ public interface DependencyGraphBuilder
      *
      * @param project the project
      * @param filter artifact filter (can be <code>null</code>)
-     * @param reactorProjects Map of those projects contained in the reactor. Key is made up of
-     *            groupId-artifactId-version.
+     * @param reactorProjects Collection of those projects contained in the reactor.
      * @return the dependency graph
-     * @throws DependencyGraphBuilderException
+     * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
     DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
-                                         Map<String, MavenProject> reactorProjects )
+                                         Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException;
 }

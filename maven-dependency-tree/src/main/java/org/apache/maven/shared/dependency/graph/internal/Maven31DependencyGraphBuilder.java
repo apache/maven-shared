@@ -93,11 +93,10 @@ public class Maven31DependencyGraphBuilder
         throws DependencyGraphBuilderException
     {
         ProjectBuildingRequest projectBuildingRequest =
-            (ProjectBuildingRequest) Invoker.invoke( project.getClass(), project, "getProjectBuildingRequest" );
+            (ProjectBuildingRequest) Invoker.invoke( project, "getProjectBuildingRequest" );
 
         RepositorySystemSession session =
-            (RepositorySystemSession) Invoker.invoke( ProjectBuildingRequest.class, projectBuildingRequest,
-                                                      "getRepositorySession" );
+            (RepositorySystemSession) Invoker.invoke( projectBuildingRequest, "getRepositorySession" );
 
         /*
          * if ( Boolean.TRUE != ( (Boolean) session.getConfigProperties().get(

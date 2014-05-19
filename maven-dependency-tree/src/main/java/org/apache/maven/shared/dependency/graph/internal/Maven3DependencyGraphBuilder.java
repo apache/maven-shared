@@ -39,7 +39,6 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.version.VersionConstraint;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -93,7 +92,7 @@ public class Maven3DependencyGraphBuilder
         throws DependencyGraphBuilderException
     {
         ProjectBuildingRequest projectBuildingRequest =
-            (ProjectBuildingRequest) invoke( project, "getProjectBuildingRequest" );
+            (ProjectBuildingRequest) Invoker.invoke( project, "getProjectBuildingRequest" );
 
         DependencyResolutionRequest request =
             new DefaultDependencyResolutionRequest( project, projectBuildingRequest.getRepositorySession() );
@@ -168,27 +167,6 @@ public class Maven3DependencyGraphBuilder
         }
 
         return reactorDeps;
-    }
-
-    private Object invoke( Object object, String method )
-        throws DependencyGraphBuilderException
-    {
-        try
-        {
-            return object.getClass().getMethod( method ).invoke( object );
-        }
-        catch ( IllegalAccessException e )
-        {
-            throw new DependencyGraphBuilderException( e.getMessage(), e );
-        }
-        catch ( InvocationTargetException e )
-        {
-            throw new DependencyGraphBuilderException( e.getMessage(), e );
-        }
-        catch ( NoSuchMethodException e )
-        {
-            throw new DependencyGraphBuilderException( e.getMessage(), e );
-        }
     }
 
     private Artifact getDependencyArtifact( Dependency dep )

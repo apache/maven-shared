@@ -65,8 +65,6 @@ public class Maven3DependencyGraphBuilder
     @Requirement
     private ArtifactFactory factory;
 
-    private final Invoker invoker = new Invoker();
-
     /**
      * Builds the dependency graph for Maven 3.
      *
@@ -78,7 +76,7 @@ public class Maven3DependencyGraphBuilder
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, Collections.EMPTY_LIST );
+        return buildDependencyGraph( project, filter, Collections.<MavenProject>emptyList() );
     }
 
     /**
@@ -129,8 +127,8 @@ public class Maven3DependencyGraphBuilder
             final DependencyResolutionResult result = e.getResult();
             final List<Dependency> reactorDeps =
                 getReactorDependencies( reactorProjects, result.getUnresolvedDependencies() );
-            invoker.invoke( result.getUnresolvedDependencies(), "removeAll", Collection.class, reactorDeps );
-            invoker.invoke( result.getResolvedDependencies(), "addAll", Collection.class, reactorDeps );
+            Invoker.invoke( result.getUnresolvedDependencies(), "removeAll", Collection.class, reactorDeps );
+            Invoker.invoke( result.getResolvedDependencies(), "addAll", Collection.class, reactorDeps );
 
             if ( !result.getUnresolvedDependencies().isEmpty() )
             {

@@ -41,7 +41,7 @@ final class ArtifactKey
 
     public ArtifactKey( MavenProject project )
     {
-        this ( project.getGroupId(), project.getArtifactId(), project.getVersion() );
+        this( project.getGroupId(), project.getArtifactId(), project.getVersion() );
     }
 
     @Override
@@ -51,27 +51,15 @@ final class ArtifactKey
         {
             return true;
         }
+
         if ( !( o instanceof ArtifactKey ) )
         {
             return false;
         }
 
-        ArtifactKey that = ( ArtifactKey ) o;
+        ArtifactKey that = (ArtifactKey) o;
 
-        if ( !artifactId.equals( that.artifactId ) )
-        {
-            return false;
-        }
-        if ( !groupId.equals( that.groupId ) )
-        {
-            return false;
-        }
-        if ( !version.equals( that.version ) )
-        {
-            return false;
-        }
-
-        return true;
+        return artifactId.equals( that.artifactId ) && groupId.equals( that.groupId ) && version.equals( that.version );
     }
 
     @Override

@@ -33,6 +33,12 @@ final class Invoker
         // do not instantiate
     }
 
+    public static Object invoke( Object object, String method )
+        throws DependencyGraphBuilderException
+    {
+        return invoke( object.getClass(), object, method );
+    }
+
     public static Object invoke( Class<?> objectClazz, Object object, String method )
         throws DependencyGraphBuilderException
     {

@@ -149,6 +149,9 @@
           <goals>
             <goal>install</goal> <!-- So that the multi-module-plugin is installed into the integration-test repo -->
           </goals>
+          <setupIncludes>
+            <setupInclude>multi-module-plugin/pom.xml</setupInclude>
+          </setupIncludes>
           <pomIncludes>
             <pomInclude>*/pom.xml</pomInclude>
           </pomIncludes>

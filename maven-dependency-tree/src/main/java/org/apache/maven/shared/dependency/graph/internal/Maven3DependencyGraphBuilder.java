@@ -132,11 +132,11 @@ public class Maven3DependencyGraphBuilder
 
             if ( !result.getUnresolvedDependencies().isEmpty() )
             {
-                throw new DependencyGraphBuilderException( "Could not resolve the following dependencies : "
+                throw new DependencyGraphBuilderException( "Could not resolve the following dependencies: "
                     + result.getUnresolvedDependencies(), e );
             }
 
-            getLogger().debug( "Resolved dependencies after ignoring reactor dependencies : " + reactorDeps );
+            getLogger().debug( "Resolved dependencies after ignoring reactor dependencies: " + reactorDeps );
 
             return result;
         }

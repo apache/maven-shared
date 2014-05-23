@@ -29,6 +29,8 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -55,27 +57,36 @@ public final class ResolveDependenciesLifecycleParticipant extends AbstractMaven
     @Override
     public void afterProjectsRead( MavenSession session ) throws MavenExecutionException
     {
-        log.debug( "" );
+        log.info( "" );
         log.info( "ResolveDependenciesLifecycleParticipant#afterProjectsRead" );
-        log.debug( "" );
 
         final List<MavenProject> projects = session.getProjects();
+        File basedir = new File( session.getExecutionRootDirectory() );
 
         for ( MavenProject project : projects )
         {
-            log.debug( "" );
-            log.debug( "project=" + project.getArtifact() );
+            log.info( "building dependency graph for project " + project.getArtifact() );
 
+            File resolved = new File( basedir, "resolved-" + project.getArtifactId() + ".txt" );
             try
             {
                 // No need to filter our search. We want to resolve all artifacts.
                 dependencyGraphBuilder.buildDependencyGraph( project, null, projects );
+
+                // proof that resolution has happened
+                resolved.createNewFile();
             }
             catch ( DependencyGraphBuilderException e )
             {
-                throw new MavenExecutionException( "Could not resolve dependencies for project : " + project, e );
+                throw new MavenExecutionException( "Could not resolve dependencies for project: " + project, e );
+            }
+            catch ( IOException e )
+            {
+                throw new MavenExecutionException( "Could not create " + resolved, e );
             }
         }
+
+        log.info( "" );
     }
 }
   

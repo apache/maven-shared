@@ -43,4 +43,14 @@
     <module>module-z-deps-y</module>
   </modules>
 
+  <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.its.dependency-tree</groupId>
+        <artifactId>resolve-extension</artifactId>
+        <version>1.0-SNAPSHOT</version>
+      </extension>
+    </extensions>
+  </build>
+
 </project>

@@ -25,7 +25,19 @@ files = FileUtils.getFiles( basedir, "resolved-*.txt", "" ).iterator();
 
 while ( files.hasNext() )
 {
-  files.next().delete();
+  file = files.next();
+  System.out.println( "deleting file " + file );
+  file.delete();
+}
+
+// delete modules from local repository
+files = FileUtils.getDirectoryNames( new File( basedir, "../.." ), "local-repo/org/apache/maven/its/dependency-tree/module*", "", true ).iterator();
+
+while ( files.hasNext() )
+{
+  file = new File( files.next() );
+  System.out.println( "deleting directory " + file );
+  FileUtils.deleteDirectory( file );
 }
 
 return true;

@@ -63,7 +63,7 @@ public class DefaultDependencyGraphBuilder
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, Collections.EMPTY_LIST );
+        return buildDependencyGraph( project, filter, Collections.<MavenProject>emptyList() );
     }
 
     /**

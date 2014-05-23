@@ -24,13 +24,13 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.apache.maven.its.dependency-tree</groupId>
-  <artifactId>multi-module-test-plugin</artifactId>
+  <artifactId>resolve-extension</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>maven-plugin</packaging>
+  <packaging>jar</packaging>
 
-  <name>Multi-Module Test-Plugin</name>
+  <name>Resolve Dependency from Reactor Check Extension</name>
   <description>
-    Creates a maven-plugin that can be used to verify that maven-dep-tree resolves deps that only exist within the reactor.
+    Extension to check that maven-dependency-tree resolves deps that only exist within the reactor.
   </description>
 
   <properties>
@@ -48,25 +48,6 @@
       <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-artifact</artifactId>
-      <version>${maven.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-plugin-api</artifactId>
-      <version>${maven.version}</version>
-      <scope>provided</scope>
-    </dependency>
-<!--
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-project</artifactId>
-      <version>${maven.version}</version>
-    </dependency>
--->
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-container-default</artifactId>

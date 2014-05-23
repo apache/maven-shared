@@ -147,7 +147,7 @@
           <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
           <settingsFile>src/it/settings.xml</settingsFile>
           <setupIncludes>
-            <setupInclude>reactor/multi-module-plugin/pom.xml</setupInclude>
+            <setupInclude>reactor/resolve-extension/pom.xml</setupInclude>
           </setupIncludes>
           <pomIncludes>
             <pomInclude>*/pom.xml</pomInclude>

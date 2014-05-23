@@ -28,6 +28,7 @@ import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -70,19 +71,33 @@ public final class ResolveDependenciesLifecycleParticipant extends AbstractMaven
             File resolved = new File( basedir, "resolved-" + project.getArtifactId() + ".txt" );
             try
             {
+                log.info( "building with reactor projects" );
                 // No need to filter our search. We want to resolve all artifacts.
                 dependencyGraphBuilder.buildDependencyGraph( project, null, projects );
-
-                // proof that resolution has happened
-                resolved.createNewFile();
             }
             catch ( DependencyGraphBuilderException e )
             {
                 throw new MavenExecutionException( "Could not resolve dependencies for project: " + project, e );
             }
-            catch ( IOException e )
+
+            try
             {
-                throw new MavenExecutionException( "Could not create " + resolved, e );
+                log.info( "building without reactor projects" );
+                // resolution without reactor projects, to check that it is not possible at this point
+                dependencyGraphBuilder.buildDependencyGraph( project, null );
+            }
+            catch ( DependencyGraphBuilderException e )
+            {
+                log.info( "expected resolution failure: " + e.getMessage() );
+
+                try
+                {
+                    FileUtils.fileWrite( resolved.getAbsolutePath(), e.getMessage() );
+                }
+                catch ( IOException ioe )
+                {
+                    throw new MavenExecutionException( "Could not write " + resolved, ioe );
+                }
             }
         }
 

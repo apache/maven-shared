@@ -75,15 +75,16 @@ public class Maven3DependencyGraphBuilder
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, Collections.<MavenProject>emptyList() );
+        return buildDependencyGraph( project, filter, null );
     }
 
     /**
-     * Builds the dependency graph for Maven 3 including any dependencies from any projects in the reactor.
+     * Builds the dependency graph for Maven 3, eventually hacking for collecting projects from
+     * reactor not yet built.
      *
      * @param project the project
      * @param filter artifact filter (can be <code>null</code>)
-     * @param reactorProjects Collection of those projects contained in the reactor.
+     * @param reactorProjects Collection of those projects contained in the reactor (can be <code>null</code>).
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
@@ -97,7 +98,7 @@ public class Maven3DependencyGraphBuilder
         DependencyResolutionRequest request =
             new DefaultDependencyResolutionRequest( project, projectBuildingRequest.getRepositorySession() );
 
-        final DependencyResolutionResult result = resolveDependencies( request, reactorProjects );
+        DependencyResolutionResult result = resolveDependencies( request, reactorProjects );
 
         return buildDependencyNode( null, result.getDependencyGraph(), project.getArtifact(), filter );
     }
@@ -112,52 +113,53 @@ public class Maven3DependencyGraphBuilder
         }
         catch ( DependencyResolutionException e )
         {
-            // Ignore any resolution failure for deps that are part of the reactor but have not yet been built.
-            // NB Typing has been removed because DependencyResolutionResult returns Sonatype aether in 3.0.4 and
-            // Eclipse aether in 3.1.1 and while dep-tree is a single module we can only compile against one of them.
-            //
-            // NB While applying this code to Maven3DependencyGraphBuilder is trivial it won't work because
-            // in Maven 3, MavenProject.getProjectReferences isn't populated. So we would need to have the reactor
-            // modules passed in separately which would change the API for DependencyGraphBuilder. If
-            // MavenProject.getProjectReferences were populated (like it should be) then this would work for Maven3 too.
-            //
-            // NB There doesn't seem to be any way to apply this to Maven2DependencyGraphBuilder as there is no
-            // concept of partial resolution like there is is 3 and 3.1
-            final DependencyResolutionResult result = e.getResult();
-
-            final List<Dependency> reactorDeps =
-                getReactorDependencies( reactorProjects, result.getUnresolvedDependencies() );
-            result.getUnresolvedDependencies().removeAll( reactorDeps );
-            Invoker.invoke( result.getResolvedDependencies(), "addAll", Collection.class, reactorDeps );
-
-            if ( !result.getUnresolvedDependencies().isEmpty() )
+            if ( reactorProjects == null )
             {
-                throw new DependencyGraphBuilderException( "Could not resolve the following dependencies: "
-                    + result.getUnresolvedDependencies(), e );
+                throw new DependencyGraphBuilderException( "Could not resolve following dependencies: "
+                    + e.getResult().getUnresolvedDependencies(), e );
             }
 
-            getLogger().debug( "Resolved dependencies after ignoring reactor dependencies: " + reactorDeps );
-
-            return result;
+            // try collecting from reactor
+            return collectDependenciesFromReactor( e, reactorProjects );
         }
+    }
+
+    private DependencyResolutionResult collectDependenciesFromReactor( DependencyResolutionException e,
+                                                                       Collection<MavenProject> reactorProjects )
+        throws DependencyGraphBuilderException
+    {
+        DependencyResolutionResult result = e.getResult();
+
+        List<Dependency> reactorDeps = getReactorDependencies( reactorProjects, result.getUnresolvedDependencies() );
+
+        result.getUnresolvedDependencies().removeAll( reactorDeps );
+        Invoker.invoke( result.getResolvedDependencies(), "addAll", Collection.class, reactorDeps );
+
+        if ( !result.getUnresolvedDependencies().isEmpty() )
+        {
+            throw new DependencyGraphBuilderException( "Could not resolve nor collect following dependencies: "
+                + result.getUnresolvedDependencies(), e );
+        }
+
+        return result;
     }
 
     private List<org.sonatype.aether.graph.Dependency> getReactorDependencies( Collection<MavenProject> reactorProjects,
                                                                                List<?> dependencies )
     {
-        final Set<ArtifactKey> reactorProjectsIds = new HashSet<ArtifactKey>();
-        for ( final MavenProject project : reactorProjects )
+        Set<ArtifactKey> reactorProjectsIds = new HashSet<ArtifactKey>();
+        for ( MavenProject project : reactorProjects )
         {
             reactorProjectsIds.add( new ArtifactKey( project ) );
         }
 
-        final List<Dependency> reactorDeps = new ArrayList<Dependency>();
-        for ( final Object untypedDependency : dependencies )
+        List<Dependency> reactorDeps = new ArrayList<Dependency>();
+        for ( Object untypedDependency : dependencies )
         {
-            final Dependency dependency = (Dependency) untypedDependency;
-            final org.sonatype.aether.artifact.Artifact depArtifact = dependency.getArtifact();
+            Dependency dependency = (Dependency) untypedDependency;
+            org.sonatype.aether.artifact.Artifact depArtifact = dependency.getArtifact();
 
-            final ArtifactKey key =
+            ArtifactKey key =
                 new ArtifactKey( depArtifact.getGroupId(), depArtifact.getArtifactId(), depArtifact.getVersion() );
 
             if ( reactorProjectsIds.contains( key ) )

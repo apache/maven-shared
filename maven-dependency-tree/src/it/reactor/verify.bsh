@@ -36,7 +36,7 @@ if ( !actual.equals( expected ) )
 
 String resolved = FileUtils.fileRead( new File( basedir, "resolved-module-z-deps-y.txt" ) );
 
-if ( !"Could not resolve the following dependencies: [org.apache.maven.its.dependency-tree:module-y-deps-x:jar:1.0-SNAPSHOT (compile), org.apache.maven.its.dependency-tree:module-x:jar:1.0-SNAPSHOT (compile)]".equals( resolved ) )
+if ( !"Could not resolve following dependencies: [org.apache.maven.its.dependency-tree:module-y-deps-x:jar:1.0-SNAPSHOT (compile), org.apache.maven.its.dependency-tree:module-x:jar:1.0-SNAPSHOT (compile)]".equals( resolved ) )
 {
     throw new Exception( "unexpected content in resolved-module-z-deps-y.txt written by ResolveDependenciesLifecycleParticipant" );
 }

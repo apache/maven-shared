@@ -73,12 +73,13 @@ public class Maven2DependencyGraphBuilder
 
     /**
      * Builds the dependency graph for Maven 2.
-     *
-     * NB the reactor projects are ignored as Maven 2 is not able to resolve projects from the reactor.
-     *
-     * @param project           the project
-     * @param filter            artifact filter (can be <code>null</code>)
-     * @param reactorProjects   Ignored.
+     * <p>
+     * notice: the reactor projects are ignored as no work has been done to try to do the same hack as with Maven 3.
+     * </p>
+     * 
+     * @param project the project
+     * @param filter artifact filter (can be <code>null</code>)
+     * @param reactorProjects Ignored.
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
@@ -86,7 +87,11 @@ public class Maven2DependencyGraphBuilder
                                                 Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
     {
-        getLogger().warn( "Reactor projects ignored - reactor dependencies cannot be resolved in Maven2" );
+        if ( reactorProjects != null )
+        {
+            getLogger().warn( "Reactor projects ignored - reactor project collection not implemented" );
+        }
+
         return buildDependencyGraph( project, filter );
     }
 

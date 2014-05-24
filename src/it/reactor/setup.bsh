@@ -30,7 +30,7 @@ while ( files.hasNext() )
   file.delete();
 }
 
-// delete modules from local repository
+// delete modules from local repository: not really necessary since invoker.properties only compiles, but sanity check
 files = FileUtils.getDirectoryNames( new File( basedir, "../.." ), "local-repo/org/apache/maven/its/dependency-tree/module*", "", true ).iterator();
 
 while ( files.hasNext() )

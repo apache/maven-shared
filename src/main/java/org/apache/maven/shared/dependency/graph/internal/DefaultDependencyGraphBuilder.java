@@ -63,7 +63,7 @@ public class DefaultDependencyGraphBuilder
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, Collections.<MavenProject>emptyList() );
+        return buildDependencyGraph( project, filter, null );
     }
 
     /**
@@ -71,7 +71,7 @@ public class DefaultDependencyGraphBuilder
      *
      * @param project the project
      * @param filter artifact filter (can be <code>null</code>)
-     * @param reactorProjects Collection of those projects contained in the reactor.
+     * @param reactorProjects Collection of those projects contained in the reactor (can be <code>null</code>)
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */

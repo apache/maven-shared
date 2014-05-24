@@ -86,7 +86,7 @@ public class DefaultDependencyGraphBuilder
             DependencyGraphBuilder effectiveGraphBuilder =
                 (DependencyGraphBuilder) container.lookup( DependencyGraphBuilder.class.getCanonicalName(), hint );
             getLogger().debug( "building " + hint + " dependency graph for " + project.getId() + " with "
-                                   + effectiveGraphBuilder.getClass() );
+                                   + effectiveGraphBuilder.getClass().getSimpleName() );
 
             return effectiveGraphBuilder.buildDependencyGraph( project, filter, reactorProjects );
         }

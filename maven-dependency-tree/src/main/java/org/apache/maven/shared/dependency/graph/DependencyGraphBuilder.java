@@ -33,10 +33,7 @@ import java.util.Collection;
 public interface DependencyGraphBuilder
 {
     /**
-     * Build the dependency graph from the repository. This is the same as
-     * {@link #buildDependencyGraph(org.apache.maven.project.MavenProject,
-     *  org.apache.maven.artifact.resolver.filter.ArtifactFilter, java.util.Collection)}
-     * with an empty reactorProjects Map.
+     * Build the dependency graph.
      *
      * @param project the project
      * @param filter artifact filter (can be <code>null</code>)
@@ -47,7 +44,12 @@ public interface DependencyGraphBuilder
         throws DependencyGraphBuilderException;
 
     /**
-     * Build the dependency graph including any dependencies contained in the reactor projects.
+     * Build the dependency graph, with a hack to include dependencies contained in the reactor projects
+     * but that are not yet compiled, which is the minimum prerequisite for Maven core's
+     * ReactorReader to find them. Notice that this hack doesn't work for Maven 2.
+     * <p>Notice: If Maven core did collect instead of resolving dependencies (ie did not try to get the
+     * artifacts but only the poms), probably this hack wouldn't be necessary even for people requiring
+     * the dependency graph before compiling. TODO: for Maven 3, use Aether to collect dependencies.</p>
      *
      * @param project the project
      * @param filter artifact filter (can be <code>null</code>)

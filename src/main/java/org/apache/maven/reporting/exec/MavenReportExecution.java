@@ -24,8 +24,8 @@ import org.apache.maven.reporting.MavenReport;
 
 /**
  * <p>
- *   Since Maven 3, reporting plugin {@link MavenReport} are not anymore prepared by Maven core.
- *   This class will store all necessary information for {@link MavenReport} generation:
+ *   Since Maven 3, reporting plugins (ie {@link MavenReport}s) are not anymore prepared by Maven core.
+ *   This class will store all necessary information for later {@link MavenReport} generation/execution:
  *   <ul>
  *     <li>a {@link MavenReport},</li>
  *     <li>the goal name associated to the report,</li>
@@ -34,11 +34,12 @@ import org.apache.maven.reporting.MavenReport;
  *   </ul> 
  * </p>
  * <p>
- *   With this, it's possible to execute the {@link MavenReport#generate(org.codehaus.doxia.sink.Sink, java.util.Locale)}
- *   method, setting the current {@link Thread} classLoader first with {@link #classLoader}
+ *   With this bean, a plugin wanting to generate a report (= <i>"execute"</i> the report) has to call the
+ *   {@link MavenReport#generate(org.codehaus.doxia.sink.Sink, java.util.Locale)}
+ *   method, setting the current {@link Thread} classLoader first with {@link #classLoader}.
  * </p>
  * <p>
- *   This bean will be instantiated by {@link MavenReportExecutor}.
+ *   This bean is instantiated by {@link MavenReportExecutor}.
  * </p>
  * 
  * @author Olivier Lamy

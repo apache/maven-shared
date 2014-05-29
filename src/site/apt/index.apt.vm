@@ -28,7 +28,7 @@
 
 ${project.name}
 
-  Classes to manage report plugin executions with Maven 3, through
+  Classes to prepare report plugins execution with Maven 3, through
   {{{./apidocs/org/apache/maven/reporting/exec/MavenReportExecutor.html}MavenReportExecutor}}
   ({{{./apidocs/org/apache/maven/reporting/exec/DefaultMavenReportExecutor.html}implementation}}):
   report plugins can be configured in <<<\<configuration\>>>> element of <<<maven-site-plugin>>> or any other

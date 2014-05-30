@@ -72,6 +72,31 @@ public class MavenReportExecution
         this( null, null, mavenReport, null );
     }
 
+    /**
+     * execute Maven Report's <code>canGenerate()</code> with adequate classloader.
+     * @return Maven Report's <code>canGenerate()</code> result
+     */
+    public boolean canGenerateReport()
+    {
+        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+        try
+        {
+            if ( classLoader != null )
+            {
+                Thread.currentThread().setContextClassLoader( classLoader );
+            }
+
+            return mavenReport.canGenerateReport();
+        }
+        finally
+        {
+            if ( classLoader != null )
+            {
+                Thread.currentThread().setContextClassLoader( originalClassLoader );
+            }
+        } 
+    }
+
     public MavenReport getMavenReport()
     {
         return mavenReport;

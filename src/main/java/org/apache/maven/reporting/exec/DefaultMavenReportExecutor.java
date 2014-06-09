@@ -262,7 +262,19 @@ public class DefaultMavenReportExecutor
                 continue;
             }
 
+            Xpp3Dom pluginMgmtConfiguration = null;
+            if ( project.getBuild() != null && project.getBuild().getPluginManagement() != null )
+            {
+                Plugin pluginMgmt = find( reportPlugin, project.getBuild().getPluginManagement().getPlugins() );
+
+                if ( pluginMgmt != null && plugin.getVersion() != null )
+                {
+                    pluginMgmtConfiguration = (Xpp3Dom) pluginMgmt.getConfiguration();
+                }
+            }
+
             mojoExecution.setConfiguration( mergeConfiguration( mojoDescriptor.getMojoConfiguration(),
+                                                                pluginMgmtConfiguration,
                                                                 reportPlugin.getConfiguration(),
                                                                 report.getConfiguration(),
                                                                 mojoDescriptor.getParameterMap().keySet() ) );
@@ -413,41 +425,44 @@ public class DefaultMavenReportExecutor
      * Merge plugin configuration and reportset configuration to mojo configuration to get effective
      * mojo configuration.
      *
-     * @param mojoConf configuration done at mojo level
-     * @param pluginConf configuration done at build plugin level
-     * @param reportSetConf configuration done at reportset level
+     * @param mojoConf configuration done at mojo descriptor level
+     * @param pluginMgmtConfig configuration done at build.pluginManagement level
+     * @param pluginConf configuration done at reporting plugin level
+     * @param reportSetConf configuration done at reportSet level
      * @param parameters set of supported parameters: any other parameter will be removed
      * @return the effective configuration to be used
      */
-    private Xpp3Dom mergeConfiguration( PlexusConfiguration mojoConf, PlexusConfiguration pluginConf,
-                                        PlexusConfiguration reportSetConf, Set<String> parameters )
+    private Xpp3Dom mergeConfiguration( PlexusConfiguration mojoConf, Xpp3Dom pluginMgmtConfig,
+                                        PlexusConfiguration pluginConf, PlexusConfiguration reportSetConf,
+                                        Set<String> parameters )
     {
         Xpp3Dom mojoConfig = ( mojoConf != null ) ? convert( mojoConf ) : new Xpp3Dom( "configuration" );
 
-        if ( pluginConf != null || reportSetConf != null )
+        if ( pluginMgmtConfig != null || pluginConf != null || reportSetConf != null )
         {
-            Xpp3Dom pluginConfiguration = pluginConf == null ? new Xpp3Dom( "fake" ) : convert( pluginConf );
+            Xpp3Dom pluginConfig = ( pluginConf == null ) ? new Xpp3Dom( "fake" ) : convert( pluginConf );
 
-            // MSITE-512 configuration from ReportSet must win
-            Xpp3Dom mergedConfigurationWithReportSet =
-                Xpp3DomUtils.mergeXpp3Dom( convert( reportSetConf ), pluginConfiguration );
-
-            Xpp3Dom mergedConfiguration = Xpp3DomUtils.mergeXpp3Dom( mergedConfigurationWithReportSet, mojoConfig );
+            // merge pluginConf into reportSetConf
+            Xpp3Dom mergedConfig = Xpp3DomUtils.mergeXpp3Dom( convert( reportSetConf ), pluginConfig );
+            // then merge pluginMgmtConfig
+            mergedConfig = Xpp3DomUtils.mergeXpp3Dom( mergedConfig, pluginMgmtConfig );
+            // then merge mojoConf
+            mergedConfig = Xpp3DomUtils.mergeXpp3Dom( mergedConfig, mojoConfig );
 
             // clean result
-            Xpp3Dom cleanedConfiguration = new Xpp3Dom( "configuration" );
-            if ( mergedConfiguration.getChildren() != null )
+            Xpp3Dom cleanedConfig = new Xpp3Dom( "configuration" );
+            if ( mergedConfig.getChildren() != null )
             {
-                for ( Xpp3Dom parameter : mergedConfiguration.getChildren() )
+                for ( Xpp3Dom parameter : mergedConfig.getChildren() )
                 {
                     if ( parameters.contains( parameter.getName() ) )
                     {
-                        cleanedConfiguration.addChild( parameter );
+                        cleanedConfig.addChild( parameter );
                     }
                 }
             }
 
-            mojoConfig = cleanedConfiguration;
+            mojoConfig = cleanedConfig;
         }
 
         return mojoConfig;

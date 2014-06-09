@@ -267,7 +267,7 @@ public class DefaultMavenReportExecutor
             {
                 Plugin pluginMgmt = find( reportPlugin, project.getBuild().getPluginManagement().getPlugins() );
 
-                if ( pluginMgmt != null && plugin.getVersion() != null )
+                if ( pluginMgmt != null )
                 {
                     pluginMgmtConfiguration = (Xpp3Dom) pluginMgmt.getConfiguration();
                 }

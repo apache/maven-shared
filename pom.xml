@@ -29,7 +29,6 @@
     <relativePath>../maven-shared-components/pom.xml</relativePath>
   </parent>
 
-  <groupId>org.apache.maven.shared</groupId>
   <artifactId>maven-shared-resources</artifactId>
   <version>2-SNAPSHOT</version>
 

@@ -37,7 +37,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * The basis for a Maven report which can be generated both as part of a site generation or
@@ -96,6 +98,7 @@ public abstract class AbstractMavenReport
             siteContext.setDecoration( new DecorationModel() );
             siteContext.setTemplateName( "org/apache/maven/doxia/siterenderer/resources/default-site.vm" );
             siteContext.setLocale( locale );
+            siteContext.setTemplateProperties( getTemplateProperties() );
 
             RenderingContext context = new RenderingContext( outputDirectory, filename );
 
@@ -135,6 +138,25 @@ public abstract class AbstractMavenReport
         {
             IOUtil.close( writer );
         }
+    }
+
+    /**
+     * create template properties like done in maven-site-plugin's
+     * <code>AbstractSiteRenderingMojo.createSiteRenderingContext( Locale )</code>
+     * @return properties
+     */
+    private Map<String, Object> getTemplateProperties()
+    {
+        Map<String, Object> templateProperties = new HashMap<String, Object>();
+        templateProperties.put( "project", getProject() );
+        templateProperties.put( "inputEncoding", "UTF-8" );
+        templateProperties.put( "outputEncoding", "UTF-8" );
+        // Put any of the properties in directly into the Velocity context
+        for ( Map.Entry<Object, Object> entry : getProject().getProperties().entrySet() )
+        {
+            templateProperties.put( (String) entry.getKey(), entry.getValue() );
+        }
+        return templateProperties;
     }
 
     /**

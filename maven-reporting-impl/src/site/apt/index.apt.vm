@@ -30,11 +30,11 @@ ${project.name}
 
   Abstract classes to manage report generation, which can be run both:
   
-  * as part of a site generation (as a {{{../maven-reporting-api/}maven-reporting-api}}'s
-  <<<{{{../maven-reporting-api/apidocs/org/apache/maven/reporting/MavenReport.html}MavenReport}}>>>),
+  * as part of a site generation, as a {{{../maven-reporting-api/}maven-reporting-api}}'s
+  <<<{{{../maven-reporting-api/apidocs/org/apache/maven/reporting/MavenReport.html}MavenReport}}>>>,
 
-  * or as a direct standalone invocation (as a {{{/ref/current/maven-plugin-api/}maven-plugin-api}}'s
-  <<<{{{/ref/current/maven-plugin-api/apidocs/org/apache/maven/plugin/Mojo.html}Mojo}})>>>.
+  * or as a direct standalone goal invocation, as a {{{/ref/current/maven-plugin-api/}maven-plugin-api}}'s
+  <<<{{{/ref/current/maven-plugin-api/apidocs/org/apache/maven/plugin/Mojo.html}Mojo}}>>>.
 
   []
 

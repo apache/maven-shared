@@ -19,65 +19,18 @@ package org.apache.maven.reporting;
  * under the License.
  */
 
-import java.io.File;
 import java.util.Locale;
 
-import org.apache.maven.doxia.siterenderer.Renderer;
-import org.apache.maven.project.MavenProject;
+import org.apache.maven.plugins.annotations.Mojo;
 
 /**
  * Typical code to copy as a reporting plugin start: choose the goal name, then implement getOutputName(),
  * getName( Locale ), getDescription( Locale ) and of course executeReport( Locale ).
- * 
- * @goal test
  */
+@Mojo( name = "test" )
 public class AbstractMavenReportTest
     extends AbstractMavenReport
 {
-    /**
-     * The output directory for the report. Note that this parameter is only evaluated if the goal is run directly from
-     * the command line. If the goal is run indirectly as part of a site generation, the output directory configured in
-     * the Maven Site Plugin is used instead.
-     *
-     * @parameter default-value="${project.reporting.outputDirectory}"
-     * @required
-     */
-    protected File outputDirectory;
-
-    /**
-     * The Maven Project.
-     *
-     * @parameter default-value="${project}"
-     * @required
-     * @readonly
-     */
-    protected MavenProject project;
-
-    /**
-     * Doxia Site Renderer component.
-     *
-     * @component
-     */
-    protected Renderer siteRenderer;
-
-    @Override
-    protected String getOutputDirectory()
-    {
-        return outputDirectory.getAbsolutePath();
-    }
-
-    @Override
-    protected MavenProject getProject()
-    {
-        return project;
-    }
-
-    @Override
-    protected Renderer getSiteRenderer()
-    {
-        return siteRenderer;
-    }
-
     public String getOutputName()
     {
         return "abstract-maven-report-test";

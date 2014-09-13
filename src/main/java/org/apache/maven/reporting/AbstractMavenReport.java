@@ -43,19 +43,20 @@ import java.util.Map;
 
 /**
  * The basis for a Maven report which can be generated both as part of a site generation or
- * as a direct standalone invocation.
- * Both invocations are delegated to <a href=""><code>abstract executeReport( Locale )</code></a>:
+ * as a direct standalone goal invocation.
+ * Both invocations are delegated to <code>abstract executeReport( Locale )</code> from:
  * <ul> 
- * <li>Mojo's execute() method (see maven-plugin-api)</li>
- * <li>MavenMultiPageReport's generate( Sink, SinkFactory, Locale ) (see maven-reporting-api)</li>
+ * <li>Mojo's <code>execute()</code> method, see maven-plugin-api</li>
+ * <li>MavenMultiPageReport's <code>generate( Sink, SinkFactory, Locale )</code>, see maven-reporting-api</li>
  * </ul>
  *
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  * @since 2.0
- * @see #execute() Mojo.execute() (from maven-plugin-api) 
- * @see #generate(Sink, SinkFactory, Locale) MavenMultiPageReport.generate( Sink, SinkFactory, Locale ) (from maven-reporting-api)
- * @see #executeReport(Locale) abstract executeReport( Locale )
+ * @see #execute() <code>Mojo.execute()</code>, from maven-plugin-api 
+ * @see #generate(Sink, SinkFactory, Locale) <code>MavenMultiPageReport.generate( Sink, SinkFactory, Locale )</code>,
+ *  from maven-reporting-api
+ * @see #executeReport(Locale) <code>abstract executeReport( Locale )</code>
  */
 public abstract class AbstractMavenReport
     extends AbstractMojo
@@ -313,7 +314,7 @@ public abstract class AbstractMavenReport
     /**
      * Execute the generation of the report.
      *
-     * @param locale the wanted locale to return the report's description, could be null.
+     * @param locale the wanted locale to return the report's description, could be <code>null</code>.
      * @throws MavenReportException if any
      */
     protected abstract void executeReport( Locale locale )

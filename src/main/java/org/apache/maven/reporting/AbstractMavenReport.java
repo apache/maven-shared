@@ -29,6 +29,8 @@ import org.apache.maven.doxia.siterenderer.SiteRenderingContext;
 import org.apache.maven.doxia.siterenderer.sink.SiteRendererSink;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.io.IOUtil;
 
@@ -62,6 +64,26 @@ public abstract class AbstractMavenReport
     extends AbstractMojo
     implements MavenMultiPageReport
 {
+    /**
+     * The output directory for the report. Note that this parameter is only evaluated if the goal is run directly from
+     * the command line. If the goal is run indirectly as part of a site generation, the output directory configured in
+     * the Maven Site Plugin is used instead.
+     */
+    @Parameter( defaultValue = "${project.reporting.outputDirectory}", readonly = true, required = true )
+    protected File outputDirectory;
+
+    /**
+     * The Maven Project.
+     */
+    @Parameter( defaultValue = "${project}", readonly = true, required = true )
+    protected MavenProject project;
+
+    /**
+     * Doxia Site Renderer component.
+     */
+    @Component
+    protected Renderer siteRenderer;
+
     /** The current sink to use */
     private Sink sink;
 
@@ -70,6 +92,21 @@ public abstract class AbstractMavenReport
 
     /** The current report output directory to use */
     private File reportOutputDirectory;
+
+    protected String getOutputDirectory()
+    {
+        return outputDirectory.getAbsolutePath();
+    }
+
+    protected MavenProject getProject()
+    {
+        return project;
+    }
+
+    protected Renderer getSiteRenderer()
+    {
+        return siteRenderer;
+    }
 
     /**
      * This method is called when the report generation is invoked directly as a standalone Mojo.
@@ -245,6 +282,7 @@ public abstract class AbstractMavenReport
     public void setReportOutputDirectory( File reportOutputDirectory )
     {
         this.reportOutputDirectory = reportOutputDirectory;
+        this.outputDirectory = reportOutputDirectory;
     }
 
     /**
@@ -285,31 +323,6 @@ public abstract class AbstractMavenReport
     {
         return true;
     }
-
-    /**
-     * @return the site renderer used.
-     */
-    protected abstract Renderer getSiteRenderer();
-
-    /**
-     * The output directory when the mojo is run directly from the command line. Implementors should use this method to
-     * return the value of a mojo parameter that the user may use to customize the output directory.
-     * <br/>
-     * <strong>Note:</strong>
-     * When the mojo is run as part of a site generation, Maven will set the effective output directory via
-     * {@link org.apache.maven.reporting.MavenReport#setReportOutputDirectory(java.io.File)}. In this case, the return
-     * value of this method is irrelevant. Therefore, developers should always call {@link #getReportOutputDirectory()}
-     * to get the effective output directory for the report. The later method will eventually fallback to this method
-     * if the mojo is not run as part of a site generation.
-     *
-     * @return The path to the output directory as specified in the plugin configuration for this report.
-     */
-    protected abstract String getOutputDirectory();
-
-    /**
-     * @return the Maven project instance.
-     */
-    protected abstract MavenProject getProject();
 
     /**
      * Execute the generation of the report.

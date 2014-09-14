@@ -50,7 +50,7 @@
   </distributionManagement>
 
   <properties>
-    <mavenVersion>2.2.0</mavenVersion>
+    <mavenVersion>2.2.1</mavenVersion>
   </properties>
 
   <contributors>

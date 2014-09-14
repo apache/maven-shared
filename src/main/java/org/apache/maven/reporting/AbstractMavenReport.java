@@ -33,6 +33,7 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.io.IOUtil;
+import org.codehaus.plexus.util.ReaderFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -79,6 +80,18 @@ public abstract class AbstractMavenReport
     protected MavenProject project;
 
     /**
+     * Specifies the input encoding.
+     */
+    @Parameter( property = "encoding", defaultValue = "${project.build.sourceEncoding}", readonly = true )
+    private String inputEncoding;
+
+    /**
+     * Specifies the output encoding.
+     */
+    @Parameter( property = "outputEncoding", defaultValue = "${project.reporting.outputEncoding}", readonly = true )
+    private String outputEncoding;
+
+    /**
      * Doxia Site Renderer component.
      */
     @Component
@@ -92,21 +105,6 @@ public abstract class AbstractMavenReport
 
     /** The current report output directory to use */
     private File reportOutputDirectory;
-
-    protected String getOutputDirectory()
-    {
-        return outputDirectory.getAbsolutePath();
-    }
-
-    protected MavenProject getProject()
-    {
-        return project;
-    }
-
-    protected Renderer getSiteRenderer()
-    {
-        return siteRenderer;
-    }
 
     /**
      * This method is called when the report generation is invoked directly as a standalone Mojo.
@@ -149,7 +147,8 @@ public abstract class AbstractMavenReport
                 outputDirectory.mkdirs();
 
                 writer =
-                    new OutputStreamWriter( new FileOutputStream( new File( outputDirectory, filename ) ), "UTF-8" );
+                    new OutputStreamWriter( new FileOutputStream( new File( outputDirectory, filename ) ),
+                                            getOutputEncoding() );
 
                 getSiteRenderer().generateDocument( writer, sink, siteContext );
 
@@ -187,8 +186,8 @@ public abstract class AbstractMavenReport
     {
         Map<String, Object> templateProperties = new HashMap<String, Object>();
         templateProperties.put( "project", getProject() );
-        templateProperties.put( "inputEncoding", "UTF-8" );
-        templateProperties.put( "outputEncoding", "UTF-8" );
+        templateProperties.put( "inputEncoding", getInputEncoding() );
+        templateProperties.put( "outputEncoding", getOutputEncoding() );
         // Put any of the properties in directly into the Velocity context
         for ( Map.Entry<Object, Object> entry : getProject().getProperties().entrySet() )
         {
@@ -283,6 +282,41 @@ public abstract class AbstractMavenReport
     {
         this.reportOutputDirectory = reportOutputDirectory;
         this.outputDirectory = reportOutputDirectory;
+    }
+
+    protected String getOutputDirectory()
+    {
+        return outputDirectory.getAbsolutePath();
+    }
+
+    protected MavenProject getProject()
+    {
+        return project;
+    }
+
+    protected Renderer getSiteRenderer()
+    {
+        return siteRenderer;
+    }
+
+    /**
+     * Gets the input files encoding.
+     *
+     * @return The input files encoding, never <code>null</code>.
+     */
+    protected String getInputEncoding()
+    {
+        return ( inputEncoding == null ) ? ReaderFactory.ISO_8859_1 : inputEncoding;
+    }
+
+    /**
+     * Gets the effective reporting output files encoding.
+     *
+     * @return The effective reporting output file encoding, never <code>null</code>.
+     */
+    protected String getOutputEncoding()
+    {
+        return ( outputEncoding == null ) ? ReaderFactory.UTF_8 : outputEncoding;
     }
 
     /**

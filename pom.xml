@@ -35,7 +35,7 @@
   <description>A component to assist in filtering of resource files with properties from a Maven project.</description>
 
   <prerequisites>
-    <maven>2.0.6</maven>
+    <maven>${mavenVersion}</maven>
   </prerequisites>
 
   <scm>
@@ -55,7 +55,7 @@
   </distributionManagement>
 
   <properties>
-    <mavenVersion>2.0.6</mavenVersion>
+    <mavenVersion>2.2.1</mavenVersion>
   </properties>
 
   <contributors>

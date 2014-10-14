@@ -19,13 +19,13 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
 
 import javax.annotation.Nonnull;
 import java.io.Reader;
+import java.util.Collections;
 import java.util.List;
 
 /**

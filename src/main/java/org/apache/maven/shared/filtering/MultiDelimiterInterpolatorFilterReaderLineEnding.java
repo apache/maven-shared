@@ -97,7 +97,9 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
     /**
      * must always be bigger than escape string plus delimiters, but doesn't need to be exact
      */
-    private int markLength = 16;
+    private int markLength = 128;
+
+    private static final int maxBufferSize = 8192;
 
     private boolean eof = false;
 
@@ -125,7 +127,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
                                                              boolean supportMultiLineFiltering )
     {
         // wrap our own buffer, so we can use mark/reset safely.
-        super( new BufferedReader( in ) );
+        super( new BufferedReader( in, maxBufferSize ) );
 
         this.interpolator = interpolator;
 
@@ -141,7 +143,6 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
         calculateMarkLength();
 
     }
-
 
     public boolean removeDelimiterSpec( String delimiterSpec )
     {
@@ -237,7 +238,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
             return -1;
         }
 
-        in.mark( markLength );
+        BoundedReader in = new BoundedReader(this.in, markLength);
 
         int ch = in.read();
         if ( ( ch == -1 ) || ( ch == '\n' && !supportMultiLineFiltering ) )
@@ -344,7 +345,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
 
         // we're committed, find the end token, EOL or EOF
 
-        key.append( beginToken );
+        key.append(beginToken);
         in.reset();
         in.skip( beginToken.length() );
         ch = in.read();
@@ -487,7 +488,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
 
     private void calculateMarkLength()
     {
-        markLength = 16;
+        markLength = 128;
 
         if ( escapeString != null )
         {

@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>maven-filtering</artifactId>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.3</version>
   <packaging>jar</packaging>
 
   <name>Apache Maven Filtering</name>
@@ -39,9 +39,9 @@
   </prerequisites>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-filtering</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-filtering</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-filtering</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-filtering-1.3</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-filtering-1.3</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-filtering-1.3</url>
   </scm>
   <issueManagement>
     <system>jira</system>

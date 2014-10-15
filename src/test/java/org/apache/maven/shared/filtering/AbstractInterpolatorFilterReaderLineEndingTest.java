@@ -26,6 +26,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import org.codehaus.plexus.interpolation.Interpolator;
 import org.codehaus.plexus.interpolation.RecursionInterceptor;
@@ -99,11 +101,23 @@ public abstract class AbstractInterpolatorFilterReaderLineEndingTest
         reader = getAbc_AbcReader( in, interpolator );
         assertEquals( "DONE", IOUtil.toString( reader ) );
     }
-    
+
+    // MSHARED-235: reader exceeds readAheadLimit
+    @Test
+    public void testMarkInvalid() throws Exception
+    {
+        Reader in = new StringReader( "@\").replace(p,\"]\").replace(q,\"" );
+        Reader reader = getAtReader( in, interpolator, "\\" );
+
+        assertEquals( "@\").replace(p,\"]\").replace(q,\"",  IOUtil.toString( reader ) );
+    }
+
     protected abstract Reader getAbc_AbcReader( Reader in, Interpolator interpolator );
     
     protected abstract Reader getAaa_AaaReader( Reader in, Interpolator interpolator );
     
     protected abstract Reader getDollarBracesReader( Reader in, Interpolator interpolator, String escapeString );
+    
+    protected abstract Reader getAtReader( Reader in, Interpolator interpolator, String escapeString );
 
 }

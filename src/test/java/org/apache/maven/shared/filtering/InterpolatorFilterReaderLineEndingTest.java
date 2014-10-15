@@ -45,4 +45,12 @@ public class InterpolatorFilterReaderLineEndingTest
         reader.setEscapeString( escapeString );
         return reader;
     }
+    
+    @Override
+    protected Reader getAtReader( Reader in, Interpolator interpolator, String escapeString )
+    {
+        InterpolatorFilterReaderLineEnding reader = new InterpolatorFilterReaderLineEnding( in, interpolator, "@", "@", true );
+        reader.setEscapeString( escapeString );
+        return reader;
+    }
 }

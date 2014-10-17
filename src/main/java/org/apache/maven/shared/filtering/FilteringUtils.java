@@ -48,7 +48,7 @@ public final class FilteringUtils
         if ( !StringUtils.isEmpty( val ) && PATTERN.matcher( val ).matches() )
         {
             // Adapted from StringUtils.replace in plexus-utils to accommodate pre-escaped backslashes.
-            StringBuffer buf = new StringBuffer( val.length() );
+            StringBuilder buf = new StringBuilder( val.length() );
             int start = 0, end = 0;
             while ( ( end = val.indexOf( '\\', start ) ) != -1 )
             {

@@ -19,28 +19,28 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
+import java.io.File;
+import java.util.List;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.io.FileUtils;
 
-import java.io.File;
-import java.util.List;
-
 /**
  * @author Olivier Lamy
- *
  */
-public interface MavenFileFilter extends DefaultFilterInfo
+public interface MavenFileFilter
+    extends DefaultFilterInfo
 {
 
     /**
      * Will copy a file with some filtering using defaultFilterWrappers.
      *
-     * @param from         file to copy/filter
-     * @param to           destination file
-     * @param filtering    enable or not filering
+     * @param from file to copy/filter
+     * @param to destination file
+     * @param filtering enable or not filering
      * @param mavenProject the mavenproject
-     * @param filters      {@link List} of String which are path to a Property file
+     * @param filters {@link List} of String which are path to a Property file
      * @throws MavenFilteringException
      * @see #getDefaultFilterWrappers(MavenProject, List, boolean, MavenSession)
      */
@@ -66,7 +66,6 @@ public interface MavenFileFilter extends DefaultFilterInfo
     void copyFile( File from, final File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
                    String encoding )
         throws MavenFilteringException;
-
 
     /**
      * @param from

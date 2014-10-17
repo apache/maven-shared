@@ -22,289 +22,309 @@ package org.apache.maven.shared.filtering;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Properties;
+
+import javax.annotation.Nonnull;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.utils.StringUtils;
 import org.apache.maven.shared.utils.io.FileUtils;
-import org.codehaus.plexus.interpolation.*;
+import org.codehaus.plexus.interpolation.InterpolationPostProcessor;
+import org.codehaus.plexus.interpolation.PrefixAwareRecursionInterceptor;
+import org.codehaus.plexus.interpolation.PrefixedObjectValueSource;
+import org.codehaus.plexus.interpolation.PropertiesBasedValueSource;
+import org.codehaus.plexus.interpolation.RecursionInterceptor;
+import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
+import org.codehaus.plexus.interpolation.SingleResponseValueSource;
+import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.interpolation.multi.MultiDelimiterStringSearchInterpolator;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
-import javax.annotation.Nonnull;
+class BaseFilter
+    extends AbstractLogEnabled
+    implements DefaultFilterInfo
+{
 
-class BaseFilter extends AbstractLogEnabled implements DefaultFilterInfo {
+    /**
+     * @see org.apache.maven.shared.filtering.MavenFileFilter#getDefaultFilterWrappers(org.apache.maven.project.MavenProject,
+     *      java.util.List, boolean, org.apache.maven.execution.MavenSession)
+     * @deprecated
+     */
+    public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject,
+                                                                   List<String> filters,
+                                                                   final boolean escapedBackslashesInFilePath,
+                                                                   MavenSession mavenSession )
+        throws MavenFilteringException
+    {
+        return getDefaultFilterWrappers( mavenProject, filters, escapedBackslashesInFilePath, mavenSession, null );
+    }
 
+    @Nonnull
+    public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject,
+                                                                   List<String> filters,
+                                                                   final boolean escapedBackslashesInFilePath,
+                                                                   MavenSession mavenSession,
+                                                                   MavenResourcesExecution mavenResourcesExecution )
+        throws MavenFilteringException
+    {
 
-	/**
-	 * @see org.apache.maven.shared.filtering.MavenFileFilter#getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession)
-	 * @deprecated
-	 */
-	public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject,
-			List<String> filters,
-			final boolean escapedBackslashesInFilePath,
-			MavenSession mavenSession )
-			throws MavenFilteringException
-	{
-		return getDefaultFilterWrappers( mavenProject, filters, escapedBackslashesInFilePath, mavenSession, null );
-	}
+        MavenResourcesExecution mre =
+            mavenResourcesExecution == null ? new MavenResourcesExecution() : mavenResourcesExecution.copyOf();
 
+        mre.setMavenProject( mavenProject );
+        mre.setMavenSession( mavenSession );
+        mre.setFilters( filters );
+        mre.setEscapedBackslashesInFilePath( escapedBackslashesInFilePath );
 
-	@Nonnull public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject, List<String> filters,
-			final boolean escapedBackslashesInFilePath,
-			MavenSession mavenSession,
-			MavenResourcesExecution mavenResourcesExecution )
-			throws MavenFilteringException
-	{
+        return getDefaultFilterWrappers( mre );
 
-		MavenResourcesExecution mre =
-				mavenResourcesExecution == null ? new MavenResourcesExecution() : mavenResourcesExecution.copyOf();
+    }
 
-		mre.setMavenProject( mavenProject );
-		mre.setMavenSession( mavenSession );
-		mre.setFilters( filters );
-		mre.setEscapedBackslashesInFilePath( escapedBackslashesInFilePath );
+    @Nonnull
+    public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final AbstractMavenFilteringRequest req )
+        throws MavenFilteringException
+    {
+        // backup values
+        boolean supportMultiLineFiltering = req.isSupportMultiLineFiltering();
 
-		return getDefaultFilterWrappers( mre );
+        // compensate for null parameter value.
+        final AbstractMavenFilteringRequest request = req == null ? new MavenFileFilterRequest() : req;
 
-	}
+        request.setSupportMultiLineFiltering( supportMultiLineFiltering );
 
-	@Nonnull public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final AbstractMavenFilteringRequest req )
-			throws MavenFilteringException
-	{
-		// backup values
-		boolean supportMultiLineFiltering = req.isSupportMultiLineFiltering();
+        // Here we build some properties which will be used to read some properties files
+        // to interpolate the expression ${ } in this properties file
 
-		// compensate for null parameter value.
-		final AbstractMavenFilteringRequest request = req == null ? new MavenFileFilterRequest() : req;
+        // Take a copy of filterProperties to ensure that evaluated filterTokens are not propagated
+        // to subsequent filter files. Note: this replicates current behaviour and seems to make sense.
 
-		request.setSupportMultiLineFiltering( supportMultiLineFiltering );
+        final Properties baseProps = new Properties();
 
-		// Here we build some properties which will be used to read some properties files
-		// to interpolate the expression ${ } in this properties file
+        // Project properties
+        if ( request.getMavenProject() != null )
+        {
+            baseProps.putAll( request.getMavenProject().getProperties() == null ? Collections.emptyMap()
+                            : request.getMavenProject().getProperties() );
+        }
+        // TODO this is NPE free but do we consider this as normal
+        // or do we have to throw an MavenFilteringException with mavenSession cannot be null
+        if ( request.getMavenSession() != null )
+        {
+            // execution properties wins
+            baseProps.putAll( request.getMavenSession().getExecutionProperties() );
+        }
 
-		// Take a copy of filterProperties to ensure that evaluated filterTokens are not propagated
-		// to subsequent filter files. Note: this replicates current behaviour and seems to make sense.
+        // now we build properties to use for resources interpolation
 
-		final Properties baseProps = new Properties();
+        final Properties filterProperties = new Properties();
 
-		// Project properties
-		if ( request.getMavenProject() != null )
-		{
-			baseProps.putAll( request.getMavenProject().getProperties() == null
-					? Collections.emptyMap()
-					: request.getMavenProject().getProperties() );
-		}
-		// TODO this is NPE free but do we consider this as normal
-		// or do we have to throw an MavenFilteringException with mavenSession cannot be null
-		if ( request.getMavenSession() != null )
-		{
-			// execution properties wins
-			baseProps.putAll( request.getMavenSession().getExecutionProperties() );
-		}
+        File basedir = request.getMavenProject() != null ? request.getMavenProject().getBasedir() : new File( "." );
 
-		// now we build properties to use for resources interpolation
+        loadProperties( filterProperties, basedir, request.getFileFilters(), baseProps );
+        if ( filterProperties.size() < 1 )
+        {
+            filterProperties.putAll( baseProps );
+        }
 
-		final Properties filterProperties = new Properties();
+        if ( request.getMavenProject() != null )
+        {
+            if ( request.isInjectProjectBuildFilters() )
+            {
+                List<String> buildFilters = new ArrayList<String>( request.getMavenProject().getBuild().getFilters() );
 
-		File basedir = request.getMavenProject() != null ? request.getMavenProject().getBasedir() : new File( "." );
+                // JDK-8015656: (coll) unexpected NPE from removeAll
+                if ( request.getFileFilters() != null )
+                {
+                    buildFilters.removeAll( request.getFileFilters() );
+                }
 
-		loadProperties( filterProperties, basedir, request.getFileFilters(), baseProps );
-		if ( filterProperties.size() < 1 )
-		{
-			filterProperties.putAll( baseProps );
-		}
+                loadProperties( filterProperties, basedir, buildFilters, baseProps );
+            }
 
-		if ( request.getMavenProject() != null )
-		{
-			if ( request.isInjectProjectBuildFilters() )
-			{
-				@SuppressWarnings( "unchecked" )
-				List<String> buildFilters = new ArrayList<String>( request.getMavenProject().getBuild().getFilters() );
+            // Project properties
+            filterProperties.putAll( request.getMavenProject().getProperties() == null ? Collections.emptyMap()
+                            : request.getMavenProject().getProperties() );
+        }
+        if ( request.getMavenSession() != null )
+        {
+            // execution properties wins
+            filterProperties.putAll( request.getMavenSession().getExecutionProperties() );
+        }
 
-				// JDK-8015656: (coll) unexpected NPE from removeAll
-				if ( request.getFileFilters() != null )
-				{
-					buildFilters.removeAll( request.getFileFilters() );
-				}
+        if ( request.getAdditionalProperties() != null )
+        {
+            // additional properties wins
+            filterProperties.putAll( request.getAdditionalProperties() );
+        }
 
-				loadProperties( filterProperties, basedir, buildFilters, baseProps );
-			}
+        List<FileUtils.FilterWrapper> defaultFilterWrappers =
+            request == null ? new ArrayList<FileUtils.FilterWrapper>( 1 )
+                            : new ArrayList<FileUtils.FilterWrapper>( request.getDelimiters().size() + 1 );
 
-			// Project properties
-			filterProperties.putAll( request.getMavenProject().getProperties() == null
-					? Collections.emptyMap()
-					: request.getMavenProject().getProperties() );
-		}
-		if ( request.getMavenSession() != null )
-		{
-			// execution properties wins
-			filterProperties.putAll( request.getMavenSession().getExecutionProperties() );
-		}
+        if ( getLogger().isDebugEnabled() )
+        {
+            getLogger().debug( "properties used " + filterProperties );
+        }
 
-		if ( request.getAdditionalProperties() != null )
-		{
-			// additional properties wins
-			filterProperties.putAll( request.getAdditionalProperties() );
-		}
+        final ValueSource propertiesValueSource = new PropertiesBasedValueSource( filterProperties );
 
-		List<FileUtils.FilterWrapper> defaultFilterWrappers = request == null
-				? new ArrayList<FileUtils.FilterWrapper>( 1 )
-				: new ArrayList<FileUtils.FilterWrapper>( request.getDelimiters().size() + 1 );
+        if ( request != null )
+        {
+            FileUtils.FilterWrapper wrapper =
+                new Wrapper( request.getDelimiters(), request.getMavenProject(), request.getMavenSession(),
+                             propertiesValueSource, request.getProjectStartExpressions(), request.getEscapeString(),
+                             request.isEscapeWindowsPaths(), request.isSupportMultiLineFiltering() );
 
-		if ( getLogger().isDebugEnabled() )
-		{
-			getLogger().debug( "properties used " + filterProperties );
-		}
+            defaultFilterWrappers.add( wrapper );
+        }
 
-		final ValueSource propertiesValueSource = new PropertiesBasedValueSource( filterProperties );
+        return defaultFilterWrappers;
+    }
 
-		if ( request != null )
-		{
-			FileUtils.FilterWrapper wrapper =
-					new Wrapper( request.getDelimiters(), request.getMavenProject(), request.getMavenSession(),
-							propertiesValueSource, request.getProjectStartExpressions(), request.getEscapeString(),
-							request.isEscapeWindowsPaths(), request.isSupportMultiLineFiltering() );
+    /**
+     * default visibility only for testing reason !
+     */
+    void loadProperties( Properties filterProperties, File basedir, List<String> propertiesFilePaths,
+                         Properties baseProps )
+        throws MavenFilteringException
+    {
+        if ( propertiesFilePaths != null )
+        {
+            Properties workProperties = new Properties();
+            workProperties.putAll( baseProps );
 
-			defaultFilterWrappers.add( wrapper );
-		}
+            for ( String filterFile : propertiesFilePaths )
+            {
+                if ( StringUtils.isEmpty( filterFile ) )
+                {
+                    // skip empty file name
+                    continue;
+                }
+                try
+                {
+                    File propFile = FileUtils.resolveFile( basedir, filterFile );
+                    Properties properties = PropertyUtils.loadPropertyFile( propFile, workProperties );
+                    filterProperties.putAll( properties );
+                    workProperties.putAll( properties );
+                }
+                catch ( IOException e )
+                {
+                    throw new MavenFilteringException( "Error loading property file '" + filterFile + "'", e );
+                }
+            }
+        }
+    }
 
-		return defaultFilterWrappers;
-	}
+    private static final class Wrapper
+        extends FileUtils.FilterWrapper
+    {
 
-	/**
-	 * default visibility only for testing reason !
-	 */
-	void loadProperties( Properties filterProperties, File basedir, List<String> propertiesFilePaths, Properties baseProps )
-			throws MavenFilteringException
-	{
-		if ( propertiesFilePaths != null )
-		{
-			Properties workProperties = new Properties();
-			workProperties.putAll( baseProps );
+        private LinkedHashSet<String> delimiters;
 
-			for ( String filterFile : propertiesFilePaths )
-			{
-				if ( StringUtils.isEmpty(filterFile) )
-				{
-					// skip empty file name
-					continue;
-				}
-				try
-				{
-					File propFile = FileUtils.resolveFile( basedir, filterFile );
-					Properties properties = PropertyUtils.loadPropertyFile( propFile, workProperties );
-					filterProperties.putAll( properties );
-					workProperties.putAll( properties );
-				}
-				catch ( IOException e )
-				{
-					throw new MavenFilteringException( "Error loading property file '" + filterFile + "'", e );
-				}
-			}
-		}
-	}
+        private MavenProject project;
 
-	private static final class Wrapper
-			extends FileUtils.FilterWrapper
-	{
+        private ValueSource propertiesValueSource;
 
-		private LinkedHashSet<String> delimiters;
+        private List<String> projectStartExpressions;
 
-		private MavenProject project;
+        private String escapeString;
 
-		private ValueSource propertiesValueSource;
+        private boolean escapeWindowsPaths;
 
-		private List<String> projectStartExpressions;
+        private final MavenSession mavenSession;
 
-		private String escapeString;
+        private boolean supportMultiLineFiltering;
 
-		private boolean escapeWindowsPaths;
+        Wrapper(
+                 LinkedHashSet<String> delimiters,
+                 MavenProject project,
+                 MavenSession mavenSession,
+                 ValueSource propertiesValueSource,
+                 List<String> projectStartExpressions,
+                 String escapeString,
+                 boolean escapeWindowsPaths,
+                 boolean supportMultiLineFiltering )
+        {
+            super();
+            this.delimiters = delimiters;
+            this.project = project;
+            this.mavenSession = mavenSession;
+            this.propertiesValueSource = propertiesValueSource;
+            this.projectStartExpressions = projectStartExpressions;
+            this.escapeString = escapeString;
+            this.escapeWindowsPaths = escapeWindowsPaths;
+            this.supportMultiLineFiltering = supportMultiLineFiltering;
+        }
 
-		private final MavenSession mavenSession;
+        public Reader getReader( Reader reader )
+        {
+            MultiDelimiterStringSearchInterpolator interpolator = new MultiDelimiterStringSearchInterpolator();
+            interpolator.setDelimiterSpecs( delimiters );
 
-		private boolean supportMultiLineFiltering;
+            RecursionInterceptor ri = null;
+            if ( projectStartExpressions != null && !projectStartExpressions.isEmpty() )
+            {
+                ri = new PrefixAwareRecursionInterceptor( projectStartExpressions, true );
+            }
+            else
+            {
+                ri = new SimpleRecursionInterceptor();
+            }
 
-		Wrapper( LinkedHashSet<String> delimiters, MavenProject project, MavenSession mavenSession,
-				ValueSource propertiesValueSource, List<String> projectStartExpressions, String escapeString,
-				boolean escapeWindowsPaths, boolean supportMultiLineFiltering )
-		{
-			super();
-			this.delimiters = delimiters;
-			this.project = project;
-			this.mavenSession = mavenSession;
-			this.propertiesValueSource = propertiesValueSource;
-			this.projectStartExpressions = projectStartExpressions;
-			this.escapeString = escapeString;
-			this.escapeWindowsPaths = escapeWindowsPaths;
-			this.supportMultiLineFiltering = supportMultiLineFiltering;
-		}
+            interpolator.addValueSource( propertiesValueSource );
 
-		public Reader getReader( Reader reader )
-		{
-			MultiDelimiterStringSearchInterpolator interpolator = new MultiDelimiterStringSearchInterpolator();
-			interpolator.setDelimiterSpecs( delimiters );
+            if ( project != null )
+            {
+                interpolator.addValueSource( new PrefixedObjectValueSource( projectStartExpressions, project, true ) );
+            }
 
-			RecursionInterceptor ri = null;
-			if ( projectStartExpressions != null && !projectStartExpressions.isEmpty() )
-			{
-				ri = new PrefixAwareRecursionInterceptor( projectStartExpressions, true );
-			}
-			else
-			{
-				ri = new SimpleRecursionInterceptor();
-			}
+            if ( mavenSession != null )
+            {
+                interpolator.addValueSource( new PrefixedObjectValueSource( "session", mavenSession ) );
 
-			interpolator.addValueSource( propertiesValueSource );
+                final Settings settings = mavenSession.getSettings();
+                if ( settings != null )
+                {
+                    interpolator.addValueSource( new PrefixedObjectValueSource( "settings", settings ) );
+                    interpolator.addValueSource( new SingleResponseValueSource( "localRepository",
+                                                                                settings.getLocalRepository() ) );
+                }
+            }
 
-			if ( project != null )
-			{
-				interpolator.addValueSource( new PrefixedObjectValueSource( projectStartExpressions, project, true ) );
-			}
+            interpolator.setEscapeString( escapeString );
 
-			if ( mavenSession != null )
-			{
-				interpolator.addValueSource( new PrefixedObjectValueSource( "session", mavenSession ) );
+            if ( escapeWindowsPaths )
+            {
+                interpolator.addPostProcessor( new InterpolationPostProcessor()
+                {
+                    public Object execute( String expression, Object value )
+                    {
+                        if ( value instanceof String )
+                        {
+                            return FilteringUtils.escapeWindowsPath( (String) value );
+                        }
 
-				final Settings settings = mavenSession.getSettings();
-				if ( settings != null )
-				{
-					interpolator.addValueSource( new PrefixedObjectValueSource( "settings", settings ) );
-					interpolator.addValueSource(
-							new SingleResponseValueSource( "localRepository", settings.getLocalRepository() ) );
-				}
-			}
+                        return value;
+                    }
+                } );
+            }
 
-			interpolator.setEscapeString( escapeString );
+            MultiDelimiterInterpolatorFilterReaderLineEnding filterReader =
+                new MultiDelimiterInterpolatorFilterReaderLineEnding( reader, interpolator, supportMultiLineFiltering );
+            filterReader.setRecursionInterceptor( ri );
+            filterReader.setDelimiterSpecs( delimiters );
 
-			if ( escapeWindowsPaths )
-			{
-				interpolator.addPostProcessor( new InterpolationPostProcessor()
-				{
-					public Object execute( String expression, Object value )
-					{
-						if ( value instanceof String )
-						{
-							return FilteringUtils.escapeWindowsPath( (String) value );
-						}
+            filterReader.setInterpolateWithPrefixPattern( false );
+            filterReader.setEscapeString( escapeString );
 
-						return value;
-					}
-				} );
-			}
+            return filterReader;
+        }
 
-			MultiDelimiterInterpolatorFilterReaderLineEnding filterReader =
-					new MultiDelimiterInterpolatorFilterReaderLineEnding( reader, interpolator, supportMultiLineFiltering );
-			filterReader.setRecursionInterceptor( ri );
-			filterReader.setDelimiterSpecs( delimiters );
-
-			filterReader.setInterpolateWithPrefixPattern( false );
-			filterReader.setEscapeString( escapeString );
-
-			return filterReader;
-		}
-
-	}
+    }
 }

@@ -43,7 +43,7 @@ public class AbstractMavenFilteringRequest
 
     private MavenSession mavenSession;
 
-    /** 
+    /**
      * List of Strings considered as expressions which contains values in the project/pom:
      * pom project
      * Default value will be pom and project.
@@ -51,7 +51,7 @@ public class AbstractMavenFilteringRequest
      * @since 1.0-beta-2
      */
     private List<String> projectStartExpressions = new ArrayList<String>();
-    
+
     /**
      * String which will escape interpolation mechanism:
      * foo \${foo.bar} -> foo ${foo.bar}
@@ -59,17 +59,17 @@ public class AbstractMavenFilteringRequest
      * @since 1.0-beta-2
      */
     private String escapeString;
-    
+
     /**
      * @since 1.0-beta-3
      */
     private Properties additionalProperties;
-    
+
     /**
      * @since 1.0-beta-3
      */
     private boolean injectProjectBuildFilters = false;
-    
+
     /**
      * Set of expression delimiter specifications to use during filtering. Delimiter specifications are
      * given in the form 'BEGIN*END' or, for symmetrical delimiters, simply 'TOKEN'. The default
@@ -78,21 +78,24 @@ public class AbstractMavenFilteringRequest
      * @since 1.0-beta-3
      */
     private LinkedHashSet<String> delimiters = new LinkedHashSet<String>();
-    
+
     /**
      * Do not stop trying to filter tokens when reaching EOL.
      *
      * @since 1.0
      */
     private boolean supportMultiLineFiltering;
-    
+
     protected AbstractMavenFilteringRequest()
     {
         initDefaults();
     }
 
-    protected AbstractMavenFilteringRequest( MavenProject mavenProject, List<String> filters,
-                                             String encoding, MavenSession mavenSession )
+    protected AbstractMavenFilteringRequest(
+                                             MavenProject mavenProject,
+                                             List<String> filters,
+                                             String encoding,
+                                             MavenSession mavenSession )
     {
         initDefaults();
         this.mavenProject = mavenProject;
@@ -105,7 +108,7 @@ public class AbstractMavenFilteringRequest
     {
         projectStartExpressions.add( "pom" );
         projectStartExpressions.add( "project" );
-        
+
         delimiters.add( "${*}" );
         delimiters.add( "@" );
     }
@@ -155,12 +158,12 @@ public class AbstractMavenFilteringRequest
     {
         this.escapeWindowsPaths = escapedBackslashesInFilePath;
     }
-    
+
     public boolean isEscapedBackslashesInFilePath()
     {
         return isEscapeWindowsPaths();
     }
-    
+
     public void setEscapedBackslashesInFilePath( boolean escape )
     {
         setEscapeWindowsPaths( escape );
@@ -234,7 +237,7 @@ public class AbstractMavenFilteringRequest
     {
         this.escapeString = escapeString;
     }
-    
+
     /**
      * @since 1.0-beta-2
      */

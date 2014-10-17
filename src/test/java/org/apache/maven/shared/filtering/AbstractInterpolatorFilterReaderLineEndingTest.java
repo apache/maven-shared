@@ -26,8 +26,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.Arrays;
-import java.util.HashSet;
 
 import org.codehaus.plexus.interpolation.Interpolator;
 import org.codehaus.plexus.interpolation.RecursionInterceptor;
@@ -40,7 +38,7 @@ import org.mockito.MockitoAnnotations;
 public abstract class AbstractInterpolatorFilterReaderLineEndingTest
 {
 
-    @Mock 
+    @Mock
     private Interpolator interpolator;
 
     @Before
@@ -48,9 +46,10 @@ public abstract class AbstractInterpolatorFilterReaderLineEndingTest
     {
         MockitoAnnotations.initMocks( this );
     }
-    
+
     @Test
-    public void testDefaults() throws Exception
+    public void testDefaults()
+        throws Exception
     {
         when( interpolator.interpolate( eq( "${a}" ), eq( "" ), isA( RecursionInterceptor.class ) ) ).thenReturn( "DONE_A" );
 
@@ -82,7 +81,6 @@ public abstract class AbstractInterpolatorFilterReaderLineEndingTest
         reader = getDollarBracesReader( in, interpolator, "\\" );
         assertEquals( "unknown expression ${unknown}", IOUtil.toString( reader ) );
     }
-    
 
     // MSHARED-198: custom delimiters doesn't work as expected
     @Test
@@ -91,12 +89,12 @@ public abstract class AbstractInterpolatorFilterReaderLineEndingTest
     {
         when( interpolator.interpolate( eq( "aaaFILTER.a.MEaaa" ), eq( "" ), isA( RecursionInterceptor.class ) ) ).thenReturn( "DONE" );
         when( interpolator.interpolate( eq( "abcFILTER.a.MEabc" ), eq( "" ), isA( RecursionInterceptor.class ) ) ).thenReturn( "DONE" );
-    
+
         Reader in = new StringReader( "aaaFILTER.a.MEaaa" );
         Reader reader = getAaa_AaaReader( in, interpolator );
-            
+
         assertEquals( "DONE", IOUtil.toString( reader ) );
-    
+
         in = new StringReader( "abcFILTER.a.MEabc" );
         reader = getAbc_AbcReader( in, interpolator );
         assertEquals( "DONE", IOUtil.toString( reader ) );
@@ -104,20 +102,21 @@ public abstract class AbstractInterpolatorFilterReaderLineEndingTest
 
     // MSHARED-235: reader exceeds readAheadLimit
     @Test
-    public void testMarkInvalid() throws Exception
+    public void testMarkInvalid()
+        throws Exception
     {
         Reader in = new StringReader( "@\").replace(p,\"]\").replace(q,\"" );
         Reader reader = getAtReader( in, interpolator, "\\" );
 
-        assertEquals( "@\").replace(p,\"]\").replace(q,\"",  IOUtil.toString( reader ) );
+        assertEquals( "@\").replace(p,\"]\").replace(q,\"", IOUtil.toString( reader ) );
     }
 
     protected abstract Reader getAbc_AbcReader( Reader in, Interpolator interpolator );
-    
+
     protected abstract Reader getAaa_AaaReader( Reader in, Interpolator interpolator );
-    
+
     protected abstract Reader getDollarBracesReader( Reader in, Interpolator interpolator, String escapeString );
-    
+
     protected abstract Reader getAtReader( Reader in, Interpolator interpolator, String escapeString );
 
 }

@@ -22,12 +22,12 @@ package org.apache.maven.shared.filtering;
 import java.io.Reader;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.io.FileUtils;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author Olivier Lamy
@@ -40,15 +40,17 @@ public interface MavenReaderFilter
     /**
      * Provides a new reader that applies filtering using defaultFilterWrappers.
      *
-     * @param from  the source reader
-     * @param filtering    enable or not filering
+     * @param from the source reader
+     * @param filtering enable or not filering
      * @param mavenProject the mavenproject
-     * @param filters      {@link java.util.List} of String which are path to a Property file
+     * @param filters {@link java.util.List} of String which are path to a Property file
      * @return an input stream that applies the filter
      * @throws org.apache.maven.shared.filtering.MavenFilteringException
-     * @see #getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession)
+     * @see #getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean,
+     *      org.apache.maven.execution.MavenSession)
      */
-    @Nonnull Reader filter( @Nonnull Reader from, boolean filtering, @Nullable MavenProject mavenProject, List<String> filters,
+    @Nonnull
+    Reader filter( @Nonnull Reader from, boolean filtering, @Nullable MavenProject mavenProject, List<String> filters,
                    boolean escapedBackslashesInFilePath, MavenSession mavenSession )
         throws MavenFilteringException;
 
@@ -60,16 +62,18 @@ public interface MavenReaderFilter
      * @return an input stream that applies the filter
      * @since 1.0-beta-3
      */
-    @Nonnull Reader filter( @Nonnull MavenReaderFilterRequest mavenFileFilterRequest )
+    @Nonnull
+    Reader filter( @Nonnull MavenReaderFilterRequest mavenFileFilterRequest )
         throws MavenFilteringException;
 
     /**
      * Provides a new reader that applies filtering using defaultFilterWrappers.
      *
-     * @param from  the source reader
+     * @param from the source reader
      * @param filtering true to apply filtering
      * @param filterWrappers {@link java.util.List} of FileUtils.FilterWrapper
      * @return an input stream that applies the filter
      */
-    @Nonnull Reader filter( @Nonnull Reader from, boolean filtering, @Nonnull List<FileUtils.FilterWrapper> filterWrappers );
+    @Nonnull
+    Reader filter( @Nonnull Reader from, boolean filtering, @Nonnull List<FileUtils.FilterWrapper> filterWrappers );
 }

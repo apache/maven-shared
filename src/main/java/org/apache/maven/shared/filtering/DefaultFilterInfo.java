@@ -1,6 +1,5 @@
 package org.apache.maven.shared.filtering;
 
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,56 +21,61 @@ package org.apache.maven.shared.filtering;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.io.FileUtils;
 
-import javax.annotation.Nonnull;
+public interface DefaultFilterInfo
+{
+    /**
+     * Will return the default FileUtils.FilterWrappers.
+     * <p/>
+     * <ul>
+     * <li>interpolate with token ${} and values from sysProps, project.properties, filters and project filters.</li>
+     * <li>interpolate with token @ @ and values from sysProps, project.properties, filters and project filters.</li>
+     * <li>interpolate with token ${} and values from mavenProject interpolation.</li>
+     * <li>interpolation with token @ @ and values from mavenProject interpolation</li>
+     * </ul>
+     * <b>This method is now deprecated and no escape mechanism will be used.</b>
+     *
+     * @param mavenProject
+     * @param filters {@link java.util.List} of properties file
+     * @return {@link java.util.List} of FileUtils.FilterWrapper
+     * @deprecated use
+     *             {@link #getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession, org.apache.maven.shared.filtering.MavenResourcesExecution)}
+     */
+    @Nonnull
+    List<FileUtils.FilterWrapper> getDefaultFilterWrappers( MavenProject mavenProject, List<String> filters,
+                                                            boolean escapedBackslashesInFilePath,
+                                                            MavenSession mavenSession )
+        throws MavenFilteringException;
 
-public interface DefaultFilterInfo {
-	/**
-	 * Will return the default FileUtils.FilterWrappers.
-	 * <p/>
-	 * <ul>
-	 * <li>interpolate with token ${} and values from sysProps, project.properties, filters and project filters.</li>
-	 * <li>interpolate with token @ @ and values from sysProps, project.properties, filters and project filters.</li>
-	 * <li>interpolate with token ${} and values from mavenProject interpolation.</li>
-	 * <li>interpolation with token @ @ and values from mavenProject interpolation</li>
-	 * </ul>
-	 * <b>This method is now deprecated and no escape mechanism will be used.</b>
-	 *
-	 * @param mavenProject
-	 * @param filters      {@link java.util.List} of properties file
-	 * @return {@link java.util.List} of FileUtils.FilterWrapper
-	 * @deprecated use {@link #getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession, org.apache.maven.shared.filtering.MavenResourcesExecution)}
-	 */
-	@Nonnull List<FileUtils.FilterWrapper> getDefaultFilterWrappers(MavenProject mavenProject, List<String> filters,
-			boolean escapedBackslashesInFilePath,
-			MavenSession mavenSession)
-			throws MavenFilteringException;
+    /**
+     * @param mavenProject
+     * @param filters
+     * @param escapedBackslashesInFilePath
+     * @param mavenSession
+     * @param mavenResourcesExecution
+     * @return {@link java.util.List} of FileUtils.FilterWrapper
+     * @throws org.apache.maven.shared.filtering.MavenFilteringException
+     * @since 1.0-beta-2
+     */
+    @Nonnull
+    List<FileUtils.FilterWrapper> getDefaultFilterWrappers( MavenProject mavenProject, List<String> filters,
+                                                            boolean escapedBackslashesInFilePath,
+                                                            MavenSession mavenSession,
+                                                            MavenResourcesExecution mavenResourcesExecution )
+        throws MavenFilteringException;
 
-	/**
-	 * @param mavenProject
-	 * @param filters
-	 * @param escapedBackslashesInFilePath
-	 * @param mavenSession
-	 * @param mavenResourcesExecution
-	 * @return {@link java.util.List} of FileUtils.FilterWrapper
-	 * @throws org.apache.maven.shared.filtering.MavenFilteringException
-	 * @since 1.0-beta-2
-	 */
-	@Nonnull List<FileUtils.FilterWrapper> getDefaultFilterWrappers(MavenProject mavenProject, List<String> filters,
-			boolean escapedBackslashesInFilePath,
-			MavenSession mavenSession,
-			MavenResourcesExecution mavenResourcesExecution)
-			throws MavenFilteringException;
-
-	/**
-	 * @param request
-	 * @return {@link java.util.List} of FileUtils.FilterWrapper
-	 * @throws org.apache.maven.shared.filtering.MavenFilteringException
-	 * @since 1.0-beta-3
-	 */
-	@Nonnull List<FileUtils.FilterWrapper> getDefaultFilterWrappers(AbstractMavenFilteringRequest request)
-			throws MavenFilteringException;
+    /**
+     * @param request
+     * @return {@link java.util.List} of FileUtils.FilterWrapper
+     * @throws org.apache.maven.shared.filtering.MavenFilteringException
+     * @since 1.0-beta-3
+     */
+    @Nonnull
+    List<FileUtils.FilterWrapper> getDefaultFilterWrappers( AbstractMavenFilteringRequest request )
+        throws MavenFilteringException;
 }

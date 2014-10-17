@@ -27,18 +27,17 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.model.Resource;
-import org.codehaus.plexus.PlexusTestCase;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.shared.utils.io.IOUtil;
+import org.codehaus.plexus.PlexusTestCase;
 
 /**
  * @author Olivier Lamy
- *
  */
 public class EscapeStringTest
     extends PlexusTestCase
 {
-    
+
     File outputDirectory = new File( getBasedir(), "target/EscapeStringTest" );
 
     File unitDirectory = new File( getBasedir(), "src/test/units-files/escape-remove-char" );
@@ -68,8 +67,8 @@ public class EscapeStringTest
         projectProperties.put( "java.version", "zloug" );
         projectProperties.put( "replaceThis", "I am the replacement" );
         mavenProject.setProperties( projectProperties );
-        MavenResourcesFiltering mavenResourcesFiltering = (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class
-            .getName() );
+        MavenResourcesFiltering mavenResourcesFiltering =
+            (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class.getName() );
 
         Resource resource = new Resource();
         List<Resource> resources = new ArrayList<Resource>();
@@ -81,11 +80,9 @@ public class EscapeStringTest
 
         List<String> nonFilteredFileExtensions = Collections.singletonList( "gif" );
 
-        MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, outputDirectory,
-                                                                                       mavenProject, "UTF-8",
-                                                                                       filtersFile,
-                                                                                       nonFilteredFileExtensions,
-                                                                                       new StubMavenSession() );
+        MavenResourcesExecution mavenResourcesExecution =
+            new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
+                                         nonFilteredFileExtensions, new StubMavenSession() );
         mavenResourcesExecution.setUseDefaultFilterWrappers( true );
 
         mavenResourcesExecution.setEscapeString( "!" );

@@ -20,18 +20,18 @@ package org.apache.maven.shared.filtering;
  */
 
 import java.util.regex.Pattern;
+
 import org.apache.maven.shared.utils.StringUtils;
 
 /**
  * @author Olivier Lamy
  * @author Dennis Lundberg
- *
  */
 public final class FilteringUtils
 {
     private static final String WINDOWS_PATH_PATTERN = "^(.*)[a-zA-Z]:\\\\(.*)";
 
-    private static final Pattern PATTERN = Pattern.compile( WINDOWS_PATH_PATTERN ) ;
+    private static final Pattern PATTERN = Pattern.compile( WINDOWS_PATH_PATTERN );
 
     /**
      * 
@@ -40,7 +40,7 @@ public final class FilteringUtils
     {
         // nothing just an util class
     }
-    
+
     // TODO: Correct to handle relative windows paths. (http://jira.codehaus.org/browse/MSHARED-121)
     // How do we distinguish a relative windows path from some other value that happens to contain backslashes??
     public static String escapeWindowsPath( String val )
@@ -54,15 +54,15 @@ public final class FilteringUtils
             {
                 buf.append( val.substring( start, end ) ).append( "\\\\" );
                 start = end + 1;
-                
+
                 if ( val.indexOf( '\\', end + 1 ) == end + 1 )
                 {
                     start++;
                 }
             }
-            
+
             buf.append( val.substring( start ) );
-            
+
             return buf.toString();
         }
         return val;

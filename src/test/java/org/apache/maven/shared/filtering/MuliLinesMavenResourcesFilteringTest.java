@@ -27,14 +27,12 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.model.Resource;
-import org.codehaus.plexus.PlexusTestCase;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.shared.utils.io.IOUtil;
+import org.codehaus.plexus.PlexusTestCase;
 
 /**
  * @author Olivier Lamy
- * 
- * 
  * @version $Id$
  */
 public class MuliLinesMavenResourcesFilteringTest
@@ -55,7 +53,6 @@ public class MuliLinesMavenResourcesFilteringTest
     }
 
     /**
-     * 
      * @throws Exception
      */
     public void testFilteringTokenOnce()
@@ -71,7 +68,8 @@ public class MuliLinesMavenResourcesFilteringTest
         projectProperties.put( "foo", "bar" );
         projectProperties.put( "java.version", "zloug" );
         mavenProject.setProperties( projectProperties );
-        MavenResourcesFiltering mavenResourcesFiltering = (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class.getName() );
+        MavenResourcesFiltering mavenResourcesFiltering =
+            (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class.getName() );
 
         String unitFilesDir = getBasedir() + "/src/test/units-files/MRESOURCES-104";
 
@@ -86,14 +84,11 @@ public class MuliLinesMavenResourcesFilteringTest
 
         List<String> nonFilteredFileExtensions = Collections.singletonList( "gif" );
 
-        MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( resources, outputDirectory,
-                                                                                       mavenProject, "UTF-8",
-                                                                                       filtersFile,
-                                                                                       nonFilteredFileExtensions,
-                                                                                       new StubMavenSession() );
+        MavenResourcesExecution mavenResourcesExecution =
+            new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
+                                         nonFilteredFileExtensions, new StubMavenSession() );
         mavenResourcesExecution.setUseDefaultFilterWrappers( true );
-        
-        
+
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
         Properties result = new Properties();
@@ -107,11 +102,11 @@ public class MuliLinesMavenResourcesFilteringTest
         {
             IOUtil.close( in );
         }
-        
-        System.out.println("properties " + result.toString());
-        //email=foo@bar.com
-        //foo=${project.version}
-        //bar=@project.version@
+
+        System.out.println( "properties " + result.toString() );
+        // email=foo@bar.com
+        // foo=${project.version}
+        // bar=@project.version@
         assertEquals( "1.0", result.get( "foo" ) );
         assertEquals( "1.0", result.get( "bar" ) );
         assertEquals( "foo@bar.com", result.get( "email" ) );

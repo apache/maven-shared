@@ -23,8 +23,8 @@ import java.io.File;
 import java.util.Collections;
 
 import org.apache.maven.model.Resource;
-import org.codehaus.plexus.PlexusTestCase;
 import org.apache.maven.shared.utils.io.FileUtils;
+import org.codehaus.plexus.PlexusTestCase;
 
 /**
  * @author Mikolaj Izdebski
@@ -48,20 +48,18 @@ public class InvalidMarkTest
     public void testEscape()
         throws Exception
     {
-        MavenResourcesFiltering mavenResourcesFiltering = (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class
-            .getName() );
+        MavenResourcesFiltering mavenResourcesFiltering =
+            (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class.getName() );
 
         Resource resource = new Resource();
         resource.setDirectory( "src/test/units-files/MSHARED-325" );
         resource.setFiltering( true );
 
-        MavenResourcesExecution mavenResourcesExecution = new MavenResourcesExecution( Collections.singletonList( resource ),
-                                                                                       outputDirectory,
-                                                                                       new StubMavenProject( new File(".") ),
-                                                                                       "UTF-8",
-                                                                                       Collections.<String>emptyList(),
-                                                                                       Collections.<String>emptyList(),
-                                                                                       new StubMavenSession() );
+        MavenResourcesExecution mavenResourcesExecution =
+            new MavenResourcesExecution( Collections.singletonList( resource ), outputDirectory,
+                                         new StubMavenProject( new File( "." ) ), "UTF-8",
+                                         Collections.<String> emptyList(), Collections.<String> emptyList(),
+                                         new StubMavenSession() );
 
         try
         {

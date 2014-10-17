@@ -51,11 +51,11 @@ public class TestReflectionProperties
             File from = new File( getBasedir() + "/src/test/units-files/reflection-test.properties" );
             File to = new File( getBasedir() + "/target/reflection-test.properties" );
 
-            if (to.exists())
+            if ( to.exists() )
             {
                 to.delete();
-            }            
-            
+            }
+
             mavenFileFilter.copyFile( from, to, true, mavenProject, null, false, null,
                                       new StubMavenSession( executionProperties ) );
 
@@ -93,11 +93,11 @@ public class TestReflectionProperties
             File from = new File( getBasedir() + "/src/test/units-files/reflection-test.properties" );
             File to = new File( getBasedir() + "/target/reflection-test.properties" );
 
-            if (to.exists())
+            if ( to.exists() )
             {
                 to.delete();
             }
-            
+
             mavenFileFilter.copyFile( from, to, false, mavenProject, null, false, null,
                                       new StubMavenSession( executionProperties ) );
 
@@ -117,6 +117,6 @@ public class TestReflectionProperties
             }
         }
 
-    }    
-    
+    }
+
 }

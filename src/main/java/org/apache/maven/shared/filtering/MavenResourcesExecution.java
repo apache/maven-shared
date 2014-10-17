@@ -78,6 +78,9 @@ public class MavenResourcesExecution
      */
     private boolean supportMultiLineFiltering;
 
+    /**
+     * Do nothing.
+     */
     public MavenResourcesExecution()
     {
         // no op
@@ -86,13 +89,13 @@ public class MavenResourcesExecution
     /**
      * As we use a Maven project <code>useDefaultFilterWrappers</code> will be set to <code>true</code>.
      *
-     * @param resources
-     * @param outputDirectory
-     * @param mavenProject
-     * @param encoding
-     * @param fileFilters
-     * @param nonFilteredFileExtensions
-     * @param mavenSession
+     * @param resources The list of resources.
+     * @param outputDirectory The output directory.
+     * @param mavenProject The maven project.
+     * @param encoding The given encoding.
+     * @param fileFilters The file filters.
+     * @param nonFilteredFileExtensions The extensions which should not being filtered.
+     * @param mavenSession The maven session.
      */
     public MavenResourcesExecution(
                                     List<Resource> resources,
@@ -111,6 +114,14 @@ public class MavenResourcesExecution
         this.resourcesBaseDirectory = mavenProject.getBasedir();
     }
 
+    /**
+     * @param resources The list of resources.
+     * @param outputDirectory The output directory.
+     * @param encoding The given encoding.
+     * @param filterWrappers The list of filter wrappers.
+     * @param resourcesBaseDirectory The resources base directory.
+     * @param nonFilteredFileExtensions The list of extensions which should not being filtered.
+     */
     public MavenResourcesExecution(
                                     List<Resource> resources,
                                     File outputDirectory,
@@ -145,11 +156,17 @@ public class MavenResourcesExecution
         this.resources = resources;
     }
 
+    /**
+     * @return The output directory.
+     */
     public File getOutputDirectory()
     {
         return outputDirectory;
     }
 
+    /**
+     * @param outputDirectory The output directory.
+     */
     public void setOutputDirectory( File outputDirectory )
     {
         this.outputDirectory = outputDirectory;
@@ -187,6 +204,9 @@ public class MavenResourcesExecution
         this.filterWrappers = filterWrappers;
     }
 
+    /**
+     * @param filterWrapper The filter wrapper which should be added.
+     */
     public void addFilterWrapper( FilterWrapper filterWrapper )
     {
         if ( this.filterWrappers == null )
@@ -200,7 +220,7 @@ public class MavenResourcesExecution
      * Helper to add {@link FileUtils.FilterWrapper}, will {@link RegexBasedInterpolator} with default regex Exp ${ }
      * and InterpolatorFilterReaderLineEnding with defaultTokens ${ }.
      *
-     * @param valueSource
+     * @param valueSource The value Source.
      * @deprecated This doesn't support escaping use
      *             {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
      */
@@ -221,11 +241,11 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @param valueSource
-     * @param startRegExp
-     * @param endRegExp
-     * @param startToken
-     * @param endToken
+     * @param valueSource The valueSource.
+     * @param startRegExp The start regular expression.
+     * @param endRegExp The end regular expression.
+     * @param startToken The start token.
+     * @param endToken The end token.
      * @deprecated This doesn't support escaping use
      *             {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
      */
@@ -245,10 +265,10 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @param valueSource
-     * @param startExp start token like ${
-     * @param endExp endToken }
-     * @param escapeString
+     * @param valueSource {@link ValueSource}
+     * @param startExp start token like <code>${</code>
+     * @param endExp endToken <code>}</code>
+     * @param escapeString The escape string.
      * @since 1.0-beta-2
      * @deprecated This doesn't support escaping use
      *             {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
@@ -272,10 +292,10 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @param valueSource
-     * @param startExp start token like ${
-     * @param endExp endToken }
-     * @param escapeString
+     * @param valueSource {@link ValueSource}
+     * @param startExp start token like <code>${</code>
+     * @param endExp endToken <code>}</code>
+     * @param escapeString The escape string.
      * @param supportMultiLineFiltering do we support or use filtering on multi lines with start and endtoken on multi
      *            lines
      * @since 1.0
@@ -299,21 +319,33 @@ public class MavenResourcesExecution
         } );
     }
 
+    /**
+     * @return The resource base directory.
+     */
     public File getResourcesBaseDirectory()
     {
         return resourcesBaseDirectory;
     }
 
+    /**
+     * @param resourcesBaseDirectory Set the resource base directory.
+     */
     public void setResourcesBaseDirectory( File resourcesBaseDirectory )
     {
         this.resourcesBaseDirectory = resourcesBaseDirectory;
     }
 
+    /**
+     * @return use default filter wrapper 
+     */
     public boolean isUseDefaultFilterWrappers()
     {
         return useDefaultFilterWrappers;
     }
 
+    /**
+     * @param useDefaultFilterWrappers
+     */
     public void setUseDefaultFilterWrappers( boolean useDefaultFilterWrappers )
     {
         this.useDefaultFilterWrappers = useDefaultFilterWrappers;
@@ -332,7 +364,7 @@ public class MavenResourcesExecution
     /**
      * Overwrite existing files even if the destination files are newer.
      *
-     * @param overwrite
+     * @param overwrite overwrite true or false.
      * @since 1.0-beta-2
      */
     public void setOverwrite( boolean overwrite )
@@ -353,7 +385,7 @@ public class MavenResourcesExecution
     /**
      * Copy any empty directories included in the Resources.
      *
-     * @param includeEmptyDirs
+     * @param includeEmptyDirs {@code true} to include empty directories, otherwise {@code false}.
      * @since 1.0-beta-2
      */
     public void setIncludeEmptyDirs( boolean includeEmptyDirs )
@@ -379,6 +411,9 @@ public class MavenResourcesExecution
         this.filterFilenames = filterFilenames;
     }
 
+    /**
+     * @return {@link MavenResourcesExecution}
+     */
     public MavenResourcesExecution copyOf()
     {
         MavenResourcesExecution mre = new MavenResourcesExecution();
@@ -419,11 +454,17 @@ public class MavenResourcesExecution
         }
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.maven.shared.filtering.AbstractMavenFilteringRequest#isSupportMultiLineFiltering()
+     */
     public boolean isSupportMultiLineFiltering()
     {
         return supportMultiLineFiltering;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.maven.shared.filtering.AbstractMavenFilteringRequest#setSupportMultiLineFiltering(boolean)
+     */
     public void setSupportMultiLineFiltering( boolean supportMultiLineFiltering )
     {
         this.supportMultiLineFiltering = supportMultiLineFiltering;

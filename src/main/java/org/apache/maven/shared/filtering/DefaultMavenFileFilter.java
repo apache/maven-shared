@@ -80,6 +80,9 @@ public class DefaultMavenFileFilter
         copyFile( from, to, filtering, filterWrappers, encoding );
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.maven.shared.filtering.MavenFileFilter#copyFile(org.apache.maven.shared.filtering.MavenFileFilterRequest)
+     */
     public void copyFile( MavenFileFilterRequest mavenFileFilterRequest )
         throws MavenFilteringException
     {
@@ -89,6 +92,9 @@ public class DefaultMavenFileFilter
                   mavenFileFilterRequest.isFiltering(), filterWrappers, mavenFileFilterRequest.getEncoding() );
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.maven.shared.filtering.MavenFileFilter#copyFile(java.io.File, java.io.File, boolean, java.util.List, java.lang.String)
+     */
     public void copyFile( File from, File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
                           String encoding )
         throws MavenFilteringException
@@ -97,6 +103,9 @@ public class DefaultMavenFileFilter
         copyFile( from, to, filtering, filterWrappers, encoding, false );
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.maven.shared.filtering.MavenFileFilter#copyFile(java.io.File, java.io.File, boolean, java.util.List, java.lang.String, boolean)
+     */
     public void copyFile( File from, File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
                           String encoding, boolean overwrite )
         throws MavenFilteringException

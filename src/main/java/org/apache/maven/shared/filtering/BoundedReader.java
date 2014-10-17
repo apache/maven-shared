@@ -63,11 +63,11 @@ public class BoundedReader
     }
 
     @Override
-    public void mark( int readAheadLimit )
+    public void mark( int theReadAheadLimit )
         throws IOException
     {
-        this.readAheadLimit = readAheadLimit;
-        target.mark( readAheadLimit );
+        this.readAheadLimit = theReadAheadLimit;
+        target.mark( theReadAheadLimit );
     }
 
     @Override

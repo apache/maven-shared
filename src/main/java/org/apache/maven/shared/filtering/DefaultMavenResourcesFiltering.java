@@ -48,6 +48,10 @@ import org.sonatype.plexus.build.incremental.BuildContext;
  * @plexus.component role="org.apache.maven.shared.filtering.MavenResourcesFiltering"
  *                   role-hint="default"
  */
+/**
+ * @author kama
+ *
+ */
 public class DefaultMavenResourcesFiltering
     extends AbstractLogEnabled
     implements MavenResourcesFiltering, Initializable
@@ -67,6 +71,9 @@ public class DefaultMavenResourcesFiltering
     // ------------------------------------------------
     // Plexus lifecycle
     // ------------------------------------------------
+    /* (non-Javadoc)
+     * @see org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable#initialize()
+     */
     public void initialize()
         throws InitializationException
     {
@@ -84,6 +91,9 @@ public class DefaultMavenResourcesFiltering
      */
     private MavenFileFilter mavenFileFilter;
 
+    /* (non-Javadoc)
+     * @see org.apache.maven.shared.filtering.MavenResourcesFiltering#filterResources(java.util.List, java.io.File, org.apache.maven.project.MavenProject, java.lang.String, java.util.List, java.util.List, org.apache.maven.execution.MavenSession)
+     */
     public void filterResources( List<Resource> resources, File outputDirectory, MavenProject mavenProject,
                                  String encoding, List<String> fileFilters, List<String> nonFilteredFileExtensions,
                                  MavenSession mavenSession )
@@ -98,6 +108,9 @@ public class DefaultMavenResourcesFiltering
         filterResources( mavenResourcesExecution );
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.maven.shared.filtering.MavenResourcesFiltering#filterResources(java.util.List, java.io.File, java.lang.String, java.util.List, java.io.File, java.util.List)
+     */
     public void filterResources( List<Resource> resources, File outputDirectory, String encoding,
                                  List<FileUtils.FilterWrapper> filterWrappers, File resourcesBaseDirectory,
                                  List<String> nonFilteredFileExtensions )
@@ -109,6 +122,9 @@ public class DefaultMavenResourcesFiltering
         filterResources( mavenResourcesExecution );
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.maven.shared.filtering.MavenResourcesFiltering#filteredFileExtension(java.lang.String, java.util.List)
+     */
     public boolean filteredFileExtension( String fileName, List<String> userNonFilteredFileExtensions )
     {
         List<String> nonFilteredFileExtensions = new ArrayList<String>( getDefaultNonFilteredFileExtensions() );
@@ -126,6 +142,9 @@ public class DefaultMavenResourcesFiltering
         return filteredFileExtension;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.maven.shared.filtering.MavenResourcesFiltering#getDefaultNonFilteredFileExtensions()
+     */
     public List<String> getDefaultNonFilteredFileExtensions()
     {
         if ( this.defaultNonFilteredFileExtensions == null )
@@ -135,6 +154,9 @@ public class DefaultMavenResourcesFiltering
         return this.defaultNonFilteredFileExtensions;
     }
 
+    /* (non-Javadoc)
+     * @see org.apache.maven.shared.filtering.MavenResourcesFiltering#filterResources(org.apache.maven.shared.filtering.MavenResourcesExecution)
+     */
     public void filterResources( MavenResourcesExecution mavenResourcesExecution )
         throws MavenFilteringException
     {

@@ -38,9 +38,7 @@ public class DefaultMavenReaderFilter
     extends BaseFilter
     implements MavenReaderFilter
 {
-    /* (non-Javadoc)
-     * @see org.apache.maven.shared.filtering.MavenReaderFilter#filter(java.io.Reader, boolean, org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession)
-     */
+    /** {@inheritDoc} */
     @Nonnull
     public Reader filter( @Nonnull Reader from, boolean filtering, MavenProject mavenProject, List<String> filters,
                           boolean escapedBackslashesInFilePath, MavenSession mavenSession )
@@ -57,9 +55,7 @@ public class DefaultMavenReaderFilter
         return filter( from, filtering, filterWrappers );
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.maven.shared.filtering.MavenReaderFilter#filter(org.apache.maven.shared.filtering.MavenReaderFilterRequest)
-     */
+    /** {@inheritDoc} */
     @Nonnull
     public Reader filter( @Nonnull MavenReaderFilterRequest mavenFileFilterRequest )
         throws MavenFilteringException
@@ -68,9 +64,7 @@ public class DefaultMavenReaderFilter
         return filter( mavenFileFilterRequest.getFrom(), mavenFileFilterRequest.isFiltering(), filterWrappers );
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.maven.shared.filtering.MavenReaderFilter#filter(java.io.Reader, boolean, java.util.List)
-     */
+    /** {@inheritDoc} */
     @Nonnull 
     public Reader filter( @Nonnull Reader from, boolean filtering, @Nonnull List<FilterWrapper> filterWrappers )
     {

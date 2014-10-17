@@ -165,7 +165,8 @@ public final class PropertyUtils
             v = v.substring( idx + 2 );
 
             // if no matching } then bail
-            if ( ( idx2 = v.indexOf( '}' ) ) < 0 )
+            idx2 = v.indexOf( '}' );
+            if ( idx2 < 0 )
             {
                 break;
             }

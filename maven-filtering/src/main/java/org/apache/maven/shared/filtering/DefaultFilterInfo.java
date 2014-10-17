@@ -40,7 +40,7 @@ public interface DefaultFilterInfo
      * </ul>
      * <b>This method is now deprecated and no escape mechanism will be used.</b>
      *
-     * @param mavenProject
+     * @param mavenProject The maven project
      * @param filters {@link java.util.List} of properties file
      * @return {@link java.util.List} of FileUtils.FilterWrapper
      * @deprecated use
@@ -53,11 +53,11 @@ public interface DefaultFilterInfo
         throws MavenFilteringException;
 
     /**
-     * @param mavenProject
-     * @param filters
-     * @param escapedBackslashesInFilePath
-     * @param mavenSession
-     * @param mavenResourcesExecution
+     * @param mavenProject The maven project
+     * @param filters The filters to get
+     * @param escapedBackslashesInFilePath escape backslashes ?
+     * @param mavenSession The maven session
+     * @param mavenResourcesExecution The filtering configuration
      * @return {@link java.util.List} of FileUtils.FilterWrapper
      * @throws org.apache.maven.shared.filtering.MavenFilteringException
      * @since 1.0-beta-2
@@ -70,7 +70,7 @@ public interface DefaultFilterInfo
         throws MavenFilteringException;
 
     /**
-     * @param request
+     * @param request The filtering request
      * @return {@link java.util.List} of FileUtils.FilterWrapper
      * @throws org.apache.maven.shared.filtering.MavenFilteringException
      * @since 1.0-beta-3

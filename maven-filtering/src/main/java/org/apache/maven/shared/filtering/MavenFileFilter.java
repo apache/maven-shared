@@ -49,7 +49,7 @@ public interface MavenFileFilter
         throws MavenFilteringException;
 
     /**
-     * @param mavenFileFilterRequest
+     * @param mavenFileFilterRequest the request
      * @throws MavenFilteringException
      * @since 1.0-beta-3
      */
@@ -57,9 +57,9 @@ public interface MavenFileFilter
         throws MavenFilteringException;
 
     /**
-     * @param from
-     * @param to
-     * @param filtering
+     * @param from The source file
+     * @param to The target file
+     * @param filtering true to apply filtering
      * @param filterWrappers {@link List} of FileUtils.FilterWrapper
      * @throws MavenFilteringException
      */
@@ -68,12 +68,12 @@ public interface MavenFileFilter
         throws MavenFilteringException;
 
     /**
-     * @param from
-     * @param to
-     * @param filtering
-     * @param filterWrappers
-     * @param encoding
-     * @param overwrite
+     * @param from The source file
+     * @param to The destination file
+     * @param filtering true to apply filtering
+     * @param filterWrappers The filters to applt
+     * @param encoding The encoding to use
+     * @param overwrite Overwrite to file ?
      * @throws MavenFilteringException
      * @since 1.0-beta-2
      */

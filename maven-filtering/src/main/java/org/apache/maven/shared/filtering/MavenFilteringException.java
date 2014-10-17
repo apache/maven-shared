@@ -35,7 +35,7 @@ public class MavenFilteringException
     }
 
     /**
-     * @param message
+     * @param message the message
      */
     public MavenFilteringException( String message )
     {
@@ -43,7 +43,7 @@ public class MavenFilteringException
     }
 
     /**
-     * @param cause
+     * @param cause the cause of the exception
      */
     public MavenFilteringException( Throwable cause )
     {
@@ -51,8 +51,8 @@ public class MavenFilteringException
     }
 
     /**
-     * @param message
-     * @param cause
+     * @param message a message
+     * @param cause a worthy cause
      */
     public MavenFilteringException( String message, Throwable cause )
     {

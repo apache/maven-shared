@@ -56,7 +56,7 @@ class BaseFilter
      *      java.util.List, boolean, org.apache.maven.execution.MavenSession)
      * @deprecated
      */
-    public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject,
+    @Nonnull public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject,
                                                                    List<String> filters,
                                                                    final boolean escapedBackslashesInFilePath,
                                                                    MavenSession mavenSession )

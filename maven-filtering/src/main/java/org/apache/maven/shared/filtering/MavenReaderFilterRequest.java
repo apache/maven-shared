@@ -19,8 +19,6 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import java.io.File;
-import java.io.InputStream;
 import java.io.Reader;
 import java.util.List;
 import java.util.Properties;
@@ -46,8 +44,14 @@ public class MavenReaderFilterRequest
         // nothing
     }
 
-    public MavenReaderFilterRequest( Reader from, boolean filtering, MavenProject mavenProject, List<String> filters,
-                                     boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession,
+    public MavenReaderFilterRequest(
+                                     Reader from,
+                                     boolean filtering,
+                                     MavenProject mavenProject,
+                                     List<String> filters,
+                                     boolean escapedBackslashesInFilePath,
+                                     String encoding,
+                                     MavenSession mavenSession,
                                      Properties additionalProperties )
     {
         super( mavenProject, filters, encoding, mavenSession );
@@ -56,7 +60,6 @@ public class MavenReaderFilterRequest
         setAdditionalProperties( additionalProperties );
         setEscapeWindowsPaths( escapedBackslashesInFilePath );
     }
-
 
     public Reader getFrom()
     {

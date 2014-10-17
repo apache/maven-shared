@@ -34,9 +34,9 @@ public class StubMavenSession
 {
 
     private Properties executionProperties;
-    
+
     private final Settings settings;
-    
+
     public StubMavenSession( Settings settings )
     {
         this( null, settings );
@@ -51,11 +51,11 @@ public class StubMavenSession
     {
         this( executionProperties, null );
     }
-    
+
     public StubMavenSession( Properties executionProperties, Settings settings )
     {
         super( null, null, null, null, null, null, null, null, null );
-        
+
         this.settings = settings;
         this.executionProperties = new Properties();
         if ( executionProperties != null )
@@ -64,7 +64,7 @@ public class StubMavenSession
         }
         this.executionProperties.putAll( System.getProperties() );
     }
-    
+
     public Settings getSettings()
     {
         return settings;

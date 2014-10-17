@@ -47,24 +47,25 @@ public class FilteringUtilsTest
 
     // This doesn't work, see MSHARED-121
     /*
-    public void testEscapeWindowsPathStartingWithDrivelessAbsolutePath()
-    {
-        assertEquals( "\\\\Users\\\\Administrator", FilteringUtils.escapeWindowsPath( "\\Users\\Administrator" ) );
-    }
-    */
+     * public void testEscapeWindowsPathStartingWithDrivelessAbsolutePath()
+     * {
+     * assertEquals( "\\\\Users\\\\Administrator", FilteringUtils.escapeWindowsPath( "\\Users\\Administrator" ) );
+     * }
+     */
 
     // This doesn't work, see MSHARED-121
     /*
-    public void testEscapeWindowsPathStartingWithExpression()
-    {
-        assertEquals( "${pathExpr}\\\\Documents", FilteringUtils.escapeWindowsPath( "${pathExpr}\\Documents" ) );
-    }
-    */
+     * public void testEscapeWindowsPathStartingWithExpression()
+     * {
+     * assertEquals( "${pathExpr}\\\\Documents", FilteringUtils.escapeWindowsPath( "${pathExpr}\\Documents" ) );
+     * }
+     */
 
     // MSHARED-179
     public void testEscapeWindowsPathNotAtBeginning()
         throws Exception
     {
-        assertEquals( "jdbc:derby:C:\\\\Users\\\\Administrator/test;create=true", FilteringUtils.escapeWindowsPath( "jdbc:derby:C:\\Users\\Administrator/test;create=true" ) );
+        assertEquals( "jdbc:derby:C:\\\\Users\\\\Administrator/test;create=true",
+                      FilteringUtils.escapeWindowsPath( "jdbc:derby:C:\\Users\\Administrator/test;create=true" ) );
     }
 }

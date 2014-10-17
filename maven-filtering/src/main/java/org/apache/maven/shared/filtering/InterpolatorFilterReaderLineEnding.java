@@ -19,15 +19,15 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import org.codehaus.plexus.interpolation.InterpolationException;
-import org.codehaus.plexus.interpolation.Interpolator;
-import org.codehaus.plexus.interpolation.RecursionInterceptor;
-import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
-
 import java.io.BufferedReader;
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
+
+import org.codehaus.plexus.interpolation.InterpolationException;
+import org.codehaus.plexus.interpolation.Interpolator;
+import org.codehaus.plexus.interpolation.RecursionInterceptor;
+import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
 
 /**
  * A FilterReader implementation, that works with Interpolator interface instead of it's own interpolation
@@ -35,7 +35,6 @@ import java.io.Reader;
  *
  * @author cstamas
  * @author Olivier Lamy
- *
  * @since 1.0
  */
 public class InterpolatorFilterReaderLineEnding
@@ -97,28 +96,36 @@ public class InterpolatorFilterReaderLineEnding
     private boolean eof = false;
 
     /**
-     * @param in                        reader to use
-     * @param interpolator              interpolator instance to use
-     * @param beginToken                start token to use
-     * @param endToken                  end token to use
+     * @param in reader to use
+     * @param interpolator interpolator instance to use
+     * @param beginToken start token to use
+     * @param endToken end token to use
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    public InterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, String beginToken, String endToken,
+    public InterpolatorFilterReaderLineEnding(
+                                               Reader in,
+                                               Interpolator interpolator,
+                                               String beginToken,
+                                               String endToken,
                                                boolean supportMultiLineFiltering )
     {
         this( in, interpolator, beginToken, endToken, new SimpleRecursionInterceptor(), supportMultiLineFiltering );
     }
 
     /**
-     * @param in                        reader to use
-     * @param interpolator              interpolator instance to use
-     * @param beginToken                start token to use
-     * @param endToken                  end token to use
-     * @param ri                        The {@link RecursionInterceptor} to use to prevent recursive expressions.
+     * @param in reader to use
+     * @param interpolator interpolator instance to use
+     * @param beginToken start token to use
+     * @param endToken end token to use
+     * @param ri The {@link RecursionInterceptor} to use to prevent recursive expressions.
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    private InterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, String beginToken,
-                                                String endToken, RecursionInterceptor ri,
+    private InterpolatorFilterReaderLineEnding(
+                                                Reader in,
+                                                Interpolator interpolator,
+                                                String beginToken,
+                                                String endToken,
+                                                RecursionInterceptor ri,
                                                 boolean supportMultiLineFiltering )
     {
         // wrap our own buffer, so we can use mark/reset safely.
@@ -145,7 +152,7 @@ public class InterpolatorFilterReaderLineEnding
      * @param n The number of characters to skip
      * @return the number of characters actually skipped
      * @throws IllegalArgumentException If <code>n</code> is negative.
-     * @throws IOException              If an I/O error occurs
+     * @throws IOException If an I/O error occurs
      */
     public long skip( long n )
         throws IOException
@@ -170,8 +177,8 @@ public class InterpolatorFilterReaderLineEnding
      * occurs, or the end of the stream is reached.
      *
      * @param cbuf Destination buffer to write characters to. Must not be <code>null</code>.
-     * @param off  Offset at which to start storing characters.
-     * @param len  Maximum number of characters to read.
+     * @param off Offset at which to start storing characters.
+     * @param len Maximum number of characters to read.
      * @return the number of characters read, or -1 if the end of the stream has been reached
      * @throws IOException If an I/O error occurs
      */

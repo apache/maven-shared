@@ -19,19 +19,20 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
-
-import javax.annotation.Nonnull;
 import java.io.Reader;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
+
 /**
  * @author Kristian Rosenvold
  * @plexus.component role="org.apache.maven.shared.filtering.MavenReaderFilter"
- * role-hint="default"
+ *                   role-hint="default"
  */
 public class DefaultMavenReaderFilter
     extends BaseFilter
@@ -53,21 +54,18 @@ public class DefaultMavenReaderFilter
         return filter( from, filtering, filterWrappers );
     }
 
-
-    @Nonnull public Reader filter( @Nonnull MavenReaderFilterRequest mavenFileFilterRequest )
+    @Nonnull
+    public Reader filter( @Nonnull MavenReaderFilterRequest mavenFileFilterRequest )
         throws MavenFilteringException
     {
         List<FilterWrapper> filterWrappers = getDefaultFilterWrappers( mavenFileFilterRequest );
         return filter( mavenFileFilterRequest.getFrom(), mavenFileFilterRequest.isFiltering(), filterWrappers );
     }
 
-
-    @SuppressWarnings( "unchecked" )
     public @Nonnull Reader filter( @Nonnull Reader from, boolean filtering, @Nonnull List<FilterWrapper> filterWrappers )
     {
-        return filterWrap( from, filtering ? filterWrappers : Collections.<FilterWrapper>emptyList() );
+        return filterWrap( from, filtering ? filterWrappers : Collections.<FilterWrapper> emptyList() );
     }
-
 
     private static @Nonnull Reader filterWrap( @Nonnull Reader from, @Nonnull Iterable<FilterWrapper> wrappers )
     {
@@ -78,6 +76,5 @@ public class DefaultMavenReaderFilter
         }
         return reader;
     }
-
 
 }

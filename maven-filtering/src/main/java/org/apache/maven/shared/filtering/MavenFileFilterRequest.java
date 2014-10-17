@@ -33,11 +33,11 @@ import org.apache.maven.project.MavenProject;
 public class MavenFileFilterRequest
     extends AbstractMavenFilteringRequest
 {
-    
+
     private File from;
 
     private File to;
-    
+
     private boolean filtering;
 
     public MavenFileFilterRequest()
@@ -45,8 +45,15 @@ public class MavenFileFilterRequest
         // nothing
     }
 
-    public MavenFileFilterRequest( File from, File to, boolean filtering, MavenProject mavenProject, List<String> filters,
-                                   boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession,
+    public MavenFileFilterRequest(
+                                   File from,
+                                   File to,
+                                   boolean filtering,
+                                   MavenProject mavenProject,
+                                   List<String> filters,
+                                   boolean escapedBackslashesInFilePath,
+                                   String encoding,
+                                   MavenSession mavenSession,
                                    Properties additionalProperties )
     {
         super( mavenProject, filters, encoding, mavenSession );
@@ -56,7 +63,6 @@ public class MavenFileFilterRequest
         setAdditionalProperties( additionalProperties );
         setEscapeWindowsPaths( escapedBackslashesInFilePath );
     }
-
 
     public File getFrom()
     {

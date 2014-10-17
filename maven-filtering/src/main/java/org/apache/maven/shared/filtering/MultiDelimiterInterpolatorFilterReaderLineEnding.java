@@ -38,7 +38,6 @@ import org.codehaus.plexus.interpolation.multi.DelimiterSpecification;
  *
  * @author cstamas
  * @author Olivier Lamy
- *
  * @since 1.0
  */
 public class MultiDelimiterInterpolatorFilterReaderLineEnding
@@ -106,23 +105,27 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
     /**
      * This constructor uses default begin token ${ and default end token }.
      *
-     * @param in                        reader to use
-     * @param interpolator              interpolator instance to use
+     * @param in reader to use
+     * @param interpolator interpolator instance to use
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator,
+    public MultiDelimiterInterpolatorFilterReaderLineEnding(
+                                                             Reader in,
+                                                             Interpolator interpolator,
                                                              boolean supportMultiLineFiltering )
     {
         this( in, interpolator, new SimpleRecursionInterceptor(), supportMultiLineFiltering );
     }
 
     /**
-     * @param in                        reader to use
-     * @param interpolator              interpolator instance to use
-     * @param ri                        The {@link RecursionInterceptor} to use to prevent recursive expressions.
+     * @param in reader to use
+     * @param interpolator interpolator instance to use
+     * @param ri The {@link RecursionInterceptor} to use to prevent recursive expressions.
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator,
+    public MultiDelimiterInterpolatorFilterReaderLineEnding(
+                                                             Reader in,
+                                                             Interpolator interpolator,
                                                              RecursionInterceptor ri,
                                                              boolean supportMultiLineFiltering )
     {
@@ -168,7 +171,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * @param n The number of characters to skip
      * @return the number of characters actually skipped
      * @throws IllegalArgumentException If <code>n</code> is negative.
-     * @throws IOException              If an I/O error occurs
+     * @throws IOException If an I/O error occurs
      */
     public long skip( long n )
         throws IOException
@@ -193,8 +196,8 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * occurs, or the end of the stream is reached.
      *
      * @param cbuf Destination buffer to write characters to. Must not be <code>null</code>.
-     * @param off  Offset at which to start storing characters.
-     * @param len  Maximum number of characters to read.
+     * @param off Offset at which to start storing characters.
+     * @param len Maximum number of characters to read.
      * @return the number of characters read, or -1 if the end of the stream has been reached
      * @throws IOException If an I/O error occurs
      */
@@ -238,7 +241,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
             return -1;
         }
 
-        BoundedReader in = new BoundedReader(this.in, markLength);
+        BoundedReader in = new BoundedReader( this.in, markLength );
 
         int ch = in.read();
         if ( ( ch == -1 ) || ( ch == '\n' && !supportMultiLineFiltering ) )
@@ -345,7 +348,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
 
         // we're committed, find the end token, EOL or EOF
 
-        key.append(beginToken);
+        key.append( beginToken );
         in.reset();
         in.skip( beginToken.length() );
         ch = in.read();
@@ -479,8 +482,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
         return recursionInterceptor;
     }
 
-    public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor(
-        RecursionInterceptor recursionInterceptor )
+    public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor recursionInterceptor )
     {
         this.recursionInterceptor = recursionInterceptor;
         return this;

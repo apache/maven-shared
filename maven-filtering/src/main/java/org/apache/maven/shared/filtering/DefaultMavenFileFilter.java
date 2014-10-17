@@ -19,16 +19,6 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.utils.StringUtils;
-import org.apache.maven.shared.utils.io.FileUtils;
-import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
-import org.apache.maven.shared.utils.io.IOUtil;
-import org.sonatype.plexus.build.incremental.BuildContext;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,13 +32,23 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.util.Arrays;
 import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.utils.StringUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
+import org.apache.maven.shared.utils.io.IOUtil;
+import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * @author Olivier Lamy
  * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter"
- * role-hint="default"
+ *                   role-hint="default"
  */
 public class DefaultMavenFileFilter
     extends BaseFilter
@@ -80,7 +80,6 @@ public class DefaultMavenFileFilter
         copyFile( from, to, filtering, filterWrappers, encoding );
     }
 
-
     public void copyFile( MavenFileFilterRequest mavenFileFilterRequest )
         throws MavenFilteringException
     {
@@ -90,7 +89,6 @@ public class DefaultMavenFileFilter
                   mavenFileFilterRequest.isFiltering(), filterWrappers, mavenFileFilterRequest.getEncoding() );
     }
 
-
     public void copyFile( File from, File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
                           String encoding )
         throws MavenFilteringException
@@ -98,7 +96,6 @@ public class DefaultMavenFileFilter
         // overwrite forced to false to preserve backward comp
         copyFile( from, to, filtering, filterWrappers, encoding, false );
     }
-
 
     public void copyFile( File from, File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
                           String encoding, boolean overwrite )
@@ -156,7 +153,7 @@ public class DefaultMavenFileFilter
         }
         else
         {
-            if ( to.lastModified() < from.lastModified()  )
+            if ( to.lastModified() < from.lastModified() )
             {
                 FileUtils.copyFile( from, to );
             }
@@ -192,6 +189,5 @@ public class DefaultMavenFileFilter
             return new BufferedReader( new InputStreamReader( instream, encoding ) );
         }
     }
-
 
 }

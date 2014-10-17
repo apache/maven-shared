@@ -42,8 +42,6 @@ import org.codehaus.plexus.PlexusTestCase;
 public class DefaultMavenFileFilterTest
     extends PlexusTestCase
 {
-    
-    
 
     File to = new File( getBasedir(), "target/reflection-test.properties" );
 
@@ -132,7 +130,6 @@ public class DefaultMavenFileFilterTest
 
         assertTrue( filterProperties.getProperty( "third_filter_key" ).equals( "first and second" ) );
     }
-    
 
     // MSHARED-161: DefaultMavenFileFilter.getDefaultFilterWrappers loads
     // filters from the current directory instead of using basedir
@@ -150,9 +147,9 @@ public class DefaultMavenFileFilterTest
         req.setInjectProjectBuildFilters( true );
 
         List<FilterWrapper> wrappers = mavenFileFilter.getDefaultFilterWrappers( req );
-        
-        Reader reader = wrappers.get(0).getReader( new StringReader( "${filefilter} ${buildfilter}" ) );
-        
+
+        Reader reader = wrappers.get( 0 ).getReader( new StringReader( "${filefilter} ${buildfilter}" ) );
+
         assertEquals( "true true", IOUtil.toString( reader ) );
     }
 
@@ -176,9 +173,10 @@ public class DefaultMavenFileFilterTest
         reader = wrappers.get( 0 ).getReader( new StringReader( "abcFILTER.a.MEabc" ) );
         assertEquals( "DONE", IOUtil.toString( reader ) );
     }
-    
+
     // MSHARED-199: Filtering doesn't work if 2 delimiters are used on the same line, the first one being left open
-    public void testLineWithSingleAtAndExpression() throws Exception
+    public void testLineWithSingleAtAndExpression()
+        throws Exception
     {
         MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
 

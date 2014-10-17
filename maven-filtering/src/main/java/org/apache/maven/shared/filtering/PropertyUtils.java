@@ -19,9 +19,6 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import org.apache.maven.shared.utils.io.IOUtil;
-import org.apache.maven.shared.utils.StringUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,11 +26,12 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.apache.maven.shared.utils.StringUtils;
+import org.apache.maven.shared.utils.io.IOUtil;
 
 /**
  * @author <a href="mailto:kenney@neonics.com">Kenney Westerhof</a>
  * @author William Ferguson
- *
  */
 public final class PropertyUtils
 {
@@ -48,8 +46,8 @@ public final class PropertyUtils
     /**
      * Reads a property file, resolving all internal variables, using the supplied base properties.
      * <p>
-     * The properties are resolved iteratively, so if the value of property A refers to property B, 
-     * then after resolution the value of property B will contain the value of property B.
+     * The properties are resolved iteratively, so if the value of property A refers to property B, then after
+     * resolution the value of property B will contain the value of property B.
      * </p>
      * 
      * @param propFile The property file to load.
@@ -83,13 +81,13 @@ public final class PropertyUtils
         // The algorithm iterates only over the fileProps which is all that is required to resolve
         // the properties defined within the file. This is slightly different to current, however
         // I suspect that this was the actual original intent.
-        // 
+        //
         // The difference is that #loadPropertyFile(File, boolean, boolean) also resolves System properties
         // whose values contain expressions. I believe this is unexpected and is not validated by the test cases,
         // as can be verified by replacing the implementation of #loadPropertyFile(File, boolean, boolean)
         // with the commented variant I have provided that reuses this method.
 
-        for ( Iterator iter = fileProps.keySet().iterator(); iter.hasNext(); )
+        for ( Iterator<Object> iter = fileProps.keySet().iterator(); iter.hasNext(); )
         {
             final String k = (String) iter.next();
             final String propValue = getPropertyValue( k, combinedProps );
@@ -111,7 +109,7 @@ public final class PropertyUtils
     public static Properties loadPropertyFile( File propfile, boolean fail, boolean useSystemProps )
         throws IOException
     {
-        
+
         final Properties baseProps = new Properties();
 
         if ( useSystemProps )
@@ -140,16 +138,10 @@ public final class PropertyUtils
         return resolvedProps;
     }
 
-
     /**
-     * Retrieves a property value, replacing values like ${token}
-     * using the Properties to look them up.
-     *
-     * It will leave unresolved properties alone, trying for System
-     * properties, and implements reparsing (in the case that
-     * the value of a property contains a key), and will
-     * not loop endlessly on a pair like
-     * test = ${test}.
+     * Retrieves a property value, replacing values like ${token} using the Properties to look them up. It will leave
+     * unresolved properties alone, trying for System properties, and implements reparsing (in the case that the value
+     * of a property contains a key), and will not loop endlessly on a pair like test = ${test}.
      *
      * @param k
      * @param p

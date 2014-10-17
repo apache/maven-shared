@@ -33,14 +33,14 @@ public class StubMavenProject
     extends MavenProject
 {
     private Properties properties;
-    
+
     private File basedir;
 
-    protected StubMavenProject (File basedir)
+    protected StubMavenProject( File basedir )
     {
         this.basedir = basedir;
     }
-    
+
     public Properties getProperties()
     {
         return this.properties;
@@ -51,19 +51,18 @@ public class StubMavenProject
         this.properties = properties;
     }
 
-    public void addProperty(String key, String value)
+    public void addProperty( String key, String value )
     {
-        if (this.properties == null)
+        if ( this.properties == null )
         {
             this.properties = new Properties();
         }
         this.properties.put( key, value );
     }
-    
+
     public File getBasedir()
     {
         return basedir;
     }
-
 
 }

@@ -1,3 +1,5 @@
+package org.apache.maven.shared.filtering;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.maven.shared.filtering;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -24,53 +25,77 @@ import java.io.Reader;
 /**
  * A reader that imposes a limit to the number of bytes that can be read from
  * an underlying reader, simulating eof when this limit is reached.
- *
  * This stream can typically be used to constrain a client with regard to a readAheadLimit
  * of an underlying stream, to avoid overrunning this limit and hence
  * lose the opportunity do to reset.
  */
-public class BoundedReader extends Reader {
+public class BoundedReader
+    extends Reader
+{
 
-	private final Reader target;
+    private final Reader target;
 
-	int pos = 0;
+    int pos = 0;
 
-	int readAheadLimit;
+    int readAheadLimit;
 
-	public BoundedReader(Reader target, int readAheadLimit) throws IOException {
-		this.target = target;
-		target.mark(readAheadLimit);
-		this.readAheadLimit = readAheadLimit;
-	}
+    public BoundedReader( Reader target, int readAheadLimit )
+        throws IOException
+    {
+        this.target = target;
+        target.mark( readAheadLimit );
+        this.readAheadLimit = readAheadLimit;
+    }
 
+    @Override
+    public void close()
+        throws IOException
+    {
+        target.close();
+    }
 
-	@Override public void close() throws IOException {
-		target.close();
-	}
+    @Override
+    public void reset()
+        throws IOException
+    {
+        pos = 0;
+        target.reset();
+    }
 
-	@Override public void reset() throws IOException {
-		pos = 0;
-		target.reset();
-	}
+    @Override
+    public void mark( int readAheadLimit )
+        throws IOException
+    {
+        this.readAheadLimit = readAheadLimit;
+        target.mark( readAheadLimit );
+    }
 
-	@Override public void mark(int readAheadLimit) throws IOException {
-		this.readAheadLimit = readAheadLimit;
-		target.mark(readAheadLimit);
-	}
+    @Override
+    public int read()
+        throws IOException
+    {
+        if ( pos >= readAheadLimit )
+        {
+            return -1;
+        }
+        pos++;
+        return target.read();
+    }
 
-	@Override public int read() throws IOException {
-		if (pos >= readAheadLimit) return -1;
-		pos++;
-		return target.read();
-	}
-
-	@Override public int read(char[] cbuf, int off, int len) throws IOException{
-		int c;
-		for (int i = 0; i < len; i++){
-			c = read();
-			if (c == -1) return i;
-			cbuf[off + i] = (char) c;
-		}
-		return len;
-	}
+    @Override
+    public int read( char[] cbuf, int off, int len )
+        throws IOException
+    {
+        int c;
+        for ( int i = 0; i < len; i++ )
+        {
+            c = read();
+            if ( c == -1 )
+            {
+                return i;
+            }
+            cbuf[off + i] = (char) c;
+        }
+        return len;
+    }
 }

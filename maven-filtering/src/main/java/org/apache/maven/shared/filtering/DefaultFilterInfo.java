@@ -53,7 +53,7 @@ public interface DefaultFilterInfo
      * @deprecated use
      *             {@link #getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession, org.apache.maven.shared.filtering.MavenResourcesExecution)}
      */
-    // CHECKSTYLE_ON:
+    // CHECKSTYLE_ON: LineLength
     @Nonnull
     List<FileUtils.FilterWrapper> getDefaultFilterWrappers( MavenProject mavenProject, List<String> filters,
                                                             boolean escapedBackslashesInFilePath,

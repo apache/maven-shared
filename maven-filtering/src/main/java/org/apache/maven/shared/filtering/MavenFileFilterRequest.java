@@ -40,11 +40,25 @@ public class MavenFileFilterRequest
 
     private boolean filtering;
 
+    /**
+     * The constructor.
+     */
     public MavenFileFilterRequest()
     {
         // nothing
     }
 
+    /**
+     * @param from The request from where.
+     * @param to The request to where
+     * @param filtering Filtering yes {@code true} or no {@code false}
+     * @param mavenProject The Maven Project.
+     * @param filters The list of given filters.
+     * @param escapedBackslashesInFilePath Escape back slashes in file path.
+     * @param encoding The used encoding during the filtering.
+     * @param mavenSession The Maven Session.
+     * @param additionalProperties Supplemental properties.
+     */
     public MavenFileFilterRequest(
                                    File from,
                                    File to,
@@ -64,31 +78,49 @@ public class MavenFileFilterRequest
         setEscapeWindowsPaths( escapedBackslashesInFilePath );
     }
 
+    /**
+     * @return to filter from.
+     */
     public File getFrom()
     {
         return from;
     }
 
+    /**
+     * @param from set filter from.
+     */
     public void setFrom( File from )
     {
         this.from = from;
     }
 
+    /**
+     * @return The filter to
+     */
     public File getTo()
     {
         return to;
     }
 
+    /**
+     * @param to Set the target.
+     */
     public void setTo( File to )
     {
         this.to = to;
     }
 
+    /**
+     * @return if we are filtering yes {@code true} no {@code false}
+     */
     public boolean isFiltering()
     {
         return filtering;
     }
 
+    /**
+     * @param filtering set filtering yes / no.
+     */
     public void setFiltering( boolean filtering )
     {
         this.filtering = filtering;

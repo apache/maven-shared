@@ -65,10 +65,10 @@ public class DefaultMavenReaderFilter
     }
 
     /** {@inheritDoc} */
-    @Nonnull 
+    @Nonnull
     public Reader filter( @Nonnull Reader from, boolean filtering, @Nonnull List<FilterWrapper> filterWrappers )
     {
-        return filterWrap( from, filtering ? filterWrappers : Collections.<FilterWrapper> emptyList() );
+        return filterWrap( from, filtering ? filterWrappers : Collections.<FilterWrapper>emptyList() );
     }
 
     @Nonnull

@@ -230,7 +230,7 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
-     * @param escapeString
+     * @param escapeString The escape string to use
      * @since 1.0-beta-2
      */
     public void setEscapeString( String escapeString )
@@ -247,7 +247,7 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
-     * @param projectStartExpressions
+     * @param projectStartExpressions  The start expressions
      * @since 1.0-beta-2
      */
     public void setProjectStartExpressions( List<String> projectStartExpressions )

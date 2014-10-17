@@ -38,9 +38,11 @@ public interface MavenFileFilter
      *
      * @param from file to copy/filter
      * @param to destination file
-     * @param filtering enable or not filering
+     * @param filtering enable or not filtering
      * @param mavenProject the mavenproject
+     * @param mavenSession The maven session.
      * @param filters {@link List} of String which are path to a Property file
+     * @param encoding The encoding which is used during the filtering process.
      * @throws MavenFilteringException
      * @see #getDefaultFilterWrappers(MavenProject, List, boolean, MavenSession)
      */
@@ -61,7 +63,8 @@ public interface MavenFileFilter
      * @param to The target file
      * @param filtering true to apply filtering
      * @param filterWrappers {@link List} of FileUtils.FilterWrapper
-     * @throws MavenFilteringException
+     * @param encoding The encoding used during the filtering.
+     * @throws MavenFilteringException In case of an error.
      */
     void copyFile( File from, final File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
                    String encoding )
@@ -71,10 +74,10 @@ public interface MavenFileFilter
      * @param from The source file
      * @param to The destination file
      * @param filtering true to apply filtering
-     * @param filterWrappers The filters to applt
+     * @param filterWrappers The filters to be applied.
      * @param encoding The encoding to use
      * @param overwrite Overwrite to file ?
-     * @throws MavenFilteringException
+     * @throws MavenFilteringException In case of an error.
      * @since 1.0-beta-2
      */
     void copyFile( File from, final File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,

@@ -39,11 +39,24 @@ public class MavenReaderFilterRequest
 
     private boolean filtering;
 
+    /**
+     * Default constructor.
+     */
     public MavenReaderFilterRequest()
     {
         // nothing
     }
 
+    /**
+     * @param from To read from
+     * @param filtering filter yes/no
+     * @param mavenProject The Maven Project.
+     * @param filters The list of filters which will be used.
+     * @param escapedBackslashesInFilePath escape backslashes in file paths.
+     * @param encoding Encoding
+     * @param mavenSession The Maven Session.
+     * @param additionalProperties supplemental properties.
+     */
     public MavenReaderFilterRequest(
                                      Reader from,
                                      boolean filtering,
@@ -61,21 +74,33 @@ public class MavenReaderFilterRequest
         setEscapeWindowsPaths( escapedBackslashesInFilePath );
     }
 
+    /**
+     * @return where we read from.
+     */
     public Reader getFrom()
     {
         return from;
     }
 
+    /**
+     * @param from set where to read from.
+     */
     public void setFrom( Reader from )
     {
         this.from = from;
     }
 
+    /**
+     * @return is filtering active ({@code true}) false otherwise.
+     */
     public boolean isFiltering()
     {
         return filtering;
     }
 
+    /**
+     * @param filtering turn filtering on {@code true}) or off ({@code false}).
+     */
     public void setFiltering( boolean filtering )
     {
         this.filtering = filtering;

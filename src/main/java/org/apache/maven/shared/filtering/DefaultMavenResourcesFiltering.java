@@ -191,10 +191,19 @@ public class DefaultMavenResourcesFiltering
                 StringBuilder debugMessage =
                     new StringBuilder( "resource with targetPath " ).append( resource.getTargetPath() ).append( ls );
                 debugMessage.append( "directory " ).append( resource.getDirectory() ).append( ls );
-                debugMessage.append( "excludes " ).append( resource.getExcludes() == null ? " empty "
-                                                                           : resource.getExcludes().toString() ).append( ls );
-                debugMessage.append( "includes " ).append( resource.getIncludes() == null ? " empty "
-                                                                           : resource.getIncludes().toString() );
+
+                //@formatter:off
+                debugMessage.append( "excludes " )
+                    .append( 
+                            resource.getExcludes() == null ? " empty " : resource.getExcludes().toString() 
+                           )
+                    .append( ls );
+                debugMessage.append( "includes " )
+                    .append( 
+                             resource.getIncludes() == null ? " empty " : resource.getIncludes().toString()
+                    );
+                
+                //@formatter:on
                 getLogger().debug( debugMessage.toString() );
             }
 

@@ -441,21 +441,33 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
 
     }
 
+    /**
+     * @return interpolate with prefix pattern {@code true} (active) {@code false} otherwise.
+     */
     public boolean isInterpolateWithPrefixPattern()
     {
         return interpolateWithPrefixPattern;
     }
 
+    /**
+     * @param interpolateWithPrefixPattern set the interpolate with prefix pattern.
+     */
     public void setInterpolateWithPrefixPattern( boolean interpolateWithPrefixPattern )
     {
         this.interpolateWithPrefixPattern = interpolateWithPrefixPattern;
     }
 
+    /**
+     * @return the escapce string.
+     */
     public String getEscapeString()
     {
         return escapeString;
     }
 
+    /**
+     * @param escapeString Set the value of the escape string.
+     */
     public void setEscapeString( String escapeString )
     {
         // TODO NPE if escapeString is null ?
@@ -467,21 +479,34 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
         }
     }
 
+    /**
+     * @return state of preserve escape string.
+     */
     public boolean isPreserveEscapeString()
     {
         return preserveEscapeString;
     }
 
+    /**
+     * @param preserveEscapeString preserve escape string {@code true} or {@code false}. 
+     */
     public void setPreserveEscapeString( boolean preserveEscapeString )
     {
         this.preserveEscapeString = preserveEscapeString;
     }
 
+    /**
+     * @return {@link RecursionInterceptor} 
+     */
     public RecursionInterceptor getRecursionInterceptor()
     {
         return recursionInterceptor;
     }
 
+    /**
+     * @param givenRecursionInterceptor {@link RecursionInterceptor}
+     * @return this
+     */
     public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor givenRecursionInterceptor )
     {
         this.recursionInterceptor = givenRecursionInterceptor;

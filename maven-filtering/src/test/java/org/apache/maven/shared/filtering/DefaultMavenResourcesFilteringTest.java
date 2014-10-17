@@ -48,6 +48,7 @@ public class DefaultMavenResourcesFilteringTest
 
     File outputDirectory = new File( getBasedir(), "target/DefaultMavenResourcesFilteringTest" );
 
+    @SuppressWarnings( "ResultOfMethodCallIgnored" )
     protected void setUp()
         throws Exception
     {
@@ -221,6 +222,7 @@ public class DefaultMavenResourcesFilteringTest
         assertFiltering( baseDir, initialImageFile, true, true );
     }
 
+    @SuppressWarnings( "ConstantConditions" )
     private void assertFiltering( File baseDir, File initialImageFile, boolean escapeTest, boolean additionnalProperties )
         throws Exception
     {
@@ -484,6 +486,7 @@ public class DefaultMavenResourcesFilteringTest
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
         File[] files = outputDirectory.listFiles();
+        assertNotNull( files);
         assertEquals( 2, files.length );
         File includeFile = new File( outputDirectory, "includefile.txt" );
         assertTrue( includeFile.exists() );
@@ -650,11 +653,11 @@ public class DefaultMavenResourcesFilteringTest
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
         File[] childs = outputDirectory.listFiles();
+        assertNotNull( childs );
         assertEquals( 3, childs.length );
 
-        for ( int i = 0, size = childs.length; i < size; i++ )
+        for ( File file : childs )
         {
-            File file = childs[i];
             if ( file.getName().endsWith( "dir1" ) || file.getName().endsWith( "empty-directory" )
                 || file.getName().endsWith( "empty-directory-child" ) )
             {

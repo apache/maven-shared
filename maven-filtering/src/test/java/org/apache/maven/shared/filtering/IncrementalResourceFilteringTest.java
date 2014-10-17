@@ -45,7 +45,7 @@ public class IncrementalResourceFilteringTest
 
     File unitDirectory = new File( getBasedir(), "src/test/units-files/incremental" );
 
-    protected void setUp()
+    @SuppressWarnings( "ResultOfMethodCallIgnored" ) protected void setUp()
         throws Exception
     {
         super.setUp();
@@ -77,10 +77,6 @@ public class IncrementalResourceFilteringTest
         assertTime( "time", "file02.txt" ); // this one is unchanged
 
         assertTrue( ctx.getRefreshFiles().contains( new File( outputDirectory, "file01.txt" ) ) );
-
-        // one file is expected to be deleted
-        Set<String> deletedFiles = new HashSet<String>();
-        deletedFiles.add( "file01.txt" );
 
         ctx = new TestIncrementalBuildContext( unitDirectory, new HashSet(), changedFiles, new HashMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
@@ -175,7 +171,7 @@ public class IncrementalResourceFilteringTest
     }
 
     private void filter( String time )
-        throws Exception, MavenFilteringException
+        throws Exception
     {
         File baseDir = new File( getBasedir() );
         StubMavenProject mavenProject = new StubMavenProject( baseDir );
@@ -202,7 +198,7 @@ public class IncrementalResourceFilteringTest
         filtersFile.add( new File( unitDirectory, "filters.txt" ).getPath() );
 
         mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
-                                                 new ArrayList(), new StubMavenSession() );
+                                                 new ArrayList<String>(), new StubMavenSession() );
     }
 
 }

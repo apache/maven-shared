@@ -232,7 +232,7 @@ public class InterpolatorFilterReaderLineEnding
 
         boolean inEscape = ( useEscape && ch == escapeString.charAt( 0 ) );
 
-        StringBuffer key = new StringBuffer();
+        StringBuilder key = new StringBuilder();
 
         // have we found an escape string?
         if ( inEscape )

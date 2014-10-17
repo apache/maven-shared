@@ -182,8 +182,8 @@ public class DefaultMavenResourcesFiltering
             if ( getLogger().isDebugEnabled() )
             {
                 String ls = System.getProperty( "line.separator" );
-                StringBuffer debugMessage =
-                    new StringBuffer( "resource with targetPath " ).append( resource.getTargetPath() ).append( ls );
+                StringBuilder debugMessage =
+                    new StringBuilder( "resource with targetPath " ).append( resource.getTargetPath() ).append( ls );
                 debugMessage.append( "directory " ).append( resource.getDirectory() ).append( ls );
                 debugMessage.append( "excludes " ).append( resource.getExcludes() == null ? " empty "
                                                                            : resource.getExcludes().toString() ).append( ls );

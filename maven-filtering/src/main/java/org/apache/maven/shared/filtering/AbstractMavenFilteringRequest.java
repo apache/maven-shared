@@ -86,11 +86,21 @@ public class AbstractMavenFilteringRequest
      */
     private boolean supportMultiLineFiltering;
 
+    /**
+     * Create instance.
+     */
     protected AbstractMavenFilteringRequest()
     {
         initDefaults();
     }
 
+    /**
+     * Create instance with given parameters
+     * @param mavenProject The instance of MavenProject.
+     * @param filters The list of filters.
+     * @param encoding The encoding.
+     * @param mavenSession The MavenSession.
+     */
     protected AbstractMavenFilteringRequest(
                                              MavenProject mavenProject,
                                              List<String> filters,
@@ -113,31 +123,54 @@ public class AbstractMavenFilteringRequest
         delimiters.add( "@" );
     }
 
+    /**
+     * @return The MavenProject
+     */
     public MavenProject getMavenProject()
     {
         return mavenProject;
     }
 
+    /**
+     * Set the MavenProject.
+     * @param mavenProject The MavenProject to be set.
+     */
     public void setMavenProject( MavenProject mavenProject )
     {
         this.mavenProject = mavenProject;
     }
 
+    /**
+     * The list of filters.
+     * @return The list of currently set filters.
+     */
     public List<String> getFilters()
     {
         return filters;
     }
 
+    /**
+     * Set the filters.
+     * @param filters Set the list of filters
+     */
     public void setFilters( List<String> filters )
     {
         this.filters = filters;
     }
 
+    /**
+     * Alias for {@link #getFilters()}. 
+     * @return  The list of filters.
+     */
     public List<String> getFileFilters()
     {
         return getFilters();
     }
 
+    /**
+     * Alias for {@link #setFilters(List)}
+     * @param filters The list of filters to be set.
+     */
     public void setFileFilters( List<String> filters )
     {
         setFilters( filters );
@@ -145,6 +178,7 @@ public class AbstractMavenFilteringRequest
 
     /**
      * @since 1.0-beta-3
+     * @return true if escape is activated false otherwise.
      */
     public boolean isEscapeWindowsPaths()
     {
@@ -153,43 +187,67 @@ public class AbstractMavenFilteringRequest
 
     /**
      * @since 1.0-beta-3
+     * @param escapedBackslashesInFilePath true or false.
      */
     public void setEscapeWindowsPaths( boolean escapedBackslashesInFilePath )
     {
         this.escapeWindowsPaths = escapedBackslashesInFilePath;
     }
 
+    /**
+     * Alias for {@link #isEscapeWindowsPaths()}
+     * @return The current value of {@link #isEscapeWindowsPaths()} 
+     */
     public boolean isEscapedBackslashesInFilePath()
     {
         return isEscapeWindowsPaths();
     }
 
+    /**
+     * Alias for {@link #setEscapeWindowsPaths(boolean)}
+     * @param escape activate or deactivate escaping.
+     */
     public void setEscapedBackslashesInFilePath( boolean escape )
     {
         setEscapeWindowsPaths( escape );
     }
 
+    /**
+     * Return the encoding.
+     * @return Current encoding.
+     */
     public String getEncoding()
     {
         return encoding;
     }
 
+    /**
+     * Set the value for encoding.
+     * @param encoding Give the new value for encoding.
+     */
     public void setEncoding( String encoding )
     {
         this.encoding = encoding;
     }
 
+    /**
+     * @return Current value of mavenSession
+     */
     public MavenSession getMavenSession()
     {
         return mavenSession;
     }
 
+    /**
+     * @param mavenSession Set new value for the MavenSession of the instance.
+     */
     public void setMavenSession( MavenSession mavenSession )
     {
         this.mavenSession = mavenSession;
     }
 
     /**
+     * @return the additional properties.
      * @since 1.0-beta-3
      */
     public Properties getAdditionalProperties()
@@ -198,6 +256,7 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
+     * @param additionalProperties The additional properties to be set.
      * @since 1.0-beta-3
      */
     public void setAdditionalProperties( Properties additionalProperties )
@@ -206,6 +265,7 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
+     * @return the current value of injectProjectBuildFilters.
      * @since 1.0-beta-3
      */
     public boolean isInjectProjectBuildFilters()
@@ -214,6 +274,7 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
+     * @param injectProjectBuildFilters true or false.
      * @since 1.0-beta-3
      */
     public void setInjectProjectBuildFilters( boolean injectProjectBuildFilters )
@@ -222,6 +283,7 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
+     * @return Current value of escapeString.
      * @since 1.0-beta-2
      */
     public String getEscapeString()
@@ -239,6 +301,7 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
+     * @return The list of project start expressions.
      * @since 1.0-beta-2
      */
     public List<String> getProjectStartExpressions()
@@ -287,11 +350,17 @@ public class AbstractMavenFilteringRequest
         }
     }
 
+    /**
+     * @return If support multiple line filtering is active or not.
+     */
     public boolean isSupportMultiLineFiltering()
     {
         return supportMultiLineFiltering;
     }
 
+    /**
+     * @param supportMultiLineFiltering activate or deactivate multiple line filtering support.
+     */
     public void setSupportMultiLineFiltering( boolean supportMultiLineFiltering )
     {
         this.supportMultiLineFiltering = supportMultiLineFiltering;

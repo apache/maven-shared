@@ -98,7 +98,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      */
     private int markLength = 128;
 
-    private static final int maxBufferSize = 8192;
+    private static final int MAXIMUM_BUFFER_SIZE = 8192;
 
     private boolean eof = false;
 
@@ -130,7 +130,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
                                                              boolean supportMultiLineFiltering )
     {
         // wrap our own buffer, so we can use mark/reset safely.
-        super( new BufferedReader( in, maxBufferSize ) );
+        super( new BufferedReader( in, MAXIMUM_BUFFER_SIZE ) );
 
         this.interpolator = interpolator;
 
@@ -169,9 +169,9 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * the stream is reached.
      *
      * @param n The number of characters to skip
-     * @return the number of characters actually skipped
      * @throws IllegalArgumentException If <code>n</code> is negative.
      * @throws IOException If an I/O error occurs
+     * @return the number of characters actually skipped
      */
     public long skip( long n )
         throws IOException
@@ -482,9 +482,9 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
         return recursionInterceptor;
     }
 
-    public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor recursionInterceptor )
+    public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor givenRecursionInterceptor )
     {
-        this.recursionInterceptor = recursionInterceptor;
+        this.recursionInterceptor = givenRecursionInterceptor;
         return this;
     }
 

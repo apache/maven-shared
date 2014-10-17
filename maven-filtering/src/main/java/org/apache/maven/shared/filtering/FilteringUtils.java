@@ -43,6 +43,10 @@ public final class FilteringUtils
 
     // TODO: Correct to handle relative windows paths. (http://jira.codehaus.org/browse/MSHARED-121)
     // How do we distinguish a relative windows path from some other value that happens to contain backslashes??
+    /**
+     * @param val The value to be escaped.
+     * @return Escaped value
+     */
     public static String escapeWindowsPath( String val )
     {
         if ( !StringUtils.isEmpty( val ) && PATTERN.matcher( val ).matches() )

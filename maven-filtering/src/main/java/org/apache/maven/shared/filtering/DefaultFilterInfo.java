@@ -27,6 +27,10 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.io.FileUtils;
 
+/**
+ *
+ * @author Kristian Rosenvold
+ */
 public interface DefaultFilterInfo
 {
     /**
@@ -42,6 +46,9 @@ public interface DefaultFilterInfo
      *
      * @param mavenProject The maven project
      * @param filters {@link java.util.List} of properties file
+     * @param escapedBackslashesInFilePath true to escape backslashes in file path.
+     * @param mavenSession The maven session which will be used.
+     * @throws MavenFilteringException
      * @return {@link java.util.List} of FileUtils.FilterWrapper
      * @deprecated use
      *             {@link #getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession, org.apache.maven.shared.filtering.MavenResourcesExecution)}
@@ -58,8 +65,8 @@ public interface DefaultFilterInfo
      * @param escapedBackslashesInFilePath escape backslashes ?
      * @param mavenSession The maven session
      * @param mavenResourcesExecution The filtering configuration
+     * @throws MavenFilteringException
      * @return {@link java.util.List} of FileUtils.FilterWrapper
-     * @throws org.apache.maven.shared.filtering.MavenFilteringException
      * @since 1.0-beta-2
      */
     @Nonnull
@@ -71,8 +78,8 @@ public interface DefaultFilterInfo
 
     /**
      * @param request The filtering request
-     * @return {@link java.util.List} of FileUtils.FilterWrapper
      * @throws org.apache.maven.shared.filtering.MavenFilteringException
+     * @return {@link java.util.List} of FileUtils.FilterWrapper
      * @since 1.0-beta-3
      */
     @Nonnull

@@ -151,7 +151,6 @@ public class InterpolatorFilterReaderLineEnding
      *
      * @param n The number of characters to skip
      * @return the number of characters actually skipped
-     * @throws IllegalArgumentException If <code>n</code> is negative.
      * @throws IOException If an I/O error occurs
      */
     public long skip( long n )
@@ -396,21 +395,33 @@ public class InterpolatorFilterReaderLineEnding
 
     }
 
+    /**
+     * @return current state of interpolate with prefix pattern.
+     */
     public boolean isInterpolateWithPrefixPattern()
     {
         return interpolateWithPrefixPattern;
     }
 
+    /**
+     * @param interpolateWithPrefixPattern interpolate with prefix pattern.
+     */
     public void setInterpolateWithPrefixPattern( boolean interpolateWithPrefixPattern )
     {
         this.interpolateWithPrefixPattern = interpolateWithPrefixPattern;
     }
 
+    /**
+     * @return The current value of escapeString.
+     */
     public String getEscapeString()
     {
         return escapeString;
     }
 
+    /**
+     * @param escapeString Set the value for escapeString.
+     */
     public void setEscapeString( String escapeString )
     {
         // TODO NPE if escapeString is null ?
@@ -422,6 +433,9 @@ public class InterpolatorFilterReaderLineEnding
         }
     }
 
+    /**
+     * @return state of preserve escape string.
+     */
     public boolean isPreserveEscapeString()
     {
         return preserveEscapeString;
@@ -437,9 +451,9 @@ public class InterpolatorFilterReaderLineEnding
         return recursionInterceptor;
     }
 
-    public InterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor recursionInterceptor )
+    public InterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor theRecursionInterceptor )
     {
-        this.recursionInterceptor = recursionInterceptor;
+        this.recursionInterceptor = theRecursionInterceptor;
         return this;
     }
 

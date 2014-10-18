@@ -94,7 +94,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
-      <version>2.7</version>
+      <version>2.7.1</version>
     </dependency>
     <dependency>
       <!-- plexus-archiver needs this -->
@@ -106,7 +106,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-interpolation</artifactId>
-      <version>1.19</version>
+      <version>1.21</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

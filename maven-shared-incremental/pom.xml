@@ -113,6 +113,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-annotations</artifactId>
+      <version>1.6</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -127,6 +128,7 @@
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-metadata</artifactId>
+        <version>1.6</version>
         <executions>
           <execution>
             <goals>

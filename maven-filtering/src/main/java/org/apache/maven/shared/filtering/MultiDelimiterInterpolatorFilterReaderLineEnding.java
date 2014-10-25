@@ -26,6 +26,7 @@ import java.io.Reader;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.maven.shared.filtering.streams.BoundedReader;
 import org.codehaus.plexus.interpolation.InterpolationException;
 import org.codehaus.plexus.interpolation.Interpolator;
 import org.codehaus.plexus.interpolation.RecursionInterceptor;

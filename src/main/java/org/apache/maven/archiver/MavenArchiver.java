@@ -166,7 +166,6 @@ public class MavenArchiver
      *
      * @todo Add user attributes list and user groups list
      */
-    @SuppressWarnings ({ "JavaDoc", "UnusedDeclaration" })
     public Manifest getManifest( MavenProject project, ManifestConfiguration config )
         throws ManifestException, DependencyResolutionRequiredException
     {
@@ -473,7 +472,6 @@ public class MavenArchiver
         }
     }
 
-    @SuppressWarnings ("UnusedDeclaration")
     public JarArchiver getArchiver()
     {
         return archiver;
@@ -505,8 +503,16 @@ public class MavenArchiver
     {
         // we have to clone the project instance so we can write out the pom with the deployment version,
         // without impacting the main project instance...
-        // TODO use clone() in Maven 2.0.9+
-        MavenProject workingProject = new MavenProject( project );
+        MavenProject workingProject = null;
+        try
+        {
+            workingProject = (MavenProject) project.clone();
+        }
+        catch (CloneNotSupportedException e)
+        {
+            // Should never happen
+            throw new ArchiverException( "Failed to clone Maven project", e );
+        }
 
         boolean forced = archiveConfiguration.isForced();
         if ( archiveConfiguration.isAddMavenDescriptor() )
@@ -592,7 +598,7 @@ public class MavenArchiver
         archiver.createArchive();
     }
 
-    private void addCreatedByEntry( MavenSession session, Manifest m, Map entries )
+    private void addCreatedByEntry( MavenSession session, Manifest m, Map<String, String> entries )
         throws ManifestException
     {
         String createdBy = "Apache Maven";

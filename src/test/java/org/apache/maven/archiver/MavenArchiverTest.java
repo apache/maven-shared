@@ -57,7 +57,6 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-@SuppressWarnings( "ResultOfMethodCallIgnored" )
 public class MavenArchiverTest
     extends TestCase
 {
@@ -182,7 +181,7 @@ public class MavenArchiverTest
 
             MavenProject project = new MavenProject( model )
             {
-                public List getRuntimeClasspathElements()
+                public List<String> getRuntimeClasspathElements()
                 {
                     return Collections.singletonList( tempFile.getAbsolutePath() );
                 }
@@ -234,7 +233,7 @@ public class MavenArchiverTest
         jarFile.setLastModified( System.currentTimeMillis() - 60000L );
         long time = jarFile.lastModified();
 
-        List files = FileUtils.getFiles( new File( "target/maven-archiver" ), "**/**", null, true );
+        List<File> files = FileUtils.getFiles( new File( "target/maven-archiver" ), "**/**", null, true );
         for ( Object file : files )
         {
             File f = (File) file;
@@ -270,7 +269,7 @@ public class MavenArchiverTest
             assertTrue( jarFile.exists() );
 
             jar = new JarFile( jarFile );
-            Map entries = jar.getManifest().getMainAttributes();
+            Map<Object, Object> entries = jar.getManifest().getMainAttributes();
             assertFalse( entries.containsKey( Attributes.Name.IMPLEMENTATION_VERSION ) ); // "Implementation-Version"
         }
         finally
@@ -308,7 +307,7 @@ public class MavenArchiverTest
 
             jar = new JarFile( jarFile );
 
-            Map entries = jar.getManifest().getMainAttributes();
+            Map<Object, Object> entries = jar.getManifest().getMainAttributes();
 
             assertTrue( entries.containsKey( Attributes.Name.IMPLEMENTATION_VERSION ) );
             assertEquals( "0.1", entries.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
@@ -439,7 +438,8 @@ public class MavenArchiverTest
         config.getManifest().setAddDefaultSpecificationEntries( true );
 
         //noinspection deprecation
-        archiver.createArchive( project, config );
+        MavenSession session = getDummySessionWithoutMavenVersion();
+        archiver.createArchive( session, project, config );
         assertTrue( jarFile.exists() );
         Attributes manifest = getJarFileManifest( jarFile ).getMainAttributes();
 
@@ -539,7 +539,7 @@ public class MavenArchiverTest
         assertTrue( jarFile.exists() );
 
         final Manifest manifest = getJarFileManifest( jarFile );
-        Map entries = manifest.getMainAttributes();
+        Map<Object, Object> entries = manifest.getMainAttributes();
 
         assertEquals( "Apache Maven", entries.get( new Attributes.Name( "Created-By" ) ) );
     }
@@ -574,7 +574,6 @@ public class MavenArchiverTest
         assertEquals( "The value of the attribute is wrong.", "value", attribute );
     }
 
-    @SuppressWarnings( "ResultOfMethodCallIgnored" )
     public void testDefaultClassPathValue()
         throws Exception
     {
@@ -602,14 +601,12 @@ public class MavenArchiverTest
         assertEquals( "dummy3-2.0.jar", classPathEntries[2] );
     }
 
-    @SuppressWarnings( "ResultOfMethodCallIgnored" )
     private void deleteAndAssertNotPresent( File jarFile )
     {
         jarFile.delete();
         assertFalse( jarFile.exists() );
     }
 
-    @SuppressWarnings( "ResultOfMethodCallIgnored" )
     public void testDefaultClassPathValue_WithSnapshot()
         throws Exception
     {
@@ -849,6 +846,7 @@ public class MavenArchiverTest
         artifact.setGroupId( "org.apache.dummy" );
         artifact.setArtifactId( "dummy" );
         artifact.setVersion( "0.1" );
+        artifact.setBaseVersion( "0.1" );
         artifact.setType( "jar" );
         artifact.setArtifactHandler( new DefaultArtifactHandler( "jar" ) );
         project.setArtifact( artifact );
@@ -907,6 +905,7 @@ public class MavenArchiverTest
         artifact.setGroupId( "org.apache.dummy" );
         artifact.setArtifactId( "dummy" );
         artifact.setVersion( "0.1" );
+        artifact.setBaseVersion( "0.1" );
         artifact.setType( "jar" );
         artifact.setArtifactHandler( new DefaultArtifactHandler( "jar" ) );
         project.setArtifact( artifact );
@@ -1042,7 +1041,7 @@ public class MavenArchiverTest
         ArtifactRepository localRepo = null;
         EventDispatcher eventDispatcher = null;
         ReactorManager reactorManager = null;
-        List goals = null;
+        List<?> goals = null;
         String executionRootDir = null;
         Date startTime = new Date();
 

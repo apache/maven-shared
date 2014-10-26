@@ -53,7 +53,7 @@ class MockArtifact
     private String classifier;
 
     private String baseVersion;
-    
+
     private ArtifactHandler artifactHandler;
 
     private boolean snapshot;
@@ -77,7 +77,7 @@ class MockArtifact
     {
         this.version = string;
     }
-    
+
     public void setSnapshotVersion( String snapshotVersion, String baseVersion )
     {
         snapshot = true;
@@ -142,7 +142,13 @@ class MockArtifact
         // TODO
     }
 
-    public Collection getMetadataList()
+    public ArtifactMetadata getMetadata( Class<?> metadataClass )
+    {
+        // TODO
+        return null;
+    }
+
+    public Collection<ArtifactMetadata> getMetadataList()
     {
         // TODO
         return null;  //To change body of implemented methods use File | Settings | File Templates.
@@ -195,13 +201,13 @@ class MockArtifact
         return artifactHandler;
     }
 
-    public List getDependencyTrail()
+    public List<String> getDependencyTrail()
     {
         // TODO
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void setDependencyTrail( List list )
+    public void setDependencyTrail( List<String> list )
     {
         //To change body of implemented methods use File | Settings | File Templates.
         // TODO
@@ -264,13 +270,13 @@ class MockArtifact
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public List getAvailableVersions()
+    public List<ArtifactVersion> getAvailableVersions()
     {
         // TODO
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void setAvailableVersions( List list )
+    public void setAvailableVersions( List<ArtifactVersion> list )
     {
         // TODO
         //To change body of implemented methods use File | Settings | File Templates.
@@ -327,7 +333,7 @@ class MockArtifact
          this.scope = string;
     }
 
-    public int compareTo( Object o )
+    public int compareTo( Artifact o )
     {
         // TODO
         return 0;  //To change body of implemented methods use File | Settings | File Templates.

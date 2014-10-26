@@ -139,12 +139,12 @@ public class MavenArchiveConfiguration
         return manifestEntries.isEmpty();
     }
 
-    public Map<String,String> getManifestEntries()
+    public Map<String, String> getManifestEntries()
     {
         return manifestEntries;
     }
 
-    public void setManifestEntries( Map manifestEntries )
+    public void setManifestEntries( Map<String, String> manifestEntries )
     {
         this.manifestEntries = manifestEntries;
     }

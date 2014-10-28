@@ -1,8 +1,5 @@
 package org.apache.maven.archiver;
 
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.handler.ArtifactHandler;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,10 +28,19 @@ import org.apache.maven.artifact.handler.ArtifactHandler;
  */
 public class ManifestConfiguration
 {
+    /**
+     * The simple layout.
+     */
     public static final String CLASSPATH_LAYOUT_TYPE_SIMPLE = "simple";
 
+    /**
+     * The layout type
+     */
     public static final String CLASSPATH_LAYOUT_TYPE_REPOSITORY = "repository";
 
+    /**
+     * custom layout type.
+     */
     public static final String CLASSPATH_LAYOUT_TYPE_CUSTOM = "custom";
 
     private String mainClass;
@@ -63,47 +69,65 @@ public class ManifestConfiguration
      * @since 2.1
      */
     private boolean addDefaultImplementationEntries;
-    
+
     /**
-     * The generated Class-Path entry will contains paths that follow the
-     * Maven 2 repository layout:
+     * The generated Class-Path entry will contains paths that follow the Maven 2 repository layout:
      * $groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
+     * 
      * @since 2.3
      * @deprecated Use {@link ManifestConfiguration#classpathLayoutType} instead.
      */
     private boolean classpathMavenRepositoryLayout = false;
-    
+
     private String classpathLayoutType = CLASSPATH_LAYOUT_TYPE_SIMPLE;
-    
+
     private String customClasspathLayout;
-    
+
     private boolean useUniqueVersions = true;
 
+    /**
+     * @return mainClass
+     */
     public String getMainClass()
     {
         return mainClass;
     }
 
+    /**
+     * @return the package name.
+     */
     public String getPackageName()
     {
         return packageName;
     }
 
+    /**
+     * @return if addClasspath true or false.
+     */
     public boolean isAddClasspath()
     {
         return addClasspath;
     }
 
+    /**
+     * @return {@link #addDefaultImplementationEntries}
+     */
     public boolean isAddDefaultImplementationEntries()
     {
         return addDefaultImplementationEntries;
     }
 
+    /**
+     * @return {@link #addDefaultSpecificationEntries}
+     */
     public boolean isAddDefaultSpecificationEntries()
     {
         return addDefaultSpecificationEntries;
     }
 
+    /**
+     * @return {@link #addExtensions}
+     */
     public boolean isAddExtensions()
     {
         return addExtensions;
@@ -111,28 +135,42 @@ public class ManifestConfiguration
 
     /**
      * @deprecated Use {@link ManifestConfiguration#getClasspathLayoutType()}, and compare to
-     * CLASSPATH_LAYOUT_TYPE_SIMPLE or CLASSPATH_LAYOUT_TYPE_REPOSITORY, also declared in {@link ManifestConfiguration}.
+     *             CLASSPATH_LAYOUT_TYPE_SIMPLE or CLASSPATH_LAYOUT_TYPE_REPOSITORY, also declared in
+     *             {@link ManifestConfiguration}.
+     * @return The state of classpath Maven repository layout.
      */
     public boolean isClasspathMavenRepositoryLayout()
     {
         return classpathMavenRepositoryLayout;
     }
 
+    /**
+     * @param addClasspath turn on addClasspath or off.
+     */
     public void setAddClasspath( boolean addClasspath )
     {
         this.addClasspath = addClasspath;
     }
 
+    /**
+     * @param addDefaultImplementationEntries true to add default implementations false otherwise.
+     */
     public void setAddDefaultImplementationEntries( boolean addDefaultImplementationEntries )
     {
         this.addDefaultImplementationEntries = addDefaultImplementationEntries;
     }
 
+    /**
+     * @param addDefaultSpecificationEntries add default specifications true/false.
+     */
     public void setAddDefaultSpecificationEntries( boolean addDefaultSpecificationEntries )
     {
         this.addDefaultSpecificationEntries = addDefaultSpecificationEntries;
     }
 
+    /**
+     * @param addExtensions true to add extensions false otherwise.
+     */
     public void setAddExtensions( boolean addExtensions )
     {
         this.addExtensions = addExtensions;
@@ -140,29 +178,42 @@ public class ManifestConfiguration
 
     /**
      * @deprecated Use {@link ManifestConfiguration#setClasspathLayoutType(String)}, and use
-     * CLASSPATH_LAYOUT_TYPE_SIMPLE, CLASSPATH_LAYOUT_TYPE_CUSTOM, or CLASSPATH_LAYOUT_TYPE_REPOSITORY, 
-     * also declared in {@link ManifestConfiguration}.
+     *             CLASSPATH_LAYOUT_TYPE_SIMPLE, CLASSPATH_LAYOUT_TYPE_CUSTOM, or CLASSPATH_LAYOUT_TYPE_REPOSITORY, also
+     *             declared in {@link ManifestConfiguration}.
+     * @param classpathMavenRepositoryLayout true/false classpath maven repository 
      */
     public void setClasspathMavenRepositoryLayout( boolean classpathMavenRepositoryLayout )
     {
         this.classpathMavenRepositoryLayout = classpathMavenRepositoryLayout;
     }
 
+    /**
+     * @param classpathPrefix The prefix.
+     */
     public void setClasspathPrefix( String classpathPrefix )
     {
         this.classpathPrefix = classpathPrefix;
     }
 
+    /**
+     * @param mainClass The main class.
+     */
     public void setMainClass( String mainClass )
     {
         this.mainClass = mainClass;
     }
 
+    /**
+     * @param packageName The package name.
+     */
     public void setPackageName( String packageName )
     {
         this.packageName = packageName;
     }
 
+    /**
+     * @return The classpath prefix.
+     */
     public String getClasspathPrefix()
     {
         String cpp = classpathPrefix.replaceAll( "\\\\", "/" );
@@ -176,28 +227,30 @@ public class ManifestConfiguration
     }
 
     /**
-     * Return the type of layout to use when formatting classpath entries.
-     * Default is taken from the constant CLASSPATH_LAYOUT_TYPE_SIMPLE, declared 
-     * in this class, which has a value of 'simple'. Other values are: 'repository'
-     * (CLASSPATH_LAYOUT_TYPE_REPOSITORY, or the same as a maven classpath layout),
-     * and 'custom' (CLASSPATH_LAYOUT_TYPE_CUSTOM).
-     * <br/>
-     * <b>NOTE:</b> If you specify a type of 'custom' you MUST set {@link ManifestConfiguration#setCustomClasspathLayout(String)}.
+     * Return the type of layout to use when formatting classpath entries. Default is taken from the constant
+     * CLASSPATH_LAYOUT_TYPE_SIMPLE, declared in this class, which has a value of 'simple'. Other values are:
+     * 'repository' (CLASSPATH_LAYOUT_TYPE_REPOSITORY, or the same as a maven classpath layout), and 'custom'
+     * (CLASSPATH_LAYOUT_TYPE_CUSTOM). <br/>
+     * <b>NOTE:</b> If you specify a type of 'custom' you MUST set
+     * {@link ManifestConfiguration#setCustomClasspathLayout(String)}.
+     * @return The classpath layout type.
      */
     public String getClasspathLayoutType()
     {
+        // CHECKSTYLE_OFF: LineLength
         return CLASSPATH_LAYOUT_TYPE_SIMPLE.equals( classpathLayoutType ) && classpathMavenRepositoryLayout ? CLASSPATH_LAYOUT_TYPE_REPOSITORY
                         : classpathLayoutType;
+        // CHECKSTYLE_ON: LineLength
     }
 
     /**
-     * Set the type of layout to use when formatting classpath entries.
-     * Should be one of: 'simple' (CLASSPATH_LAYOUT_TYPE_SIMPLE), 'repository'
-     * (CLASSPATH_LAYOUT_TYPE_REPOSITORY, or the same as a maven classpath layout),
-     * and 'custom' (CLASSPATH_LAYOUT_TYPE_CUSTOM). The constant names noted here
-     * are defined in the {@link ManifestConfiguration} class.
-     * <br/>
-     * <b>NOTE:</b> If you specify a type of 'custom' you MUST set {@link ManifestConfiguration#setCustomClasspathLayout(String)}.
+     * Set the type of layout to use when formatting classpath entries. Should be one of: 'simple'
+     * (CLASSPATH_LAYOUT_TYPE_SIMPLE), 'repository' (CLASSPATH_LAYOUT_TYPE_REPOSITORY, or the same as a maven classpath
+     * layout), and 'custom' (CLASSPATH_LAYOUT_TYPE_CUSTOM). The constant names noted here are defined in the
+     * {@link ManifestConfiguration} class. <br/>
+     * <b>NOTE:</b> If you specify a type of 'custom' you MUST set
+     * {@link ManifestConfiguration#setCustomClasspathLayout(String)}.
+     * @param classpathLayoutType The classpath layout type.
      */
     public void setClasspathLayoutType( String classpathLayoutType )
     {
@@ -205,15 +258,16 @@ public class ManifestConfiguration
     }
 
     /**
-     * Retrieve the layout expression for use when the layout type set in {@link ManifestConfiguration#setClasspathLayoutType(String)}
-     * has the value 'custom'. <b>The default value is null.</b>
-     * Expressions will be evaluated against the following ordered list of classpath-related objects:
+     * Retrieve the layout expression for use when the layout type set in
+     * {@link ManifestConfiguration#setClasspathLayoutType(String)} has the value 'custom'. <b>The default value is
+     * null.</b> Expressions will be evaluated against the following ordered list of classpath-related objects:
      * <ol>
-     *   <li>The current {@link Artifact} instance, if one exists.</li>
-     *   <li>The current {@link ArtifactHandler} instance from the artifact above.</li>
+     * <li>The current {@link Artifact} instance, if one exists.</li>
+     * <li>The current {@link ArtifactHandler} instance from the artifact above.</li>
      * </ol>
      * <br/>
      * <b>NOTE:</b> If you specify a layout type of 'custom' you MUST set this layout expression.
+     * @return The custom classpath layout.
      */
     public String getCustomClasspathLayout()
     {
@@ -221,14 +275,16 @@ public class ManifestConfiguration
     }
 
     /**
-     * Set the layout expression for use when the layout type set in {@link ManifestConfiguration#setClasspathLayoutType(String)}
-     * has the value 'custom'. Expressions will be evaluated against the following ordered list of classpath-related objects:
+     * Set the layout expression for use when the layout type set in
+     * {@link ManifestConfiguration#setClasspathLayoutType(String)} has the value 'custom'. Expressions will be
+     * evaluated against the following ordered list of classpath-related objects:
      * <ol>
-     *   <li>The current {@link Artifact} instance, if one exists.</li>
-     *   <li>The current {@link ArtifactHandler} instance from the artifact above.</li>
+     * <li>The current {@link Artifact} instance, if one exists.</li>
+     * <li>The current {@link ArtifactHandler} instance from the artifact above.</li>
      * </ol>
      * <br/>
      * <b>NOTE:</b> If you specify a layout type of 'custom' you MUST set this layout expression.
+     * @param customClasspathLayout The custom classpath layout.
      */
     public void setCustomClasspathLayout( String customClasspathLayout )
     {
@@ -236,14 +292,13 @@ public class ManifestConfiguration
     }
 
     /**
-     * Retrieve the flag for whether snapshot artifacts should be added to the 
-     * classpath using the timestamp/buildnumber version (the default, when this
-     * flag is true), or using the generic -SNAPSHOT version (when the flag is
-     * false).
-     * <br/>
-     * <b>NOTE:</b> If the snapshot was installed locally, this flag will not 
-     * have an effect on that artifact's inclusion, since it will have the same
-     * version either way (i.e. -SNAPSHOT naming).
+     * Retrieve the flag for whether snapshot artifacts should be added to the classpath using the 
+     * timestamp/buildnumber version (the default, when this flag is true), or using the generic 
+     * -SNAPSHOT version (when the flag is false). <br/>
+     * <b>NOTE:</b> If the snapshot was installed locally, this flag will not have an effect on 
+     * that artifact's inclusion, since it will have the same version either way (i.e. -SNAPSHOT naming).
+     * 
+     * @return The state of {@link #useUniqueVersions}
      */
     public boolean isUseUniqueVersions()
     {
@@ -251,14 +306,12 @@ public class ManifestConfiguration
     }
 
     /**
-     * Set the flag for whether snapshot artifacts should be added to the 
-     * classpath using the timestamp/buildnumber version (the default, when this
-     * flag is true), or using the generic -SNAPSHOT version (when the flag is
-     * false).
+     * Set the flag for whether snapshot artifacts should be added to the classpath using the timestamp/buildnumber
+     * version (the default, when this flag is true), or using the generic -SNAPSHOT version (when the flag is false).
      * <br/>
-     * <b>NOTE:</b> If the snapshot was installed locally, this flag will not 
-     * have an effect on that artifact's inclusion, since it will have the same
-     * version either way (i.e. -SNAPSHOT naming).
+     * <b>NOTE:</b> If the snapshot was installed locally, this flag will not have an effect on that artifact's
+     * inclusion, since it will have the same version either way (i.e. -SNAPSHOT naming).
+     * @param useUniqueVersions true to use unique versions or not.
      */
     public void setUseUniqueVersions( boolean useUniqueVersions )
     {

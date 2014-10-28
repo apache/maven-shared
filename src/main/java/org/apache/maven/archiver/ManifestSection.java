@@ -23,41 +23,59 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
  * @version $Id$
  */
-public class ManifestSection 
+public class ManifestSection
 {
 
     private String name = null;
 
-    private Map<String,String> manifestEntries = new HashMap<String,String>();
+    private Map<String, String> manifestEntries = new HashMap<String, String>();
 
+    /**
+     * @param key The key of the manifest entry.
+     * @param value The appropriate value.
+     */
     public void addManifestEntry( String key, String value )
     {
         manifestEntries.put( key, value );
     }
 
-    public Map<String,String> getManifestEntries()
+    /**
+     * @return The entries.
+     */
+    public Map<String, String> getManifestEntries()
     {
         return manifestEntries;
     }
 
+    /**
+     * @return The name.
+     */
     public String getName()
     {
         return name;
     }
 
+    /**
+     * @param name the name.
+     */
     public void setName( String name )
     {
         this.name = name;
     }
 
-    public void addManifestEntries( Map<String,String> map )
+    /**
+     * @param map The map to add.
+     */
+    public void addManifestEntries( Map<String, String> map )
     {
         manifestEntries.putAll( map );
     }
 
+    /**
+     * @return true if empty false otherwise.
+     */
     public boolean isManifestEntriesEmpty()
     {
         return manifestEntries.isEmpty();

@@ -60,36 +60,57 @@ public class MavenArchiveConfiguration
      */
     private File pomPropertiesFile;
 
+    /**
+     * @return {@link #compress}
+     */
     public boolean isCompress()
     {
         return compress;
     }
 
+    /**
+     * @return {@link #recompressAddedZips}
+     */
     public boolean isRecompressAddedZips()
     {
         return recompressAddedZips;
     }
 
+    /**
+     * @param recompressAddedZips {@link #recompressAddedZips}
+     */
     public void setRecompressAddedZips( boolean recompressAddedZips )
     {
         this.recompressAddedZips = recompressAddedZips;
     }
 
+    /**
+     * @return {@link #index}
+     */
     public boolean isIndex()
     {
         return index;
     }
 
+    /**
+     * @return {@link #addMavenDescriptor}
+     */
     public boolean isAddMavenDescriptor()
     {
         return addMavenDescriptor;
     }
 
+    /**
+     * @return {@link #manifestFile}
+     */
     public File getManifestFile()
     {
         return manifestFile;
     }
 
+    /**
+     * @return {@link #manifest}
+     */
     public ManifestConfiguration getManifest()
     {
         if ( manifest == null )
@@ -99,96 +120,142 @@ public class MavenArchiveConfiguration
         return manifest;
     }
 
+    /**
+     * @param compress set compress to true/false.
+     */
     public void setCompress( boolean compress )
     {
         this.compress = compress;
     }
 
+    /**
+     * @param index set index to true/false.
+     */
     public void setIndex( boolean index )
     {
         this.index = index;
     }
 
+    /**
+     * @param addMavenDescriptor activate to add maven descriptor or not.
+     */
     public void setAddMavenDescriptor( boolean addMavenDescriptor )
     {
         this.addMavenDescriptor = addMavenDescriptor;
     }
 
+    /**
+     * @param manifestFile The manifest file.
+     */
     public void setManifestFile( File manifestFile )
     {
         this.manifestFile = manifestFile;
     }
 
+    /**
+     * @param manifest {@link ManifestConfiguration}
+     */
     public void setManifest( ManifestConfiguration manifest )
     {
         this.manifest = manifest;
     }
 
+    /**
+     * @param key The key of the entry.
+     * @param value The value of the entry.
+     */
     public void addManifestEntry( String key, String value )
     {
         manifestEntries.put( key, value );
     }
 
-    public void addManifestEntries( Map<String,String> map )
+    /**
+     * @param map The whole map which should be added.
+     */
+    public void addManifestEntries( Map<String, String> map )
     {
         manifestEntries.putAll( map );
     }
 
+    /**
+     * @return are there entries true yes false otherwise.
+     */
     public boolean isManifestEntriesEmpty()
     {
         return manifestEntries.isEmpty();
     }
 
+    /**
+     * @return {@link #manifestEntries}
+     */
     public Map<String, String> getManifestEntries()
     {
         return manifestEntries;
     }
 
+    /**
+     * @param manifestEntries {@link #manifestEntries}
+     */
     public void setManifestEntries( Map<String, String> manifestEntries )
     {
         this.manifestEntries = manifestEntries;
     }
 
+    /**
+     * @param section {@link ManifestSection}
+     */
     public void addManifestSection( ManifestSection section )
     {
         manifestSections.add( section );
     }
 
+    /**
+     * @param list Added list of {@link ManifestSection}.
+     */
     public void addManifestSections( List<ManifestSection> list )
     {
         manifestSections.addAll( list );
     }
 
+    /**
+     * @return if manifestSections is empty or not.
+     */
     public boolean isManifestSectionsEmpty()
     {
         return manifestSections.isEmpty();
     }
 
+    /**
+     * @return {@link #manifestSections}
+     */
     public List<ManifestSection> getManifestSections()
     {
         return manifestSections;
     }
 
+    /**
+     * @param manifestSections set The list of {@link ManifestSection}.
+     */
     public void setManifestSections( List<ManifestSection> manifestSections )
     {
         this.manifestSections = manifestSections;
     }
 
     /**
-     * <p>Returns, whether recreating the archive is forced (default). Setting
-     * this option to false means, that the archiver should compare the
-     * timestamps of included files with the timestamp of the target archive
-     * and rebuild the archive only, if the latter timestamp precedes the
-     * former timestamps. Checking for timestamps will typically offer a
-     * performance gain (in particular, if the following steps in a build
-     * can be suppressed, if an archive isn't recrated) on the cost that
-     * you get inaccurate results from time to time. In particular, removal
-     * of source files won't be detected.</p>
-     * <p>An archiver doesn't necessarily support checks for uptodate. If
-     * so, setting this option to true will simply be ignored.</p>
+     * <p>
+     * Returns, whether recreating the archive is forced (default). Setting this option to false means, that the
+     * archiver should compare the timestamps of included files with the timestamp of the target archive and rebuild the
+     * archive only, if the latter timestamp precedes the former timestamps. Checking for timestamps will typically
+     * offer a performance gain (in particular, if the following steps in a build can be suppressed, if an archive isn't
+     * recrated) on the cost that you get inaccurate results from time to time. In particular, removal of source files
+     * won't be detected.
+     * </p>
+     * <p>
+     * An archiver doesn't necessarily support checks for uptodate. If so, setting this option to true will simply be
+     * ignored.
+     * </p>
      *
-     * @return True, if the target archive should always be created; false
-     *         otherwise
+     * @return True, if the target archive should always be created; false otherwise
      * @see #setForced(boolean)
      */
     public boolean isForced()
@@ -197,20 +264,20 @@ public class MavenArchiveConfiguration
     }
 
     /**
-     * <p>Sets, whether recreating the archive is forced (default). Setting
-     * this option to false means, that the archiver should compare the
-     * timestamps of included files with the timestamp of the target archive
-     * and rebuild the archive only, if the latter timestamp precedes the
-     * former timestamps. Checking for timestamps will typically offer a
-     * performance gain (in particular, if the following steps in a build
-     * can be suppressed, if an archive isn't recrated) on the cost that
-     * you get inaccurate results from time to time. In particular, removal
-     * of source files won't be detected.</p>
-     * <p>An archiver doesn't necessarily support checks for uptodate. If
-     * so, setting this option to true will simply be ignored.</p>
+     * <p>
+     * Sets, whether recreating the archive is forced (default). Setting this option to false means, that the archiver
+     * should compare the timestamps of included files with the timestamp of the target archive and rebuild the archive
+     * only, if the latter timestamp precedes the former timestamps. Checking for timestamps will typically offer a
+     * performance gain (in particular, if the following steps in a build can be suppressed, if an archive isn't
+     * recrated) on the cost that you get inaccurate results from time to time. In particular, removal of source files
+     * won't be detected.
+     * </p>
+     * <p>
+     * An archiver doesn't necessarily support checks for uptodate. If so, setting this option to true will simply be
+     * ignored.
+     * </p>
      *
-     * @param forced True, if the target archive should always be created; false
-     *               otherwise
+     * @param forced True, if the target archive should always be created; false otherwise
      * @see #isForced()
      */
     public void setForced( boolean forced )
@@ -219,8 +286,7 @@ public class MavenArchiveConfiguration
     }
 
     /**
-     * Returns the location of the "pom.properties" file.
-     * May be null, in which case a default value is choosen.
+     * Returns the location of the "pom.properties" file. May be null, in which case a default value is choosen.
      *
      * @return "pom.properties" location or null.
      */
@@ -230,8 +296,7 @@ public class MavenArchiveConfiguration
     }
 
     /**
-     * Sets the location of the "pom.properties" file.
-     * May be null, in which case a default value is choosen.
+     * Sets the location of the "pom.properties" file. May be null, in which case a default value is choosen.
      *
      * @param pomPropertiesFile "pom.properties" location or null.
      */

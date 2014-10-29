@@ -39,8 +39,6 @@ public class AbstractMavenFilteringRequest
 
     private boolean escapeWindowsPaths = true;
 
-    private String encoding;
-
     private MavenSession mavenSession;
 
     /**
@@ -98,19 +96,13 @@ public class AbstractMavenFilteringRequest
      * Create instance with given parameters
      * @param mavenProject The instance of MavenProject.
      * @param filters The list of filters.
-     * @param encoding The encoding.
      * @param mavenSession The MavenSession.
      */
-    protected AbstractMavenFilteringRequest(
-                                             MavenProject mavenProject,
-                                             List<String> filters,
-                                             String encoding,
-                                             MavenSession mavenSession )
+    protected AbstractMavenFilteringRequest( MavenProject mavenProject, List<String> filters, MavenSession mavenSession )
     {
         initDefaults();
         this.mavenProject = mavenProject;
         this.filters = filters;
-        this.encoding = encoding;
         this.mavenSession = mavenSession;
     }
 
@@ -212,23 +204,6 @@ public class AbstractMavenFilteringRequest
         setEscapeWindowsPaths( escape );
     }
 
-    /**
-     * Return the encoding.
-     * @return Current encoding.
-     */
-    public String getEncoding()
-    {
-        return encoding;
-    }
-
-    /**
-     * Set the value for encoding.
-     * @param encoding Give the new value for encoding.
-     */
-    public void setEncoding( String encoding )
-    {
-        this.encoding = encoding;
-    }
 
     /**
      * @return Current value of mavenSession

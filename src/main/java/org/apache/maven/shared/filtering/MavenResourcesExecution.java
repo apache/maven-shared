@@ -57,6 +57,9 @@ public class MavenResourcesExecution
 
     private boolean filterFilenames = false;
 
+    private String encoding;
+
+
     /**
      * Overwrite existing files even if the destination files are newer. <code>false</code> by default.
      *
@@ -106,7 +109,8 @@ public class MavenResourcesExecution
                                     List<String> nonFilteredFileExtensions,
                                     MavenSession mavenSession )
     {
-        super( mavenProject, fileFilters, encoding, mavenSession );
+        super( mavenProject, fileFilters, mavenSession );
+        this.encoding = encoding;
         this.resources = resources;
         this.outputDirectory = outputDirectory;
         this.nonFilteredFileExtensions = nonFilteredFileExtensions;
@@ -138,6 +142,24 @@ public class MavenResourcesExecution
         this.resourcesBaseDirectory = resourcesBaseDirectory;
         this.useDefaultFilterWrappers = false;
         setEncoding( encoding );
+    }
+
+    /**
+     * Return the encoding.
+     * @return Current encoding.
+     */
+    public String getEncoding()
+    {
+        return encoding;
+    }
+
+    /**
+     * Set the value for encoding.
+     * @param encoding Give the new value for encoding.
+     */
+    public void setEncoding( String encoding )
+    {
+        this.encoding = encoding;
     }
 
     /**

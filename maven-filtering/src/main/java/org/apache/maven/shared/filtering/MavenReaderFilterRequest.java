@@ -56,7 +56,7 @@ public class MavenReaderFilterRequest
      * @param encoding Encoding
      * @param mavenSession The Maven Session.
      * @param additionalProperties supplemental properties.
-     * @deprectated use version without encoding
+     * @deprecated use version without encoding
      */
     public MavenReaderFilterRequest(
                                      Reader from,

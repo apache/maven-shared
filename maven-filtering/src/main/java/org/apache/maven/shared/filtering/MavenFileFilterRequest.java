@@ -40,6 +40,8 @@ public class MavenFileFilterRequest
 
     private boolean filtering;
 
+    private String encoding;
+
     /**
      * The constructor.
      */
@@ -70,13 +72,33 @@ public class MavenFileFilterRequest
                                    MavenSession mavenSession,
                                    Properties additionalProperties )
     {
-        super( mavenProject, filters, encoding, mavenSession );
+        super( mavenProject, filters, mavenSession );
+        this.encoding = encoding;
         this.from = from;
         this.to = to;
         this.filtering = filtering;
         setAdditionalProperties( additionalProperties );
         setEscapeWindowsPaths( escapedBackslashesInFilePath );
     }
+
+    /**
+     * Return the encoding.
+     * @return Current encoding.
+     */
+    public String getEncoding()
+    {
+        return encoding;
+    }
+
+    /**
+     * Set the value for encoding.
+     * @param encoding Give the new value for encoding.
+     */
+    public void setEncoding( String encoding )
+    {
+        this.encoding = encoding;
+    }
+
 
     /**
      * @return to filter from.

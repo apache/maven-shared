@@ -56,6 +56,7 @@ public class MavenReaderFilterRequest
      * @param encoding Encoding
      * @param mavenSession The Maven Session.
      * @param additionalProperties supplemental properties.
+     * @deprectated use version without encoding
      */
     public MavenReaderFilterRequest(
                                      Reader from,
@@ -67,12 +68,33 @@ public class MavenReaderFilterRequest
                                      MavenSession mavenSession,
                                      Properties additionalProperties )
     {
-        super( mavenProject, filters, encoding, mavenSession );
+        super( mavenProject, filters, mavenSession );
         this.from = from;
         this.filtering = filtering;
         setAdditionalProperties( additionalProperties );
         setEscapeWindowsPaths( escapedBackslashesInFilePath );
     }
+
+    /**
+     * @param from                         To read from
+     * @param filtering                    filter yes/no
+     * @param mavenProject                 The Maven Project.
+     * @param filters                      The list of filters which will be used.
+     * @param escapedBackslashesInFilePath escape backslashes in file paths.
+     * @param mavenSession                 The Maven Session.
+     * @param additionalProperties         supplemental properties.
+     */
+    public MavenReaderFilterRequest( Reader from, boolean filtering, MavenProject mavenProject, List<String> filters,
+                                     boolean escapedBackslashesInFilePath, MavenSession mavenSession,
+                                     Properties additionalProperties )
+    {
+        super( mavenProject, filters, mavenSession );
+        this.from = from;
+        this.filtering = filtering;
+        setAdditionalProperties( additionalProperties );
+        setEscapeWindowsPaths( escapedBackslashesInFilePath );
+    }
+
 
     /**
      * @return where we read from.

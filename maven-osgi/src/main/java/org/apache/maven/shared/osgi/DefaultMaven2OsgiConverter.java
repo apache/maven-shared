@@ -56,6 +56,14 @@ public class DefaultMaven2OsgiConverter
     /** pattern that matches strings that contain only numbers */
     private static final Pattern ONLY_NUMBERS = Pattern.compile( "[0-9]+" );
 
+    private static final Pattern DATED_SNAPSHOT =
+        Pattern.compile( "([0-9])(\\.([0-9]))?(\\.([0-9]))?\\-([0-9]{8}\\.[0-9]{6}\\-[0-9]*)" );
+
+    private static final Pattern DOTS_IN_QUALIFIER =
+        Pattern.compile( "([0-9])(\\.[0-9])?\\.([0-9A-Za-z_-]+)\\.([0-9A-Za-z_-]+)" );
+
+    private static final Pattern NEED_TO_FILL_ZEROS = Pattern.compile( "([0-9])(\\.([0-9]))?(\\.([0-9A-Za-z_-]+))?" );
+
     private static final String FILE_SEPARATOR = System.getProperty( "file.separator" );
 
     private String getBundleSymbolicName( String groupId, String artifactId )
@@ -251,7 +259,6 @@ public class DefaultMaven2OsgiConverter
         osgiVersion = version;
 
         /* check for dated snapshot versions with only major or major and minor */
-        Pattern DATED_SNAPSHOT = Pattern.compile( "([0-9])(\\.([0-9]))?(\\.([0-9]))?\\-([0-9]{8}\\.[0-9]{6}\\-[0-9]*)" );
         m = DATED_SNAPSHOT.matcher( osgiVersion );
         if ( m.matches() )
         {
@@ -272,7 +279,6 @@ public class DefaultMaven2OsgiConverter
         }
 
         /* remove dots in the middle of the qualifier */
-        Pattern DOTS_IN_QUALIFIER = Pattern.compile( "([0-9])(\\.[0-9])?\\.([0-9A-Za-z_-]+)\\.([0-9A-Za-z_-]+)" );
         m = DOTS_IN_QUALIFIER.matcher( osgiVersion );
         if ( m.matches() )
         {
@@ -298,8 +304,6 @@ public class DefaultMaven2OsgiConverter
          * 1          -> 1.0.0
          * 1.1        -> 1.1.0
          */
-        //Pattern NEED_TO_FILL_ZEROS = Pattern.compile( "([0-9])(\\.([0-9]))?\\.([0-9A-Za-z_-]+)" );
-        Pattern NEED_TO_FILL_ZEROS = Pattern.compile( "([0-9])(\\.([0-9]))?(\\.([0-9A-Za-z_-]+))?" );
         m = NEED_TO_FILL_ZEROS.matcher( osgiVersion );
         if ( m.matches() )
         {

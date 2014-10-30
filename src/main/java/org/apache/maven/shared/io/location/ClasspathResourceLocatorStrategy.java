@@ -37,7 +37,8 @@ public class ClasspathResourceLocatorStrategy
     {
     }
 
-    public ClasspathResourceLocatorStrategy( String tempFilePrefix, String tempFileSuffix, boolean tempFileDeleteOnExit )
+    public ClasspathResourceLocatorStrategy( String tempFilePrefix, String tempFileSuffix,
+                                             boolean tempFileDeleteOnExit )
     {
         this.tempFilePrefix = tempFilePrefix;
         this.tempFileSuffix = tempFileSuffix;

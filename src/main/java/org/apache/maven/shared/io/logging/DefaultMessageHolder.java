@@ -29,7 +29,7 @@ public class DefaultMessageHolder
     implements MessageHolder
 {
 
-    private List messages = new ArrayList();
+    private List<Message> messages = new ArrayList<Message>();
 
     private Message currentMessage;
 
@@ -149,7 +149,7 @@ public class DefaultMessageHolder
         StringBuffer buffer = new StringBuffer();
 
         int counter = 1;
-        for ( Iterator it = messages.iterator(); it.hasNext(); )
+        for ( Iterator<Message> it = messages.iterator(); it.hasNext(); )
         {
             Message message = (Message) it.next();
 
@@ -364,9 +364,8 @@ public class DefaultMessageHolder
     {
         int count = 0;
 
-        for ( Iterator it = messages.iterator(); it.hasNext(); )
+        for ( Message message : messages )
         {
-            Message message = (Message) it.next();
             if ( messageLevel == message.getMessageLevel() )
             {
                 count++;
@@ -487,43 +486,34 @@ public class DefaultMessageHolder
 
     public void render( MessageSink sink )
     {
-        for ( Iterator it = messages.iterator(); it.hasNext(); )
+        for ( Message message : messages )
         {
-            Message message = (Message) it.next();
-
             renderTo( message, sink );
         }
     }
 
     protected void renderTo( Message message, MessageSink sink )
     {
-        switch( message.getMessageLevel() )
+        switch ( message.getMessageLevel() )
         {
-        case( MessageLevels.LEVEL_SEVERE ):
-        {
-            sink.severe( message.render().toString() );
-            break;
-        }
-        case( MessageLevels.LEVEL_ERROR ):
-        {
-            sink.error( message.render().toString() );
-            break;
-        }
-        case( MessageLevels.LEVEL_WARNING ):
-        {
-            sink.warning( message.render().toString() );
-            break;
-        }
-        case( MessageLevels.LEVEL_INFO ):
-        {
-            sink.info( message.render().toString() );
-            break;
-        }
-        default:
-        {
-            sink.debug( message.render().toString() );
-            break;
-        }
+            case ( MessageLevels.LEVEL_SEVERE ):
+                sink.severe( message.render().toString() );
+                break;
+
+            case ( MessageLevels.LEVEL_ERROR ):
+                sink.error( message.render().toString() );
+                break;
+
+            case ( MessageLevels.LEVEL_WARNING ):
+                sink.warning( message.render().toString() );
+                break;
+
+            case ( MessageLevels.LEVEL_INFO ):
+                sink.info( message.render().toString() );
+                break;
+
+            default:
+                sink.debug( message.render().toString() );
         }
     }
 

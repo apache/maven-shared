@@ -67,7 +67,7 @@ public class FileLocation
             {
                 stream.close();
             }
-            catch( IOException e )
+            catch ( IOException e )
             {
                 // swallow it.
             }

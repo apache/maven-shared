@@ -284,8 +284,8 @@ public class FileSetManager
 
         if ( messages != null && messages.isDebugEnabled() )
         {
-            messages
-                .addDebugMessage( "Found deletable paths: " + String.valueOf( deletablePaths ).replace( ',', '\n' ) ).flush();
+            String paths = String.valueOf( deletablePaths ).replace( ',', '\n' );
+            messages.addDebugMessage( "Found deletable paths: " + paths ).flush();
         }
 
         List warnMessages = new LinkedList();
@@ -421,8 +421,8 @@ public class FileSetManager
         {
             if ( verbose && messages != null )
             {
-                messages
-                    .addInfoMessage( "Adding symbolic link dirs which were previously excluded to the list being deleted." ).flush();
+                messages.addInfoMessage( "Adding symbolic link dirs which were previously excluded"
+                                             + " to the list being deleted." ).flush();
             }
 
             // we need to see which entries were only excluded because they're symlinks...
@@ -442,7 +442,8 @@ public class FileSetManager
 
             if ( messages != null && messages.isDebugEnabled() )
             {
-                messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): " + linksForDeletion ).flush();
+                messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): "
+                                            + linksForDeletion ).flush();
             }
 
             excludes.removeAll( includedDirsAndSymlinks );
@@ -478,8 +479,8 @@ public class FileSetManager
         {
             if ( verbose && messages != null )
             {
-                messages
-                    .addInfoMessage( "Adding symbolic link files which were previously excluded to the list being deleted." ).flush();
+                messages.addInfoMessage( "Adding symbolic link files which were previously excluded "
+                                             + "to the list being deleted." ).flush();
             }
 
             // we need to see which entries were only excluded because they're symlinks...
@@ -499,7 +500,8 @@ public class FileSetManager
 
             if ( messages != null && messages.isDebugEnabled() )
             {
-                messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): " + linksForDeletion ).flush();
+                messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): "
+                                            + linksForDeletion ).flush();
             }
 
             excludes.removeAll( includedFilesAndSymlinks );
@@ -514,7 +516,8 @@ public class FileSetManager
 
     /**
      * Removes all parent directories of the already excluded files/directories from the given set of deletable
-     * directories. I.e. if "subdir/excluded.txt" should not be deleted, "subdir" should be excluded from deletion, too.
+     * directories. I.e. if "subdir/excluded.txt" should not be deleted, "subdir" should be excluded from deletion,
+     * too.
      * 
      * @param excludedPaths The relative paths of the files/directories which are excluded from deletion, must not be
      *            <code>null</code>.

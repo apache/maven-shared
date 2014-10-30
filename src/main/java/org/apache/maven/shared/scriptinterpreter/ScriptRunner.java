@@ -118,8 +118,8 @@ public class ScriptRunner
      * will not affect the scripts.
      *
      * @param classPath The additional class path for the script interpreter, may be <code>null</code> or empty if only
-     *                  the plugin realm should be used for the script evaluation. If specified, this class path will precede
-     *                  the artifacts from the plugin class path.
+     *            the plugin realm should be used for the script evaluation. If specified, this class path will precede
+     *            the artifacts from the plugin class path.
      */
     public void setClassPath( List<String> classPath )
     {
@@ -140,16 +140,18 @@ public class ScriptRunner
     /**
      * Runs the specified hook script.
      *
-     * @param scriptDescription  The description of the script to use for logging, must not be <code>null</code>.
-     * @param basedir            The base directory of the project, must not be <code>null</code>.
+     * @param scriptDescription The description of the script to use for logging, must not be <code>null</code>.
+     * @param basedir The base directory of the project, must not be <code>null</code>.
      * @param relativeScriptPath The path to the script relative to the project base directory, may be <code>null</code>
-     *                           to skip the script execution.
-     * @param context            The key-value storage used to share information between hook scripts, may be <code>null</code>.
-     * @param logger             The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
-     * @param stage              The stage of the build job the script is invoked in, must not be <code>null</code>. This is for logging purpose only.
-     * @param failOnException    If <code>true</code> and the script throws an exception, then a {@link RunFailureException}
-     *                           will be thrown, otherwise a {@link RunErrorException} will be thrown on script exception.
-     * @throws IOException         If an I/O error occurred while reading the script file.
+     *            to skip the script execution.
+     * @param context The key-value storage used to share information between hook scripts, may be <code>null</code>.
+     * @param logger The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
+     * @param stage The stage of the build job the script is invoked in, must not be <code>null</code>. This is for
+     *            logging purpose only.
+     * @param failOnException If <code>true</code> and the script throws an exception, then a
+     *            {@link RunFailureException} will be thrown, otherwise a {@link RunErrorException} will be thrown on
+     *            script exception.
+     * @throws IOException If an I/O error occurred while reading the script file.
      * @throws RunFailureException If the script did not return <code>true</code> of threw an exception.
      */
     public void run( final String scriptDescription, final File basedir, final String relativeScriptPath,
@@ -181,13 +183,15 @@ public class ScriptRunner
      * Runs the specified hook script.
      *
      * @param scriptDescription The description of the script to use for logging, must not be <code>null</code>.
-     * @param scriptFile        The path to the script, may be <code>null</code> to skip the script execution.
-     * @param context           The key-value storage used to share information between hook scripts, may be <code>null</code>.
-     * @param logger            The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
-     * @param stage             The stage of the build job the script is invoked in, must not be <code>null</code>. This is for logging purpose only.
-     * @param failOnException   If <code>true</code> and the script throws an exception, then a {@link RunFailureException}
-     *                          will be thrown, otherwise a {@link RunErrorException} will be thrown on script exception.
-     * @throws IOException         If an I/O error occurred while reading the script file.
+     * @param scriptFile The path to the script, may be <code>null</code> to skip the script execution.
+     * @param context The key-value storage used to share information between hook scripts, may be <code>null</code>.
+     * @param logger The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
+     * @param stage The stage of the build job the script is invoked in, must not be <code>null</code>. This is for
+     *            logging purpose only.
+     * @param failOnException If <code>true</code> and the script throws an exception, then a
+     *            {@link RunFailureException} will be thrown, otherwise a {@link RunErrorException} will be thrown on
+     *            script exception.
+     * @throws IOException If an I/O error occurred while reading the script file.
      * @throws RunFailureException If the script did not return <code>true</code> of threw an exception.
      */
     public void run( final String scriptDescription, File scriptFile, final Map<String, ? extends Object> context,

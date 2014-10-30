@@ -39,6 +39,7 @@ public interface Invoker
      * @deprecated Query this property by yourself, this has nothing to do with invoking Maven and as such does not
      *             belong into this API!
      */
+    @SuppressWarnings( "checkstyle:constantname" )
     String userHome = System.getProperty( "user.home" );
 
     /**

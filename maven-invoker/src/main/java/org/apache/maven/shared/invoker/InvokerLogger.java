@@ -32,27 +32,27 @@ public interface InvokerLogger
     /**
      * The threshold for debug output.
      */
-    public static final int DEBUG = 4;
+    int DEBUG = 4;
 
     /**
      * The threshold for info output.
      */
-    public static final int INFO = 3;
+    int INFO = 3;
 
     /**
      * The threshold for warn output.
      */
-    public static final int WARN = 2;
+    int WARN = 2;
 
     /**
      * The threshold for error output.
      */
-    public static final int ERROR = 1;
+    int ERROR = 1;
 
     /**
      * The threshold for fatal error output.
      */
-    public static final int FATAL = 0;
+    int FATAL = 0;
 
     /**
      * Logs the specified debug message.

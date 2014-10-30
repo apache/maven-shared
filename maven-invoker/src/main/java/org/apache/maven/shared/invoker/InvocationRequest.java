@@ -70,19 +70,21 @@ public interface InvocationRequest
      * Gets whether Maven should search subdirectories to build a dynamic reactor
      * @return <code>true</code> if we should search subdirectories, <code>false</code> otherwise
      */
-    public boolean isActivatedReactor();
+    boolean isActivatedReactor();
 
     /**
      * Gets the list of subdirectory patterns to search
      * @return list of subdirectory patterns to search, or <code>null</code> in which case defaults should be used
      */
-    public String[] getActivatedReactorIncludes();
+    String[] getActivatedReactorIncludes();
 
     /**
      * Gets the list of subdirectory patterns to exclude from search
-     * @return list of subdirectory patterns to exclude search, or <code>null</code> in which case nothing should be excluded
+     * 
+     * @return list of subdirectory patterns to exclude search, or <code>null</code> in which case nothing should be
+     *         excluded
      */
-    public String[] getActivatedReactorExcludes();
+    String[] getActivatedReactorExcludes();
 
     /**
      * A list of specified reactor projects to build instead of all projects. 
@@ -91,7 +93,7 @@ public interface InvocationRequest
      * @return the list of projects to add to reactor build, otherwise {@code null}
      * @since 2.1
      */
-    public List<String> getProjects();
+    List<String> getProjects();
 
     /**
      * Get the value of the {@code also-make} argument.
@@ -265,7 +267,8 @@ public interface InvocationRequest
     /**
      * Gets the path to the custom toolchains file
      * 
-     * @return The path to the custom toolchains file or <code>null</code> to load the toolchains from the default location
+     * @return The path to the custom toolchains file or <code>null</code> to load the toolchains from the default
+     *         location
      * @since 2.1
      */
     File getToolchainsFile();
@@ -320,17 +323,17 @@ public interface InvocationRequest
     /**
      * The failure mode "fail-fast" where the build is stopped by the first failure.
      */
-    static final String REACTOR_FAIL_FAST = "fail-fast";
+    String REACTOR_FAIL_FAST = "fail-fast";
 
     /**
      * The failure mode "fail-at-end" where the build is only failed at its very end if necessary.
      */
-    static final String REACTOR_FAIL_AT_END = "fail-at-end";
+    String REACTOR_FAIL_AT_END = "fail-at-end";
 
     /**
      * The failure mode "fail-never" in which Maven will always exit with code 0 regardless of build failures.
      */
-    static final String REACTOR_FAIL_NEVER = "fail-never";
+    String REACTOR_FAIL_NEVER = "fail-never";
 
     // ----------------------------------------------------------------------
     // Artifact repository policies
@@ -339,12 +342,12 @@ public interface InvocationRequest
     /**
      * The strict checksum policy which fails the build if a corrupt artifact is detected.
      */
-    static final String CHECKSUM_POLICY_FAIL = "fail";
+    String CHECKSUM_POLICY_FAIL = "fail";
 
     /**
      * The lax checksum policy which only outputs a warning if a corrupt artifact is detected.
      */
-    static final String CHECKSUM_POLICY_WARN = "warn";
+    String CHECKSUM_POLICY_WARN = "warn";
 
     // ----------------------------------------------------------------------
     //
@@ -400,8 +403,8 @@ public interface InvocationRequest
     InvocationRequest setUpdateSnapshots( boolean updateSnapshots );
 
     /**
-     * Sets the failure mode of the Maven invocation.
-     * Equivalent of {@code -ff} and {@code --fail-fast}, {@code -fae} and {@code --fail-at-end}, {@code -fn} and {@code --fail-never} 
+     * Sets the failure mode of the Maven invocation. Equivalent of {@code -ff} and {@code --fail-fast}, {@code -fae}
+     * and {@code --fail-at-end}, {@code -fn} and {@code --fail-never}
      * 
      * @param failureBehavior The failure mode, must be one of {@link #REACTOR_FAIL_FAST}, {@link #REACTOR_FAIL_AT_END}
      *            and {@link #REACTOR_FAIL_NEVER}.
@@ -648,9 +651,8 @@ public interface InvocationRequest
      */
     InvocationRequest setAlsoMake( boolean alsoMake );
 
-	/**
-     * Enable the 'also make dependents' mode.
-     * Equivalent of {@code -amd} or {@code --also-make-dependents}
+    /**
+     * Enable the 'also make dependents' mode. Equivalent of {@code -amd} or {@code --also-make-dependents}
      * 
      * @param alsoMakeDependents enable 'also make' mode
      * @return This invocation request.

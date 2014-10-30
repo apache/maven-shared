@@ -93,30 +93,26 @@ public class PrintStreamLogger
         switch ( level )
         {
             case ( DEBUG ):
-            {
                 buffer.append( "[DEBUG]" );
                 break;
-            }
+
             case ( INFO ):
-            {
                 buffer.append( "[INFO]" );
                 break;
-            }
+
             case ( WARN ):
-            {
                 buffer.append( "[WARN]" );
                 break;
-            }
+
             case ( ERROR ):
-            {
                 buffer.append( "[ERROR]" );
                 break;
-            }
+
             case ( FATAL ):
-            {
                 buffer.append( "[FATAL]" );
                 break;
-            }
+
+            default:
         }
 
         buffer.append( ' ' );

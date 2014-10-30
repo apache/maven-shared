@@ -393,7 +393,7 @@ public class DefaultInvocationRequest
 
     public Map<String, String> getShellEnvironments()
     {
-        return shellEnvironments == null ? Collections.<String, String>emptyMap(): shellEnvironments;
+        return shellEnvironments == null ? Collections.<String, String>emptyMap() : shellEnvironments;
     }
 
     public String getMavenOpts()

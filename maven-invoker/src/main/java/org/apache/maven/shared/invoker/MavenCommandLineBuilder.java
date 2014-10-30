@@ -443,7 +443,7 @@ public class MavenCommandLineBuilder
             }
         }
 
-        if( StringUtils.isNotEmpty( request.getResumeFrom() ) )
+        if ( StringUtils.isNotEmpty( request.getResumeFrom() ) )
         {
             cli.createArg().setValue( "-rf" );
             cli.createArg().setValue( request.getResumeFrom() );
@@ -517,7 +517,7 @@ public class MavenCommandLineBuilder
         {
             cli.createArg().setValue( "-V" );
         }
-	}
+    }
 
     protected void setThreads( InvocationRequest request, Commandline cli )
     {
@@ -567,7 +567,7 @@ public class MavenCommandLineBuilder
         if ( mavenExecutable == null || !mavenExecutable.isAbsolute() )
         {
             String executable;
-            if( mavenExecutable != null )
+            if ( mavenExecutable != null )
             {
                 executable = mavenExecutable.getPath();
             }

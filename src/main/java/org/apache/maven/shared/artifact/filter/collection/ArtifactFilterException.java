@@ -1,3 +1,5 @@
+package org.apache.maven.shared.artifact.filter.collection;
+
 /* 
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -16,7 +18,6 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.apache.maven.shared.artifact.filter.collection;
 
 /**
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
@@ -24,8 +25,6 @@ package org.apache.maven.shared.artifact.filter.collection;
 public class ArtifactFilterException
     extends Exception
 {
-
-   
     /**
      * 
      */

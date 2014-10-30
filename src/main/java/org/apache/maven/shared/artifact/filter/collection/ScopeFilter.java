@@ -55,7 +55,7 @@ public class ScopeFilter
      * @return a Set of filtered dependencies.
      * @throws ArtifactFilterException
      */
-    public Set<Artifact> filter( Set<Artifact> artifacts)
+    public Set<Artifact> filter( Set<Artifact> artifacts )
         throws ArtifactFilterException
     {
         Set<Artifact> results = artifacts;

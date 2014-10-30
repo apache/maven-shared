@@ -171,9 +171,9 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
             matches = token.startsWith( prefix );
         }
         // support versions range 
-        else if ( pattern.startsWith( "[" ) || pattern.startsWith( "(" ))
+        else if ( pattern.startsWith( "[" ) || pattern.startsWith( "(" ) )
         {
-        	matches = isVersionIncludedInRange(token, pattern);
+            matches = isVersionIncludedInRange( token, pattern );
         }
         // support exact match
         else
@@ -183,13 +183,17 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
 
         return matches;
     }
-    
-    private boolean isVersionIncludedInRange(final String version, final String range) {
-    	try {
-			return VersionRange.createFromVersionSpec(range).containsVersion(new DefaultArtifactVersion(version));
-		} catch (InvalidVersionSpecificationException e) {
-			return false;
-		}
-	}
+
+    private boolean isVersionIncludedInRange( final String version, final String range )
+    {
+        try
+        {
+            return VersionRange.createFromVersionSpec( range ).containsVersion( new DefaultArtifactVersion( version ) );
+        }
+        catch ( InvalidVersionSpecificationException e )
+        {
+            return false;
+        }
+    }
 
 }

@@ -35,6 +35,9 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 
+/**
+ * 
+ */
 @Component( role = MavenPluginManagerHelper.class )
 public class DefaultMavenPluginManagerHelper
     implements MavenPluginManagerHelper
@@ -97,7 +100,8 @@ public class DefaultMavenPluginManagerHelper
         {
             try
             {
-                Thread.currentThread().getContextClassLoader().loadClass( "org.sonatype.aether.graph.DependencyFilter" );
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                cl.loadClass( "org.sonatype.aether.graph.DependencyFilter" );
                 isEclipseAether = false;
             }
             catch ( ClassNotFoundException e )

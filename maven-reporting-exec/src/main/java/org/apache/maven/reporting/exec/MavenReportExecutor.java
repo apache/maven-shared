@@ -22,21 +22,22 @@ package org.apache.maven.reporting.exec;
 import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.reporting.MavenReport;
 
 /**
- * This component will prepare {@link MavenReport}s for later generation.
- * If a {@link MavenReport} needs to fork a goal or a lifecycle phase, this fork is executed.
- * <p>Notice that Maven Reports are classical {@link org.apache.maven.plugin.Mojo Mojos} implementing
- * the {@link MavenReport} interface: when used as reports, their <code>Mojo.execute()</code> method is
- * not to be used but <code>MavenReport.generate()</code>.</p> 
+ * This component will prepare {@link org.apache.maven.reporting.MavenReport}s for later generation. If a
+ * {@link org.apache.maven.reporting.MavenReport} needs to fork a goal or a lifecycle phase, this fork is executed.
+ * <p>
+ * Notice that Maven Reports are classical {@link org.apache.maven.plugin.Mojo Mojos} implementing the
+ * {@link org.apache.maven.reporting.MavenReport} interface: when used as reports, their <code>Mojo.execute()</code>
+ * method is not to be used but <code>MavenReport.generate()</code>.
+ * </p>
  *
  * @author Olivier Lamy
  */
 public interface MavenReportExecutor
 {
     /**
-     * Build the {@link MavenReport}s, with associated forked executions if necessary. 
+     * Build the {@link org.apache.maven.reporting.MavenReport}s, with associated forked executions if necessary. 
      * 
      * @param mavenReportExecutorRequest
      * @return a list or prepared Maven report executions

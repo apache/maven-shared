@@ -66,7 +66,8 @@ import org.codehaus.plexus.util.xml.Xpp3DomUtils;
  * <li>use the one defined in the reportPlugin configuration,</li>
  * <li>search similar (same groupId and artifactId) plugin in the build/plugins section of the pom,</li>
  * <li>search similar (same groupId and artifactId) plugin in the build/pluginManagement section of the pom,</li>
- * <li>ask {@link PluginVersionResolver} to get a fallback version (display a warning as it's not a recommended use).</li>
+ * <li>ask {@link PluginVersionResolver} to get a fallback version (display a warning as it's not a recommended use).
+ * </li>
  * </ol>
  * </p>
  * <p>

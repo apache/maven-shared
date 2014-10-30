@@ -75,7 +75,7 @@ public class Verifier
 {
     private static final String LOG_FILENAME = "log.txt";
 
-    public String localRepo;
+    private String localRepo;
 
     private final String basedir;
 
@@ -438,7 +438,7 @@ public class Verifier
         return lines;
     }
 
-    private final static String MARKER = "${artifact:";
+    private static final String MARKER = "${artifact:";
 
     private List<String> replaceArtifacts( String line, boolean hasCommand )
     {
@@ -931,9 +931,10 @@ public class Verifier
     /**
      * Filters a text file by replacing some user-defined tokens.
      *
-     * @param srcPath          The path to the input file, relative to the base directory, must not be <code>null</code>.
-     * @param dstPath          The path to the output file, relative to the base directory and possibly equal to the input file,
-     *                         must not be <code>null</code>.
+     * @param srcPath          The path to the input file, relative to the base directory, must not be
+     *                         <code>null</code>.
+     * @param dstPath          The path to the output file, relative to the base directory and possibly equal to the
+     *                         input file, must not be <code>null</code>.
      * @param fileEncoding     The file encoding to use, may be <code>null</code> or empty to use the platform's default
      *                         encoding.
      * @param filterProperties The mapping from tokens to replacement values, must not be <code>null</code>.
@@ -1452,7 +1453,7 @@ public class Verifier
     {
         try
         {
-            return getMavenLauncher( Collections.<String, String> emptyMap() ).getMavenVersion();
+            return getMavenLauncher( Collections.<String, String>emptyMap() ).getMavenVersion();
         }
         catch ( LauncherException e )
         {

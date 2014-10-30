@@ -117,7 +117,8 @@ public final class MapperUtil
 
         try
         {
-            FileNameMapper m = (FileNameMapper) Thread.currentThread().getContextClassLoader().loadClass( classname ).newInstance();
+            FileNameMapper m =
+                (FileNameMapper) Thread.currentThread().getContextClassLoader().loadClass( classname ).newInstance();
 
             m.setFrom( mapper.getFrom() );
             m.setTo( mapper.getTo() );

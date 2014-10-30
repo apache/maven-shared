@@ -508,7 +508,8 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * @param givenRecursionInterceptor {@link RecursionInterceptor}
      * @return this
      */
-    public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor givenRecursionInterceptor )
+    public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor(
+                                                                    RecursionInterceptor givenRecursionInterceptor )
     {
         this.recursionInterceptor = givenRecursionInterceptor;
         return this;

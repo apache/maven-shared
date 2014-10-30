@@ -98,7 +98,8 @@ public class AbstractMavenFilteringRequest
      * @param filters The list of filters.
      * @param mavenSession The MavenSession.
      */
-    protected AbstractMavenFilteringRequest( MavenProject mavenProject, List<String> filters, MavenSession mavenSession )
+    protected AbstractMavenFilteringRequest( MavenProject mavenProject, List<String> filters,
+                                             MavenSession mavenSession )
     {
         initDefaults();
         this.mavenProject = mavenProject;

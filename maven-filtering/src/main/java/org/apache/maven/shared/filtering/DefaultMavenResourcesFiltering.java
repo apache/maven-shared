@@ -274,7 +274,8 @@ public class DefaultMavenResourcesFiltering
 
                 mavenFileFilter.copyFile( source, destinationFile, resource.isFiltering() && filteredExt,
                                           mavenResourcesExecution.getFilterWrappers(),
-                                          mavenResourcesExecution.getEncoding(), mavenResourcesExecution.isOverwrite() );
+                                          mavenResourcesExecution.getEncoding(),
+                                          mavenResourcesExecution.isOverwrite() );
             }
 
             // deal with deleted source files

@@ -175,7 +175,7 @@ public interface JarSignerRequest
      *
      * @param providerClass the new value of the field {@code providerClass}.
      */
-    public void setProviderClass( String providerClass );
+    void setProviderClass( String providerClass );
 
     /**
      * Sets the new given value to the field {@code providerArg} of the request.

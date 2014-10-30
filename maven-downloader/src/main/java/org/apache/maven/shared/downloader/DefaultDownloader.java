@@ -47,50 +47,35 @@ public class DefaultDownloader
      */
     private ArtifactFactory artifactFactory;
 
-    public File download( String groupId,
-                          String artifactId,
-                          String version,
-                          File localRepository,
+    public File download( String groupId, String artifactId, String version, File localRepository,
                           String[] remoteRepositories )
         throws DownloadException, DownloadNotFoundException
-
     {
-        throw new RuntimeException( "Unsupported method, instead use" +
-        		"org.apache.maven.shared.downloader.DefaultDownloader.download( String, String, String, ArtifactRepository, List )" );
+        throw new RuntimeException( "Unsupported method, instead use org.apache.maven.shared.downloader."
+            + "DefaultDownloader.download( String, String, String, ArtifactRepository, List )" );
     }
 
-    public File download( String groupId,
-                          String artifactId,
-                          String version,
-                          ArtifactRepository localRepository,
-                          List/*<ArtifactRepository>*/ remoteRepositories )
+    public File download( String groupId, String artifactId, String version, ArtifactRepository localRepository,
+                          List/* <ArtifactRepository> */remoteRepositories )
         throws DownloadException, DownloadNotFoundException
-
     {
         return download( groupId, artifactId, version, "jar", null, localRepository, remoteRepositories );
     }
     
-    public File download( String groupId,
-                          String artifactId,
-                          String version,
-                          String type,
-                          String classifier,
-                          ArtifactRepository localRepository,
-                          List/*<ArtifactRepository>*/ remoteRepositories )
+    public File download( String groupId, String artifactId, String version, String type, String classifier,
+                          ArtifactRepository localRepository, List/* <ArtifactRepository> */remoteRepositories )
         throws DownloadException, DownloadNotFoundException
-
     {
         Artifact artifact =
-            artifactFactory.createDependencyArtifact( groupId, artifactId, VersionRange.createFromVersion( version ), type, classifier, Artifact.SCOPE_RUNTIME );
+            artifactFactory.createDependencyArtifact( groupId, artifactId, VersionRange.createFromVersion( version ),
+                                                      type, classifier, Artifact.SCOPE_RUNTIME );
 
         return download( artifact, localRepository, remoteRepositories );
     }
     
-    private File download( Artifact artifact,
-                            ArtifactRepository localRepository,
-                            List/*<ArtifactRepository>*/ remoteRepositories )
+    private File download( Artifact artifact, ArtifactRepository localRepository,
+                           List/* <ArtifactRepository> */remoteRepositories )
         throws DownloadException, DownloadNotFoundException
-        
     {
         try
         {

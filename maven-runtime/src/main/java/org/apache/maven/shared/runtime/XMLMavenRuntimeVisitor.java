@@ -34,7 +34,6 @@ import org.apache.maven.project.DuplicateProjectException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectSorter;
 import org.apache.maven.shared.utils.io.IOUtil;
-import org.apache.maven.shared.utils.ReaderFactory;
 import org.codehaus.plexus.util.dag.CycleDetectedException;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
@@ -44,7 +43,8 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
  * @author <a href="mailto:markh@apache.org">Mark Hobson</a>
  * @version $Id$
  */
-class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
+class XMLMavenRuntimeVisitor
+    implements MavenRuntimeVisitor
 {
     // fields -----------------------------------------------------------------
 
@@ -68,7 +68,8 @@ class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * {@inheritDoc}
      */
-    public void visitProjectProperties( URL url ) throws MavenRuntimeException
+    public void visitProjectProperties( URL url )
+        throws MavenRuntimeException
     {
         // no-op
     }
@@ -76,7 +77,8 @@ class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
     /**
      * {@inheritDoc}
      */
-    public void visitProjectXML( URL url ) throws MavenRuntimeException
+    public void visitProjectXML( URL url )
+        throws MavenRuntimeException
     {
         MavenProject project = parseProjectXML( url );
 
@@ -102,7 +104,8 @@ class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
      * @throws MavenRuntimeException
      *             if an error occurred ordering the projects
      */
-    public List<MavenProject> getSortedProjects() throws MavenRuntimeException
+    public List<MavenProject> getSortedProjects()
+        throws MavenRuntimeException
     {
         // mediate dependency versions since declared versions can differ from runtime versions
         List<MavenProject> mediatedProjects = MavenProjectUtils.cloneProjects( projects );
@@ -135,7 +138,8 @@ class XMLMavenRuntimeVisitor implements MavenRuntimeVisitor
      * @throws MavenRuntimeException
      *             if an error occurs parsing the XML
      */
-    private MavenProject parseProjectXML( URL url ) throws MavenRuntimeException
+    private MavenProject parseProjectXML( URL url )
+        throws MavenRuntimeException
     {
         MavenXpp3Reader reader = new MavenXpp3Reader();
 

@@ -300,34 +300,30 @@ public class MavenArchiver
                     else
                     {
                         List<ValueSource> valueSources = new ArrayList<ValueSource>();
-                        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact, true ) );
-                        valueSources.add( new PrefixedObjectValueSource(
-                                                                         ARTIFACT_EXPRESSION_PREFIXES,
-                                                                         artifact == null ? null
-                                                                                         : artifact.getArtifactHandler(),
+
+                        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact,
                                                                          true ) );
+                        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES,
+                                                                         artifact.getArtifactHandler(), true ) );
 
                         Properties extraExpressions = new Properties();
-                        if ( artifact != null )
+                        // FIXME: This query method SHOULD NOT affect the internal
+                        // state of the artifact version, but it does.
+                        if ( !artifact.isSnapshot() )
                         {
-                            // FIXME: This query method SHOULD NOT affect the internal
-                            // state of the artifact version, but it does.
-                            if ( !artifact.isSnapshot() )
-                            {
-                                extraExpressions.setProperty( "baseVersion", artifact.getVersion() );
-                            }
+                            extraExpressions.setProperty( "baseVersion", artifact.getVersion() );
+                        }
 
-                            extraExpressions.setProperty( "groupIdPath", artifact.getGroupId().replace( '.', '/' ) );
-                            if ( StringUtils.isNotEmpty( artifact.getClassifier() ) )
-                            {
-                                extraExpressions.setProperty( "dashClassifier", "-" + artifact.getClassifier() );
-                                extraExpressions.setProperty( "dashClassifier?", "-" + artifact.getClassifier() );
-                            }
-                            else
-                            {
-                                extraExpressions.setProperty( "dashClassifier", "" );
-                                extraExpressions.setProperty( "dashClassifier?", "" );
-                            }
+                        extraExpressions.setProperty( "groupIdPath", artifact.getGroupId().replace( '.', '/' ) );
+                        if ( StringUtils.isNotEmpty( artifact.getClassifier() ) )
+                        {
+                            extraExpressions.setProperty( "dashClassifier", "-" + artifact.getClassifier() );
+                            extraExpressions.setProperty( "dashClassifier?", "-" + artifact.getClassifier() );
+                        }
+                        else
+                        {
+                            extraExpressions.setProperty( "dashClassifier", "" );
+                            extraExpressions.setProperty( "dashClassifier?", "" );
                         }
                         valueSources.add( new PrefixedPropertiesValueSource( ARTIFACT_EXPRESSION_PREFIXES,
                                                                              extraExpressions, true ) );
@@ -360,7 +356,8 @@ public class MavenArchiver
                                 // here we must find the Artifact in the project Artifacts to generate the maven layout
                                 if ( config.isUseUniqueVersions() )
                                 {
-                                    classpath.append( interpolator.interpolate( REPOSITORY_LAYOUT, recursionInterceptor ) );
+                                    classpath.append( interpolator.interpolate( REPOSITORY_LAYOUT,
+                                                                                recursionInterceptor ) );
                                 }
                                 else
                                 {
@@ -372,9 +369,9 @@ public class MavenArchiver
                             {
                                 if ( layout == null )
                                 {
-                                    throw new ManifestException(
-                                                                 ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM
-                                                                     + " layout type was declared, but custom layout expression was not specified. Check your <archive><manifest><customLayout/> element." );
+                                    throw new ManifestException( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM
+                                        + " layout type was declared, but custom layout expression was not"
+                                        + " specified. Check your <archive><manifest><customLayout/> element." );
                                 }
 
                                 classpath.append( interpolator.interpolate( layout, recursionInterceptor ) );

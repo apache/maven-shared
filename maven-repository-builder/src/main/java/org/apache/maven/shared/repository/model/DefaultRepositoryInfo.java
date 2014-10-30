@@ -23,6 +23,9 @@ import org.apache.maven.artifact.Artifact;
 
 import java.util.List;
 
+/**
+ * 
+ */
 public class DefaultRepositoryInfo
     implements RepositoryInfo
 {

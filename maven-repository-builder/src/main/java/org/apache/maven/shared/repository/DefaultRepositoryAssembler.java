@@ -335,7 +335,8 @@ public class DefaultRepositoryAssembler
 
                     writeChecksums( targetFile );
 
-                    addPomWithAncestry( a, project.getRemoteArtifactRepositories(), localRepository, targetRepository, groupVersionAlignments, project );
+                    addPomWithAncestry( a, project.getRemoteArtifactRepositories(), localRepository, targetRepository,
+                                        groupVersionAlignments, project );
                 }
             }
         }
@@ -383,9 +384,12 @@ public class DefaultRepositoryAssembler
             {
                 artifact.isSnapshot();
 
-                Artifact pomArtifact = artifactFactory.createProjectArtifact( artifact.getGroupId(), artifact.getArtifactId(), artifact.getBaseVersion() );
+                Artifact pomArtifact =
+                    artifactFactory.createProjectArtifact( artifact.getGroupId(), artifact.getArtifactId(),
+                                                           artifact.getBaseVersion() );
 
-                getLogger().debug( "Building MavenProject instance for: " + pomArtifact + ". NOTE: This SHOULD BE available in the Artifact API! ...but it's not." );
+                getLogger().debug( "Building MavenProject instance for: " + pomArtifact
+                                       + ". NOTE: This SHOULD BE available in the Artifact API! ...but it's not." );
                 p = projectBuilder.buildFromRepository( pomArtifact, remoteArtifactRepositories, localRepository );
             }
             catch ( ProjectBuildingException e )
@@ -401,10 +405,10 @@ public class DefaultRepositoryAssembler
             p = p.getParent();
         }
 
-        while( p != null )
+        while ( p != null )
         {
-            Artifact destArtifact = artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p
-                .getVersion() );
+            Artifact destArtifact =
+                artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p.getVersion() );
 
             setAlignment( destArtifact, groupVersionAlignments );
 
@@ -414,8 +418,8 @@ public class DefaultRepositoryAssembler
             if ( ( sourceFile == null ) || !sourceFile.exists() )
             {
                 // something that hasn't been realigned yet...we want to read from the original location.
-                Artifact srcArtifact = artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p
-                                                                               .getVersion() );
+                Artifact srcArtifact =
+                    artifactFactory.createProjectArtifact( p.getGroupId(), p.getArtifactId(), p.getVersion() );
 
                 sourceFile = new File( localRepository.getBasedir(), localRepository.pathOf( srcArtifact ) );
             }
@@ -627,7 +631,7 @@ public class DefaultRepositoryAssembler
 
             field.setAccessible( false );
         }
-        catch( NoSuchFieldException e )
+        catch ( NoSuchFieldException e )
         {
             // fine... no field, no cache. we'll ignore it.
         }
@@ -654,9 +658,8 @@ public class DefaultRepositoryAssembler
         DependencyManagement dependencyManagement = project.getModel().getDependencyManagement();
 
         Map map = null;
-        List deps;
-        if ( ( dependencyManagement != null ) && ( ( deps = dependencyManagement.getDependencies() ) != null )
-             && ( deps.size() > 0 ) )
+        List deps = ( dependencyManagement == null ) ? null : dependencyManagement.getDependencies();
+        if ( ( deps != null ) && ( deps.size() > 0 ) )
         {
             map = new HashMap();
 

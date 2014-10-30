@@ -30,7 +30,7 @@ public interface RepositoryAssembler
 {
     String ROLE = RepositoryAssembler.class.getName();
 
-    public void buildRemoteRepository( File repositoryDirectory, RepositoryInfo repository,
-                                       RepositoryBuilderConfigSource configSource )
+    void buildRemoteRepository( File repositoryDirectory, RepositoryInfo repository,
+                                RepositoryBuilderConfigSource configSource )
         throws RepositoryAssemblyException;
 }

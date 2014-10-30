@@ -1,11 +1,5 @@
 package org.apache.maven.shared.project.utils;
 
-import java.io.File;
-import java.util.Map;
-
-import org.apache.maven.model.Model;
-import org.apache.maven.project.MavenProject;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,6 +19,15 @@ import org.apache.maven.project.MavenProject;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Map;
+
+import org.apache.maven.model.Model;
+import org.apache.maven.project.MavenProject;
+
+/**
+ * 
+ */
 public final class ScmUtils
 {
     private ScmUtils()

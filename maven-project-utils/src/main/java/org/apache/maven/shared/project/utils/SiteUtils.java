@@ -1,11 +1,5 @@
 package org.apache.maven.shared.project.utils;
 
-import java.io.File;
-import java.util.Map;
-
-import org.apache.maven.model.Model;
-import org.apache.maven.project.MavenProject;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,6 +19,15 @@ import org.apache.maven.project.MavenProject;
  * under the License.
  */
 
+import java.io.File;
+import java.util.Map;
+
+import org.apache.maven.model.Model;
+import org.apache.maven.project.MavenProject;
+
+/**
+ * 
+ */
 public final class SiteUtils
 {
 
@@ -53,13 +56,13 @@ public final class SiteUtils
             siteUrl = String.valueOf( getDistributionManagementSiteUrl( project ) );
             if ( !ProjectUtils.isRootProject( project ) )
             {
-                if( useModuleName )
+                if ( useModuleName )
                 {
                     Map<String, String> modules = ProjectUtils.getAllModules( project.getParent() );
                     
-                    for( String module : modules.keySet() )
+                    for ( String module : modules.keySet() )
                     {
-                        if( new File( project.getParent().getBasedir(), module ).equals( project.getFile() ) )
+                        if ( new File( project.getParent().getBasedir(), module ).equals( project.getFile() ) )
                         {
                             return siteUrl + '/' + module;
                         }
@@ -81,7 +84,7 @@ public final class SiteUtils
      * @param model
      * @return return the url if available, otherwise {@code null} 
      */
-    protected static final String getDistributionManagementSiteUrl( Model model )
+    protected static String getDistributionManagementSiteUrl( Model model )
     {
         if ( model.getDistributionManagement() == null || model.getDistributionManagement().getSite() == null )
         {
@@ -90,7 +93,7 @@ public final class SiteUtils
         return model.getDistributionManagement().getSite().getUrl();
     }
 
-    protected static final String getDistributionManagementSiteUrl( MavenProject project )
+    protected static String getDistributionManagementSiteUrl( MavenProject project )
     {
         if ( project.getDistributionManagement() == null || project.getDistributionManagement().getSite() == null )
         {

@@ -1,12 +1,5 @@
 package org.apache.maven.shared.project.runtime;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.IOUtil;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -26,6 +19,16 @@ import org.codehaus.plexus.util.IOUtil;
  * under the License.
  */
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.IOUtil;
+
+/**
+ * 
+ */
 public final class MavenUtils
 {
     
@@ -41,7 +44,8 @@ public final class MavenUtils
         // if this ever changes, we will have to revisit this code.
         final Properties properties = new Properties();
         final InputStream in =
-            MavenProject.class.getClassLoader().getResourceAsStream( "META-INF/maven/org.apache.maven/maven-core/pom.properties" );
+            MavenProject.class.getClassLoader().getResourceAsStream( "META-INF/maven/org.apache.maven/maven-core/"
+                                                                         + "pom.properties" );
         try
         {
             properties.load( in );

@@ -1,21 +1,5 @@
 package org.apache.maven.shared.project.utils;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Profile;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.IOUtil;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -35,6 +19,25 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
  * under the License.
  */
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+
+import org.apache.maven.model.Model;
+import org.apache.maven.model.Profile;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+/**
+ * 
+ */
 public final class ProjectUtils
 {
     // This instance is often used, including in recursive methods, so initiate it for general usage
@@ -184,8 +187,9 @@ public final class ProjectUtils
 
     
     /**
-     * Returns all modules of a project, including does specified in profiles, both active and inactive.
-     * The key of the returned Map is the name of the module, the value refers to the source of the module (the project or a specific profile). 
+     * Returns all modules of a project, including does specified in profiles, both active and inactive. The key of the
+     * returned Map is the name of the module, the value refers to the source of the module (the project or a specific
+     * profile).
      * 
      * @param project the project
      * @return all modules, never {@code null}
@@ -225,7 +229,7 @@ public final class ProjectUtils
      */
     public static File getJoinedFolder( MavenProject project )
     {
-        if( project == null )
+        if ( project == null )
         {
             return null;
         }
@@ -248,11 +252,12 @@ public final class ProjectUtils
         return null; //@todo fix exception handling
     }
     
-    private static final File getJoinedFolder( File baseDirectory, Model model ) throws IOException, XmlPullParserException
+    private static File getJoinedFolder( File baseDirectory, Model model )
+        throws IOException, XmlPullParserException
     {
         File joinedFolder = baseDirectory;
         
-        for( String module : getAllModules( model ).keySet() )
+        for ( String module : getAllModules( model ).keySet() )
         {
             File moduleFile = getModuleFile( baseDirectory, module );
             
@@ -268,7 +273,7 @@ public final class ProjectUtils
     
     // Don't make this method public, it has nothing to do with a MavenProject.
     // If required on more places, create a separate Utils-class
-    protected static final File getJoinedFolder( File lhs, File rhs )
+    protected static File getJoinedFolder( File lhs, File rhs )
     {
         File joinedFolder = null;
 
@@ -294,7 +299,7 @@ public final class ProjectUtils
         {
             File nextFile = lhsStack.pop();
             
-            if( nextFile.isDirectory() && nextFile.equals( rhsStack.pop() ) )
+            if ( nextFile.isDirectory() && nextFile.equals( rhsStack.pop() ) )
             {
                 joinedFolder = nextFile;
             }

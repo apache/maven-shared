@@ -62,8 +62,8 @@ public class IncrementalBuildHelper
     private DirectoryScanner directoryScanner;
 
     /**
-     * Once the {@link #beforeRebuildExecution(org.apache.maven.shared.incremental.IncrementalBuildHelperRequest)} got called,
-     * this will contain the list of files in the build directory.
+     * Once the {@link #beforeRebuildExecution(org.apache.maven.shared.incremental.IncrementalBuildHelperRequest)} got
+     * called, this will contain the list of files in the build directory.
      */
     private String[] filesBeforeAction = new String[0];
 
@@ -142,10 +142,10 @@ public class IncrementalBuildHelper
         //X TODO the executionId contains -cli and -mojoname
         //X we should remove those postfixes as it should not make
         //X any difference whether being run on the cli or via build
-        String mojoStatusPath = MAVEN_STATUS_ROOT + File.separator
-                                + mojoExecution.getMojoDescriptor().getPluginDescriptor().getArtifactId() + File.separator
-                                + mojoExecution.getMojoDescriptor().getGoal() + File.separator
-                                + mojoExecution.getExecutionId();
+        String mojoStatusPath =
+            MAVEN_STATUS_ROOT + File.separator
+                + mojoExecution.getMojoDescriptor().getPluginDescriptor().getArtifactId() + File.separator
+                + mojoExecution.getMojoDescriptor().getGoal() + File.separator + mojoExecution.getExecutionId();
 
         File mojoStatusDir = new File( buildOutputDirectory, mojoStatusPath );
 
@@ -180,17 +180,17 @@ public class IncrementalBuildHelper
             {
                 oldInputFiles = FileUtils.fileReadArray( mojoConfigFile );
             }
-            catch( IOException e )
+            catch ( IOException e )
             {
                 throw new MojoExecutionException( "Error reading old mojo status " + mojoConfigFile, e );
             }
         }
 
-        String[] inputFileNames = new String[ incrementalBuildHelperRequest.getInputFiles().size() ];
+        String[] inputFileNames = new String[incrementalBuildHelperRequest.getInputFiles().size()];
         int i = 0;
         for ( File inputFile : incrementalBuildHelperRequest.getInputFiles() )
         {
-            inputFileNames[ i++ ] = inputFile.getAbsolutePath();
+            inputFileNames[i++] = inputFile.getAbsolutePath();
         }
 
         DirectoryScanResult dsr = DirectoryScanner.diffFiles( oldInputFiles, inputFileNames );
@@ -199,7 +199,7 @@ public class IncrementalBuildHelper
         {
             FileUtils.fileWriteArray( mojoConfigFile, inputFileNames );
         }
-        catch( IOException e )
+        catch ( IOException e )
         {
             throw new MojoExecutionException( "Error while storing the mojo status", e );
         }
@@ -232,7 +232,7 @@ public class IncrementalBuildHelper
             {
                 oldInputFiles = FileUtils.fileReadArray( mojoConfigFile );
             }
-            catch( IOException e )
+            catch ( IOException e )
             {
                 throw new MojoExecutionException( "Error reading old mojo status " + mojoConfigFile, e );
             }
@@ -245,7 +245,7 @@ public class IncrementalBuildHelper
             // store away the list of input files
             FileUtils.fileWriteArray( mojoConfigFile, dirScanner.getIncludedFiles() );
         }
-        catch( IOException e )
+        catch ( IOException e )
         {
             throw new MojoExecutionException( "Error while storing new mojo status" + mojoConfigFile, e );
         }
@@ -256,19 +256,23 @@ public class IncrementalBuildHelper
     }
 
     /**
-     * <p>This method shall get invoked before the actual Mojo task gets triggered,
-     * e.g. the actual compile in maven-compiler-plugin.</p>
-     *
-     * <p><b>Attention:</b> This method shall only get invoked if the plugin re-creates <b>all</b> the output.</p>
-     *
-     * <p>It first picks up the list of files created in the previous build and delete them.
-     * This step is necessary to prevent left-overs. After that we take a 'directory snapshot'
-     * (list of all files which exist in the outputDirectory after the clean). </p>
-     *
-     * <p>After the actual Mojo task got executed you should invoke the method
-     * {@link #afterRebuildExecution(org.apache.maven.shared.incremental.IncrementalBuildHelperRequest)} to collect the list of files which got changed
-     * by this task.</p>
-     *
+     * <p>
+     * This method shall get invoked before the actual Mojo task gets triggered, e.g. the actual compile in
+     * maven-compiler-plugin.
+     * </p>
+     * <p>
+     * <b>Attention:</b> This method shall only get invoked if the plugin re-creates <b>all</b> the output.
+     * </p>
+     * <p>
+     * It first picks up the list of files created in the previous build and delete them. This step is necessary to
+     * prevent left-overs. After that we take a 'directory snapshot' (list of all files which exist in the
+     * outputDirectory after the clean).
+     * </p>
+     * <p>
+     * After the actual Mojo task got executed you should invoke the method
+     * {@link #afterRebuildExecution(org.apache.maven.shared.incremental.IncrementalBuildHelperRequest)} to collect the
+     * list of files which got changed by this task.
+     * </p>
      *
      * @param incrementalBuildHelperRequest
      * @return all files which got created in the previous build and have been deleted now.
@@ -291,7 +295,7 @@ public class IncrementalBuildHelper
                 oldFile.delete();
             }
         }
-        catch( IOException e )
+        catch ( IOException e )
         {
             throw new MojoExecutionException( "Error reading old mojo status", e );
         }
@@ -309,8 +313,8 @@ public class IncrementalBuildHelper
     }
 
     /**
-     * <p>This method collects and stores all information about files changed since
-     * the call to {@link #beforeRebuildExecution(org.apache.maven.shared.incremental.IncrementalBuildHelperRequest)}.</p>
+     * <p>This method collects and stores all information about files changed since the
+     * call to {@link #beforeRebuildExecution(org.apache.maven.shared.incremental.IncrementalBuildHelperRequest)}.</p>
      *
      * <p><b>Attention:</b> This method shall only get invoked if the plugin re-creates <b>all</b> the output.</p>
      *
@@ -345,7 +349,8 @@ public class IncrementalBuildHelper
         {
             try
             {
-                FileUtils.fileWriteArray( mojoConfigFile, toArrayOfPath( incrementalBuildHelperRequest.getInputFiles() ));
+                FileUtils.fileWriteArray( mojoConfigFile,
+                                          toArrayOfPath( incrementalBuildHelperRequest.getInputFiles() ) );
             }
             catch ( IOException e )
             {
@@ -357,7 +362,7 @@ public class IncrementalBuildHelper
 
     private String[] toArrayOfPath( Set<File> files )
     {
-        if (files == null || files.isEmpty())
+        if ( files == null || files.isEmpty() )
         {
             return EMPTY_ARRAY;
         }

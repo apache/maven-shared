@@ -85,7 +85,8 @@ public class DefaultDownloadManager
         }
         catch ( MalformedURLException e )
         {
-            throw new DownloadFailedException( url, "Download failed due to invalid URL. Reason: " + e.getMessage(), e );
+            throw new DownloadFailedException( url, "Download failed due to invalid URL. Reason: " + e.getMessage(),
+                                               e );
         }
 
         Wagon wagon = null;

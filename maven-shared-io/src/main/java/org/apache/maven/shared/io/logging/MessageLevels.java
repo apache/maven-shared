@@ -24,7 +24,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * 
+ */
 public final class MessageLevels
 {
 
@@ -35,11 +37,11 @@ public final class MessageLevels
     public static final int LEVEL_SEVERE = 4;
     public static final int LEVEL_DISABLED = 5;
 
-    private static final List LEVEL_NAMES;
+    private static final List<String> LEVEL_NAMES;
 
     static
     {
-        List names = new ArrayList();
+        List<String> names = new ArrayList<String>();
         names.add( "DEBUG" );
         names.add( "INFO" );
         names.add( "WARN" );
@@ -61,21 +63,17 @@ public final class MessageLevels
 
         switch ( maxMessageLevel )
         {
-        case (LEVEL_DEBUG): {
-            states[LEVEL_DEBUG] = true;
-        }
-        case (LEVEL_INFO): {
-            states[LEVEL_INFO] = true;
-        }
-        case (LEVEL_WARNING): {
-            states[LEVEL_WARNING] = true;
-        }
-        case (LEVEL_ERROR): {
-            states[LEVEL_ERROR] = true;
-        }
-        case (LEVEL_SEVERE): {
-            states[LEVEL_SEVERE] = true;
-        }
+            case ( LEVEL_DEBUG ):
+                states[LEVEL_DEBUG] = true;
+            case ( LEVEL_INFO ):
+                states[LEVEL_INFO] = true;
+            case ( LEVEL_WARNING ):
+                states[LEVEL_WARNING] = true;
+            case ( LEVEL_ERROR ):
+                states[LEVEL_ERROR] = true;
+            case ( LEVEL_SEVERE ):
+                states[LEVEL_SEVERE] = true;
+            default:
         }
 
         return states;

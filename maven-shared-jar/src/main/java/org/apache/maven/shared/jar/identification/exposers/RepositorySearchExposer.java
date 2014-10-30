@@ -40,7 +40,8 @@ import java.util.List;
  * {@link #setFileHashAnalyzer(org.apache.maven.shared.jar.identification.hash.JarHashAnalyzer)},
  * {@link #setRepositoryHashSearch(org.apache.maven.shared.jar.identification.repository.RepositoryHashSearch)}
  *
- * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="repositorySearch"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer"
+ *                   role-hint="repositorySearch"
  */
 public class RepositorySearchExposer
     extends AbstractLogEnabled

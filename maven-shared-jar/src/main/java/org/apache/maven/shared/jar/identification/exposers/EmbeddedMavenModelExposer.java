@@ -35,11 +35,11 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.jar.JarEntry;
 
-
 /**
  * Exposer that examines a JAR file for any embedded Maven metadata for identification.
  *
- * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="embeddedMavenModel"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer"
+ *                   role-hint="embeddedMavenModel"
  */
 public class EmbeddedMavenModelExposer
     extends AbstractLogEnabled

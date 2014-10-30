@@ -95,7 +95,8 @@ public class JarAnalyzer
      * Constructor. Opens the JAR file, so should be matched by a call to {@link #closeQuietly()}.
      *
      * @param file the JAR file to open
-     * @throws java.io.IOException if there is a problem opening the JAR file, or reading the manifest. The JAR file will be closed if this occurs.
+     * @throws java.io.IOException if there is a problem opening the JAR file, or reading the manifest. The JAR file
+     *             will be closed if this occurs.
      */
     public JarAnalyzer( File file )
         throws IOException
@@ -140,8 +141,8 @@ public class JarAnalyzer
     }
 
     /**
-     * Get the data for an individual entry in the JAR. The caller should closeQuietly the input stream, and should not retain
-     * the stream as the JAR file may be closed elsewhere.
+     * Get the data for an individual entry in the JAR. The caller should closeQuietly the input stream, and should not
+     * retain the stream as the JAR file may be closed elsewhere.
      *
      * @param entry the JAR entry to read from
      * @return the input stream of the individual JAR entry.

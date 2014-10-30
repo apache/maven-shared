@@ -32,7 +32,8 @@ import java.util.List;
  * <code>main</code> method if it exists to obtain the version.
  *
  * @todo not currently implemented
- * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer" role-hint="staticMainOutput"
+ * @plexus.component role="org.apache.maven.shared.jar.identification.JarIdentificationExposer"
+ *                   role-hint="staticMainOutput"
  */
 public class StaticMainOutputExposer
     implements JarIdentificationExposer

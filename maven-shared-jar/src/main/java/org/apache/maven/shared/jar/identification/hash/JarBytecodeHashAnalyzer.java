@@ -35,7 +35,8 @@ import java.util.jar.JarEntry;
  * Analyzer that calculates the hash code for the entire file. Can be used to detect an exact copy of the file's class
  * data. Useful to see thru a recompile, recompression, or timestamp change.
  * <p/>
- * If you are not using Plexus, you must call {@link #setDigester(org.codehaus.plexus.digest.StreamingDigester)} before use
+ * If you are not using Plexus, you must call {@link #setDigester(org.codehaus.plexus.digest.StreamingDigester)} before
+ * use
  *
  * @plexus.component role="org.apache.maven.shared.jar.identification.hash.JarHashAnalyzer" role-hint="bytecode"
  */

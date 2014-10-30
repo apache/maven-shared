@@ -47,7 +47,8 @@ public class ImportVisitor
     private JavaClass javaClass;
 
     /**
-     * Pattern to detect if the import is qualified and allows retrieval of the actual import name from the string via the group 1.
+     * Pattern to detect if the import is qualified and allows retrieval of the actual import name from the string via
+     * the group 1.
      */
     private static final Pattern QUALIFIED_IMPORT_PATTERN = Pattern.compile( "L([a-zA-Z][a-zA-Z0-9\\.]+);" );
 

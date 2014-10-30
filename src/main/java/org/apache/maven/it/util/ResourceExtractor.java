@@ -32,7 +32,9 @@ import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.shared.utils.io.IOUtil;
 
 
-/* @todo this can be replaced with plexus-archiver */
+/**
+ *  @todo this can be replaced with plexus-archiver
+ */
 public class ResourceExtractor
 {
 

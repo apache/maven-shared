@@ -34,7 +34,6 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * Default dependency graph builder that detects current Maven version to delegate to either Maven 2 or Maven 3 specific

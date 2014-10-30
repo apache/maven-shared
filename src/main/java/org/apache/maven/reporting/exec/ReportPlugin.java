@@ -23,12 +23,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.configuration.PlexusConfiguration;
 
 /**
- * Represents a reporting plugin and its execution configuration. It basically contains similar informations
- * as a {@link Plugin}, but in order to decouple reporting stuff from core, some values are copied.
+ * Represents a reporting plugin and its execution configuration. It basically contains similar informations as a
+ * {@link org.apache.maven.model.Plugin}, but in order to decouple reporting stuff from core, some values are copied.
  */
 public class ReportPlugin
 {

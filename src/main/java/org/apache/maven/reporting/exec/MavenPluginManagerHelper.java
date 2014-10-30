@@ -24,16 +24,15 @@ import java.util.List;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.InvalidPluginDescriptorException;
-import org.apache.maven.plugin.MavenPluginManager;
 import org.apache.maven.plugin.PluginContainerException;
 import org.apache.maven.plugin.PluginDescriptorParsingException;
 import org.apache.maven.plugin.PluginResolutionException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 
 /**
- * {@link MavenPluginManager} helper to deal with API changes between Maven 3.0.x and 3.1.x, ie switch from Sonatype Aether
- * (in <code>org.sonatype.aether</code> package) to Eclipse Aether (in <code>org.eclipse.aether</code> package) for
- * some parameters.
+ * {@link org.apache.maven.plugin.MavenPluginManager} helper to deal with API changes between Maven 3.0.x and 3.1.x, ie
+ * switch from Sonatype Aether (in <code>org.sonatype.aether</code> package) to Eclipse Aether (in
+ * <code>org.eclipse.aether</code> package) for some parameters.
  * 
  * @author Hervé Boutemy
  * @since 1.1
@@ -41,7 +40,8 @@ import org.apache.maven.plugin.descriptor.PluginDescriptor;
 public interface MavenPluginManagerHelper
 {
     /**
-     * Helper for {@link MavenPluginManager#getPluginDescriptor(Plugin, List, org.eclipse.aether.RepositorySystemSession)}
+     * Helper for {@link org.apache.maven.plugin.MavenPluginManager#getPluginDescriptor
+     * MavenPluginManager#getPluginDescriptor(Plugin, List, xxx.aether.RepositorySystemSession)}
      * 
      * @param plugin
      * @param session
@@ -54,7 +54,8 @@ public interface MavenPluginManagerHelper
         throws PluginResolutionException, PluginDescriptorParsingException, InvalidPluginDescriptorException;
 
     /**
-     * Helper for {@link MavenPluginManager#setupPluginRealm(PluginDescriptor, MavenSession, ClassLoader, List, org.eclipse.aether.graph.DependencyFilter)
+     * Helper for {@link org.apache.maven.plugin.MavenPluginManager#setupPluginRealm
+     * MavenPluginManager#setupPluginRealm(PluginDescriptor, ..., List, xxx.aether.graph.DependencyFilter)}
      * 
      * @param pluginDescriptor
      * @param session

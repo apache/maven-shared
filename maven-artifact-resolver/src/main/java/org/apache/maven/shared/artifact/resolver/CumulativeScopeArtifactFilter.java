@@ -23,13 +23,12 @@ import java.util.Collection;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 
 /**
  * Filter to only retain objects in the given scope or better. This implementation allows the 
  * accumulation of multiple scopes and their associated implied scopes, so that the user can filter
  * apply a series of implication rules in a single step. This should be a more efficient implementation
- * of multiple standard {@link ScopeArtifactFilter} instances ORed together.
+ * of multiple standard {@link org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter} instances ORed together.
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @author jdcasey

@@ -69,11 +69,13 @@ public final class DefaultProjectDependenciesResolver
     private ArtifactMetadataSource metadataSource;
     
     // for plexus instantiation.
-    public DefaultProjectDependenciesResolver(){}
+    public DefaultProjectDependenciesResolver()
+    {
+    }
 
     // for testing.
     DefaultProjectDependenciesResolver( ArtifactResolver resolver, ArtifactFactory artifactFactory,
-                                               ArtifactMetadataSource metadataSource )
+                                        ArtifactMetadataSource metadataSource )
     {
         this.resolver = resolver;
         this.artifactFactory = artifactFactory;
@@ -97,19 +99,19 @@ public final class DefaultProjectDependenciesResolver
 
         CumulativeScopeArtifactFilter scopeFilter = new CumulativeScopeArtifactFilter( scopes );
         
-        for ( MavenProject project : projects )
+        for ( MavenProject proj : projects )
         {
-            Set<Artifact> depArtifacts = project.getDependencyArtifacts();
+            Set<Artifact> depArtifacts = proj.getDependencyArtifacts();
             if ( depArtifacts == null )
             {
                 try
                 {
-                    depArtifacts = project.createArtifacts( artifactFactory, null, scopeFilter );
+                    depArtifacts = proj.createArtifacts( artifactFactory, null, scopeFilter );
                 }
                 catch ( InvalidDependencyVersionException e )
                 {
-                    throw new ArtifactResolutionException( "Failed to create Artifact instances for project dependencies: "
-                        + e.getMessage(), null, e );
+                    throw new ArtifactResolutionException( "Failed to create Artifact instances for project "
+                        + "dependencies: " + e.getMessage(), null, e );
                 }
             }
             
@@ -128,19 +130,19 @@ public final class DefaultProjectDependenciesResolver
                 }
             }
             
-            Artifact projectArtifact = project.getArtifact();
+            Artifact projectArtifact = proj.getArtifact();
             if ( projectArtifact == null )
             {
-                projectArtifact = artifactFactory.createProjectArtifact( project.getGroupId(), project.getArtifactId(),
-                                                                     project.getVersion() );
+                projectArtifact = artifactFactory.createProjectArtifact( proj.getGroupId(), proj.getArtifactId(),
+                                                                     proj.getVersion() );
             }
             
             try
             {
                 ArtifactResolutionResult result = resolver.resolveTransitively( depArtifacts, projectArtifact,
-                                                                                project.getManagedVersionMap(),
+                                                                                proj.getManagedVersionMap(),
                                                                                 session.getLocalRepository(),
-                                                                                project.getRemoteArtifactRepositories(),
+                                                                                proj.getRemoteArtifactRepositories(),
                                                                                 metadataSource, scopeFilter );
 
                 if ( result.getArtifacts() != null && !result.getArtifacts().isEmpty() )
@@ -179,7 +181,8 @@ public final class DefaultProjectDependenciesResolver
     /**
      * {@inheritDoc}
      */
-    public Set<Artifact> resolve( final MavenProject project, final Collection<String> scopes, final MavenSession session )
+    public Set<Artifact> resolve( final MavenProject project, final Collection<String> scopes,
+                                  final MavenSession session )
         throws ArtifactResolutionException, ArtifactNotFoundException
     {
         Collection<MavenProject> projects = Collections.singleton( project );

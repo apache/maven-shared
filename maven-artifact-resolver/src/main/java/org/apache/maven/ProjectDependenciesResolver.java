@@ -23,7 +23,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
 
 import java.util.Collection;
@@ -47,11 +46,11 @@ public interface ProjectDependenciesResolver
      * @param session Contains the local repository, along with other settings related to artifact resolution.
      * @return The set of resolved artifacts. If the projects contain no dependencies, this will return an empty set.
      * @throws ArtifactResolutionException In case {@link Artifact} instances cannot be created from 
-     *          project {@link Dependency} instances, or artifact resolution fails.
+     *          project {@link org.apache.maven.model.Dependency} instances, or artifact resolution fails.
      * @throws ArtifactNotFoundException In cases where one or more dependency artifacts cannot be found in the
      *          various repositories.
      */
-    public Set<Artifact> resolve( Collection<? extends MavenProject> projects, Collection<String> scopes,
+    Set<Artifact> resolve( Collection<? extends MavenProject> projects, Collection<String> scopes,
                                   MavenSession session )
         throws ArtifactResolutionException, ArtifactNotFoundException;
 
@@ -64,10 +63,10 @@ public interface ProjectDependenciesResolver
      * @param session Contains the local repository, along with other settings related to artifact resolution.
      * @return The set of resolved artifacts. If the project contains no dependencies, this will return an empty set.
      * @throws ArtifactResolutionException In case {@link Artifact} instances cannot be created from the
-     *          project {@link Dependency} instance, or artifact resolution fails.
+     *          project {@link org.apache.maven.model.Dependency} instance, or artifact resolution fails.
      * @throws ArtifactNotFoundException In cases where one or more dependency artifacts cannot be found in the
      *          various repositories.
      */
-    public Set<Artifact> resolve( MavenProject project, Collection<String> scopes, MavenSession session  )
+    Set<Artifact> resolve( MavenProject project, Collection<String> scopes, MavenSession session  )
         throws ArtifactResolutionException, ArtifactNotFoundException;
 }

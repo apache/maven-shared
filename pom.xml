@@ -90,17 +90,6 @@
   </dependencies>
 
   <build>
-    <!-- push back this in maven-shared-components 20 -->
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.3</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-
     <plugins>
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
@@ -114,6 +103,15 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>src/test/keystore</exclude>
+          </excludes>
+        </configuration>
       </plugin>
     </plugins>
   </build>

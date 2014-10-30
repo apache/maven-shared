@@ -24,6 +24,9 @@ import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
 
+/**
+ * 
+ */
 public abstract class AbstractArtifactsFilter
     implements ArtifactsFilter
 {
@@ -32,7 +35,8 @@ public abstract class AbstractArtifactsFilter
      * @version $Id$
      * @throws ArtifactFilterException 
      */
-    public boolean isArtifactIncluded( Artifact artifact ) throws ArtifactFilterException
+    public boolean isArtifactIncluded( Artifact artifact )
+        throws ArtifactFilterException
     {
         Set<Artifact> set = new HashSet<Artifact>();
         set.add( artifact );

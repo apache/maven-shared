@@ -21,6 +21,9 @@ package org.apache.maven.shared.artifact.filter;
 
 import org.codehaus.plexus.logging.Logger;
 
+/**
+ * 
+ */
 public interface StatisticsReportingArtifactFilter
 {
 

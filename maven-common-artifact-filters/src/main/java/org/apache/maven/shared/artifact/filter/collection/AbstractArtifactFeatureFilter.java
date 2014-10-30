@@ -44,7 +44,7 @@ public abstract class AbstractArtifactFeatureFilter
      */
     private List<String> excludes;
 
-    public AbstractArtifactFeatureFilter( String include, String exclude)
+    public AbstractArtifactFeatureFilter( String include, String exclude )
     {
         setExcludes( exclude );
         setIncludes( include );
@@ -58,7 +58,7 @@ public abstract class AbstractArtifactFeatureFilter
      */
     public Set<Artifact> filter( Set<Artifact> artifacts )
     {
-        Set<Artifact>results = artifacts;
+        Set<Artifact> results = artifacts;
 
         if ( this.includes != null && !this.includes.isEmpty() )
         {

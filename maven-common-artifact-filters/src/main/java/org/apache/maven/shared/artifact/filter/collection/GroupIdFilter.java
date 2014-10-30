@@ -41,7 +41,7 @@ public class GroupIdFilter
      */
     public GroupIdFilter( String include, String exclude )
     {
-        super( include, exclude);
+        super( include, exclude );
     }
 
     /*

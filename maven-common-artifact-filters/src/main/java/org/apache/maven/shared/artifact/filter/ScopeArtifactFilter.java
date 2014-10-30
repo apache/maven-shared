@@ -162,8 +162,9 @@ public class ScopeArtifactFilter
 
     public String toString()
     {
-        return "Scope filter [null-scope=" + includeNullScope + ", compile=" + includeCompileScope + ", runtime=" + includeRuntimeScope + ", test=" + includeTestScope
-            + ", provided=" + includeProvidedScope + ", system=" + includeSystemScope + "]";
+        return "Scope filter [null-scope=" + includeNullScope + ", compile=" + includeCompileScope + ", runtime="
+            + includeRuntimeScope + ", test=" + includeTestScope + ", provided=" + includeProvidedScope + ", system="
+            + includeSystemScope + "]";
     }
 
     public void reportFilteredArtifacts( Logger logger )

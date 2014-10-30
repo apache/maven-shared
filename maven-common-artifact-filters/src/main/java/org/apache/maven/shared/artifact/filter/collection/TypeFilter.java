@@ -30,14 +30,9 @@ public class TypeFilter
 {
     public TypeFilter( String include, String exclude )
     {
-        super( include, exclude);
+        super( include, exclude );
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.maven.plugin.dependency.utils.filters.AbstractArtifactFeatureFilter#getArtifactFeature(org.apache.maven.artifact.Artifact)
-     */
     protected String getArtifactFeature( Artifact artifact )
     {
         return artifact.getType();

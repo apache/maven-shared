@@ -53,6 +53,8 @@ import org.apache.maven.shared.artifact.filter.ScopeArtifactFilter;
 import org.apache.maven.shared.repository.model.GroupVersionAlignment;
 import org.apache.maven.shared.repository.model.RepositoryInfo;
 import org.apache.maven.shared.repository.utils.DigestUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.IOUtil;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
@@ -62,8 +64,6 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-import org.apache.maven.shared.utils.io.FileUtils;
-import org.apache.maven.shared.utils.io.IOUtil;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -78,7 +78,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -95,7 +94,7 @@ public class DefaultRepositoryAssembler
     implements RepositoryAssembler, Contextualizable
 {
     private static final String[] PREFERRED_RESOLVER_HINTS = { "project-cache-aware", // Provided in Maven 2.1-SNAPSHOT
-                                                              "default" };
+        "default" };
 
     protected static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone( "UTC" );
 
@@ -175,7 +174,7 @@ public class DefaultRepositoryAssembler
             if ( logger.isDebugEnabled() )
             {
                 logger.debug( "dependency-artifact set for project: " + project.getId()
-                    + " is null. Skipping repository processing." );
+                                  + " is null. Skipping repository processing." );
             }
 
             return;
@@ -193,8 +192,7 @@ public class DefaultRepositoryAssembler
             // FIXME I'm not getting runtime dependencies here
             result = artifactResolver.resolveTransitively( dependencyArtifacts, project.getArtifact(),
                                                            getManagedVersionMap( project ), localRepository,
-                                                           project.getRemoteArtifactRepositories(),
-                                                           metadataSource );
+                                                           project.getRemoteArtifactRepositories(), metadataSource );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -256,15 +254,15 @@ public class DefaultRepositoryAssembler
 
         if ( ( includes == null ) || includes.isEmpty() )
         {
-            List patterns = new ArrayList();
+            List<String> patterns = new ArrayList<String>();
 
             Set projectArtifacts = project.getDependencyArtifacts();
 
             if ( projectArtifacts != null )
             {
-                for ( Iterator it = projectArtifacts.iterator(); it.hasNext(); )
+                for ( Object projectArtifact : projectArtifacts )
                 {
-                    Artifact artifact = (Artifact) it.next();
+                    Artifact artifact = (Artifact) projectArtifact;
 
                     patterns.add( artifact.getDependencyConflictId() );
                 }
@@ -312,9 +310,9 @@ public class DefaultRepositoryAssembler
 
             FileUtils.mkdir( repositoryDirectory.getAbsolutePath() );
 
-            for ( Iterator i = result.getArtifacts().iterator(); i.hasNext(); )
+            for ( Object o : result.getArtifacts() )
             {
-                Artifact a = (Artifact) i.next();
+                Artifact a = (Artifact) o;
 
                 if ( filter.include( a ) )
                 {
@@ -354,11 +352,6 @@ public class DefaultRepositoryAssembler
         }
     }
 
-    /**
-     *
-     * @param pomFileOverride This is used to allow injection of a POM's file directly, for
-     *         cases where the POM has not been installed into the repository yet.
-     */
     private void addPomWithAncestry( final Artifact artifact, List remoteArtifactRepositories,
                                      ArtifactRepository localRepository, ArtifactRepository targetRepository,
                                      Map groupVersionAlignments, MavenProject masterProject )
@@ -456,9 +449,9 @@ public class DefaultRepositoryAssembler
     private ArtifactRepository findCentralRepository( MavenProject project )
     {
         ArtifactRepository centralRepository = null;
-        for ( Iterator i = project.getRemoteArtifactRepositories().iterator(); i.hasNext(); )
+        for ( Object o : project.getRemoteArtifactRepositories() )
         {
-            ArtifactRepository r = (ArtifactRepository) i.next();
+            ArtifactRepository r = (ArtifactRepository) o;
             if ( "central".equals( r.getId() ) )
             {
                 centralRepository = r;
@@ -472,9 +465,9 @@ public class DefaultRepositoryAssembler
                                              ArtifactRepository centralRepository, ArtifactRepository targetRepository )
         throws RepositoryAssemblyException
     {
-        for ( Iterator i = result.getArtifacts().iterator(); i.hasNext(); )
+        for ( Object o : result.getArtifacts() )
         {
-            Artifact a = (Artifact) i.next();
+            Artifact a = (Artifact) o;
 
             if ( filter.include( a ) )
             {
@@ -514,18 +507,18 @@ public class DefaultRepositoryAssembler
                 {
                     writeChecksums( metadataFile );
 
-                    File metadataFileRemote = new File( targetRepository.getBasedir(), targetRepository
-                        .pathOfRemoteRepositoryMetadata( metadata ) );
+                    File metadataFileRemote = new File( targetRepository.getBasedir(),
+                                                        targetRepository.pathOfRemoteRepositoryMetadata( metadata ) );
 
                     FileUtils.copyFile( metadataFile, metadataFileRemote );
 
                     FileUtils.copyFile( new File( metadataFile.getParentFile(), metadataFile.getName() + ".sha1" ),
-                                        new File( metadataFileRemote.getParentFile(), metadataFileRemote.getName()
-                                            + ".sha1" ) );
+                                        new File( metadataFileRemote.getParentFile(),
+                                                  metadataFileRemote.getName() + ".sha1" ) );
 
                     FileUtils.copyFile( new File( metadataFile.getParentFile(), metadataFile.getName() + ".md5" ),
-                                        new File( metadataFileRemote.getParentFile(), metadataFileRemote.getName()
-                                            + ".md5" ) );
+                                        new File( metadataFileRemote.getParentFile(),
+                                                  metadataFileRemote.getName() + ".md5" ) );
                 }
                 catch ( IOException e )
                 {
@@ -543,10 +536,10 @@ public class DefaultRepositoryAssembler
             String md5 = DigestUtils.createChecksum( file, "MD5" );
             String sha1 = DigestUtils.createChecksum( file, "SHA-1" );
 
-            FileUtils.fileWrite( new File( file.getParentFile(), file.getName() + ".md5" ).getAbsolutePath(), md5
-                .toLowerCase() );
-            FileUtils.fileWrite( new File( file.getParentFile(), file.getName() + ".sha1" ).getAbsolutePath(), sha1
-                .toLowerCase() );
+            FileUtils.fileWrite( new File( file.getParentFile(), file.getName() + ".md5" ).getAbsolutePath(),
+                                 md5.toLowerCase() );
+            FileUtils.fileWrite( new File( file.getParentFile(), file.getName() + ".sha1" ).getAbsolutePath(),
+                                 sha1.toLowerCase() );
         }
         catch ( NoSuchAlgorithmException e )
         {
@@ -560,9 +553,9 @@ public class DefaultRepositoryAssembler
 
         if ( versionAlignments != null )
         {
-            for ( Iterator i = versionAlignments.iterator(); i.hasNext(); )
+            for ( Object versionAlignment : versionAlignments )
             {
-                GroupVersionAlignment alignment = (GroupVersionAlignment) i.next();
+                GroupVersionAlignment alignment = (GroupVersionAlignment) versionAlignment;
 
                 groupVersionAlignments.put( alignment.getId(), alignment );
             }
@@ -594,8 +587,8 @@ public class DefaultRepositoryAssembler
     public ArtifactRepository createRepository( String repositoryId, String repositoryUrl, boolean offline,
                                                 boolean updateSnapshots, String globalChecksumPolicy )
     {
-        ArtifactRepository localRepository = new DefaultArtifactRepository( repositoryId, repositoryUrl,
-                                                                            repositoryLayout );
+        ArtifactRepository localRepository =
+            new DefaultArtifactRepository( repositoryId, repositoryUrl, repositoryLayout );
 
         boolean snapshotPolicySet = false;
 
@@ -657,26 +650,26 @@ public class DefaultRepositoryAssembler
     {
         DependencyManagement dependencyManagement = project.getModel().getDependencyManagement();
 
-        Map map = null;
+        Map<String, Artifact> map;
         List deps = ( dependencyManagement == null ) ? null : dependencyManagement.getDependencies();
         if ( ( deps != null ) && ( deps.size() > 0 ) )
         {
-            map = new HashMap();
+            map = new HashMap<String, Artifact>();
 
             if ( getLogger().isDebugEnabled() )
             {
                 getLogger().debug( "Adding managed dependencies for " + project.getId() );
             }
 
-            for ( Iterator i = dependencyManagement.getDependencies().iterator(); i.hasNext(); )
+            for ( Object o1 : dependencyManagement.getDependencies() )
             {
-                Dependency d = (Dependency) i.next();
+                Dependency d = (Dependency) o1;
 
                 VersionRange versionRange = VersionRange.createFromVersionSpec( d.getVersion() );
-                Artifact artifact = artifactFactory.createDependencyArtifact( d.getGroupId(), d.getArtifactId(),
-                                                                              versionRange, d.getType(),
-                                                                              d.getClassifier(), d.getScope(),
-                                                                              d.isOptional() );
+                Artifact artifact =
+                    artifactFactory.createDependencyArtifact( d.getGroupId(), d.getArtifactId(), versionRange,
+                                                              d.getType(), d.getClassifier(), d.getScope(),
+                                                              d.isOptional() );
                 if ( getLogger().isDebugEnabled() )
                 {
                     getLogger().debug( "  " + artifact );
@@ -687,11 +680,10 @@ public class DefaultRepositoryAssembler
                 // dependencies will be excluded if necessary.
                 if ( ( null != d.getExclusions() ) && !d.getExclusions().isEmpty() )
                 {
-                    List exclusions = new ArrayList();
-                    Iterator exclItr = d.getExclusions().iterator();
-                    while ( exclItr.hasNext() )
+                    List<String> exclusions = new ArrayList<String>();
+                    for ( Object o : d.getExclusions() )
                     {
-                        Exclusion e = (Exclusion) exclItr.next();
+                        Exclusion e = (Exclusion) o;
                         exclusions.add( e.getGroupId() + ":" + e.getArtifactId() );
                     }
                     ExcludesArtifactFilter eaf = new ExcludesArtifactFilter( exclusions );
@@ -704,9 +696,9 @@ public class DefaultRepositoryAssembler
                 map.put( d.getManagementKey(), artifact );
             }
         }
-        else if ( map == null )
+        else
         {
-            map = Collections.EMPTY_MAP;
+            map = Collections.emptyMap();
         }
         return map;
     }
@@ -716,18 +708,23 @@ public class DefaultRepositoryAssembler
     {
         PlexusContainer container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
 
-        for ( int i = 0; i < PREFERRED_RESOLVER_HINTS.length; i++ )
+        for ( String hint : PREFERRED_RESOLVER_HINTS )
         {
-            String hint = PREFERRED_RESOLVER_HINTS[i];
-
-            try
+            if ( container.hasComponent( ArtifactResolver.ROLE, hint ) )
             {
-                artifactResolver = (ArtifactResolver) container.lookup( ArtifactResolver.ROLE, hint );
-                break;
+                try
+                {
+                    artifactResolver = (ArtifactResolver) container.lookup( ArtifactResolver.ROLE, hint );
+                    break;
+                }
+                catch ( ComponentLookupException e )
+                {
+                    getLogger().warn( "Cannot find ArtifactResolver with hint: " + hint, e );
+                }
             }
-            catch ( ComponentLookupException e )
+            else
             {
-                getLogger().debug( "Cannot find ArtifactResolver with hint: " + hint, e );
+                getLogger().debug( "No ArtifactResolver with hint " + hint );
             }
         }
 
@@ -745,8 +742,9 @@ public class DefaultRepositoryAssembler
 
         if ( artifactResolver == null )
         {
-            throw new ContextException( "Failed to lookup a valid ArtifactResolver implementation. Tried hints:\n"
-                                        + Arrays.asList( PREFERRED_RESOLVER_HINTS ) );
+            throw new ContextException(
+                "Failed to lookup a valid ArtifactResolver implementation. Tried hints:\n" + Arrays.asList(
+                    PREFERRED_RESOLVER_HINTS ) );
         }
     }
 }

@@ -82,7 +82,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
-import static org.apache.commons.codec.digest.DigestUtils.*;
+import static org.apache.commons.codec.digest.DigestUtils.md5Hex;
+import static org.apache.commons.codec.digest.DigestUtils.shaHex;
 
 /**
  * @author Jason van Zyl

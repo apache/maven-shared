@@ -128,10 +128,10 @@ public final class DigestUtils
     {
         String output = "";
 
-        for ( int cnt = 0; cnt < data.length; cnt++ )
+        for ( byte aData : data )
         {
             //Deposit a byte into the 8 lsb of an int.
-            int tempInt = data[cnt] & BYTE_MASK;
+            int tempInt = aData & BYTE_MASK;
 
             //Get hex representation of the int as a string.
             String tempStr = Integer.toHexString( tempInt );

@@ -52,7 +52,6 @@ import org.apache.maven.shared.artifact.filter.PatternIncludesArtifactFilter;
 import org.apache.maven.shared.artifact.filter.ScopeArtifactFilter;
 import org.apache.maven.shared.repository.model.GroupVersionAlignment;
 import org.apache.maven.shared.repository.model.RepositoryInfo;
-import org.apache.maven.shared.repository.utils.DigestUtils;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.shared.utils.io.IOUtil;
 import org.codehaus.plexus.PlexusConstants;
@@ -66,11 +65,11 @@ import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Field;
-import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,6 +81,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+
+import static org.apache.commons.codec.digest.DigestUtils.*;
 
 /**
  * @author Jason van Zyl
@@ -531,20 +532,17 @@ public class DefaultRepositoryAssembler
     private void writeChecksums( File file )
         throws IOException, RepositoryAssemblyException
     {
-        try
-        {
-            String md5 = DigestUtils.createChecksum( file, "MD5" );
-            String sha1 = DigestUtils.createChecksum( file, "SHA-1" );
+        FileInputStream data = new FileInputStream( file );
+        String md5 = md5Hex( data ).toUpperCase();
+        data.close();
+        FileInputStream data1 = new FileInputStream( file );
+        String sha1 = shaHex( data1 ).toUpperCase();
+        data1.close();
 
-            FileUtils.fileWrite( new File( file.getParentFile(), file.getName() + ".md5" ).getAbsolutePath(),
-                                 md5.toLowerCase() );
-            FileUtils.fileWrite( new File( file.getParentFile(), file.getName() + ".sha1" ).getAbsolutePath(),
-                                 sha1.toLowerCase() );
-        }
-        catch ( NoSuchAlgorithmException e )
-        {
-            throw new RepositoryAssemblyException( "Unable to get write checksums: " + e.getMessage(), e );
-        }
+        FileUtils.fileWrite( new File( file.getParentFile(), file.getName() + ".md5" ).getAbsolutePath(),
+                             md5.toLowerCase() );
+        FileUtils.fileWrite( new File( file.getParentFile(), file.getName() + ".sha1" ).getAbsolutePath(),
+                             sha1.toLowerCase() );
     }
 
     protected Map createGroupVersionAlignments( List versionAlignments )

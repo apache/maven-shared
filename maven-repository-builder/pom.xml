@@ -28,14 +28,14 @@ under the License.
   </parent>
 
   <artifactId>maven-repository-builder</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
 
   <name>Apache Maven Repository Builder</name>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-repository-builder-1.0</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-repository-builder-1.0</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-repository-builder-1.0</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-repository-builder</url>
   </scm>
   <issueManagement>
     <system>jira</system>

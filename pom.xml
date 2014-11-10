@@ -17,7 +17,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<project xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd' xmlns='http://maven.apache.org/POM/4.0.0'>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -28,14 +28,14 @@ under the License.
   </parent>
 
   <artifactId>maven-repository-builder</artifactId>
-  <version>1.0-alpha-3-SNAPSHOT</version>
+  <version>1.0</version>
 
   <name>Apache Maven Repository Builder</name>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-repository-builder</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-repository-builder</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-repository-builder-1.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-repository-builder-1.0</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-repository-builder-1.0</url>
   </scm>
   <issueManagement>
     <system>jira</system>

@@ -110,7 +110,7 @@ public class PatternIncludesArtifactFilter
         }
         else
         {
-            return Boolean.valueOf( match( artifact, negativePatterns ) );
+            return match( artifact, negativePatterns );
         }
     }
 
@@ -122,7 +122,7 @@ public class PatternIncludesArtifactFilter
         }
         else
         {
-            return Boolean.valueOf( match( artifact, positivePatterns ) );
+            return match( artifact, positivePatterns );
         }
     }
 
@@ -199,7 +199,7 @@ public class PatternIncludesArtifactFilter
                 return true;
             }
 
-            if ( regionMatch && value.indexOf( pattern ) > -1 )
+            if ( regionMatch && value.contains( pattern ) )
             {
                 patternsTriggered.add( pattern );
                 return true;
@@ -231,7 +231,7 @@ public class PatternIncludesArtifactFilter
         {
             final String contains = pattern.substring( 1, pattern.length() - 1 );
 
-            matches = ( token.indexOf( contains ) != -1 );
+            matches = ( token.contains( contains ) );
         }
         // support leading wildcard
         else if ( pattern.startsWith( "*" ) )
@@ -307,7 +307,7 @@ public class PatternIncludesArtifactFilter
 
             if ( !missed.isEmpty() && logger.isWarnEnabled() )
             {
-                final StringBuffer buffer = new StringBuffer();
+                final StringBuilder buffer = new StringBuilder();
 
                 buffer.append( "The following patterns were never triggered in this " );
                 buffer.append( getFilterDescription() );
@@ -333,7 +333,7 @@ public class PatternIncludesArtifactFilter
 
     protected String getPatternsAsString()
     {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         for ( String pattern : positivePatterns )
         {
             buffer.append( "\no \'" ).append( pattern ).append( "\'" );
@@ -351,8 +351,8 @@ public class PatternIncludesArtifactFilter
     {
         if ( !filteredArtifactIds.isEmpty() && logger.isDebugEnabled() )
         {
-            final StringBuffer buffer =
-                new StringBuffer( "The following artifacts were removed by this " + getFilterDescription() + ": " );
+            final StringBuilder buffer =
+                new StringBuilder( "The following artifacts were removed by this " + getFilterDescription() + ": " );
 
             for ( String artifactId : filteredArtifactIds )
             {

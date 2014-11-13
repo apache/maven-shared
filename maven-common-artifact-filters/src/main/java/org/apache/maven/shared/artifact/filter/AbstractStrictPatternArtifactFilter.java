@@ -154,7 +154,7 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
         {
             String contains = pattern.substring( 1, pattern.length() - 1 );
 
-            matches = ( token.indexOf( contains ) != -1 );
+            matches = ( token.contains( contains ) );
         }
         // support leading wildcard
         else if ( pattern.startsWith( "*" ) )

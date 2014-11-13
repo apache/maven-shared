@@ -171,7 +171,7 @@ public class ScopeArtifactFilter
     {
         if ( !filteredArtifactIds.isEmpty() && logger.isDebugEnabled() )
         {
-            StringBuffer buffer = new StringBuffer( "The following artifacts were removed by this filter: " );
+            StringBuilder buffer = new StringBuilder( "The following artifacts were removed by this filter: " );
 
             for ( String artifactId : filteredArtifactIds )
             {
@@ -186,7 +186,7 @@ public class ScopeArtifactFilter
     {
         if ( logger.isDebugEnabled() )
         {
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
 
             boolean report = false;
             if ( !nullScopeHit )

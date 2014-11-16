@@ -169,10 +169,10 @@ public class PatternIncludesArtifactFilter
 
     private boolean matchAgainst( final String value, final List<String> patterns, final boolean regionMatch )
     {
+        final String[] tokens = value.split( ":" );
         for ( String pattern : patterns )
         {
             final String[] patternTokens = pattern.split( ":" );
-            final String[] tokens = value.split( ":" );
 
             // fail immediately if pattern tokens outnumber tokens to match
             boolean matched = ( patternTokens.length <= tokens.length );
@@ -182,14 +182,15 @@ public class PatternIncludesArtifactFilter
                 matched = matches( tokens[i], patternTokens[i] );
             }
 
-            // // case of starting '*' like '*:jar:*'
-            if ( !matched && patternTokens.length < tokens.length && patternTokens.length > 0
-                && "*".equals( patternTokens[0] ) )
+            // case of starting '*' like '*:jar:*'
+            // This really only matches from the end instead.....
+            if ( !matched && patternTokens.length < tokens.length && isFirstPatternWildcard( patternTokens ) )
             {
                 matched = true;
+                int tokenOffset = tokens.length - patternTokens.length;
                 for ( int i = 0; matched && i < patternTokens.length; i++ )
                 {
-                    matched = matches( tokens[i + ( tokens.length - patternTokens.length )], patternTokens[i] );
+                    matched = matches( tokens[i + tokenOffset], patternTokens[i] );
                 }
             }
 
@@ -208,6 +209,11 @@ public class PatternIncludesArtifactFilter
         }
         return false;
 
+    }
+
+    private boolean isFirstPatternWildcard( String[] patternTokens )
+    {
+        return patternTokens.length > 0 && "*".equals( patternTokens[0] );
     }
 
     /**

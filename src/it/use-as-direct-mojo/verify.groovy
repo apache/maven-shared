@@ -1,5 +1,3 @@
-package org.apache.maven.reporting;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +7,7 @@ package org.apache.maven.reporting;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -19,29 +17,14 @@ package org.apache.maven.reporting;
  * under the License.
  */
 
-import org.apache.maven.doxia.sink.Sink;
+File site = new File( basedir, 'target/site/' )
 
-public class DemoReportRenderer
-    extends AbstractMavenReportRenderer
-{
+File f = new File( site, 'custom-report.html' );
+assert f.exists();
+assert f.text.contains( 'Custom Maven Report content.' );
 
-    public DemoReportRenderer( Sink sink )
-    {
-        super( sink );
-    }
+f = new File( site, 'custom-report-with-renderer.html' );
+assert f.exists();
+assert f.text.contains( 'Custom Maven Report with Renderer content.' );
 
-    public String getTitle()
-    {
-        return "report title";
-    }
-
-    public void renderBody()
-    {
-        startSection( "section" );
-
-        text( "demo" );
-
-        endSection();
-    }
-
-}
+return true;

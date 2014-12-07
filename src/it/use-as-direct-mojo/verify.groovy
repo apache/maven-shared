@@ -27,4 +27,8 @@ f = new File( site, 'custom-report-with-renderer.html' );
 assert f.exists();
 assert f.text.contains( 'Custom Maven Report with Renderer content.' );
 
+f = new File( site, 'external/report.html' );
+assert f.exists();
+assert f.text.contains( '<h1>External Report</h1>' );
+
 return true;

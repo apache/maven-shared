@@ -56,9 +56,15 @@ ${project.name}
 
 ** Doxia dependency
 
+  When used as report during site generation, Doxia implementation is provided by <<<maven-site-plugin>>>, independently
+  from Doxia version used during plugin compilation.
+
+  When used as a direct standalone goal invocation, Doxia implementation used is the version used during plugin compilation.
+
   <<<maven-reporting-impl 2.0.x>>> use Doxia 1.0, then is used for reporting plugins wanting Maven 2.0.x compatibility.
 
-  <<<maven-reporting-impl 2.1.x>>> use Doxia 1.1: using this version implies for a reporting plugin that it has Maven 2.1
-  as prerequisite.
-
-  <<<maven-reporting-impl 2.2.x>>> use Doxia 1.2.
+  Starting with <<<maven-reporting-impl 2.1>>>, Doxia version used is 1.1 or more. When creating a reporting plugin,
+  take care to use corresponding <<<doxia-sink-api>>>, and avoid <<<doxia-sink-api>>> version 1.0 that can be
+  imported by <<<{{{../maven-reporting-api/}maven-reporting-api}}>>> 3.0: this would lead to
+  <<<"java.lang.ClassNotFoundException: org.apache.maven.doxia.sink.SinkEventAttributes">>> when used as direct standalone
+  goal.

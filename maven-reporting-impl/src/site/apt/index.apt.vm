@@ -3,7 +3,7 @@
  -----
  Hervé Boutemy
  -----
- 2013-07-24
+ 2014-12-07
  -----
 
  ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -40,9 +40,8 @@ ${project.name}
 
 * Usage
 
-  Creating a new report plugin can be done by copying
-  <<<{{{./xref-test/org/apache/maven/reporting/AbstractMavenReportTest.html}AbstractMavenReportTest.java}}>>>
-  structure and implement a few methods.
+  A full working sample is included in <<<maven-reporting-impl>>> ITs, which are part of 
+  {{{../source-repository.html}the component source tree}}: see <<<src/it/setup-reporting-plugin>>>.
 
 * History
 

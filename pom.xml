@@ -34,7 +34,7 @@
   <description>A component to assist in signing jars.</description>
 
   <prerequisites>
-    <maven>2.0.6</maven>
+    <maven>2.2.1</maven>
   </prerequisites>
 
   <scm>
@@ -54,7 +54,7 @@
   </distributionManagement>
 
   <properties>
-    <mavenVersion>2.1.0</mavenVersion>
+    <mavenVersion>2.2.1</mavenVersion>
   </properties>
 
   <dependencies>

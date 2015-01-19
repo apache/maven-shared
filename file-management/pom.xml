@@ -81,13 +81,6 @@ under the License.
       <version>0.7</version>
     </dependency>
 
-    <!-- Plexus -->
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-container-default</artifactId>
-      <version>1.0-alpha-9</version>
-    </dependency>
-
     <!-- Test -->
     <dependency>
       <groupId>junit</groupId>

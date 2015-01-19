@@ -37,6 +37,13 @@ under the License.
     Provides a component for plugins to easily resolve project dependencies.
   </description>
 
+  <properties>
+    <maven.version>2.2.1</maven.version>
+  </properties>
+  <prerequisites>
+    <maven>${maven.version}</maven>
+  </prerequisites>
+
   <!--
   NOTE: This library is meant to be used by plugins, hence we can consider the Maven API to be provided by the
   runtime environment. Last but not least, using "provided" scope is the easiest way to exclude all our transitive
@@ -63,25 +70,25 @@ under the License.
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact-manager</artifactId>
-      <version>2.1.0</version>
+      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-artifact</artifactId>
-      <version>2.1.0</version>
+      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>
-      <version>2.1.0</version>
+      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
-      <version>2.1.0</version>
+      <version>${maven.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

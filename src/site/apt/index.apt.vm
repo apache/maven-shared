@@ -3,7 +3,7 @@
  ------
  Dennis Lundberg
  ------
- 2013-07-24
+ 2015-01-22
  ------
 
 ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -35,19 +35,33 @@ ${project.name}
 
 * Maven Changes Plugin
 
-** org/apache/maven/plugins/announcement.vm
+** <<<org/apache/maven/plugins/announcement.vm>>>
 
   This is a template that can be used by Maven Changes Plugin to create and send
   an announcement e-mail for one of our plugins. It will create an announcement
   e-mail that conforms to the "Promote the release" section of our
   {{{http://maven.apache.org/developers/release/maven-project-release-procedure.html#Promote_the_release}release procedure}}.
 
-** org/apache/maven/shared/announcement.vm
+** <<<org/apache/maven/shared/announcement.vm>>>
 
   This is a template that can be used by Maven Changes Plugin to create and send
   an announcement e-mail for one of our shared components. It will create an
   announcement e-mail that conforms to the "Promote the release" section of our
   {{{http://maven.apache.org/developers/release/maven-project-release-procedure.html#Promote_the_release}release procedure}}.
+
+
+* Maven Checkstyle Plugin
+
+** <<<config/maven-header.txt>>>
+
+  This is a license header template that can be used by Maven Checkstyle Plugin
+  to verify that all files are using this license header.
+
+** {{{./maven_checks.html}<<<config/maven_checks.xml>>>}}
+
+  This is a Checkstyle configuration file for
+  {{{/developers/conventions/code.html}Maven coding conventions}} that can be
+  used in Maven Checkstyle Plugin.
 
 
 * Usage

@@ -56,4 +56,22 @@
     <url>https://builds.apache.org/hudson/job/maven-shared/</url>
   </ciManagement>
 
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.rat</groupId>
+          <artifactId>apache-rat-plugin</artifactId>
+          <configuration>
+            <excludes combine.children="append">
+              <!--
+                This is a license header template.
+              -->
+              <exclude>src/main/resources/config/maven-header.txt</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 </project>

@@ -97,6 +97,34 @@ Usage
 </project>
 +----------+
 
+  or like this:
+
++----------+
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.14</version>
+        <configuration>
+          <configLocation>config/maven_checks.xml</configLocation>
+          <headerLocation>config/maven-header.txt</headerLocation>
+        </configuration>
+        <dependencies>
+          ...
+        </dependencies>
+        <executions>
+          ...
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  ...
+</project>
++----------+
+
 
 * Execute the plugin
 

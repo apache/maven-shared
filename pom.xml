@@ -30,15 +30,15 @@
   </parent>
 
   <artifactId>maven-shared-resources</artifactId>
-  <version>2-SNAPSHOT</version>
+  <version>2</version>
 
   <name>Apache Maven Shared Resources</name>
   <description>A collection of templates that are specific to the Maven project.</description>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-resources/</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-resources/</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-resources/</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-resources-2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-resources-2</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-shared-resources-2</url>
   </scm>
   <issueManagement>
     <system>jira</system>

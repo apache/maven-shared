@@ -19,23 +19,13 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Properties;
-
-import javax.annotation.Nonnull;
-
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.shared.utils.StringUtils;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.codehaus.plexus.interpolation.InterpolationPostProcessor;
+import org.codehaus.plexus.interpolation.Interpolator;
 import org.codehaus.plexus.interpolation.PrefixAwareRecursionInterceptor;
 import org.codehaus.plexus.interpolation.PrefixedObjectValueSource;
 import org.codehaus.plexus.interpolation.PropertiesBasedValueSource;
@@ -46,6 +36,16 @@ import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.interpolation.multi.MultiDelimiterStringSearchInterpolator;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Properties;
+
 class BaseFilter
     extends AbstractLogEnabled
     implements DefaultFilterInfo
@@ -53,10 +53,11 @@ class BaseFilter
 
     /**
      * @see org.apache.maven.shared.filtering.MavenFileFilter#getDefaultFilterWrappers(org.apache.maven.project.MavenProject,
-     *      java.util.List, boolean, org.apache.maven.execution.MavenSession)
+     * java.util.List, boolean, org.apache.maven.execution.MavenSession)
      * @deprecated
      */
-    @Nonnull public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject,
+    @Nonnull
+    public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject,
                                                                    List<String> filters,
                                                                    final boolean escapedBackslashesInFilePath,
                                                                    MavenSession mavenSession )
@@ -109,8 +110,9 @@ class BaseFilter
         // Project properties
         if ( request.getMavenProject() != null )
         {
-            baseProps.putAll( request.getMavenProject().getProperties() == null ? Collections.emptyMap()
-                            : request.getMavenProject().getProperties() );
+            baseProps.putAll( request.getMavenProject().getProperties() == null
+                                  ? Collections.emptyMap()
+                                  : request.getMavenProject().getProperties() );
         }
         // TODO this is NPE free but do we consider this as normal
         // or do we have to throw an MavenFilteringException with mavenSession cannot be null
@@ -148,8 +150,9 @@ class BaseFilter
             }
 
             // Project properties
-            filterProperties.putAll( request.getMavenProject().getProperties() == null ? Collections.emptyMap()
-                            : request.getMavenProject().getProperties() );
+            filterProperties.putAll( request.getMavenProject().getProperties() == null
+                                         ? Collections.emptyMap()
+                                         : request.getMavenProject().getProperties() );
         }
         if ( request.getMavenSession() != null )
         {
@@ -163,9 +166,9 @@ class BaseFilter
             filterProperties.putAll( request.getAdditionalProperties() );
         }
 
-        List<FileUtils.FilterWrapper> defaultFilterWrappers =
-            request == null ? new ArrayList<FileUtils.FilterWrapper>( 1 )
-                            : new ArrayList<FileUtils.FilterWrapper>( request.getDelimiters().size() + 1 );
+        List<FileUtils.FilterWrapper> defaultFilterWrappers = request == null
+            ? new ArrayList<FileUtils.FilterWrapper>( 1 )
+            : new ArrayList<FileUtils.FilterWrapper>( request.getDelimiters().size() + 1 );
 
         if ( getLogger().isDebugEnabled() )
         {
@@ -264,10 +267,15 @@ class BaseFilter
 
         public Reader getReader( Reader reader )
         {
-            MultiDelimiterStringSearchInterpolator interpolator = new MultiDelimiterStringSearchInterpolator();
-            interpolator.setDelimiterSpecs( delimiters );
+            Interpolator interpolator =
+                createInterpolator( delimiters, projectStartExpressions,
+                                    propertiesValueSource, project, mavenSession,
+                                    escapeString, escapeWindowsPaths );
 
-            RecursionInterceptor ri = null;
+            MultiDelimiterInterpolatorFilterReaderLineEnding filterReader =
+                new MultiDelimiterInterpolatorFilterReaderLineEnding( reader, interpolator, supportMultiLineFiltering );
+
+            final RecursionInterceptor ri;
             if ( projectStartExpressions != null && !projectStartExpressions.isEmpty() )
             {
                 ri = new PrefixAwareRecursionInterceptor( projectStartExpressions, true );
@@ -277,46 +285,6 @@ class BaseFilter
                 ri = new SimpleRecursionInterceptor();
             }
 
-            interpolator.addValueSource( propertiesValueSource );
-
-            if ( project != null )
-            {
-                interpolator.addValueSource( new PrefixedObjectValueSource( projectStartExpressions, project, true ) );
-            }
-
-            if ( mavenSession != null )
-            {
-                interpolator.addValueSource( new PrefixedObjectValueSource( "session", mavenSession ) );
-
-                final Settings settings = mavenSession.getSettings();
-                if ( settings != null )
-                {
-                    interpolator.addValueSource( new PrefixedObjectValueSource( "settings", settings ) );
-                    interpolator.addValueSource( new SingleResponseValueSource( "localRepository",
-                                                                                settings.getLocalRepository() ) );
-                }
-            }
-
-            interpolator.setEscapeString( escapeString );
-
-            if ( escapeWindowsPaths )
-            {
-                interpolator.addPostProcessor( new InterpolationPostProcessor()
-                {
-                    public Object execute( String expression, Object value )
-                    {
-                        if ( value instanceof String )
-                        {
-                            return FilteringUtils.escapeWindowsPath( (String) value );
-                        }
-
-                        return value;
-                    }
-                } );
-            }
-
-            MultiDelimiterInterpolatorFilterReaderLineEnding filterReader =
-                new MultiDelimiterInterpolatorFilterReaderLineEnding( reader, interpolator, supportMultiLineFiltering );
             filterReader.setRecursionInterceptor( ri );
             filterReader.setDelimiterSpecs( delimiters );
 
@@ -326,5 +294,54 @@ class BaseFilter
             return filterReader;
         }
 
+    }
+
+    private static Interpolator createInterpolator( LinkedHashSet<String> delimiters,
+                                                    List<String> projectStartExpressions,
+                                                    ValueSource propertiesValueSource, MavenProject project,
+                                                    MavenSession mavenSession, String escapeString,
+                                                    boolean escapeWindowsPaths )
+    {
+        MultiDelimiterStringSearchInterpolator interpolator = new MultiDelimiterStringSearchInterpolator();
+        interpolator.setDelimiterSpecs( delimiters );
+
+        interpolator.addValueSource( propertiesValueSource );
+
+        if ( project != null )
+        {
+            interpolator.addValueSource( new PrefixedObjectValueSource( projectStartExpressions, project, true ) );
+        }
+
+        if ( mavenSession != null )
+        {
+            interpolator.addValueSource( new PrefixedObjectValueSource( "session", mavenSession ) );
+
+            final Settings settings = mavenSession.getSettings();
+            if ( settings != null )
+            {
+                interpolator.addValueSource( new PrefixedObjectValueSource( "settings", settings ) );
+                interpolator.addValueSource(
+                    new SingleResponseValueSource( "localRepository", settings.getLocalRepository() ) );
+            }
+        }
+
+        interpolator.setEscapeString( escapeString );
+
+        if ( escapeWindowsPaths )
+        {
+            interpolator.addPostProcessor( new InterpolationPostProcessor()
+            {
+                public Object execute( String expression, Object value )
+                {
+                    if ( value instanceof String )
+                    {
+                        return FilteringUtils.escapeWindowsPath( (String) value );
+                    }
+
+                    return value;
+                }
+            } );
+        }
+        return interpolator;
     }
 }

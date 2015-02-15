@@ -48,15 +48,8 @@ import java.util.Set;
 
 /**
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
+ * @author kama
  * @version $Revision$ $Date$
- */
-/**
- * @author kama
- *
- */
-/**
- * @author kama
- *
  */
 public class MavenArchiver
 {

@@ -222,7 +222,7 @@ class Embedded3xLauncher
         }
     }
 
-    public int run( String[] cliArgs, String workingDirectory, File logFile )
+    public int run( String[] cliArgs, Properties systemProperties, String workingDirectory, File logFile )
         throws IOException, LauncherException
     {
         PrintStream out = ( logFile != null ) ? new PrintStream( new FileOutputStream( logFile ) ) : System.out;
@@ -232,6 +232,13 @@ class Embedded3xLauncher
             System.setProperties( null );
             System.setProperty( "maven.home", originalProperties.getProperty( "maven.home", "" ) );
             System.setProperty( "user.dir", new File( workingDirectory ).getAbsolutePath() );
+
+            for ( Object o : systemProperties.keySet() )
+            {
+                String key = (String) o;
+                String value = systemProperties.getProperty( key );
+                System.setProperty( key, value );
+            }
 
             ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
             Thread.currentThread().setContextClassLoader( mavenCli.getClass().getClassLoader() );

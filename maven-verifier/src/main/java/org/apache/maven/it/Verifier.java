@@ -1314,13 +1314,6 @@ public class Verifier
             args.add( "--debug" );
         }
 
-        for ( Object o : systemProperties.keySet() )
-        {
-            String key = (String) o;
-            String value = systemProperties.getProperty( key );
-            args.add( "-D" + key + "=" + value );
-        }
-
         /*
          * NOTE: Unless explicitly requested by the caller, the forked builds should use the current local
          * repository. Otherwise, the forked builds would in principle leave the sandbox environment which has been
@@ -1342,7 +1335,7 @@ public class Verifier
 
             MavenLauncher launcher = getMavenLauncher( envVars );
 
-            ret = launcher.run( cliArgs, getBasedir(), logFile );
+            ret = launcher.run( cliArgs, systemProperties, getBasedir(), logFile );
         }
         catch ( LauncherException e )
         {

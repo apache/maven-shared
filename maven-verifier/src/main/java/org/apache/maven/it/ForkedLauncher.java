@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,7 +74,8 @@ class ForkedLauncher
         }
     }
 
-    public int run( String[] cliArgs, Map<String, String> envVars, String workingDirectory, File logFile )
+    public int run( String[] cliArgs, Properties systemProperties, Map<String, String> envVars,
+                    String workingDirectory, File logFile )
         throws IOException, LauncherException
     {
         Commandline cmd = new Commandline();
@@ -102,6 +104,13 @@ class ForkedLauncher
 
         cmd.setWorkingDirectory( workingDirectory );
 
+        for ( Object o : systemProperties.keySet() )
+        {
+            String key = (String) o;
+            String value = systemProperties.getProperty( key );
+            cmd.createArg().setValue( "-D" + key + "=" + value );
+        }
+
         for ( String cliArg : cliArgs )
         {
             cmd.createArg().setValue( cliArg );
@@ -127,10 +136,10 @@ class ForkedLauncher
         }
     }
 
-    public int run( String[] cliArgs, String workingDirectory, File logFile )
+    public int run( String[] cliArgs, Properties systemProperties, String workingDirectory, File logFile )
         throws IOException, LauncherException
     {
-        return run( cliArgs, envVars, workingDirectory, logFile );
+        return run( cliArgs, systemProperties, envVars, workingDirectory, logFile );
     }
 
     public String getMavenVersion()
@@ -148,7 +157,7 @@ class ForkedLauncher
 
         // disable EMMA runtime controller port allocation, should be harmless if EMMA is not used
         Map<String, String> envVars = Collections.singletonMap( "MAVEN_OPTS", "-Demma.rt.control=false" );
-        run( new String[] { "--version" }, envVars, null, logFile );
+        run( new String[] { "--version" }, new Properties(), envVars, null, logFile );
 
         List<String> logLines = FileUtils.loadFile( logFile );
         // noinspection ResultOfMethodCallIgnored

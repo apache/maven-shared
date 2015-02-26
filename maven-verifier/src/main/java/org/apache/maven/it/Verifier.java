@@ -2035,4 +2035,8 @@ public class Verifier
         this.localRepoLayout = localRepoLayout;
     }
 
+    public String getLocalRepository()
+    {
+        return localRepo;
+    }
 }

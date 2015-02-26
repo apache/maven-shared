@@ -21,6 +21,7 @@ package org.apache.maven.it;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
 /**
  * @author Benjamin Bentmann
@@ -28,7 +29,7 @@ import java.io.IOException;
 interface MavenLauncher
 {
 
-    int run( String[] cliArgs, String workingDirectory, File logFile )
+    int run( String[] cliArgs, Properties systemProperties, String workingDirectory, File logFile )
         throws IOException, LauncherException;
 
     String getMavenVersion()

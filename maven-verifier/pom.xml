@@ -81,6 +81,8 @@
                 The manifest specification does not describe any method for writing comments into the manifest.
               -->
               <exclude>src/test/resources/META-INF/MANIFEST.MF</exclude>
+              <!-- hudson creates this file -->
+              <exclude>.maven/spy.log</exclude>
             </excludes>
           </configuration>
         </plugin>

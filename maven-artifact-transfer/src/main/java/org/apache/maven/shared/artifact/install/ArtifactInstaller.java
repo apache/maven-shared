@@ -19,10 +19,10 @@ package org.apache.maven.shared.artifact.install;
  * under the License.
  */
 
+import java.io.File;
 import java.util.Collection;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.project.ProjectBuildingRequest;
 
 public interface ArtifactInstaller
@@ -31,4 +31,14 @@ public interface ArtifactInstaller
     public void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException;
 
+    /**
+     * Create a new {@code ProjectBuildingRequest} with an adjusted repository session. 
+     * 
+     * @param request the project building request
+     * @param basedir the base directory of the local repository
+     * @return a new project building request
+     * @throws ArtifactInstallerException 
+     */
+    public ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest request, File basedir )
+        throws ArtifactInstallerException;
 }

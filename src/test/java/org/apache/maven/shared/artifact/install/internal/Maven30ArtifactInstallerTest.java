@@ -8,6 +8,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.project.DefaultProjectBuildingRequest;
+import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.apache.maven.shared.artifact.install.ArtifactInstaller;
 import org.codehaus.plexus.PlexusTestCase;
@@ -54,4 +55,19 @@ public class Maven30ArtifactInstallerTest extends PlexusTestCase
         assertTrue( new File( localRepo, "GROUPID/ARTIFACTID/maven-metadata-local.xml" ).exists() ); //??
     }
 
+    public void testSetLocalRepositoryBasedir() throws Exception
+    {
+        DefaultProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest();
+        MavenRepositorySystemSession repositorySession = new MavenRepositorySystemSession();
+        repositorySession.setLocalRepositoryManager( new SimpleLocalRepositoryManager( localRepo ) );
+        buildingRequest.setRepositorySession( repositorySession );
+
+        File basedir = new File( "NEW/LOCAL/REPO" );
+        
+        ProjectBuildingRequest newBuildingRequest = installer.setLocalRepositoryBasedir( buildingRequest, basedir );
+        
+        assertEquals( basedir.getAbsoluteFile(), newBuildingRequest.getRepositorySession().getLocalRepository().getBasedir() );
+        
+    }
+    
 }

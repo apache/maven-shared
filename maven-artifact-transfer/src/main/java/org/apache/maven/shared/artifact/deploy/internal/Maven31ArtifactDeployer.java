@@ -26,12 +26,12 @@ import org.apache.maven.shared.artifact.deploy.ArtifactDeployer;
 import org.apache.maven.shared.artifact.deploy.ArtifactDeployerException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.deployment.DeployRequest;
 import org.eclipse.aether.deployment.DeploymentException;
-import org.eclipse.aether.impl.Deployer;
 import org.eclipse.aether.metadata.DefaultMetadata;
 import org.eclipse.aether.metadata.Metadata;
 import org.eclipse.aether.metadata.Metadata.Nature;
@@ -41,7 +41,7 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
 {
 
     @Requirement
-    private Deployer deployer;
+    private RepositorySystem repositorySystem;
     
     public void deploy( ProjectBuildingRequest buildingRequest,
                          Collection<org.apache.maven.artifact.Artifact> mavenArtifacts )
@@ -76,7 +76,7 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
         // deploy
         try
         {
-            deployer.deploy( session, request );
+            repositorySystem.deploy( session, request );
         }
         catch ( DeploymentException e )
         {

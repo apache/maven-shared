@@ -282,6 +282,9 @@ public class DefaultInvocationRequest
         return this;
     }
 
+    /**
+     * @see MavenCommandLineBuilder#setShellEnvironment(InvocationRequest, org.codehaus.plexus.util.cli.Commandline)
+     */
     public boolean isShellEnvironmentInherited()
     {
         return shellEnvironmentInherited;
@@ -383,7 +386,7 @@ public class DefaultInvocationRequest
 
     public InvocationRequest addShellEnvironment( String name, String value )
     {
-        if ( this.shellEnvironmentInherited )
+        if ( this.shellEnvironments == null )
         {
             this.shellEnvironments = new HashMap<String, String>();
         }

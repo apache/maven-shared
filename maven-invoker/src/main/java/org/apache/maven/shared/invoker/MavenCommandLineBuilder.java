@@ -573,7 +573,14 @@ public class MavenCommandLineBuilder
             }
             else if ( Os.isFamily( "windows" ) )
             {
-                executable = "mvn.bat";
+                if ( new File( mavenHome, "/bin/mvn.cmd" ).exists() )
+                {
+                    executable = "mvn.cmd";
+                }
+                else
+                {
+                    executable = "mvn.bat";
+                }
             }
             else
             {

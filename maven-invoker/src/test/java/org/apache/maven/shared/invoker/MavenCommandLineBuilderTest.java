@@ -1024,20 +1024,9 @@ public class MavenCommandLineBuilderTest
         assertArgumentsNotPresent( commandline, bannedArgs );
         assertArgumentsPresentInOrder( commandline, goals );
 
-        File mavenFile;
-        if ( Os.isFamily( Os.FAMILY_WINDOWS ) )
-        {
-            mavenFile = new File( mavenDir, "bin/mvn.bat" );
-        }
-        else
-        {
-            mavenFile = new File( mavenDir, "bin/mvn" );
-        }
-
         String executable = commandline.getExecutable();
-        System.out.println( "Executable is: " + executable );
 
-        assertTrue( executable.indexOf( mavenFile.getCanonicalPath() ) > -1 );
+        assertTrue( executable.indexOf( new File( mavenDir, "bin/mvn" ).getCanonicalPath() ) > -1 );
         assertEquals( projectDir.getCanonicalPath(), commandline.getWorkingDirectory().getCanonicalPath() );
     }
 

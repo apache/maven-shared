@@ -87,6 +87,7 @@ under the License.
         </file>
       </activation>
       <modules>
+        <module>maven-artifact-transfer</module>
         <module>maven-reporting-exec</module>
       </modules>
     </profile>

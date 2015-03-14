@@ -33,6 +33,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.codehaus.plexus.util.Os;
+import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
@@ -1105,6 +1106,30 @@ public class MavenCommandLineBuilderTest
         assertTrue( "Expected executable to be absolute", executable.isAbsolute() );
     }
     
+    public void testAddShellEnvironment()
+        throws Exception
+    {
+        setupTempMavenHomeIfMissing();
+
+        InvocationRequest request = newRequest();
+
+        String envVar1Name = "VAR-1";
+        String envVar1Value = "VAR-1-VALUE";
+
+        String envVar2Name = "VAR-2";
+        String envVar2Value = "VAR-2-VALUE";
+
+        request.addShellEnvironment( envVar1Name, envVar1Value );
+        request.addShellEnvironment( envVar2Name, envVar2Value );
+
+        MavenCommandLineBuilder commandLineBuilder = new MavenCommandLineBuilder();
+
+        Commandline commandline = commandLineBuilder.build( request );
+
+        assertEnvironmentVariablePresent( commandline, envVar1Name, envVar1Value );
+        assertEnvironmentVariablePresent( commandline, envVar2Name, envVar2Value );
+    }
+    
     public void setUp()
     {
         sysProps = System.getProperties();
@@ -1144,6 +1169,17 @@ public class MavenCommandLineBuilderTest
         System.out.println( "Starting: " + element.getMethodName() );
     }
 
+    private void assertEnvironmentVariablePresent( Commandline cli, String varName, String varValue )
+        throws CommandLineException
+    {
+        List<String> environmentVariables = Arrays.asList( cli.getEnvironmentVariables() );
+
+        String expectedDeclaration = varName + "=" + varValue;
+
+        assertTrue( "Environment variable setting: \'" + expectedDeclaration + "\' is mssing in "
+            + environmentVariables, environmentVariables.contains( expectedDeclaration ) );
+    }
+    
     private void assertArgumentsPresentInOrder( Commandline cli, String... expected )
     {
         assertArgumentsPresentInOrder( cli, Arrays.asList( expected ) );

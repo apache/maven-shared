@@ -201,6 +201,8 @@ public class MavenCommandLineBuilder
             {
                 cli.addSystemEnvironment();
                 cli.addEnvironment( "MAVEN_TERMINATE_CMD", "on" );
+                // MSHARED-261: Ensure M2_HOME is not inherited, but gets a proper value
+                cli.addEnvironment( "M2_HOME", getMavenHome().getAbsolutePath() );
             }
             catch ( IOException e )
             {

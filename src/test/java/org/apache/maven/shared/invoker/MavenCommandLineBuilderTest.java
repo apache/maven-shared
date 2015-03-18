@@ -37,6 +37,7 @@ import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.junit.Assume;
 
 public class MavenCommandLineBuilderTest
     extends TestCase
@@ -258,20 +259,20 @@ public class MavenCommandLineBuilderTest
         throws Exception
     {
         logTestStart();
-        setupTempMavenHomeIfMissing();
+        setupTempMavenHomeIfMissing( false );
 
         TestCommandLineBuilder tclb = new TestCommandLineBuilder();
         tclb.checkRequiredState();
     }
 
-    private File setupTempMavenHomeIfMissing()
+    private File setupTempMavenHomeIfMissing( boolean forceDummy )
         throws Exception
     {
         String mavenHome = System.getProperty( "maven.home" );
 
         File appDir = null;
 
-        if ( ( mavenHome == null ) || !new File( mavenHome ).exists() )
+        if ( forceDummy || ( mavenHome == null ) || !new File( mavenHome ).exists() )
         {
             File tmpDir = getTempDir();
             appDir = new File( tmpDir, "invoker-tests/maven-home" );
@@ -430,11 +431,11 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "-X" ) );
         assertArgumentsNotPresent( cli, Collections.singleton( "-e" ) );
     }
-    
+
     public void testActivateReactor()
     {
         logTestStart();
-        
+
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
@@ -442,19 +443,19 @@ public class MavenCommandLineBuilderTest
 
         assertArgumentsPresent( cli, Collections.singleton( "-r" ) );
     }
-    
+
     public void testActivateReactorIncludesExcludes()
     {
         logTestStart();
-        
+
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        String[] includes = new String[] {"foo", "bar"};
-        String[] excludes = new String[] {"baz", "quz"};
-        
+        String[] includes = new String[] { "foo", "bar" };
+        String[] excludes = new String[] { "baz", "quz" };
+
         tcb.setReactorBehavior( newRequest().activateReactor( includes, excludes ), cli );
-        
+
         Set<String> args = new HashSet<String>();
         args.add( "-r" );
         args.add( "-D" );
@@ -463,28 +464,29 @@ public class MavenCommandLineBuilderTest
 
         assertArgumentsPresent( cli, args );
     }
-    
+
     public void testAlsoMake()
     {
         logTestStart();
-        
+
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
         tcb.setReactorBehavior( newRequest().setAlsoMake( true ), cli );
 
-        //-am is only useful with -pl
+        // -am is only useful with -pl
         assertArgumentsNotPresent( cli, Collections.singleton( "-am" ) );
     }
 
     public void testProjectsAndAlsoMake()
     {
         logTestStart();
-        
+
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb.setReactorBehavior( newRequest().setProjects( Collections.singletonList( "proj1" ) ).setAlsoMake( true ), cli );
+        tcb.setReactorBehavior( newRequest().setProjects( Collections.singletonList( "proj1" ) ).setAlsoMake( true ),
+                                cli );
 
         assertArgumentsPresentInOrder( cli, "-pl", "proj1", "-am" );
     }
@@ -492,24 +494,25 @@ public class MavenCommandLineBuilderTest
     public void testAlsoMakeDependents()
     {
         logTestStart();
-        
+
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
         tcb.setReactorBehavior( newRequest().setAlsoMakeDependents( true ), cli );
 
-        //-amd is only useful with -pl
+        // -amd is only useful with -pl
         assertArgumentsNotPresent( cli, Collections.singleton( "-amd" ) );
     }
 
     public void testProjectsAndAlsoMakeDependents()
     {
         logTestStart();
-        
+
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb.setReactorBehavior( newRequest().setProjects( Collections.singletonList( "proj1" ) ).setAlsoMakeDependents( true ), cli );
+        tcb.setReactorBehavior( newRequest().setProjects( Collections.singletonList( "proj1" ) ).setAlsoMakeDependents( true ),
+                                cli );
 
         assertArgumentsPresentInOrder( cli, "-pl", "proj1", "-amd" );
     }
@@ -517,11 +520,12 @@ public class MavenCommandLineBuilderTest
     public void testProjectsAndAlsoMakeAndAlsoMakeDependents()
     {
         logTestStart();
-        
+
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb.setReactorBehavior( newRequest().setProjects( Collections.singletonList( "proj1" ) ).setAlsoMake( true ).setAlsoMakeDependents( true ), cli );
+        tcb.setReactorBehavior( newRequest().setProjects( Collections.singletonList( "proj1" ) ).setAlsoMake( true ).setAlsoMakeDependents( true ),
+                                cli );
 
         assertArgumentsPresentInOrder( cli, "-pl", "proj1", "-am", "-amd" );
     }
@@ -535,7 +539,7 @@ public class MavenCommandLineBuilderTest
 
         tcb.setReactorBehavior( newRequest().setResumeFrom( ":module3" ), cli );
 
-        assertArgumentsPresentInOrder( cli, "-rf", ":module3"  );
+        assertArgumentsPresentInOrder( cli, "-rf", ":module3" );
     }
 
     public void testShouldSetStrictChecksumPolityFlagFromRequest()
@@ -823,7 +827,7 @@ public class MavenCommandLineBuilderTest
 
         assertArgumentsPresent( cli, args );
     }
-    
+
     public void testShouldSpecifyCustomGlobalSettingsLocationFromRequest()
         throws Exception
     {
@@ -879,6 +883,7 @@ public class MavenCommandLineBuilderTest
 
         assertArgumentsPresent( cli, args );
     }
+
     public void testShouldSpecifyCustomPropertyFromRequest()
         throws IOException
     {
@@ -971,13 +976,14 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         tcb.setThreads( newRequest().setThreads( "2.0C" ), cli );
 
-        assertArgumentsPresentInOrder( cli, "-T", "2.0C");
+        assertArgumentsPresentInOrder( cli, "-T", "2.0C" );
     }
+
     public void testBuildTypicalMavenInvocationEndToEnd()
         throws Exception
     {
         logTestStart();
-        File mavenDir = setupTempMavenHomeIfMissing();
+        File mavenDir = setupTempMavenHomeIfMissing( false );
 
         InvocationRequest request = newRequest();
 
@@ -1035,7 +1041,7 @@ public class MavenCommandLineBuilderTest
         throws Exception
     {
         logTestStart();
-        setupTempMavenHomeIfMissing();
+        setupTempMavenHomeIfMissing( false );
 
         InvocationRequest request = newRequest();
 
@@ -1076,7 +1082,7 @@ public class MavenCommandLineBuilderTest
     public void testShouldInsertActivatedProfiles()
         throws Exception
     {
-        setupTempMavenHomeIfMissing();
+        setupTempMavenHomeIfMissing( false );
 
         String profile1 = "profile-1";
         String profile2 = "profile-2";
@@ -1095,21 +1101,66 @@ public class MavenCommandLineBuilderTest
 
         assertArgumentsPresentInOrder( commandline, "-P", profile1 + "," + profile2 );
     }
-    
-    public void testMvnCommand() throws Exception
+
+    public void testShouldSetEnvVar_M2_HOME()
+        throws Exception
+    {
+        Assume.assumeNotNull( System.getenv( "M2_HOME" ) );
+
+        logTestStart();
+        setupTempMavenHomeIfMissing( true );
+
+        InvocationRequest request = newRequest();
+
+        File tmpDir = getTempDir();
+        File projectDir = new File( tmpDir, "invoker-tests/maven-terminate-cmd-options-set" );
+
+        projectDir.mkdirs();
+        toDelete.add( projectDir.getParentFile() );
+
+        request.setBaseDirectory( projectDir );
+
+        createDummyFile( projectDir, "pom.xml" );
+
+        List<String> goals = new ArrayList<String>();
+
+        goals.add( "clean" );
+        request.setGoals( goals );
+
+        MavenCommandLineBuilder commandLineBuilder = new MavenCommandLineBuilder();
+        File mavenHome2 = new File( System.getProperty( "maven.home" ) );
+        commandLineBuilder.setMavenHome( mavenHome2 );
+
+        Commandline commandline = commandLineBuilder.build( request );
+
+        String[] environmentVariables = commandline.getEnvironmentVariables();
+        String m2Home = null;
+        for ( int i = 0; i < environmentVariables.length; i++ )
+        {
+            String envVar = environmentVariables[i];
+            if ( envVar.startsWith( "M2_HOME=" ) )
+            {
+                m2Home = envVar;
+            }
+        }
+        assertEquals( "M2_HOME=" + mavenHome2.getAbsolutePath(), m2Home );
+    }
+
+    public void testMvnCommand()
+        throws Exception
     {
         MavenCommandLineBuilder commandLineBuilder = new MavenCommandLineBuilder();
-        File mavenExecutable = new File ( "mvnDebug" );
+        File mavenExecutable = new File( "mvnDebug" );
         commandLineBuilder.setMavenExecutable( mavenExecutable );
         File executable = commandLineBuilder.findMavenExecutable();
-        assertTrue( "Expected executable to exist",  executable.exists() );
+        assertTrue( "Expected executable to exist", executable.exists() );
         assertTrue( "Expected executable to be absolute", executable.isAbsolute() );
     }
-    
+
     public void testAddShellEnvironment()
         throws Exception
     {
-        setupTempMavenHomeIfMissing();
+        setupTempMavenHomeIfMissing( false );
 
         InvocationRequest request = newRequest();
 
@@ -1129,7 +1180,7 @@ public class MavenCommandLineBuilderTest
         assertEnvironmentVariablePresent( commandline, envVar1Name, envVar1Value );
         assertEnvironmentVariablePresent( commandline, envVar2Name, envVar2Value );
     }
-    
+
     public void setUp()
     {
         sysProps = System.getProperties();
@@ -1179,7 +1230,7 @@ public class MavenCommandLineBuilderTest
         assertTrue( "Environment variable setting: \'" + expectedDeclaration + "\' is mssing in "
             + environmentVariables, environmentVariables.contains( expectedDeclaration ) );
     }
-    
+
     private void assertArgumentsPresentInOrder( Commandline cli, String... expected )
     {
         assertArgumentsPresentInOrder( cli, Arrays.asList( expected ) );
@@ -1200,7 +1251,7 @@ public class MavenCommandLineBuilderTest
         }
 
         assertEquals( "Arguments: " + expected + " were not found or are in the wrong order: "
-            + Arrays.asList( arguments ), expected.size(), expectedCounter );
+                          + Arrays.asList( arguments ), expected.size(), expectedCounter );
     }
 
     private void assertArgumentsPresent( Commandline cli, Set<String> requiredArgs )

@@ -19,12 +19,15 @@ package org.apache.maven.shared.invoker;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.net.MalformedURLException;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 public class SystemOutLoggerTest
-    extends TestCase
 {
 
     private static final Throwable EXCEPTION =
@@ -32,161 +35,188 @@ public class SystemOutLoggerTest
 
     private static final String MESSAGE = "This is a test message.";
 
+    @Test
     public void testDebugWithMessageOnly()
     {
         logTestStart();
         new SystemOutLogger().debug( MESSAGE );
     }
 
+    @Test
     public void testDebugWithMessageAndError()
     {
         logTestStart();
         new SystemOutLogger().debug( MESSAGE, EXCEPTION );
     }
 
+    @Test
     public void testDebugWithNullMessageAndNoError()
     {
         logTestStart();
         new SystemOutLogger().debug( null );
     }
 
+    @Test
     public void testDebugWithNullMessageError()
     {
         logTestStart();
         new SystemOutLogger().debug( null, EXCEPTION );
     }
 
+    @Test
     public void testDebugWithMessageNullError()
     {
         logTestStart();
         new SystemOutLogger().debug( MESSAGE, null );
     }
 
+    @Test
     public void testInfoWithMessageOnly()
     {
         logTestStart();
         new SystemOutLogger().info( MESSAGE );
     }
 
+    @Test
     public void testInfoWithMessageAndError()
     {
         logTestStart();
         new SystemOutLogger().info( MESSAGE, EXCEPTION );
     }
 
+    @Test
     public void testInfoWithNullMessageAndNoError()
     {
         logTestStart();
         new SystemOutLogger().info( null );
     }
 
+    @Test
     public void testInfoWithNullMessageError()
     {
         logTestStart();
         new SystemOutLogger().info( null, EXCEPTION );
     }
 
+    @Test
     public void testInfoWithMessageNullError()
     {
         logTestStart();
         new SystemOutLogger().info( MESSAGE, null );
     }
 
+    @Test
     public void testWarnWithMessageOnly()
     {
         logTestStart();
         new SystemOutLogger().warn( MESSAGE );
     }
 
+    @Test
     public void testWarnWithMessageAndError()
     {
         logTestStart();
         new SystemOutLogger().warn( MESSAGE, EXCEPTION );
     }
 
+    @Test
     public void testWarnWithNullMessageAndNoError()
     {
         logTestStart();
         new SystemOutLogger().warn( null );
     }
 
+    @Test
     public void testWarnWithNullMessageError()
     {
         logTestStart();
         new SystemOutLogger().warn( null, EXCEPTION );
     }
 
+    @Test
     public void testWarnWithMessageNullError()
     {
         logTestStart();
         new SystemOutLogger().warn( MESSAGE, null );
     }
 
+    @Test
     public void testErrorWithMessageOnly()
     {
         logTestStart();
         new SystemOutLogger().error( MESSAGE );
     }
 
+    @Test
     public void testErrorWithMessageAndError()
     {
         logTestStart();
         new SystemOutLogger().error( MESSAGE, EXCEPTION );
     }
 
+    @Test
     public void testErrorWithNullMessageAndNoError()
     {
         logTestStart();
         new SystemOutLogger().error( null );
     }
 
+    @Test
     public void testErrorWithNullMessageError()
     {
         logTestStart();
         new SystemOutLogger().error( null, EXCEPTION );
     }
 
+    @Test
     public void testErrorWithMessageNullError()
     {
         logTestStart();
         new SystemOutLogger().error( MESSAGE, null );
     }
 
+    @Test
     public void testFatalErrorWithMessageOnly()
     {
         logTestStart();
         new SystemOutLogger().fatalError( MESSAGE );
     }
 
+    @Test
     public void testFatalErrorWithMessageAndError()
     {
         logTestStart();
         new SystemOutLogger().fatalError( MESSAGE, EXCEPTION );
     }
 
+    @Test
     public void testFatalErrorWithNullMessageAndNoError()
     {
         logTestStart();
         new SystemOutLogger().fatalError( null );
     }
 
+    @Test
     public void testFatalErrorWithNullMessageError()
     {
         logTestStart();
         new SystemOutLogger().fatalError( null, EXCEPTION );
     }
 
+    @Test
     public void testFatalErrorWithMessageNullError()
     {
         logTestStart();
         new SystemOutLogger().fatalError( MESSAGE, null );
     }
 
+    @Test
     public void testDefaultThresholdInfo()
     {
         assertEquals( InvokerLogger.INFO, new SystemOutLogger().getThreshold() );
     }
 
+    @Test
     public void testThresholdDebug()
     {
         InvokerLogger logger = new SystemOutLogger();
@@ -198,6 +228,7 @@ public class SystemOutLoggerTest
         assertTrue( logger.isFatalErrorEnabled() );
     }
 
+    @Test
     public void testThresholdInfo()
     {
         InvokerLogger logger = new SystemOutLogger();
@@ -209,6 +240,7 @@ public class SystemOutLoggerTest
         assertTrue( logger.isFatalErrorEnabled() );
     }
 
+    @Test
     public void testThresholdWarn()
     {
         InvokerLogger logger = new SystemOutLogger();
@@ -220,6 +252,7 @@ public class SystemOutLoggerTest
         assertTrue( logger.isFatalErrorEnabled() );
     }
 
+    @Test
     public void testThresholdError()
     {
         InvokerLogger logger = new SystemOutLogger();
@@ -231,6 +264,7 @@ public class SystemOutLoggerTest
         assertTrue( logger.isFatalErrorEnabled() );
     }
 
+    @Test
     public void testThresholdFatal()
     {
         InvokerLogger logger = new SystemOutLogger();

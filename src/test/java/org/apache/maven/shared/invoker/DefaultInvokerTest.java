@@ -19,6 +19,8 @@ package org.apache.maven.shared.invoker;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -28,15 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
-
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.junit.Test;
 
 public class DefaultInvokerTest
-    extends TestCase
 {
 
+    @Test
     public void testBuildShouldSucceed()
         throws IOException, MavenInvocationException, URISyntaxException
     {
@@ -60,6 +61,7 @@ public class DefaultInvokerTest
         assertEquals( 0, result.getExitCode() );
     }
 
+    @Test
     public void testBuildShouldFail()
         throws IOException, MavenInvocationException, URISyntaxException
     {
@@ -83,6 +85,7 @@ public class DefaultInvokerTest
         assertEquals( 1, result.getExitCode() );
     }
 
+    @Test
     public void testSpacePom()
         throws Exception
     {
@@ -109,6 +112,7 @@ public class DefaultInvokerTest
         assertEquals( 0, result.getExitCode() );
     }
 
+    @Test
     public void testSpaceSettings()
         throws Exception
     {
@@ -135,6 +139,7 @@ public class DefaultInvokerTest
         assertEquals( 0, result.getExitCode() );
     }
 
+    @Test
     public void testSpaceLocalRepo()
         throws Exception
     {
@@ -161,6 +166,7 @@ public class DefaultInvokerTest
         assertEquals( 0, result.getExitCode() );
     }
 
+    @Test
     public void testSpaceProperties()
         throws Exception
     {

@@ -19,6 +19,13 @@ package org.apache.maven.shared.invoker;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,23 +37,22 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
+import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.Commandline;
-import org.codehaus.plexus.util.FileUtils;
-import org.codehaus.plexus.util.IOUtil;
 import org.junit.Assume;
+import org.junit.Test;
 
 public class MavenCommandLineBuilderTest
-    extends TestCase
 {
 
     private List<File> toDelete = new ArrayList<File>();
 
     private Properties sysProps;
 
+    @Test
     public void testWrapwithQuotes()
     {
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
@@ -61,6 +67,7 @@ public class MavenCommandLineBuilderTest
 
     }
 
+    @Test
     public void testShouldFailToSetLocalRepoLocationGloballyWhenItIsAFile()
         throws IOException
     {
@@ -86,6 +93,7 @@ public class MavenCommandLineBuilderTest
         }
     }
 
+    @Test
     public void testShouldFailToSetLocalRepoLocationFromRequestWhenItIsAFile()
         throws IOException
     {
@@ -110,6 +118,7 @@ public class MavenCommandLineBuilderTest
         }
     }
 
+    @Test
     public void testShouldSetLocalRepoLocationGlobally()
         throws Exception
     {
@@ -132,6 +141,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-D", "maven.repo.local=" + lrd.getPath() );
     }
 
+    @Test
     public void testShouldSetLocalRepoLocationFromRequest()
         throws Exception
     {
@@ -153,6 +163,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-D", "maven.repo.local=" + lrd.getPath() );
     }
 
+    @Test
     public void testRequestProvidedLocalRepoLocationShouldOverrideGlobal()
         throws Exception
     {
@@ -179,6 +190,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-D", "maven.repo.local=" + lrd.getPath() );
     }
 
+    @Test
     public void testShouldSetWorkingDirectoryGlobally()
         throws Exception
     {
@@ -202,6 +214,7 @@ public class MavenCommandLineBuilderTest
         assertEquals( cli.getWorkingDirectory(), wd );
     }
 
+    @Test
     public void testShouldSetWorkingDirectoryFromRequest()
         throws Exception
     {
@@ -226,6 +239,7 @@ public class MavenCommandLineBuilderTest
         assertEquals( cli.getWorkingDirectory(), wd );
     }
 
+    @Test
     public void testRequestProvidedWorkingDirectoryShouldOverrideGlobal()
         throws Exception
     {
@@ -255,6 +269,7 @@ public class MavenCommandLineBuilderTest
         assertEquals( cli.getWorkingDirectory(), wd );
     }
 
+    @Test
     public void testShouldUseSystemOutLoggerWhenNoneSpecified()
         throws Exception
     {
@@ -304,6 +319,7 @@ public class MavenCommandLineBuilderTest
         return appDir;
     }
 
+    @Test
     public void testShouldFailIfLoggerSetToNull()
     {
         logTestStart();
@@ -326,6 +342,7 @@ public class MavenCommandLineBuilderTest
         }
     }
 
+    @Test
     public void testShouldFindDummyMavenExecutable()
         throws Exception
     {
@@ -359,6 +376,7 @@ public class MavenCommandLineBuilderTest
         assertEquals( check.getCanonicalPath(), mavenExe.getCanonicalPath() );
     }
 
+    @Test
     public void testShouldSetBatchModeFlagFromRequest()
     {
         logTestStart();
@@ -371,6 +389,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "-B" ) );
     }
 
+    @Test
     public void testShouldSetOfflineFlagFromRequest()
     {
         logTestStart();
@@ -383,6 +402,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "-o" ) );
     }
 
+    @Test
     public void testShouldSetUpdateSnapshotsFlagFromRequest()
     {
         logTestStart();
@@ -395,6 +415,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "-U" ) );
     }
 
+    @Test
     public void testShouldSetDebugFlagFromRequest()
     {
         logTestStart();
@@ -407,6 +428,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "-X" ) );
     }
 
+    @Test
     public void testShouldSetErrorFlagFromRequest()
     {
         logTestStart();
@@ -419,6 +441,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "-e" ) );
     }
 
+    @Test
     public void testDebugOptionShouldMaskShowErrorsOption()
     {
         logTestStart();
@@ -432,6 +455,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsNotPresent( cli, Collections.singleton( "-e" ) );
     }
 
+    @Test
     public void testActivateReactor()
     {
         logTestStart();
@@ -444,6 +468,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "-r" ) );
     }
 
+    @Test
     public void testActivateReactorIncludesExcludes()
     {
         logTestStart();
@@ -465,6 +490,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, args );
     }
 
+    @Test
     public void testAlsoMake()
     {
         logTestStart();
@@ -478,6 +504,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsNotPresent( cli, Collections.singleton( "-am" ) );
     }
 
+    @Test
     public void testProjectsAndAlsoMake()
     {
         logTestStart();
@@ -491,6 +518,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-pl", "proj1", "-am" );
     }
 
+    @Test
     public void testAlsoMakeDependents()
     {
         logTestStart();
@@ -504,6 +532,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsNotPresent( cli, Collections.singleton( "-amd" ) );
     }
 
+    @Test
     public void testProjectsAndAlsoMakeDependents()
     {
         logTestStart();
@@ -517,6 +546,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-pl", "proj1", "-amd" );
     }
 
+    @Test
     public void testProjectsAndAlsoMakeAndAlsoMakeDependents()
     {
         logTestStart();
@@ -530,6 +560,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-pl", "proj1", "-am", "-amd" );
     }
 
+    @Test
     public void testShouldSetResumeFrom()
     {
         logTestStart();
@@ -542,6 +573,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-rf", ":module3" );
     }
 
+    @Test
     public void testShouldSetStrictChecksumPolityFlagFromRequest()
     {
         logTestStart();
@@ -554,6 +586,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "-C" ) );
     }
 
+    @Test
     public void testShouldSetLaxChecksumPolicyFlagFromRequest()
     {
         logTestStart();
@@ -566,6 +599,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "-c" ) );
     }
 
+    @Test
     public void testShouldSetFailAtEndFlagFromRequest()
     {
         logTestStart();
@@ -578,6 +612,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "-fae" ) );
     }
 
+    @Test
     public void testShouldSetFailNeverFlagFromRequest()
     {
         logTestStart();
@@ -590,6 +625,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "-fn" ) );
     }
 
+    @Test
     public void testShouldUseDefaultOfFailFastWhenSpecifiedInRequest()
     {
         logTestStart();
@@ -606,6 +642,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsNotPresent( cli, banned );
     }
 
+    @Test
     public void testShouldSpecifyFileOptionUsingNonStandardPomFileLocation()
         throws Exception
     {
@@ -639,6 +676,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, args );
     }
 
+    @Test
     public void testShouldSpecifyFileOptionUsingNonStandardPomInBasedir()
         throws Exception
     {
@@ -672,6 +710,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, args );
     }
 
+    @Test
     public void testShouldNotSpecifyFileOptionUsingStandardPomFileLocation()
         throws Exception
     {
@@ -705,6 +744,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsNotPresent( cli, args );
     }
 
+    @Test
     public void testShouldNotSpecifyFileOptionUsingStandardPomInBasedir()
         throws Exception
     {
@@ -738,6 +778,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsNotPresent( cli, args );
     }
 
+    @Test
     public void testShouldUseDefaultPomFileWhenBasedirSpecifiedWithoutPomFileName()
         throws Exception
     {
@@ -769,6 +810,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsNotPresent( cli, args );
     }
 
+    @Test
     public void testShouldSpecifyPomFileWhenBasedirSpecifiedWithPomFileName()
         throws Exception
     {
@@ -800,6 +842,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, args );
     }
 
+    @Test
     public void testShouldSpecifyCustomUserSettingsLocationFromRequest()
         throws Exception
     {
@@ -828,6 +871,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, args );
     }
 
+    @Test
     public void testShouldSpecifyCustomGlobalSettingsLocationFromRequest()
         throws Exception
     {
@@ -856,6 +900,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, args );
     }
 
+    @Test
     public void testShouldSpecifyCustomToolchainsLocationFromRequest()
         throws Exception
     {
@@ -884,6 +929,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, args );
     }
 
+    @Test
     public void testShouldSpecifyCustomPropertyFromRequest()
         throws IOException
     {
@@ -900,6 +946,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-D", "key=value" );
     }
 
+    @Test
     public void testShouldSpecifyCustomPropertyWithSpacesInValueFromRequest()
         throws IOException
     {
@@ -916,6 +963,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-D", "key=value with spaces" );
     }
 
+    @Test
     public void testShouldSpecifyCustomPropertyWithSpacesInKeyFromRequest()
         throws IOException
     {
@@ -932,6 +980,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-D", "key with spaces=value with spaces" );
     }
 
+    @Test
     public void testShouldSpecifySingleGoalFromRequest()
         throws IOException
     {
@@ -948,6 +997,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresent( cli, Collections.singleton( "test" ) );
     }
 
+    @Test
     public void testShouldSpecifyTwoGoalsFromRequest()
         throws IOException
     {
@@ -966,6 +1016,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, goals );
     }
 
+    @Test
     public void testShouldSpecifyThreadsFromRequest()
         throws IOException
     {
@@ -979,6 +1030,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( cli, "-T", "2.0C" );
     }
 
+    @Test
     public void testBuildTypicalMavenInvocationEndToEnd()
         throws Exception
     {
@@ -1037,6 +1089,7 @@ public class MavenCommandLineBuilderTest
         assertEquals( projectDir.getCanonicalPath(), commandline.getWorkingDirectory().getCanonicalPath() );
     }
 
+    @Test
     public void testShouldSetEnvVar_MAVEN_TERMINATE_CMD()
         throws Exception
     {
@@ -1079,6 +1132,7 @@ public class MavenCommandLineBuilderTest
 
     }
 
+    @Test
     public void testShouldInsertActivatedProfiles()
         throws Exception
     {
@@ -1102,6 +1156,7 @@ public class MavenCommandLineBuilderTest
         assertArgumentsPresentInOrder( commandline, "-P", profile1 + "," + profile2 );
     }
 
+    @Test
     public void testShouldSetEnvVar_M2_HOME()
         throws Exception
     {
@@ -1146,6 +1201,7 @@ public class MavenCommandLineBuilderTest
         assertEquals( "M2_HOME=" + mavenHome2.getAbsolutePath(), m2Home );
     }
 
+    @Test
     public void testMvnCommand()
         throws Exception
     {
@@ -1157,6 +1213,7 @@ public class MavenCommandLineBuilderTest
         assertTrue( "Expected executable to be absolute", executable.isAbsolute() );
     }
 
+    @Test
     public void testAddShellEnvironment()
         throws Exception
     {

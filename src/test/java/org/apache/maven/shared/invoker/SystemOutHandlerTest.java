@@ -19,24 +19,26 @@ package org.apache.maven.shared.invoker;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 public class SystemOutHandlerTest
-    extends TestCase
 {
 
+    @Test
     public void testConsumeWithoutAlwaysFlush()
     {
         logTestStart();
         new SystemOutHandler( false ).consumeLine( "This is a test." );
     }
 
+    @Test
     public void testConsumeWithAlwaysFlush()
     {
         logTestStart();
         new SystemOutHandler( true ).consumeLine( "This is a test." );
     }
 
+    @Test
     public void testConsumeNullLine()
     {
         logTestStart();

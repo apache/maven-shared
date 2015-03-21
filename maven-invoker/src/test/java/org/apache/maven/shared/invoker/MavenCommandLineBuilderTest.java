@@ -42,7 +42,9 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.Commandline;
+import org.junit.After;
 import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 public class MavenCommandLineBuilderTest
@@ -1238,6 +1240,7 @@ public class MavenCommandLineBuilderTest
         assertEnvironmentVariablePresent( commandline, envVar2Name, envVar2Value );
     }
 
+    @Before
     public void setUp()
     {
         sysProps = System.getProperties();
@@ -1247,6 +1250,7 @@ public class MavenCommandLineBuilderTest
         System.setProperties( p );
     }
 
+    @After
     public void tearDown()
         throws IOException
     {

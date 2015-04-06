@@ -55,7 +55,7 @@ under the License.
   </scm>
   <issueManagement>
     <system>jira</system>
-    <url>http://jira.codehaus.org/browse/MSHARED/component/14413</url>
+    <url>https://issues.apache.org/jira/browse/MSHARED/component/12326447</url>
   </issueManagement>
   <distributionManagement>
     <site>

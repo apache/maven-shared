@@ -46,7 +46,7 @@
   </scm>
   <issueManagement>
     <system>jira</system>
-    <url>http://jira.codehaus.org/browse/MSHARED/component/16150</url>
+    <url>https://issues.apache.org/jira/browse/MSHARED/component/12326454</url>
   </issueManagement>
   <distributionManagement>
     <site>

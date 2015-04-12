@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.apache.maven.shared.filtering.streams.BoundedReader;
 import org.junit.Test;
 
 public class BoundedReaderTest

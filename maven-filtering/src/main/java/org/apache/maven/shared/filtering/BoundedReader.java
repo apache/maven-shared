@@ -1,4 +1,4 @@
-package org.apache.maven.shared.filtering.streams;
+package org.apache.maven.shared.filtering;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,7 +19,6 @@ package org.apache.maven.shared.filtering.streams;
  * under the License.
  */
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -84,7 +83,7 @@ public class BoundedReader
     }
 
     @Override
-    public int read( @Nonnull char[] cbuf, int off, int len )
+    public int read( char[] cbuf, int off, int len )
         throws IOException
     {
         int c;

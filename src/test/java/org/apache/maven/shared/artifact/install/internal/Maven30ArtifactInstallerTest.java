@@ -12,6 +12,7 @@ import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 import org.apache.maven.shared.artifact.install.ArtifactInstaller;
 import org.codehaus.plexus.PlexusTestCase;
+import org.sonatype.aether.impl.internal.EnhancedLocalRepositoryManager;
 import org.sonatype.aether.impl.internal.SimpleLocalRepositoryManager;
 
 public class Maven30ArtifactInstallerTest extends PlexusTestCase
@@ -55,7 +56,7 @@ public class Maven30ArtifactInstallerTest extends PlexusTestCase
         assertTrue( new File( localRepo, "GROUPID/ARTIFACTID/maven-metadata-local.xml" ).exists() ); //??
     }
 
-    public void testSetLocalRepositoryBasedir() throws Exception
+    public void testSetLocalRepositoryBasedirSimple() throws Exception
     {
         DefaultProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest();
         MavenRepositorySystemSession repositorySession = new MavenRepositorySystemSession();
@@ -69,5 +70,20 @@ public class Maven30ArtifactInstallerTest extends PlexusTestCase
         assertEquals( basedir.getAbsoluteFile(), newBuildingRequest.getRepositorySession().getLocalRepository().getBasedir() );
         
     }
-    
+
+    public void testSetLocalRepositoryBasedirEnhanced() throws Exception
+    {
+        DefaultProjectBuildingRequest buildingRequest = new DefaultProjectBuildingRequest();
+        MavenRepositorySystemSession repositorySession = new MavenRepositorySystemSession();
+        repositorySession.setLocalRepositoryManager( new EnhancedLocalRepositoryManager( localRepo ) );
+        buildingRequest.setRepositorySession( repositorySession );
+
+        File basedir = new File( "NEW/LOCAL/REPO" );
+        
+        ProjectBuildingRequest newBuildingRequest = installer.setLocalRepositoryBasedir( buildingRequest, basedir );
+        
+        assertEquals( basedir.getAbsoluteFile(), newBuildingRequest.getRepositorySession().getLocalRepository().getBasedir() );
+        
+    }
+
 }

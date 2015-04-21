@@ -95,26 +95,33 @@ public class Maven30ArtifactInstaller
             throw new ArtifactInstallerException( e.getMessage(), e );
         }
     }
-    
+
     public ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest buildingRequest, File basedir )
         throws ArtifactInstallerException
     {
         ProjectBuildingRequest newRequest = new DefaultProjectBuildingRequest( buildingRequest );
-        
+
         RepositorySystemSession session =
                         (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
 
         // "clone" session and replace localRepository
         DefaultRepositorySystemSession newSession = new DefaultRepositorySystemSession( session );
-        
+
         // keep same repositoryType 
-        String repositoryType = session.getLocalRepository().getContentType();
+        String repositoryType = resolveRepositoryType( session.getLocalRepository() );
+
         LocalRepositoryManager localRepositoryManager =
             repositorySystem.newLocalRepositoryManager( new LocalRepository( basedir, repositoryType ) );
+
         newSession.setLocalRepositoryManager( localRepositoryManager );
-        
+
         Invoker.invoke( newRequest, "setRepositorySession", RepositorySystemSession.class, newSession );
-        
+
         return newRequest;
+    }
+
+    protected String resolveRepositoryType( LocalRepository localRepository )
+    {
+        return localRepository.getContentType();
     }
 }

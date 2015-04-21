@@ -40,7 +40,7 @@ public class DefaultArtifactInstaller
 {
 
     protected PlexusContainer container;
-    
+
     public void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException
     {
@@ -57,13 +57,13 @@ public class DefaultArtifactInstaller
             throw new ArtifactInstallerException( e.getMessage(), e );
         }
     }
-    
+
     public ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest request, File basedir )
         throws ArtifactInstallerException
     {
         try
         {
-            String hint = isMaven31() ? "maven31" : "maven3";
+            String hint = isMaven31() ? "maven31" : isMaven302() ? "maven302" : "maven3";
 
             ArtifactInstaller effectiveArtifactInstaller = container.lookup( ArtifactInstaller.class, hint );
 
@@ -81,6 +81,14 @@ public class DefaultArtifactInstaller
     protected static boolean isMaven31()
     {
         return canFindCoreClass( "org.eclipse.aether.artifact.Artifact" ); // Maven 3.1 specific
+    }
+
+    /**
+     * @return true if the current Maven version is Maven 3.0.2
+     */
+    protected static boolean isMaven302()
+    {
+        return canFindCoreClass( "org.sonatype.aether.spi.localrepo.LocalRepositoryManagerFactory" );
     }
 
     private static boolean canFindCoreClass( String className )

@@ -60,13 +60,34 @@ final class Invoker
         }
     }
 
-    public static Object invoke( Object object, String method, Class<?> clazz, Object arg )
+    public static Object invoke( Object object, String method, Class<?> argClazz, Object arg )
         throws ArtifactInstallerException
     {
         try
         {
             final Class<?> objectClazz = object.getClass();
-            return objectClazz.getMethod( method, clazz ).invoke( object, arg );
+            return objectClazz.getMethod( method, argClazz ).invoke( object, arg );
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new ArtifactInstallerException( e.getMessage(), e );
+        }
+        catch ( InvocationTargetException e )
+        {
+            throw new ArtifactInstallerException( e.getMessage(), e );
+        }
+        catch ( NoSuchMethodException e )
+        {
+            throw new ArtifactInstallerException( e.getMessage(), e );
+        }
+    }
+    
+    public static Object invoke( Class<?> objectClazz, String staticMethod, Class<?> argClazz, Object arg )
+                    throws ArtifactInstallerException
+    {
+        try
+        {
+            return objectClazz.getMethod( staticMethod, argClazz ).invoke( null, arg );
         }
         catch ( IllegalAccessException e )
         {

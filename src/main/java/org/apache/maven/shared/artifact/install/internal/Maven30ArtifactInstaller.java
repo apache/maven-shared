@@ -59,7 +59,9 @@ public class Maven30ArtifactInstaller
         // transform artifacts
         for ( org.apache.maven.artifact.Artifact mavenArtifact : mavenArtifacts )
         {
-            Artifact mainArtifact = RepositoryUtils.toArtifact( mavenArtifact );   
+            Artifact mainArtifact =
+                (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                           org.apache.maven.artifact.Artifact.class, mavenArtifact );
             request.addArtifact( mainArtifact );
 
             for ( ArtifactMetadata metadata : mavenArtifact.getMetadataList() )
@@ -120,6 +122,15 @@ public class Maven30ArtifactInstaller
         return newRequest;
     }
 
+    public File getLocalRepositoryBasedir( ProjectBuildingRequest buildingRequest )
+        throws ArtifactInstallerException
+    {
+        RepositorySystemSession session =
+                        (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
+        
+        return session.getLocalRepository().getBasedir();
+    }
+    
     protected String resolveRepositoryType( LocalRepository localRepository )
     {
         return localRepository.getContentType();

@@ -75,6 +75,23 @@ public class DefaultArtifactInstaller
         }
     }
 
+    public File getLocalRepositoryBasedir( ProjectBuildingRequest request )
+        throws ArtifactInstallerException
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : isMaven302() ? "maven302" : "maven3";
+
+            ArtifactInstaller effectiveArtifactInstaller = container.lookup( ArtifactInstaller.class, hint );
+
+            return effectiveArtifactInstaller.getLocalRepositoryBasedir( request );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new ArtifactInstallerException( e.getMessage(), e );
+        }
+    }
+    
     /**
      * @return true if the current Maven version is Maven 3.1.
      */

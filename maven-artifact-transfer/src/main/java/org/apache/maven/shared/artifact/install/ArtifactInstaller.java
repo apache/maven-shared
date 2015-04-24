@@ -37,8 +37,18 @@ public interface ArtifactInstaller
      * @param request the project building request
      * @param basedir the base directory of the local repository
      * @return a new project building request
-     * @throws ArtifactInstallerException 
+     * @throws ArtifactInstallerException if an exception occurs
      */
     public ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest request, File basedir )
+        throws ArtifactInstallerException;
+    
+    /**
+     * Get the localRepositryBasedir as specified in the repository session of the request
+     * 
+     * @param request the build request
+     * @return the local repository base directory
+     * @throws ArtifactInstallerException if an exception occurs
+     */
+    public File getLocalRepositoryBasedir( ProjectBuildingRequest request )
         throws ArtifactInstallerException;
 }

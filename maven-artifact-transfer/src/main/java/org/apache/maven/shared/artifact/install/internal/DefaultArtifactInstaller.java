@@ -39,7 +39,7 @@ public class DefaultArtifactInstaller
     implements ArtifactInstaller, Contextualizable
 {
 
-    protected PlexusContainer container;
+    private PlexusContainer container;
 
     public void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException

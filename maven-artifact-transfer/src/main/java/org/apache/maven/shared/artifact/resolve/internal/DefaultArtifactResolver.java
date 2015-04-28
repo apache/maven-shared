@@ -1,4 +1,19 @@
-package org.apache.maven.shared.artifact.deploy.internal;
+package org.apache.maven.shared.artifact.resolve.internal;
+
+import java.util.List;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.shared.artifact.resolve.ArtifactResolver;
+import org.apache.maven.shared.artifact.resolve.ArtifactResolverException;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,41 +34,28 @@ package org.apache.maven.shared.artifact.deploy.internal;
  * under the License.
  */
 
-import java.util.Collection;
-
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.project.ProjectBuildingRequest;
-import org.apache.maven.shared.artifact.deploy.ArtifactDeployer;
-import org.apache.maven.shared.artifact.deploy.ArtifactDeployerException;
-import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-
-@Component( role = ArtifactDeployer.class )
-public class DefaultArtifactDeployer
-    implements ArtifactDeployer, Contextualizable
+@Component( role = ArtifactResolver.class, hint = "default" )
+public class DefaultArtifactResolver
+    implements ArtifactResolver, Contextualizable
 {
-
     private PlexusContainer container;
-    
-    public void deploy( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
-        throws ArtifactDeployerException
+
+    public org.apache.maven.artifact.Artifact resolveArtifact( ProjectBuildingRequest buildingRequest,
+                                                               Artifact mavenArtifact,
+                                                               List<ArtifactRepository> remoteRepositories )
+        throws ArtifactResolverException
     {
         try
         {
             String hint = isMaven31() ? "maven31" : "maven3";
 
-            ArtifactDeployer effectiveArtifactDeployer = container.lookup( ArtifactDeployer.class, hint );
+            ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
 
-            effectiveArtifactDeployer.deploy( request, mavenArtifacts );
+            return effectiveArtifactResolver.resolveArtifact( buildingRequest, mavenArtifact, remoteRepositories );
         }
         catch ( ComponentLookupException e )
         {
-            throw new ArtifactDeployerException( e.getMessage(), e );
+            throw new ArtifactResolverException( e.getMessage(), e );
         }
     }
 
@@ -82,7 +84,7 @@ public class DefaultArtifactDeployer
     /**
      * Injects the Plexus content.
      *
-     * @param context   Plexus context to inject.
+     * @param context Plexus context to inject.
      * @throws ContextException if the PlexusContainer could not be located.
      */
     public void contextualize( Context context )
@@ -90,4 +92,5 @@ public class DefaultArtifactDeployer
     {
         container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
     }
+
 }

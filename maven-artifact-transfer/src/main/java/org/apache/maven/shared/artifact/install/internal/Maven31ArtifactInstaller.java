@@ -32,6 +32,7 @@ import org.apache.maven.shared.artifact.install.ArtifactInstaller;
 import org.apache.maven.shared.artifact.install.ArtifactInstallerException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.eclipse.aether.DefaultRepositoryCache;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
@@ -108,6 +109,9 @@ public class Maven31ArtifactInstaller implements ArtifactInstaller
 
         // "clone" session and replace localRepository
         DefaultRepositorySystemSession newSession = new DefaultRepositorySystemSession( session );
+
+        // Clear cache, since we're using a new local repository
+        newSession.setCache( new DefaultRepositoryCache() );
 
         // keep same repositoryType
         String repositoryType = resolveRepositoryType( session.getLocalRepository() );

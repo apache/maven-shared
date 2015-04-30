@@ -39,6 +39,7 @@ import org.sonatype.aether.installation.InstallRequest;
 import org.sonatype.aether.installation.InstallationException;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.LocalRepositoryManager;
+import org.sonatype.aether.util.DefaultRepositoryCache;
 import org.sonatype.aether.util.DefaultRepositorySystemSession;
 import org.sonatype.aether.util.artifact.SubArtifact;
 
@@ -108,6 +109,9 @@ public class Maven30ArtifactInstaller
 
         // "clone" session and replace localRepository
         DefaultRepositorySystemSession newSession = new DefaultRepositorySystemSession( session );
+        
+        // Clear cache, since we're using a new local repository
+        newSession.setCache( new DefaultRepositoryCache() );
 
         // keep same repositoryType 
         String repositoryType = resolveRepositoryType( session.getLocalRepository() );

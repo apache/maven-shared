@@ -32,6 +32,9 @@ import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.repository.RemoteRepository;
+import org.sonatype.aether.resolution.ArtifactDescriptorException;
+import org.sonatype.aether.resolution.ArtifactDescriptorRequest;
+import org.sonatype.aether.resolution.ArtifactDescriptorResult;
 import org.sonatype.aether.resolution.ArtifactRequest;
 import org.sonatype.aether.resolution.ArtifactResolutionException;
 
@@ -47,33 +50,40 @@ public class Maven30ArtifactResolver
                                  List<ArtifactRepository> remoteRepositories )
         throws ArtifactResolverException
     {
-        ArtifactRequest request = new ArtifactRequest();
-
         Artifact aetherArtifact =
             (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact", org.apache.maven.artifact.Artifact.class,
                                        mavenArtifact );
-        request.setArtifact( aetherArtifact );
 
+        @SuppressWarnings( "unchecked" )
         List<RemoteRepository> aetherRepositories =
                         (List<RemoteRepository>) Invoker.invoke( RepositoryUtils.class, "toRepos",
                                                                  List.class, remoteRepositories );
-        request.setRepositories( aetherRepositories );
         
         RepositorySystemSession session =
             (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
 
         try
         {
+            // use descriptor to respect relocation
+            ArtifactDescriptorRequest descriptorRequest = new ArtifactDescriptorRequest( aetherArtifact, aetherRepositories, null );
+            
+            ArtifactDescriptorResult descriptorResult = repositorySystem.readArtifactDescriptor( session, descriptorRequest );
+            
+            ArtifactRequest request = new ArtifactRequest( descriptorResult.getArtifact(), aetherRepositories, null );
+            
             Artifact resolvedArtifact = repositorySystem.resolveArtifact( session, request ).getArtifact();
             
             return (org.apache.maven.artifact.Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
                                                                         Artifact.class, resolvedArtifact );
         }
+        catch ( ArtifactDescriptorException e )
+        {
+            throw new ArtifactResolverException( e.getMessage(), e );
+        }
         catch ( ArtifactResolutionException e )
         {
             throw new ArtifactResolverException( e.getMessage(), e );
         }
-
     }
 
 }

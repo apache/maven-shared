@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact.install;
+package org.apache.maven.shared.artifact.repository;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,14 +19,12 @@ package org.apache.maven.shared.artifact.install;
  * under the License.
  */
 
-import java.util.Collection;
-
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.project.ProjectBuildingRequest;
-
-public interface ArtifactInstaller
+public class RepositoryManagerException extends Exception
 {
 
-    public void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
-        throws ArtifactInstallerException;
+    public RepositoryManagerException( String message, Throwable cause )
+    {
+        super( message, cause );
+    }
+
 }

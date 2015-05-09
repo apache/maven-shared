@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact.install.internal;
+package org.apache.maven.shared.artifact.repository.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,14 +19,15 @@ package org.apache.maven.shared.artifact.install.internal;
  * under the License.
  */
 
-import org.apache.maven.shared.artifact.install.ArtifactInstaller;
+import org.apache.maven.shared.artifact.repository.RepositoryManager;
 import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.aether.repository.LocalRepository;
 
-@Component( role = ArtifactInstaller.class, hint = "maven302" )
-public class Maven302ArtifactInstaller
-    extends Maven30ArtifactInstaller
+@Component( role = RepositoryManager.class, hint = "maven302" )
+public class Maven302RepositoryManager
+    extends Maven30RepositoryManager
 {
+
     /**
      * Aether-1.9+ (i.e. M3.0.2+) expects "default", not "enhanced" as repositoryType
      */
@@ -38,7 +39,7 @@ public class Maven302ArtifactInstaller
         {
             repositoryType = "default";
         }
-        else 
+        else
         {
             // this should be "simple"
             repositoryType = localRepository.getContentType();

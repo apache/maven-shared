@@ -19,13 +19,11 @@ package org.apache.maven.shared.artifact.install.internal;
  * under the License.
  */
 
-import java.io.File;
 import java.util.Collection;
 
 import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.artifact.repository.metadata.ArtifactRepositoryMetadata;
-import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.apache.maven.shared.artifact.install.ArtifactInstaller;
@@ -37,10 +35,6 @@ import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.installation.InstallRequest;
 import org.sonatype.aether.installation.InstallationException;
-import org.sonatype.aether.repository.LocalRepository;
-import org.sonatype.aether.repository.LocalRepositoryManager;
-import org.sonatype.aether.util.DefaultRepositoryCache;
-import org.sonatype.aether.util.DefaultRepositorySystemSession;
 import org.sonatype.aether.util.artifact.SubArtifact;
 
 @Component( role = ArtifactInstaller.class, hint = "maven3" )
@@ -97,46 +91,5 @@ public class Maven30ArtifactInstaller
         {
             throw new ArtifactInstallerException( e.getMessage(), e );
         }
-    }
-
-    public ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest buildingRequest, File basedir )
-        throws ArtifactInstallerException
-    {
-        ProjectBuildingRequest newRequest = new DefaultProjectBuildingRequest( buildingRequest );
-
-        RepositorySystemSession session =
-                        (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
-
-        // "clone" session and replace localRepository
-        DefaultRepositorySystemSession newSession = new DefaultRepositorySystemSession( session );
-        
-        // Clear cache, since we're using a new local repository
-        newSession.setCache( new DefaultRepositoryCache() );
-
-        // keep same repositoryType 
-        String repositoryType = resolveRepositoryType( session.getLocalRepository() );
-
-        LocalRepositoryManager localRepositoryManager =
-            repositorySystem.newLocalRepositoryManager( new LocalRepository( basedir, repositoryType ) );
-
-        newSession.setLocalRepositoryManager( localRepositoryManager );
-
-        Invoker.invoke( newRequest, "setRepositorySession", RepositorySystemSession.class, newSession );
-
-        return newRequest;
-    }
-
-    public File getLocalRepositoryBasedir( ProjectBuildingRequest buildingRequest )
-        throws ArtifactInstallerException
-    {
-        RepositorySystemSession session =
-                        (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
-        
-        return session.getLocalRepository().getBasedir();
-    }
-    
-    protected String resolveRepositoryType( LocalRepository localRepository )
-    {
-        return localRepository.getContentType();
     }
 }

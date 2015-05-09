@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact.install.internal;
+package org.apache.maven.shared.artifact.repository.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,12 +19,11 @@ package org.apache.maven.shared.artifact.install.internal;
  * under the License.
  */
 
-import java.util.Collection;
+import java.io.File;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
-import org.apache.maven.shared.artifact.install.ArtifactInstaller;
-import org.apache.maven.shared.artifact.install.ArtifactInstallerException;
+import org.apache.maven.shared.artifact.repository.RepositoryManager;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
@@ -33,27 +32,67 @@ import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
-@Component( role = ArtifactInstaller.class )
-public class DefaultArtifactInstaller
-    implements ArtifactInstaller, Contextualizable
+@Component( role = RepositoryManager.class )
+public class DefaultRepositoryManager
+    implements RepositoryManager, Contextualizable
 {
-
     private PlexusContainer container;
 
-    public void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
-        throws ArtifactInstallerException
+    /**
+     * {@inheritDoc}
+     */
+    public String getPathForLocalArtifact( ProjectBuildingRequest buildingRequest, Artifact artifact )
     {
         try
         {
             String hint = isMaven31() ? "maven31" : "maven3";
 
-            ArtifactInstaller effectiveArtifactInstaller = container.lookup( ArtifactInstaller.class, hint );
+            RepositoryManager effectiveRepositoryManager = container.lookup( RepositoryManager.class, hint );
 
-            effectiveArtifactInstaller.install( request, mavenArtifacts );
+            return effectiveRepositoryManager.getPathForLocalArtifact( buildingRequest, artifact );
         }
         catch ( ComponentLookupException e )
         {
-            throw new ArtifactInstallerException( e.getMessage(), e );
+            throw new IllegalStateException( e.getMessage(), e );
+        }
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest request, File basedir )
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : isMaven302() ? "maven302" : "maven3";
+
+            RepositoryManager effectiveRepositoryManager = container.lookup( RepositoryManager.class, hint );
+
+            return effectiveRepositoryManager.setLocalRepositoryBasedir( request, basedir );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new IllegalStateException( e.getMessage(), e );
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public File getLocalRepositoryBasedir( ProjectBuildingRequest request )
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : isMaven302() ? "maven302" : "maven3";
+
+            RepositoryManager effectiveRepositoryManager = container.lookup( RepositoryManager.class, hint );
+
+            return effectiveRepositoryManager.getLocalRepositoryBasedir( request );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new IllegalStateException( e.getMessage(), e );
         }
     }
 
@@ -63,6 +102,14 @@ public class DefaultArtifactInstaller
     protected static boolean isMaven31()
     {
         return canFindCoreClass( "org.eclipse.aether.artifact.Artifact" ); // Maven 3.1 specific
+    }
+
+    /**
+     * @return true if the current Maven version is Maven 3.0.2
+     */
+    protected static boolean isMaven302()
+    {
+        return canFindCoreClass( "org.sonatype.aether.spi.localrepo.LocalRepositoryManagerFactory" );
     }
 
     private static boolean canFindCoreClass( String className )
@@ -82,7 +129,7 @@ public class DefaultArtifactInstaller
     /**
      * Injects the Plexus content.
      *
-     * @param context   Plexus context to inject.
+     * @param context Plexus context to inject.
      * @throws ContextException if the PlexusContainer could not be located.
      */
     public void contextualize( Context context )

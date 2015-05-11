@@ -21,6 +21,7 @@ package org.apache.maven.shared.dependency.graph.internal;
 
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
@@ -62,7 +63,13 @@ public class DefaultDependencyGraphBuilder
     public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, null );
+        return buildDependencyGraph( project.getProjectBuildingRequest(), filter, null );
+    }
+    
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter )
+        throws DependencyGraphBuilderException
+    {
+        return buildDependencyGraph( buildingRequest, filter, null );
     }
 
     /**
@@ -78,29 +85,29 @@ public class DefaultDependencyGraphBuilder
                                                 Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
     {
+        return buildDependencyGraph( project.getProjectBuildingRequest(), filter, reactorProjects );
+    }
+    
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter,
+                                                Collection<MavenProject> reactorProjects )
+        throws DependencyGraphBuilderException
+    {
         try
         {
-            String hint = isMaven31() ? "maven31" : isMaven2x() ? "maven2" : "maven3";
+            String hint = isMaven31() ? "maven31" : "maven3";
 
             DependencyGraphBuilder effectiveGraphBuilder =
                 (DependencyGraphBuilder) container.lookup( DependencyGraphBuilder.class.getCanonicalName(), hint );
-            getLogger().debug( "building " + hint + " dependency graph for " + project.getId() + " with "
-                                   + effectiveGraphBuilder.getClass().getSimpleName() );
+            
+            getLogger().debug( "building " + hint + " dependency graph for " + buildingRequest.getProject().getId()
+                                   + " with " + effectiveGraphBuilder.getClass().getSimpleName() );
 
-            return effectiveGraphBuilder.buildDependencyGraph( project, filter, reactorProjects );
+            return effectiveGraphBuilder.buildDependencyGraph( buildingRequest, filter, reactorProjects );
         }
         catch ( ComponentLookupException e )
         {
             throw new DependencyGraphBuilderException( e.getMessage(), e );
         }
-    }
-
-    /**
-     * @return true if the current Maven is Maven 2.x.
-     */
-    protected static boolean isMaven2x()
-    {
-        return !canFindCoreClass( "org.apache.maven.project.DependencyResolutionRequest" ); // Maven 3 specific
     }
 
     /**

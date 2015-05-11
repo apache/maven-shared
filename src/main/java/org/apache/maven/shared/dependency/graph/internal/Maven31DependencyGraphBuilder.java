@@ -78,6 +78,12 @@ public class Maven31DependencyGraphBuilder
     {
         return buildDependencyGraph( project, filter, null );
     }
+    
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter )
+        throws DependencyGraphBuilderException
+    {
+        return buildDependencyGraph( buildingRequest, filter, null );
+    }
 
     /**
      * Builds the dependency graph for Maven 3.1+, eventually hacking for collecting projects from
@@ -96,6 +102,15 @@ public class Maven31DependencyGraphBuilder
         ProjectBuildingRequest projectBuildingRequest =
             (ProjectBuildingRequest) Invoker.invoke( project, "getProjectBuildingRequest" );
 
+        return buildDependencyGraph( projectBuildingRequest, filter, reactorProjects );
+    }
+    
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest projectBuildingRequest, ArtifactFilter filter,
+                                                Collection<MavenProject> reactorProjects )
+        throws DependencyGraphBuilderException
+    {
+        MavenProject project = projectBuildingRequest.getProject();
+        
         RepositorySystemSession session =
             (RepositorySystemSession) Invoker.invoke( projectBuildingRequest, "getRepositorySession" );
 

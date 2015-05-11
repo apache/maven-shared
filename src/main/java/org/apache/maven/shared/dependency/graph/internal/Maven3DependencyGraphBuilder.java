@@ -19,6 +19,13 @@ package org.apache.maven.shared.dependency.graph.internal;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
@@ -36,15 +43,9 @@ import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
+import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.version.VersionConstraint;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Wrapper around Maven 3 dependency resolver.
@@ -77,6 +78,12 @@ public class Maven3DependencyGraphBuilder
     {
         return buildDependencyGraph( project, filter, null );
     }
+    
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter )
+        throws DependencyGraphBuilderException
+    {
+        return buildDependencyGraph( buildingRequest, filter, null );
+    }
 
     /**
      * Builds the dependency graph for Maven 3, eventually hacking for collecting projects from
@@ -92,17 +99,31 @@ public class Maven3DependencyGraphBuilder
                                                 Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
     {
+        // this method doesn't exist on all MavenProject versions and also has been deprecated.
         ProjectBuildingRequest projectBuildingRequest =
             (ProjectBuildingRequest) Invoker.invoke( project, "getProjectBuildingRequest" );
 
+        return buildDependencyGraph( projectBuildingRequest, filter, reactorProjects );
+    }
+
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter,
+                                                Collection<MavenProject> reactorProjects )
+        throws DependencyGraphBuilderException
+    {
+        MavenProject project = buildingRequest.getProject();
+        
+        RepositorySystemSession session =
+            (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
+        
         DependencyResolutionRequest request =
-            new DefaultDependencyResolutionRequest( project, projectBuildingRequest.getRepositorySession() );
+            new DefaultDependencyResolutionRequest( project, session );
 
         DependencyResolutionResult result = resolveDependencies( request, reactorProjects );
 
         return buildDependencyNode( null, result.getDependencyGraph(), project.getArtifact(), filter );
     }
 
+    
     private DependencyResolutionResult resolveDependencies( DependencyResolutionRequest request,
                                                             Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException

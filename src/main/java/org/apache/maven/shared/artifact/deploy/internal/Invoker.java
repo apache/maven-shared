@@ -81,4 +81,26 @@ final class Invoker
             throw new ArtifactDeployerException( e.getMessage(), e );
         }
     }
+    
+    public static Object invoke( Class<?> objectClazz, String staticMethod, Class<?> argClazz, Object arg )
+                    throws ArtifactDeployerException
+    {
+        try
+        {
+            return objectClazz.getMethod( staticMethod, argClazz ).invoke( null, arg );
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new ArtifactDeployerException( e.getMessage(), e );
+        }
+        catch ( InvocationTargetException e )
+        {
+            throw new ArtifactDeployerException( e.getMessage(), e );
+        }
+        catch ( NoSuchMethodException e )
+        {
+            throw new ArtifactDeployerException( e.getMessage(), e );
+        }
+    }
+
 }

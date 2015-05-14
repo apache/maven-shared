@@ -21,7 +21,11 @@ package org.apache.maven.shared.artifact.deploy.internal;
 
 import java.util.Collection;
 
+import org.apache.maven.RepositoryUtils;
+import org.apache.maven.artifact.metadata.ArtifactMetadata;
+import org.apache.maven.artifact.repository.metadata.ArtifactRepositoryMetadata;
 import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.apache.maven.shared.artifact.deploy.ArtifactDeployer;
 import org.apache.maven.shared.artifact.deploy.ArtifactDeployerException;
 import org.codehaus.plexus.component.annotations.Component;
@@ -33,7 +37,8 @@ import org.sonatype.aether.deployment.DeployRequest;
 import org.sonatype.aether.deployment.DeploymentException;
 import org.sonatype.aether.metadata.Metadata;
 import org.sonatype.aether.metadata.Metadata.Nature;
-import org.sonatype.aether.util.artifact.DefaultArtifact;
+import org.sonatype.aether.repository.RemoteRepository;
+import org.sonatype.aether.util.artifact.SubArtifact;
 import org.sonatype.aether.util.metadata.DefaultMetadata;
 
 @Component( role = ArtifactDeployer.class, hint = "maven3" )
@@ -55,26 +60,39 @@ public class Maven30ArtifactDeployer
         for ( org.apache.maven.artifact.Artifact mavenArtifact : mavenArtifacts )
         {
             Artifact aetherArtifact =
-                new DefaultArtifact( mavenArtifact.getGroupId(), mavenArtifact.getArtifactId(),
-                                     mavenArtifact.getClassifier(), mavenArtifact.getArtifactHandler().getExtension(),
-                                     mavenArtifact.getVersion(), null, mavenArtifact.getFile() );
-            
+                            (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                                       org.apache.maven.artifact.Artifact.class, mavenArtifact );
             request.addArtifact( aetherArtifact );
+
+            RemoteRepository aetherRepository =
+                (RemoteRepository) Invoker.invoke( RepositoryUtils.class, "toRepo",
+                                                   org.apache.maven.artifact.repository.ArtifactRepository.class,
+                                                   mavenArtifact.getRepository() );
+            request.setRepository( aetherRepository );
             
-            if ( mavenArtifact.getMetadataList() != null )
+            for ( ArtifactMetadata metadata : mavenArtifact.getMetadataList() )
             {
-                for( org.apache.maven.artifact.metadata.ArtifactMetadata metadata : mavenArtifact.getMetadataList() )
+                if ( metadata instanceof ProjectArtifactMetadata )
                 {
-                    Metadata aetherMetadata = new DefaultMetadata( metadata.getGroupId(), metadata.getArtifactId(), "maven-metadata.xml", Nature.RELEASE_OR_SNAPSHOT );
-                    
-                    request.addMetadata( aetherMetadata );
+                    org.sonatype.aether.artifact.Artifact pomArtifact = new SubArtifact( aetherArtifact, "", "pom" );
+                    pomArtifact = pomArtifact.setFile( ( (ProjectArtifactMetadata) metadata ).getFile() );
+                    request.addArtifact( pomArtifact );
+                }
+                else if ( // metadata instanceof SnapshotArtifactRepositoryMetadata ||
+                    metadata instanceof ArtifactRepositoryMetadata )
+                {
+                    // eaten, handled by repo system
+                }
+                else
+                {
+                    // request.addMetadata( new MetadataBridge( metadata ) );
                 }
             }
         }
         
         RepositorySystemSession session =
             (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
-
+        
         // deploy
         try
         {

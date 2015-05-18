@@ -7,6 +7,7 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolver;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolverException;
+import org.apache.maven.shared.artifact.resolve.filter.TransformableFilter;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
@@ -58,7 +59,43 @@ public class DefaultArtifactResolver
             throw new ArtifactResolverException( e.getMessage(), e );
         }
     }
+    
+    public void resolveTransitively( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact,
+                                     List<ArtifactRepository> remoteRepositories )
+        throws ArtifactResolverException
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : "maven3";
 
+            ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
+
+            effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact, remoteRepositories );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new ArtifactResolverException( e.getMessage(), e );
+        }
+    }
+    
+    public void resolveTransitively( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact,
+                                     List<ArtifactRepository> remoteRepositories, TransformableFilter filter )
+        throws ArtifactResolverException
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : "maven3";
+
+            ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
+
+            effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact, remoteRepositories, filter );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new ArtifactResolverException( e.getMessage(), e );
+        }
+    }
+    
     /**
      * @return true if the current Maven version is Maven 3.1.
      */

@@ -1,10 +1,5 @@
 package org.apache.maven.shared.artifact.resolve;
 
-import java.util.List;
-
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.project.ProjectBuildingRequest;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,10 +19,29 @@ import org.apache.maven.project.ProjectBuildingRequest;
  * under the License.
  */
 
+import java.util.List;
+
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.shared.artifact.resolve.filter.TransformableFilter;
+
 public interface ArtifactResolver
 {
+
     public org.apache.maven.artifact.Artifact resolveArtifact( ProjectBuildingRequest buildingRequest,
-                                 org.apache.maven.artifact.Artifact mavenArtifact, List<ArtifactRepository> remoteRepositories )
+                                                               org.apache.maven.artifact.Artifact mavenArtifact,
+                                                               List<ArtifactRepository> remoteRepositories )
+        throws ArtifactResolverException;
+
+    public void resolveTransitively( ProjectBuildingRequest buildingRequest,
+                                     org.apache.maven.artifact.Artifact mavenArtifact,
+                                     List<ArtifactRepository> remoteRepositories )
+        throws ArtifactResolverException;
+    
+    public void resolveTransitively( ProjectBuildingRequest buildingRequest,
+                                     org.apache.maven.artifact.Artifact mavenArtifact,
+                                     List<ArtifactRepository> remoteRepositories,
+                                     TransformableFilter filter )
         throws ArtifactResolverException;
 
 }

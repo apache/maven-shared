@@ -34,6 +34,22 @@
   <name>Apache Maven Artifact Transfer</name>
   <description>An API to either install or deploy artifacts with Maven3</description>
   
+  <scm>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-artifact-transfer</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-artifact-transfer</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-artifact-transfer</url>
+  </scm>
+  <issueManagement>
+    <system>jira</system>
+    <url>https://issues.apache.org/jira/browse/MSHARED/component/12327114</url>
+  </issueManagement>
+  <distributionManagement>
+    <site>
+      <id>apache.website</id>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/components/${maven.site.path}</url>
+    </site>
+  </distributionManagement>
+
   <build>
     <plugins>
       <plugin>

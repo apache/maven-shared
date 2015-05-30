@@ -37,6 +37,9 @@ import org.sonatype.aether.installation.InstallRequest;
 import org.sonatype.aether.installation.InstallationException;
 import org.sonatype.aether.util.artifact.SubArtifact;
 
+/**
+ * 
+ */
 @Component( role = ArtifactInstaller.class, hint = "maven3" )
 public class Maven30ArtifactInstaller
     implements ArtifactInstaller
@@ -63,7 +66,7 @@ public class Maven30ArtifactInstaller
             {
                 if ( metadata instanceof ProjectArtifactMetadata )
                 {
-                    org.sonatype.aether.artifact.Artifact pomArtifact = new SubArtifact( mainArtifact, "", "pom" );
+                    Artifact pomArtifact = new SubArtifact( mainArtifact, "", "pom" );
                     pomArtifact = pomArtifact.setFile( ( (ProjectArtifactMetadata) metadata ).getFile() );
                     request.addArtifact( pomArtifact );
                 }

@@ -46,6 +46,9 @@ import org.eclipse.aether.resolution.ArtifactResult;
 import org.eclipse.aether.resolution.DependencyRequest;
 import org.eclipse.aether.resolution.DependencyResolutionException;
 
+/**
+ * 
+ */
 @Component( role = ArtifactResolver.class, hint = "maven31" )
 public class Maven31ArtifactResolver
     implements ArtifactResolver

@@ -19,6 +19,9 @@ package org.apache.maven.shared.artifact.resolve.filter;
  * under the License.
  */
 
+/**
+ * 
+ */
 public interface TransformableFilter
 {
     /**
@@ -34,5 +37,5 @@ public interface TransformableFilter
      * @param transformer the tool specific transformer
      * @return the transformed value
      */
-    public abstract <T> T transform( FilterTransformer<T> transformer );
+    <T> T transform( FilterTransformer<T> transformer );
 }

@@ -34,7 +34,11 @@ import org.sonatype.aether.util.filter.ExclusionsDependencyFilter;
 import org.sonatype.aether.util.filter.OrDependencyFilter;
 import org.sonatype.aether.util.filter.ScopeDependencyFilter;
 
-class SonatypeAetherFilterTransformer implements FilterTransformer<DependencyFilter>
+/**
+ * 
+ */
+class SonatypeAetherFilterTransformer
+    implements FilterTransformer<DependencyFilter>
 {
     public AndDependencyFilter transform( AndFilter filter )
     {

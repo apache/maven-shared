@@ -19,6 +19,9 @@ package org.apache.maven.shared.artifact.repository;
  * under the License.
  */
 
+/**
+ * 
+ */
 public class RepositoryManagerException extends Exception
 {
 

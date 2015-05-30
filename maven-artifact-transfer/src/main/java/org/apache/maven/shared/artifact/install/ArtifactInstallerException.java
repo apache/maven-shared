@@ -19,6 +19,9 @@ package org.apache.maven.shared.artifact.install;
  * under the License.
  */
 
+/**
+ * 
+ */
 public class ArtifactInstallerException
     extends Exception
 {

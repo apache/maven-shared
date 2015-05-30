@@ -36,6 +36,9 @@ import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.LocalRepositoryManager;
 
+/**
+ * 
+ */
 @Component( role = RepositoryManager.class, hint = "maven31" )
 public class Maven31RepositoryManager
     implements RepositoryManager
@@ -53,8 +56,9 @@ public class Maven31RepositoryManager
         // LRM.getPathForLocalArtifact() won't throw an Exception, so translate reflection error to RuntimeException
         try
         {
-            aetherArtifact = (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact", org.apache.maven.artifact.Artifact.class,
-                                       mavenArtifact );
+            aetherArtifact =
+                (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                           org.apache.maven.artifact.Artifact.class, mavenArtifact );
 
             session = (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
         }

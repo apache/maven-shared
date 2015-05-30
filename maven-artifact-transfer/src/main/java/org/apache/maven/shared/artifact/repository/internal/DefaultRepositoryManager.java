@@ -32,6 +32,9 @@ import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
+/**
+ * 
+ */
 @Component( role = RepositoryManager.class )
 public class DefaultRepositoryManager
     implements RepositoryManager, Contextualizable

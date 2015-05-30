@@ -1,21 +1,5 @@
 package org.apache.maven.shared.artifact.resolve.internal;
 
-import java.util.List;
-
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.project.ProjectBuildingRequest;
-import org.apache.maven.shared.artifact.resolve.ArtifactResolver;
-import org.apache.maven.shared.artifact.resolve.ArtifactResolverException;
-import org.apache.maven.shared.artifact.resolve.filter.TransformableFilter;
-import org.codehaus.plexus.PlexusConstants;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.codehaus.plexus.context.Context;
-import org.codehaus.plexus.context.ContextException;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -35,15 +19,33 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
  * under the License.
  */
 
+import java.util.List;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.shared.artifact.resolve.ArtifactResolver;
+import org.apache.maven.shared.artifact.resolve.ArtifactResolverException;
+import org.apache.maven.shared.artifact.resolve.filter.TransformableFilter;
+import org.codehaus.plexus.PlexusConstants;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+
+/**
+ * 
+ */
 @Component( role = ArtifactResolver.class, hint = "default" )
 public class DefaultArtifactResolver
     implements ArtifactResolver, Contextualizable
 {
     private PlexusContainer container;
 
-    public org.apache.maven.artifact.Artifact resolveArtifact( ProjectBuildingRequest buildingRequest,
-                                                               Artifact mavenArtifact,
-                                                               List<ArtifactRepository> remoteRepositories )
+    public Artifact resolveArtifact( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact,
+                                     List<ArtifactRepository> remoteRepositories )
         throws ArtifactResolverException
     {
         try

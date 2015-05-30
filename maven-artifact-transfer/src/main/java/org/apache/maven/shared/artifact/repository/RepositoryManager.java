@@ -23,8 +23,10 @@ import java.io.File;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
-import org.apache.maven.shared.artifact.install.ArtifactInstallerException;
 
+/**
+ * 
+ */
 public interface RepositoryManager
 {
 
@@ -37,7 +39,7 @@ public interface RepositoryManager
      * @param basedir the base directory of the local repository
      * @return a new project building request
      */
-    public ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest request, File basedir );
+    ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest request, File basedir );
     
     /**
      * Get the localRepositryBasedir as specified in the repository session of the request
@@ -45,5 +47,5 @@ public interface RepositoryManager
      * @param request the build request
      * @return the local repository base directory
      */
-    public File getLocalRepositoryBasedir( ProjectBuildingRequest request );
+    File getLocalRepositoryBasedir( ProjectBuildingRequest request );
 }

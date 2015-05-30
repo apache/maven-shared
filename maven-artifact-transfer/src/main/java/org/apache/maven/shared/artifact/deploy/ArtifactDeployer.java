@@ -24,9 +24,12 @@ import java.util.Collection;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
 
+/**
+ * 
+ */
 public interface ArtifactDeployer
 {
 
-    public void deploy( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
+    void deploy( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
                     throws ArtifactDeployerException;
 }

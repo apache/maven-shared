@@ -19,6 +19,9 @@ package org.apache.maven.shared.artifact.resolve;
  * under the License.
  */
 
+/**
+ * 
+ */
 public class ArtifactResolverException extends Exception
 {
 

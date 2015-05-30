@@ -19,6 +19,9 @@ package org.apache.maven.shared.artifact.deploy;
  * under the License.
  */
 
+/**
+ * 
+ */
 public class ArtifactDeployerException
     extends Exception
 {

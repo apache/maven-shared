@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.metadata.ArtifactRepositoryMetadata;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
@@ -38,7 +39,10 @@ import org.eclipse.aether.deployment.DeploymentException;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.util.artifact.SubArtifact;
 
-@Component( role = ArtifactDeployer.class , hint="maven31" )
+/**
+ * 
+ */
+@Component( role = ArtifactDeployer.class, hint = "maven31" )
 public class Maven31ArtifactDeployer implements ArtifactDeployer
 {
 
@@ -62,7 +66,7 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
             
             RemoteRepository aetherRepository =
                             (RemoteRepository) Invoker.invoke( RepositoryUtils.class, "toRepo",
-                                                               org.apache.maven.artifact.repository.ArtifactRepository.class,
+                                                               ArtifactRepository.class,
                                                                mavenArtifact.getRepository() );
             request.setRepository( aetherRepository );
 

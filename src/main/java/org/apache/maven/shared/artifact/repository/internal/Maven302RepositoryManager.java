@@ -23,6 +23,9 @@ import org.apache.maven.shared.artifact.repository.RepositoryManager;
 import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.aether.repository.LocalRepository;
 
+/**
+ * 
+ */
 @Component( role = RepositoryManager.class, hint = "maven302" )
 public class Maven302RepositoryManager
     extends Maven30RepositoryManager

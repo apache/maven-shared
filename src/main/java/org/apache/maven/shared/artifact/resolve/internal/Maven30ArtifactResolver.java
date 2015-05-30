@@ -45,6 +45,9 @@ import org.sonatype.aether.resolution.ArtifactRequest;
 import org.sonatype.aether.resolution.ArtifactResolutionException;
 import org.sonatype.aether.resolution.ArtifactResult;
 
+/**
+ * 
+ */
 @Component( role = ArtifactResolver.class, hint = "maven3" )
 public class Maven30ArtifactResolver
     implements ArtifactResolver
@@ -133,7 +136,7 @@ public class Maven30ArtifactResolver
                                     aetherRepositories );
 
             DependencyFilter depFilter  = null;
-            if( dependencyFilter != null )
+            if ( dependencyFilter != null )
             {
                 depFilter = dependencyFilter.transform( new SonatypeAetherFilterTransformer() );
             }

@@ -37,7 +37,10 @@ import org.eclipse.aether.installation.InstallRequest;
 import org.eclipse.aether.installation.InstallationException;
 import org.eclipse.aether.util.artifact.SubArtifact;
 
-@Component( role = ArtifactInstaller.class , hint="maven31" )
+/**
+ * 
+ */
+@Component( role = ArtifactInstaller.class, hint = "maven31" )
 public class Maven31ArtifactInstaller implements ArtifactInstaller 
 {
 
@@ -63,7 +66,7 @@ public class Maven31ArtifactInstaller implements ArtifactInstaller
             {
                 if ( metadata instanceof ProjectArtifactMetadata )
                 {
-                    org.eclipse.aether.artifact.Artifact pomArtifact = new SubArtifact( mainArtifact, "", "pom" );
+                    Artifact pomArtifact = new SubArtifact( mainArtifact, "", "pom" );
                     pomArtifact = pomArtifact.setFile( ( (ProjectArtifactMetadata) metadata ).getFile() );
                     request.addArtifact( pomArtifact );
                 }

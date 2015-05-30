@@ -35,12 +35,12 @@ import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.deployment.DeployRequest;
 import org.sonatype.aether.deployment.DeploymentException;
-import org.sonatype.aether.metadata.Metadata;
-import org.sonatype.aether.metadata.Metadata.Nature;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.util.artifact.SubArtifact;
-import org.sonatype.aether.util.metadata.DefaultMetadata;
 
+/**
+ * 
+ */
 @Component( role = ArtifactDeployer.class, hint = "maven3" )
 public class Maven30ArtifactDeployer
     implements ArtifactDeployer
@@ -74,7 +74,7 @@ public class Maven30ArtifactDeployer
             {
                 if ( metadata instanceof ProjectArtifactMetadata )
                 {
-                    org.sonatype.aether.artifact.Artifact pomArtifact = new SubArtifact( aetherArtifact, "", "pom" );
+                    Artifact pomArtifact = new SubArtifact( aetherArtifact, "", "pom" );
                     pomArtifact = pomArtifact.setFile( ( (ProjectArtifactMetadata) metadata ).getFile() );
                     request.addArtifact( pomArtifact );
                 }

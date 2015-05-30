@@ -33,7 +33,8 @@ import org.eclipse.aether.util.filter.ExclusionsDependencyFilter;
 import org.eclipse.aether.util.filter.ScopeDependencyFilter;
 import org.eclipse.aether.graph.DependencyFilter;
 
-class EclipseAetherFilterTransformer implements FilterTransformer<DependencyFilter>
+class EclipseAetherFilterTransformer
+    implements FilterTransformer<DependencyFilter>
 {
     
     public AndDependencyFilter transform( AndFilter andFilter )

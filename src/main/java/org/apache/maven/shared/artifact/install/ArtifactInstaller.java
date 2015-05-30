@@ -24,9 +24,12 @@ import java.util.Collection;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
 
+/**
+ * 
+ */
 public interface ArtifactInstaller
 {
 
-    public void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
+    void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException;
 }

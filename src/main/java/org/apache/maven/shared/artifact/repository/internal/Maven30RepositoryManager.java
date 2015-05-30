@@ -26,7 +26,6 @@ import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.repository.RepositoryManager;
 import org.apache.maven.shared.artifact.repository.RepositoryManagerException;
-import org.apache.maven.shared.artifact.repository.internal.Invoker;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.sonatype.aether.RepositorySystem;
@@ -37,6 +36,9 @@ import org.sonatype.aether.repository.LocalRepositoryManager;
 import org.sonatype.aether.util.DefaultRepositoryCache;
 import org.sonatype.aether.util.DefaultRepositorySystemSession;
 
+/**
+ * 
+ */
 @Component( role = RepositoryManager.class, hint = "maven3" )
 public class Maven30RepositoryManager
     implements RepositoryManager

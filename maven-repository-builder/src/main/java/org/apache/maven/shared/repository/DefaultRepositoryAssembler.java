@@ -709,19 +709,12 @@ public class DefaultRepositoryAssembler
 
         for ( String hint : PREFERRED_RESOLVER_HINTS )
         {
-            if ( container.hasComponent( ArtifactResolver.ROLE, hint ) )
+            try
             {
-                try
-                {
-                    artifactResolver = (ArtifactResolver) container.lookup( ArtifactResolver.ROLE, hint );
-                    break;
-                }
-                catch ( ComponentLookupException e )
-                {
-                    getLogger().warn( "Cannot find ArtifactResolver with hint: " + hint, e );
-                }
+                artifactResolver = (ArtifactResolver) container.lookup( ArtifactResolver.ROLE, hint );
+                break;
             }
-            else
+            catch ( ComponentLookupException e )
             {
                 getLogger().debug( "No ArtifactResolver with hint " + hint );
             }

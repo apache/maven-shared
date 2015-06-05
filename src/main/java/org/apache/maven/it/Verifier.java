@@ -75,6 +75,8 @@ public class Verifier
 {
     private static final String LOG_FILENAME = "log.txt";
 
+    private static final String[] DEFAULT_CLI_OPTIONS = {"-e", "--batch-mode"};
+
     private String localRepo;
 
     private final String basedir;
@@ -82,6 +84,8 @@ public class Verifier
     private final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 
     private final ByteArrayOutputStream errStream = new ByteArrayOutputStream();
+
+    private final String[] defaultCliOptions;
 
     private PrintStream originalOut;
 
@@ -141,16 +145,28 @@ public class Verifier
     public Verifier( String basedir, String settingsFile, boolean debug )
         throws VerificationException
     {
-        this( basedir, settingsFile, debug, null );
+        this( basedir, settingsFile, debug, DEFAULT_CLI_OPTIONS );
+    }
+
+    public Verifier( String basedir, String settingsFile, boolean debug, String[] defaultCliOptions )
+        throws VerificationException
+    {
+        this( basedir, settingsFile, debug, null, defaultCliOptions );
     }
 
     public Verifier( String basedir, String settingsFile, boolean debug, boolean forkJvm )
         throws VerificationException
     {
-        this( basedir, settingsFile, debug, Boolean.valueOf( forkJvm ) );
+        this( basedir, settingsFile, debug, forkJvm, DEFAULT_CLI_OPTIONS );
     }
 
-    private Verifier( String basedir, String settingsFile, boolean debug, Boolean forkJvm )
+    public Verifier( String basedir, String settingsFile, boolean debug, boolean forkJvm, String[] defaultCliOptions )
+        throws VerificationException
+    {
+        this( basedir, settingsFile, debug, (Boolean) forkJvm, defaultCliOptions );
+    }
+
+    private Verifier( String basedir, String settingsFile, boolean debug, Boolean forkJvm, String[] defaultCliOptions )
         throws VerificationException
     {
         this.basedir = basedir;
@@ -174,6 +190,8 @@ public class Verifier
         {
             forkMode = "auto";
         }
+
+        this.defaultCliOptions = defaultCliOptions == null ? new String[0] : defaultCliOptions.clone();
     }
 
     private void findDefaultMavenHome()
@@ -1305,9 +1323,7 @@ public class Verifier
             }
         }
 
-        args.add( "-e" );
-
-        args.add( "--batch-mode" );
+        Collections.addAll( args, defaultCliOptions );
 
         if ( this.mavenDebug )
         {

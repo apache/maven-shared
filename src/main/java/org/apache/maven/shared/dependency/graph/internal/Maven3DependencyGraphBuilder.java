@@ -68,17 +68,12 @@ public class Maven3DependencyGraphBuilder
     /**
      * Builds the dependency graph for Maven 3.
      *
-     * @param project the project
+     * @param buildingRequest the buildingRequest
      * @param filter artifact filter (can be <code>null</code>)
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
-    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
-        throws DependencyGraphBuilderException
-    {
-        return buildDependencyGraph( project, filter, null );
-    }
-    
+    @Override
     public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
@@ -89,23 +84,13 @@ public class Maven3DependencyGraphBuilder
      * Builds the dependency graph for Maven 3, eventually hacking for collecting projects from
      * reactor not yet built.
      *
-     * @param project the project
+     * @param buildingRequest the buildingRequest
      * @param filter artifact filter (can be <code>null</code>)
      * @param reactorProjects Collection of those projects contained in the reactor (can be <code>null</code>).
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
-    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
-                                                Collection<MavenProject> reactorProjects )
-        throws DependencyGraphBuilderException
-    {
-        // this method doesn't exist on all MavenProject versions and also has been deprecated.
-        ProjectBuildingRequest projectBuildingRequest =
-            (ProjectBuildingRequest) Invoker.invoke( project, "getProjectBuildingRequest" );
-
-        return buildDependencyGraph( projectBuildingRequest, filter, reactorProjects );
-    }
-
+    @Override
     public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter,
                                                 Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException

@@ -66,6 +66,7 @@ public class DefaultDependencyGraphBuilder
         return buildDependencyGraph( project.getProjectBuildingRequest(), filter, null );
     }
     
+    @Override
     public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
@@ -88,6 +89,7 @@ public class DefaultDependencyGraphBuilder
         return buildDependencyGraph( project.getProjectBuildingRequest(), filter, reactorProjects );
     }
     
+    @Override
     public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter,
                                                 Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
@@ -138,6 +140,7 @@ public class DefaultDependencyGraphBuilder
      * @param context   Plexus context to inject.
      * @throws ContextException if the PlexusContainer could not be located.
      */
+    @Override
     public void contextualize( Context context )
         throws ContextException
     {

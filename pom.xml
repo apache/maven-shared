@@ -51,6 +51,8 @@
 
   <properties>
     <mavenVersion>3.0</mavenVersion>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
   </properties>
 
   <contributors>

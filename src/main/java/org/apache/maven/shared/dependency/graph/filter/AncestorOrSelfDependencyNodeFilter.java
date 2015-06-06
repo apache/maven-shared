@@ -64,6 +64,7 @@ public class AncestorOrSelfDependencyNodeFilter
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean accept( DependencyNode node )
     {
         for ( DependencyNode descendantNode : descendantNodes )

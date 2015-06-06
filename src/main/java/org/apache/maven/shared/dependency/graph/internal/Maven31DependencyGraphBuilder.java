@@ -68,17 +68,12 @@ public class Maven31DependencyGraphBuilder
     /**
      * Builds the dependency graph for Maven 3.1+.
      *
-     * @param project the project
+     * @param buildingRequest the buildingRequest
      * @param filter artifact filter (can be <code>null</code>)
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
-    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
-        throws DependencyGraphBuilderException
-    {
-        return buildDependencyGraph( project, filter, null );
-    }
-    
+    @Override
     public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
@@ -89,22 +84,13 @@ public class Maven31DependencyGraphBuilder
      * Builds the dependency graph for Maven 3.1+, eventually hacking for collecting projects from
      * reactor not yet built.
      *
-     * @param project the project
+     * @param buildingRequest the buildingRequest
      * @param filter artifact filter (can be <code>null</code>)
      * @param reactorProjects Collection of those projects contained in the reactor (can be <code>null</code>).
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
-    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
-                                                Collection<MavenProject> reactorProjects )
-        throws DependencyGraphBuilderException
-    {
-        ProjectBuildingRequest projectBuildingRequest =
-            (ProjectBuildingRequest) Invoker.invoke( project, "getProjectBuildingRequest" );
-
-        return buildDependencyGraph( projectBuildingRequest, filter, reactorProjects );
-    }
-    
+    @Override
     public DependencyNode buildDependencyGraph( ProjectBuildingRequest projectBuildingRequest, ArtifactFilter filter,
                                                 Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException

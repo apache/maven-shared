@@ -57,6 +57,7 @@ public class CollectingDependencyNodeVisitor
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean visit( DependencyNode node )
     {
         // collect node
@@ -68,6 +69,7 @@ public class CollectingDependencyNodeVisitor
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean endVisit( DependencyNode node )
     {
         return true;

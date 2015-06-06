@@ -64,6 +64,7 @@ public class FilteringDependencyNodeVisitor
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean visit( DependencyNode node )
     {
         boolean visit;
@@ -83,6 +84,7 @@ public class FilteringDependencyNodeVisitor
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean endVisit( DependencyNode node )
     {
         boolean visit;

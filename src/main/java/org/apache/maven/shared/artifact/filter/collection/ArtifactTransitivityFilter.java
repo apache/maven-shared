@@ -19,23 +19,22 @@ package org.apache.maven.shared.artifact.filter.collection;
  * under the License.    
  */
 
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
+import org.apache.maven.shared.dependency.graph.DependencyNode;
+import org.apache.maven.shared.dependency.graph.filter.ArtifactDependencyNodeFilter;
+import org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter;
+import org.apache.maven.shared.dependency.graph.traversal.BuildingDependencyNodeVisitor;
+import org.apache.maven.shared.dependency.graph.traversal.CollectingDependencyNodeVisitor;
+import org.apache.maven.shared.dependency.graph.traversal.FilteringDependencyNodeVisitor;
 
 /**
- * This filter will exclude everything that is not a dependency of the selected artifact.
+ * This filter will exclude everything that is not a dependency of the selected dependencyNode.
  * 
  * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
  * @version $Id$
@@ -44,58 +43,34 @@ public class ArtifactTransitivityFilter
     extends AbstractArtifactsFilter
 {
 
-    Collection<Artifact> transitiveArtifacts;
+    /**
+     * List of dependencyConflictIds of transitiveArtifacts
+     */
+    private Set<String> transitiveArtifacts;
 
-    ArtifactFactory factory;
-
-    ArtifactRepository local;
-
-    List<ArtifactRepository> remote;
-
-    @SuppressWarnings( "unchecked" )
-    public ArtifactTransitivityFilter( Artifact artifact, ArtifactFactory factory, ArtifactRepository local,
-                                       List<ArtifactRepository> remote, MavenProjectBuilder builder )
+    /**
+     * @TODO describe for to get a DependencyNode based on Artifact or Dependency
+     * 
+     */
+    public ArtifactTransitivityFilter( DependencyNode node )
         throws ProjectBuildingException, InvalidDependencyVersionException
     {
-        this.factory = factory;
-        this.local = local;
-        this.remote = remote;
+        CollectingDependencyNodeVisitor collectingVisitor = new CollectingDependencyNodeVisitor();
+     
+        DependencyNodeFilter dependencyFilter = new ArtifactDependencyNodeFilter( new ScopeArtifactFilter( Artifact.SCOPE_TEST ) );
+        
+        FilteringDependencyNodeVisitor filteringVisitor = new FilteringDependencyNodeVisitor( collectingVisitor, dependencyFilter );
+        
+        BuildingDependencyNodeVisitor buildingVisitor = new BuildingDependencyNodeVisitor( filteringVisitor );
 
-        Artifact rootArtifactPom =
-            factory.createArtifact( artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion(), "", "pom" );
-
-        MavenProject rootArtifactProject = builder.buildFromRepository( rootArtifactPom, remote, local );
-
-        // load all the artifacts.
-        transitiveArtifacts =
-            rootArtifactProject.createArtifacts( this.factory, Artifact.SCOPE_TEST,
-                                                 new ScopeArtifactFilter( Artifact.SCOPE_TEST ) );
-
+        buildingVisitor.visit( node );
+        
+        for( DependencyNode collectedNode : collectingVisitor.getNodes() )
+        {
+            transitiveArtifacts.add( collectedNode.getArtifact().getDependencyConflictId() );
+        }
     }
-
-    @SuppressWarnings( "unchecked" )
-    public ArtifactTransitivityFilter( Dependency dependency, ArtifactFactory factory, ArtifactRepository local,
-                                       List<ArtifactRepository> remote, MavenProjectBuilder builder )
-        throws ProjectBuildingException, InvalidDependencyVersionException
-    {
-
-        this.factory = factory;
-        this.local = local;
-        this.remote = remote;
-
-        Artifact rootArtifactPom =
-            factory.createArtifact( dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), "",
-                                    "pom" );
-
-        MavenProject rootArtifactProject = builder.buildFromRepository( rootArtifactPom, remote, local );
-
-        // load all the artifacts.
-        transitiveArtifacts =
-            rootArtifactProject.createArtifacts( this.factory, Artifact.SCOPE_TEST,
-                                                 new ScopeArtifactFilter( Artifact.SCOPE_TEST ) );
-
-    }
-
+    
     public Set<Artifact> filter( Set<Artifact> artifacts )
     {
 
@@ -118,16 +93,6 @@ public class ArtifactTransitivityFilter
      */
     public boolean artifactIsATransitiveDependency( Artifact artifact )
     {
-        boolean result = false;
-        for ( Artifact trans : transitiveArtifacts )
-        {
-            if ( trans.getGroupId().equals( artifact.getGroupId() )
-                && trans.getArtifactId().equals( artifact.getArtifactId() ) )
-            {
-                result = true;
-                break;
-            }
-        }
-        return result;
+        return transitiveArtifacts.contains( artifact.getDependencyConflictId() );
     }
 }

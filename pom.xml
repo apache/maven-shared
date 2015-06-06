@@ -122,6 +122,12 @@
       <artifactId>plexus-component-annotations</artifactId>
       <version>1.6</version>
     </dependency>
+    
+    <dependency>
+      <groupId>org.apache.maven.shared</groupId>
+      <artifactId>maven-common-artifact-filters</artifactId>
+      <version>1.5-SNAPSHOT</version>
+    </dependency>
   
     <!-- Maven 3.0.x -->
     <dependency>

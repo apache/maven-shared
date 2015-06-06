@@ -22,16 +22,20 @@ package org.apache.maven.shared.artifact.resolve.internal;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.maven.shared.artifact.resolve.filter.TransformableFilter;
-import org.apache.maven.shared.artifact.resolve.filter.AndFilter;
-import org.apache.maven.shared.artifact.resolve.filter.ExclusionsFilter;
-import org.apache.maven.shared.artifact.resolve.filter.FilterTransformer;
-import org.apache.maven.shared.artifact.resolve.filter.OrFilter;
-import org.apache.maven.shared.artifact.resolve.filter.ScopeFilter;
+import org.apache.maven.shared.artifact.filter.resolve.AndFilter;
+import org.apache.maven.shared.artifact.filter.resolve.ExclusionsFilter;
+import org.apache.maven.shared.artifact.filter.resolve.FilterTransformer;
+import org.apache.maven.shared.artifact.filter.resolve.OrFilter;
+import org.apache.maven.shared.artifact.filter.resolve.PatternExclusionsFilter;
+import org.apache.maven.shared.artifact.filter.resolve.PatternInclusionsFilter;
+import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
+import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
+import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.util.filter.AndDependencyFilter;
 import org.eclipse.aether.util.filter.ExclusionsDependencyFilter;
+import org.eclipse.aether.util.filter.PatternExclusionsDependencyFilter;
+import org.eclipse.aether.util.filter.PatternInclusionsDependencyFilter;
 import org.eclipse.aether.util.filter.ScopeDependencyFilter;
-import org.eclipse.aether.graph.DependencyFilter;
 
 class EclipseAetherFilterTransformer
     implements FilterTransformer<DependencyFilter>
@@ -66,5 +70,14 @@ class EclipseAetherFilterTransformer
     {
         return new ScopeDependencyFilter( filter.getIncluded(), filter.getExcluded() );
     }
+    
+    public DependencyFilter transform( PatternExclusionsFilter filter )
+    {
+        return new PatternExclusionsDependencyFilter( filter.getExcludes() );
+    } 
 
+    public DependencyFilter transform( PatternInclusionsFilter filter )
+    {
+        return new PatternInclusionsDependencyFilter( filter.getIncludes() );
+    }
 }

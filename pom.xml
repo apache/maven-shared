@@ -154,6 +154,12 @@
           <pomIncludes>
             <pomInclude>*/pom.xml</pomInclude>
           </pomIncludes>
+          <pomExcludes> <!-- Tree ITs, must be transformed to graph ITs -->
+            <pomExclude>maven-version/pom.xml</pomExclude>
+            <pomExclude>mshared-167/pom.xml</pomExclude>
+            <pomExclude>reactor/pom.xml</pomExclude>
+            <pomExclude>verbose/pom.xml</pomExclude>
+          </pomExcludes>
         </configuration>
         <executions>
           <execution>

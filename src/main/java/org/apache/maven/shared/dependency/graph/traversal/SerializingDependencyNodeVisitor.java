@@ -142,6 +142,7 @@ public class SerializingDependencyNodeVisitor
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean visit( DependencyNode node )
     {
         indent( node );
@@ -156,6 +157,7 @@ public class SerializingDependencyNodeVisitor
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean endVisit( DependencyNode node )
     {
         depth--;

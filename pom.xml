@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>maven-dependency-tree</artifactId>
-  <version>2.3-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
 
   <name>Apache Maven Dependency Tree</name>
   <description>A tree-based API for resolution of Maven project dependencies</description>
@@ -50,7 +50,9 @@
   </distributionManagement>
 
   <properties>
-    <mavenVersion>2.2.1</mavenVersion>
+    <mavenVersion>3.0</mavenVersion>
+    <maven.compiler.source>1.6</maven.compiler.source>
+    <maven.compiler.target>1.6</maven.compiler.target>
   </properties>
 
   <contributors>
@@ -60,12 +62,6 @@
   </contributors>
 
   <dependencies>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-project</artifactId>
-      <version>${mavenVersion}</version>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
@@ -206,12 +202,8 @@
             <configuration>
               <groups>
                 <group>
-                  <title>Maven 2 &amp; 3 Dependency Graph</title>
+                  <title>Maven 3 Dependency Graph</title>
                   <packages>org.apache.maven.shared.dependency.graph*</packages>
-                </group>
-                <group>
-                  <title>Maven 2-specific Dependency Tree</title>
-                  <packages>org.apache.maven.shared.dependency.tree*</packages>
                 </group>
               </groups>
             </configuration>

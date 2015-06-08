@@ -57,6 +57,7 @@ public class ArtifactDependencyNodeFilter
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean accept( DependencyNode node )
     {
         Artifact artifact = node.getArtifact();

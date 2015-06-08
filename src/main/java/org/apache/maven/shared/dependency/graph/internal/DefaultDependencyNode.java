@@ -68,6 +68,7 @@ public class DefaultDependencyNode implements DependencyNode
      * @return the visitor result of ending the visit to this node
      * @since 1.1
      */
+    @Override
     public boolean accept( DependencyNodeVisitor visitor )
     {
         if ( visitor.visit( this ) )
@@ -87,6 +88,7 @@ public class DefaultDependencyNode implements DependencyNode
     /**
      * @return Artifact for this DependencyNode.
      */
+    @Override
     public Artifact getArtifact()
     {
         return artifact;
@@ -104,6 +106,7 @@ public class DefaultDependencyNode implements DependencyNode
     /**
      * @return List of child nodes for this DependencyNode.
      */
+    @Override
     public List<DependencyNode> getChildren()
     {
         return children;
@@ -112,21 +115,25 @@ public class DefaultDependencyNode implements DependencyNode
     /**
      * @return Parent of this DependencyNode.
      */
+    @Override
     public DependencyNode getParent()
     {
         return parent;
     }
 
+    @Override
     public String getPremanagedVersion()
     {
         return premanagedVersion;
     }
 
+    @Override
     public String getPremanagedScope()
     {
         return premanagedScope;
     }
 
+    @Override
     public String getVersionConstraint()
     {
         return versionConstraint;
@@ -135,6 +142,7 @@ public class DefaultDependencyNode implements DependencyNode
     /**
      * @return Stringified representation of this DependencyNode.
      */
+    @Override
     public String toNodeString()
     {
         StringBuffer buffer = new StringBuffer();

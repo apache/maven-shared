@@ -70,6 +70,7 @@ public class AndDependencyNodeFilter
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean accept( DependencyNode node )
     {
         for ( DependencyNodeFilter filter : filters )

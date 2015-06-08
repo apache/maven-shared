@@ -80,6 +80,7 @@ public class BuildingDependencyNodeVisitor
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean visit( DependencyNode node )
     {
         // clone the node
@@ -107,6 +108,7 @@ public class BuildingDependencyNodeVisitor
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean endVisit( DependencyNode node )
     {
         parentNodes.pop();

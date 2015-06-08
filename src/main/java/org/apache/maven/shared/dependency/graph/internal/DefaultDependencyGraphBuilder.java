@@ -36,11 +36,11 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 import java.util.Collection;
 
 /**
- * Default dependency graph builder that detects current Maven version to delegate to either Maven 2 or Maven 3 specific
+ * Default dependency graph builder that detects current Maven version to delegate to either Maven 3.0 or 3.1+ specific
  * code.
  *
- * @see Maven2DependencyGraphBuilder
  * @see Maven3DependencyGraphBuilder
+ * @see Maven31DependencyGraphBuilder
  * @author Hervé Boutemy
  * @since 2.0
  */
@@ -82,7 +82,7 @@ public class DefaultDependencyGraphBuilder
     {
         try
         {
-            String hint = isMaven31() ? "maven31" : isMaven2x() ? "maven2" : "maven3";
+            String hint = isMaven31() ? "maven31" : "maven3";
 
             DependencyGraphBuilder effectiveGraphBuilder =
                 (DependencyGraphBuilder) container.lookup( DependencyGraphBuilder.class.getCanonicalName(), hint );
@@ -95,14 +95,6 @@ public class DefaultDependencyGraphBuilder
         {
             throw new DependencyGraphBuilderException( e.getMessage(), e );
         }
-    }
-
-    /**
-     * @return true if the current Maven is Maven 2.x.
-     */
-    protected static boolean isMaven2x()
-    {
-        return !canFindCoreClass( "org.apache.maven.project.DependencyResolutionRequest" ); // Maven 3 specific
     }
 
     /**

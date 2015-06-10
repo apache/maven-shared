@@ -20,18 +20,17 @@ package org.apache.maven.shared.artifact.filter.collection;
  */
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
+import org.apache.maven.project.DependencyResolutionResult;
+import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
+import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.project.ProjectBuildingResult;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
-import org.apache.maven.shared.dependency.graph.DependencyNode;
-import org.apache.maven.shared.dependency.graph.filter.ArtifactDependencyNodeFilter;
-import org.apache.maven.shared.dependency.graph.filter.DependencyNodeFilter;
-import org.apache.maven.shared.dependency.graph.traversal.BuildingDependencyNodeVisitor;
-import org.apache.maven.shared.dependency.graph.traversal.CollectingDependencyNodeVisitor;
-import org.apache.maven.shared.dependency.graph.traversal.FilteringDependencyNodeVisitor;
 
 /**
  * This filter will exclude everything that is not a dependency of the selected dependencyNode.
@@ -42,35 +41,71 @@ import org.apache.maven.shared.dependency.graph.traversal.FilteringDependencyNod
 public class ArtifactTransitivityFilter
     extends AbstractArtifactsFilter
 {
-
     /**
      * List of dependencyConflictIds of transitiveArtifacts
      */
     private Set<String> transitiveArtifacts;
 
-    /**
-     * @TODO describe for to get a DependencyNode based on Artifact or Dependency
-     * 
-     */
-    public ArtifactTransitivityFilter( DependencyNode node )
+    public ArtifactTransitivityFilter( Artifact artifact, ProjectBuildingRequest buildingRequest,
+                                       ProjectBuilder projectBuilder )
         throws ProjectBuildingException, InvalidDependencyVersionException
     {
-        CollectingDependencyNodeVisitor collectingVisitor = new CollectingDependencyNodeVisitor();
-     
-        DependencyNodeFilter dependencyFilter = new ArtifactDependencyNodeFilter( new ScopeArtifactFilter( Artifact.SCOPE_TEST ) );
-        
-        FilteringDependencyNodeVisitor filteringVisitor = new FilteringDependencyNodeVisitor( collectingVisitor, dependencyFilter );
-        
-        BuildingDependencyNodeVisitor buildingVisitor = new BuildingDependencyNodeVisitor( filteringVisitor );
+        ProjectBuildingResult buildingResult = projectBuilder.build( artifact, buildingRequest );
 
-        buildingVisitor.visit( node );
-        
-        for( DependencyNode collectedNode : collectingVisitor.getNodes() )
+        DependencyResolutionResult resolutionResult = buildingResult.getDependencyResolutionResult();
+        if ( resolutionResult != null )
         {
-            transitiveArtifacts.add( collectedNode.getArtifact().getDependencyConflictId() );
+            if ( isMaven31() )
+            {
+                try
+                {
+                    List<org.eclipse.aether.graph.Dependency> dependencies =
+                        (List<org.eclipse.aether.graph.Dependency>) Invoker.invoke( resolutionResult, "getDependencies" );
+
+                    for ( org.eclipse.aether.graph.Dependency dependency : dependencies )
+                    {
+                        Artifact mavenArtifact =
+                            (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                                       org.eclipse.aether.artifact.Artifact.class,
+                                                       dependency.getArtifact() );
+
+                        transitiveArtifacts.add( mavenArtifact.getDependencyConflictId() );
+                    }
+                }
+                catch ( ReflectiveOperationException e )
+                {
+                    // don't want to pollute method signature with ReflectionExceptions
+                    throw new RuntimeException( e.getMessage(), e );
+                }
+
+            }
+            else
+            {
+                try
+                {
+                    List<org.sonatype.aether.graph.Dependency> dependencies =
+                        (List<org.sonatype.aether.graph.Dependency>) Invoker.invoke( resolutionResult,
+                                                                                     "getDependencies" );
+
+                    for ( org.sonatype.aether.graph.Dependency dependency : dependencies )
+                    {
+                        Artifact mavenArtifact =
+                            (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                                       org.sonatype.aether.artifact.Artifact.class,
+                                                       dependency.getArtifact() );
+
+                        transitiveArtifacts.add( mavenArtifact.getDependencyConflictId() );
+                    }
+                }
+                catch ( ReflectiveOperationException e )
+                {
+                    // don't want to pollute method signature with ReflectionExceptions
+                    throw new RuntimeException( e.getMessage(), e );
+                }
+            }
         }
     }
-    
+
     public Set<Artifact> filter( Set<Artifact> artifacts )
     {
 
@@ -94,5 +129,27 @@ public class ArtifactTransitivityFilter
     public boolean artifactIsATransitiveDependency( Artifact artifact )
     {
         return transitiveArtifacts.contains( artifact.getDependencyConflictId() );
+    }
+
+    /**
+     * @return true if the current Maven version is Maven 3.1.
+     */
+    protected static boolean isMaven31()
+    {
+        return canFindCoreClass( "org.eclipse.aether.artifact.Artifact" ); // Maven 3.1 specific
+    }
+
+    private static boolean canFindCoreClass( String className )
+    {
+        try
+        {
+            Thread.currentThread().getContextClassLoader().loadClass( className );
+
+            return true;
+        }
+        catch ( ClassNotFoundException e )
+        {
+            return false;
+        }
     }
 }

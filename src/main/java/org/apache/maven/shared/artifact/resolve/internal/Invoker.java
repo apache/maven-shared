@@ -19,8 +19,6 @@ package org.apache.maven.shared.artifact.resolve.internal;
  * under the License.
  */
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.apache.maven.shared.artifact.resolve.ArtifactResolverException;
 
 /**
@@ -46,15 +44,7 @@ final class Invoker
         {
             return objectClazz.getMethod( method ).invoke( object );
         }
-        catch ( IllegalAccessException e )
-        {
-            throw new ArtifactResolverException( e.getMessage(), e );
-        }
-        catch ( InvocationTargetException e )
-        {
-            throw new ArtifactResolverException( e.getMessage(), e );
-        }
-        catch ( NoSuchMethodException e )
+        catch ( ReflectiveOperationException e )
         {
             throw new ArtifactResolverException( e.getMessage(), e );
         }
@@ -68,15 +58,7 @@ final class Invoker
             final Class<?> objectClazz = object.getClass();
             return objectClazz.getMethod( method, argClazz ).invoke( object, arg );
         }
-        catch ( IllegalAccessException e )
-        {
-            throw new ArtifactResolverException( e.getMessage(), e );
-        }
-        catch ( InvocationTargetException e )
-        {
-            throw new ArtifactResolverException( e.getMessage(), e );
-        }
-        catch ( NoSuchMethodException e )
+        catch ( ReflectiveOperationException e )
         {
             throw new ArtifactResolverException( e.getMessage(), e );
         }
@@ -89,15 +71,7 @@ final class Invoker
         {
             return objectClazz.getMethod( staticMethod, argClazz ).invoke( null, arg );
         }
-        catch ( IllegalAccessException e )
-        {
-            throw new ArtifactResolverException( e.getMessage(), e );
-        }
-        catch ( InvocationTargetException e )
-        {
-            throw new ArtifactResolverException( e.getMessage(), e );
-        }
-        catch ( NoSuchMethodException e )
+        catch ( ReflectiveOperationException e )
         {
             throw new ArtifactResolverException( e.getMessage(), e );
         }

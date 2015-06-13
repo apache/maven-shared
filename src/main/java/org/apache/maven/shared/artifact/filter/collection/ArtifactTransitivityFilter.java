@@ -19,6 +19,7 @@ package org.apache.maven.shared.artifact.filter.collection;
  * under the License.    
  */
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -97,7 +98,17 @@ public class ArtifactTransitivityFilter
                         transitiveArtifacts.add( mavenArtifact.getDependencyConflictId() );
                     }
                 }
-                catch ( ReflectiveOperationException e )
+                catch ( IllegalAccessException e )
+                {
+                    // don't want to pollute method signature with ReflectionExceptions
+                    throw new RuntimeException( e.getMessage(), e );
+                }
+                catch ( InvocationTargetException e )
+                {
+                    // don't want to pollute method signature with ReflectionExceptions
+                    throw new RuntimeException( e.getMessage(), e );
+                }
+                catch ( NoSuchMethodException e )
                 {
                     // don't want to pollute method signature with ReflectionExceptions
                     throw new RuntimeException( e.getMessage(), e );
@@ -122,7 +133,17 @@ public class ArtifactTransitivityFilter
                         transitiveArtifacts.add( mavenArtifact.getDependencyConflictId() );
                     }
                 }
-                catch ( ReflectiveOperationException e )
+                catch ( IllegalAccessException e )
+                {
+                    // don't want to pollute method signature with ReflectionExceptions
+                    throw new RuntimeException( e.getMessage(), e );
+                }
+                catch ( InvocationTargetException e )
+                {
+                    // don't want to pollute method signature with ReflectionExceptions
+                    throw new RuntimeException( e.getMessage(), e );
+                }
+                catch ( NoSuchMethodException e )
                 {
                     // don't want to pollute method signature with ReflectionExceptions
                     throw new RuntimeException( e.getMessage(), e );

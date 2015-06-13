@@ -1,5 +1,7 @@
 package org.apache.maven.shared.artifact.filter.collection;
 
+import java.lang.reflect.InvocationTargetException;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,21 +33,21 @@ final class Invoker
     }
 
     public static Object invoke( Object object, String method )
-        throws ReflectiveOperationException
+        throws IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
         return invoke( object.getClass(), object, method );
     }
 
     public static Object invoke( Class<?> objectClazz, Object object, String method )
-                    throws ReflectiveOperationException
+        throws IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
-            return objectClazz.getMethod( method ).invoke( object );
+        return objectClazz.getMethod( method ).invoke( object );
     }
 
     public static Object invoke( Object object, String method, Class<?> clazz, Object arg )
-                    throws ReflectiveOperationException
+        throws IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
-            final Class<?> objectClazz = object.getClass();
-            return objectClazz.getMethod( method, clazz ).invoke( object, arg );
+        final Class<?> objectClazz = object.getClass();
+        return objectClazz.getMethod( method, clazz ).invoke( object, arg );
     }
 }

@@ -149,7 +149,6 @@ public class PatternIncludesArtifactFilter
 
         if ( actTransitively )
         {
-            @SuppressWarnings( "unchecked" )
             final List<String> depTrail = artifact.getDependencyTrail();
 
             if ( ( depTrail != null ) && depTrail.size() > 1 )

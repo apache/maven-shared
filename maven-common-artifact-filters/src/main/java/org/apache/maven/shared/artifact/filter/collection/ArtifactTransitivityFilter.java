@@ -19,19 +19,19 @@ package org.apache.maven.shared.artifact.filter.collection;
  * under the License.    
  */
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.MavenProjectBuilder;
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.project.DefaultProjectBuildingRequest;
+import org.apache.maven.project.DependencyResolutionResult;
+import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.artifact.InvalidDependencyVersionException;
+import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.project.ProjectBuildingResult;
 
 /**
  * This filter will exclude everything that is not a dependency of the selected artifact.
@@ -42,34 +42,93 @@ import org.apache.maven.project.artifact.InvalidDependencyVersionException;
 public class ArtifactTransitivityFilter
     extends AbstractArtifactsFilter
 {
+    /**
+     * List of dependencyConflictIds of transitiveArtifacts
+     */
+    private Set<String> transitiveArtifacts;
 
-    Collection<Artifact> transitiveArtifacts;
-
-    ArtifactFactory factory;
-
-    ArtifactRepository local;
-
-    List<ArtifactRepository> remote;
-
-    @SuppressWarnings( "unchecked" )
-    public ArtifactTransitivityFilter( Artifact artifact, ArtifactFactory factory, ArtifactRepository local,
-                                       List<ArtifactRepository> remote, MavenProjectBuilder builder )
-        throws ProjectBuildingException, InvalidDependencyVersionException
+    /**
+     * Use {@link MavenSession#getProjectBuildingRequest()} to get the buildingRequest. 
+     * The projectBuilder should be resolved with CDI.
+     * 
+     * <pre>
+     *   // For Mojo
+     *   &#64;Component
+     *   private ProjectBuilder projectBuilder;
+     *
+     *   // For Components
+     *   &#64;Requirement // or &#64;Inject  
+     *   private ProjectBuilder projectBuilder;
+     * </pre>
+     * 
+     * @param artifact the artifact to resolve the dependencies from
+     * @param buildingRequest the buildingRequest
+     * @param projectBuilder the projectBuilder
+     * @throws ProjectBuildingException if the project descriptor could not be successfully built
+     */
+    public ArtifactTransitivityFilter( Artifact artifact, ProjectBuildingRequest buildingRequest,
+                                       ProjectBuilder projectBuilder )
+        throws ProjectBuildingException
     {
-        this.factory = factory;
-        this.local = local;
-        this.remote = remote;
+        ProjectBuildingRequest request = new DefaultProjectBuildingRequest( buildingRequest );
+        
+        request.setResolveDependencies( true );
+        
+        ProjectBuildingResult buildingResult = projectBuilder.build( artifact, request );
 
-        Artifact rootArtifactPom =
-            factory.createArtifact( artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion(), "", "pom" );
+        DependencyResolutionResult resolutionResult = buildingResult.getDependencyResolutionResult();
+        if ( resolutionResult != null )
+        {
+            if ( isMaven31() )
+            {
+                try
+                {
+                    @SuppressWarnings( "unchecked" )
+                    List<org.eclipse.aether.graph.Dependency> dependencies =
+                        (List<org.eclipse.aether.graph.Dependency>) Invoker.invoke( resolutionResult, "getDependencies" );
 
-        MavenProject rootArtifactProject = builder.buildFromRepository( rootArtifactPom, remote, local );
+                    for ( org.eclipse.aether.graph.Dependency dependency : dependencies )
+                    {
+                        Artifact mavenArtifact =
+                            (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                                       org.eclipse.aether.artifact.Artifact.class,
+                                                       dependency.getArtifact() );
 
-        // load all the artifacts.
-        transitiveArtifacts =
-            rootArtifactProject.createArtifacts( this.factory, Artifact.SCOPE_TEST,
-                                                 new ScopeArtifactFilter( Artifact.SCOPE_TEST ) );
+                        transitiveArtifacts.add( mavenArtifact.getDependencyConflictId() );
+                    }
+                }
+                catch ( ReflectiveOperationException e )
+                {
+                    // don't want to pollute method signature with ReflectionExceptions
+                    throw new RuntimeException( e.getMessage(), e );
+                }
+            }
+            else
+            {
+                try
+                {
+                    @SuppressWarnings( "unchecked" )
+                    List<org.sonatype.aether.graph.Dependency> dependencies =
+                        (List<org.sonatype.aether.graph.Dependency>) Invoker.invoke( resolutionResult,
+                                                                                     "getDependencies" );
 
+                    for ( org.sonatype.aether.graph.Dependency dependency : dependencies )
+                    {
+                        Artifact mavenArtifact =
+                            (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                                       org.sonatype.aether.artifact.Artifact.class,
+                                                       dependency.getArtifact() );
+
+                        transitiveArtifacts.add( mavenArtifact.getDependencyConflictId() );
+                    }
+                }
+                catch ( ReflectiveOperationException e )
+                {
+                    // don't want to pollute method signature with ReflectionExceptions
+                    throw new RuntimeException( e.getMessage(), e );
+                }
+            }
+        }
     }
 
     public Set<Artifact> filter( Set<Artifact> artifacts )
@@ -94,16 +153,28 @@ public class ArtifactTransitivityFilter
      */
     public boolean artifactIsATransitiveDependency( Artifact artifact )
     {
-        boolean result = false;
-        for ( Artifact trans : transitiveArtifacts )
-        {
-            if ( trans.getGroupId().equals( artifact.getGroupId() )
-                && trans.getArtifactId().equals( artifact.getArtifactId() ) )
-            {
-                result = true;
-                break;
-            }
-        }
-        return result;
+        return transitiveArtifacts.contains( artifact.getDependencyConflictId() );
     }
+
+    /**
+     * @return true if the current Maven version is Maven 3.1.
+     */
+    protected static boolean isMaven31()
+    {
+        return canFindCoreClass( "org.eclipse.aether.artifact.Artifact" ); // Maven 3.1 specific
+    }
+
+    private static boolean canFindCoreClass( String className )
+    {
+        try
+        {
+            Thread.currentThread().getContextClassLoader().loadClass( className );
+
+            return true;
+        }
+        catch ( ClassNotFoundException e )
+        {
+            return false;
+        }
+    }    
 }

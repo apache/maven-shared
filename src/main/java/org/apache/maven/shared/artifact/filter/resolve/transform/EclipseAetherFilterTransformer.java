@@ -43,7 +43,7 @@ import org.eclipse.aether.util.filter.ScopeDependencyFilter;
  * @author Robert Scholte
  * @since 3.0
  */
-class EclipseAetherFilterTransformer
+public class EclipseAetherFilterTransformer
     implements FilterTransformer<DependencyFilter>
 {
     @Override

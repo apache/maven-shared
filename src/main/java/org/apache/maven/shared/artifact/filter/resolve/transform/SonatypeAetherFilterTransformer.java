@@ -44,7 +44,7 @@ import org.sonatype.aether.util.filter.ScopeDependencyFilter;
  * @author Robert Scholte  
  * @since 3.0
  */
-class SonatypeAetherFilterTransformer
+public class SonatypeAetherFilterTransformer
     implements FilterTransformer<DependencyFilter>
 {
     @Override

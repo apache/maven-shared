@@ -73,29 +73,6 @@ public class ArtifactTransitivityFilter
 
     }
 
-    @SuppressWarnings( "unchecked" )
-    public ArtifactTransitivityFilter( Dependency dependency, ArtifactFactory factory, ArtifactRepository local,
-                                       List<ArtifactRepository> remote, MavenProjectBuilder builder )
-        throws ProjectBuildingException, InvalidDependencyVersionException
-    {
-
-        this.factory = factory;
-        this.local = local;
-        this.remote = remote;
-
-        Artifact rootArtifactPom =
-            factory.createArtifact( dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion(), "",
-                                    "pom" );
-
-        MavenProject rootArtifactProject = builder.buildFromRepository( rootArtifactPom, remote, local );
-
-        // load all the artifacts.
-        transitiveArtifacts =
-            rootArtifactProject.createArtifacts( this.factory, Artifact.SCOPE_TEST,
-                                                 new ScopeArtifactFilter( Artifact.SCOPE_TEST ) );
-
-    }
-
     public Set<Artifact> filter( Set<Artifact> artifacts )
     {
 

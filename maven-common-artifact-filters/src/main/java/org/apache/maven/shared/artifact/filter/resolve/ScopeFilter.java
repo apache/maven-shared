@@ -19,6 +19,7 @@ package org.apache.maven.shared.artifact.filter.resolve;
  * under the License.
  */
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -60,6 +61,17 @@ public class ScopeFilter implements TransformableFilter
     }
 
     /**
+     * Construct a ScopeFilter based on included scopes  
+     * 
+     * @param included the scopes to include, must not be {@code null}
+     * @return the filter, never {@code null}
+     */
+    public static ScopeFilter including( String... included ) 
+    {
+        return new ScopeFilter( Arrays.asList( included ), null );
+    }
+
+    /**
      * Construct a ScopeFilter based on excluded scopes
      * 
      * @param excluded the scopes to exclude, may be {@code null}
@@ -68,6 +80,17 @@ public class ScopeFilter implements TransformableFilter
     public static ScopeFilter excluding( Collection<String> excluded ) 
     {
         return new ScopeFilter( null, excluded );
+    }
+
+    /**
+     * Construct a ScopeFilter based on excluded scopes
+     * 
+     * @param excluded the scopes to exclude, must not be {@code null}
+     * @return the filter, never {@code null}
+     */
+    public static ScopeFilter excluding( String... excluded ) 
+    {
+        return new ScopeFilter( null, Arrays.asList( excluded ) );
     }
 
     /**

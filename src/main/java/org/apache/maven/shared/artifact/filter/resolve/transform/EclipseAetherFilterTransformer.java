@@ -33,6 +33,7 @@ import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.util.filter.AndDependencyFilter;
 import org.eclipse.aether.util.filter.ExclusionsDependencyFilter;
+import org.eclipse.aether.util.filter.OrDependencyFilter;
 import org.eclipse.aether.util.filter.PatternExclusionsDependencyFilter;
 import org.eclipse.aether.util.filter.PatternInclusionsDependencyFilter;
 import org.eclipse.aether.util.filter.ScopeDependencyFilter;
@@ -64,14 +65,14 @@ public class EclipseAetherFilterTransformer
     }
 
     @Override
-    public AndDependencyFilter transform( OrFilter orFilter )
+    public OrDependencyFilter transform( OrFilter orFilter )
     {
         Collection<DependencyFilter> filters = new ArrayList<DependencyFilter>();
         for ( TransformableFilter filter : orFilter.getFilters() )
         {
             filters.add( filter.transform( this ) );
         }
-        return new AndDependencyFilter( filters );
+        return new OrDependencyFilter( filters );
     }
 
     @Override

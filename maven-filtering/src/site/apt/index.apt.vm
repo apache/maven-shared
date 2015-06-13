@@ -25,7 +25,7 @@
 
 ${project.name}
 
-  These Plexus components have been built from the filtering process/code in Maven Resources Plugin.
+  This component has been built from the filtering process/code in Maven Resources Plugin.
 
   The goal is to provide a shared component for all plugins that needs to filter resources.
 

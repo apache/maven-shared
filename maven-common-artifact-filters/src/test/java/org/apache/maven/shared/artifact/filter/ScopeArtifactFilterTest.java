@@ -19,24 +19,27 @@ package org.apache.maven.shared.artifact.filter;
  * under the License.
  */
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import junit.framework.TestCase;
+
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.versioning.VersionRange;
-import org.codehaus.plexus.PlexusTestCase;
-
-import static org.easymock.EasyMock.*;
+import org.apache.maven.plugin.testing.ArtifactStubFactory;
 
 public class ScopeArtifactFilterTest
-    extends PlexusTestCase
+    extends TestCase
 {
     
     public void testExcludedArtifactWithRangeShouldNotCauseNPE()
         throws Exception
     {
-        ArtifactFactory factory = (ArtifactFactory) lookup( ArtifactFactory.ROLE );
+        ArtifactStubFactory factory = new ArtifactStubFactory();
         
-        Artifact excluded = factory.createDependencyArtifact( "group", "artifact", VersionRange.createFromVersionSpec( "[1.2.3]" ), "jar", null, Artifact.SCOPE_PROVIDED );
+        Artifact excluded = factory.createArtifact( "group", "artifact", VersionRange.createFromVersionSpec( "[1.2.3]" ), Artifact.SCOPE_PROVIDED, "jar", null, false );
         
         ArtifactFilter filter = new ScopeArtifactFilter( Artifact.SCOPE_RUNTIME );
         

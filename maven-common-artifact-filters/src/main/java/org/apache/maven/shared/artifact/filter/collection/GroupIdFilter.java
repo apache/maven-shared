@@ -25,7 +25,6 @@ import org.apache.maven.artifact.Artifact;
  * Filter on GroupId Name.
  * 
  * @author clove
- * @see org.apache.maven.plugin.dependency.utils.filters.AbstractArtifactFeatureFilter
  * @since 2.0
  * @version $Id$
  */
@@ -36,30 +35,21 @@ public class GroupIdFilter
     /**
      * Construction will setup the super call with a filtertype of 'GroupId'
      * 
-     * @param include
-     * @param exclude
+     * @param include comma separated list of groupIds to include, may be {@code null}
+     * @param exclude comma separated list of groupIds to exclude, may be {@code null}
      */
     public GroupIdFilter( String include, String exclude )
     {
         super( include, exclude );
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.maven.plugin.dependency.utils.filters.AbstractArtifactFeatureFilter#getArtifactFeature(org.apache.maven.artifact.Artifact)
-     */
+    @Override
     protected String getArtifactFeature( Artifact artifact )
     {
         return artifact.getGroupId();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.apache.maven.plugin.dependency.utils.filters.AbstractArtifactFeatureFilter#compareFeatures(String,String)
-     */
-
+    @Override
     protected boolean compareFeatures( String lhs, String rhs )
     {
         return lhs.startsWith( rhs );

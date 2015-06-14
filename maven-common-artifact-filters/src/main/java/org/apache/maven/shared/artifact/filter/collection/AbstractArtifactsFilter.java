@@ -33,7 +33,7 @@ public abstract class AbstractArtifactsFilter
     /**
      * @author <a href="mailto:brianf@apache.org">Brian Fox</a>
      * @version $Id$
-     * @throws ArtifactFilterException 
+     * @throws ArtifactFilterException when filtering fails
      */
     public boolean isArtifactIncluded( Artifact artifact )
         throws ArtifactFilterException

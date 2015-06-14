@@ -40,7 +40,7 @@ public class ExclusionsFilter
      * The default constructor specifying a collection of keys which must be excluded. 
      * 
      * @param excludes the keys to exclude, may not be {@code null}
-     * @see Artifact#getDependencyConflictId()
+     * @see org.apache.maven.artifact.Artifact#getDependencyConflictId()
      */
     public ExclusionsFilter( Collection<String> excludes )
     {

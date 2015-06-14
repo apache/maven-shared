@@ -28,10 +28,10 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.codehaus.plexus.logging.Logger;
 
 /**
- * {@link ArtifactFilter} implementation that selects artifacts based on their
- * scopes.
- * <br/>
- * <b>NOTE:</b> None of the fine-grained scopes imply other scopes when enabled;
+ * <p>
+ * {@link ArtifactFilter} implementation that selects artifacts based on their scopes.
+ * </p>
+ * <strong>NOTE:</strong> None of the fine-grained scopes imply other scopes when enabled;
  * when fine-grained scope control is used, each scope must be enabled separately,
  * UNLESS the corresponding XXXWithImplications() method is used to enable that
  * scope.
@@ -79,6 +79,8 @@ public class ScopeArtifactFilter
      * Constructor that uses the implied nature of Maven scopes to determine which
      * artifacts to include. For instance, 'test' scope implies compile, provided, and runtime,
      * while 'runtime' scope implies only compile.
+     * 
+     * @param scope the scope
      */
     public ScopeArtifactFilter( String scope )
     {
@@ -327,6 +329,9 @@ public class ScopeArtifactFilter
      *   <li>provided</li>
      *   <li>compile</li>
      * </ul>
+     *
+     * @param enabled whether specified scopes should be included
+     * @return this instance 
      */
     public ScopeArtifactFilter setIncludeCompileScopeWithImplications( boolean enabled )
     {
@@ -344,6 +349,9 @@ public class ScopeArtifactFilter
      *   <li>compile</li>
      *   <li>runtime</li>
      * </ul>
+     *
+     * @param enabled whether specified scopes should be included
+     * @return this instance 
      */
     public ScopeArtifactFilter setIncludeRuntimeScopeWithImplications( boolean enabled )
     {
@@ -363,6 +371,9 @@ public class ScopeArtifactFilter
      *   <li>runtime</li>
      *   <li>test</li>
      * </ul>
+     *
+     * @param enabled whether specified scopes should be included
+     * @return this instance 
      */
     public ScopeArtifactFilter setIncludeTestScopeWithImplications( boolean enabled )
     {
@@ -377,6 +388,9 @@ public class ScopeArtifactFilter
     
     /**
      * Determine whether artifacts that have a null scope are included or excluded.
+     *
+     * @param enable whether null-scope should be included
+     * @return this instance 
      */
     public ScopeArtifactFilter setIncludeNullScope( boolean enable )
     {
@@ -387,6 +401,8 @@ public class ScopeArtifactFilter
     
     /**
      * Reset hit counts and tracking of filtered artifacts, BUT NOT ENABLED SCOPES.
+     *
+     * @return this instance 
      */
     public ScopeArtifactFilter reset()
     {

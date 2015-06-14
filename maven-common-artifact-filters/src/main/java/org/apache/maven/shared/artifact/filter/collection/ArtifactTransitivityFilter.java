@@ -48,9 +48,10 @@ public class ArtifactTransitivityFilter
     private Set<String> transitiveArtifacts;
 
     /**
+     * <p>
      * Use {@link org.apache.maven.execution.MavenSession#getProjectBuildingRequest()} to get the buildingRequest.
      * The projectBuilder should be resolved with CDI.
-     * <p/>
+     * </p>
      * <pre>
      *   // For Mojo
      *   &#64;Component

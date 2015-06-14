@@ -1,7 +1,5 @@
 package org.apache.maven.shared.artifact.filter.collection;
 
-import java.lang.reflect.InvocationTargetException;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
  * under the License.
  */
 
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Invokes method on objects using reflection.

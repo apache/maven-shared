@@ -45,11 +45,11 @@ public class DefaultDependencyNode implements DependencyNode
     /**
      * Constructs the DefaultDependencyNode.
      *
-     * @param parent            Parent node.
+     * @param parent            Parent node, may be {@code null}.
      * @param artifact          Artifact associated with this dependency.
-     * @param premanagedVersion
-     * @param premanagedScope
-     * @param versionConstraint
+     * @param premanagedVersion the premanaged version, may be {@code null}.
+     * @param premanagedScope   the premanaged scope, may be {@code null}.
+     * @param versionConstraint the version constraint, may be {@code null.}
      */
     public DefaultDependencyNode( DependencyNode parent, Artifact artifact, String premanagedVersion,
                                   String premanagedScope, String versionConstraint )

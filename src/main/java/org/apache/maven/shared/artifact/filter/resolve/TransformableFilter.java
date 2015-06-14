@@ -37,6 +37,7 @@ public interface TransformableFilter
      *   }
      * </pre>
      * 
+     * @param <T> the interface of the tool specific filter
      * @param transformer the tool specific transformer, may not be {@code null}
      * @return the transformed value, never {@code null}
      */

@@ -67,8 +67,8 @@ public class FilterArtifacts
      * Inserts the specified element at the specified position in this list. Shifts the element currently at that
      * position (if any) and any subsequent elements to the right (adds one to their indices).
      * 
-     * @param index index at which the specified element is to be inserted.
-     * @param element element to be inserted.
+     * @param index at which index the specified filter is to be inserted.
+     * @param filter the filter to be inserted.
      * @throws IndexOutOfBoundsException if index is out of range <tt>(index &lt; 0 || index &gt; size())</tt>.
      */
     public void addFilter( int index, ArtifactsFilter filter )
@@ -101,7 +101,7 @@ public class FilterArtifacts
     }
 
     /**
-     * @return Returns the filters.
+     * @return the filters.
      */
     public List<ArtifactsFilter> getFilters()
     {

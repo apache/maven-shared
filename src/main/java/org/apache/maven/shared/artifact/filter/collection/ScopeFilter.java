@@ -49,11 +49,11 @@ public class ScopeFilter
      * This function determines if filtering needs to be performed. Excludes are
      * ignored if Includes are used.
      * 
-     * @param dependencies
-     *            the set of dependencies to filter.
+     * @param artifacts
+     *            the set of artifacts to filter.
      * 
-     * @return a Set of filtered dependencies.
-     * @throws ArtifactFilterException
+     * @return a Set of filtered artifacts.
+     * @throws ArtifactFilterException when there's an invalid included scope
      */
     public Set<Artifact> filter( Set<Artifact> artifacts )
         throws ArtifactFilterException
@@ -160,7 +160,7 @@ public class ScopeFilter
     }
 
     /**
-     * @param includeScope
+     * @param scope
      *            The includeScope to set.
      */
     public void setIncludeScope( String scope )
@@ -177,12 +177,12 @@ public class ScopeFilter
     }
 
     /**
-     * @param excludeScope
+     * @param scope
      *            The excludeScope to set.
      */
-    public void setExcludeScope( String excludeScope )
+    public void setExcludeScope( String scope )
     {
-        this.excludeScope = excludeScope;
+        this.excludeScope = scope;
     }
 
 }

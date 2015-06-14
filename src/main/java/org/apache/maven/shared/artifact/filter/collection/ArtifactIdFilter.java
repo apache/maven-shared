@@ -25,7 +25,6 @@ import org.apache.maven.artifact.Artifact;
  * Filter on ArtifactId name
  * 
  * @author clove
- * @see org.apache.maven.plugin.dependency.utils.filters.AbstractArtifactFeatureFilter
  * @since 2.0-alpha-2
  * @version $Id$
  */
@@ -35,14 +34,15 @@ public class ArtifactIdFilter
     /**
      * Will setup super with 'ArtifactId' as the filterType
      * 
-     * @param include
-     * @param exclude
+     * @param include comma separated list of artifactIds to include, may be {@code null}
+     * @param exclude comma separated list of artifactIds to exclude, may be {@code null}
      */
     public ArtifactIdFilter( String include, String exclude )
     {
         super( include, exclude );
     }
 
+    @Override
     protected String getArtifactFeature( Artifact artifact )
     {
         return artifact.getArtifactId();

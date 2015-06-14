@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Filter based on scope. <em>Note:<em> There's no logic for inherited scoped
+ * Filter based on scope. <strong>Note:</strong> There's no logic for inherited scoped
  * 
  * @author Robert Scholte
  * @since 3.0
@@ -40,8 +40,8 @@ public class ScopeFilter implements TransformableFilter
 
     /**
      * 
-     * @param included specific scopes to include or {@null} to include all
-     * @param excluded specific scopes to exclude or {@null} to exclude none
+     * @param included specific scopes to include or {@code null} to include all
+     * @param excluded specific scopes to exclude or {@code null} to exclude none
      */
     public ScopeFilter( Collection<String> included, Collection<String> excluded )
     {

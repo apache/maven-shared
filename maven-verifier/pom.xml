@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>maven-verifier</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6</version>
 
   <name>Apache Maven Verifier Component</name>
   <description>Provides a test harness for Maven integration tests.</description>
@@ -40,9 +40,9 @@
   </contributors>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-verifier</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-verifier</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-verifier</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-verifier-1.6</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-verifier-1.6</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-verifier-1.6</url>
   </scm>
   <issueManagement>
     <system>jira</system>

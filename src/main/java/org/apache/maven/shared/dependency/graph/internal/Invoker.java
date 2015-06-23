@@ -19,9 +19,9 @@ package org.apache.maven.shared.dependency.graph.internal;
  * under the License.
  */
 
-import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
-
 import java.lang.reflect.InvocationTargetException;
+
+import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
 
 /**
  * Invokes method on objects using reflection.
@@ -67,6 +67,27 @@ final class Invoker
         {
             final Class<?> objectClazz = object.getClass();
             return objectClazz.getMethod( method, clazz ).invoke( object, arg );
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new DependencyGraphBuilderException( e.getMessage(), e );
+        }
+        catch ( InvocationTargetException e )
+        {
+            throw new DependencyGraphBuilderException( e.getMessage(), e );
+        }
+        catch ( NoSuchMethodException e )
+        {
+            throw new DependencyGraphBuilderException( e.getMessage(), e );
+        }
+    }
+    
+    public static Object invoke( Class<?> objectClazz, String staticMethod, Class<?> argClazz, Object arg )
+                    throws DependencyGraphBuilderException
+    {
+        try
+        {
+            return objectClazz.getMethod( staticMethod, argClazz ).invoke( null, arg );
         }
         catch ( IllegalAccessException e )
         {

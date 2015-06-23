@@ -19,10 +19,16 @@ package org.apache.maven.shared.dependency.graph.internal;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.project.DefaultDependencyResolutionRequest;
 import org.apache.maven.project.DependencyResolutionException;
 import org.apache.maven.project.DependencyResolutionRequest;
@@ -40,13 +46,6 @@ import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.version.VersionConstraint;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 /**
  * Wrapper around Eclipse Aether dependency resolver, used in Maven 3.1.
  *
@@ -61,9 +60,6 @@ public class Maven31DependencyGraphBuilder
 {
     @Requirement
     private ProjectDependenciesResolver resolver;
-
-    @Requirement
-    private ArtifactFactory factory;
 
     /**
      * Builds the dependency graph for Maven 3.1+.
@@ -189,11 +185,16 @@ public class Maven31DependencyGraphBuilder
     private Artifact getDependencyArtifact( Dependency dep )
     {
         org.eclipse.aether.artifact.Artifact artifact = dep.getArtifact();
-
-        return factory.createDependencyArtifact( artifact.getGroupId(), artifact.getArtifactId(),
-                                                 VersionRange.createFromVersion( artifact.getVersion() ),
-                                                 artifact.getProperty( "type", artifact.getExtension() ),
-                                                 artifact.getClassifier(), dep.getScope(), dep.isOptional() );
+        
+        try
+        {
+            return (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact", org.eclipse.aether.artifact.Artifact.class, artifact );
+        }
+        catch ( DependencyGraphBuilderException e )
+        {
+            // ReflectionException should not happen
+            throw new RuntimeException( e.getMessage(), e );
+        }
     }
 
     private DependencyNode buildDependencyNode( DependencyNode parent, org.eclipse.aether.graph.DependencyNode node,

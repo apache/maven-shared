@@ -19,6 +19,8 @@ package org.apache.maven.shared.artifact.filter.resolve.transform;
  * under the License.
  */
 
+import static org.junit.Assert.*;
+
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -29,6 +31,10 @@ import org.apache.maven.shared.artifact.filter.resolve.PatternExclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.PatternInclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.graph.DefaultDependencyNode;
+import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.util.filter.AndDependencyFilter;
 import org.eclipse.aether.util.filter.ExclusionsDependencyFilter;
 import org.eclipse.aether.util.filter.OrDependencyFilter;
@@ -39,24 +45,36 @@ import org.junit.Test;
 
 public class EclipseAetherFilterTransformerTest
 {
-
     private EclipseAetherFilterTransformer transformer = new EclipseAetherFilterTransformer();
 
     @Test
     public void testTransformAndFilter()
     {
-        AndFilter filter = new AndFilter( Arrays.<TransformableFilter>asList( ScopeFilter.including( "compile" ), 
-                                                                              ScopeFilter.including( "test" ) ) );
+        AndFilter filter = new AndFilter(
+              Arrays.<TransformableFilter>asList( ScopeFilter.including( "compile" ),
+                                                   new ExclusionsFilter( Collections.singletonList( "x:a" ) ) ) );
 
         AndDependencyFilter dependencyFilter = (AndDependencyFilter) filter.transform( transformer );
+        
+        assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:v", "compile" ), null ) );
+
+        assertFalse( dependencyFilter.accept( newDependencyNode( "x:a:v", "compile" ), null ) );
+
+        assertFalse( dependencyFilter.accept( newDependencyNode( "g:a:v", "test" ), null ) );
+
+        assertFalse( dependencyFilter.accept( newDependencyNode( "x:a:v", "test" ), null ) );
     }
 
     @Test
     public void testTransformExclusionsFilter()
     {
-        ExclusionsFilter filter = new ExclusionsFilter( Collections.singletonList( "runtime" ) );
+        ExclusionsFilter filter = new ExclusionsFilter( Collections.singletonList( "x:a" ) );
 
         ExclusionsDependencyFilter dependencyFilter = (ExclusionsDependencyFilter) filter.transform( transformer );
+
+        assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:v", "compile" ), null ) );
+
+        assertFalse( dependencyFilter.accept( newDependencyNode( "x:a:v", "compile" ), null ) );
     }
 
     @Test
@@ -67,6 +85,11 @@ public class EclipseAetherFilterTransformerTest
 
         OrDependencyFilter dependencyFilter = (OrDependencyFilter) filter.transform( transformer );
 
+        assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:v", "compile" ), null ) );
+
+        assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:v", "test" ), null ) );
+        
+        assertFalse( dependencyFilter.accept( newDependencyNode( "g:a:v", "runtime" ), null ) );
     }
 
     @Test
@@ -75,26 +98,45 @@ public class EclipseAetherFilterTransformerTest
         ScopeFilter filter = ScopeFilter.including( Collections.singletonList( "runtime" ) );
 
         ScopeDependencyFilter dependencyFilter = (ScopeDependencyFilter) filter.transform( transformer );
+        
+        assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:v", "runtime" ), null ) );
+
+        assertFalse( dependencyFilter.accept( newDependencyNode( "g:a:v", "compile" ), null ) );
+
+        assertFalse( dependencyFilter.accept( newDependencyNode( "g:a:v", "test" ), null ) );
     }
 
     @Test
     public void testTransformPatternExclusionsFilter()
     {
         PatternExclusionsFilter filter =
-            new PatternExclusionsFilter( Collections.singletonList( "org.apache.maven:*" ) );
+            new PatternExclusionsFilter( Collections.singletonList( "x:*" ) );
 
         PatternExclusionsDependencyFilter dependencyFilter =
             (PatternExclusionsDependencyFilter) filter.transform( transformer );
+
+        assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:v", "runtime" ), null ) );
+
+        assertFalse( dependencyFilter.accept( newDependencyNode( "x:a:v", "runtime" ), null ) );
     }
 
     @Test
     public void testTransformPatternInclusionsFilter()
     {
         PatternInclusionsFilter filter =
-            new PatternInclusionsFilter( Collections.singletonList( "org.apache.maven:*" ) );
+            new PatternInclusionsFilter( Collections.singletonList( "g:*" ) );
 
         PatternInclusionsDependencyFilter dependencyFilter =
             (PatternInclusionsDependencyFilter) filter.transform( transformer );
+
+        assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:v", "runtime" ), null ) );
+
+        assertFalse( dependencyFilter.accept( newDependencyNode( "x:a:v", "runtime" ), null ) );
+    }
+    
+    private DependencyNode newDependencyNode( String string, String scope )
+    {
+        return new DefaultDependencyNode( new Dependency( new DefaultArtifact( string ), scope ) );
     }
 
 }

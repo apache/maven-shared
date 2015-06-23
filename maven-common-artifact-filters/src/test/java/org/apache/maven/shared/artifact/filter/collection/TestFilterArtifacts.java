@@ -58,7 +58,7 @@ public class TestFilterArtifacts
         FileUtils.deleteDirectory( outputFolder );
 
         ArtifactStubFactory fact = new ArtifactStubFactory( outputFolder, false );
-        @SuppressWarnings( "unchecked" )
+
         Set<Artifact> artifacts = fact.getReleaseAndSnapshotArtifacts();
         FilterArtifacts fa = new FilterArtifacts();
 
@@ -120,7 +120,7 @@ public class TestFilterArtifacts
         File outputFolder = new File( "target/filters/" );
         FileUtils.deleteDirectory( outputFolder );
         ArtifactStubFactory fact = new ArtifactStubFactory( outputFolder, false );
-        @SuppressWarnings( "unchecked" )
+
         Set<Artifact> artifacts = fact.getClassifiedArtifacts();
         FilterArtifacts fa = new FilterArtifacts();
         fa.addFilter( new ClassifierFilter( "", "four" ) );

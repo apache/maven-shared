@@ -19,10 +19,16 @@ package org.apache.maven.shared.dependency.graph.internal;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.project.DefaultDependencyResolutionRequest;
 import org.apache.maven.project.DependencyResolutionException;
 import org.apache.maven.project.DependencyResolutionRequest;
@@ -39,13 +45,6 @@ import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.version.VersionConstraint;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 /**
  * Wrapper around Maven 3 dependency resolver.
  *
@@ -60,9 +59,6 @@ public class Maven3DependencyGraphBuilder
 {
     @Requirement
     private ProjectDependenciesResolver resolver;
-
-    @Requirement
-    private ArtifactFactory factory;
 
     /**
      * Builds the dependency graph for Maven 3.
@@ -175,12 +171,8 @@ public class Maven3DependencyGraphBuilder
 
     private Artifact getDependencyArtifact( Dependency dep )
     {
-        org.sonatype.aether.artifact.Artifact artifact = dep.getArtifact();
-
-        return factory.createDependencyArtifact( artifact.getGroupId(), artifact.getArtifactId(),
-                                                 VersionRange.createFromVersion( artifact.getVersion() ),
-                                                 artifact.getProperty( "type", artifact.getExtension() ),
-                                                 artifact.getClassifier(), dep.getScope(), dep.isOptional() );
+        
+        return RepositoryUtils.toArtifact( dep.getArtifact() );
     }
 
     private DependencyNode buildDependencyNode( DependencyNode parent, org.sonatype.aether.graph.DependencyNode node,

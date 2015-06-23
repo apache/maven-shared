@@ -19,10 +19,7 @@ package org.apache.maven.shared.artifact.resolve.internal;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolver;
@@ -44,8 +41,7 @@ public class DefaultArtifactResolver
 {
     private PlexusContainer container;
 
-    public Artifact resolveArtifact( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact,
-                                     List<ArtifactRepository> remoteRepositories )
+    public Artifact resolveArtifact( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
         throws ArtifactResolverException
     {
         try
@@ -54,7 +50,7 @@ public class DefaultArtifactResolver
 
             ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
 
-            return effectiveArtifactResolver.resolveArtifact( buildingRequest, mavenArtifact, remoteRepositories );
+            return effectiveArtifactResolver.resolveArtifact( buildingRequest, mavenArtifact );
         }
         catch ( ComponentLookupException e )
         {
@@ -62,8 +58,7 @@ public class DefaultArtifactResolver
         }
     }
     
-    public void resolveTransitively( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact,
-                                     List<ArtifactRepository> remoteRepositories )
+    public void resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
         throws ArtifactResolverException
     {
         try
@@ -72,7 +67,7 @@ public class DefaultArtifactResolver
 
             ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
 
-            effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact, remoteRepositories );
+            effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact );
         }
         catch ( ComponentLookupException e )
         {
@@ -80,8 +75,8 @@ public class DefaultArtifactResolver
         }
     }
     
-    public void resolveTransitively( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact,
-                                     List<ArtifactRepository> remoteRepositories, TransformableFilter filter )
+    public void resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact ,
+                                     TransformableFilter filter  )
         throws ArtifactResolverException
     {
         try
@@ -90,7 +85,7 @@ public class DefaultArtifactResolver
 
             ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
 
-            effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact, remoteRepositories, filter );
+            effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact, filter );
         }
         catch ( ComponentLookupException e )
         {

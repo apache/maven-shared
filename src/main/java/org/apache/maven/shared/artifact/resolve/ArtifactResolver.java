@@ -19,10 +19,7 @@ package org.apache.maven.shared.artifact.resolve;
  * under the License.
  */
 
-import java.util.List;
-
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 
@@ -32,16 +29,14 @@ import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 public interface ArtifactResolver
 {
 
-    Artifact resolveArtifact( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact,
-                              List<ArtifactRepository> remoteRepositories )
+    Artifact resolveArtifact( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
         throws ArtifactResolverException;
 
-    void resolveTransitively( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact,
-                              List<ArtifactRepository> remoteRepositories )
+    void resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
         throws ArtifactResolverException;
 
-    void resolveTransitively( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact,
-                              List<ArtifactRepository> remoteRepositories, TransformableFilter filter )
+    void resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact ,
+                              TransformableFilter filter  )
         throws ArtifactResolverException;
 
 }

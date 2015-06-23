@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.maven.RepositoryUtils;
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolver;
@@ -56,9 +55,8 @@ public class Maven31ArtifactResolver
     @Requirement
     private RepositorySystem repositorySystem;
 
-    public org.apache.maven.artifact.Artifact resolveArtifact( ProjectBuildingRequest buildingRequest,
-                                                               org.apache.maven.artifact.Artifact mavenArtifact,
-                                                               List<ArtifactRepository> remoteRepositories )
+    public org.apache.maven.artifact.Artifact resolveArtifact( ProjectBuildingRequest buildingRequest ,
+                                                               org.apache.maven.artifact.Artifact mavenArtifact  )
         throws ArtifactResolverException
     {
         Artifact aetherArtifact =
@@ -67,7 +65,8 @@ public class Maven31ArtifactResolver
 
         @SuppressWarnings( "unchecked" )
         List<RemoteRepository> aetherRepositories =
-            (List<RemoteRepository>) Invoker.invoke( RepositoryUtils.class, "toRepos", List.class, remoteRepositories );
+            (List<RemoteRepository>) Invoker.invoke( RepositoryUtils.class, "toRepos", List.class,
+                                                     buildingRequest.getRemoteRepositories() );
 
         RepositorySystemSession session =
             (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
@@ -98,17 +97,16 @@ public class Maven31ArtifactResolver
         }
     }
 
-    public void resolveTransitively( ProjectBuildingRequest buildingRequest,
-                                     org.apache.maven.artifact.Artifact mavenArtifact,
-                                     List<ArtifactRepository> remoteRepositories )
+    public void resolveTransitively( ProjectBuildingRequest buildingRequest ,
+                                     org.apache.maven.artifact.Artifact mavenArtifact  )
         throws ArtifactResolverException
     {
-        resolveTransitively( buildingRequest, mavenArtifact, remoteRepositories, null );
+        resolveTransitively( buildingRequest, mavenArtifact, null );
     }
 
-    public void resolveTransitively( ProjectBuildingRequest buildingRequest,
-                                     org.apache.maven.artifact.Artifact mavenArtifact,
-                                     List<ArtifactRepository> remoteRepositories, TransformableFilter dependencyFilter )
+    public void resolveTransitively( ProjectBuildingRequest buildingRequest ,
+                                     org.apache.maven.artifact.Artifact mavenArtifact ,
+                                     TransformableFilter dependencyFilter  )
         throws ArtifactResolverException
     {
         Artifact aetherArtifact =
@@ -117,7 +115,8 @@ public class Maven31ArtifactResolver
 
         @SuppressWarnings( "unchecked" )
         List<RemoteRepository> aetherRepositories =
-            (List<RemoteRepository>) Invoker.invoke( RepositoryUtils.class, "toRepos", List.class, remoteRepositories );
+            (List<RemoteRepository>) Invoker.invoke( RepositoryUtils.class, "toRepos", List.class,
+                                                     buildingRequest.getRemoteRepositories() );
 
         RepositorySystemSession session =
             (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );

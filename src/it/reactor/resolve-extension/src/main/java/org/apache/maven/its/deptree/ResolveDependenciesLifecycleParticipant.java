@@ -22,7 +22,9 @@ package org.apache.maven.its.deptree;
 import org.apache.maven.AbstractMavenLifecycleParticipant;
 import org.apache.maven.MavenExecutionException;
 import org.apache.maven.execution.MavenSession;
+import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
 import org.codehaus.plexus.component.annotations.Component;
@@ -66,6 +68,11 @@ public final class ResolveDependenciesLifecycleParticipant extends AbstractMaven
 
         for ( MavenProject project : projects )
         {
+            ProjectBuildingRequest buildingRequest =
+                new DefaultProjectBuildingRequest( session.getProjectBuildingRequest() );
+            
+            buildingRequest.setProject( project );
+            
             log.info( "building dependency graph for project " + project.getArtifact() );
 
             File resolved = new File( basedir, "resolved-" + project.getArtifactId() + ".txt" );
@@ -73,7 +80,7 @@ public final class ResolveDependenciesLifecycleParticipant extends AbstractMaven
             {
                 log.info( "building with reactor projects" );
                 // No need to filter our search. We want to resolve all artifacts.
-                dependencyGraphBuilder.buildDependencyGraph( project, null, projects );
+                dependencyGraphBuilder.buildDependencyGraph( buildingRequest, null, projects );
             }
             catch ( DependencyGraphBuilderException e )
             {
@@ -84,7 +91,7 @@ public final class ResolveDependenciesLifecycleParticipant extends AbstractMaven
             {
                 log.info( "building without reactor projects" );
                 // resolution without reactor projects, to check that it is not possible at this point
-                dependencyGraphBuilder.buildDependencyGraph( project, null );
+                dependencyGraphBuilder.buildDependencyGraph( buildingRequest, null );
             }
             catch ( DependencyGraphBuilderException e )
             {

@@ -64,38 +64,37 @@ public class Maven31DependencyGraphBuilder
     /**
      * Builds the dependency graph for Maven 3.1+.
      *
-     * @param project the project
+     * @param buildingRequest the buildingRequest
      * @param filter artifact filter (can be <code>null</code>)
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
     @Override
-    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, null );
+        return buildDependencyGraph( buildingRequest, filter, null );
     }
 
     /**
      * Builds the dependency graph for Maven 3.1+, eventually hacking for collecting projects from
      * reactor not yet built.
      *
-     * @param project the project
+     * @param buildingRequest the buildingRequest
      * @param filter artifact filter (can be <code>null</code>)
      * @param reactorProjects Collection of those projects contained in the reactor (can be <code>null</code>).
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
     @Override
-    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter,
                                                 Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
     {
-        ProjectBuildingRequest projectBuildingRequest =
-            (ProjectBuildingRequest) Invoker.invoke( project, "getProjectBuildingRequest" );
-
+        MavenProject project = buildingRequest.getProject();
+        
         RepositorySystemSession session =
-            (RepositorySystemSession) Invoker.invoke( projectBuildingRequest, "getRepositorySession" );
+            (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
 
         /*
          * if ( Boolean.TRUE != ( (Boolean) session.getConfigProperties().get(
@@ -188,7 +187,12 @@ public class Maven31DependencyGraphBuilder
         
         try
         {
-            return (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact", org.eclipse.aether.artifact.Artifact.class, artifact );
+            Artifact mavenArtifact = (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                              org.eclipse.aether.artifact.Artifact.class, artifact );
+            
+            mavenArtifact.setScope( dep.getScope() );
+            
+            return mavenArtifact;
         }
         catch ( DependencyGraphBuilderException e )
         {

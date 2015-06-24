@@ -63,38 +63,37 @@ public class Maven3DependencyGraphBuilder
     /**
      * Builds the dependency graph for Maven 3.
      *
-     * @param project the project
+     * @param buildingRequest the buildingRequest
      * @param filter artifact filter (can be <code>null</code>)
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
     @Override
-    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, null );
+        return buildDependencyGraph( buildingRequest, filter, null );
     }
 
     /**
      * Builds the dependency graph for Maven 3, eventually hacking for collecting projects from
      * reactor not yet built.
      *
-     * @param project the project
+     * @param buildingRequest the buildingRequest
      * @param filter artifact filter (can be <code>null</code>)
      * @param reactorProjects Collection of those projects contained in the reactor (can be <code>null</code>).
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
     @Override
-    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter,
                                                 Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
     {
-        ProjectBuildingRequest projectBuildingRequest =
-            (ProjectBuildingRequest) Invoker.invoke( project, "getProjectBuildingRequest" );
+        MavenProject project = buildingRequest.getProject();
 
         DependencyResolutionRequest request =
-            new DefaultDependencyResolutionRequest( project, projectBuildingRequest.getRepositorySession() );
+            new DefaultDependencyResolutionRequest( project, buildingRequest.getRepositorySession() );
 
         DependencyResolutionResult result = resolveDependencies( request, reactorProjects );
 
@@ -171,8 +170,11 @@ public class Maven3DependencyGraphBuilder
 
     private Artifact getDependencyArtifact( Dependency dep )
     {
+        Artifact mavenArtifact = RepositoryUtils.toArtifact( dep.getArtifact() );
         
-        return RepositoryUtils.toArtifact( dep.getArtifact() );
+        mavenArtifact.setScope( dep.getScope() );
+        
+        return mavenArtifact; 
     }
 
     private DependencyNode buildDependencyNode( DependencyNode parent, org.sonatype.aether.graph.DependencyNode node,

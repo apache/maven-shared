@@ -21,6 +21,7 @@ package org.apache.maven.shared.dependency.graph.internal;
 
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilderException;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
@@ -54,16 +55,16 @@ public class DefaultDependencyGraphBuilder
     /**
      * Builds a dependency graph.
      *
-     * @param project the project
+     * @param buildingRequest the buildingRequest
      * @param filter artifact filter (can be <code>null</code>)
      * @return DependencyNode containing the dependency graph.
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
     @Override
-    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter )
         throws DependencyGraphBuilderException
     {
-        return buildDependencyGraph( project, filter, null );
+        return buildDependencyGraph( buildingRequest, filter, null );
     }
 
     /**
@@ -76,7 +77,7 @@ public class DefaultDependencyGraphBuilder
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
     @Override
-    public DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
+    public DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter,
                                                 Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException
     {
@@ -86,10 +87,16 @@ public class DefaultDependencyGraphBuilder
 
             DependencyGraphBuilder effectiveGraphBuilder =
                 (DependencyGraphBuilder) container.lookup( DependencyGraphBuilder.class.getCanonicalName(), hint );
-            getLogger().debug( "building " + hint + " dependency graph for " + project.getId() + " with "
-                                   + effectiveGraphBuilder.getClass().getSimpleName() );
+            
+            if ( getLogger().isDebugEnabled() )
+            {
+                MavenProject project = buildingRequest.getProject();
+                
+                getLogger().debug( "building " + hint + " dependency graph for " + project.getId() + " with "
+                                + effectiveGraphBuilder.getClass().getSimpleName() );
+            }
 
-            return effectiveGraphBuilder.buildDependencyGraph( project, filter, reactorProjects );
+            return effectiveGraphBuilder.buildDependencyGraph( buildingRequest, filter, reactorProjects );
         }
         catch ( ComponentLookupException e )
         {

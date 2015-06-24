@@ -21,6 +21,7 @@ package org.apache.maven.shared.dependency.graph;
 
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.project.ProjectBuildingRequest;
 
 import java.util.Collection;
 
@@ -35,12 +36,12 @@ public interface DependencyGraphBuilder
     /**
      * Build the dependency graph.
      *
-     * @param project the project
+     * @param buildingRequest the buildingRequest
      * @param filter artifact filter (can be <code>null</code>)
      * @return the dependency graph
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
-    DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter )
+    DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter )
         throws DependencyGraphBuilderException;
 
     /**
@@ -51,13 +52,13 @@ public interface DependencyGraphBuilder
      * artifacts but only the poms), probably this hack wouldn't be necessary even for people requiring
      * the dependency graph before compiling. TODO: for Maven 3, use Aether to collect dependencies.</p>
      *
-     * @param project the project
+     * @param buildingRequest the buildingRequest
      * @param filter artifact filter (can be <code>null</code>)
      * @param reactorProjects Collection of those projects contained in the reactor (can be <code>null</code>).
      * @return the dependency graph
      * @throws DependencyGraphBuilderException if some of the dependencies could not be resolved.
      */
-    DependencyNode buildDependencyGraph( MavenProject project, ArtifactFilter filter,
+    DependencyNode buildDependencyGraph( ProjectBuildingRequest buildingRequest, ArtifactFilter filter,
                                          Collection<MavenProject> reactorProjects )
         throws DependencyGraphBuilderException;
 }

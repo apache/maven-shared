@@ -1,9 +1,5 @@
 package org.apache.maven.reporting;
 
-import org.apache.commons.validator.routines.RegexValidator;
-import org.apache.commons.validator.routines.UrlValidator;
-
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,6 +19,9 @@ import org.apache.commons.validator.routines.UrlValidator;
  * under the License.
  */
 
+import org.apache.commons.validator.routines.RegexValidator;
+import org.apache.commons.validator.routines.UrlValidator;
+
 /**
  * Static utility class intended to help {@link AbstractMavenReportRenderer} in validating URLs. Validation uses two
  * UrlValidator instances. The first validates public URLs, the second validates local URLs. At least one validator has
@@ -34,17 +33,17 @@ import org.apache.commons.validator.routines.UrlValidator;
 final class UrlValidationUtil
 {
 
-    private static String LETTERS_DIGITS = "[a-zA-Z0-9]";
+    private static final String LETTERS_DIGITS = "[a-zA-Z0-9]";
 
-    private static String LETTERS_DIGITS_HYPHEN = "[a-zA-Z0-9\\-]";
+    private static final String LETTERS_DIGITS_HYPHEN = "[a-zA-Z0-9\\-]";
 
-    private static String LABEL = LETTERS_DIGITS + "(" + LETTERS_DIGITS_HYPHEN + "{0,61}" + LETTERS_DIGITS + ")?";
+    private static final String LABEL = LETTERS_DIGITS + "(" + LETTERS_DIGITS_HYPHEN + "{0,61}" + LETTERS_DIGITS + ")?";
 
-    private static String OPTIONAL_PORT = "(:(([1-5]\\d{1,4})|([1-9]\\d{1,3})))?";
+    private static final String OPTIONAL_PORT = "(:(([1-5]\\d{1,4})|([1-9]\\d{1,3})))?";
 
     private static final String AUTHORITY_REGEX = LABEL + "(\\." + LABEL + ")*\\.local\\.?" + OPTIONAL_PORT;
 
-    private final static String[] SCHEMES = { "http", "https" };
+    private static final String[] SCHEMES = { "http", "https" };
 
     private UrlValidationUtil()
     {

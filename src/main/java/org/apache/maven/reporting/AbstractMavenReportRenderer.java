@@ -19,8 +19,7 @@ package org.apache.maven.reporting;
  * under the License.
  */
 
-import org.apache.commons.validator.EmailValidator;
-import org.apache.commons.validator.UrlValidator;
+import org.apache.commons.validator.routines.EmailValidator;
 
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.util.HtmlTools;
@@ -618,8 +617,6 @@ public abstract class AbstractMavenReportRenderer
 
         href = href.trim();
 
-        String[] schemes = {"http", "https"};
-        UrlValidator urlValidator = new UrlValidator( schemes );
         EmailValidator emailValidator = EmailValidator.getInstance();
 
         if ( emailValidator.isValid( href )
@@ -631,7 +628,7 @@ public abstract class AbstractMavenReportRenderer
         {
             return href;
         }
-        else if ( urlValidator.isValid( href ) )
+        else if ( UrlValidationUtil.isValidUrl( href ) )
         {
             return href;
         }
@@ -647,7 +644,7 @@ public abstract class AbstractMavenReportRenderer
                 hrefTmp = href + "index.html";
             }
 
-            if ( urlValidator.isValid( hrefTmp ) )
+            if ( UrlValidationUtil.isValidUrl( hrefTmp ) )
             {
                 return href;
             }

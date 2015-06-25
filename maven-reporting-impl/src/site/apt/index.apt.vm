@@ -45,7 +45,7 @@ ${project.name}
 
 * History
 
-** inclusion in Maven core
+** Inclusion in Maven core
 
   Until Maven 2.0.4, <<<maven-reporting-impl>>> was included in Maven 2 core distribution: version
   used was completely driven by Maven version used.
@@ -76,12 +76,15 @@ ${project.name}
   direct standalone goal.
 
   * avoid <<<doxia-sink-api>>> after 1.4 since RenderingContext was moved in Doxia 1.5 from core to Site Renderer (see
-  {{{https://issues.apache.org/jira/browse/DOXIA-499}DOXIA-499}}.
+  {{{https://issues.apache.org/jira/browse/DOXIA-499}DOXIA-499}}).
+
+  []
 
   <<<maven-reporting-impl 2.4.x>>> use Doxia 1.6.
 
-** upgrading to <<<maven-reporting-impl 2.3+>>>
+** Upgrading to <<<maven-reporting-impl 2.3+>>>
 
   When upgrading a reporting plugin from an old version of <<<maven-reporting-impl>>> to version 2.3 or more,
-  a lot of copy/pasted code can be removed by upgrading the plugin to plugin-tools with Java 5 annotations:
+  a lot of copy/pasted code can be removed by upgrading the plugin to
+  {{{/plugin-tools/maven-plugin-tools-annotations/}plugin-tools with Java 5 annotations}}:
   see {{{https://issues.apache.org/jira/browse/MSHARED-347}MSHARED-347}} for more details.

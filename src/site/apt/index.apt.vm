@@ -54,17 +54,34 @@ ${project.name}
   moved to shared components to improve fexibility: starting with Maven 2.0.5, each plugin can choose its
   <<<maven-reporting-impl>>> version independently from Maven.
 
-** Doxia dependency
-
-  When used as report during site generation, Doxia implementation is provided by <<<maven-site-plugin>>>, independently
-  from Doxia version used during plugin compilation.
+** Doxia runtime
 
   When used as a direct standalone goal invocation, Doxia implementation used is the version used during plugin compilation.
 
+  When used as report during site generation, <<<maven-site-plugin>>> provides Doxia API implementation to the plugin, overriding
+  normal plugin dependency: see
+  {{{/shared/maven-reporting-exec/xref/org/apache/maven/reporting/exec/DefaultMavenReportExecutor.html}DefaultMavenReportExecutor}}
+  in <<<{{{/shared/maven-reporting-exec/}maven-reporting-exec}}>>>.
+
+** Doxia dependency
+
   <<<maven-reporting-impl 2.0.x>>> use Doxia 1.0, then is used for reporting plugins wanting Maven 2.0.x compatibility.
 
-  Starting with <<<maven-reporting-impl 2.1>>>, Doxia version used is 1.1 or more. When creating a reporting plugin,
-  take care to use corresponding <<<doxia-sink-api>>>, and avoid <<<doxia-sink-api>>> version 1.0 that can be
-  imported by <<<{{{../maven-reporting-api/}maven-reporting-api}}>>> 3.0: this would lead to
-  <<<"java.lang.ClassNotFoundException: org.apache.maven.doxia.sink.SinkEventAttributes">>> when used as direct standalone
-  goal.
+  From <<<maven-reporting-impl 2.1>>> to <<<maven-reporting-impl 2.3>>>, Doxia version used ranges from 1.1 to 1.4.
+  When creating a reporting plugin using one of these <<<maven-reporting-impl>>> versions,
+  take care to use corresponding <<<doxia-sink-api>>>:
+
+  * avoid <<<doxia-sink-api>>> version 1.0 that can be imported by <<<{{{../maven-reporting-api/}maven-reporting-api}}>>> 3.0:
+  this would lead to <<<"java.lang.ClassNotFoundException: org.apache.maven.doxia.sink.SinkEventAttributes">>> when used as
+  direct standalone goal.
+
+  * avoid <<<doxia-sink-api>>> after 1.4 since RenderingContext was moved in Doxia 1.5 from core to Site Renderer (see
+  {{{https://issues.apache.org/jira/browse/DOXIA-499}DOXIA-499}}.
+
+  <<<maven-reporting-impl 2.4.x>>> use Doxia 1.6.
+
+** upgrading to <<<maven-reporting-impl 2.3+>>>
+
+  When upgrading a reporting plugin from an old version of <<<maven-reporting-impl>>> to version 2.3 or more,
+  a lot of copy/pasted code can be removed by upgrading the plugin to plugin-tools with Java 5 annotations:
+  see {{{https://issues.apache.org/jira/browse/MSHARED-347}MSHARED-347}} for more details.

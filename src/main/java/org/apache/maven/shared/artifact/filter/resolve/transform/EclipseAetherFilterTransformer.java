@@ -21,7 +21,9 @@ package org.apache.maven.shared.artifact.filter.resolve.transform;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import org.apache.maven.shared.artifact.filter.resolve.AbstractFilter;
 import org.apache.maven.shared.artifact.filter.resolve.AndFilter;
 import org.apache.maven.shared.artifact.filter.resolve.ExclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.FilterTransformer;
@@ -31,6 +33,7 @@ import org.apache.maven.shared.artifact.filter.resolve.PatternInclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.eclipse.aether.graph.DependencyFilter;
+import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.util.filter.AndDependencyFilter;
 import org.eclipse.aether.util.filter.ExclusionsDependencyFilter;
 import org.eclipse.aether.util.filter.OrDependencyFilter;
@@ -91,5 +94,18 @@ public class EclipseAetherFilterTransformer
     public DependencyFilter transform( PatternInclusionsFilter filter )
     {
         return new PatternInclusionsDependencyFilter( filter.getIncludes() );
+    }
+    
+    @Override
+    public DependencyFilter transform( final AbstractFilter filter )
+    {
+        return new DependencyFilter()
+        {
+            @Override
+            public boolean accept( DependencyNode node, List<DependencyNode> parents )
+            {
+                return filter.accept( new EclipseAetherNode( node ), null );
+            }
+        }; 
     }
 }

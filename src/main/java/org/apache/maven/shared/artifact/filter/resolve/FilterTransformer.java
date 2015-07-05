@@ -77,4 +77,12 @@ public interface FilterTransformer<T>
      * @return the transformed filter, never {@code null}
      */
     T transform( PatternInclusionsFilter patternInclusionsFilter );
+
+    /**
+     * Transform a custom filter to T specific implementation 
+     * 
+     * @param abstractFilter the filter
+     * @return the transformed filter, never {@code null}
+     */
+    T transform( AbstractFilter abstractFilter );
 }

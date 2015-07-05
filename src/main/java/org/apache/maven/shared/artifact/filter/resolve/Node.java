@@ -19,6 +19,13 @@ package org.apache.maven.shared.artifact.filter.resolve;
  * under the License.
  */
 
+/**
+ * Represents a node of a dependency graph
+ * 
+ * @author Robert Scholte
+ * @since 3.0
+ *
+ */
 public interface Node
 {
     org.apache.maven.model.Dependency getDependency();

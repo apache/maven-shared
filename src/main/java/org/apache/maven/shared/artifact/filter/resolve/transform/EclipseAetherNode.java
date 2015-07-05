@@ -24,6 +24,12 @@ import org.eclipse.aether.artifact.ArtifactProperties;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyNode;
 
+/**
+ * Adapter of an Eclipse Aether DependencyNode for common Node 
+ * 
+ * @author Robert Scholte
+ * @since 3.0
+ */
 public class EclipseAetherNode implements Node
 {
 

@@ -24,6 +24,12 @@ import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.util.artifact.ArtifactProperties;
 
+/**
+ * Adapter of a Sonatype Aether DependencyNode for common Node
+ * 
+ * @author Robert Scholte
+ * @since 3.0
+ */
 public class SonatypeAetherNode implements Node
 {
 

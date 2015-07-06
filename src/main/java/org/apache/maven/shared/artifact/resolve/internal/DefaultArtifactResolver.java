@@ -24,6 +24,7 @@ import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolver;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolverException;
+import org.apache.maven.shared.artifact.resolve.ArtifactResult;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
@@ -41,7 +42,7 @@ public class DefaultArtifactResolver
 {
     private PlexusContainer container;
 
-    public Artifact resolveArtifact( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
+    public ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
         throws ArtifactResolverException
     {
         try
@@ -58,7 +59,7 @@ public class DefaultArtifactResolver
         }
     }
     
-    public void resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
+    public Iterable<ArtifactResult> resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
         throws ArtifactResolverException
     {
         try
@@ -67,7 +68,7 @@ public class DefaultArtifactResolver
 
             ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
 
-            effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact );
+            return effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact );
         }
         catch ( ComponentLookupException e )
         {
@@ -75,7 +76,7 @@ public class DefaultArtifactResolver
         }
     }
     
-    public void resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact ,
+    public Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult> resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact ,
                                      TransformableFilter filter  )
         throws ArtifactResolverException
     {
@@ -85,7 +86,7 @@ public class DefaultArtifactResolver
 
             ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
 
-            effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact, filter );
+            return effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact, filter );
         }
         catch ( ComponentLookupException e )
         {

@@ -21,6 +21,7 @@ package org.apache.maven.shared.artifact.resolve.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.RepositoryUtils;
@@ -55,7 +56,7 @@ public class Maven30ArtifactResolver
     @Requirement
     private RepositorySystem repositorySystem;
 
-    public org.apache.maven.artifact.Artifact resolveArtifact( ProjectBuildingRequest buildingRequest ,
+    public org.apache.maven.shared.artifact.resolve.ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest ,
                                                                org.apache.maven.artifact.Artifact mavenArtifact  )
         throws ArtifactResolverException
     {
@@ -82,10 +83,7 @@ public class Maven30ArtifactResolver
 
             ArtifactRequest request = new ArtifactRequest( descriptorResult.getArtifact(), aetherRepositories, null );
 
-            Artifact resolvedArtifact = repositorySystem.resolveArtifact( session, request ).getArtifact();
-
-            return (org.apache.maven.artifact.Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
-                                                                        Artifact.class, resolvedArtifact );
+            return new Maven30ArtifactResult( repositorySystem.resolveArtifact( session, request ) );
         }
         catch ( ArtifactDescriptorException e )
         {
@@ -97,14 +95,14 @@ public class Maven30ArtifactResolver
         }
     }
 
-    public void resolveTransitively( ProjectBuildingRequest buildingRequest ,
+    public Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult> resolveTransitively( ProjectBuildingRequest buildingRequest ,
                                   org.apache.maven.artifact.Artifact mavenArtifact  )
         throws ArtifactResolverException
     {
-        resolveTransitively( buildingRequest, mavenArtifact, null );
+        return resolveTransitively( buildingRequest, mavenArtifact, null );
     }
 
-    public void resolveTransitively( ProjectBuildingRequest buildingRequest ,
+    public Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult> resolveTransitively( ProjectBuildingRequest buildingRequest ,
                                   org.apache.maven.artifact.Artifact mavenArtifact ,
                                   TransformableFilter dependencyFilter  )
         throws ArtifactResolverException
@@ -140,18 +138,36 @@ public class Maven30ArtifactResolver
                 depFilter = dependencyFilter.transform( new SonatypeAetherFilterTransformer() );
             }
 
-            List<ArtifactResult> artifactResults = repositorySystem.resolveDependencies( session, request, depFilter );
+            List<ArtifactResult> dependencyResults = repositorySystem.resolveDependencies( session, request, depFilter );
 
-            Collection<ArtifactRequest> artifactRequests = new ArrayList<ArtifactRequest>( 1 + artifactResults.size() );
+            Collection<ArtifactRequest> artifactRequests = new ArrayList<ArtifactRequest>( 1 + dependencyResults.size() );
 
             artifactRequests.add( new ArtifactRequest( descriptorResult.getArtifact(), aetherRepositories, null ) );
 
-            for ( ArtifactResult artifactResult : artifactResults )
+            for ( ArtifactResult artifactResult : dependencyResults )
             {
                 artifactRequests.add( new ArtifactRequest( artifactResult.getArtifact(), aetherRepositories, null ) );
             }
 
-            repositorySystem.resolveArtifacts( session, artifactRequests );
+            final List<ArtifactResult> artifactResults = repositorySystem.resolveArtifacts( session, artifactRequests );
+
+            // Keep it lazy! Often artifactsResults aren't used, so transforming up front is too expensive
+            return new Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult>()
+            {
+                @Override
+                public Iterator<org.apache.maven.shared.artifact.resolve.ArtifactResult> iterator()
+                {
+                    Collection<org.apache.maven.shared.artifact.resolve.ArtifactResult> artResults =
+                        new ArrayList<org.apache.maven.shared.artifact.resolve.ArtifactResult>( artifactResults.size() );
+
+                    for ( ArtifactResult artifactResult : artifactResults )
+                    {
+                        artResults.add( new Maven30ArtifactResult( artifactResult ) );
+                    }
+
+                    return artResults.iterator();
+                }
+            };
         }
         catch ( ArtifactDescriptorException e )
         {

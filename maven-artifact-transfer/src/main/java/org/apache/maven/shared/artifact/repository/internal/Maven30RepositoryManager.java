@@ -115,7 +115,7 @@ public class Maven30RepositoryManager
 
         return newRequest;
     }
-
+    
     /**
      * {@inheritDoc}
      */
@@ -130,7 +130,6 @@ public class Maven30RepositoryManager
         {
             throw new RuntimeException( e.getMessage(), e );
         }
-
         return session.getLocalRepository().getBasedir();
     }
 
@@ -138,4 +137,5 @@ public class Maven30RepositoryManager
     {
         return localRepository.getContentType();
     }
+
 }

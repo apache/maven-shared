@@ -29,13 +29,13 @@ import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 public interface ArtifactResolver
 {
 
-    Artifact resolveArtifact( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
+    ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
         throws ArtifactResolverException;
 
-    void resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
+    Iterable<ArtifactResult> resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
         throws ArtifactResolverException;
 
-    void resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact ,
+    Iterable<ArtifactResult> resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact ,
                               TransformableFilter filter  )
         throws ArtifactResolverException;
 

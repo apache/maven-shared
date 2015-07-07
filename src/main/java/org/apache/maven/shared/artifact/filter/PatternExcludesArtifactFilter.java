@@ -19,7 +19,7 @@ package org.apache.maven.shared.artifact.filter;
  * under the License.
  */
 
-import java.util.List;
+import java.util.Collection;
 
 import org.apache.maven.artifact.Artifact;
 
@@ -32,12 +32,12 @@ import org.apache.maven.artifact.Artifact;
 public class PatternExcludesArtifactFilter
     extends PatternIncludesArtifactFilter
 {
-    public PatternExcludesArtifactFilter( List<String> patterns )
+    public PatternExcludesArtifactFilter( Collection<String> patterns )
     {
         super( patterns );
     }
 
-    public PatternExcludesArtifactFilter( List<String> patterns, boolean actTransitively )
+    public PatternExcludesArtifactFilter( Collection<String> patterns, boolean actTransitively )
     {
         super( patterns, actTransitively );
     }

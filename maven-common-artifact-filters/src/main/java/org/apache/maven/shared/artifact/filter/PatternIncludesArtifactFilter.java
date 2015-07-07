@@ -20,6 +20,7 @@ package org.apache.maven.shared.artifact.filter;
  */
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,12 +52,12 @@ public class PatternIncludesArtifactFilter
 
     private final List<String> filteredArtifactIds = new ArrayList<String>();
 
-    public PatternIncludesArtifactFilter( final List<String> patterns )
+    public PatternIncludesArtifactFilter( final Collection<String> patterns )
     {
         this( patterns, false );
     }
 
-    public PatternIncludesArtifactFilter( final List<String> patterns, final boolean actTransitively )
+    public PatternIncludesArtifactFilter( final Collection<String> patterns, final boolean actTransitively )
     {
         this.actTransitively = actTransitively;
         final List<String> pos = new ArrayList<String>();

@@ -19,46 +19,36 @@ package org.apache.maven.shared.artifact.filter.resolve.transform;
  * under the License.
  */
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.shared.artifact.filter.resolve.Node;
-import org.sonatype.aether.graph.Dependency;
-import org.sonatype.aether.graph.DependencyNode;
-import org.sonatype.aether.util.artifact.ArtifactProperties;
 
 /**
- * Adapter of a Sonatype Aether DependencyNode for common Node
  * 
  * @author Robert Scholte
  * @since 3.0
  */
-class SonatypeAetherNode implements Node
+class ArtifactIncludeNode implements Node
 {
-
-    private final DependencyNode node;
-
-    SonatypeAetherNode( DependencyNode node )
+    private final Artifact artifact;
+    
+    public ArtifactIncludeNode( Artifact artifact )
     {
-        this.node = node;
+        this.artifact = artifact;
     }
-
-
+    
     @Override
-    public org.apache.maven.model.Dependency getDependency()
+    public Dependency getDependency()
     {
-        if ( node.getDependency() == null )
-        {
-            return null;
-        }
-        
-        Dependency nodeDependency = node.getDependency();
-
         org.apache.maven.model.Dependency mavenDependency = new org.apache.maven.model.Dependency();
-        mavenDependency.setGroupId( nodeDependency.getArtifact().getGroupId() );
-        mavenDependency.setArtifactId( nodeDependency.getArtifact().getArtifactId() );
-        mavenDependency.setVersion( nodeDependency.getArtifact().getVersion() );
-        mavenDependency.setClassifier( nodeDependency.getArtifact().getClassifier() );
-        mavenDependency.setType( nodeDependency.getArtifact().getProperty( ArtifactProperties.TYPE, null ) );
+        mavenDependency.setGroupId( artifact.getGroupId() );
+        mavenDependency.setArtifactId( artifact.getArtifactId() );
+        mavenDependency.setVersion( artifact.getVersion() );
+        mavenDependency.setClassifier( artifact.getClassifier() );
+        mavenDependency.setType( artifact.getType() );
 
         return mavenDependency;
     }
-     
+
+    
 }

@@ -23,8 +23,10 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.ArtifactUtils;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.resolver.filter.AndArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
@@ -34,8 +36,10 @@ import org.apache.maven.plugin.testing.stubs.ArtifactStub;
 import org.apache.maven.plugin.testing.stubs.StubArtifactRepository;
 import org.apache.maven.shared.artifact.filter.PatternExcludesArtifactFilter;
 import org.apache.maven.shared.artifact.filter.PatternIncludesArtifactFilter;
+import org.apache.maven.shared.artifact.filter.resolve.AbstractFilter;
 import org.apache.maven.shared.artifact.filter.resolve.AndFilter;
 import org.apache.maven.shared.artifact.filter.resolve.ExclusionsFilter;
+import org.apache.maven.shared.artifact.filter.resolve.Node;
 import org.apache.maven.shared.artifact.filter.resolve.OrFilter;
 import org.apache.maven.shared.artifact.filter.resolve.PatternExclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.PatternInclusionsFilter;
@@ -150,6 +154,25 @@ public class ArtifactIncludeFilterTransformerTest
         assertTrue( dependencyFilter.include( newArtifact( "g:a:v", "runtime" ) ) );
 
         assertFalse( dependencyFilter.include( newArtifact( "x:a:v", "runtime" ) ) );
+    }
+    
+    @Test
+    public void testTransformAbstractFilter() throws Exception
+    {
+        AbstractFilter snapshotFilter = new AbstractFilter()
+        {
+            @Override
+            public boolean accept( Node node, List<Node> parents )
+            {
+                return ArtifactUtils.isSnapshot( node.getDependency().getVersion() );
+            }
+        };
+        
+        ArtifactFilter dependencyFilter = snapshotFilter.transform( transformer );
+        
+        assertTrue( dependencyFilter.include( newArtifact( "g:a:1.0-SNAPSHOT", "compile" ) ) );
+
+        assertFalse( dependencyFilter.include( newArtifact( "g:a:1.0", "compile" ) ) );
     }
 
     private Artifact newArtifact( String coor, String scope )

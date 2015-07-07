@@ -146,6 +146,13 @@ public class ArtifactIncludeFilterTransformer implements FilterTransformer<Artif
     @Override
     public ArtifactFilter transform( final AbstractFilter filter )
     {
-        throw new UnsupportedOperationException( "Not yet implemented" );
+        return new ArtifactFilter()
+        {
+            @Override
+            public boolean include( Artifact artifact )
+            {
+                return filter.accept( new ArtifactIncludeNode( artifact ), null );
+            }
+        };
     }
 }

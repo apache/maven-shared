@@ -23,9 +23,14 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
+import org.apache.maven.artifact.ArtifactUtils;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
+import org.apache.maven.shared.artifact.filter.resolve.AbstractFilter;
 import org.apache.maven.shared.artifact.filter.resolve.AndFilter;
 import org.apache.maven.shared.artifact.filter.resolve.ExclusionsFilter;
+import org.apache.maven.shared.artifact.filter.resolve.Node;
 import org.apache.maven.shared.artifact.filter.resolve.OrFilter;
 import org.apache.maven.shared.artifact.filter.resolve.PatternExclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.PatternInclusionsFilter;
@@ -34,6 +39,7 @@ import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.DefaultDependencyNode;
 import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.util.filter.AndDependencyFilter;
 import org.eclipse.aether.util.filter.ExclusionsDependencyFilter;
@@ -132,6 +138,25 @@ public class EclipseAetherFilterTransformerTest
         assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:v", "runtime" ), null ) );
 
         assertFalse( dependencyFilter.accept( newDependencyNode( "x:a:v", "runtime" ), null ) );
+    }
+    
+    @Test
+    public void testTransformAbstractFilter() throws Exception
+    {
+        AbstractFilter snapshotFilter = new AbstractFilter()
+        {
+            @Override
+            public boolean accept( Node node, List<Node> parents )
+            {
+                return ArtifactUtils.isSnapshot( node.getDependency().getVersion() );
+            }
+        };
+        
+        DependencyFilter dependencyFilter = snapshotFilter.transform( transformer );
+        
+        assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:1.0-SNAPSHOT", "compile" ), null ) );
+
+        assertFalse( dependencyFilter.accept( newDependencyNode( "g:a:1.0", "compile" ), null ) );
     }
     
     private DependencyNode newDependencyNode( String string, String scope )

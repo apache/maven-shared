@@ -24,14 +24,19 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
+import org.apache.maven.artifact.ArtifactUtils;
+import org.apache.maven.shared.artifact.filter.resolve.AbstractFilter;
 import org.apache.maven.shared.artifact.filter.resolve.AndFilter;
 import org.apache.maven.shared.artifact.filter.resolve.ExclusionsFilter;
+import org.apache.maven.shared.artifact.filter.resolve.Node;
 import org.apache.maven.shared.artifact.filter.resolve.OrFilter;
 import org.apache.maven.shared.artifact.filter.resolve.PatternExclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.PatternInclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
+import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
@@ -134,6 +139,25 @@ public class SonatypeAetherFilterTransformerTest
         assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:v", "runtime" ), null ) );
 
         assertFalse( dependencyFilter.accept( newDependencyNode( "x:a:v", "runtime" ), null ) );
+    }
+    
+    @Test
+    public void testTransformAbstractFilter() throws Exception
+    {
+        AbstractFilter snapshotFilter = new AbstractFilter()
+        {
+            @Override
+            public boolean accept( Node node, List<Node> parents )
+            {
+                return ArtifactUtils.isSnapshot( node.getDependency().getVersion() );
+            }
+        };
+        
+        DependencyFilter dependencyFilter = snapshotFilter.transform( transformer );
+        
+        assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:1.0-SNAPSHOT", "compile" ), null ) );
+
+        assertFalse( dependencyFilter.accept( newDependencyNode( "g:a:1.0", "compile" ), null ) );
     }
     
     private DependencyNode newDependencyNode( String string, String scope )

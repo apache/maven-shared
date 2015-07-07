@@ -30,12 +30,12 @@ import org.eclipse.aether.graph.DependencyNode;
  * @author Robert Scholte
  * @since 3.0
  */
-public class EclipseAetherNode implements Node
+class EclipseAetherNode implements Node
 {
 
     private final DependencyNode node;
 
-    public EclipseAetherNode( DependencyNode node )
+    EclipseAetherNode( DependencyNode node )
     {
         this.node = node;
     }

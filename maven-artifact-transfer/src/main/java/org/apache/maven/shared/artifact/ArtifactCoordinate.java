@@ -62,7 +62,7 @@ package org.apache.maven.shared.artifact;
  *   this.artifact.setVersion( version );
  * }
  * 
- * public void setClassifier( String classifier );
+ * public void setClassifier( String classifier )
  * {
  *   this.artifact.setClassifier( classifier );
  * }
@@ -141,4 +141,6 @@ public class ArtifactCoordinate
     {
         this.classifier = classifier;
     }
+    
+    
 }

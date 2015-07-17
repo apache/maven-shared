@@ -19,8 +19,11 @@ package org.apache.maven.shared.artifact.resolve;
  * under the License.
  */
 
+import java.util.Collection;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.shared.artifact.ArtifactCoordinate;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 
 /**
@@ -29,14 +32,29 @@ import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 public interface ArtifactResolver
 {
 
-    ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
+    ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact )
         throws ArtifactResolverException;
 
-    Iterable<ArtifactResult> resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
+    ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest , ArtifactCoordinate coordinate )
+                    throws ArtifactResolverException;
+
+    /**
+     * This will resolve the dependencies of the coordinate, not resolving the the artifact of the coordinate itself.
+     * If the coordinate needs to be resolved too, use 
+     * {@link #resolveDependencies(ProjectBuildingRequest, Collection, TransformableFilter)} passing 
+     * {@code Collections.singletonList(coordinate)}
+     * 
+     * @param buildingRequest
+     * @param coordinate
+     * @param filter
+     * @return
+     * @throws ArtifactResolverException
+     */
+    Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
+                                                  ArtifactCoordinate coordinate, TransformableFilter filter )
         throws ArtifactResolverException;
 
-    Iterable<ArtifactResult> resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact ,
-                              TransformableFilter filter  )
-        throws ArtifactResolverException;
-
+    Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
+                                                  Collection<ArtifactCoordinate> dependencies, TransformableFilter filter )
+                    throws ArtifactResolverException;
 }

@@ -102,4 +102,35 @@ final class Invoker
             throw new ArtifactResolverException( e.getMessage(), e );
         }
     }
+    
+    /**
+     * <strong>Note:</strong> Ensure that argClasses and args have the same number of elements 
+     * 
+     * @param objectClazz the class of the static method
+     * @param staticMethod the static method to call
+     * @param argClasses the classes of the argument, used to select the right static method
+     * @param args the actual arguments to be passed
+     * @return the result of the method invocation
+     * @throws ArtifactResolverException if any checked exception occurs
+     */
+    public static Object invoke( Class<?> objectClazz, String staticMethod, Class<?>[] argClasses, Object[] args )
+                    throws ArtifactResolverException
+    {
+        try
+        {
+            return objectClazz.getMethod( staticMethod, argClasses ).invoke( null, args );
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new ArtifactResolverException( e.getMessage(), e );
+        }
+        catch ( InvocationTargetException e )
+        {
+            throw new ArtifactResolverException( e.getMessage(), e );
+        }
+        catch ( NoSuchMethodException e )
+        {
+            throw new ArtifactResolverException( e.getMessage(), e );
+        }
+    }
 }

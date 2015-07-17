@@ -124,7 +124,7 @@ public class ArtifactCoordinate
 
     public final String getType()
     {
-        return type;
+        return type != null ? type : "jar";
     }
 
     public final void setType( String type )

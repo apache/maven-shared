@@ -19,8 +19,11 @@ package org.apache.maven.shared.artifact.resolve.internal;
  * under the License.
  */
 
+import java.util.Collection;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.shared.artifact.ArtifactCoordinate;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolver;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolverException;
@@ -42,6 +45,7 @@ public class DefaultArtifactResolver
 {
     private PlexusContainer container;
 
+    @Override
     public ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
         throws ArtifactResolverException
     {
@@ -59,7 +63,8 @@ public class DefaultArtifactResolver
         }
     }
     
-    public Iterable<ArtifactResult> resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
+    @Override
+    public ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate )
         throws ArtifactResolverException
     {
         try
@@ -68,7 +73,7 @@ public class DefaultArtifactResolver
 
             ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
 
-            return effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact );
+            return effectiveArtifactResolver.resolveArtifact( buildingRequest, coordinate );
         }
         catch ( ComponentLookupException e )
         {
@@ -76,8 +81,10 @@ public class DefaultArtifactResolver
         }
     }
     
-    public Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult> resolveTransitively( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact ,
-                                     TransformableFilter filter  )
+    @Override
+    public Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
+                                                         Collection<ArtifactCoordinate> coordinates,
+                                                         TransformableFilter filter )
         throws ArtifactResolverException
     {
         try
@@ -86,7 +93,27 @@ public class DefaultArtifactResolver
 
             ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
 
-            return effectiveArtifactResolver.resolveTransitively( buildingRequest, mavenArtifact, filter );
+            return effectiveArtifactResolver.resolveDependencies( buildingRequest, coordinates, filter );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new ArtifactResolverException( e.getMessage(), e );
+        }
+    }
+    
+    @Override
+    public Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
+                                                                                                  ArtifactCoordinate coordinate,
+                                                                                                  TransformableFilter filter )
+        throws ArtifactResolverException
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : "maven3";
+
+            ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
+
+            return effectiveArtifactResolver.resolveDependencies( buildingRequest, coordinate, filter );
         }
         catch ( ComponentLookupException e )
         {
@@ -127,5 +154,4 @@ public class DefaultArtifactResolver
     {
         container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
     }
-
 }

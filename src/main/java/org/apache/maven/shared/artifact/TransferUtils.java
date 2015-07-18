@@ -34,7 +34,7 @@ public final class TransferUtils
 
     public static ArtifactCoordinate toArtifactCoordinate( Artifact artifact )
     {
-        ArtifactCoordinate coordinate = new ArtifactCoordinate();
+        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
         
         coordinate.setGroupId( artifact.getGroupId() );
         coordinate.setArtifactId( artifact.getArtifactId() );
@@ -47,7 +47,7 @@ public final class TransferUtils
 
     public static ArtifactCoordinate toArtifactCoordinate( Dependency dependency )
     {
-        ArtifactCoordinate coordinate = new ArtifactCoordinate();
+        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
         
         coordinate.setGroupId( dependency.getGroupId() );
         coordinate.setArtifactId( dependency.getArtifactId() );
@@ -60,7 +60,7 @@ public final class TransferUtils
 
     public static ArtifactCoordinate toArtifactCoordinate( Extension extension )
     {
-        ArtifactCoordinate coordinate = new ArtifactCoordinate();
+        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
         
         coordinate.setGroupId( extension.getGroupId() );
         coordinate.setArtifactId( extension.getArtifactId() );
@@ -71,7 +71,7 @@ public final class TransferUtils
 
     public static ArtifactCoordinate toArtifactCoordinate( MavenProject project )
     {
-        ArtifactCoordinate coordinate = new ArtifactCoordinate();
+        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
         
         coordinate.setGroupId( project.getGroupId() );
         coordinate.setArtifactId( project.getArtifactId() );
@@ -83,7 +83,7 @@ public final class TransferUtils
 
     public static ArtifactCoordinate toArtifactCoordinate( Parent parent )
     {
-        ArtifactCoordinate coordinate = new ArtifactCoordinate();
+        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
         
         coordinate.setGroupId( parent.getGroupId() );
         coordinate.setArtifactId( parent.getArtifactId() );
@@ -95,7 +95,7 @@ public final class TransferUtils
 
     public static ArtifactCoordinate toArtifactCoordinate( Plugin plugin )
     {
-        ArtifactCoordinate coordinate = new ArtifactCoordinate();
+        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
         
         coordinate.setGroupId( plugin.getGroupId() );
         coordinate.setArtifactId( plugin.getArtifactId() );

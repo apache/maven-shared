@@ -20,8 +20,17 @@ package org.apache.maven.shared.artifact;
  */
 
 /**
- * Contains all elements of an Maven Artifact of Dependency to calculate its path for either a local or remote
- * Maven2 repository
+ * <p>
+ * Contains all elements of an Maven Artifact of Dependency to resolve and calculate its path for either a local or
+ * remote Maven2 repository.
+ * </p>
+ * <p>
+ * The version can be a version range. Based on the groupId and artifactId it will be resolved to the actual version.
+ * </p>
+ * <p>
+ * The type will be translated to an extension based on the artifact descriptor ({@code pom.xml} matching the groupId,
+ * artifactId and version.
+ * </p>
  * 
  * @author Robert Scholte
  */
@@ -31,6 +40,11 @@ public interface ArtifactCoordinate
 
     String getArtifactId();
 
+    /**
+     * A version or versionRange
+     * 
+     * @return
+     */
     String getVersion();
 
     String getType();

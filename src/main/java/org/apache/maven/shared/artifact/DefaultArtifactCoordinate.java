@@ -147,5 +147,20 @@ public class DefaultArtifactCoordinate implements ArtifactCoordinate
         this.classifier = classifier;
     }
     
+    @Override
+    public String toString()
+    {
+        StringBuilder sb =
+            new StringBuilder().append( groupId ).append( ':' ).append( artifactId ).append( ':' ).append( type );
+        
+        if ( classifier != null )
+        {
+            sb.append( ':' ).append( classifier );
+        }
+        
+        sb.append( ':' ).append( version );
+        
+        return sb.toString();
+    }
     
 }

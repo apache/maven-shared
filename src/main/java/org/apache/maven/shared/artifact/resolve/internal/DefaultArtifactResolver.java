@@ -22,6 +22,7 @@ package org.apache.maven.shared.artifact.resolve.internal;
 import java.util.Collection;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.ArtifactCoordinate;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
@@ -83,7 +84,7 @@ public class DefaultArtifactResolver
     
     @Override
     public Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
-                                                         Collection<ArtifactCoordinate> coordinates,
+                                                         Collection<Dependency> coordinates,
                                                          TransformableFilter filter )
         throws ArtifactResolverException
     {

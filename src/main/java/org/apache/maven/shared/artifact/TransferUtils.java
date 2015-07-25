@@ -104,4 +104,32 @@ public final class TransferUtils
         
         return coordinate;
     }
+    
+    public static Dependency toDependency( Artifact artifact )
+    {
+        Dependency dependency = new Dependency();
+        
+        dependency.setGroupId( artifact.getGroupId() );
+        dependency.setArtifactId( artifact.getArtifactId() );
+        dependency.setVersion( artifact.getVersion() );
+        dependency.setType( artifact.getType() );
+        dependency.setClassifier( artifact.getClassifier() );
+        dependency.setScope( artifact.getScope() );
+        
+        return dependency;
+    }
+
+    public static Dependency toDependency( ArtifactCoordinate coordinate )
+    {
+        Dependency dependency = new Dependency();
+        
+        dependency.setGroupId( coordinate.getGroupId() );
+        dependency.setArtifactId( coordinate.getArtifactId() );
+        dependency.setVersion( coordinate.getVersion() );
+        dependency.setType( coordinate.getType() );
+        dependency.setClassifier( coordinate.getClassifier() );
+        
+        return dependency;
+    }
+
 }

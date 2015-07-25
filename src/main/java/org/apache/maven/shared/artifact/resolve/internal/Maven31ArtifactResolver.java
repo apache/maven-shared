@@ -154,7 +154,7 @@ public class Maven31ArtifactResolver
     
     @Override
     public Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
-                                                                                                  Collection<ArtifactCoordinate> coordinates,
+                                                                                                  Collection<org.apache.maven.model.Dependency> mavenDependencies,
                                                                                                   TransformableFilter filter )
         throws ArtifactResolverException
     {
@@ -162,11 +162,17 @@ public class Maven31ArtifactResolver
             (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
                                                    ArtifactHandlerManager.class, artifactHandlerManager );
 
-        List<Dependency> dependencies = new ArrayList<Dependency>( coordinates.size() );
+        List<Dependency> aetherDependencies = new ArrayList<Dependency>( mavenDependencies.size() );
 
-        for ( ArtifactCoordinate coordinate : coordinates )
+        final Class<?>[] argClasses = new Class<?>[] { org.apache.maven.model.Dependency.class, ArtifactTypeRegistry.class };
+
+        for ( org.apache.maven.model.Dependency mavenDependency : mavenDependencies )
         {
-            dependencies.add( toDependency( coordinate, typeRegistry ) );
+            Object[] args = new Object[] {mavenDependency, typeRegistry };
+            
+            Dependency aetherDependency = (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
+            
+            aetherDependencies.add( aetherDependency );
         }
 
         @SuppressWarnings( "unchecked" )
@@ -174,7 +180,7 @@ public class Maven31ArtifactResolver
             (List<RemoteRepository>) Invoker.invoke( RepositoryUtils.class, "toRepos", List.class,
                                                      buildingRequest.getRemoteRepositories() );
 
-        CollectRequest request = new CollectRequest( (Dependency) null, dependencies, aetherRepositories );
+        CollectRequest request = new CollectRequest( (Dependency) null, aetherDependencies, aetherRepositories );
 
         return resolveDependencies( buildingRequest, aetherRepositories, filter, request );
     }

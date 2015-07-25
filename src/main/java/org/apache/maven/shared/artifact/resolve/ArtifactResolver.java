@@ -22,6 +22,7 @@ package org.apache.maven.shared.artifact.resolve;
 import java.util.Collection;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.ArtifactCoordinate;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
@@ -55,6 +56,6 @@ public interface ArtifactResolver
         throws ArtifactResolverException;
 
     Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
-                                                  Collection<ArtifactCoordinate> dependencies, TransformableFilter filter )
+                                                  Collection<Dependency> dependencies, TransformableFilter filter )
                     throws ArtifactResolverException;
 }

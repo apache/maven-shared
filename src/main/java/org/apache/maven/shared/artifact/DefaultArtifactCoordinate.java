@@ -147,11 +147,14 @@ public class DefaultArtifactCoordinate implements ArtifactCoordinate
         this.classifier = classifier;
     }
     
+    /**
+     * @see org.apache.maven.artifact.DefaultArtifact#toString()
+     */
     @Override
     public String toString()
     {
         StringBuilder sb =
-            new StringBuilder().append( groupId ).append( ':' ).append( artifactId ).append( ':' ).append( type );
+            new StringBuilder().append( groupId ).append( ':' ).append( artifactId ).append( ':' ).append( getType() );
         
         if ( classifier != null )
         {

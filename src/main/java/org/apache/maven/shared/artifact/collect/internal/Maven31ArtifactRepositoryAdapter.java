@@ -31,6 +31,12 @@ import org.apache.maven.repository.Proxy;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.repository.RepositoryPolicy;
 
+/**
+ * ArtifactRepository wrapper around {@link RemoteRepository}
+ * 
+ * @author Robert Scholte
+ *
+ */
 public class Maven31ArtifactRepositoryAdapter implements ArtifactRepository
 {
     

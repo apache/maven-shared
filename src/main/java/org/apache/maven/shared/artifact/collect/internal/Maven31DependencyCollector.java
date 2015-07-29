@@ -39,6 +39,12 @@ import org.eclipse.aether.collection.DependencyCollectionException;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.repository.RemoteRepository;
 
+/**
+ * Maven 3.1+ implementation of the {@link DependencyCollector}
+ * 
+ * @author Robert Scholte
+ *
+ */
 @Component( role = DependencyCollector.class, hint = "maven31" )
 public class Maven31DependencyCollector
     implements DependencyCollector

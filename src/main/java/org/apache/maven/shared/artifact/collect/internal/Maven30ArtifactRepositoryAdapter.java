@@ -31,6 +31,12 @@ import org.apache.maven.repository.Proxy;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.repository.RepositoryPolicy;
 
+/**
+ * ArtifactRepository wrapper around {@link RemoteRepository}
+ * 
+ * @author Robert Scholte
+ *
+ */
 public class Maven30ArtifactRepositoryAdapter implements ArtifactRepository
 {
     

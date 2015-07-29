@@ -31,7 +31,12 @@ import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.graph.DependencyVisitor;
 import org.eclipse.aether.repository.RemoteRepository;
 
-
+/**
+ * CollectorResult wrapper around {@link CollectResult}
+ * 
+ * @author Robert Scholte
+ *
+ */
 public class Maven31CollectorResult implements CollectorResult
 {
     private final CollectResult collectResult;

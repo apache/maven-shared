@@ -26,6 +26,12 @@ import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.project.MavenProject;
 
+/**
+ * Utility class
+ * 
+ * @author Robert Scholte
+ *
+ */
 public final class TransferUtils
 {
     private TransferUtils()

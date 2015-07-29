@@ -85,6 +85,7 @@ public class DefaultArtifactResolver
     @Override
     public Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
                                                          Collection<Dependency> coordinates,
+                                                         Collection<Dependency> managedDependencies,
                                                          TransformableFilter filter )
         throws ArtifactResolverException
     {
@@ -94,7 +95,7 @@ public class DefaultArtifactResolver
 
             ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
 
-            return effectiveArtifactResolver.resolveDependencies( buildingRequest, coordinates, filter );
+            return effectiveArtifactResolver.resolveDependencies( buildingRequest, coordinates, null, filter );
         }
         catch ( ComponentLookupException e )
         {
@@ -103,9 +104,8 @@ public class DefaultArtifactResolver
     }
     
     @Override
-    public Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
-                                                                                                  ArtifactCoordinate coordinate,
-                                                                                                  TransformableFilter filter )
+    public Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
+                                                         ArtifactCoordinate coordinate, TransformableFilter filter )
         throws ArtifactResolverException
     {
         try

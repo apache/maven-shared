@@ -33,6 +33,11 @@ import org.codehaus.plexus.context.Context;
 import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
+/**
+ * This DependencyCollector passes the request to the proper Maven 3.x implementation
+ *  
+ * @author Robert Scholte
+ */
 @Component( role = DependencyCollector.class, hint = "default" )
 public class DefaultDependencyCollector implements DependencyCollector, Contextualizable 
 {

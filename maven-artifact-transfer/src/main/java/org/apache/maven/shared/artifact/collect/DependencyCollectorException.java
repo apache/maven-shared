@@ -19,6 +19,10 @@ package org.apache.maven.shared.artifact.collect;
  * under the License.
  */
 
+/**
+ * 
+ * @author Robert Scholte
+ */
 public class DependencyCollectorException extends Exception
 {
 

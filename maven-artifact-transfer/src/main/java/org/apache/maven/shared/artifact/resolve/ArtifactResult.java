@@ -1,7 +1,5 @@
 package org.apache.maven.shared.artifact.resolve;
 
-import org.apache.maven.artifact.Artifact;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,6 +19,8 @@ import org.apache.maven.artifact.Artifact;
  * under the License.
  */
 
+import org.apache.maven.artifact.Artifact;
+
 /**
  * The Artifact Result
  * 
@@ -29,6 +29,5 @@ import org.apache.maven.artifact.Artifact;
  */
 public interface ArtifactResult
 {
-
     Artifact getArtifact();
 }

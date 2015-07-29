@@ -42,7 +42,7 @@ public interface ArtifactResolver
     /**
      * This will resolve the dependencies of the coordinate, not resolving the the artifact of the coordinate itself.
      * If the coordinate needs to be resolved too, use 
-     * {@link #resolveDependencies(ProjectBuildingRequest, Collection, TransformableFilter)} passing 
+     * {@link #resolveDependencies(ProjectBuildingRequest, Collection, Collection, TransformableFilter)} passing 
      * {@code Collections.singletonList(coordinate)}
      * 
      * @param buildingRequest
@@ -55,7 +55,18 @@ public interface ArtifactResolver
                                                   ArtifactCoordinate coordinate, TransformableFilter filter )
         throws ArtifactResolverException;
 
+    /**
+     * 
+     * @param buildingRequest the project building request, never {@code null}
+     * @param dependencies the dependencies to resolve, never {@code null}
+     * @param managedDependencies managed dependencies, can be {@code null}
+     * @param filter a filter, can be {@code null}
+     * @return
+     * @throws ArtifactResolverException
+     */
     Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
-                                                  Collection<Dependency> dependencies, TransformableFilter filter )
+                                                  Collection<Dependency> dependencies,
+                                                  Collection<Dependency> managedDependencies,
+                                                  TransformableFilter filter )
                     throws ArtifactResolverException;
 }

@@ -23,6 +23,11 @@ import java.util.List;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
 
+/**
+ * 
+ * @author Robert Scholte
+ *
+ */
 public interface CollectorResult
 {
     List<ArtifactRepository> getRemoteRepositories();

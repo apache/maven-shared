@@ -31,6 +31,12 @@ import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.graph.DependencyVisitor;
 import org.sonatype.aether.repository.RemoteRepository;
 
+/**
+ * CollectorResult wrapper around {@link CollectResult} 
+ * 
+ * @author Robert Scholte
+ *
+ */
 public class Maven30CollectorResult implements CollectorResult
 {
     private final CollectResult collectResult;

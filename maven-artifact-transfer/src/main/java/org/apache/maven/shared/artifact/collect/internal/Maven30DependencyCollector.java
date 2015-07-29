@@ -39,6 +39,12 @@ import org.sonatype.aether.collection.DependencyCollectionException;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.repository.RemoteRepository;
 
+/**
+ * Maven 3.0 implementation of the {@link DependencyCollector}
+ * 
+ * @author Robert Scholte
+ *
+ */
 @Component( role = DependencyCollector.class, hint = "maven3" )
 public class Maven30DependencyCollector
     implements DependencyCollector

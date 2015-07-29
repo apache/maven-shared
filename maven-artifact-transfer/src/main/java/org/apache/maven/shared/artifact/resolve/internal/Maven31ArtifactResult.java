@@ -25,7 +25,7 @@ import org.eclipse.aether.resolution.ArtifactResult;
 import org.eclipse.aether.artifact.Artifact;
 
 /**
- * 
+ * {@link org.apache.maven.shared.artifact.resolve.ArtifactResult} wrapper for {@link ArtifactResult}
  * 
  * @author Robert Scholte
  * @since 3.0
@@ -44,8 +44,8 @@ public class Maven31ArtifactResult implements org.apache.maven.shared.artifact.r
     {
         try
         {
-            return (org.apache.maven.artifact.Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact", Artifact.class,
-                                                       artifactResult.getArtifact() );
+            return (org.apache.maven.artifact.Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                                                        Artifact.class, artifactResult.getArtifact() );
         }
         catch ( ArtifactResolverException e )
         {

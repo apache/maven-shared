@@ -732,7 +732,7 @@ public abstract class AbstractMavenReportRenderer
                         {
                             if ( braceStack == 0 )
                             {
-                                if ( i != 0 ) // handle { at first character
+                                if ( i != lastOffset ) // handle { at first character
                                 {
                                     segments.add( text.substring( lastOffset, i ) );
                                     segments.add( null );

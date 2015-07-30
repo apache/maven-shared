@@ -111,5 +111,19 @@ public class AbstractMavenReportRendererTest
 
         checkPattern( "{}test,", new String[] { "", null, "test,", null } );
         checkPattern( "Hi ${name}. How is it going, sir?", new String[] { "Hi ${name}. How is it going, sir?", null } );
+
+        // MSHARED-392 multiple links
+        checkPattern( "{Indiana University Extreme! Lab Software License, vesion 1.1.1,"
+                        + "http://www.extreme.indiana.edu/viewcvs/~checkout~/XPP3/java/LICENSE.txt}"
+                        + "{Public Domain,http://creativecommons.org/licenses/publicdomain}"
+                        + "{Apache Software License, version 1.1,http://www.apache.org/licenses/LICENSE-1.1}",
+                                  new String[]{"Indiana University Extreme! Lab Software License, vesion 1.1.1", 
+                                      "http://www.extreme.indiana.edu/viewcvs/~checkout~/XPP3/java/LICENSE.txt",
+                                      "Public Domain",
+                                      "http://creativecommons.org/licenses/publicdomain",
+                                      "Apache Software License, version 1.1",
+                                      "http://www.apache.org/licenses/LICENSE-1.1"});
+
+        
     }
 }

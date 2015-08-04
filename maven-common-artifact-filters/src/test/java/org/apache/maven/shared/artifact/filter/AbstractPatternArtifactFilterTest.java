@@ -31,7 +31,7 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 
 import static org.easymock.EasyMock.*;
 
-public abstract class PatternArtifactFilterTCK
+public abstract class AbstractPatternArtifactFilterTest
     extends TestCase
 {
 

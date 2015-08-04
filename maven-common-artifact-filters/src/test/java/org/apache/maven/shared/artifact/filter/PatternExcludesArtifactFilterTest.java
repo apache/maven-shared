@@ -21,155 +21,28 @@ package org.apache.maven.shared.artifact.filter;
 
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 
 public class PatternExcludesArtifactFilterTest
-    extends TestCase
+    extends AbstractPatternArtifactFilterTest
 {
 
-    private final PatternArtifactFilterTCK tck = new PatternArtifactFilterTCK()
+    @Override
+    protected ArtifactFilter createFilter( final List<String> patterns )
     {
-
-        @Override
-        protected ArtifactFilter createFilter( final List<String> patterns )
-        {
-            return new PatternExcludesArtifactFilter( patterns );
-        }
-
-        @Override
-        protected ArtifactFilter createFilter( final List<String> patterns, final boolean actTransitively )
-        {
-            return new PatternExcludesArtifactFilter( patterns, actTransitively );
-        }
-
-        @Override
-        protected boolean isInclusionExpected()
-        {
-            return false;
-        }
-
-    };
-
-    public void testShouldTriggerBothPatternsWithNonColonWildcards()
-    {
-        tck.testShouldTriggerBothPatternsWithNonColonWildcards();
+        return new PatternExcludesArtifactFilter( patterns );
     }
 
-    public void testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard()
+    @Override
+    protected ArtifactFilter createFilter( final List<String> patterns, final boolean actTransitively )
     {
-        tck.testIncludeWhenPatternMatchesDepTrailWithTransitivityUsingNonColonWildcard();
+        return new PatternExcludesArtifactFilter( patterns, actTransitively );
     }
 
-    public void testShouldTriggerBothPatternsWithWildcards()
+    @Override
+    protected boolean isInclusionExpected()
     {
-        tck.testShouldTriggerBothPatternsWithWildcards();
+        return false;
     }
 
-    public void testShouldNotIncludeDirectlyMatchedArtifactByDependencyConflictId()
-    {
-        tck.testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId();
-    }
-
-    public void testShouldNotIncludeDirectlyMatchedArtifactByGroupIdArtifactId()
-    {
-        tck.testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId();
-    }
-
-    public void testShouldNotIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled()
-    {
-        tck.testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled();
-    }
-
-    public void testShouldIncludeWhenArtifactIdDiffers()
-    {
-        tck.testShouldNotIncludeWhenArtifactIdDiffers();
-    }
-
-    public void testShouldIncludeWhenBothIdElementsDiffer()
-    {
-        tck.testShouldNotIncludeWhenBothIdElementsDiffer();
-    }
-
-    public void testShouldIncludeWhenGroupIdDiffers()
-    {
-        tck.testShouldNotIncludeWhenGroupIdDiffers();
-    }
-
-    public void testShouldIncludeWhenNegativeMatch()
-    {
-        tck.testShouldNotIncludeWhenNegativeMatch();
-    }
-
-    public void testShouldNotIncludeWhenWildcardMatchesInsideSequence()
-    {
-        tck.testShouldIncludeWhenWildcardMatchesInsideSequence();
-    }
-
-    public void testShouldIncludeWhenWildcardMatchesOutsideSequence()
-    {
-        tck.testShouldIncludeWhenWildcardMatchesOutsideSequence();
-    }
-
-    public void testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent()
-    {
-        tck.testShouldIncludeTransitiveDependencyWhenWildcardMatchesButDoesntMatchParent();
-    }
-
-    public void testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId()
-    {
-        tck.testShouldIncludeWhenWildcardMatchesMiddleOfArtifactId();
-    }
-
-    public void testShouldIncludeWhenWildcardCoversPartOfGroupIdAndEverythingElse()
-    {
-        tck.testShouldIncludeWhenWildcardCoversPartOfGroupIdAndEverythingElse();
-    }
-
-    public void testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId()
-    {
-        tck.testShouldIncludeDirectlyMatchedArtifactByGroupIdArtifactId();
-    }
-
-    public void testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId()
-    {
-        tck.testShouldIncludeDirectlyMatchedArtifactByDependencyConflictId();
-    }
-
-    public void testShouldNotIncludeWhenGroupIdDiffers()
-    {
-        tck.testShouldNotIncludeWhenGroupIdDiffers();
-    }
-
-    public void testShouldNotIncludeWhenArtifactIdDiffers()
-    {
-        tck.testShouldNotIncludeWhenArtifactIdDiffers();
-    }
-
-    public void testShouldNotIncludeWhenBothIdElementsDiffer()
-    {
-        tck.testShouldNotIncludeWhenBothIdElementsDiffer();
-    }
-
-    public void testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled()
-    {
-        tck.testShouldIncludeWhenPatternMatchesDependencyTrailAndTransitivityIsEnabled();
-    }
-
-    public void testShouldNotIncludeWhenNegativeMatch()
-    {
-        tck.testShouldNotIncludeWhenNegativeMatch();
-    }
-
-    public void testShouldIncludeWhenWildcardMatchesInsideSequence()
-    {
-        tck.testShouldIncludeWhenWildcardMatchesInsideSequence();
-    }
-
-    // See comment in TCK.
-    // public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild()
-    // {
-    // tck.testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild();
-    // }
 }

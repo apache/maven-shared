@@ -57,6 +57,11 @@ class EclipseAetherNode implements Node
         mavenDependency.setClassifier( nodeDependency.getArtifact().getClassifier() );
         mavenDependency.setType( nodeDependency.getArtifact().getProperty( ArtifactProperties.TYPE, null ) );
         mavenDependency.setScope( nodeDependency.getScope() );
+        // Eclipse Aether supports three-valued logic
+        if ( nodeDependency.getOptional() != null )
+        {
+            mavenDependency.setOptional( nodeDependency.isOptional() );
+        }
 
         return mavenDependency;
     }

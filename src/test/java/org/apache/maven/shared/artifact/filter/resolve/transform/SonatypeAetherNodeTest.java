@@ -75,8 +75,31 @@ public class SonatypeAetherNodeTest
         assertEquals( "s", mavenDependency.getScope() );
     }
     
+    @Test
+    public void testOptional()
+    {
+        Node node = new SonatypeAetherNode( newDependencyNode( "g:a:v", null ) );
+        
+        assertEquals( "false", node.getDependency().getOptional()  );
+        assertEquals( false, node.getDependency().isOptional()  );
+        
+        node = new SonatypeAetherNode( newDependencyNode( "g:a:v", null, true ) );
+        assertEquals( "true", node.getDependency().getOptional()  );
+        assertEquals( true, node.getDependency().isOptional()  );
+
+        node = new SonatypeAetherNode( newDependencyNode( "g:a:v", null, false ) );
+        assertEquals( "false", node.getDependency().getOptional()  );
+        assertEquals( false, node.getDependency().isOptional()  );
+    }
+
     private DependencyNode newDependencyNode( String string, String scope )
     {
         return new DefaultDependencyNode( new Dependency( new DefaultArtifact( string ), scope ) );
     }
+    
+    private DependencyNode newDependencyNode( String coor, String scope, boolean optional )
+    {
+        return new DefaultDependencyNode( new Dependency( new DefaultArtifact( coor ), scope, optional ) );
+    }
+
 }

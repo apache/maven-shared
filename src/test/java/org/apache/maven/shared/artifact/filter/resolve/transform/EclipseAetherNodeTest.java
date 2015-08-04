@@ -74,8 +74,32 @@ public class EclipseAetherNodeTest
         assertEquals( null, mavenDependency.getType() );
         assertEquals( "s", mavenDependency.getScope() );
     }
-    private DependencyNode newDependencyNode( String string, String scope )
+
+    @Test
+    public void testOptional()
     {
-        return new DefaultDependencyNode( new Dependency( new DefaultArtifact( string ), scope ) );
+        Node node = new EclipseAetherNode( newDependencyNode( "g:a:v", null, null ) );
+        
+        assertEquals( null, node.getDependency().getOptional()  );
+        assertEquals( false, node.getDependency().isOptional()  );
+        
+        node = new EclipseAetherNode( newDependencyNode( "g:a:v", null, true ) );
+        assertEquals( "true", node.getDependency().getOptional()  );
+        assertEquals( true, node.getDependency().isOptional()  );
+
+        node = new EclipseAetherNode( newDependencyNode( "g:a:v", null, false ) );
+        assertEquals( "false", node.getDependency().getOptional()  );
+        assertEquals( false, node.getDependency().isOptional()  );
     }
+
+    private DependencyNode newDependencyNode( String coor, String scope )
+    {
+        return new DefaultDependencyNode( new Dependency( new DefaultArtifact( coor ), scope ) );
+    }
+    
+    private DependencyNode newDependencyNode( String coor, String scope, Boolean optional )
+    {
+        return new DefaultDependencyNode( new Dependency( new DefaultArtifact( coor ), scope, optional ) );
+    }
+
 }

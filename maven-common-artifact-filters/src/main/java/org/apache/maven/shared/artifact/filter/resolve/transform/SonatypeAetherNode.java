@@ -44,19 +44,20 @@ class SonatypeAetherNode implements Node
     @Override
     public org.apache.maven.model.Dependency getDependency()
     {
-        if ( node.getDependency() == null )
+        Dependency nodeDependency = node.getDependency();
+
+        if ( nodeDependency == null )
         {
             return null;
         }
         
-        Dependency nodeDependency = node.getDependency();
-
         org.apache.maven.model.Dependency mavenDependency = new org.apache.maven.model.Dependency();
         mavenDependency.setGroupId( nodeDependency.getArtifact().getGroupId() );
         mavenDependency.setArtifactId( nodeDependency.getArtifact().getArtifactId() );
         mavenDependency.setVersion( nodeDependency.getArtifact().getVersion() );
         mavenDependency.setClassifier( nodeDependency.getArtifact().getClassifier() );
         mavenDependency.setType( nodeDependency.getArtifact().getProperty( ArtifactProperties.TYPE, null ) );
+        mavenDependency.setScope( nodeDependency.getScope() );
 
         return mavenDependency;
     }

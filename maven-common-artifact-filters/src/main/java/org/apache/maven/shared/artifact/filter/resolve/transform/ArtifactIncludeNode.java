@@ -46,6 +46,7 @@ class ArtifactIncludeNode implements Node
         mavenDependency.setVersion( artifact.getVersion() );
         mavenDependency.setClassifier( artifact.getClassifier() );
         mavenDependency.setType( artifact.getType() );
+        mavenDependency.setScope( artifact.getScope() );
 
         return mavenDependency;
     }

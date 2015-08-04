@@ -19,7 +19,8 @@ package org.apache.maven.shared.artifact.filter.resolve.transform;
  * under the License.
  */
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,13 +28,9 @@ import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.ArtifactUtils;
-import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.resolver.filter.AndArtifactFilter;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
-import org.apache.maven.artifact.resolver.filter.ScopeArtifactFilter;
 import org.apache.maven.plugin.testing.ArtifactStubFactory;
-import org.apache.maven.plugin.testing.stubs.ArtifactStub;
-import org.apache.maven.plugin.testing.stubs.StubArtifactRepository;
 import org.apache.maven.shared.artifact.filter.PatternExcludesArtifactFilter;
 import org.apache.maven.shared.artifact.filter.PatternIncludesArtifactFilter;
 import org.apache.maven.shared.artifact.filter.resolve.AbstractFilter;
@@ -45,17 +42,6 @@ import org.apache.maven.shared.artifact.filter.resolve.PatternExclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.PatternInclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
-import org.eclipse.aether.artifact.DefaultArtifact;
-import org.eclipse.aether.graph.DefaultDependencyNode;
-import org.eclipse.aether.graph.Dependency;
-import org.eclipse.aether.graph.DependencyNode;
-import org.eclipse.aether.util.filter.AndDependencyFilter;
-import org.eclipse.aether.util.filter.ExclusionsDependencyFilter;
-import org.eclipse.aether.util.filter.OrDependencyFilter;
-import org.eclipse.aether.util.filter.PatternExclusionsDependencyFilter;
-import org.eclipse.aether.util.filter.PatternInclusionsDependencyFilter;
-import org.eclipse.aether.util.filter.ScopeDependencyFilter;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ArtifactIncludeFilterTransformerTest

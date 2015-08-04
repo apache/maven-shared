@@ -58,6 +58,7 @@ class SonatypeAetherNode implements Node
         mavenDependency.setClassifier( nodeDependency.getArtifact().getClassifier() );
         mavenDependency.setType( nodeDependency.getArtifact().getProperty( ArtifactProperties.TYPE, null ) );
         mavenDependency.setScope( nodeDependency.getScope() );
+        mavenDependency.setOptional( nodeDependency.isOptional() );
 
         return mavenDependency;
     }

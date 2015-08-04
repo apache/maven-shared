@@ -22,9 +22,11 @@ package org.apache.maven.shared.artifact.filter.resolve.transform;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.versioning.VersionRange;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.testing.ArtifactStubFactory;
 import org.apache.maven.shared.artifact.filter.resolve.Node;
+import org.eclipse.aether.graph.DependencyNode;
 import org.junit.Test;
 
 public class ArtifactIncludeNodeTest
@@ -90,21 +92,71 @@ public class ArtifactIncludeNodeTest
         assertEquals( "s", dependency.getScope() );
     }
 
+    @Test
+    public void testOptional() throws Exception
+    {
+        Node node = new ArtifactIncludeNode( newArtifact( "g:a:pom:v", null, null ) );
+        
+        assertEquals( "false", node.getDependency().getOptional()  );
+        assertEquals( false, node.getDependency().isOptional()  );
+        
+        node = new ArtifactIncludeNode( newArtifact( "g:a:pom:v", null, true ) );
+        assertEquals( "true", node.getDependency().getOptional()  );
+        assertEquals( true, node.getDependency().isOptional()  );
+
+        node = new ArtifactIncludeNode( newArtifact( "g:a:pom:v", null, false ) );
+        assertEquals( "false", node.getDependency().getOptional()  );
+        assertEquals( false, node.getDependency().isOptional()  );
+    }
+
     private Artifact newArtifact( String coor, String scope )
         throws Exception
     {
+        return newArtifact( coor, scope, null );
+    }
+
+    private Artifact newArtifact( String coor, String scope, Boolean optional )
+        throws Exception
+    {
         String[] gav = coor.split( ":" );
+        String groupId = gav[0];
+        String artifactId = gav[1];
+        String version = null;
+        String classifier = null;
+        String type = null;
+
         if ( gav.length == 3 )
         {
-            return artifactFactory.createArtifact( gav[0], gav[1], gav[2], scope );
+            version = gav[2];
         }
         else if ( gav.length == 4 )
         {
-            return artifactFactory.createArtifact( gav[0], gav[1], gav[3], scope, gav[2], null );
+            type = gav[2];
+            version = gav[3];
+        }        
+        else if ( gav.length == 5 )
+        {
+            type = gav[2];
+            classifier = gav[3];
+            version = gav[4];
+        }        
+        
+        if( optional != null )
+        {
+            VersionRange versionRange = VersionRange.createFromVersion( version );
+            return artifactFactory.createArtifact( groupId, artifactId, versionRange, scope, type, classifier, optional );
+        }
+        else if ( gav.length == 3 )
+        {
+            return artifactFactory.createArtifact( groupId, artifactId, version, scope );
+        }
+        else if ( gav.length == 4 )
+        {
+            return artifactFactory.createArtifact( groupId, artifactId, version, scope, type, null );
         }
         else if ( gav.length == 5 )
         {
-            return artifactFactory.createArtifact( gav[0], gav[1], gav[4], scope, gav[2], gav[3] );
+            return artifactFactory.createArtifact( groupId, artifactId, version, scope, type, classifier );
         }
         else
         {

@@ -21,10 +21,15 @@ package org.apache.maven.shared.artifact.filter.resolve.transform;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 import org.apache.maven.shared.artifact.filter.resolve.Node;
 import org.junit.Test;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyNode;
+import org.sonatype.aether.graph.Exclusion;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 import org.sonatype.aether.util.graph.DefaultDependencyNode;
 
@@ -92,6 +97,17 @@ public class SonatypeAetherNodeTest
         assertEquals( false, node.getDependency().isOptional()  );
     }
 
+    @Test
+    public void testExclusions()
+    {
+        Node node = new SonatypeAetherNode( newDependencyNode( "g:a:v", null, Collections.singletonList( "eg:ea" ) ) );
+        assertEquals( 1, node.getDependency().getExclusions().size() );
+        
+        org.apache.maven.model.Exclusion mavenExclusion = node.getDependency().getExclusions().get( 0 );
+        assertEquals( "eg", mavenExclusion.getGroupId() );
+        assertEquals( "ea", mavenExclusion.getArtifactId() );
+    }
+
     private DependencyNode newDependencyNode( String string, String scope )
     {
         return new DefaultDependencyNode( new Dependency( new DefaultArtifact( string ), scope ) );
@@ -102,4 +118,18 @@ public class SonatypeAetherNodeTest
         return new DefaultDependencyNode( new Dependency( new DefaultArtifact( coor ), scope, optional ) );
     }
 
+    private DependencyNode newDependencyNode( String coor, String scope, Collection<String> exclusions )
+    {
+        Dependency dependency = new Dependency( new DefaultArtifact( coor ), scope );
+        
+        Collection<Exclusion> aetherExclusions = new ArrayList<Exclusion>( exclusions.size() );
+        for ( String exclusion : exclusions )
+        {
+            String[] ga = exclusion.split( ":" );
+            aetherExclusions.add( new Exclusion( ga[0], ga[1], null, null ) );
+        }
+        dependency = dependency.setExclusions( aetherExclusions );
+        
+        return new DefaultDependencyNode( dependency );
+    }
 }

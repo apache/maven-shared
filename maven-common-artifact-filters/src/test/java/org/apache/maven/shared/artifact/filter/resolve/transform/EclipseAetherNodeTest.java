@@ -21,11 +21,16 @@ package org.apache.maven.shared.artifact.filter.resolve.transform;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 import org.apache.maven.shared.artifact.filter.resolve.Node;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.DefaultDependencyNode;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyNode;
+import org.eclipse.aether.graph.Exclusion;
 import org.junit.Test;
 
 public class EclipseAetherNodeTest
@@ -78,7 +83,7 @@ public class EclipseAetherNodeTest
     @Test
     public void testOptional()
     {
-        Node node = new EclipseAetherNode( newDependencyNode( "g:a:v", null, null ) );
+        Node node = new EclipseAetherNode( newDependencyNode( "g:a:v", null, (Boolean) null ) );
         
         assertEquals( null, node.getDependency().getOptional()  );
         assertEquals( false, node.getDependency().isOptional()  );
@@ -91,6 +96,17 @@ public class EclipseAetherNodeTest
         assertEquals( "false", node.getDependency().getOptional()  );
         assertEquals( false, node.getDependency().isOptional()  );
     }
+    
+    @Test
+    public void testExclusions()
+    {
+        Node node = new EclipseAetherNode( newDependencyNode( "g:a:v", null, Collections.singletonList( "eg:ea" ) ) );
+        assertEquals( 1, node.getDependency().getExclusions().size() );
+        
+        org.apache.maven.model.Exclusion mavenExclusion = node.getDependency().getExclusions().get( 0 );
+        assertEquals( "eg", mavenExclusion.getGroupId() );
+        assertEquals( "ea", mavenExclusion.getArtifactId() );
+    }
 
     private DependencyNode newDependencyNode( String coor, String scope )
     {
@@ -100,6 +116,21 @@ public class EclipseAetherNodeTest
     private DependencyNode newDependencyNode( String coor, String scope, Boolean optional )
     {
         return new DefaultDependencyNode( new Dependency( new DefaultArtifact( coor ), scope, optional ) );
+    }
+
+    private DependencyNode newDependencyNode( String coor, String scope, Collection<String> exclusions )
+    {
+        Dependency dependency = new Dependency( new DefaultArtifact( coor ), scope );
+        
+        Collection<Exclusion> aetherExclusions = new ArrayList<Exclusion>( exclusions.size() );
+        for ( String exclusion : exclusions )
+        {
+            String[] ga = exclusion.split( ":" );
+            aetherExclusions.add( new Exclusion( ga[0], ga[1], null, null ) );
+        }
+        dependency = dependency.setExclusions( aetherExclusions );
+        
+        return new DefaultDependencyNode( dependency );
     }
 
 }

@@ -19,10 +19,14 @@ package org.apache.maven.shared.artifact.filter.resolve.transform;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.maven.shared.artifact.filter.resolve.Node;
 import org.eclipse.aether.artifact.ArtifactProperties;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyNode;
+import org.eclipse.aether.graph.Exclusion;
 
 /**
  * Adapter of an Eclipse Aether DependencyNode for common Node 
@@ -61,6 +65,24 @@ class EclipseAetherNode implements Node
         if ( nodeDependency.getOptional() != null )
         {
             mavenDependency.setOptional( nodeDependency.isOptional() );
+        }
+        if ( nodeDependency.getExclusions() != null )
+        {
+            List<org.apache.maven.model.Exclusion> mavenExclusions =
+                new ArrayList<org.apache.maven.model.Exclusion>( nodeDependency.getExclusions().size() );
+
+            for ( Exclusion aetherExclusion : nodeDependency.getExclusions() )
+            {
+                org.apache.maven.model.Exclusion mavenExclusion = new org.apache.maven.model.Exclusion();
+
+                mavenExclusion.setGroupId( aetherExclusion.getGroupId() );
+                mavenExclusion.setArtifactId( aetherExclusion.getArtifactId() );
+                // that's all folks, although Aether has more metadata
+
+                mavenExclusions.add( mavenExclusion );
+            }
+
+            mavenDependency.setExclusions( mavenExclusions );
         }
 
         return mavenDependency;

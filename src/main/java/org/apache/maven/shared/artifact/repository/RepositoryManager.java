@@ -23,6 +23,7 @@ import java.io.File;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.shared.artifact.ArtifactCoordinate;
 
 /**
  * 
@@ -31,7 +32,9 @@ public interface RepositoryManager
 {
 
     String getPathForLocalArtifact( ProjectBuildingRequest buildingRequest, Artifact artifact );
-    
+
+    String getPathForLocalArtifact( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate );
+
     /**
      * Create a new {@code ProjectBuildingRequest} with an adjusted repository session. 
      * 

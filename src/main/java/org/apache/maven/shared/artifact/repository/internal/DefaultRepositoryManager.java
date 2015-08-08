@@ -23,6 +23,7 @@ import java.io.File;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.shared.artifact.ArtifactCoordinate;
 import org.apache.maven.shared.artifact.repository.RepositoryManager;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
@@ -41,9 +42,7 @@ public class DefaultRepositoryManager
 {
     private PlexusContainer container;
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getPathForLocalArtifact( ProjectBuildingRequest buildingRequest, Artifact artifact )
     {
         try
@@ -58,12 +57,26 @@ public class DefaultRepositoryManager
         {
             throw new IllegalStateException( e.getMessage(), e );
         }
-
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
+    public String getPathForLocalArtifact( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coor )
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : "maven3";
+
+            RepositoryManager effectiveRepositoryManager = container.lookup( RepositoryManager.class, hint );
+
+            return effectiveRepositoryManager.getPathForLocalArtifact( buildingRequest, coor );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new IllegalStateException( e.getMessage(), e );
+        }
+    }
+    
+    @Override
     public ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest request, File basedir )
     {
         try
@@ -80,9 +93,7 @@ public class DefaultRepositoryManager
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public File getLocalRepositoryBasedir( ProjectBuildingRequest request )
     {
         try

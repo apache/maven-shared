@@ -22,8 +22,10 @@ package org.apache.maven.shared.artifact.repository.internal;
 import java.io.File;
 
 import org.apache.maven.RepositoryUtils;
+import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.shared.artifact.ArtifactCoordinate;
 import org.apache.maven.shared.artifact.repository.RepositoryManager;
 import org.apache.maven.shared.artifact.repository.RepositoryManagerException;
 import org.codehaus.plexus.component.annotations.Component;
@@ -33,6 +35,9 @@ import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.ArtifactType;
+import org.eclipse.aether.artifact.ArtifactTypeRegistry;
+import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.LocalRepositoryManager;
 
@@ -43,10 +48,13 @@ import org.eclipse.aether.repository.LocalRepositoryManager;
 public class Maven31RepositoryManager
     implements RepositoryManager
 {
-
     @Requirement
     private RepositorySystem repositorySystem;
 
+    @Requirement
+    private ArtifactHandlerManager artifactHandlerManager;
+
+    @Override
     public String getPathForLocalArtifact( ProjectBuildingRequest buildingRequest,
                                            org.apache.maven.artifact.Artifact mavenArtifact )
     {
@@ -69,7 +77,34 @@ public class Maven31RepositoryManager
 
         return session.getLocalRepositoryManager().getPathForLocalArtifact( aetherArtifact );
     }
+    
+    @Override
+    public String getPathForLocalArtifact( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate )
+    {
+        Artifact aetherArtifact;
+        
+        RepositorySystemSession session;
 
+        // LRM.getPathForLocalArtifact() won't throw an Exception, so translate reflection error to RuntimeException
+        try
+        {
+            ArtifactTypeRegistry typeRegistry =
+                (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
+                                                       ArtifactHandlerManager.class, artifactHandlerManager );
+            
+            aetherArtifact = toArtifact( coordinate, typeRegistry );
+            
+            session = (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
+        }
+        catch ( RepositoryManagerException e )
+        {
+            throw new RuntimeException( e.getMessage(), e );
+        }
+       
+        return session.getLocalRepositoryManager().getPathForLocalArtifact( aetherArtifact );
+    }
+
+    @Override
     public ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest buildingRequest, File basedir )
     {
         ProjectBuildingRequest newRequest = new DefaultProjectBuildingRequest( buildingRequest );
@@ -110,6 +145,7 @@ public class Maven31RepositoryManager
         return newRequest;
     }
 
+    @Override
     public File getLocalRepositoryBasedir( ProjectBuildingRequest buildingRequest )
     {
         RepositorySystemSession session;
@@ -138,5 +174,21 @@ public class Maven31RepositoryManager
             repositoryType = localRepository.getContentType();
         }
         return repositoryType;
+    }
+    
+    protected Artifact toArtifact( ArtifactCoordinate coordinate, ArtifactTypeRegistry typeRegistry )
+    {
+        if ( coordinate == null )
+        {
+            return null;
+        }
+
+        ArtifactType artifactType = typeRegistry.get( coordinate.getType() );
+
+        Artifact result =
+            new DefaultArtifact( coordinate.getGroupId(), coordinate.getArtifactId(), coordinate.getClassifier(),
+                                 artifactType.getExtension(), coordinate.getVersion(), null, artifactType );
+
+        return result;
     }
 }

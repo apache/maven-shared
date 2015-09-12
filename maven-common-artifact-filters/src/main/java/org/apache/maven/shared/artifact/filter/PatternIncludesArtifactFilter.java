@@ -57,6 +57,12 @@ public class PatternIncludesArtifactFilter
         this( patterns, false );
     }
 
+    // for backwards compatibility
+    public PatternIncludesArtifactFilter( final List<String> patterns )
+    {
+        this( patterns, false );
+    }
+
     public PatternIncludesArtifactFilter( final Collection<String> patterns, final boolean actTransitively )
     {
         this.actTransitively = actTransitively;

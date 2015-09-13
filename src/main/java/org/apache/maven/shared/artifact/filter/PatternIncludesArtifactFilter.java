@@ -57,10 +57,11 @@ public class PatternIncludesArtifactFilter
         this( patterns, false );
     }
 
-    // for backwards compatibility
-    public PatternIncludesArtifactFilter( final List<String> patterns )
+    // for backwards compatibility, used by org.apache.maven.shared.repository.DefaultRepositoryAssembler
+    @Deprecated
+    public PatternIncludesArtifactFilter( final List<String> patterns, final boolean actTransitively )
     {
-        this( patterns, false );
+        this( (Collection) patterns, actTransitively );
     }
 
     public PatternIncludesArtifactFilter( final Collection<String> patterns, final boolean actTransitively )

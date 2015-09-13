@@ -90,9 +90,10 @@ public class ArtifactTransitivityFilter
 
                     for ( org.eclipse.aether.graph.Dependency dependency : dependencies )
                     {
-                        Artifact mavenArtifact = (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
-                                                                            org.eclipse.aether.artifact.Artifact.class,
-                                                                            dependency.getArtifact() );
+                        Artifact mavenArtifact = 
+                                        (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                                                    org.eclipse.aether.artifact.Artifact.class,
+                                                                    dependency.getArtifact() );
 
                         transitiveArtifacts.add( mavenArtifact.getDependencyConflictId() );
                     }
@@ -123,9 +124,10 @@ public class ArtifactTransitivityFilter
 
                     for ( org.sonatype.aether.graph.Dependency dependency : dependencies )
                     {
-                        Artifact mavenArtifact = (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
-                                                                            org.sonatype.aether.artifact.Artifact.class,
-                                                                            dependency.getArtifact() );
+                        Artifact mavenArtifact = 
+                                        (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                                                    org.sonatype.aether.artifact.Artifact.class,
+                                                                    dependency.getArtifact() );
 
                         transitiveArtifacts.add( mavenArtifact.getDependencyConflictId() );
                     }

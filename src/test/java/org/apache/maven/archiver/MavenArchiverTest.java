@@ -1,5 +1,45 @@
 package org.apache.maven.archiver;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.artifact.handler.ArtifactHandler;
+import org.apache.maven.artifact.handler.DefaultArtifactHandler;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.execution.DefaultMavenExecutionRequest;
+import org.apache.maven.execution.DefaultMavenExecutionResult;
+import org.apache.maven.execution.MavenExecutionRequest;
+import org.apache.maven.execution.MavenExecutionResult;
+import org.apache.maven.execution.MavenSession;
+import org.apache.maven.model.Build;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.Organization;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.utils.StringUtils;
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.archiver.jar.JarArchiver;
+import org.codehaus.plexus.archiver.jar.ManifestException;
+import org.sonatype.aether.RepositorySystemSession;
+import org.sonatype.aether.util.DefaultRepositorySystemSession;
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,42 +60,6 @@ package org.apache.maven.archiver;
  */
 
 import junit.framework.TestCase;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
-import org.apache.maven.artifact.handler.ArtifactHandler;
-import org.apache.maven.artifact.handler.DefaultArtifactHandler;
-import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.execution.ReactorManager;
-import org.apache.maven.model.Build;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Organization;
-import org.apache.maven.monitor.event.EventDispatcher;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.settings.Settings;
-import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.archiver.jar.JarArchiver;
-import org.codehaus.plexus.archiver.jar.ManifestException;
-import org.apache.maven.shared.utils.io.FileUtils;
-import org.apache.maven.shared.utils.StringUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.jar.Attributes;
-import java.util.jar.JarFile;
-import java.util.jar.Manifest;
 
 public class MavenArchiverTest
     extends TestCase
@@ -865,11 +869,9 @@ public class MavenArchiverTest
         model.setVersion( "0.1" );
 
         final MavenProject project = new MavenProject( model );
-        project.setPluginArtifacts( Collections.EMPTY_SET );
-        project.setReportArtifacts( Collections.EMPTY_SET );
-        project.setExtensionArtifacts( Collections.EMPTY_SET );
-        project.setRemoteArtifactRepositories( Collections.EMPTY_LIST );
-        project.setPluginArtifactRepositories( Collections.EMPTY_LIST );
+        project.setExtensionArtifacts( Collections.<Artifact>emptySet() );
+        project.setRemoteArtifactRepositories( Collections.<ArtifactRepository>emptyList() );
+        project.setPluginArtifactRepositories( Collections.<ArtifactRepository>emptyList() );
         return project;
     }
 
@@ -1037,16 +1039,23 @@ public class MavenArchiverTest
     private MavenSession getDummySession( Properties executionProperties )
     {
         PlexusContainer container = null;
-        Settings settings = null;
-        ArtifactRepository localRepo = null;
-        EventDispatcher eventDispatcher = null;
-        ReactorManager reactorManager = null;
-        List<?> goals = null;
-        String executionRootDir = null;
+        File settings = null;
+        List<String> goals = null;
         Date startTime = new Date();
+        
+        MavenExecutionRequest request = new DefaultMavenExecutionRequest();
+        request.setUserProperties( executionProperties );
+        request.setGoals( goals );
+        request.setStartTime( startTime );
+        request.setUserSettingsFile( settings );
+        
+        MavenExecutionResult result = new DefaultMavenExecutionResult();
+        
 
-        return new MavenSession( container, settings, localRepo, eventDispatcher, reactorManager, goals,
-                                 executionRootDir, executionProperties, startTime );
+        RepositorySystemSession rss = new DefaultRepositorySystemSession();
+        
+        return new MavenSession( container, rss, request, result );
+        
     }
 
     private Set<Artifact> getArtifacts( Artifact... artifacts )

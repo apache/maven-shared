@@ -63,9 +63,9 @@ public class MavenArchiver
     /**
      * Repository layout.
      */
-    public static final String REPOSITORY_LAYOUT = "${artifact.groupIdPath}/${artifact.artifactId}/"
-        + "${artifact.baseVersion}/${artifact.artifactId}-"
-        + "${artifact.version}${dashClassifier?}.${artifact.extension}";
+    public static final String REPOSITORY_LAYOUT =
+        "${artifact.groupIdPath}/${artifact.artifactId}/" + "${artifact.baseVersion}/${artifact.artifactId}-"
+            + "${artifact.version}${dashClassifier?}.${artifact.extension}";
 
     /**
      * simple layout non unique.
@@ -76,9 +76,9 @@ public class MavenArchiver
     /**
      * Repository layout non unique.
      */
-    public static final String REPOSITORY_LAYOUT_NONUNIQUE = "${artifact.groupIdPath}/${artifact.artifactId}/"
-        + "${artifact.baseVersion}/${artifact.artifactId}-"
-        + "${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
+    public static final String REPOSITORY_LAYOUT_NONUNIQUE =
+        "${artifact.groupIdPath}/${artifact.artifactId}/" + "${artifact.baseVersion}/${artifact.artifactId}-"
+            + "${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
 
     private static final List<String> ARTIFACT_EXPRESSION_PREFIXES;
 
@@ -243,12 +243,12 @@ public class MavenArchiver
      * @param config {@link ManifestConfiguration}
      * @param entries The entries.
      * @return {@link Manifest}
-     * @throws ManifestException The manifest exception. 
+     * @throws ManifestException The manifest exception.
      * @throws DependencyResolutionRequiredException The dependency resolution required exception.
      */
     protected Manifest getManifest( MavenSession session, MavenProject project, ManifestConfiguration config,
                                     Map<String, String> entries )
-        throws ManifestException, DependencyResolutionRequiredException
+                                        throws ManifestException, DependencyResolutionRequiredException
     {
         // TODO: Should we replace "map" with a copy? Note, that we modify it!
 
@@ -262,7 +262,6 @@ public class MavenArchiver
         {
             StringBuilder classpath = new StringBuilder();
 
-            @SuppressWarnings( "unchecked" )
             List<String> artifacts = project.getRuntimeClasspathElements();
             String classpathPrefix = config.getClasspathPrefix();
             String layoutType = config.getClasspathLayoutType();
@@ -275,7 +274,6 @@ public class MavenArchiver
                 File f = new File( artifactFile );
                 if ( f.getAbsoluteFile().isFile() )
                 {
-                    @SuppressWarnings( "unchecked" )
                     Artifact artifact = findArtifactWithFile( project.getArtifacts(), f );
 
                     if ( classpath.length() > 0 )
@@ -443,7 +441,6 @@ public class MavenArchiver
         {
             // TODO: this is only for applets - should we distinguish them as a packaging?
             StringBuilder extensionsList = new StringBuilder();
-            @SuppressWarnings( "unchecked" )
             Set<Artifact> artifacts = (Set<Artifact>) project.getArtifacts();
 
             for ( Artifact artifact : artifacts )
@@ -560,20 +557,13 @@ public class MavenArchiver
      */
     public void createArchive( MavenSession session, MavenProject project,
                                MavenArchiveConfiguration archiveConfiguration )
-        throws ArchiverException, ManifestException, IOException, DependencyResolutionRequiredException
+                                   throws ArchiverException, ManifestException, IOException,
+                                   DependencyResolutionRequiredException
     {
         // we have to clone the project instance so we can write out the pom with the deployment version,
         // without impacting the main project instance...
         MavenProject workingProject = null;
-        try
-        {
-            workingProject = (MavenProject) project.clone();
-        }
-        catch ( CloneNotSupportedException e )
-        {
-            // Should never happen
-            throw new ArchiverException( "Failed to clone Maven project", e );
-        }
+        workingProject = (MavenProject) project.clone();
 
         boolean forced = archiveConfiguration.isForced();
         if ( archiveConfiguration.isAddMavenDescriptor() )
@@ -640,7 +630,6 @@ public class MavenArchiver
         // make the archiver index the jars on the classpath, if we are adding that to the manifest
         if ( archiveConfiguration.getManifest().isAddClasspath() )
         {
-            @SuppressWarnings( "unchecked" )
             List<String> artifacts = project.getRuntimeClasspathElements();
             for ( String artifact : artifacts )
             {
@@ -667,7 +656,7 @@ public class MavenArchiver
         String createdBy = "Apache Maven";
         if ( session != null ) // can be null due to API backwards compatibility
         {
-            String mavenVersion = session.getExecutionProperties().getProperty( "maven.version" );
+            String mavenVersion = session.getUserProperties().getProperty( "maven.version" );
             if ( mavenVersion != null )
             {
                 createdBy += " " + mavenVersion;

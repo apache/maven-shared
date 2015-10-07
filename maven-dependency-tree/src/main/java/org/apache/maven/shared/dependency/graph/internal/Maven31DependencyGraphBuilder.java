@@ -207,9 +207,16 @@ public class Maven31DependencyGraphBuilder
         String premanagedVersion = null; // DependencyManagerUtils.getPremanagedVersion( node );
         String premanagedScope = null; // DependencyManagerUtils.getPremanagedScope( node );
 
+        Boolean optional = null;
+        if ( node.getDependency() != null )
+        {
+            optional = node.getDependency().isOptional();
+        }
+
         DefaultDependencyNode current =
             new DefaultDependencyNode( parent, artifact, premanagedVersion, premanagedScope,
-                                       getVersionSelectedFromRange( node.getVersionConstraint() ) );
+                                       getVersionSelectedFromRange( node.getVersionConstraint() ),
+                                       optional );
 
         List<DependencyNode> nodes = new ArrayList<DependencyNode>( node.getChildren().size() );
         for ( org.eclipse.aether.graph.DependencyNode child : node.getChildren() )

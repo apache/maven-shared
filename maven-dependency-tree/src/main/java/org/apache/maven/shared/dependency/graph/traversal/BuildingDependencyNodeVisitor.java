@@ -87,7 +87,8 @@ public class BuildingDependencyNodeVisitor
         DefaultDependencyNode newNode =
             new DefaultDependencyNode( parentNodes.isEmpty() ? null : parentNodes.peek(), node.getArtifact(),
                                        node.getPremanagedVersion(), node.getPremanagedScope(),
-                                       node.getVersionConstraint() );
+                                       node.getVersionConstraint(),
+                                       node.getOptional() );
         newNode.setChildren( new ArrayList<DependencyNode>() );
 
         if ( parentNodes.empty() )

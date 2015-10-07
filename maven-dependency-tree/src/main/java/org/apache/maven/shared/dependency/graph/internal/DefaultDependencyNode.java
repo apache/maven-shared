@@ -42,6 +42,8 @@ public class DefaultDependencyNode implements DependencyNode
 
     private List<DependencyNode> children;
 
+    private Boolean optional;
+
     /**
      * Constructs the DefaultDependencyNode.
      *
@@ -59,6 +61,17 @@ public class DefaultDependencyNode implements DependencyNode
         this.premanagedVersion = premanagedVersion;
         this.premanagedScope = premanagedScope;
         this.versionConstraint = versionConstraint;
+    }
+
+    public DefaultDependencyNode( DependencyNode parent, Artifact artifact, String premanagedVersion,
+                                  String premanagedScope, String versionConstraint, Boolean optional )
+    {
+        this.parent = parent;
+        this.artifact = artifact;
+        this.premanagedVersion = premanagedVersion;
+        this.premanagedScope = premanagedScope;
+        this.versionConstraint = versionConstraint;
+        this.optional = optional;
     }
 
     /**
@@ -139,6 +152,12 @@ public class DefaultDependencyNode implements DependencyNode
         return versionConstraint;
     }
 
+    @Override
+    public Boolean getOptional()
+    {
+        return optional;
+    }
+
     /**
      * @return Stringified representation of this DependencyNode.
      */
@@ -166,7 +185,12 @@ public class DefaultDependencyNode implements DependencyNode
             appender.append( "version selected from constraint ", getVersionConstraint() );
         }
 
+
         appender.flush();
+        if ( optional != null && optional )
+        {
+            buffer.append( " (optional) " );
+        }
 
         return buffer.toString();
     }

@@ -87,4 +87,9 @@ public interface DependencyNode
      * @return the string representation
      */
     String toNodeString();
+
+    /**
+     * @return true for an optional dependency.
+     */
+    Boolean getOptional();
 }

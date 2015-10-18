@@ -49,12 +49,31 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
     @Requirement
     private RepositorySystem repositorySystem;
     
+    @Override
     public void deploy( ProjectBuildingRequest buildingRequest,
-                         Collection<org.apache.maven.artifact.Artifact> mavenArtifacts )
+                        Collection<org.apache.maven.artifact.Artifact> mavenArtifacts )
+                            throws ArtifactDeployerException
+    {
+        deploy( buildingRequest, null, mavenArtifacts );
+    }
+    
+    public void deploy( ProjectBuildingRequest buildingRequest, ArtifactRepository remoteRepository,
+                        Collection<org.apache.maven.artifact.Artifact> mavenArtifacts )
         throws ArtifactDeployerException
     {
         // prepare request
         DeployRequest request = new DeployRequest();
+        
+        RemoteRepository defaultRepository = null;
+        
+        if ( remoteRepository != null )
+        {
+            // CHECKSTYLE_OFF: LineLength
+            defaultRepository = (RemoteRepository) Invoker.invoke( RepositoryUtils.class, "toRepo",
+                                                                   org.apache.maven.artifact.repository.ArtifactRepository.class,
+                                                                   remoteRepository );
+            // CHECKSTYLE_ON: LineLength
+        }
         
         // transform artifacts
         for ( org.apache.maven.artifact.Artifact mavenArtifact : mavenArtifacts )
@@ -64,10 +83,20 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
                                                        org.apache.maven.artifact.Artifact.class, mavenArtifact );
             request.addArtifact( aetherArtifact );
             
-            RemoteRepository aetherRepository =
-                            (RemoteRepository) Invoker.invoke( RepositoryUtils.class, "toRepo",
-                                                               ArtifactRepository.class,
-                                                               mavenArtifact.getRepository() );
+            RemoteRepository aetherRepository;
+            if ( remoteRepository == null )
+            {
+                // CHECKSTYLE_OFF: LineLength
+                aetherRepository = (RemoteRepository) Invoker.invoke( RepositoryUtils.class, "toRepo",
+                                                                      org.apache.maven.artifact.repository.ArtifactRepository.class,
+                                                                      mavenArtifact.getRepository() );
+                // CHECKSTYLE_ON: LineLength
+            }
+            else
+            {
+                aetherRepository = defaultRepository;
+            }
+            
             request.setRepository( aetherRepository );
 
             for ( ArtifactMetadata metadata : mavenArtifact.getMetadataList() )

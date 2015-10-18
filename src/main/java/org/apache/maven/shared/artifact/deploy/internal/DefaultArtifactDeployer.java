@@ -22,6 +22,7 @@ package org.apache.maven.shared.artifact.deploy.internal;
 import java.util.Collection;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.deploy.ArtifactDeployer;
 import org.apache.maven.shared.artifact.deploy.ArtifactDeployerException;
@@ -43,6 +44,7 @@ public class DefaultArtifactDeployer
 
     private PlexusContainer container;
     
+    @Override
     public void deploy( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactDeployerException
     {
@@ -60,6 +62,24 @@ public class DefaultArtifactDeployer
         }
     }
 
+    @Override
+    public void deploy( ProjectBuildingRequest request, ArtifactRepository remoteRepository,
+                        Collection<Artifact> mavenArtifacts )
+                            throws ArtifactDeployerException
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : "maven3";
+
+            ArtifactDeployer effectiveArtifactDeployer = container.lookup( ArtifactDeployer.class, hint );
+
+            effectiveArtifactDeployer.deploy( request, remoteRepository, mavenArtifacts );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new ArtifactDeployerException( e.getMessage(), e );
+        }
+    }
     /**
      * @return true if the current Maven version is Maven 3.1.
      */

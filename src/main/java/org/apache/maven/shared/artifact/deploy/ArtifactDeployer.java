@@ -22,6 +22,7 @@ package org.apache.maven.shared.artifact.deploy;
 import java.util.Collection;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.project.ProjectBuildingRequest;
 
 /**
@@ -32,4 +33,16 @@ public interface ArtifactDeployer
 
     void deploy( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
                     throws ArtifactDeployerException;
+
+    /**
+     * @param request the building request
+     * @param remoteRepository the repository to deploy to. If {@code null} the {@code mavenArtifact.getRepository()} 
+     *          is used.
+     * @param mavenArtifacts the artifacts to deploy
+     * @throws ArtifactDeployerException
+     */
+    void deploy( ProjectBuildingRequest request, ArtifactRepository remoteRepository,
+                 Collection<Artifact> mavenArtifacts )
+                     throws ArtifactDeployerException;
+
 }

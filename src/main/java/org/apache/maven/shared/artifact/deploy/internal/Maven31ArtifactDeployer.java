@@ -63,16 +63,15 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
     {
         // prepare request
         DeployRequest request = new DeployRequest();
-        
+
+        RepositorySystemSession session =
+                        (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
+
         RemoteRepository defaultRepository = null;
         
         if ( remoteRepository != null )
         {
-            // CHECKSTYLE_OFF: LineLength
-            defaultRepository = (RemoteRepository) Invoker.invoke( RepositoryUtils.class, "toRepo",
-                                                                   org.apache.maven.artifact.repository.ArtifactRepository.class,
-                                                                   remoteRepository );
-            // CHECKSTYLE_ON: LineLength
+            defaultRepository = getRemoteRepository( session, remoteRepository );
         }
         
         // transform artifacts
@@ -86,11 +85,7 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
             RemoteRepository aetherRepository;
             if ( remoteRepository == null )
             {
-                // CHECKSTYLE_OFF: LineLength
-                aetherRepository = (RemoteRepository) Invoker.invoke( RepositoryUtils.class, "toRepo",
-                                                                      org.apache.maven.artifact.repository.ArtifactRepository.class,
-                                                                      mavenArtifact.getRepository() );
-                // CHECKSTYLE_ON: LineLength
+                aetherRepository = getRemoteRepository( session, mavenArtifact.getRepository() );
             }
             else
             {
@@ -119,9 +114,6 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
             }
         }
 
-        RepositorySystemSession session =
-            (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
-
         // deploy
         try
         {
@@ -131,5 +123,34 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
         {
             throw new ArtifactDeployerException( e.getMessage(), e );
         }
+    }
+    
+    private RemoteRepository getRemoteRepository( RepositorySystemSession session, ArtifactRepository remoteRepository )
+                    throws ArtifactDeployerException
+    {
+        // CHECKSTYLE_OFF: LineLength
+        RemoteRepository aetherRepo = (RemoteRepository) Invoker.invoke( RepositoryUtils.class, "toRepo",
+                                                                         org.apache.maven.artifact.repository.ArtifactRepository.class,
+                                                                         remoteRepository );
+        // CHECKSTYLE_ON: LineLength
+        
+        if ( aetherRepo.getAuthentication() == null || aetherRepo.getProxy() == null )
+        {
+            RemoteRepository.Builder builder = new RemoteRepository.Builder( aetherRepo );
+            
+            if ( aetherRepo.getAuthentication() == null )
+            {
+                builder.setAuthentication( session.getAuthenticationSelector().getAuthentication( aetherRepo ) );
+            }
+            
+            if( aetherRepo.getProxy() == null )
+            {
+                builder.setProxy( session.getProxySelector().getProxy( aetherRepo ) );
+            }
+            
+            aetherRepo = builder.build();
+        }
+
+        return aetherRepo;
     }
 }

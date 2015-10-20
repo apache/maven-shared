@@ -143,7 +143,7 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
                 builder.setAuthentication( session.getAuthenticationSelector().getAuthentication( aetherRepo ) );
             }
             
-            if( aetherRepo.getProxy() == null )
+            if ( aetherRepo.getProxy() == null )
             {
                 builder.setProxy( session.getProxySelector().getProxy( aetherRepo ) );
             }

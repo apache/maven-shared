@@ -141,7 +141,7 @@ public class Maven30ArtifactDeployer
             aetherRepo.setAuthentication( session.getAuthenticationSelector().getAuthentication( aetherRepo ) );
         }
         
-        if( aetherRepo.getProxy() == null )
+        if ( aetherRepo.getProxy() == null )
         {
             aetherRepo.setProxy( session.getProxySelector().getProxy( aetherRepo ) );
         }

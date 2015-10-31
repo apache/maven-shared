@@ -65,10 +65,6 @@ public class MappingUtils
     {
         String value = expression;
 
-        // FIXME: This is BAD! Accessors SHOULD NOT change the behavior of the object.
-        // [dennisl; 2013-07-30] This was fixed in Maven 2.0.8
-        artifact.isSnapshot();
-
         RegexBasedInterpolator interpolator = new RegexBasedInterpolator( "\\@\\{(", ")?([^}]+)\\}@" );
         interpolator.addValueSource( new ObjectBasedValueSource( artifact ) );
         interpolator.addValueSource( new ObjectBasedValueSource( artifact.getArtifactHandler() ) );

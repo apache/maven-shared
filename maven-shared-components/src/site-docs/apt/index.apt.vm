@@ -3,7 +3,7 @@
  -----
  Hervé Boutemy
  -----
- 2013-07-24
+ 2015-10-31
  -----
 
 ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -38,6 +38,8 @@ ${project.name}
 
 *--------------+------------+
 || <<Version>> || <<Release Date>> ||
+*--------------+------------+
+| {{{http://svn.apache.org/viewvc/maven/shared/tags/maven-shared-components-22/pom.xml?view=markup}22}} ({{{http://svn.apache.org/viewvc/maven/shared/tags/maven-shared-components-22/pom.xml?r1=HEAD&r2=1632934&diff_format=h}diff}}) | 2015-01-02 |
 *--------------+------------+
 | {{{http://svn.apache.org/viewvc/maven/shared/tags/maven-shared-components-21/pom.xml?view=markup}21}} ({{{http://svn.apache.org/viewvc/maven/shared/tags/maven-shared-components-21/pom.xml?r1=HEAD&r2=1582509&diff_format=h}diff}}) | 2014-10-22 |
 *--------------+------------+

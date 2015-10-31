@@ -32,33 +32,6 @@ import org.apache.maven.shared.utils.io.FileUtils;
  */
 public interface DefaultFilterInfo
 {
-    // CHECKSTYLE_OFF: LineLength
-    /**
-     * Will return the default FileUtils.FilterWrappers.
-     * <p/>
-     * <ul>
-     * <li>interpolate with token ${} and values from sysProps, project.properties, filters and project filters.</li>
-     * <li>interpolate with token @ @ and values from sysProps, project.properties, filters and project filters.</li>
-     * <li>interpolate with token ${} and values from mavenProject interpolation.</li>
-     * <li>interpolation with token @ @ and values from mavenProject interpolation</li>
-     * </ul>
-     * <b>This method is now deprecated and no escape mechanism will be used.</b>
-     *
-     * @param mavenProject The maven project
-     * @param filters {@link java.util.List} of properties file
-     * @param escapedBackslashesInFilePath true to escape backslashes in file path.
-     * @param mavenSession The maven session which will be used.
-     * @throws MavenFilteringException in case of failure.
-     * @return {@link java.util.List} of FileUtils.FilterWrapper
-     * @deprecated use
-     *             {@link #getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession, org.apache.maven.shared.filtering.MavenResourcesExecution)}
-     */
-    // CHECKSTYLE_ON: LineLength
-    @Nonnull
-    List<FileUtils.FilterWrapper> getDefaultFilterWrappers( MavenProject mavenProject, List<String> filters,
-                                                            boolean escapedBackslashesInFilePath,
-                                                            MavenSession mavenSession )
-                                                                throws MavenFilteringException;
 
     /**
      * @param mavenProject The maven project

@@ -51,21 +51,6 @@ class BaseFilter
     implements DefaultFilterInfo
 {
 
-    /**
-     * @see org.apache.maven.shared.filtering.MavenFileFilter#getDefaultFilterWrappers(org.apache.maven.project.MavenProject,
-     *      java.util.List, boolean, org.apache.maven.execution.MavenSession)
-     * @deprecated
-     */
-    @Nonnull
-    public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject,
-                                                                   List<String> filters,
-                                                                   final boolean escapedBackslashesInFilePath,
-                                                                   MavenSession mavenSession )
-                                                                       throws MavenFilteringException
-    {
-        return getDefaultFilterWrappers( mavenProject, filters, escapedBackslashesInFilePath, mavenSession, null );
-    }
-
     @Nonnull
     public List<FileUtils.FilterWrapper> getDefaultFilterWrappers( final MavenProject mavenProject,
                                                                    List<String> filters,

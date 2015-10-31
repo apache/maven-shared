@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>maven-filtering</artifactId>
-  <version>1.4-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
 
   <name>Apache Maven Filtering</name>
   <description>A component to assist in filtering of resource files with properties from a Maven project.</description>
@@ -146,13 +146,13 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-changes-plugin</artifactId>
-            <version>2.7.1</version>
             <configuration>
               <columnNames>Type,Key,Summary,Assignee,Status,Resolution,Created</columnNames>
               <maxEntries>200</maxEntries>
               <onlyCurrentVersion>true</onlyCurrentVersion>
               <sortColumnNames>Key</sortColumnNames>
               <versionPrefix>maven-filtering-</versionPrefix>
+              <fixVersionIds>12331472</fixVersionIds>
             </configuration>
             <reportSets>
               <reportSet>

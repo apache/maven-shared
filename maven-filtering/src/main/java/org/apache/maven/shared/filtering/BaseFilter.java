@@ -53,7 +53,7 @@ class BaseFilter
 
     /**
      * @see org.apache.maven.shared.filtering.MavenFileFilter#getDefaultFilterWrappers(org.apache.maven.project.MavenProject,
-     * java.util.List, boolean, org.apache.maven.execution.MavenSession)
+     *      java.util.List, boolean, org.apache.maven.execution.MavenSession)
      * @deprecated
      */
     @Nonnull
@@ -61,7 +61,7 @@ class BaseFilter
                                                                    List<String> filters,
                                                                    final boolean escapedBackslashesInFilePath,
                                                                    MavenSession mavenSession )
-        throws MavenFilteringException
+                                                                       throws MavenFilteringException
     {
         return getDefaultFilterWrappers( mavenProject, filters, escapedBackslashesInFilePath, mavenSession, null );
     }
@@ -72,7 +72,7 @@ class BaseFilter
                                                                    final boolean escapedBackslashesInFilePath,
                                                                    MavenSession mavenSession,
                                                                    MavenResourcesExecution mavenResourcesExecution )
-        throws MavenFilteringException
+                                                                       throws MavenFilteringException
     {
 
         MavenResourcesExecution mre =
@@ -110,9 +110,8 @@ class BaseFilter
         // Project properties
         if ( request.getMavenProject() != null )
         {
-            baseProps.putAll( request.getMavenProject().getProperties() == null
-                                  ? Collections.emptyMap()
-                                  : request.getMavenProject().getProperties() );
+            baseProps.putAll( request.getMavenProject().getProperties() == null ? Collections.emptyMap()
+                            : request.getMavenProject().getProperties() );
         }
         // TODO this is NPE free but do we consider this as normal
         // or do we have to throw an MavenFilteringException with mavenSession cannot be null
@@ -150,9 +149,8 @@ class BaseFilter
             }
 
             // Project properties
-            filterProperties.putAll( request.getMavenProject().getProperties() == null
-                                         ? Collections.emptyMap()
-                                         : request.getMavenProject().getProperties() );
+            filterProperties.putAll( request.getMavenProject().getProperties() == null ? Collections.emptyMap()
+                            : request.getMavenProject().getProperties() );
         }
         if ( request.getMavenSession() != null )
         {
@@ -166,9 +164,9 @@ class BaseFilter
             filterProperties.putAll( request.getAdditionalProperties() );
         }
 
-        List<FileUtils.FilterWrapper> defaultFilterWrappers = request == null
-            ? new ArrayList<FileUtils.FilterWrapper>( 1 )
-            : new ArrayList<FileUtils.FilterWrapper>( request.getDelimiters().size() + 1 );
+        List<FileUtils.FilterWrapper> defaultFilterWrappers =
+            request == null ? new ArrayList<FileUtils.FilterWrapper>( 1 )
+                            : new ArrayList<FileUtils.FilterWrapper>( request.getDelimiters().size() + 1 );
 
         if ( getLogger().isDebugEnabled() )
         {
@@ -195,7 +193,7 @@ class BaseFilter
      */
     void loadProperties( Properties filterProperties, File basedir, List<String> propertiesFilePaths,
                          Properties baseProps )
-        throws MavenFilteringException
+                             throws MavenFilteringException
     {
         if ( propertiesFilePaths != null )
         {
@@ -244,15 +242,9 @@ class BaseFilter
 
         private boolean supportMultiLineFiltering;
 
-        Wrapper(
-                 LinkedHashSet<String> delimiters,
-                 MavenProject project,
-                 MavenSession mavenSession,
-                 ValueSource propertiesValueSource,
-                 List<String> projectStartExpressions,
-                 String escapeString,
-                 boolean escapeWindowsPaths,
-                 boolean supportMultiLineFiltering )
+        Wrapper( LinkedHashSet<String> delimiters, MavenProject project, MavenSession mavenSession,
+                 ValueSource propertiesValueSource, List<String> projectStartExpressions, String escapeString,
+                 boolean escapeWindowsPaths, boolean supportMultiLineFiltering )
         {
             super();
             this.delimiters = delimiters;
@@ -267,10 +259,8 @@ class BaseFilter
 
         public Reader getReader( Reader reader )
         {
-            Interpolator interpolator =
-                createInterpolator( delimiters, projectStartExpressions,
-                                    propertiesValueSource, project, mavenSession,
-                                    escapeString, escapeWindowsPaths );
+            Interpolator interpolator = createInterpolator( delimiters, projectStartExpressions, propertiesValueSource,
+                                                            project, mavenSession, escapeString, escapeWindowsPaths );
 
             MultiDelimiterInterpolatorFilterReaderLineEnding filterReader =
                 new MultiDelimiterInterpolatorFilterReaderLineEnding( reader, interpolator, supportMultiLineFiltering );
@@ -320,8 +310,8 @@ class BaseFilter
             if ( settings != null )
             {
                 interpolator.addValueSource( new PrefixedObjectValueSource( "settings", settings ) );
-                interpolator.addValueSource(
-                    new SingleResponseValueSource( "localRepository", settings.getLocalRepository() ) );
+                interpolator.addValueSource( new SingleResponseValueSource( "localRepository",
+                                                                            settings.getLocalRepository() ) );
             }
         }
 

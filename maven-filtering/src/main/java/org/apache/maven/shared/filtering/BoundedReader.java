@@ -23,11 +23,9 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * A reader that imposes a limit to the number of bytes that can be read from
- * an underlying reader, simulating eof when this limit is reached.
- * This stream can typically be used to constrain a client with regard to a readAheadLimit
- * of an underlying stream, to avoid overrunning this limit and hence
- * lose the opportunity do to reset.
+ * A reader that imposes a limit to the number of bytes that can be read from an underlying reader, simulating eof when
+ * this limit is reached. This stream can typically be used to constrain a client with regard to a readAheadLimit of an
+ * underlying stream, to avoid overrunning this limit and hence lose the opportunity do to reset.
  */
 public class BoundedReader
     extends Reader
@@ -39,6 +37,11 @@ public class BoundedReader
 
     int readAheadLimit;
 
+    /**
+     * @param target {@link Reader}
+     * @param readAheadLimit read ahead limit.
+     * @throws IOException in case of a failure.
+     */
     public BoundedReader( Reader target, int readAheadLimit )
         throws IOException
     {

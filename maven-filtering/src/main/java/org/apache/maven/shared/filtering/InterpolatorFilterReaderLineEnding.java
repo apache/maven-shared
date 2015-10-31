@@ -102,11 +102,7 @@ public class InterpolatorFilterReaderLineEnding
      * @param endToken end token to use
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    public InterpolatorFilterReaderLineEnding(
-                                               Reader in,
-                                               Interpolator interpolator,
-                                               String beginToken,
-                                               String endToken,
+    public InterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, String beginToken, String endToken,
                                                boolean supportMultiLineFiltering )
     {
         this( in, interpolator, beginToken, endToken, new SimpleRecursionInterceptor(), supportMultiLineFiltering );
@@ -120,12 +116,8 @@ public class InterpolatorFilterReaderLineEnding
      * @param ri The {@link RecursionInterceptor} to use to prevent recursive expressions.
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    private InterpolatorFilterReaderLineEnding(
-                                                Reader in,
-                                                Interpolator interpolator,
-                                                String beginToken,
-                                                String endToken,
-                                                RecursionInterceptor ri,
+    private InterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator, String beginToken,
+                                                String endToken, RecursionInterceptor ri,
                                                 boolean supportMultiLineFiltering )
     {
         // wrap our own buffer, so we can use mark/reset safely.
@@ -441,16 +433,26 @@ public class InterpolatorFilterReaderLineEnding
         return preserveEscapeString;
     }
 
+    /**
+     * @param preserveEscapeString {@link #preserveEscapeString}
+     */
     public void setPreserveEscapeString( boolean preserveEscapeString )
     {
         this.preserveEscapeString = preserveEscapeString;
     }
 
+    /**
+     * @return {@link #recursionInterceptor}
+     */
     public RecursionInterceptor getRecursionInterceptor()
     {
         return recursionInterceptor;
     }
 
+    /**
+     * @param theRecursionInterceptor {@link RecursionInterceptor}
+     * @return {@link InterpolatorFilterReaderLineEnding}
+     */
     public InterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor theRecursionInterceptor )
     {
         this.recursionInterceptor = theRecursionInterceptor;

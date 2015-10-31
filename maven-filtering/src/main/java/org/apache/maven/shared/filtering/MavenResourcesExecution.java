@@ -59,7 +59,6 @@ public class MavenResourcesExecution
 
     private String encoding;
 
-
     /**
      * Overwrite existing files even if the destination files are newer. <code>false</code> by default.
      *
@@ -100,13 +99,8 @@ public class MavenResourcesExecution
      * @param nonFilteredFileExtensions The extensions which should not being filtered.
      * @param mavenSession The maven session.
      */
-    public MavenResourcesExecution(
-                                    List<Resource> resources,
-                                    File outputDirectory,
-                                    MavenProject mavenProject,
-                                    String encoding,
-                                    List<String> fileFilters,
-                                    List<String> nonFilteredFileExtensions,
+    public MavenResourcesExecution( List<Resource> resources, File outputDirectory, MavenProject mavenProject,
+                                    String encoding, List<String> fileFilters, List<String> nonFilteredFileExtensions,
                                     MavenSession mavenSession )
     {
         super( mavenProject, fileFilters, mavenSession );
@@ -126,12 +120,8 @@ public class MavenResourcesExecution
      * @param resourcesBaseDirectory The resources base directory.
      * @param nonFilteredFileExtensions The list of extensions which should not being filtered.
      */
-    public MavenResourcesExecution(
-                                    List<Resource> resources,
-                                    File outputDirectory,
-                                    String encoding,
-                                    List<FileUtils.FilterWrapper> filterWrappers,
-                                    File resourcesBaseDirectory,
+    public MavenResourcesExecution( List<Resource> resources, File outputDirectory, String encoding,
+                                    List<FileUtils.FilterWrapper> filterWrappers, File resourcesBaseDirectory,
                                     List<String> nonFilteredFileExtensions )
     {
         this();
@@ -146,6 +136,7 @@ public class MavenResourcesExecution
 
     /**
      * Return the encoding.
+     * 
      * @return Current encoding.
      */
     public String getEncoding()
@@ -155,6 +146,7 @@ public class MavenResourcesExecution
 
     /**
      * Set the value for encoding.
+     * 
      * @param encoding Give the new value for encoding.
      */
     public void setEncoding( String encoding )
@@ -318,12 +310,11 @@ public class MavenResourcesExecution
      * @param startExp start token like <code>${</code>
      * @param endExp endToken <code>}</code>
      * @param escapeString The escape string.
-     * @param supportMultiLineFiltering do we support or use filtering on multi lines with start and endtoken on multi
-     *            lines
+     * @param multiLineFiltering do we support or use filtering on multi lines with start and endtoken on multi lines
      * @since 1.0
      */
     public void addFilerWrapperWithEscaping( final ValueSource valueSource, final String startExp, final String endExp,
-                                             final String escapeString, final boolean supportMultiLineFiltering )
+                                             final String escapeString, final boolean multiLineFiltering )
     {
         addFilterWrapper( new FileUtils.FilterWrapper()
         {
@@ -334,7 +325,7 @@ public class MavenResourcesExecution
                 propertiesInterpolator.setEscapeString( escapeString );
                 InterpolatorFilterReaderLineEnding interpolatorFilterReader =
                     new InterpolatorFilterReaderLineEnding( reader, propertiesInterpolator, startExp, endExp,
-                                                            supportMultiLineFiltering );
+                                                            multiLineFiltering );
                 interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
                 return interpolatorFilterReader;
             }
@@ -358,7 +349,7 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @return use default filter wrapper 
+     * @return use default filter wrapper
      */
     public boolean isUseDefaultFilterWrappers()
     {
@@ -366,7 +357,7 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @param useDefaultFilterWrappers
+     * @param useDefaultFilterWrappers {@link #useDefaultFilterWrappers}
      */
     public void setUseDefaultFilterWrappers( boolean useDefaultFilterWrappers )
     {
@@ -376,6 +367,7 @@ public class MavenResourcesExecution
     /**
      * Overwrite existing files even if the destination files are newer.
      *
+     * @return {@link #overwrite}
      * @since 1.0-beta-2
      */
     public boolean isOverwrite()
@@ -397,6 +389,7 @@ public class MavenResourcesExecution
     /**
      * Copy any empty directories included in the Resources.
      *
+     * @return {@link #includeEmptyDirs}
      * @since 1.0-beta-2
      */
     public boolean isIncludeEmptyDirs()
@@ -476,17 +469,13 @@ public class MavenResourcesExecution
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.maven.shared.filtering.AbstractMavenFilteringRequest#isSupportMultiLineFiltering()
-     */
+    /** {@inheritDoc} */
     public boolean isSupportMultiLineFiltering()
     {
         return supportMultiLineFiltering;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.maven.shared.filtering.AbstractMavenFilteringRequest#setSupportMultiLineFiltering(boolean)
-     */
+    /** {@inheritDoc} */
     public void setSupportMultiLineFiltering( boolean supportMultiLineFiltering )
     {
         this.supportMultiLineFiltering = supportMultiLineFiltering;

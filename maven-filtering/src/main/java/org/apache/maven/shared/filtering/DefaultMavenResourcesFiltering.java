@@ -45,8 +45,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * @author Olivier Lamy
- * @plexus.component role="org.apache.maven.shared.filtering.MavenResourcesFiltering"
- *                   role-hint="default"
+ * @plexus.component role="org.apache.maven.shared.filtering.MavenResourcesFiltering" role-hint="default"
  */
 public class DefaultMavenResourcesFiltering
     extends AbstractLogEnabled
@@ -89,7 +88,7 @@ public class DefaultMavenResourcesFiltering
     public void filterResources( List<Resource> resources, File outputDirectory, MavenProject mavenProject,
                                  String encoding, List<String> fileFilters, List<String> nonFilteredFileExtensions,
                                  MavenSession mavenSession )
-        throws MavenFilteringException
+                                     throws MavenFilteringException
     {
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( resources, outputDirectory, mavenProject, encoding, fileFilters,
@@ -104,7 +103,7 @@ public class DefaultMavenResourcesFiltering
     public void filterResources( List<Resource> resources, File outputDirectory, String encoding,
                                  List<FileUtils.FilterWrapper> filterWrappers, File resourcesBaseDirectory,
                                  List<String> nonFilteredFileExtensions )
-        throws MavenFilteringException
+                                     throws MavenFilteringException
     {
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( resources, outputDirectory, encoding, filterWrappers, resourcesBaseDirectory,
@@ -125,7 +124,7 @@ public class DefaultMavenResourcesFiltering
         if ( getLogger().isDebugEnabled() )
         {
             getLogger().debug( "file " + fileName + " has a" + ( filteredFileExtension ? " " : " non " )
-                                   + "filtered file extension" );
+                + "filtered file extension" );
         }
         return filteredFileExtension;
     }
@@ -174,12 +173,12 @@ public class DefaultMavenResourcesFiltering
         if ( mavenResourcesExecution.getEncoding() == null || mavenResourcesExecution.getEncoding().length() < 1 )
         {
             getLogger().warn( "Using platform encoding (" + ReaderFactory.FILE_ENCODING
-                                  + " actually) to copy filtered resources, i.e. build is platform dependent!" );
+                + " actually) to copy filtered resources, i.e. build is platform dependent!" );
         }
         else
         {
             getLogger().info( "Using '" + mavenResourcesExecution.getEncoding()
-                                  + "' encoding to copy filtered resources." );
+                + "' encoding to copy filtered resources." );
         }
 
         for ( Resource resource : mavenResourcesExecution.getResources() )
@@ -192,18 +191,13 @@ public class DefaultMavenResourcesFiltering
                     new StringBuilder( "resource with targetPath " ).append( resource.getTargetPath() ).append( ls );
                 debugMessage.append( "directory " ).append( resource.getDirectory() ).append( ls );
 
-                //@formatter:off
-                debugMessage.append( "excludes " )
-                    .append( 
-                            resource.getExcludes() == null ? " empty " : resource.getExcludes().toString() 
-                           )
-                    .append( ls );
-                debugMessage.append( "includes " )
-                    .append( 
-                             resource.getIncludes() == null ? " empty " : resource.getIncludes().toString()
-                    );
-                
-                //@formatter:on
+                // @formatter:off
+                debugMessage.append( "excludes " ).append( resource.getExcludes() == null ? " empty "
+                                : resource.getExcludes().toString() ).append( ls );
+                debugMessage.append( "includes " ).append( resource.getIncludes() == null ? " empty "
+                                : resource.getIncludes().toString() );
+
+                // @formatter:on
                 getLogger().debug( debugMessage.toString() );
             }
 
@@ -232,9 +226,8 @@ public class DefaultMavenResourcesFiltering
                 throw new MavenFilteringException( "Cannot create resource output directory: " + outputDirectory );
             }
 
-            boolean ignoreDelta =
-                !outputExists || buildContext.hasDelta( mavenResourcesExecution.getFileFilters() )
-                    || buildContext.hasDelta( getRelativeOutputDirectory( mavenResourcesExecution ) );
+            boolean ignoreDelta = !outputExists || buildContext.hasDelta( mavenResourcesExecution.getFileFilters() )
+                || buildContext.hasDelta( getRelativeOutputDirectory( mavenResourcesExecution ) );
             getLogger().debug( "ignoreDelta " + ignoreDelta );
             Scanner scanner = buildContext.newScanner( resourceDirectory, ignoreDelta );
 
@@ -260,7 +253,7 @@ public class DefaultMavenResourcesFiltering
             List<String> includedFiles = Arrays.asList( scanner.getIncludedFiles() );
 
             getLogger().info( "Copying " + includedFiles.size() + " resource" + ( includedFiles.size() > 1 ? "s" : "" )
-                                  + ( targetPath == null ? "" : " to " + targetPath ) );
+                + ( targetPath == null ? "" : " to " + targetPath ) );
 
             for ( String name : includedFiles )
             {
@@ -303,7 +296,7 @@ public class DefaultMavenResourcesFiltering
 
     private File getDestinationFile( File outputDirectory, String targetPath, String name,
                                      MavenResourcesExecution mavenResourcesExecution )
-        throws MavenFilteringException
+                                         throws MavenFilteringException
     {
         String destination = name;
 

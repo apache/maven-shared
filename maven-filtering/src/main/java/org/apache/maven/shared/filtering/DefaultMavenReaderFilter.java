@@ -31,8 +31,7 @@ import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
 
 /**
  * @author Kristian Rosenvold
- * @plexus.component role="org.apache.maven.shared.filtering.MavenReaderFilter"
- *                   role-hint="default"
+ * @plexus.component role="org.apache.maven.shared.filtering.MavenReaderFilter" role-hint="default"
  */
 public class DefaultMavenReaderFilter
     extends BaseFilter
@@ -42,7 +41,7 @@ public class DefaultMavenReaderFilter
     @Nonnull
     public Reader filter( @Nonnull Reader from, boolean filtering, MavenProject mavenProject, List<String> filters,
                           boolean escapedBackslashesInFilePath, MavenSession mavenSession )
-        throws MavenFilteringException
+                              throws MavenFilteringException
     {
         MavenResourcesExecution mre = new MavenResourcesExecution();
         mre.setMavenProject( mavenProject );

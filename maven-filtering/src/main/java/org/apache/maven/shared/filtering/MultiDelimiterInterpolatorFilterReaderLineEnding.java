@@ -511,7 +511,9 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * @param givenRecursionInterceptor {@link RecursionInterceptor}
      * @return this
      */
+    // CHECKSTYLE_OFF: LineLength
     public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor givenRecursionInterceptor )
+    // CHECKSTYLE_ON: LineLength
     {
         this.recursionInterceptor = givenRecursionInterceptor;
         return this;

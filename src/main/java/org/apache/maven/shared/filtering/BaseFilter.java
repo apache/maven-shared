@@ -118,10 +118,8 @@ class BaseFilter
         // or do we have to throw an MavenFilteringException with mavenSession cannot be null
         if ( request.getMavenSession() != null )
         {
-            Properties executionProperties = new Properties();
-            executionProperties.putAll( request.getMavenSession().getSystemProperties() );
-            executionProperties.putAll( request.getMavenSession().getUserProperties() );
-            baseProps.putAll( executionProperties );
+            // execution properties wins
+            baseProps.putAll( request.getMavenSession().getExecutionProperties() );
         }
 
         // now we build properties to use for resources interpolation
@@ -159,10 +157,7 @@ class BaseFilter
         if ( request.getMavenSession() != null )
         {
             // execution properties wins
-            Properties executionProperties = new Properties();
-            executionProperties.putAll( request.getMavenSession().getSystemProperties() );
-            executionProperties.putAll( request.getMavenSession().getUserProperties() );
-            filterProperties.putAll( executionProperties );
+            filterProperties.putAll( request.getMavenSession().getExecutionProperties() );
         }
 
         if ( request.getAdditionalProperties() != null )

@@ -61,16 +61,9 @@ public class MavenFileFilterRequest
      * @param mavenSession The Maven Session.
      * @param additionalProperties Supplemental properties.
      */
-    public MavenFileFilterRequest(
-                                   File from,
-                                   File to,
-                                   boolean filtering,
-                                   MavenProject mavenProject,
-                                   List<String> filters,
-                                   boolean escapedBackslashesInFilePath,
-                                   String encoding,
-                                   MavenSession mavenSession,
-                                   Properties additionalProperties )
+    public MavenFileFilterRequest( File from, File to, boolean filtering, MavenProject mavenProject,
+                                   List<String> filters, boolean escapedBackslashesInFilePath, String encoding,
+                                   MavenSession mavenSession, Properties additionalProperties )
     {
         super( mavenProject, filters, mavenSession );
         this.encoding = encoding;
@@ -83,6 +76,7 @@ public class MavenFileFilterRequest
 
     /**
      * Return the encoding.
+     * 
      * @return Current encoding.
      */
     public String getEncoding()
@@ -92,13 +86,13 @@ public class MavenFileFilterRequest
 
     /**
      * Set the value for encoding.
+     * 
      * @param encoding Give the new value for encoding.
      */
     public void setEncoding( String encoding )
     {
         this.encoding = encoding;
     }
-
 
     /**
      * @return to filter from.

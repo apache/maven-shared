@@ -47,8 +47,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * @author Olivier Lamy
- * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter"
- *                   role-hint="default"
+ * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter" role-hint="default"
  */
 public class DefaultMavenFileFilter
     extends BaseFilter
@@ -65,9 +64,10 @@ public class DefaultMavenFileFilter
      */
     private BuildContext buildContext;
 
+    /** {@inheritDoc} */
     public void copyFile( File from, File to, boolean filtering, MavenProject mavenProject, List<String> filters,
                           boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )
-        throws MavenFilteringException
+                              throws MavenFilteringException
     {
         MavenResourcesExecution mre = new MavenResourcesExecution();
         mre.setMavenProject( mavenProject );
@@ -93,7 +93,7 @@ public class DefaultMavenFileFilter
     /** {@inheritDoc} */
     public void copyFile( File from, File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
                           String encoding )
-        throws MavenFilteringException
+                              throws MavenFilteringException
     {
         // overwrite forced to false to preserve backward comp
         copyFile( from, to, filtering, filterWrappers, encoding, false );
@@ -102,7 +102,7 @@ public class DefaultMavenFileFilter
     /** {@inheritDoc} */
     public void copyFile( File from, File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
                           String encoding, boolean overwrite )
-        throws MavenFilteringException
+                              throws MavenFilteringException
     {
         try
         {
@@ -134,7 +134,7 @@ public class DefaultMavenFileFilter
 
     private void filterFile( @Nonnull File from, @Nonnull File to, @Nullable String encoding,
                              @Nullable List<FilterWrapper> wrappers )
-        throws IOException, MavenFilteringException
+                                 throws IOException, MavenFilteringException
     {
         if ( wrappers != null && wrappers.size() > 0 )
         {

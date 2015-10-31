@@ -39,20 +39,21 @@ public interface MavenFileFilter
      * @param from file to copy/filter
      * @param to destination file
      * @param filtering enable or not filtering
-     * @param mavenProject the mavenproject
-     * @param mavenSession The maven session.
+     * @param mavenProject {@link MavenProject}
+     * @param mavenSession {@link MavenSession}
+     * @param escapedBackslashesInFilePath escape backslashes in file path.
      * @param filters {@link List} of String which are path to a Property file
      * @param encoding The encoding which is used during the filtering process.
-     * @throws MavenFilteringException
+     * @throws MavenFilteringException in case of failure.
      * @see #getDefaultFilterWrappers(MavenProject, List, boolean, MavenSession)
      */
     void copyFile( File from, final File to, boolean filtering, MavenProject mavenProject, List<String> filters,
                    boolean escapedBackslashesInFilePath, String encoding, MavenSession mavenSession )
-        throws MavenFilteringException;
+                       throws MavenFilteringException;
 
     /**
      * @param mavenFileFilterRequest the request
-     * @throws MavenFilteringException
+     * @throws MavenFilteringException in case of failure.
      * @since 1.0-beta-3
      */
     void copyFile( MavenFileFilterRequest mavenFileFilterRequest )
@@ -68,7 +69,7 @@ public interface MavenFileFilter
      */
     void copyFile( File from, final File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
                    String encoding )
-        throws MavenFilteringException;
+                       throws MavenFilteringException;
 
     /**
      * @param from The source file
@@ -82,5 +83,5 @@ public interface MavenFileFilter
      */
     void copyFile( File from, final File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
                    String encoding, boolean overwrite )
-        throws MavenFilteringException;
+                       throws MavenFilteringException;
 }

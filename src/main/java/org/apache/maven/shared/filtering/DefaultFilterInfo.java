@@ -48,7 +48,7 @@ public interface DefaultFilterInfo
      * @param filters {@link java.util.List} of properties file
      * @param escapedBackslashesInFilePath true to escape backslashes in file path.
      * @param mavenSession The maven session which will be used.
-     * @throws MavenFilteringException
+     * @throws MavenFilteringException in case of failure.
      * @return {@link java.util.List} of FileUtils.FilterWrapper
      * @deprecated use
      *             {@link #getDefaultFilterWrappers(org.apache.maven.project.MavenProject, java.util.List, boolean, org.apache.maven.execution.MavenSession, org.apache.maven.shared.filtering.MavenResourcesExecution)}
@@ -58,7 +58,7 @@ public interface DefaultFilterInfo
     List<FileUtils.FilterWrapper> getDefaultFilterWrappers( MavenProject mavenProject, List<String> filters,
                                                             boolean escapedBackslashesInFilePath,
                                                             MavenSession mavenSession )
-        throws MavenFilteringException;
+                                                                throws MavenFilteringException;
 
     /**
      * @param mavenProject The maven project
@@ -66,7 +66,7 @@ public interface DefaultFilterInfo
      * @param escapedBackslashesInFilePath escape backslashes ?
      * @param mavenSession The maven session
      * @param mavenResourcesExecution The filtering configuration
-     * @throws MavenFilteringException
+     * @throws MavenFilteringException in case of failure.
      * @return {@link java.util.List} of FileUtils.FilterWrapper
      * @since 1.0-beta-2
      */
@@ -75,11 +75,11 @@ public interface DefaultFilterInfo
                                                             boolean escapedBackslashesInFilePath,
                                                             MavenSession mavenSession,
                                                             MavenResourcesExecution mavenResourcesExecution )
-        throws MavenFilteringException;
+                                                                throws MavenFilteringException;
 
     /**
      * @param request The filtering request
-     * @throws org.apache.maven.shared.filtering.MavenFilteringException
+     * @throws org.apache.maven.shared.filtering.MavenFilteringException in case of failure.
      * @return {@link java.util.List} of FileUtils.FilterWrapper
      * @since 1.0-beta-3
      */

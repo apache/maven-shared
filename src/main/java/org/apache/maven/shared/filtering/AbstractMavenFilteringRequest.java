@@ -42,17 +42,15 @@ public class AbstractMavenFilteringRequest
     private MavenSession mavenSession;
 
     /**
-     * List of Strings considered as expressions which contains values in the project/pom:
-     * pom project
-     * Default value will be pom and project.
+     * List of Strings considered as expressions which contains values in the project/pom: pom project Default value
+     * will be pom and project.
      *
      * @since 1.0-beta-2
      */
     private List<String> projectStartExpressions = new ArrayList<String>();
 
     /**
-     * String which will escape interpolation mechanism:
-     * foo \${foo.bar} -> foo ${foo.bar}
+     * String which will escape interpolation mechanism: foo \${foo.bar} -> foo ${foo.bar}
      *
      * @since 1.0-beta-2
      */
@@ -69,9 +67,8 @@ public class AbstractMavenFilteringRequest
     private boolean injectProjectBuildFilters = false;
 
     /**
-     * Set of expression delimiter specifications to use during filtering. Delimiter specifications are
-     * given in the form 'BEGIN*END' or, for symmetrical delimiters, simply 'TOKEN'. The default
-     * values are '${*}' and '@'.
+     * Set of expression delimiter specifications to use during filtering. Delimiter specifications are given in the
+     * form 'BEGIN*END' or, for symmetrical delimiters, simply 'TOKEN'. The default values are '${*}' and '@'.
      * 
      * @since 1.0-beta-3
      */
@@ -94,6 +91,7 @@ public class AbstractMavenFilteringRequest
 
     /**
      * Create instance with given parameters
+     * 
      * @param mavenProject The instance of MavenProject.
      * @param filters The list of filters.
      * @param mavenSession The MavenSession.
@@ -126,6 +124,7 @@ public class AbstractMavenFilteringRequest
 
     /**
      * Set the MavenProject.
+     * 
      * @param mavenProject The MavenProject to be set.
      */
     public void setMavenProject( MavenProject mavenProject )
@@ -135,6 +134,7 @@ public class AbstractMavenFilteringRequest
 
     /**
      * The list of filters.
+     * 
      * @return The list of currently set filters.
      */
     public List<String> getFilters()
@@ -144,6 +144,7 @@ public class AbstractMavenFilteringRequest
 
     /**
      * Set the filters.
+     * 
      * @param filters Set the list of filters
      */
     public void setFilters( List<String> filters )
@@ -152,8 +153,9 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
-     * Alias for {@link #getFilters()}. 
-     * @return  The list of filters.
+     * Alias for {@link #getFilters()}.
+     * 
+     * @return The list of filters.
      */
     public List<String> getFileFilters()
     {
@@ -162,11 +164,12 @@ public class AbstractMavenFilteringRequest
 
     /**
      * Alias for {@link #setFilters(List)}
-     * @param filters The list of filters to be set.
+     * 
+     * @param paramfilters The list of filters to be set.
      */
-    public void setFileFilters( List<String> filters )
+    public void setFileFilters( List<String> paramfilters )
     {
-        setFilters( filters );
+        setFilters( paramfilters );
     }
 
     /**
@@ -189,7 +192,8 @@ public class AbstractMavenFilteringRequest
 
     /**
      * Alias for {@link #isEscapeWindowsPaths()}
-     * @return The current value of {@link #isEscapeWindowsPaths()} 
+     * 
+     * @return The current value of {@link #isEscapeWindowsPaths()}
      */
     public boolean isEscapedBackslashesInFilePath()
     {
@@ -198,13 +202,13 @@ public class AbstractMavenFilteringRequest
 
     /**
      * Alias for {@link #setEscapeWindowsPaths(boolean)}
+     * 
      * @param escape activate or deactivate escaping.
      */
     public void setEscapedBackslashesInFilePath( boolean escape )
     {
         setEscapeWindowsPaths( escape );
     }
-
 
     /**
      * @return Current value of mavenSession
@@ -286,7 +290,7 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
-     * @param projectStartExpressions  The start expressions
+     * @param projectStartExpressions The start expressions
      * @since 1.0-beta-2
      */
     public void setProjectStartExpressions( List<String> projectStartExpressions )
@@ -306,8 +310,8 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
-     * Set the delimiter specifications to use during filtering. Specifications should be of the form:
-     * 'BEGIN*END' for asymmetrical delimiters, or 'TOKEN' for symmetrical delimiters. See
+     * Set the delimiter specifications to use during filtering. Specifications should be of the form: 'BEGIN*END' for
+     * asymmetrical delimiters, or 'TOKEN' for symmetrical delimiters. See
      * {@link AbstractMavenFilteringRequest#delimiters} for more information and default values.
      * 
      * @param delimiters If <code>null</code>, reset delimiters to '${*}' only. Otherwise, use the provided value.

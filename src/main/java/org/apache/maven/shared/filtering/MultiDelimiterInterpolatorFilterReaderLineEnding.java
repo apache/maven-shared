@@ -109,9 +109,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * @param interpolator interpolator instance to use
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    public MultiDelimiterInterpolatorFilterReaderLineEnding(
-                                                             Reader in,
-                                                             Interpolator interpolator,
+    public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator,
                                                              boolean supportMultiLineFiltering )
     {
         this( in, interpolator, new SimpleRecursionInterceptor(), supportMultiLineFiltering );
@@ -123,9 +121,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * @param ri The {@link RecursionInterceptor} to use to prevent recursive expressions.
      * @param supportMultiLineFiltering If multi line filtering is allowed
      */
-    public MultiDelimiterInterpolatorFilterReaderLineEnding(
-                                                             Reader in,
-                                                             Interpolator interpolator,
+    public MultiDelimiterInterpolatorFilterReaderLineEnding( Reader in, Interpolator interpolator,
                                                              RecursionInterceptor ri,
                                                              boolean supportMultiLineFiltering )
     {
@@ -147,11 +143,19 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
 
     }
 
+    /**
+     * @param delimiterSpec delimiter spec.
+     * @return true/false.
+     */
     public boolean removeDelimiterSpec( String delimiterSpec )
     {
         return delimiters.remove( DelimiterSpecification.parse( delimiterSpec ) );
     }
 
+    /**
+     * @param specs set of specs.
+     * @return {@link MultiDelimiterInterpolatorFilterReaderLineEnding}
+     */
     public MultiDelimiterInterpolatorFilterReaderLineEnding setDelimiterSpecs( Set<String> specs )
     {
         delimiters.clear();
@@ -174,7 +178,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * @return the number of characters actually skipped
      */
     public long skip( long n )
-        throws IOException
+        throws IOException, IllegalArgumentException
     {
         if ( n < 0L )
         {
@@ -488,7 +492,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
     }
 
     /**
-     * @param preserveEscapeString preserve escape string {@code true} or {@code false}. 
+     * @param preserveEscapeString preserve escape string {@code true} or {@code false}.
      */
     public void setPreserveEscapeString( boolean preserveEscapeString )
     {
@@ -496,7 +500,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
     }
 
     /**
-     * @return {@link RecursionInterceptor} 
+     * @return {@link RecursionInterceptor}
      */
     public RecursionInterceptor getRecursionInterceptor()
     {
@@ -507,8 +511,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * @param givenRecursionInterceptor {@link RecursionInterceptor}
      * @return this
      */
-    public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor(
-                                                                    RecursionInterceptor givenRecursionInterceptor )
+    public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor givenRecursionInterceptor )
     {
         this.recursionInterceptor = givenRecursionInterceptor;
         return this;

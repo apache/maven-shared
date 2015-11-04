@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.codehaus.plexus.util.Os;
@@ -271,9 +272,9 @@ public class MavenCommandLineBuilder
 
         if ( properties != null )
         {
-            for ( Iterator it = properties.entrySet().iterator(); it.hasNext(); )
+            for ( Iterator<Entry<Object, Object>> it = properties.entrySet().iterator(); it.hasNext(); )
             {
-                Map.Entry entry = (Map.Entry) it.next();
+                Entry<Object, Object> entry = it.next();
 
                 String key = (String) entry.getKey();
                 String value = (String) entry.getValue();

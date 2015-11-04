@@ -19,9 +19,13 @@ package org.apache.maven.shared.model.fileset.mappers;
  * under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import org.apache.maven.shared.model.fileset.Mapper;
+import org.junit.Test;
 
 /**
  * A test-case for the MapperUtil.
@@ -29,12 +33,39 @@ import org.apache.maven.shared.model.fileset.Mapper;
  * @version $Id$
  */
 public class MapperUtilTest
-    extends TestCase
 {
 
-	/**
-	 * Test
-	 */
+    @Test
+    public void getFileNameMapperShouldReturnNull()
+        throws MapperException
+    {
+        assertNull( MapperUtil.getFileNameMapper( null ) );
+    }
+
+    @Test
+    public void getFileNameMapperShouldReturnIdentityMapper()
+        throws MapperException
+    {
+        Mapper mapper = new Mapper();
+        FileNameMapper fileNameMapper = MapperUtil.getFileNameMapper( mapper );
+        assertNotNull( fileNameMapper );
+        assertEquals( "/var/some-file.text", fileNameMapper.mapFileName( "/var/some-file.text" ) );
+    }
+
+    @Test
+    public void getFileNameMapperShouldFileNameMapperType() throws MapperException
+    {
+        // check with FileNameMapper type
+        Mapper mapper = new Mapper();
+        mapper.setType( "glob" );
+        mapper.setFrom( "*.java" );
+        mapper.setTo( "*.class" );
+        FileNameMapper fileNameMapper = MapperUtil.getFileNameMapper( mapper );
+        assertNotNull( fileNameMapper );
+        assertEquals( "/var/SomeClasses.class", fileNameMapper.mapFileName( "/var/SomeClasses.java" ) );
+    }
+
+    @Test
     public void testGetFileNameMapper()
     {
         Mapper mapper = null;

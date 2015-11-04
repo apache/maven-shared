@@ -36,13 +36,6 @@ public interface Invoker
     String ROLE = Invoker.class.getName();
 
     /**
-     * @deprecated Query this property by yourself, this has nothing to do with invoking Maven and as such does not
-     *             belong into this API!
-     */
-    @SuppressWarnings( "checkstyle:constantname" )
-    String userHome = System.getProperty( "user.home" );
-
-    /**
      * Executes Maven using the parameters specified by the given invocation request. Parameters not specified by the
      * invocation request will be derived from the state of this invoker instance. In case both the invoker instance and
      * the invocation request provide a value for a particular option, the value from the invocation request dominates.

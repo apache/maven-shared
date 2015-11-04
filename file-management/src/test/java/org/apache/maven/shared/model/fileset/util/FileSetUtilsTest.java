@@ -345,8 +345,6 @@ public class FileSetUtilsTest
     private File setupTestDirectory( String directoryName )
         throws IOException
     {
-        System.out.println( "Setting up directory for test: " + directoryName );
-
         URL sourceResource = getClass().getClassLoader().getResource( directoryName );
 
         if ( sourceResource == null )

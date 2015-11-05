@@ -43,25 +43,23 @@ import org.apache.maven.shared.utils.StringUtils;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
 import org.apache.maven.shared.utils.io.IOUtil;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * @author Olivier Lamy
- * @plexus.component role="org.apache.maven.shared.filtering.MavenFileFilter" role-hint="default"
  */
+@Component( role = org.apache.maven.shared.filtering.MavenFileFilter.class, hint = "default" )
 public class DefaultMavenFileFilter
     extends BaseFilter
     implements MavenFileFilter
 {
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private MavenReaderFilter readerFilter;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildContext buildContext;
 
     /** {@inheritDoc} */

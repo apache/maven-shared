@@ -28,11 +28,12 @@ import javax.annotation.Nonnull;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
+import org.codehaus.plexus.component.annotations.Component;
 
 /**
  * @author Kristian Rosenvold
- * @plexus.component role="org.apache.maven.shared.filtering.MavenReaderFilter" role-hint="default"
  */
+@Component( role = org.apache.maven.shared.filtering.MavenReaderFilter.class, hint = "default" )
 public class DefaultMavenReaderFilter
     extends BaseFilter
     implements MavenReaderFilter

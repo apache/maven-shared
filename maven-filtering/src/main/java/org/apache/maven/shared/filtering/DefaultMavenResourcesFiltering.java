@@ -37,6 +37,8 @@ import org.apache.maven.shared.utils.StringUtils;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
 import org.apache.maven.shared.utils.io.IOUtil;
+import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -45,8 +47,8 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 
 /**
  * @author Olivier Lamy
- * @plexus.component role="org.apache.maven.shared.filtering.MavenResourcesFiltering" role-hint="default"
  */
+@Component( role = MavenResourcesFiltering.class, hint = "default" )
 public class DefaultMavenResourcesFiltering
     extends AbstractLogEnabled
     implements MavenResourcesFiltering, Initializable
@@ -58,10 +60,11 @@ public class DefaultMavenResourcesFiltering
 
     private List<String> defaultNonFilteredFileExtensions;
 
-    /**
-     * @plexus.requirement
-     */
+    @Requirement
     private BuildContext buildContext;
+
+    @Requirement
+    private MavenFileFilter mavenFileFilter;
 
     // ------------------------------------------------
     // Plexus lifecycle
@@ -78,11 +81,6 @@ public class DefaultMavenResourcesFiltering
         this.defaultNonFilteredFileExtensions.add( "bmp" );
         this.defaultNonFilteredFileExtensions.add( "png" );
     }
-
-    /**
-     * @plexus.requirement role-hint="default"
-     */
-    private MavenFileFilter mavenFileFilter;
 
     /** {@inheritDoc} */
     public void filterResources( List<Resource> resources, File outputDirectory, MavenProject mavenProject,

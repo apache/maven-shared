@@ -29,6 +29,11 @@ public class MavenFilteringException
     /**
      * 
      */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 
+     */
     public MavenFilteringException()
     {
         // nothing

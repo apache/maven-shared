@@ -41,7 +41,7 @@ public interface MavenReaderFilter
      * Provides a new reader that applies filtering using defaultFilterWrappers.
      *
      * @param from the source reader
-     * @param filtering enable or not filering
+     * @param filtering enable or not filtering
      * @param mavenProject {@link MavenProject}
      * @param mavenSession {@link MavenSession}
      * @param filters {@link java.util.List} of String which are path to a Property file

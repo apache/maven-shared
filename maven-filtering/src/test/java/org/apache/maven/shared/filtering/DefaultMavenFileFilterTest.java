@@ -58,7 +58,7 @@ public class DefaultMavenFileFilterTest
     public void testNotOverwriteFile()
         throws Exception
     {
-        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+        MavenFileFilter mavenFileFilter = lookup( MavenFileFilter.class );
 
         File from = new File( getBasedir(), "src/test/units-files/reflection-test.properties" );
 
@@ -81,7 +81,7 @@ public class DefaultMavenFileFilterTest
     public void testOverwriteFile()
         throws Exception
     {
-        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+        MavenFileFilter mavenFileFilter = lookup( MavenFileFilter.class );
 
         File from = new File( getBasedir(), "src/test/units-files/reflection-test.properties" );
 
@@ -104,7 +104,7 @@ public class DefaultMavenFileFilterTest
     public void testNullSafeDefaultFilterWrappers()
         throws Exception
     {
-        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+        MavenFileFilter mavenFileFilter = lookup( MavenFileFilter.class );
 
         mavenFileFilter.getDefaultFilterWrappers( null, null, false, null, null );
 
@@ -136,7 +136,7 @@ public class DefaultMavenFileFilterTest
     public void testMavenBasedir()
         throws Exception
     {
-        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+        MavenFileFilter mavenFileFilter = lookup( MavenFileFilter.class );
 
         AbstractMavenFilteringRequest req = new AbstractMavenFilteringRequest();
         req.setFileFilters( Collections.singletonList( "src/main/filters/filefilter.properties" ) );
@@ -157,7 +157,7 @@ public class DefaultMavenFileFilterTest
     public void testCustomDelimiters()
         throws Exception
     {
-        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+        MavenFileFilter mavenFileFilter = lookup( MavenFileFilter.class );
 
         AbstractMavenFilteringRequest req = new AbstractMavenFilteringRequest();
         Properties additionalProperties = new Properties();
@@ -178,7 +178,7 @@ public class DefaultMavenFileFilterTest
     public void testLineWithSingleAtAndExpression()
         throws Exception
     {
-        MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+        MavenFileFilter mavenFileFilter = lookup( MavenFileFilter.class );
 
         AbstractMavenFilteringRequest req = new AbstractMavenFilteringRequest();
         Properties additionalProperties = new Properties();

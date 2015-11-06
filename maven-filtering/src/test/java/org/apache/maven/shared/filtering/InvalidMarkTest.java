@@ -48,8 +48,7 @@ public class InvalidMarkTest
     public void testEscape()
         throws Exception
     {
-        MavenResourcesFiltering mavenResourcesFiltering =
-            (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class.getName() );
+        MavenResourcesFiltering mavenResourcesFiltering = lookup( MavenResourcesFiltering.class );
 
         Resource resource = new Resource();
         resource.setDirectory( "src/test/units-files/MSHARED-325" );
@@ -58,7 +57,7 @@ public class InvalidMarkTest
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( Collections.singletonList( resource ), outputDirectory,
                                          new StubMavenProject( new File( "." ) ), "UTF-8",
-                                         Collections.<String> emptyList(), Collections.<String> emptyList(),
+                                         Collections.<String>emptyList(), Collections.<String>emptyList(),
                                          new StubMavenSession() );
 
         try

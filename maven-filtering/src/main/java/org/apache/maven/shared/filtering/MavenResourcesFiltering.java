@@ -19,49 +19,13 @@ package org.apache.maven.shared.filtering;
  * under the License.
  */
 
-import java.io.File;
 import java.util.List;
-
-import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Resource;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.utils.io.FileUtils;
 
 /**
  * @author Olivier Lamy
  */
 public interface MavenResourcesFiltering
 {
-
-    /**
-     * @param resources {@link List} of {@link org.apache.maven.model.Resource}
-     * @param outputDirectory parent destination directory
-     * @param mavenProject the maven project
-     * @param encoding encoding to use for writing files
-     * @param fileFilters {@link List} of String which are path to a Property file
-     * @param nonFilteredFileExtensions {@link List} of String for non filtered file extensions
-     * @param mavenSession Can include executionProperties that will be used for filtering
-     * @throws MavenFilteringException in case of failure.
-     * @deprecated use {@link #filterResources(MavenResourcesExecution)}
-     */
-    void filterResources( List<Resource> resources, File outputDirectory, MavenProject mavenProject, String encoding,
-                          List<String> fileFilters, List<String> nonFilteredFileExtensions, MavenSession mavenSession )
-                              throws MavenFilteringException;
-
-    /**
-     * @param resources {@link List} of {@link org.apache.maven.model.Resource}
-     * @param outputDirectory parent destination directory
-     * @param encoding encoding to use for writing files
-     * @param filterWrappers {@link List} of FileUtils.FilterWrapper
-     * @param resourcesBaseDirectory baseDirectory of resources
-     * @param nonFilteredFileExtensions {@link List} of String for non filtered file extensions
-     * @throws MavenFilteringException in case of failure.
-     * @deprecated use {@link #filterResources(MavenResourcesExecution)}
-     */
-    void filterResources( List<Resource> resources, File outputDirectory, String encoding,
-                          List<FileUtils.FilterWrapper> filterWrappers, File resourcesBaseDirectory,
-                          List<String> nonFilteredFileExtensions )
-                              throws MavenFilteringException;
 
     /**
      * return the List of the non filtered extensions (jpg,jpeg,gif,bmp,png)

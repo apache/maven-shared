@@ -46,7 +46,7 @@ public class TestReflectionProperties
             mavenProject.setGroupId( "org.apache" );
             Properties executionProperties = new Properties();
             executionProperties.setProperty( "foo", "bar" );
-            MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+            MavenFileFilter mavenFileFilter = lookup( MavenFileFilter.class );
 
             File from = new File( getBasedir() + "/src/test/units-files/reflection-test.properties" );
             File to = new File( getBasedir() + "/target/reflection-test.properties" );
@@ -88,7 +88,7 @@ public class TestReflectionProperties
             mavenProject.setGroupId( "org.apache" );
             Properties executionProperties = new Properties();
             executionProperties.setProperty( "foo", "bar" );
-            MavenFileFilter mavenFileFilter = (MavenFileFilter) lookup( MavenFileFilter.class.getName(), "default" );
+            MavenFileFilter mavenFileFilter = lookup( MavenFileFilter.class );
 
             File from = new File( getBasedir() + "/src/test/units-files/reflection-test.properties" );
             File to = new File( getBasedir() + "/target/reflection-test.properties" );

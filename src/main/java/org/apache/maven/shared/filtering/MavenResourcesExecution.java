@@ -29,8 +29,6 @@ import org.apache.maven.model.Resource;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.apache.maven.shared.utils.io.FileUtils.FilterWrapper;
-import org.codehaus.plexus.interpolation.Interpolator;
-import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
 import org.codehaus.plexus.interpolation.StringSearchInterpolator;
 import org.codehaus.plexus.interpolation.ValueSource;
 
@@ -228,81 +226,6 @@ public class MavenResourcesExecution
             this.filterWrappers = new ArrayList<FilterWrapper>();
         }
         this.filterWrappers.add( filterWrapper );
-    }
-
-    /**
-     * Helper to add {@link FileUtils.FilterWrapper}, will {@link RegexBasedInterpolator} with default regex Exp ${ }
-     * and InterpolatorFilterReaderLineEnding with defaultTokens ${ }.
-     *
-     * @param valueSource The value Source.
-     * @deprecated This doesn't support escaping use
-     *             {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
-     */
-    public void addFilerWrapper( final ValueSource valueSource )
-    {
-        addFilterWrapper( new FileUtils.FilterWrapper()
-        {
-            public Reader getReader( Reader reader )
-            {
-                Interpolator propertiesInterpolator = new RegexBasedInterpolator();
-                propertiesInterpolator.addValueSource( valueSource );
-                return new InterpolatorFilterReaderLineEnding( reader, propertiesInterpolator,
-                                                               InterpolatorFilterReaderLineEnding.DEFAULT_BEGIN_TOKEN,
-                                                               InterpolatorFilterReaderLineEnding.DEFAULT_END_TOKEN,
-                                                               false );
-            }
-        } );
-    }
-
-    /**
-     * @param valueSource The valueSource.
-     * @param startRegExp The start regular expression.
-     * @param endRegExp The end regular expression.
-     * @param startToken The start token.
-     * @param endToken The end token.
-     * @deprecated This doesn't support escaping use
-     *             {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
-     */
-    public void addFilerWrapper( final ValueSource valueSource, final String startRegExp, final String endRegExp,
-                                 final String startToken, final String endToken )
-    {
-        addFilterWrapper( new FileUtils.FilterWrapper()
-        {
-            public Reader getReader( Reader reader )
-            {
-                Interpolator propertiesInterpolator = new RegexBasedInterpolator( startRegExp, endRegExp );
-                propertiesInterpolator.addValueSource( valueSource );
-                return new InterpolatorFilterReaderLineEnding( reader, propertiesInterpolator, startToken, endToken,
-                                                               false );
-            }
-        } );
-    }
-
-    /**
-     * @param valueSource {@link ValueSource}
-     * @param startExp start token like <code>${</code>
-     * @param endExp endToken <code>}</code>
-     * @param escapeString The escape string.
-     * @since 1.0-beta-2
-     * @deprecated This doesn't support escaping use
-     *             {@link #addFilerWrapperWithEscaping(ValueSource, String, String, String, boolean)}
-     */
-    public void addFilerWrapperWithEscaping( final ValueSource valueSource, final String startExp, final String endExp,
-                                             final String escapeString )
-    {
-        addFilterWrapper( new FileUtils.FilterWrapper()
-        {
-            public Reader getReader( Reader reader )
-            {
-                StringSearchInterpolator propertiesInterpolator = new StringSearchInterpolator( startExp, endExp );
-                propertiesInterpolator.addValueSource( valueSource );
-                propertiesInterpolator.setEscapeString( escapeString );
-                InterpolatorFilterReaderLineEnding interpolatorFilterReader =
-                    new InterpolatorFilterReaderLineEnding( reader, propertiesInterpolator, startExp, endExp, false );
-                interpolatorFilterReader.setInterpolateWithPrefixPattern( false );
-                return interpolatorFilterReader;
-            }
-        } );
     }
 
     /**

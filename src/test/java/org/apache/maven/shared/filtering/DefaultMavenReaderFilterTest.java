@@ -36,7 +36,7 @@ public class DefaultMavenReaderFilterTest
         throws Exception
     {
         assertNotNull( DefaultMavenReaderFilter.class );
-        MavenReaderFilter readerFilter = (MavenReaderFilter) lookup( MavenReaderFilter.class.getName(), "default" );
+        MavenReaderFilter readerFilter = lookup( MavenReaderFilter.class );
 
         StringReader src = new StringReader( "toto@titi.com ${foo}" );
         MavenReaderFilterRequest req = new MavenReaderFilterRequest();

@@ -24,7 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
@@ -45,7 +45,7 @@ public class IncrementalResourceFilteringTest
 
     File unitDirectory = new File( getBasedir(), "src/test/units-files/incremental" );
 
-    @SuppressWarnings( "ResultOfMethodCallIgnored" ) protected void setUp()
+    protected void setUp()
         throws Exception
     {
         super.setUp();
@@ -69,7 +69,8 @@ public class IncrementalResourceFilteringTest
         Set<String> changedFiles = new HashSet<String>();
         changedFiles.add( "file01.txt" );
 
-        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, changedFiles, new HashMap() );
+        TestIncrementalBuildContext ctx =
+            new TestIncrementalBuildContext( unitDirectory, changedFiles, Collections.emptyMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
 
         filter( "notime" );
@@ -78,7 +79,8 @@ public class IncrementalResourceFilteringTest
 
         assertTrue( ctx.getRefreshFiles().contains( new File( outputDirectory, "file01.txt" ) ) );
 
-        ctx = new TestIncrementalBuildContext( unitDirectory, new HashSet(), changedFiles, new HashMap() );
+        ctx = new TestIncrementalBuildContext( unitDirectory, Collections.emptySet(), changedFiles,
+                                               Collections.emptyMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
 
         filter( "moretime" );
@@ -98,7 +100,8 @@ public class IncrementalResourceFilteringTest
         // all files are reprocessed after contents of output directory changed (e.g. was deleted)
         Set<String> changedFiles = new HashSet<String>();
         changedFiles.add( "target/IncrementalResourceFilteringTest" );
-        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, changedFiles, new HashMap() );
+        TestIncrementalBuildContext ctx =
+            new TestIncrementalBuildContext( unitDirectory, changedFiles, Collections.emptyMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
 
         filter( "notime" );
@@ -119,7 +122,8 @@ public class IncrementalResourceFilteringTest
         // all files are reprocessed after content of filters changes
         Set<String> changedFiles = new HashSet<String>();
         changedFiles.add( "filters.txt" );
-        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, changedFiles, new HashMap() );
+        TestIncrementalBuildContext ctx =
+            new TestIncrementalBuildContext( unitDirectory, changedFiles, Collections.emptyMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
 
         filter( "notime" );
@@ -140,8 +144,8 @@ public class IncrementalResourceFilteringTest
         // all files are reprocessed after content of filters changes
         Set<String> deletedFiles = new HashSet<String>();
         deletedFiles.add( "filters.txt" );
-        TestIncrementalBuildContext ctx =
-            new TestIncrementalBuildContext( unitDirectory, new HashSet(), deletedFiles, new HashMap() );
+        TestIncrementalBuildContext ctx = new TestIncrementalBuildContext( unitDirectory, Collections.emptySet(),
+                                                                           deletedFiles, Collections.emptyMap() );
         ThreadBuildContext.setThreadBuildContext( ctx );
 
         filter( "notime" );
@@ -183,8 +187,7 @@ public class IncrementalResourceFilteringTest
         projectProperties.put( "time", time );
         projectProperties.put( "java.version", "zloug" );
         mavenProject.setProperties( projectProperties );
-        MavenResourcesFiltering mavenResourcesFiltering =
-            (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class.getName() );
+        MavenResourcesFiltering mavenResourcesFiltering = lookup( MavenResourcesFiltering.class );
 
         String unitFilesDir = new File( unitDirectory, "files" ).getPath();
 
@@ -197,8 +200,17 @@ public class IncrementalResourceFilteringTest
         List<String> filtersFile = new ArrayList<String>();
         filtersFile.add( new File( unitDirectory, "filters.txt" ).getPath() );
 
-        mavenResourcesFiltering.filterResources( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
-                                                 new ArrayList<String>(), new StubMavenSession() );
+        MavenResourcesExecution mre = new MavenResourcesExecution();
+        mre.setResources( resources );
+        mre.setOutputDirectory( outputDirectory );
+        mre.setEncoding( "UTF-8" );
+        mre.setMavenProject( mavenProject );
+        mre.setFilters( filtersFile );
+        mre.setNonFilteredFileExtensions( Collections.<String>emptyList() );
+        mre.setMavenSession( new StubMavenSession() );
+        mre.setUseDefaultFilterWrappers( true );
+
+        mavenResourcesFiltering.filterResources( mre );
     }
 
 }

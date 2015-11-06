@@ -67,8 +67,7 @@ public class EscapeStringTest
         projectProperties.put( "java.version", "zloug" );
         projectProperties.put( "replaceThis", "I am the replacement" );
         mavenProject.setProperties( projectProperties );
-        MavenResourcesFiltering mavenResourcesFiltering =
-            (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class.getName() );
+        MavenResourcesFiltering mavenResourcesFiltering = lookup( MavenResourcesFiltering.class );
 
         Resource resource = new Resource();
         List<Resource> resources = new ArrayList<Resource>();
@@ -94,11 +93,8 @@ public class EscapeStringTest
         {
             String content = IOUtil.toString( new FileInputStream( new File( outputDirectory, "content.xml" ) ) );
 
-            System.out.println( "content " + content );
-            assertTrue(
-                content.contains( "<broken-tag>Content with replacement: I am the replacement !</broken-tag>" ) );
-            assertTrue( content.contains(
-                "<broken-tag>Content with escaped replacement: Do not ${replaceThis} !</broken-tag>" ) );
+            assertTrue( content.contains( "<broken-tag>Content with replacement: I am the replacement !</broken-tag>" ) );
+            assertTrue( content.contains( "<broken-tag>Content with escaped replacement: Do not ${replaceThis} !</broken-tag>" ) );
         }
         finally
         {

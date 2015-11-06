@@ -68,8 +68,7 @@ public class MuliLinesMavenResourcesFilteringTest
         projectProperties.put( "foo", "bar" );
         projectProperties.put( "java.version", "zloug" );
         mavenProject.setProperties( projectProperties );
-        MavenResourcesFiltering mavenResourcesFiltering =
-            (MavenResourcesFiltering) lookup( MavenResourcesFiltering.class.getName() );
+        MavenResourcesFiltering mavenResourcesFiltering = lookup( MavenResourcesFiltering.class );
 
         String unitFilesDir = getBasedir() + "/src/test/units-files/MRESOURCES-104";
 
@@ -103,7 +102,6 @@ public class MuliLinesMavenResourcesFilteringTest
             IOUtil.close( in );
         }
 
-        System.out.println( "properties " + result.toString() );
         // email=foo@bar.com
         // foo=${project.version}
         // bar=@project.version@

@@ -20,7 +20,6 @@ package org.apache.maven.shared.filtering;
  */
 
 import java.io.BufferedReader;
-import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -38,7 +37,7 @@ import org.codehaus.plexus.interpolation.SimpleRecursionInterceptor;
  * @since 1.0
  */
 public class InterpolatorFilterReaderLineEnding
-    extends FilterReader
+    extends AbstractFilterReaderLineEnding
 {
 
     /**
@@ -77,21 +76,7 @@ public class InterpolatorFilterReaderLineEnding
      */
     private boolean interpolateWithPrefixPattern = true;
 
-    private String escapeString;
-
-    private boolean useEscape = false;
-
-    /**
-     * if true escapeString will be preserved \{foo} -> \{foo}
-     */
-    private boolean preserveEscapeString = false;
-
     private boolean supportMultiLineFiltering;
-
-    /**
-     * must always be bigger than escape string plus delimiters, but doesn't need to be exact
-     */
-    private int markLength = 16;
 
     private boolean eof = false;
 
@@ -221,18 +206,18 @@ public class InterpolatorFilterReaderLineEnding
             return ch;
         }
 
-        boolean inEscape = ( useEscape && ch == escapeString.charAt( 0 ) );
+        boolean inEscape = ( useEscape && ch == getEscapeString().charAt( 0 ) );
 
         StringBuilder key = new StringBuilder();
 
         // have we found an escape string?
         if ( inEscape )
         {
-            for ( int i = 0; i < escapeString.length(); i++ )
+            for ( int i = 0; i < getEscapeString().length(); i++ )
             {
                 key.append( (char) ch );
 
-                if ( ch != escapeString.charAt( i ) || ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
+                if ( ch != getEscapeString().charAt( i ) || ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
                 {
                     // mismatch, EOF or EOL, no escape string here
                     in.reset();
@@ -278,7 +263,7 @@ public class InterpolatorFilterReaderLineEnding
 
             if ( beginToken != null )
             {
-                if ( !preserveEscapeString )
+                if ( !isPreserveEscapeString() )
                 {
                     key.setLength( 0 );
                 }
@@ -404,44 +389,6 @@ public class InterpolatorFilterReaderLineEnding
     }
 
     /**
-     * @return The current value of escapeString.
-     */
-    public String getEscapeString()
-    {
-        return escapeString;
-    }
-
-    /**
-     * @param escapeString Set the value for escapeString.
-     */
-    public void setEscapeString( String escapeString )
-    {
-        // TODO NPE if escapeString is null ?
-        if ( escapeString != null && escapeString.length() >= 1 )
-        {
-            this.escapeString = escapeString;
-            this.useEscape = escapeString != null && escapeString.length() >= 1;
-            calculateMarkLength();
-        }
-    }
-
-    /**
-     * @return state of preserve escape string.
-     */
-    public boolean isPreserveEscapeString()
-    {
-        return preserveEscapeString;
-    }
-
-    /**
-     * @param preserveEscapeString {@link #preserveEscapeString}
-     */
-    public void setPreserveEscapeString( boolean preserveEscapeString )
-    {
-        this.preserveEscapeString = preserveEscapeString;
-    }
-
-    /**
      * @return {@link #recursionInterceptor}
      */
     public RecursionInterceptor getRecursionInterceptor()
@@ -457,27 +404,6 @@ public class InterpolatorFilterReaderLineEnding
     {
         this.recursionInterceptor = theRecursionInterceptor;
         return this;
-    }
-
-    private void calculateMarkLength()
-    {
-        markLength = 16;
-
-        if ( escapeString != null )
-        {
-            markLength += escapeString.length();
-        }
-
-        if ( beginToken != null )
-        {
-            markLength += beginToken.length();
-        }
-
-        if ( endToken != null )
-        {
-            markLength += endToken.length();
-        }
-
     }
 
 }

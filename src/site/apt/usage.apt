@@ -30,11 +30,7 @@ Usage
   Lookup the component in your Mojo:
 
 +-----+
-    /**
-     * @component role="org.apache.maven.shared.filtering.MavenResourcesFiltering"
-     *            role-hint="default"
-     * @required
-     */
+    @Required
     private MavenResourcesFiltering mavenResourcesFiltering;
 +-----+
 
@@ -96,5 +92,5 @@ Usage
 +-----+
 
   <<Note:>> Maven Filtering uses the
-  {{{http://plexus.codehaus.org/plexus-components/plexus-interpolation/}plexus-interpolation component}}.
+  {{{http://codehaus-plexus.github.io/plexus-interpolation/}plexus-interpolation component}}.
 

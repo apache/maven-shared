@@ -28,9 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Resource;
-import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.PathTool;
 import org.apache.maven.shared.utils.ReaderFactory;
 import org.apache.maven.shared.utils.StringUtils;
@@ -80,33 +78,6 @@ public class DefaultMavenResourcesFiltering
         this.defaultNonFilteredFileExtensions.add( "gif" );
         this.defaultNonFilteredFileExtensions.add( "bmp" );
         this.defaultNonFilteredFileExtensions.add( "png" );
-    }
-
-    /** {@inheritDoc} */
-    public void filterResources( List<Resource> resources, File outputDirectory, MavenProject mavenProject,
-                                 String encoding, List<String> fileFilters, List<String> nonFilteredFileExtensions,
-                                 MavenSession mavenSession )
-                                     throws MavenFilteringException
-    {
-        MavenResourcesExecution mavenResourcesExecution =
-            new MavenResourcesExecution( resources, outputDirectory, mavenProject, encoding, fileFilters,
-                                         nonFilteredFileExtensions, mavenSession );
-        mavenResourcesExecution.setUseDefaultFilterWrappers( true );
-        // mavenResourcesExecution.setEscapeWindowsPaths( false );
-
-        filterResources( mavenResourcesExecution );
-    }
-
-    /** {@inheritDoc} */
-    public void filterResources( List<Resource> resources, File outputDirectory, String encoding,
-                                 List<FileUtils.FilterWrapper> filterWrappers, File resourcesBaseDirectory,
-                                 List<String> nonFilteredFileExtensions )
-                                     throws MavenFilteringException
-    {
-        MavenResourcesExecution mavenResourcesExecution =
-            new MavenResourcesExecution( resources, outputDirectory, encoding, filterWrappers, resourcesBaseDirectory,
-                                         nonFilteredFileExtensions );
-        filterResources( mavenResourcesExecution );
     }
 
     /** {@inheritDoc} */

@@ -230,12 +230,12 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
         BoundedReader in = new BoundedReader( this.in, markLength );
 
         int ch = in.read();
-        if ( ( ch == -1 ) || ( ch == '\n' && !supportMultiLineFiltering ) )
+        if ( ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
         {
             return ch;
         }
 
-        boolean inEscape = ( useEscape && ch == getEscapeString().charAt( 0 ) );
+        boolean inEscape = useEscape && ch == getEscapeString().charAt( 0 );
 
         StringBuilder key = new StringBuilder();
 

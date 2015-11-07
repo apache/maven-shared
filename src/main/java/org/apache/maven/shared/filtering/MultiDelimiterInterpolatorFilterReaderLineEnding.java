@@ -20,10 +20,8 @@ package org.apache.maven.shared.filtering;
  */
 
 import java.io.BufferedReader;
-import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.codehaus.plexus.interpolation.InterpolationException;
@@ -41,7 +39,7 @@ import org.codehaus.plexus.interpolation.multi.DelimiterSpecification;
  * @since 1.0
  */
 public class MultiDelimiterInterpolatorFilterReaderLineEnding
-    extends FilterReader
+    extends AbstractFilterReaderLineEnding
 {
 
     /**
@@ -76,27 +74,11 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      */
     private boolean interpolateWithPrefixPattern = true;
 
-    private String escapeString;
-
-    private boolean useEscape = false;
-
-    /**
-     * if true escapeString will be preserved \{foo} -> \{foo}
-     */
-    private boolean preserveEscapeString = false;
-
-    private LinkedHashSet<DelimiterSpecification> delimiters = new LinkedHashSet<DelimiterSpecification>();
-
     private String beginToken;
 
     private String endToken;
 
     private boolean supportMultiLineFiltering;
-
-    /**
-     * must always be bigger than escape string plus delimiters, but doesn't need to be exact
-     */
-    private int markLength = 128;
 
     private static final int MAXIMUM_BUFFER_SIZE = 8192;
 
@@ -156,7 +138,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * @param specs set of specs.
      * @return {@link MultiDelimiterInterpolatorFilterReaderLineEnding}
      */
-    public MultiDelimiterInterpolatorFilterReaderLineEnding setDelimiterSpecs( Set<String> specs )
+    public AbstractFilterReaderLineEnding setDelimiterSpecs( Set<String> specs )
     {
         delimiters.clear();
         for ( String spec : specs )
@@ -253,18 +235,18 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
             return ch;
         }
 
-        boolean inEscape = ( useEscape && ch == escapeString.charAt( 0 ) );
+        boolean inEscape = ( useEscape && ch == getEscapeString().charAt( 0 ) );
 
         StringBuilder key = new StringBuilder();
 
         // have we found an escape string?
         if ( inEscape )
         {
-            for ( int i = 0; i < escapeString.length(); i++ )
+            for ( int i = 0; i < getEscapeString().length(); i++ )
             {
                 key.append( (char) ch );
 
-                if ( ch != escapeString.charAt( i ) || ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
+                if ( ch != getEscapeString().charAt( i ) || ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
                 {
                     // mismatch, EOF or EOL, no escape string here
                     in.reset();
@@ -323,7 +305,7 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
 
             if ( beginToken != null )
             {
-                if ( !preserveEscapeString )
+                if ( !isPreserveEscapeString() )
                 {
                     key.setLength( 0 );
                 }
@@ -462,44 +444,6 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
     }
 
     /**
-     * @return the escapce string.
-     */
-    public String getEscapeString()
-    {
-        return escapeString;
-    }
-
-    /**
-     * @param escapeString Set the value of the escape string.
-     */
-    public void setEscapeString( String escapeString )
-    {
-        // TODO NPE if escapeString is null ?
-        if ( escapeString != null && escapeString.length() >= 1 )
-        {
-            this.escapeString = escapeString;
-            this.useEscape = escapeString != null && escapeString.length() >= 1;
-            calculateMarkLength();
-        }
-    }
-
-    /**
-     * @return state of preserve escape string.
-     */
-    public boolean isPreserveEscapeString()
-    {
-        return preserveEscapeString;
-    }
-
-    /**
-     * @param preserveEscapeString preserve escape string {@code true} or {@code false}.
-     */
-    public void setPreserveEscapeString( boolean preserveEscapeString )
-    {
-        this.preserveEscapeString = preserveEscapeString;
-    }
-
-    /**
      * @return {@link RecursionInterceptor}
      */
     public RecursionInterceptor getRecursionInterceptor()
@@ -512,29 +456,11 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
      * @return this
      */
     // CHECKSTYLE_OFF: LineLength
-    public MultiDelimiterInterpolatorFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor givenRecursionInterceptor )
+    public AbstractFilterReaderLineEnding setRecursionInterceptor( RecursionInterceptor givenRecursionInterceptor )
     // CHECKSTYLE_ON: LineLength
     {
         this.recursionInterceptor = givenRecursionInterceptor;
         return this;
-    }
-
-    private void calculateMarkLength()
-    {
-        markLength = 128;
-
-        if ( escapeString != null )
-        {
-
-            markLength += escapeString.length();
-
-        }
-        for ( DelimiterSpecification spec : delimiters )
-        {
-            markLength += spec.getBegin().length();
-            markLength += spec.getEnd().length();
-
-        }
     }
 
 }

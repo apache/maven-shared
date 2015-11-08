@@ -95,24 +95,6 @@ public class MavenArchiver
     private File archiveFile;
 
     /**
-     * Return a pre-configured manifest
-     *
-     * @param project the project
-     * @param config the configuration to use
-     * @return a manifest, clients are recommended to use java.util.jar.Manifest datatype.
-     * @throws org.apache.maven.artifact.DependencyResolutionRequiredException .
-     * @throws org.codehaus.plexus.archiver.jar.ManifestException .
-     * @todo Add user attributes list and user groups list
-     * @deprecated
-     */
-    @SuppressWarnings( "UnusedDeclaration" )
-    public Manifest getManifest( MavenProject project, MavenArchiveConfiguration config )
-        throws ManifestException, DependencyResolutionRequiredException
-    {
-        return getManifest( null, project, config );
-    }
-
-    /**
      * @param session The Maven Session.
      * @param project The Maven Project.
      * @param config The MavenArchiveConfiguration
@@ -528,22 +510,6 @@ public class MavenArchiver
     public void setOutputFile( File outputFile )
     {
         archiveFile = outputFile;
-    }
-
-    /**
-     * @deprecated
-     * @param project {@link MavenProject}
-     * @param archiveConfiguration {@link MavenArchiveConfiguration}
-     * @throws ArchiverException Archiver Exception.
-     * @throws ManifestException Manifest Exception.
-     * @throws IOException IO Exception.
-     * @throws DependencyResolutionRequiredException Dependency resolution exception.
-     */
-    @SuppressWarnings( "JavaDoc" )
-    public void createArchive( MavenProject project, MavenArchiveConfiguration archiveConfiguration )
-        throws ArchiverException, ManifestException, IOException, DependencyResolutionRequiredException
-    {
-        createArchive( null, project, archiveConfiguration );
     }
 
     /**

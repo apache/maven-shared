@@ -29,8 +29,7 @@ import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
  * Utilities used to evaluate an expression.
  * </p>
  * <p>
- * The expression might use any field of the {@link Artifact} interface. Some
- * examples might be:
+ * The expression might use any field of the {@link Artifact} interface. Some examples might be:
  * </p>
  * <ul>
  * <li>@{artifactId}@-@{version}@@{dashClassifier?}@.@{extension}@</li>
@@ -38,9 +37,8 @@ import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
  * <li>@{artifactId}@.@{extension}@</li>
  * </ul>
  * <p>
- * Although parts of this code comes from the Assembly Plugin, it cannot be
- * shared with the Assembly Plugin. The reason for this is that the Assembly
- * Plugin always uses a prefix for the expressions, whereas this code does not.
+ * Although parts of this code comes from the Assembly Plugin, it cannot be shared with the Assembly Plugin. The reason
+ * for this is that the Assembly Plugin always uses a prefix for the expressions, whereas this code does not.
  * <p/>
  *
  * @author Stephane Nicoll
@@ -50,6 +48,7 @@ import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
 public class MappingUtils
 {
     public static final String DEFAULT_FILE_NAME_MAPPING = "@{artifactId}@-@{baseVersion}@.@{extension}@";
+
     public static final String DEFAULT_FILE_NAME_MAPPING_CLASSIFIER =
         "@{artifactId}@-@{baseVersion}@-@{classifier}@.@{extension}@";
 
@@ -57,7 +56,7 @@ public class MappingUtils
      * Evaluates the specified expression for the given artifact.
      *
      * @param expression the expression to evaluate
-     * @param artifact   the artifact to use as value object for tokens
+     * @param artifact the artifact to use as value object for tokens
      * @return expression the evaluated expression
      */
     public static String evaluateFileNameMapping( String expression, Artifact artifact )

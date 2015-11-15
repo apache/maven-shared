@@ -47,8 +47,14 @@ import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
  */
 public class MappingUtils
 {
+    /**
+     * Default file name mapping.
+     */
     public static final String DEFAULT_FILE_NAME_MAPPING = "@{artifactId}@-@{baseVersion}@.@{extension}@";
 
+    /**
+     * Default file name mapping incl. classifier.
+     */
     public static final String DEFAULT_FILE_NAME_MAPPING_CLASSIFIER =
         "@{artifactId}@-@{baseVersion}@-@{classifier}@.@{extension}@";
 
@@ -57,6 +63,7 @@ public class MappingUtils
      *
      * @param expression the expression to evaluate
      * @param artifact the artifact to use as value object for tokens
+     * @throws InterpolationException In case of an error.
      * @return expression the evaluated expression
      */
     public static String evaluateFileNameMapping( String expression, Artifact artifact )

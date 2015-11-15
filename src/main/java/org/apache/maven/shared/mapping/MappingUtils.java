@@ -45,8 +45,13 @@ import org.codehaus.plexus.interpolation.RegexBasedInterpolator;
  * @author Dennis Lundberg
  * @version $Id$
  */
-public class MappingUtils
+public final class MappingUtils
 {
+    private MappingUtils()
+    {
+        // prevent instantiation.
+    }
+
     /**
      * Default file name mapping.
      */

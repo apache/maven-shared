@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>maven-mapping</artifactId>
-  <version>3.0.1-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
 
   <name>Apache Maven Mapping</name>
   <description>A shared component to assist in interpolating file names using properties from a Maven project.</description>

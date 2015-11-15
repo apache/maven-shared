@@ -99,6 +99,7 @@
               <onlyCurrentVersion>true</onlyCurrentVersion>
               <sortColumnNames>Key</sortColumnNames>
               <versionPrefix>maven-mapping-</versionPrefix>
+              <component>12326454</component>
             </configuration>
             <reportSets>
               <reportSet>

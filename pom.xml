@@ -24,7 +24,7 @@
     <artifactId>maven-shared-components</artifactId>
     <groupId>org.apache.maven.shared</groupId>
     <version>22</version>
-    <relativePath>../maven-shared-components/pom.xml</relativePath>
+    <relativePath>../../pom/maven/maven-shared-components/pom.xml</relativePath>
   </parent>
 
   <artifactId>maven-common-artifact-filters</artifactId>

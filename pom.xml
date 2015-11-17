@@ -42,7 +42,6 @@ under the License.
   </scm>
 
   <modules>
-    <module>maven-shared-components</module>
     <module>maven-shared-utils</module>
     <module>maven-shared-incremental</module>
     <module>file-management</module>

@@ -32,7 +32,6 @@ import org.apache.maven.shared.utils.cli.CommandLineException;
 import org.apache.maven.shared.utils.cli.Commandline;
 import org.apache.maven.shared.utils.io.FileUtils;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 /**
@@ -82,7 +81,7 @@ public class FileSetUtilsTest
 
         String[] included = fileSetManager.getIncludedFiles( set );
 
-        Assert.assertEquals( 1, included.length );
+        assertEquals( 1, included.length );
     }
 
     /**
@@ -112,7 +111,7 @@ public class FileSetUtilsTest
 
         String[] included = fileSetManager.getIncludedFiles( set );
 
-        Assert.assertEquals( 1, included.length );
+        assertEquals( 1, included.length );
     }
 
     /**
@@ -143,7 +142,7 @@ public class FileSetUtilsTest
 
         fileSetManager.delete( set );
 
-        Assert.assertFalse( subdir.exists() );
+        assertFalse( subdir.exists() );
     }
 
     /**
@@ -164,7 +163,7 @@ public class FileSetUtilsTest
 
         fileSetManager.delete( set );
 
-        Assert.assertFalse( "file in marked subdirectory still exists.", subdirFile.exists() );
+        assertFalse( "file in marked subdirectory still exists.", subdirFile.exists() );
     }
 
     /**
@@ -192,7 +191,7 @@ public class FileSetUtilsTest
 
         fileSetManager.delete( set );
 
-        Assert.assertFalse( "directory still exists", directory.exists() );
+        assertFalse( "directory still exists", directory.exists() );
     }
 
     /**
@@ -212,7 +211,7 @@ public class FileSetUtilsTest
 
         fileSetManager.delete( set );
 
-        Assert.assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
+        assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
     }
 
     /**
@@ -232,7 +231,7 @@ public class FileSetUtilsTest
 
         fileSetManager.delete( set );
 
-        Assert.assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
+        assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
     }
 
     /**
@@ -252,9 +251,9 @@ public class FileSetUtilsTest
 
         fileSetManager.delete( set );
 
-        Assert.assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
-        Assert.assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
-        Assert.assertFalse( "included file has not been deleted", new File( directory, "included.txt" ).exists() );
+        assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
+        assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
+        assertFalse( "included file has not been deleted", new File( directory, "included.txt" ).exists() );
     }
 
     /**
@@ -274,9 +273,9 @@ public class FileSetUtilsTest
 
         fileSetManager.delete( set );
 
-        Assert.assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
-        Assert.assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
-        Assert.assertFalse( "included file has not been deleted", new File( directory, "included.txt" ).exists() );
+        assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
+        assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
+        assertFalse( "included file has not been deleted", new File( directory, "included.txt" ).exists() );
     }
 
     /**
@@ -301,12 +300,12 @@ public class FileSetUtilsTest
 
         fileSetManager.delete( set );
 
-        Assert.assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
-        Assert.assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
-        Assert.assertFalse( "included dirlink has not been deleted", new File( directory, "dirlink" ).exists() );
-        Assert.assertFalse( "included filelink has not been deleted", new File( directory, "filelink" ).exists() );
-        Assert.assertFalse( "included directory has not been deleted", new File( directory, "dir0" ).exists() );
-        Assert.assertFalse( "included directory has not been deleted", new File( directory, "dir1" ).exists() );
+        assertTrue( "excluded file has been deleted", new File( directory, "excluded.txt" ).exists() );
+        assertTrue( "excluded directory has been deleted", new File( directory, "excluded" ).exists() );
+        assertFalse( "included dirlink has not been deleted", new File( directory, "dirlink" ).exists() );
+        assertFalse( "included filelink has not been deleted", new File( directory, "filelink" ).exists() );
+        assertFalse( "included directory has not been deleted", new File( directory, "dir0" ).exists() );
+        assertFalse( "included directory has not been deleted", new File( directory, "dir1" ).exists() );
     }
 
     /**
@@ -349,7 +348,7 @@ public class FileSetUtilsTest
 
         if ( sourceResource == null )
         {
-            Assert.fail( "Source directory for test: " + directoryName + " cannot be found." );
+            fail( "Source directory for test: " + directoryName + " cannot be found." );
         }
 
         File sourceDir = new File( URLDecoder.decode( sourceResource.getPath(), "UTF-8" ) );

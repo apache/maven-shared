@@ -53,7 +53,8 @@ public class MapperUtilTest
     }
 
     @Test
-    public void getFileNameMapperShouldFileNameMapperType() throws MapperException
+    public void getFileNameMapperShouldFileNameMapperType()
+        throws MapperException
     {
         // check with FileNameMapper type
         Mapper mapper = new Mapper();
@@ -66,7 +67,7 @@ public class MapperUtilTest
     }
 
     @Test
-    public void testGetFileNameMapper()
+    public void testGetFileNameMapper() throws MapperException
     {
         Mapper mapper = null;
         try
@@ -94,15 +95,9 @@ public class MapperUtilTest
         mapper.setType( "glob" );
         mapper.setFrom( "*.java" );
         mapper.setTo( "*.class" );
-        try
-        {
-            FileNameMapper fileNameMapper = MapperUtil.getFileNameMapper( mapper );
-            assertNotNull( fileNameMapper );
-            assertEquals( "/var/SomeClasses.class", fileNameMapper.mapFileName( "/var/SomeClasses.java" ) );
-        }
-        catch ( MapperException e )
-        {
-            fail( "Unexpected exception " + e );
-        }
+
+        FileNameMapper fileNameMapper = MapperUtil.getFileNameMapper( mapper );
+        assertNotNull( fileNameMapper );
+        assertEquals( "/var/SomeClasses.class", fileNameMapper.mapFileName( "/var/SomeClasses.java" ) );
     }
 }

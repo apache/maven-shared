@@ -75,13 +75,13 @@ public class FileSetManager
     {
         if ( verbose )
         {
-            this.messages = new DefaultMessageHolder( MessageLevels.LEVEL_DEBUG, MessageLevels.LEVEL_INFO,
-                                                      new MojoLogSink( log ) );
+            this.messages =
+                new DefaultMessageHolder( MessageLevels.LEVEL_DEBUG, MessageLevels.LEVEL_INFO, new MojoLogSink( log ) );
         }
         else
         {
-            this.messages = new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO,
-                                                      new MojoLogSink( log ) );
+            this.messages =
+                new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO, new MojoLogSink( log ) );
         }
 
         this.verbose = verbose;
@@ -94,8 +94,8 @@ public class FileSetManager
      */
     public FileSetManager( Log log )
     {
-        this.messages = new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO,
-                                                  new MojoLogSink( log ) );
+        this.messages =
+            new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO, new MojoLogSink( log ) );
         this.verbose = false;
     }
 
@@ -128,8 +128,8 @@ public class FileSetManager
      */
     public FileSetManager( Logger log )
     {
-        this.messages = new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO,
-                                                  new PlexusLoggerSink( log ) );
+        this.messages =
+            new DefaultMessageHolder( MessageLevels.LEVEL_INFO, MessageLevels.LEVEL_INFO, new PlexusLoggerSink( log ) );
         this.verbose = false;
     }
 
@@ -146,17 +146,16 @@ public class FileSetManager
     // ----------------------------------------------------------------------
 
     /**
-     *
      * @param fileSet
      * @return the included files as map
      * @throws MapperException if any
      * @see #getIncludedFiles(FileSet)
      */
-    public Map mapIncludedFiles( FileSet fileSet )
+    public Map<String, String> mapIncludedFiles( FileSet fileSet )
         throws MapperException
     {
         String[] sourcePaths = getIncludedFiles( fileSet );
-        Map mappedPaths = new LinkedHashMap();
+        Map<String, String> mappedPaths = new LinkedHashMap<String, String>();
 
         FileNameMapper fileMapper = MapperUtil.getFileNameMapper( fileSet.getMapper() );
 
@@ -183,8 +182,7 @@ public class FileSetManager
     /**
      * Get all the filenames which have been included by the rules in this fileset.
      *
-     * @param fileSet
-     *            The fileset defining rules for inclusion/exclusion, and base directory.
+     * @param fileSet The fileset defining rules for inclusion/exclusion, and base directory.
      * @return the array of matching filenames, relative to the basedir of the file-set.
      */
     public String[] getIncludedFiles( FileSet fileSet )
@@ -202,8 +200,7 @@ public class FileSetManager
     /**
      * Get all the directory names which have been included by the rules in this fileset.
      *
-     * @param fileSet
-     *            The fileset defining rules for inclusion/exclusion, and base directory.
+     * @param fileSet The fileset defining rules for inclusion/exclusion, and base directory.
      * @return the array of matching dirnames, relative to the basedir of the file-set.
      */
     public String[] getIncludedDirectories( FileSet fileSet )
@@ -221,8 +218,7 @@ public class FileSetManager
     /**
      * Get all the filenames which have been excluded by the rules in this fileset.
      *
-     * @param fileSet
-     *            The fileset defining rules for inclusion/exclusion, and base directory.
+     * @param fileSet The fileset defining rules for inclusion/exclusion, and base directory.
      * @return the array of non-matching filenames, relative to the basedir of the file-set.
      */
     public String[] getExcludedFiles( FileSet fileSet )
@@ -240,8 +236,7 @@ public class FileSetManager
     /**
      * Get all the directory names which have been excluded by the rules in this fileset.
      *
-     * @param fileSet
-     *            The fileset defining rules for inclusion/exclusion, and base directory.
+     * @param fileSet The fileset defining rules for inclusion/exclusion, and base directory.
      * @return the array of non-matching dirnames, relative to the basedir of the file-set.
      */
     public String[] getExcludedDirectories( FileSet fileSet )
@@ -273,13 +268,13 @@ public class FileSetManager
      *
      * @param fileSet The file-set matching rules, along with search base directory.
      * @param throwsError Throw IOException when errors have occurred by deleting files or directories.
-     * @throws IOException If a matching file cannot be deleted and <code>throwsError=true</code>, otherwise
-     * print warning messages.
+     * @throws IOException If a matching file cannot be deleted and <code>throwsError=true</code>, otherwise print
+     *             warning messages.
      */
     public void delete( FileSet fileSet, boolean throwsError )
         throws IOException
     {
-        Set deletablePaths = findDeletablePaths( fileSet );
+        Set<String> deletablePaths = findDeletablePaths( fileSet );
 
         if ( messages != null && messages.isDebugEnabled() )
         {
@@ -287,11 +282,11 @@ public class FileSetManager
             messages.addDebugMessage( "Found deletable paths: " + paths ).flush();
         }
 
-        List warnMessages = new LinkedList();
+        List<String> warnMessages = new LinkedList<String>();
 
-        for ( Iterator it = deletablePaths.iterator(); it.hasNext(); )
+        for ( Iterator<String> it = deletablePaths.iterator(); it.hasNext(); )
         {
-            String path = (String) it.next();
+            String path = it.next();
 
             File file = new File( fileSet.getDirectory(), path );
 
@@ -305,7 +300,7 @@ public class FileSetManager
                         {
                             messages.addInfoMessage( "Deleting directory: " + file ).flush();
                         }
-    
+
                         removeDir( file, fileSet.isFollowSymlinks(), throwsError, warnMessages );
                     }
                     else
@@ -314,7 +309,7 @@ public class FileSetManager
                         {
                             messages.addInfoMessage( "Deleting symlink to directory: " + file ).flush();
                         }
-    
+
                         if ( !file.delete() )
                         {
                             String message = "Unable to delete symlink " + file.getAbsolutePath();
@@ -353,11 +348,9 @@ public class FileSetManager
 
         if ( messages != null && messages.isWarningEnabled() && !throwsError && ( warnMessages.size() > 0 ) )
         {
-            for ( Iterator it = warnMessages.iterator(); it.hasNext(); )
+            for ( Iterator<String> it = warnMessages.iterator(); it.hasNext(); )
             {
-                String msg = (String) it.next();
-
-                messages.addWarningMessage( msg ).flush();
+                messages.addWarningMessage( it.next() ).flush();
             }
         }
     }
@@ -381,24 +374,22 @@ public class FileSetManager
         }
         if ( messages != null && messages.isDebugEnabled() )
         {
-            messages.addDebugMessage(
-                                      "Checking for symlink:\nFile's canonical path: "
-                                          + fileInCanonicalParent.getCanonicalPath()
-                                          + "\nFile's absolute path with canonical parent: "
-                                          + fileInCanonicalParent.getPath() ).flush();
+            messages.addDebugMessage( "Checking for symlink:\nFile's canonical path: "
+                + fileInCanonicalParent.getCanonicalPath() + "\nFile's absolute path with canonical parent: "
+                + fileInCanonicalParent.getPath() ).flush();
         }
         return !fileInCanonicalParent.getCanonicalFile().equals( fileInCanonicalParent.getAbsoluteFile() );
     }
 
-    private Set findDeletablePaths( FileSet fileSet )
+    private Set<String> findDeletablePaths( FileSet fileSet )
     {
-        Set includes = findDeletableDirectories( fileSet );
+        Set<String> includes = findDeletableDirectories( fileSet );
         includes.addAll( findDeletableFiles( fileSet, includes ) );
 
         return includes;
     }
 
-    private Set findDeletableDirectories( FileSet fileSet )
+    private Set<String> findDeletableDirectories( FileSet fileSet )
     {
         if ( verbose && messages != null )
         {
@@ -409,7 +400,7 @@ public class FileSetManager
 
         if ( scanner == null )
         {
-            return Collections.EMPTY_SET;
+            return Collections.<String>emptySet();
         }
 
         Set<String> includes = new HashSet<String>( Arrays.asList( scanner.getIncludedDirectories() ) );
@@ -421,7 +412,7 @@ public class FileSetManager
             if ( verbose && messages != null )
             {
                 messages.addInfoMessage( "Adding symbolic link dirs which were previously excluded"
-                                             + " to the list being deleted." ).flush();
+                    + " to the list being deleted." ).flush();
             }
 
             // we need to see which entries were only excluded because they're symlinks...
@@ -442,7 +433,7 @@ public class FileSetManager
             if ( messages != null && messages.isDebugEnabled() )
             {
                 messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): "
-                                            + linksForDeletion ).flush();
+                    + linksForDeletion ).flush();
             }
 
             excludes.removeAll( includedDirsAndSymlinks );
@@ -479,7 +470,7 @@ public class FileSetManager
             if ( verbose && messages != null )
             {
                 messages.addInfoMessage( "Adding symbolic link files which were previously excluded "
-                                             + "to the list being deleted." ).flush();
+                    + "to the list being deleted." ).flush();
             }
 
             // we need to see which entries were only excluded because they're symlinks...
@@ -500,7 +491,7 @@ public class FileSetManager
             if ( messages != null && messages.isDebugEnabled() )
             {
                 messages.addDebugMessage( "Symlinks marked for deletion (originally mismarked): "
-                                            + linksForDeletion ).flush();
+                    + linksForDeletion ).flush();
             }
 
             excludes.removeAll( includedFilesAndSymlinks );
@@ -515,8 +506,7 @@ public class FileSetManager
 
     /**
      * Removes all parent directories of the already excluded files/directories from the given set of deletable
-     * directories. I.e. if "subdir/excluded.txt" should not be deleted, "subdir" should be excluded from deletion,
-     * too.
+     * directories. I.e. if "subdir/excluded.txt" should not be deleted, "subdir" should be excluded from deletion, too.
      * 
      * @param excludedPaths The relative paths of the files/directories which are excluded from deletion, must not be
      *            <code>null</code>.
@@ -525,9 +515,9 @@ public class FileSetManager
      */
     private void excludeParentDirectoriesOfExcludedPaths( List<String> excludedPaths, Set<String> deletablePaths )
     {
-        for ( Iterator it = excludedPaths.iterator(); it.hasNext(); )
+        for ( Iterator<String> it = excludedPaths.iterator(); it.hasNext(); )
         {
-            String path = (String) it.next();
+            String path = it.next();
 
             String parentPath = new File( path ).getParent();
 
@@ -576,7 +566,7 @@ public class FileSetManager
      * @param warnMessages A list of warning messages used when <code>throwsError=false</code>.
      * @throws IOException If a matching file cannot be deleted and <code>throwsError=true</code>.
      */
-    private void removeDir( File dir, boolean followSymlinks, boolean throwsError, List warnMessages )
+    private void removeDir( File dir, boolean followSymlinks, boolean throwsError, List<String> warnMessages )
         throws IOException
     {
         String[] list = dir.list();

@@ -27,13 +27,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
 import org.apache.maven.shared.model.fileset.FileSet;
 import org.apache.maven.shared.utils.cli.CommandLineException;
 import org.apache.maven.shared.utils.cli.Commandline;
 import org.apache.maven.shared.utils.io.FileUtils;
+
+import junit.framework.Assert;
+import junit.framework.TestCase;
 
 /**
  * Test the FileSet
@@ -43,24 +43,24 @@ import org.apache.maven.shared.utils.io.FileUtils;
 public class FileSetUtilsTest
     extends TestCase
 {
-    private Set testDirectories = new HashSet();
+    private Set<File> testDirectories = new HashSet<File>();
 
-    private Set linkFiles = new HashSet();
+    private Set<File> linkFiles = new HashSet<File>();
 
     /** {@inheritDoc} */
     public void tearDown()
         throws IOException
     {
-        for ( Iterator it = linkFiles.iterator(); it.hasNext(); )
+        for ( Iterator<File> it = linkFiles.iterator(); it.hasNext(); )
         {
-            File linkFile = (File) it.next();
+            File linkFile = it.next();
 
             linkFile.delete();
         }
 
-        for ( Iterator it = testDirectories.iterator(); it.hasNext(); )
+        for ( Iterator<File> it = testDirectories.iterator(); it.hasNext(); )
         {
-            File dir = (File) it.next();
+            File dir = it.next();
 
             FileUtils.deleteDirectory( dir );
         }

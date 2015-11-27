@@ -19,6 +19,19 @@ package org.apache.maven.shared.model.fileset.util;
  * under the License.
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.shared.io.logging.DefaultMessageHolder;
 import org.apache.maven.shared.io.logging.MessageHolder;
@@ -32,20 +45,6 @@ import org.apache.maven.shared.model.fileset.mappers.MapperUtil;
 import org.apache.maven.shared.utils.io.DirectoryScanner;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.codehaus.plexus.logging.Logger;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Provides operations for use with FileSet instances, such as retrieving the included/excluded files, deleting all
@@ -413,9 +412,9 @@ public class FileSetManager
             return Collections.EMPTY_SET;
         }
 
-        Set includes = new HashSet( Arrays.asList( scanner.getIncludedDirectories() ) );
-        Collection excludes = new ArrayList( Arrays.asList( scanner.getExcludedDirectories() ) );
-        Collection linksForDeletion = new ArrayList();
+        Set<String> includes = new HashSet<String>( Arrays.asList( scanner.getIncludedDirectories() ) );
+        List<String> excludes = new ArrayList<String>( Arrays.asList( scanner.getExcludedDirectories() ) );
+        List<String> linksForDeletion = new ArrayList<String>();
 
         if ( !fileSet.isFollowSymlinks() )
         {
@@ -435,7 +434,7 @@ public class FileSetManager
                 messages.addDebugMessage( "Marked for preserve (with followSymlinks == false): " + excludes ).flush();
             }
 
-            List includedDirsAndSymlinks = Arrays.asList( scanner.getIncludedDirectories() );
+            List<String> includedDirsAndSymlinks = Arrays.asList( scanner.getIncludedDirectories() );
 
             linksForDeletion.addAll( excludes );
             linksForDeletion.retainAll( includedDirsAndSymlinks );
@@ -456,7 +455,7 @@ public class FileSetManager
         return includes;
     }
 
-    private Set findDeletableFiles( FileSet fileSet, Set deletableDirectories )
+    private Set<String> findDeletableFiles( FileSet fileSet, Set<String> deletableDirectories )
     {
         if ( verbose && messages != null )
         {
@@ -470,10 +469,10 @@ public class FileSetManager
             return deletableDirectories;
         }
 
-        Set includes = deletableDirectories;
+        Set<String> includes = deletableDirectories;
         includes.addAll( Arrays.asList( scanner.getIncludedFiles() ) );
-        Collection excludes = new ArrayList( Arrays.asList( scanner.getExcludedFiles() ) );
-        Collection linksForDeletion = new ArrayList();
+        List<String> excludes = new ArrayList<String>( Arrays.asList( scanner.getExcludedFiles() ) );
+        List<String> linksForDeletion = new ArrayList<String>();
 
         if ( !fileSet.isFollowSymlinks() )
         {
@@ -493,7 +492,7 @@ public class FileSetManager
                 messages.addDebugMessage( "Marked for preserve (with followSymlinks == false): " + excludes ).flush();
             }
 
-            List includedFilesAndSymlinks = Arrays.asList( scanner.getIncludedFiles() );
+            List<String> includedFilesAndSymlinks = Arrays.asList( scanner.getIncludedFiles() );
 
             linksForDeletion.addAll( excludes );
             linksForDeletion.retainAll( includedFilesAndSymlinks );
@@ -524,7 +523,7 @@ public class FileSetManager
      * @param deletablePaths The relative paths to files/directories which are scheduled for deletion, must not be
      *            <code>null</code>.
      */
-    private void excludeParentDirectoriesOfExcludedPaths( Collection excludedPaths, Set deletablePaths )
+    private void excludeParentDirectoriesOfExcludedPaths( List<String> excludedPaths, Set<String> deletablePaths )
     {
         for ( Iterator it = excludedPaths.iterator(); it.hasNext(); )
         {

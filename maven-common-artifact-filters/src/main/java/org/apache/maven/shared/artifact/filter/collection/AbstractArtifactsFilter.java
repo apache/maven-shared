@@ -1,6 +1,6 @@
 package org.apache.maven.shared.artifact.filter.collection;
 
-/*
+/* 
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -16,10 +16,10 @@ package org.apache.maven.shared.artifact.filter.collection;
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License. 
+ * under the License.    
  */
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
@@ -38,7 +38,7 @@ public abstract class AbstractArtifactsFilter
     public boolean isArtifactIncluded( Artifact artifact )
         throws ArtifactFilterException
     {
-        Set<Artifact> set = new HashSet<Artifact>();
+        Set<Artifact> set = new LinkedHashSet<Artifact>();
         set.add( artifact );
 
         set = filter( set );

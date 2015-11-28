@@ -20,7 +20,7 @@ package org.apache.maven.shared.artifact.filter.collection;
  */
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -82,7 +82,7 @@ public abstract class AbstractArtifactFeatureFilter
      */
     private Set<Artifact> filterIncludes( Set<Artifact> artifacts, List<String> theIncludes )
     {
-        Set<Artifact> result = new HashSet<Artifact>();
+        Set<Artifact> result = new LinkedHashSet<Artifact>();
 
         for ( String include : theIncludes )
         {
@@ -110,7 +110,7 @@ public abstract class AbstractArtifactFeatureFilter
      */
     private Set<Artifact> filterExcludes( Set<Artifact> artifacts, List<String> theExcludes )
     {
-        Set<Artifact> result = new HashSet<Artifact>();
+        Set<Artifact> result = new LinkedHashSet<Artifact>();
 
         for ( Artifact artifact : artifacts )
         {

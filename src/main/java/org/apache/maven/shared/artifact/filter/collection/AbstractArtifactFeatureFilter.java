@@ -44,6 +44,10 @@ public abstract class AbstractArtifactFeatureFilter
      */
     private List<String> excludes;
 
+    /**
+     * @param include comma separated list with includes.
+     * @param exclude comma separated list with excludes.
+     */
     public AbstractArtifactFeatureFilter( String include, String exclude )
     {
         setExcludes( exclude );
@@ -146,6 +150,9 @@ public abstract class AbstractArtifactFeatureFilter
      */
     protected abstract String getArtifactFeature( Artifact artifact );
 
+    /**
+     * @param excludeString comma separated list with excludes.
+     */
     public void setExcludes( String excludeString )
     {
         if ( StringUtils.isNotEmpty( excludeString ) )
@@ -154,6 +161,9 @@ public abstract class AbstractArtifactFeatureFilter
         }
     }
 
+    /**
+     * @param includeString comma separated list with includes.
+     */
     public void setIncludes( String includeString )
     {
         if ( StringUtils.isNotEmpty( includeString ) )

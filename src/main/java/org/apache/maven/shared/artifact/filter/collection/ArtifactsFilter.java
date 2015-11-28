@@ -33,9 +33,19 @@ import org.apache.maven.artifact.Artifact;
  */
 public interface ArtifactsFilter
 {
+    /**
+     * @param artifacts {@link Artifact}
+     * @return Set of artifacts.
+     * @throws ArtifactFilterException in case of a failure.
+     */
     Set<Artifact> filter( Set<Artifact> artifacts )
         throws ArtifactFilterException;
 
+    /**
+     * @param artifact {@link Artifact}
+     * @return {@code true} if artifact is included {@code false} otherwise.
+     * @throws ArtifactFilterException in case of a failure.
+     */
     boolean isArtifactIncluded( Artifact artifact )
         throws ArtifactFilterException;
 }

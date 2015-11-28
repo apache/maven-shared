@@ -52,6 +52,9 @@ public class PatternIncludesArtifactFilter
 
     private final List<String> filteredArtifactIds = new ArrayList<String>();
 
+    /**
+     * @param patterns The pattern to be used.
+     */
     public PatternIncludesArtifactFilter( final Collection<String> patterns )
     {
         this( patterns, false );
@@ -64,12 +67,16 @@ public class PatternIncludesArtifactFilter
         this( (Collection) patterns, actTransitively );
     }
 
+    /**
+     * @param patterns The pattern to be used.
+     * @param actTransitively transitive yes/no.
+     */
     public PatternIncludesArtifactFilter( final Collection<String> patterns, final boolean actTransitively )
     {
         this.actTransitively = actTransitively;
         final List<String> pos = new ArrayList<String>();
         final List<String> neg = new ArrayList<String>();
-        if ( ( patterns != null ) && !patterns.isEmpty() )
+        if ( patterns != null && !patterns.isEmpty() )
         {
             for ( String pattern : patterns )
             {
@@ -88,6 +95,7 @@ public class PatternIncludesArtifactFilter
         negativePatterns = neg;
     }
 
+    /** {@inheritDoc} */
     public boolean include( final Artifact artifact )
     {
         final boolean shouldInclude = patternMatches( artifact );
@@ -100,11 +108,18 @@ public class PatternIncludesArtifactFilter
         return shouldInclude;
     }
 
+    /**
+     * @param artifact to check for.
+     * @return true if the match is true false otherwise.
+     */
     protected boolean patternMatches( final Artifact artifact )
     {
-        return ( positiveMatch( artifact ) == Boolean.TRUE ) || ( negativeMatch( artifact ) == Boolean.FALSE );
+        return positiveMatch( artifact ) == Boolean.TRUE || negativeMatch( artifact ) == Boolean.FALSE;
     }
 
+    /**
+     * @param artifactId add artifact to the filtered artifacts list.
+     */
     protected void addFilteredArtifactId( final String artifactId )
     {
         filteredArtifactIds.add( artifactId );
@@ -112,7 +127,7 @@ public class PatternIncludesArtifactFilter
 
     private Boolean negativeMatch( final Artifact artifact )
     {
-        if ( ( negativePatterns == null ) || negativePatterns.isEmpty() )
+        if ( negativePatterns == null || negativePatterns.isEmpty() )
         {
             return null;
         }
@@ -122,9 +137,13 @@ public class PatternIncludesArtifactFilter
         }
     }
 
+    /**
+     * @param artifact check for positive match.
+     * @return true/false.
+     */
     protected Boolean positiveMatch( final Artifact artifact )
     {
-        if ( ( positivePatterns == null ) || positivePatterns.isEmpty() )
+        if ( positivePatterns == null || positivePatterns.isEmpty() )
         {
             return null;
         }
@@ -159,7 +178,7 @@ public class PatternIncludesArtifactFilter
         {
             final List<String> depTrail = artifact.getDependencyTrail();
 
-            if ( ( depTrail != null ) && depTrail.size() > 1 )
+            if ( depTrail != null && depTrail.size() > 1 )
             {
                 for ( String trailItem : depTrail )
                 {
@@ -182,7 +201,7 @@ public class PatternIncludesArtifactFilter
             final String[] patternTokens = pattern.split( ":" );
 
             // fail immediately if pattern tokens outnumber tokens to match
-            boolean matched = ( patternTokens.length <= tokens.length );
+            boolean matched = patternTokens.length <= tokens.length;
 
             for ( int i = 0; matched && i < patternTokens.length; i++ )
             {
@@ -244,7 +263,7 @@ public class PatternIncludesArtifactFilter
         {
             final String contains = pattern.substring( 1, pattern.length() - 1 );
 
-            matches = ( token.contains( contains ) );
+            matches = token.contains( contains );
         }
         // support leading wildcard
         else if ( pattern.startsWith( "*" ) )
@@ -307,6 +326,7 @@ public class PatternIncludesArtifactFilter
         }
     }
 
+    /** {@inheritDoc} */
     public void reportMissedCriteria( final Logger logger )
     {
         // if there are no patterns, there is nothing to report.
@@ -344,6 +364,9 @@ public class PatternIncludesArtifactFilter
         return "Includes filter:" + getPatternsAsString();
     }
 
+    /**
+     * @return pattern as a string.
+     */
     protected String getPatternsAsString()
     {
         final StringBuilder buffer = new StringBuilder();
@@ -355,11 +378,15 @@ public class PatternIncludesArtifactFilter
         return buffer.toString();
     }
 
+    /**
+     * @return description.
+     */
     protected String getFilterDescription()
     {
         return "artifact inclusion filter";
     }
 
+    /** {@inheritDoc} */
     public void reportFilteredArtifacts( final Logger logger )
     {
         if ( !filteredArtifactIds.isEmpty() && logger.isDebugEnabled() )
@@ -376,6 +403,7 @@ public class PatternIncludesArtifactFilter
         }
     }
 
+    /** {@inheritDoc} */
     public boolean hasMissedCriteria()
     {
         // if there are no patterns, there is nothing to report.

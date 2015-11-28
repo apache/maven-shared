@@ -30,11 +30,18 @@ import java.util.List;
 public abstract class AbstractFilter implements TransformableFilter
 {
 
+    /** {@inheritDoc}
+     */
     @Override
     public final <T> T transform( FilterTransformer<T> transformer )
     {
         return transformer.transform( this );
     }
 
+    /**
+     * @param node {@link Node}
+     * @param parents {@link Node}s.
+     * @return {@code true} / {@code false}
+     */
     public abstract boolean accept( Node node, List<Node> parents );
 }

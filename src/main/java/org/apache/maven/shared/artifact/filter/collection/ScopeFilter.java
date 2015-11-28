@@ -39,6 +39,10 @@ public class ScopeFilter
 
     private String excludeScope;
 
+    /**
+     * @param includeScope the scope to be included.
+     * @param excludeScope the scope to be excluded.
+     */
     public ScopeFilter( String includeScope, String excludeScope )
     {
         this.includeScope = includeScope;

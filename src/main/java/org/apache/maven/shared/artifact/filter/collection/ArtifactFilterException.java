@@ -30,21 +30,34 @@ public class ArtifactFilterException
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Create an instance.
+     */
     public ArtifactFilterException()
     {
         super();
     }
 
+    /**
+     * @param theMessage The message which describes what happends.
+     * @param theCause The cause.
+     */
     public ArtifactFilterException( String theMessage, Throwable theCause )
     {
         super( theMessage, theCause );
     }
 
+    /**
+     * @param theMessage The message which describes what happends.
+     */
     public ArtifactFilterException( String theMessage )
     {
         super( theMessage );
     }
 
+    /**
+     * @param theCause {@link Throwable} cause of the problem.
+     */
     public ArtifactFilterException( Throwable theCause )
     {
         super( theCause );

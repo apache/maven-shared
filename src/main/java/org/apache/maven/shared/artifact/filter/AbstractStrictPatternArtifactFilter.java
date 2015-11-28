@@ -79,9 +79,7 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
 
     // ArtifactFilter methods -------------------------------------------------
 
-    /*
-     * @see org.apache.maven.artifact.resolver.filter.ArtifactFilter#include(org.apache.maven.artifact.Artifact)
-     */
+    /** {@inheritDoc} */
     public boolean include( Artifact artifact )
     {
         boolean matched = false;
@@ -121,7 +119,7 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
         String[] patternTokens = pattern.split( ":" );
 
         // fail immediately if pattern tokens outnumber tokens to match
-        boolean matched = ( patternTokens.length <= tokens.length );
+        boolean matched = patternTokens.length <= tokens.length;
 
         for ( int i = 0; matched && i < patternTokens.length; i++ )
         {
@@ -154,7 +152,7 @@ public abstract class AbstractStrictPatternArtifactFilter implements ArtifactFil
         {
             String contains = pattern.substring( 1, pattern.length() - 1 );
 
-            matches = ( token.contains( contains ) );
+            matches = token.contains( contains );
         }
         // support leading wildcard
         else if ( pattern.startsWith( "*" ) )

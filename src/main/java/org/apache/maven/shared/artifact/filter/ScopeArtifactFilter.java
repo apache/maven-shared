@@ -106,6 +106,7 @@ public class ScopeArtifactFilter
         }
     }
 
+    /** {@inheritDoc} */
     public boolean include( Artifact artifact )
     {
         boolean result = true;
@@ -162,6 +163,9 @@ public class ScopeArtifactFilter
         return result;
     }
 
+    /**
+     * @return Information converted to a string.
+     */
     public String toString()
     {
         return "Scope filter [null-scope=" + includeNullScope + ", compile=" + includeCompileScope + ", runtime="
@@ -169,6 +173,7 @@ public class ScopeArtifactFilter
             + includeSystemScope + "]";
     }
 
+    /** {@inheritDoc} */
     public void reportFilteredArtifacts( Logger logger )
     {
         if ( !filteredArtifactIds.isEmpty() && logger.isDebugEnabled() )
@@ -184,6 +189,7 @@ public class ScopeArtifactFilter
         }
     }
 
+    /** {@inheritDoc} */
     public void reportMissedCriteria( Logger logger )
     {
         if ( logger.isDebugEnabled() )
@@ -229,6 +235,7 @@ public class ScopeArtifactFilter
         }
     }
 
+    /** {@inheritDoc} */
     public boolean hasMissedCriteria()
     {
         boolean report = false;
@@ -261,62 +268,94 @@ public class ScopeArtifactFilter
         return report;
     }
     
+    /**
+     * @return {@link #includeCompileScope}
+     */
     public boolean isIncludeCompileScope()
     {
         return includeCompileScope;
     }
 
-    public ScopeArtifactFilter setIncludeCompileScope( boolean includeCompileScope )
+    /**
+     * @param pIncludeCompileScope true/false.
+     * @return {@link ScopeArtifactFilter}
+     */
+    public ScopeArtifactFilter setIncludeCompileScope( boolean pIncludeCompileScope )
     {
-        this.includeCompileScope = includeCompileScope;
+        this.includeCompileScope = pIncludeCompileScope;
         
         return this;
     }
 
+    /**
+     * @return {@link #includeRuntimeScope}
+     */
     public boolean isIncludeRuntimeScope()
     {
         return includeRuntimeScope;
     }
 
-    public ScopeArtifactFilter setIncludeRuntimeScope( boolean includeRuntimeScope )
+    /**
+     * @param pIncludeRuntimeScope true/false
+     * @return {@link ScopeArtifactFilter}
+     */
+    public ScopeArtifactFilter setIncludeRuntimeScope( boolean pIncludeRuntimeScope )
     {
-        this.includeRuntimeScope = includeRuntimeScope;
+        this.includeRuntimeScope = pIncludeRuntimeScope;
         
         return this;
     }
 
+    /**
+     * @return {@link #includeTestScope}
+     */
     public boolean isIncludeTestScope()
     {
         return includeTestScope;
     }
 
-    public ScopeArtifactFilter setIncludeTestScope( boolean includeTestScope )
+    /**
+     * @param pIncludeTestScope {@link #includeTestScope}
+     * @return {@link ScopeArtifactFilter}
+     */
+    public ScopeArtifactFilter setIncludeTestScope( boolean pIncludeTestScope )
     {
-        this.includeTestScope = includeTestScope;
+        this.includeTestScope = pIncludeTestScope;
         
         return this;
     }
 
+    /**
+     * @return {@link #includeProvidedScope}
+     */
     public boolean isIncludeProvidedScope()
     {
         return includeProvidedScope;
     }
 
-    public ScopeArtifactFilter setIncludeProvidedScope( boolean includeProvidedScope )
+    /**
+     * @param pIncludeProvidedScope yes/no.
+     * @return {@link #ScopeArtifactFilter()}
+     */
+    public ScopeArtifactFilter setIncludeProvidedScope( boolean pIncludeProvidedScope )
     {
-        this.includeProvidedScope = includeProvidedScope;
+        this.includeProvidedScope = pIncludeProvidedScope;
         
         return this;
     }
 
+    /**
+     * @return {@link #includeSystemScope}
+     */
     public boolean isIncludeSystemScope()
     {
         return includeSystemScope;
     }
 
-    public ScopeArtifactFilter setIncludeSystemScope( boolean includeSystemScope )
+    /** {@inheritDoc} */
+    public ScopeArtifactFilter setIncludeSystemScope( boolean pIncludeSystemScope )
     {
-        this.includeSystemScope = includeSystemScope;
+        this.includeSystemScope = pIncludeSystemScope;
         
         return this;
     }

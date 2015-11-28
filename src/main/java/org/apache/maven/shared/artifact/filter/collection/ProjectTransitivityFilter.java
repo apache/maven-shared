@@ -36,12 +36,18 @@ public class ProjectTransitivityFilter
 
     private Set<Artifact> directDependencies;
 
+    /**
+     * @param directDependencies set of direct dependencies.
+     * @param excludeTransitive {@code true} exclude transitive deps {@code false} otherwise.
+     */
     public ProjectTransitivityFilter( Set<Artifact> directDependencies, boolean excludeTransitive )
     {
         this.excludeTransitive = excludeTransitive;
         this.directDependencies = directDependencies;
     }
 
+    /** {@inheritDoc}
+     */
     public Set<Artifact> filter( Set<Artifact> artifacts )
     {
         // why not just take the directDependencies here?

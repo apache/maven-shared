@@ -60,13 +60,6 @@ public class PatternIncludesArtifactFilter
         this( patterns, false );
     }
 
-    // for backwards compatibility, used by org.apache.maven.shared.repository.DefaultRepositoryAssembler
-    @Deprecated
-    public PatternIncludesArtifactFilter( final List<String> patterns, final boolean actTransitively )
-    {
-        this( (Collection) patterns, actTransitively );
-    }
-
     /**
      * @param patterns The pattern to be used.
      * @param actTransitively transitive yes/no.

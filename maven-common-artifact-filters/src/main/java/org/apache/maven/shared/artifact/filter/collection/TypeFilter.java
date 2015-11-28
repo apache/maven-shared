@@ -28,11 +28,16 @@ import org.apache.maven.artifact.Artifact;
 public class TypeFilter
     extends AbstractArtifactFeatureFilter
 {
+    /**
+     * @param include comma separated list with includes.
+     * @param exclude comma separated list with excludes.
+     */
     public TypeFilter( String include, String exclude )
     {
         super( include, exclude );
     }
 
+    /** {@inheritDoc} */
     protected String getArtifactFeature( Artifact artifact )
     {
         return artifact.getType();

@@ -47,6 +47,9 @@ public class ExclusionsFilter
         this.excludes = Collections.unmodifiableCollection( excludes );
     }
 
+    /**
+     * @return The list of excludes.
+     */
     public final Collection<String> getExcludes()
     {
         return excludes;

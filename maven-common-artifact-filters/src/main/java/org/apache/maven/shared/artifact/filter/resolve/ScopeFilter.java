@@ -116,7 +116,9 @@ public class ScopeFilter implements TransformableFilter
     /**
      * Transform this filter to a tool specific implementation
      * 
+     * @param <T> The type to be used.
      * @param transformer the transformer, must not be {@code null}
+     * @return T.
      */
     public <T> T transform ( FilterTransformer<T> transformer )
     {

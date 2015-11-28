@@ -37,6 +37,9 @@ public class FilterArtifacts
 {
     private List<ArtifactsFilter> filters;
 
+    /**
+     * Created new instance.
+     */
     public FilterArtifacts()
     {
         filters = new ArrayList<ArtifactsFilter>();
@@ -79,6 +82,11 @@ public class FilterArtifacts
         }
     }
 
+    /**
+     * @param artifacts The {@link Artifact}s to filter. 
+     * @return The resulting artifacts set.
+     * @throws ArtifactFilterException in case of a failure.
+     */
     public Set<Artifact> filter( Set<Artifact> artifacts )
         throws ArtifactFilterException
     {

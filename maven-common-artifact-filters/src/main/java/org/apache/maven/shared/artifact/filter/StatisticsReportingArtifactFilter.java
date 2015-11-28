@@ -27,10 +27,19 @@ import org.codehaus.plexus.logging.Logger;
 public interface StatisticsReportingArtifactFilter
 {
 
+    /**
+     * @param logger The logger.
+     */
     void reportMissedCriteria( Logger logger );
 
+    /**
+     * @param logger The logger.
+     */
     void reportFilteredArtifacts( Logger logger );
 
+    /**
+     * @return {@code true} if missed cireteria {@code false} otherwise.
+     */
     boolean hasMissedCriteria();
 
 }

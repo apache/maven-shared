@@ -32,16 +32,24 @@ import org.apache.maven.artifact.Artifact;
 public class PatternExcludesArtifactFilter
     extends PatternIncludesArtifactFilter
 {
+    /**
+     * @param patterns The pattern to be used.
+     */
     public PatternExcludesArtifactFilter( Collection<String> patterns )
     {
         super( patterns );
     }
 
+    /**
+     * @param patterns The pattern which will be used.
+     * @param actTransitively yes/no.
+     */
     public PatternExcludesArtifactFilter( Collection<String> patterns, boolean actTransitively )
     {
         super( patterns, actTransitively );
     }
 
+    /** {@inheritDoc} */
     public boolean include( Artifact artifact )
     {
         boolean shouldInclude = !patternMatches( artifact );
@@ -54,11 +62,13 @@ public class PatternExcludesArtifactFilter
         return shouldInclude;
     }
 
+    /** {@inheritDoc} */
     protected String getFilterDescription()
     {
         return "artifact exclusion filter";
     }
 
+    /** {@inheritDoc} */
     public String toString()
     {
         return "Excludes filter:" + getPatternsAsString();

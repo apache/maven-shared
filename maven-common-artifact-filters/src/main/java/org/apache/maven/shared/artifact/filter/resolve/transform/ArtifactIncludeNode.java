@@ -47,7 +47,7 @@ class ArtifactIncludeNode implements Node
     @Override
     public Dependency getDependency()
     {
-        org.apache.maven.model.Dependency mavenDependency = new org.apache.maven.model.Dependency();
+        Dependency mavenDependency = new Dependency();
         mavenDependency.setGroupId( artifact.getGroupId() );
         mavenDependency.setArtifactId( artifact.getArtifactId() );
         mavenDependency.setVersion( artifact.getVersion() );

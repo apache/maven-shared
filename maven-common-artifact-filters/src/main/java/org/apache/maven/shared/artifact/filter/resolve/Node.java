@@ -24,10 +24,12 @@ package org.apache.maven.shared.artifact.filter.resolve;
  * 
  * @author Robert Scholte
  * @since 3.0
- *
  */
 public interface Node
 {
+    /**
+     * @return {@link Dependency}
+     */
     org.apache.maven.model.Dependency getDependency();
 
 }

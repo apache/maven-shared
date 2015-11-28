@@ -173,6 +173,9 @@ public class ArtifactTransitivityFilter
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Set<Artifact> filter( Set<Artifact> artifacts )
     {
 

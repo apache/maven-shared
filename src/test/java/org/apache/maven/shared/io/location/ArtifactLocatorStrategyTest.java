@@ -22,6 +22,7 @@ package org.apache.maven.shared.io.location;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -118,7 +119,7 @@ public class ArtifactLocatorStrategyTest
 
         try
         {
-            resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
+            resolver.resolve( artifact, Collections.<ArtifactRepository>emptyList(), localRepository );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -162,7 +163,7 @@ public class ArtifactLocatorStrategyTest
 
         try
         {
-            resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
+            resolver.resolve( artifact, Collections.<ArtifactRepository>emptyList(), localRepository );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -206,7 +207,7 @@ public class ArtifactLocatorStrategyTest
 
         try
         {
-            resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
+            resolver.resolve( artifact, Collections.<ArtifactRepository>emptyList(), localRepository );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -251,7 +252,7 @@ public class ArtifactLocatorStrategyTest
 
         try
         {
-            resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
+            resolver.resolve( artifact, Collections.<ArtifactRepository>emptyList(), localRepository );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -296,7 +297,7 @@ public class ArtifactLocatorStrategyTest
 
         try
         {
-            resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
+            resolver.resolve( artifact, Collections.<ArtifactRepository>emptyList(), localRepository );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -341,7 +342,7 @@ public class ArtifactLocatorStrategyTest
 
         try
         {
-            resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
+            resolver.resolve( artifact, Collections.<ArtifactRepository>emptyList(), localRepository );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -384,7 +385,7 @@ public class ArtifactLocatorStrategyTest
 
         try
         {
-            resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
+            resolver.resolve( artifact, Collections.<ArtifactRepository>emptyList(), localRepository );
         }
         catch ( ArtifactResolutionException e )
         {
@@ -424,10 +425,10 @@ public class ArtifactLocatorStrategyTest
 
         try
         {
-            resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
+            resolver.resolve( artifact, Collections.<ArtifactRepository>emptyList(), localRepository );
             expectLastCall().andThrow( new ArtifactNotFoundException( "not found", "group", "artifact", "version",
-                                                                               "jar", Collections.EMPTY_LIST,
-                                                                               "http://nowhere.com", Collections.EMPTY_LIST,
+                                                                               "jar", null, Collections.<ArtifactRepository>emptyList(),
+                                                                               "http://nowhere.com", Collections.<String>emptyList(),
                                                                                 new NullPointerException() ) );
         }
         catch ( ArtifactResolutionException e )
@@ -469,11 +470,12 @@ public class ArtifactLocatorStrategyTest
 
         try
         {
-            resolver.resolve( artifact, Collections.EMPTY_LIST, localRepository );
+            resolver.resolve( artifact, Collections.<ArtifactRepository>emptyList(), localRepository );
             expectLastCall().andThrow( new ArtifactResolutionException( "resolution failed", "group", "artifact",
-                                                                                 "version", "jar", Collections.EMPTY_LIST,
-                                                                                 Collections.EMPTY_LIST,
+                                                                                 "version", "jar", null, Collections.<ArtifactRepository>emptyList(),
+                                                                                 Collections.<String>emptyList(),
                                                                                  new NullPointerException() ) );
+
         }
         catch ( ArtifactResolutionException e )
         {

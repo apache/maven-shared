@@ -19,7 +19,7 @@ package org.apache.maven.shared.io.location;
  * under the License.
  */
 
-import org.apache.maven.shared.io.TestUtils;
+import org.apache.maven.shared.io.Utils;
 import org.apache.maven.shared.utils.io.IOUtil;
 
 import java.io.ByteArrayOutputStream;
@@ -52,7 +52,7 @@ public class FileLocationTest
 
         String testStr = "This is a test";
 
-        TestUtils.writeFileWithEncoding( file, testStr, "US-ASCII" );
+        Utils.writeFileWithEncoding( file, testStr, "US-ASCII" );
 
         FileLocation location = new FileLocation( file, file.getAbsolutePath() );
 
@@ -71,7 +71,7 @@ public class FileLocationTest
 
         String testStr = "This is a test";
 
-        TestUtils.writeFileWithEncoding( file, testStr, "US-ASCII" );
+        Utils.writeFileWithEncoding( file, testStr, "US-ASCII" );
 
         FileLocation location = new FileLocation( file, file.getAbsolutePath() );
 
@@ -91,7 +91,7 @@ public class FileLocationTest
 
         String testStr = "This is a test";
 
-        TestUtils.writeFileWithEncoding( file, testStr, "US-ASCII" );
+        Utils.writeFileWithEncoding( file, testStr, "US-ASCII" );
 
         FileLocation location = new FileLocation( file, file.getAbsolutePath() );
 
@@ -110,7 +110,7 @@ public class FileLocationTest
 
         String testStr = "This is a test";
 
-        TestUtils.writeFileWithEncoding( file, testStr, "US-ASCII" );
+        Utils.writeFileWithEncoding( file, testStr, "US-ASCII" );
 
         FileLocation location = new FileLocation( file, file.getAbsolutePath() );
 

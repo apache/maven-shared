@@ -28,7 +28,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
 import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.shared.io.TestUtils;
+import org.apache.maven.shared.io.Utils;
 
 public class ArtifactLocationTest
     extends TestCase
@@ -58,7 +58,7 @@ public class ArtifactLocationTest
 
         String testStr = "This is a test";
 
-        TestUtils.writeFileWithEncoding( f, testStr, "US-ASCII" );
+        Utils.writeFileWithEncoding( f, testStr, "US-ASCII" );
 
         Artifact a = new DefaultArtifact( "group", "artifact", VersionRange.createFromVersion( "1" ), null, "jar",
                                           null, new DefaultArtifactHandler() );

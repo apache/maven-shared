@@ -24,7 +24,7 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.apache.maven.shared.io.TestUtils;
+import org.apache.maven.shared.io.Utils;
 import org.apache.maven.shared.io.logging.DefaultMessageHolder;
 import org.apache.maven.shared.io.logging.MessageHolder;
 
@@ -59,7 +59,7 @@ public class URLLocatorStrategyTest
 
         String testStr = "This is a test.";
 
-        TestUtils.writeFileWithEncoding( tempFile, testStr, "US-ASCII" );
+        Utils.writeFileWithEncoding( tempFile, testStr, "US-ASCII" );
 
         MessageHolder mh = new DefaultMessageHolder();
 

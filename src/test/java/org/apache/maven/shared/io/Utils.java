@@ -32,10 +32,10 @@ import org.apache.maven.shared.utils.io.IOUtil;
 import org.apache.maven.shared.utils.ReaderFactory;
 import org.apache.maven.shared.utils.WriterFactory;
 
-public final class TestUtils
+public final class Utils
 {
 
-    private TestUtils()
+    private Utils()
     {
     }
 

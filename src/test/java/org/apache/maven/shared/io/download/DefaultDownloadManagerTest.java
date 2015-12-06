@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 import org.apache.maven.artifact.manager.WagonManager;
-import org.apache.maven.shared.io.TestUtils;
+import org.apache.maven.shared.io.Utils;
 import org.apache.maven.shared.io.logging.DefaultMessageHolder;
 import org.apache.maven.shared.io.logging.MessageHolder;
 import org.apache.maven.wagon.ConnectionException;
@@ -185,7 +185,7 @@ public class DefaultDownloadManagerTest
         }
         catch ( DownloadFailedException e )
         {
-            assertTrue( TestUtils.toString( e ).indexOf( "UnsupportedProtocolException" ) > -1 );
+            assertTrue( Utils.toString( e ).indexOf( "UnsupportedProtocolException" ) > -1 );
         }
 
         verify( wagon, wagonManager );
@@ -211,7 +211,7 @@ public class DefaultDownloadManagerTest
         }
         catch ( DownloadFailedException e )
         {
-            assertTrue( TestUtils.toString( e ).indexOf( "ConnectionException" ) > -1 );
+            assertTrue( Utils.toString( e ).indexOf( "ConnectionException" ) > -1 );
         }
 
         verify( wagon, wagonManager );
@@ -237,7 +237,7 @@ public class DefaultDownloadManagerTest
         }
         catch ( DownloadFailedException e )
         {
-            assertTrue( TestUtils.toString( e ).indexOf( "AuthenticationException" ) > -1 );
+            assertTrue( Utils.toString( e ).indexOf( "AuthenticationException" ) > -1 );
         }
 
         verify( wagon, wagonManager );
@@ -263,7 +263,7 @@ public class DefaultDownloadManagerTest
         }
         catch ( DownloadFailedException e )
         {
-            assertTrue( TestUtils.toString( e ).indexOf( "TransferFailedException" ) > -1 );
+            assertTrue( Utils.toString( e ).indexOf( "TransferFailedException" ) > -1 );
         }
 
         verify( wagon, wagonManager );
@@ -289,7 +289,7 @@ public class DefaultDownloadManagerTest
         }
         catch ( DownloadFailedException e )
         {
-            assertTrue( TestUtils.toString( e ).indexOf( "ResourceDoesNotExistException" ) > -1 );
+            assertTrue( Utils.toString( e ).indexOf( "ResourceDoesNotExistException" ) > -1 );
         }
 
         verify( wagon, wagonManager );
@@ -315,7 +315,7 @@ public class DefaultDownloadManagerTest
         }
         catch ( DownloadFailedException e )
         {
-            assertTrue( TestUtils.toString( e ).indexOf( "AuthorizationException" ) > -1 );
+            assertTrue( Utils.toString( e ).indexOf( "AuthorizationException" ) > -1 );
         }
 
         verify( wagon, wagonManager );

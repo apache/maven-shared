@@ -21,10 +21,18 @@ package org.apache.maven.shared.io.location;
 
 import org.apache.maven.artifact.Artifact;
 
+/**
+ * The artifact location.
+ *
+ */
 public class ArtifactLocation
     extends FileLocation
 {
 
+    /**
+     * @param artifact {@link Artifact}
+     * @param specification The specification.
+     */
     public ArtifactLocation( Artifact artifact, String specification )
     {
         super( specification );

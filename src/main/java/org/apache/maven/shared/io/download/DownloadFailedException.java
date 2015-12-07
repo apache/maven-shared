@@ -19,6 +19,10 @@ package org.apache.maven.shared.io.download;
  * under the License.
  */
 
+/**
+ * The Download Failed Exception.
+ *
+ */
 public class DownloadFailedException
     extends Exception
 {
@@ -27,18 +31,30 @@ public class DownloadFailedException
 
     private String url;
 
+    /**
+     * @param url The url.
+     * @param message The message.
+     * @param cause The cause of the problem.
+     */
     public DownloadFailedException( String url, String message, Throwable cause )
     {
         super( message, cause );
         this.url = url;
     }
 
+    /**
+     * @param url The url.
+     * @param message The message.
+     */
     public DownloadFailedException( String url, String message )
     {
         super( message );
         this.url = url;
     }
 
+    /**
+     * @return The url.
+     */
     public String getUrl()
     {
         return url;

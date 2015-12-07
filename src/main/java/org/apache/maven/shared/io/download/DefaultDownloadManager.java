@@ -49,7 +49,7 @@ public class DefaultDownloadManager
 
     private WagonManager wagonManager;
 
-    private Map cache = new HashMap();
+    private Map<String, File> cache = new HashMap<String, File>();
 
     public DefaultDownloadManager()
     {
@@ -63,10 +63,10 @@ public class DefaultDownloadManager
     public File download( String url, MessageHolder messageHolder )
         throws DownloadFailedException
     {
-        return download( url, Collections.EMPTY_LIST, messageHolder );
+        return download( url, Collections.<TransferListener>emptyList(), messageHolder );
     }
 
-    public File download( String url, List transferListeners, MessageHolder messageHolder )
+    public File download( String url, List<TransferListener> transferListeners, MessageHolder messageHolder )
         throws DownloadFailedException
     {
         File downloaded = (File) cache.get( url );
@@ -123,10 +123,9 @@ public class DefaultDownloadManager
         String remotePath = sourceUrl.getPath();
         String baseUrl = url.substring( 0, url.length() - remotePath.length() );
 
-        for ( Iterator it = transferListeners.iterator(); it.hasNext(); )
+        for ( Iterator<TransferListener> it = transferListeners.iterator(); it.hasNext(); )
         {
-            TransferListener listener = (TransferListener) it.next();
-            wagon.addTransferListener( listener );
+            wagon.addTransferListener( it.next() );
         }
 
         // connect to the remote site, and retrieve the archive. Note the separate methods in which
@@ -137,8 +136,8 @@ public class DefaultDownloadManager
 
         try
         {
-            wagon.connect( repo, wagonManager.getAuthenticationInfo( repo.getId() ), wagonManager.getProxy( sourceUrl
-                .getProtocol() ) );
+            wagon.connect( repo, wagonManager.getAuthenticationInfo( repo.getId() ),
+                           wagonManager.getProxy( sourceUrl.getProtocol() ) );
         }
         catch ( ConnectionException e )
         {
@@ -188,10 +187,9 @@ public class DefaultDownloadManager
                     messageHolder.addMessage( "Failed to disconnect wagon for: " + url, e );
                 }
 
-                for ( Iterator it = transferListeners.iterator(); it.hasNext(); )
+                for ( Iterator<TransferListener> it = transferListeners.iterator(); it.hasNext(); )
                 {
-                    TransferListener listener = (TransferListener) it.next();
-                    wagon.removeTransferListener( listener );
+                    wagon.removeTransferListener( it.next() );
                 }
             }
         }

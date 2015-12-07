@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.maven.shared.io.logging.MessageHolder;
+import org.apache.maven.wagon.events.TransferListener;
 
 public interface DownloadManager
 {
@@ -31,7 +32,7 @@ public interface DownloadManager
     File download( String url, MessageHolder messageHolder )
         throws DownloadFailedException;
 
-    File download( String url, List transferListeners, MessageHolder messageHolder )
+    File download( String url, List<TransferListener> transferListeners, MessageHolder messageHolder )
         throws DownloadFailedException;
 
 }

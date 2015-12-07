@@ -25,13 +25,33 @@ import java.util.List;
 import org.apache.maven.shared.io.logging.MessageHolder;
 import org.apache.maven.wagon.events.TransferListener;
 
+/**
+ * The Download Manager interface.
+ *
+ */
 public interface DownloadManager
 {
+    /**
+     * The Role.
+     */
     String ROLE = DownloadManager.class.getName();
 
+    /**
+     * @param url The URL.
+     * @param messageHolder {@link MessageHolder}
+     * @return {@link File}
+     * @throws DownloadFailedException in case of exception.
+     */
     File download( String url, MessageHolder messageHolder )
         throws DownloadFailedException;
 
+    /**
+     * @param url The URL.
+     * @param transferListeners {@link TransferListener}
+     * @param messageHolder {@link MessageHolder}
+     * @return {@link File}
+     * @throws DownloadFailedException in case of exception.
+     */
     File download( String url, List<TransferListener> transferListeners, MessageHolder messageHolder )
         throws DownloadFailedException;
 

@@ -41,31 +41,46 @@ import org.apache.maven.wagon.authorization.AuthorizationException;
 import org.apache.maven.wagon.events.TransferListener;
 import org.apache.maven.wagon.repository.Repository;
 
+/**
+ * The Implementation of the {@link DownloadManager}.
+ *
+ */
 public class DefaultDownloadManager
     implements DownloadManager
 {
 
+    /**
+     * Role hint.
+     */
     public static final String ROLE_HINT = "default";
 
     private WagonManager wagonManager;
 
     private Map<String, File> cache = new HashMap<String, File>();
 
+    /**
+     * Create an instance of the {@code DefaultDownloadManager}.
+     */
     public DefaultDownloadManager()
     {
     }
 
+    /**
+     * @param wagonManager {@Link org.apache.maven.repository.legacy.WagonManager}
+     */
     public DefaultDownloadManager( WagonManager wagonManager )
     {
         this.wagonManager = wagonManager;
     }
 
+    /** {@inheritDoc} */
     public File download( String url, MessageHolder messageHolder )
         throws DownloadFailedException
     {
         return download( url, Collections.<TransferListener>emptyList(), messageHolder );
     }
 
+    /** {@inheritDoc} */
     public File download( String url, List<TransferListener> transferListeners, MessageHolder messageHolder )
         throws DownloadFailedException
     {

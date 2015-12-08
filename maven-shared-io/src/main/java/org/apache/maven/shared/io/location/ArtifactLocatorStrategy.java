@@ -29,6 +29,10 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.shared.io.logging.MessageHolder;
 
+/**
+ * The locator strategy.
+ *
+ */
 public class ArtifactLocatorStrategy
     implements LocatorStrategy
 {
@@ -40,12 +44,18 @@ public class ArtifactLocatorStrategy
 
     private final ArtifactRepository localRepository;
 
-    private final List remoteRepositories;
+    private final List<ArtifactRepository> remoteRepositories;
 
     private String defaultClassifier = null;
 
+    /**
+     * @param factory {@link ArtifactFactory}
+     * @param resolver {@link ArtifactResolver}
+     * @param localRepository {@link ArtifactRepository}
+     * @param remoteRepositories {@link RemoteRepository}
+     */
     public ArtifactLocatorStrategy( ArtifactFactory factory, ArtifactResolver resolver,
-                                    ArtifactRepository localRepository, List remoteRepositories )
+                                    ArtifactRepository localRepository, List<ArtifactRepository> remoteRepositories )
     {
         this.factory = factory;
         this.resolver = resolver;
@@ -53,8 +63,15 @@ public class ArtifactLocatorStrategy
         this.remoteRepositories = remoteRepositories;
     }
 
+    /**
+     * @param factory {@link ArtifactFactory}
+     * @param resolver {@link ArtifactResolver}
+     * @param localRepository {@link ArtifactRepository}
+     * @param remoteRepositories {@link ArtifactRepository}
+     * @param defaultArtifactType default artifact type.
+     */
     public ArtifactLocatorStrategy( ArtifactFactory factory, ArtifactResolver resolver,
-                                    ArtifactRepository localRepository, List remoteRepositories,
+                                    ArtifactRepository localRepository, List<ArtifactRepository> remoteRepositories,
                                     String defaultArtifactType )
     {
         this.factory = factory;
@@ -64,8 +81,16 @@ public class ArtifactLocatorStrategy
         this.defaultArtifactType = defaultArtifactType;
     }
 
+    /**
+     * @param factory {@link ArtifactFactory}
+     * @param resolver {@link ArtifactResolver}
+     * @param localRepository {@link ArtifactRepository}
+     * @param remoteRepositories {@link ArtifactRepository}
+     * @param defaultArtifactType default artifact type.
+     * @param defaultClassifier default classifier.
+     */
     public ArtifactLocatorStrategy( ArtifactFactory factory, ArtifactResolver resolver,
-                                    ArtifactRepository localRepository, List remoteRepositories,
+                                    ArtifactRepository localRepository, List<ArtifactRepository> remoteRepositories,
                                     String defaultArtifactType, String defaultClassifier )
     {
         this.factory = factory;
@@ -80,6 +105,9 @@ public class ArtifactLocatorStrategy
      * Assumes artifact identity is given in a set of comma-delimited tokens of
      * the form: <code>groupId:artifactId:version:type:classifier</code>, where
      * type and classifier are optional.
+     * @param locationSpecification location spec.
+     * @param messageHolder {@link MessageHolder}
+     * @return location.
      */
     public Location resolve( String locationSpecification, MessageHolder messageHolder )
     {

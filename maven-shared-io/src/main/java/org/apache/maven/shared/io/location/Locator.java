@@ -26,55 +26,85 @@ import java.util.List;
 import org.apache.maven.shared.io.logging.DefaultMessageHolder;
 import org.apache.maven.shared.io.logging.MessageHolder;
 
+/**
+ * The Locator.
+ *
+ */
 public final class Locator
 {
 
-    private List strategies;
+    private List<LocatorStrategy> strategies;
     private final MessageHolder messageHolder;
 
-    public Locator( List strategies, MessageHolder messageHolder )
+    /**
+     * @param strategies List of strategies.
+     * @param messageHolder {@link MessageHolder}
+     */
+    public Locator( List<LocatorStrategy> strategies, MessageHolder messageHolder )
     {
         this.messageHolder = messageHolder;
-        this.strategies = new ArrayList( strategies );
+        this.strategies = new ArrayList<LocatorStrategy>( strategies );
     }
 
+    /**
+     * Create instance.
+     */
     public Locator()
     {
         this.messageHolder = new DefaultMessageHolder();
-        this.strategies = new ArrayList();
+        this.strategies = new ArrayList<LocatorStrategy>();
     }
 
+    /**
+     * @return {@link MessageHolder}
+     */
     public MessageHolder getMessageHolder()
     {
         return messageHolder;
     }
 
+    /**
+     * @param strategy The strategy to be added.
+     */
     public void addStrategy( LocatorStrategy strategy )
     {
         this.strategies.add( strategy );
     }
 
+    /**
+     * @param strategy the strategy to remove.
+     */
     public void removeStrategy( LocatorStrategy strategy )
     {
         this.strategies.remove( strategy );
     }
 
-    public void setStrategies( List strategies )
+    /**
+     * @param strategies the strategies to be set.
+     */
+    public void setStrategies( List<LocatorStrategy> strategies )
     {
         this.strategies.clear();
         this.strategies.addAll( strategies );
     }
 
-    public List getStrategies()
+    /**
+     * @return list of strategies.
+     */
+    public List<LocatorStrategy> getStrategies()
     {
         return strategies;
     }
 
+    /**
+     * @param locationSpecification location spec.
+     * @return {@link Location}
+     */
     public Location resolve( String locationSpecification )
     {
         Location location = null;
 
-        for ( Iterator it = strategies.iterator(); location == null && it.hasNext(); )
+        for ( Iterator<LocatorStrategy> it = strategies.iterator(); location == null && it.hasNext(); )
         {
             LocatorStrategy strategy = (LocatorStrategy) it.next();
 

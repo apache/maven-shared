@@ -23,6 +23,10 @@ import java.net.URL;
 
 import org.apache.maven.shared.io.logging.MessageHolder;
 
+/**
+ * classpath resource locator strategy.
+ *
+ */
 public class ClasspathResourceLocatorStrategy
     implements LocatorStrategy
 {
@@ -33,10 +37,18 @@ public class ClasspathResourceLocatorStrategy
 
     private boolean tempFileDeleteOnExit = true;
 
+    /**
+     * Create instance.
+     */
     public ClasspathResourceLocatorStrategy()
     {
     }
 
+    /**
+     * @param tempFilePrefix Prefix.
+     * @param tempFileSuffix Suffix.
+     * @param tempFileDeleteOnExit delete on exit.
+     */
     public ClasspathResourceLocatorStrategy( String tempFilePrefix, String tempFileSuffix,
                                              boolean tempFileDeleteOnExit )
     {
@@ -45,6 +57,7 @@ public class ClasspathResourceLocatorStrategy
         this.tempFileDeleteOnExit = tempFileDeleteOnExit;
     }
 
+    /** {@inheritDoc} */
     public Location resolve( String locationSpecification, MessageHolder messageHolder )
     {
         ClassLoader cloader = Thread.currentThread().getContextClassLoader();

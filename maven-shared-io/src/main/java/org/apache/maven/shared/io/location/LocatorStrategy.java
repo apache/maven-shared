@@ -21,9 +21,18 @@ package org.apache.maven.shared.io.location;
 
 import org.apache.maven.shared.io.logging.MessageHolder;
 
+/**
+ * Locator Strategy interface.
+ *
+ */
 public interface LocatorStrategy
 {
 
+    /**
+     * @param locationSpecification the specifiaction.
+     * @param messageHolder {@link MessageHolder}
+     * @return {@link Location}
+     */
     Location resolve( String locationSpecification, MessageHolder messageHolder );
 
 }

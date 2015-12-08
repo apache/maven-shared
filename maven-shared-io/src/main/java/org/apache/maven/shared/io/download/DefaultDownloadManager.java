@@ -42,7 +42,7 @@ import org.apache.maven.wagon.events.TransferListener;
 import org.apache.maven.wagon.repository.Repository;
 
 /**
- * The Implementation of the {@link DownloadManager}.
+ * The Implementation of the {@link DownloadManager
  *
  */
 public class DefaultDownloadManager

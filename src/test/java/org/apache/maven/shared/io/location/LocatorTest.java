@@ -41,12 +41,12 @@ public class LocatorTest
 
     public void testShouldConstructWithStrategyStackAndMessageHolder()
     {
-        new Locator( Collections.EMPTY_LIST, new DefaultMessageHolder() );
+        new Locator( Collections.<LocatorStrategy>emptyList(), new DefaultMessageHolder() );
     }
 
     public void testShouldAllowModificationOfStrategiesAfterConstructionWithUnmodifiableStack()
     {
-        Locator locator = new Locator( Collections.unmodifiableList( Collections.EMPTY_LIST ),
+        Locator locator = new Locator( Collections.unmodifiableList( Collections.<LocatorStrategy>emptyList() ),
                                        new DefaultMessageHolder() );
 
         locator.addStrategy( new FileLocatorStrategy() );
@@ -71,7 +71,7 @@ public class LocatorTest
 
         locator.setStrategies( Collections.singletonList( replacementStrategy ) );
 
-        List strategies = locator.getStrategies();
+        List<LocatorStrategy> strategies = locator.getStrategies();
 
         assertFalse( strategies.contains( originalStrategy ) );
         assertTrue( strategies.contains( replacementStrategy ) );
@@ -88,7 +88,7 @@ public class LocatorTest
         Locator locator = new Locator();
         locator.addStrategy( originalStrategy );
 
-        List strategies = locator.getStrategies();
+        List<LocatorStrategy> strategies = locator.getStrategies();
 
         assertTrue( strategies.contains( originalStrategy ) );
 
@@ -103,7 +103,7 @@ public class LocatorTest
 
     public void testResolutionFallsThroughStrategyStackAndReturnsNullIfNotResolved()
     {
-        List strategies = new ArrayList();
+        List<LocatorStrategy> strategies = new ArrayList<LocatorStrategy>();
 
         strategies.add( new LoggingLocatorStrategy() );
         strategies.add( new LoggingLocatorStrategy() );

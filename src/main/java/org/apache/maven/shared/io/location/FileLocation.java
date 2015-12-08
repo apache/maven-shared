@@ -27,6 +27,10 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 
+/**
+ * file location implementation.
+ *
+ */
 public class FileLocation
     implements Location
 {
@@ -36,17 +40,25 @@ public class FileLocation
     private final String specification;
     private FileInputStream stream;
 
+    /**
+     * @param file {@link File}
+     * @param specification spec.
+     */
     public FileLocation( File file, String specification )
     {
         this.file = file;
         this.specification = specification;
     }
 
+    /**
+     * @param specification spec.
+     */
     protected FileLocation( String specification )
     {
         this.specification = specification;
     }
 
+    /** {@inheritDoc} */
     public void close()
     {
         if ( ( channel != null ) && channel.isOpen() )
@@ -74,6 +86,7 @@ public class FileLocation
         }
     }
 
+    /** {@inheritDoc} */
     public File getFile()
         throws IOException
     {
@@ -82,11 +95,18 @@ public class FileLocation
         return unsafeGetFile();
     }
 
+    /**
+     * @return {@link File}
+     */
     protected File unsafeGetFile()
     {
         return file;
     }
 
+    /**
+     * initialize file.
+     * @throws IOException in case error.
+     */
     protected void initFile()
         throws IOException
     {
@@ -97,6 +117,9 @@ public class FileLocation
         }
     }
 
+    /**
+     * @param file {@link File}
+     */
     protected void setFile( File file )
     {
         if ( channel != null )
@@ -107,11 +130,13 @@ public class FileLocation
         this.file = file;
     }
 
+    /** {@inheritDoc} */
     public String getSpecification()
     {
         return specification;
     }
 
+    /** {@inheritDoc} */
     public void open()
         throws IOException
     {
@@ -124,6 +149,7 @@ public class FileLocation
         }
     }
 
+    /** {@inheritDoc} */
     public int read( ByteBuffer buffer )
         throws IOException
     {
@@ -131,6 +157,7 @@ public class FileLocation
         return channel.read( buffer );
     }
 
+    /** {@inheritDoc} */
     public int read( byte[] buffer )
         throws IOException
     {
@@ -138,6 +165,7 @@ public class FileLocation
         return channel.read( ByteBuffer.wrap( buffer ) );
     }
 
+    /** {@inheritDoc} */
     public InputStream getInputStream()
         throws IOException
     {

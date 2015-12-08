@@ -24,21 +24,53 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+/**
+ * The location interface.
+ *
+ */
 public interface Location
 {
 
+    /**
+     * @return {@link File}.
+     * @throws IOException in case of an error.
+     */
     File getFile() throws IOException;
 
+    /**
+     * open the location.
+     * @throws IOException in case of an error.
+     */
     void open() throws IOException;
 
+    /**
+     * Close the location.
+     */
     void close();
 
+    /**
+     * @param buffer The buffer.
+     * @return number of read bytes.
+     * @throws IOException in case of an error.
+     */
     int read( ByteBuffer buffer ) throws IOException;
 
+    /**
+     * @param buffer The buffer.
+     * @return number of read bytes.
+     * @throws IOException in case of an error.
+     */
     int read( byte[] buffer ) throws IOException;
 
+    /**
+     * @return the resulting input stream.
+     * @throws IOException in case of an error.
+     */
     InputStream getInputStream() throws IOException;
 
+    /**
+     * @return spec.
+     */
     String getSpecification();
 
 }

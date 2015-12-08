@@ -25,6 +25,10 @@ import java.net.URL;
 
 import org.apache.maven.shared.utils.io.FileUtils;
 
+/**
+ * The URL Location.
+ *
+ */
 public class URLLocation
     extends FileLocation
 {
@@ -37,6 +41,13 @@ public class URLLocation
 
     private final boolean tempFileDeleteOnExit;
 
+    /**
+     * @param url The URL.
+     * @param specification The spec.
+     * @param tempFilePrefix the prefix.
+     * @param tempFileSuffix The suffix.
+     * @param tempFileDeleteOnExit delete on exit.
+     */
     public URLLocation( URL url, String specification, String tempFilePrefix, String tempFileSuffix,
                         boolean tempFileDeleteOnExit )
     {
@@ -48,6 +59,7 @@ public class URLLocation
         this.tempFileDeleteOnExit = tempFileDeleteOnExit;
     }
 
+    /** {@inheritDoc} */
     protected void initFile()
         throws IOException
     {

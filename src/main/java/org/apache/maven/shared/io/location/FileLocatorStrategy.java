@@ -23,10 +23,15 @@ import java.io.File;
 
 import org.apache.maven.shared.io.logging.MessageHolder;
 
+/**
+ * file locator strategy.
+ *
+ */
 public class FileLocatorStrategy
     implements LocatorStrategy
 {
 
+    /** {@inheritDoc} */
     public Location resolve( String locationSpecification, MessageHolder messageHolder )
     {
         File file = new File( locationSpecification );

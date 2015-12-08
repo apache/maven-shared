@@ -24,6 +24,10 @@ import java.net.URL;
 
 import org.apache.maven.shared.io.logging.MessageHolder;
 
+/**
+ * URL Locator Strategy.
+ *
+ */
 public class URLLocatorStrategy
     implements LocatorStrategy
 {
@@ -34,10 +38,18 @@ public class URLLocatorStrategy
 
     private boolean tempFileDeleteOnExit = true;
 
+    /**
+     * Create instance.
+     */
     public URLLocatorStrategy()
     {
     }
 
+    /**
+     * @param tempFilePrefix prefix.
+     * @param tempFileSuffix suffix.
+     * @param tempFileDeleteOnExit delete on exit.
+     */
     public URLLocatorStrategy( String tempFilePrefix, String tempFileSuffix, boolean tempFileDeleteOnExit )
     {
         this.tempFilePrefix = tempFilePrefix;
@@ -45,6 +57,7 @@ public class URLLocatorStrategy
         this.tempFileDeleteOnExit = tempFileDeleteOnExit;
     }
 
+    /** {@inheritDoc} */
     public Location resolve( String locationSpecification, MessageHolder messageHolder )
     {
         Location location = null;

@@ -22,7 +22,7 @@ package org.apache.maven.shared.io.logging;
 import org.codehaus.plexus.logging.Logger;
 
 /**
- * 
+ * The plexus logger sing implementation.
  */
 public class PlexusLoggerSink
     implements MessageSink
@@ -30,31 +30,39 @@ public class PlexusLoggerSink
 
     private final Logger logger;
 
+    /**
+     * @param logger The logger.
+     */
     public PlexusLoggerSink( Logger logger )
     {
         this.logger = logger;
     }
 
+    /** {@inheritDoc} */
     public void debug( String message )
     {
         logger.debug( message );
     }
 
+    /** {@inheritDoc} */
     public void error( String message )
     {
         logger.error( message );
     }
 
+    /** {@inheritDoc} */
     public void info( String message )
     {
         logger.info( message );
     }
 
+    /** {@inheritDoc} */
     public void severe( String message )
     {
         logger.fatalError( message );
     }
 
+    /** {@inheritDoc} */
     public void warning( String message )
     {
         logger.warn( message );

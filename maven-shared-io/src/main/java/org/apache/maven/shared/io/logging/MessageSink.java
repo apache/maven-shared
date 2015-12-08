@@ -20,17 +20,36 @@ package org.apache.maven.shared.io.logging;
  */
 
 
+/**
+ * Message Sink interface.
+ *
+ */
 public interface MessageSink
 {
 
+    /**
+     * @param message The message.
+     */
     void debug( String message );
 
+    /**
+     * @param message The message.
+     */
     void info( String message );
 
+    /**
+     * @param message The message.
+     */
     void warning( String message );
 
+    /**
+     * @param message The message.
+     */
     void error( String message );
 
+    /**
+     * @param message The message.
+     */
     void severe( String message );
 
 }

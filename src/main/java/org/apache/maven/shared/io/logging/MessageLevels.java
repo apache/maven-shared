@@ -30,11 +30,29 @@ import java.util.List;
 public final class MessageLevels
 {
 
+    /**
+     * Debug.
+     */
     public static final int LEVEL_DEBUG = 0;
+    /**
+     * Info
+     */
     public static final int LEVEL_INFO = 1;
+    /**
+     * Warning.
+     */
     public static final int LEVEL_WARNING = 2;
+    /**
+     * Error
+     */
     public static final int LEVEL_ERROR = 3;
+    /**
+     * Severe
+     */
     public static final int LEVEL_SEVERE = 4;
+    /**
+     * Disabled.
+     */
     public static final int LEVEL_DISABLED = 5;
 
     private static final List<String> LEVEL_NAMES;
@@ -55,6 +73,10 @@ public final class MessageLevels
     {
     }
 
+    /**
+     * @param maxMessageLevel for which level.
+     * @return level states.
+     */
     public static boolean[] getLevelStates( int maxMessageLevel )
     {
         boolean[] states = new boolean[5];
@@ -79,6 +101,10 @@ public final class MessageLevels
         return states;
     }
 
+    /**
+     * @param messageLevel the message leve.
+     * @return The label.
+     */
     public static String getLevelLabel( int messageLevel )
     {
         if ( messageLevel > -1 && LEVEL_NAMES.size() > messageLevel )

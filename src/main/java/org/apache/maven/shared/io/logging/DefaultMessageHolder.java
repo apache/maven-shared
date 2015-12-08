@@ -25,6 +25,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Default Message Holder.
+ *
+ */
 public class DefaultMessageHolder
     implements MessageHolder
 {
@@ -39,17 +43,29 @@ public class DefaultMessageHolder
 
     private MessageSink onDemandSink;
 
+    /**
+     * Create instance.
+     */
     public DefaultMessageHolder()
     {
         this.messageLevelStates = MessageLevels.getLevelStates( MessageLevels.LEVEL_INFO );
     }
 
+    /**
+     * @param maxMessageLevel max message level.
+     * @param defaultMessageLevel default message level.
+     */
     public DefaultMessageHolder( int maxMessageLevel, int defaultMessageLevel )
     {
         this.defaultMessageLevel = defaultMessageLevel;
         this.messageLevelStates = MessageLevels.getLevelStates( maxMessageLevel );
     }
 
+    /**
+     * @param maxMessageLevel max message level.
+     * @param defaultMessageLevel default message level.
+     * @param onDemandSink {@link MessageSink}
+     */
     public DefaultMessageHolder( int maxMessageLevel, int defaultMessageLevel, MessageSink onDemandSink )
     {
         this.defaultMessageLevel = defaultMessageLevel;
@@ -57,11 +73,18 @@ public class DefaultMessageHolder
         this.messageLevelStates = MessageLevels.getLevelStates( maxMessageLevel );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addMessage( CharSequence messagePart, Throwable error )
     {
         return addMessage( defaultMessageLevel, messagePart, error );
     }
 
+    /**
+     * @param level Level.
+     * @param messagePart Message part.
+     * @param error {@link Throwable}
+     * @return {@link MessageHolder}
+     */
     protected MessageHolder addMessage( int level, CharSequence messagePart, Throwable error )
     {
         newMessage( level );
@@ -71,11 +94,17 @@ public class DefaultMessageHolder
         return this;
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addMessage( CharSequence messagePart )
     {
         return addMessage( defaultMessageLevel, messagePart );
     }
 
+    /**
+     * @param level level.
+     * @param messagePart message part.
+     * @return {@link MessageHolder}
+     */
     protected MessageHolder addMessage( int level, CharSequence messagePart )
     {
         newMessage( level );
@@ -84,11 +113,17 @@ public class DefaultMessageHolder
         return this;
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addMessage( Throwable error )
     {
         return addMessage( defaultMessageLevel, error );
     }
 
+    /**
+     * @param level level.
+     * @param error {@link Throwable}
+     * @return {@link MessageHolder}
+     */
     protected MessageHolder addMessage( int level, Throwable error )
     {
         newMessage( level );
@@ -97,6 +132,7 @@ public class DefaultMessageHolder
         return this;
     }
 
+    /** {@inheritDoc} */
     public MessageHolder append( CharSequence messagePart )
     {
         if ( currentMessage == null )
@@ -109,6 +145,7 @@ public class DefaultMessageHolder
         return this;
     }
 
+    /** {@inheritDoc} */
     public MessageHolder append( Throwable error )
     {
         if ( currentMessage == null )
@@ -121,11 +158,13 @@ public class DefaultMessageHolder
         return this;
     }
 
+    /** {@inheritDoc} */
     public boolean isEmpty()
     {
         return messages.isEmpty();
     }
 
+    /** {@inheritDoc} */
     public MessageHolder newMessage()
     {
         newMessage( defaultMessageLevel );
@@ -133,6 +172,9 @@ public class DefaultMessageHolder
         return this;
     }
 
+    /**
+     * @param messageLevel message level.
+     */
     protected void newMessage( int messageLevel )
     {
         if ( onDemandSink != null && currentMessage != null )
@@ -144,6 +186,7 @@ public class DefaultMessageHolder
         messages.add( currentMessage );
     }
 
+    /** {@inheritDoc} */
     public String render()
     {
         StringBuffer buffer = new StringBuffer();
@@ -183,6 +226,7 @@ public class DefaultMessageHolder
         return buffer.toString();
     }
 
+    /** {@inheritDoc} */
     public int size()
     {
         return messages.size();
@@ -217,11 +261,17 @@ public class DefaultMessageHolder
             return this;
         }
 
+        /**
+         * @return message level.
+         */
         public int getMessageLevel()
         {
             return messageLevel;
         }
 
+        /**
+         * @return Sequence.
+         */
         public CharSequence render()
         {
             StringBuffer buffer = new StringBuffer();
@@ -255,111 +305,136 @@ public class DefaultMessageHolder
         }
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addDebugMessage( CharSequence messagePart, Throwable error )
     {
         return addMessage( MessageLevels.LEVEL_DEBUG, messagePart, error );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addDebugMessage( CharSequence messagePart )
     {
         return addMessage( MessageLevels.LEVEL_DEBUG, messagePart );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addDebugMessage( Throwable error )
     {
         return addMessage( MessageLevels.LEVEL_DEBUG, error );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addErrorMessage( CharSequence messagePart, Throwable error )
     {
         return addMessage( MessageLevels.LEVEL_ERROR, messagePart, error );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addErrorMessage( CharSequence messagePart )
     {
         return addMessage( MessageLevels.LEVEL_ERROR, messagePart );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addErrorMessage( Throwable error )
     {
         return addMessage( MessageLevels.LEVEL_ERROR, error );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addInfoMessage( CharSequence messagePart, Throwable error )
     {
         return addMessage( MessageLevels.LEVEL_INFO, messagePart, error );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addInfoMessage( CharSequence messagePart )
     {
         return addMessage( MessageLevels.LEVEL_INFO, messagePart );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addInfoMessage( Throwable error )
     {
         return addMessage( MessageLevels.LEVEL_INFO, error );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addSevereMessage( CharSequence messagePart, Throwable error )
     {
         return addMessage( MessageLevels.LEVEL_SEVERE, messagePart, error );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addSevereMessage( CharSequence messagePart )
     {
         return addMessage( MessageLevels.LEVEL_SEVERE, messagePart );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addSevereMessage( Throwable error )
     {
         return addMessage( MessageLevels.LEVEL_SEVERE, error );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addWarningMessage( CharSequence messagePart, Throwable error )
     {
         return addMessage( MessageLevels.LEVEL_WARNING, messagePart, error );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addWarningMessage( CharSequence messagePart )
     {
         return addMessage( MessageLevels.LEVEL_WARNING, messagePart );
     }
 
+    /** {@inheritDoc} */
     public MessageHolder addWarningMessage( Throwable error )
     {
         return addMessage( MessageLevels.LEVEL_WARNING, error );
     }
 
+    /** {@inheritDoc} */
     public int countDebugMessages()
     {
         return countMessagesOfType( MessageLevels.LEVEL_DEBUG );
     }
 
+    /** {@inheritDoc} */
     public int countErrorMessages()
     {
         return countMessagesOfType( MessageLevels.LEVEL_ERROR );
     }
 
+    /** {@inheritDoc} */
     public int countInfoMessages()
     {
         return countMessagesOfType( MessageLevels.LEVEL_INFO );
     }
 
+    /** {@inheritDoc} */
     public int countMessages()
     {
         return size();
     }
 
+    /** {@inheritDoc} */
     public int countSevereMessages()
     {
         return countMessagesOfType( MessageLevels.LEVEL_SEVERE );
     }
 
+    /** {@inheritDoc} */
     public int countWarningMessages()
     {
         return countMessagesOfType( MessageLevels.LEVEL_WARNING );
     }
 
+    /**
+     * @param messageLevel leve.
+     * @return number of messages.
+     */
     private int countMessagesOfType( int messageLevel )
     {
         int count = 0;
@@ -375,31 +450,37 @@ public class DefaultMessageHolder
         return count;
     }
 
+    /** {@inheritDoc} */
     public boolean isDebugEnabled()
     {
         return messageLevelStates[MessageLevels.LEVEL_DEBUG];
     }
 
+    /** {@inheritDoc} */
     public boolean isErrorEnabled()
     {
         return messageLevelStates[MessageLevels.LEVEL_ERROR];
     }
 
+    /** {@inheritDoc} */
     public boolean isInfoEnabled()
     {
         return messageLevelStates[MessageLevels.LEVEL_INFO];
     }
 
+    /** {@inheritDoc} */
     public boolean isSevereEnabled()
     {
         return messageLevelStates[MessageLevels.LEVEL_SEVERE];
     }
 
+    /** {@inheritDoc} */
     public boolean isWarningEnabled()
     {
         return messageLevelStates[MessageLevels.LEVEL_WARNING];
     }
 
+    /** {@inheritDoc} */
     public MessageHolder newDebugMessage()
     {
         if ( isDebugEnabled() )
@@ -410,6 +491,7 @@ public class DefaultMessageHolder
         return this;
     }
 
+    /** {@inheritDoc} */
     public MessageHolder newErrorMessage()
     {
         if ( isErrorEnabled() )
@@ -420,6 +502,7 @@ public class DefaultMessageHolder
         return this;
     }
 
+    /** {@inheritDoc} */
     public MessageHolder newInfoMessage()
     {
         if ( isInfoEnabled() )
@@ -430,6 +513,7 @@ public class DefaultMessageHolder
         return this;
     }
 
+    /** {@inheritDoc} */
     public MessageHolder newSevereMessage()
     {
         if ( isSevereEnabled() )
@@ -440,6 +524,7 @@ public class DefaultMessageHolder
         return this;
     }
 
+    /** {@inheritDoc} */
     public MessageHolder newWarningMessage()
     {
         if ( isWarningEnabled() )
@@ -450,31 +535,37 @@ public class DefaultMessageHolder
         return this;
     }
 
+    /** {@inheritDoc} */
     public void setDebugEnabled( boolean enabled )
     {
         messageLevelStates[MessageLevels.LEVEL_DEBUG] = enabled;
     }
 
+    /** {@inheritDoc} */
     public void setErrorEnabled( boolean enabled )
     {
         messageLevelStates[MessageLevels.LEVEL_ERROR] = enabled;
     }
 
+    /** {@inheritDoc} */
     public void setInfoEnabled( boolean enabled )
     {
         messageLevelStates[MessageLevels.LEVEL_INFO] = enabled;
     }
 
+    /** {@inheritDoc} */
     public void setSevereEnabled( boolean enabled )
     {
         messageLevelStates[MessageLevels.LEVEL_SEVERE] = enabled;
     }
 
+    /** {@inheritDoc} */
     public void setWarningEnabled( boolean enabled )
     {
         messageLevelStates[MessageLevels.LEVEL_WARNING] = enabled;
     }
 
+    /** {@inheritDoc} */
     public void flush()
     {
         if ( onDemandSink != null && currentMessage != null )
@@ -484,6 +575,7 @@ public class DefaultMessageHolder
         }
     }
 
+    /** {@inheritDoc} */
     public void render( MessageSink sink )
     {
         for ( Message message : messages )
@@ -492,6 +584,10 @@ public class DefaultMessageHolder
         }
     }
 
+    /**
+     * @param message {@link Message}
+     * @param sink {@link MessageSink}
+     */
     protected void renderTo( Message message, MessageSink sink )
     {
         switch ( message.getMessageLevel() )

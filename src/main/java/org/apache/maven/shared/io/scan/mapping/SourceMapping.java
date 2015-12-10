@@ -30,6 +30,12 @@ import java.util.Set;
  */
 public interface SourceMapping
 {
+    /**
+     * @param targetDir target directory.
+     * @param source source.
+     * @return list of target files.
+     * @throws InclusionScanException in case of an error.
+     */
     Set getTargetFiles( File targetDir, String source )
         throws InclusionScanException;
 }

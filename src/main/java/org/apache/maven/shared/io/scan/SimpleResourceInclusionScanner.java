@@ -35,6 +35,10 @@ public class SimpleResourceInclusionScanner
 
     private Set sourceExcludes;
 
+    /**
+     * @param sourceIncludes The source includes.
+     * @param sourceExcludes The source excludes.
+     */
     public SimpleResourceInclusionScanner( Set sourceIncludes, Set sourceExcludes )
     {
         this.sourceIncludes = sourceIncludes;
@@ -42,6 +46,7 @@ public class SimpleResourceInclusionScanner
         this.sourceExcludes = sourceExcludes;
     }
 
+    /** {@inheritDoc} */
     public Set getIncludedSources( File sourceDir, File targetDir )
         throws InclusionScanException
     {

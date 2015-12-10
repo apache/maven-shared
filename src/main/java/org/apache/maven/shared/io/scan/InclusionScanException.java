@@ -26,11 +26,18 @@ package org.apache.maven.shared.io.scan;
 public class InclusionScanException
     extends Exception
 {
+    /**
+     * @param message The message.
+     */
     public InclusionScanException( String message )
     {
         super( message );
     }
 
+    /**
+     * @param message The message.
+     * @param cause The cause of the error.
+     */
     public InclusionScanException( String message, Throwable cause )
     {
         super( message, cause );

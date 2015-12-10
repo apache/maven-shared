@@ -38,6 +38,10 @@ public class SingleTargetMapping
 
     private String outputFile;
 
+    /**
+     * @param sourceSuffix source suffix.
+     * @param outputFile output file.
+     */
     public SingleTargetMapping( String sourceSuffix, String outputFile )
     {
         this.sourceSuffix = sourceSuffix;
@@ -45,6 +49,7 @@ public class SingleTargetMapping
         this.outputFile = outputFile;
     }
 
+    /** {@inheritDoc} */
     public Set getTargetFiles( File targetDir, String source )
         throws InclusionScanException
     {

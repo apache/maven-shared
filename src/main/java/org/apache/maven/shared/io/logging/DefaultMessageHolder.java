@@ -249,15 +249,15 @@ public class DefaultMessageHolder
             this.onDemandSink = onDemandSink;
         }
 
-        public Message setError( Throwable error )
+        public Message setError( Throwable pError )
         {
-            this.error = error;
+            this.error = pError;
             return this;
         }
 
-        public Message append( CharSequence message )
+        public Message append( CharSequence pMessage )
         {
-            this.message.append( message.toString() );
+            this.message.append( pMessage.toString() );
             return this;
         }
 

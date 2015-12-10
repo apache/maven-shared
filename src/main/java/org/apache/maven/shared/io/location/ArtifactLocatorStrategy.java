@@ -52,7 +52,7 @@ public class ArtifactLocatorStrategy
      * @param factory {@link ArtifactFactory}
      * @param resolver {@link ArtifactResolver}
      * @param localRepository {@link ArtifactRepository}
-     * @param remoteRepositories {@link RemoteRepository}
+     * @param remoteRepositories {@link ArtifactRepository}
      */
     public ArtifactLocatorStrategy( ArtifactFactory factory, ArtifactResolver resolver,
                                     ArtifactRepository localRepository, List<ArtifactRepository> remoteRepositories )

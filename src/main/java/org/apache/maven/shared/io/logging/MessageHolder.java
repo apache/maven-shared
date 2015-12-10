@@ -177,7 +177,7 @@ public interface MessageHolder
     MessageHolder addSevereMessage( CharSequence messagePart );
 
     /**
-     * @param error
+     * @param error The error.
      * @return {@link MessageHolder}
      */
     MessageHolder addSevereMessage( Throwable error );

@@ -30,8 +30,17 @@ import java.util.Set;
  */
 public interface ResourceInclusionScanner
 {
+    /**
+     * @param sourceMapping {@link SourceMapping}
+     */
     void addSourceMapping( SourceMapping sourceMapping );
 
+    /**
+     * @param sourceDir {@link File}
+     * @param targetDir {@link File}
+     * @return The included sources.
+     * @throws InclusionScanException in case of an error.
+     */
     Set getIncludedSources( File sourceDir, File targetDir )
         throws InclusionScanException;
 }

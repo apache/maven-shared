@@ -45,16 +45,27 @@ public class StaleResourceScanner
     //
     // ----------------------------------------------------------------------
 
+    /**
+     * Create instance with defaults.
+     */
     public StaleResourceScanner()
     {
         this( 0, Collections.singleton( "**/*" ), Collections.EMPTY_SET );
     }
 
+    /**
+     * @param lastUpdatedWithinMsecs last update within milli seconds.
+     */
     public StaleResourceScanner( long lastUpdatedWithinMsecs )
     {
         this( lastUpdatedWithinMsecs, Collections.singleton( "**/*" ), Collections.EMPTY_SET );
     }
 
+    /**
+     * @param lastUpdatedWithinMsecs last update within milli seconds.
+     * @param sourceIncludes source includes.
+     * @param sourceExcludes source excludes.
+     */
     public StaleResourceScanner( long lastUpdatedWithinMsecs, Set sourceIncludes, Set sourceExcludes )
     {
         this.lastUpdatedWithinMsecs = lastUpdatedWithinMsecs;
@@ -68,6 +79,7 @@ public class StaleResourceScanner
     // SourceInclusionScanner Implementation
     // ----------------------------------------------------------------------
 
+    /** {@inheritDoc} */
     public Set getIncludedSources( File sourceDir, File targetDir )
         throws InclusionScanException
     {

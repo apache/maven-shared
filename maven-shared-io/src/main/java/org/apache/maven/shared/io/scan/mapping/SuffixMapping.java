@@ -36,6 +36,10 @@ public final class SuffixMapping
 
     private final Set targetSuffixes;
 
+    /**
+     * @param sourceSuffix source suffix.
+     * @param targetSuffix target suffix.
+     */
     public SuffixMapping( String sourceSuffix, String targetSuffix )
     {
         this.sourceSuffix = sourceSuffix;
@@ -43,6 +47,10 @@ public final class SuffixMapping
         this.targetSuffixes = Collections.singleton( targetSuffix );
     }
 
+    /**
+     * @param sourceSuffix source suffix.
+     * @param targetSuffixes target suffixes.
+     */
     public SuffixMapping( String sourceSuffix, Set targetSuffixes )
     {
         this.sourceSuffix = sourceSuffix;
@@ -50,6 +58,7 @@ public final class SuffixMapping
         this.targetSuffixes = Collections.unmodifiableSet( targetSuffixes );
     }
 
+    /** {@inheritDoc} */
     public Set getTargetFiles( File targetDir, String source )
     {
         Set targetFiles = new HashSet();

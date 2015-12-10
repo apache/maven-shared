@@ -22,37 +22,49 @@ package org.apache.maven.shared.io.logging;
 import org.apache.maven.plugin.logging.Log;
 
 
+/**
+ * The Mojo Log Sink.
+ *
+ */
 public class MojoLogSink
     implements MessageSink
 {
 
     private final Log logger;
 
+    /**
+     * @param logger {@link Log}
+     */
     public MojoLogSink( Log logger )
     {
         this.logger = logger;
     }
 
+    /** {@inheritDoc} */
     public void debug( String message )
     {
         logger.debug( message );
     }
 
+    /** {@inheritDoc} */
     public void error( String message )
     {
         logger.error( message );
     }
 
+    /** {@inheritDoc} */
     public void info( String message )
     {
         logger.info( message );
     }
 
+    /** {@inheritDoc} */
     public void severe( String message )
     {
         logger.error( message );
     }
 
+    /** {@inheritDoc} */
     public void warning( String message )
     {
         logger.warn( message );

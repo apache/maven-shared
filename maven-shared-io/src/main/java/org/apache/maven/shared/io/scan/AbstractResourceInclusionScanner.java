@@ -37,16 +37,26 @@ public abstract class AbstractResourceInclusionScanner
 {
     private final List sourceMappings = new ArrayList();
 
+    /** {@inheritDoc} */
     public final void addSourceMapping( SourceMapping sourceMapping )
     {
         sourceMappings.add( sourceMapping );
     }
 
+    /**
+     * @return The source mapping.
+     */
     protected final List getSourceMappings()
     {
         return Collections.unmodifiableList( sourceMappings );
     }
 
+    /**
+     * @param sourceDir {@link File}
+     * @param sourceIncludes source includes.
+     * @param sourceExcludes source excludes.
+     * @return The resulting sources.
+     */
     protected String[] scanForSources( File sourceDir, Set sourceIncludes, Set sourceExcludes )
     {
         DirectoryScanner ds = new DirectoryScanner();

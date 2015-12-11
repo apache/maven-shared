@@ -19,20 +19,22 @@ package org.apache.maven.shared.io.scan.mapping;
  * under the License.
  */
 
-
-import junit.framework.TestCase;
-import org.apache.maven.shared.io.scan.InclusionScanException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.maven.shared.io.scan.InclusionScanException;
+import org.junit.Test;
+
 /**
  * @author jdcasey
  */
 public class SuffixMappingTest
-    extends TestCase
 {
+    @Test
     public void testShouldReturnSingleClassFileForSingleJavaFile()
         throws InclusionScanException
     {
@@ -40,15 +42,17 @@ public class SuffixMappingTest
 
         File basedir = new File( "." );
 
+        System.out.println( "basedir:" + basedir.getAbsolutePath() );
         SuffixMapping mapping = new SuffixMapping( ".java", ".class" );
 
-        Set results = mapping.getTargetFiles( basedir, base + ".java" );
+        Set<File> results = mapping.getTargetFiles( basedir, base + ".java" );
 
         assertEquals( "Returned wrong number of target files.", 1, results.size() );
 
         assertEquals( "Target file is wrong.", new File( basedir, base + ".class" ), results.iterator().next() );
     }
 
+    @Test
     public void testShouldNotReturnClassFileWhenSourceFileHasWrongSuffix()
         throws InclusionScanException
     {
@@ -58,11 +62,12 @@ public class SuffixMappingTest
 
         SuffixMapping mapping = new SuffixMapping( ".java", ".class" );
 
-        Set results = mapping.getTargetFiles( basedir, base + ".xml" );
+        Set<File> results = mapping.getTargetFiles( basedir, base + ".xml" );
 
         assertTrue( "Returned wrong number of target files.", results.isEmpty() );
     }
 
+    @Test
     public void testShouldReturnOneClassFileAndOneXmlFileForSingleJavaFile()
         throws InclusionScanException
     {
@@ -70,13 +75,13 @@ public class SuffixMappingTest
 
         File basedir = new File( "." );
 
-        Set targets = new HashSet();
+        Set<String> targets = new HashSet<String>();
         targets.add( ".class" );
         targets.add( ".xml" );
 
         SuffixMapping mapping = new SuffixMapping( ".java", targets );
 
-        Set results = mapping.getTargetFiles( basedir, base + ".java" );
+        Set<File> results = mapping.getTargetFiles( basedir, base + ".java" );
 
         assertEquals( "Returned wrong number of target files.", 2, results.size() );
 
@@ -85,6 +90,7 @@ public class SuffixMappingTest
         assertTrue( "Targets do not contain class target.", results.contains( new File( basedir, base + ".xml" ) ) );
     }
 
+    @Test
     public void testShouldReturnNoTargetFilesWhenSourceFileHasWrongSuffix()
         throws InclusionScanException
     {
@@ -92,17 +98,18 @@ public class SuffixMappingTest
 
         File basedir = new File( "." );
 
-        Set targets = new HashSet();
+        Set<String> targets = new HashSet<String>();
         targets.add( ".class" );
         targets.add( ".xml" );
 
         SuffixMapping mapping = new SuffixMapping( ".java", targets );
 
-        Set results = mapping.getTargetFiles( basedir, base + ".apt" );
+        Set<File> results = mapping.getTargetFiles( basedir, base + ".apt" );
 
         assertTrue( "Returned wrong number of target files.", results.isEmpty() );
     }
 
+    @Test
     public void testSingleTargetMapper()
         throws InclusionScanException
     {
@@ -112,7 +119,7 @@ public class SuffixMappingTest
 
         SingleTargetMapping mapping = new SingleTargetMapping( ".cs", "/foo" );
 
-        Set results = mapping.getTargetFiles( basedir, base + ".apt" );
+        Set<File> results = mapping.getTargetFiles( basedir, base + ".apt" );
 
         assertTrue( results.isEmpty() );
 

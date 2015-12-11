@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.maven.shared.io.scan.mapping.SourceMapping;
+
 /**
  * @author <a href="mailto:trygvis@inamo.no">Trygve Laugst&oslash;l</a>
  * @version $Id$
@@ -31,15 +33,15 @@ import java.util.Set;
 public class SimpleResourceInclusionScanner
     extends AbstractResourceInclusionScanner
 {
-    private Set sourceIncludes;
+    private Set<String> sourceIncludes;
 
-    private Set sourceExcludes;
+    private Set<String> sourceExcludes;
 
     /**
      * @param sourceIncludes The source includes.
      * @param sourceExcludes The source excludes.
      */
-    public SimpleResourceInclusionScanner( Set sourceIncludes, Set sourceExcludes )
+    public SimpleResourceInclusionScanner( Set<String> sourceIncludes, Set<String> sourceExcludes )
     {
         this.sourceIncludes = sourceIncludes;
 
@@ -50,11 +52,11 @@ public class SimpleResourceInclusionScanner
     public Set getIncludedSources( File sourceDir, File targetDir )
         throws InclusionScanException
     {
-        List srcMappings = getSourceMappings();
+        List<SourceMapping> srcMappings = getSourceMappings();
 
         if ( srcMappings.isEmpty() )
         {
-            return Collections.EMPTY_SET;
+            return Collections.<String>emptySet();
         }
 
         return Collections.singleton( scanForSources( sourceDir, sourceIncludes, sourceExcludes ) );

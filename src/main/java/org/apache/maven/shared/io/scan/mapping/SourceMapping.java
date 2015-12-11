@@ -19,10 +19,10 @@ package org.apache.maven.shared.io.scan.mapping;
  * under the License.
  */
 
-import org.apache.maven.shared.io.scan.InclusionScanException;
-
 import java.io.File;
 import java.util.Set;
+
+import org.apache.maven.shared.io.scan.InclusionScanException;
 
 /**
  * @author jdcasey
@@ -36,6 +36,6 @@ public interface SourceMapping
      * @return list of target files.
      * @throws InclusionScanException in case of an error.
      */
-    Set getTargetFiles( File targetDir, String source )
+    Set<File> getTargetFiles( File targetDir, String source )
         throws InclusionScanException;
 }

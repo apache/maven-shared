@@ -19,14 +19,13 @@ package org.apache.maven.shared.io.scan;
  * under the License.
  */
 
-import org.apache.maven.shared.io.scan.mapping.SourceMapping;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.maven.shared.io.scan.mapping.SourceMapping;
 
 /**
  * @author jdcasey
@@ -37,9 +36,9 @@ public class StaleResourceScanner
 {
     private final long lastUpdatedWithinMsecs;
 
-    private final Set sourceIncludes;
+    private final Set<String> sourceIncludes;
 
-    private final Set sourceExcludes;
+    private final Set<String> sourceExcludes;
 
     // ----------------------------------------------------------------------
     //
@@ -50,7 +49,7 @@ public class StaleResourceScanner
      */
     public StaleResourceScanner()
     {
-        this( 0, Collections.singleton( "**/*" ), Collections.EMPTY_SET );
+        this( 0, Collections.singleton( "**/*" ), Collections.<String>emptySet() );
     }
 
     /**
@@ -58,7 +57,7 @@ public class StaleResourceScanner
      */
     public StaleResourceScanner( long lastUpdatedWithinMsecs )
     {
-        this( lastUpdatedWithinMsecs, Collections.singleton( "**/*" ), Collections.EMPTY_SET );
+        this( lastUpdatedWithinMsecs, Collections.singleton( "**/*" ), Collections.<String>emptySet() );
     }
 
     /**
@@ -66,7 +65,7 @@ public class StaleResourceScanner
      * @param sourceIncludes source includes.
      * @param sourceExcludes source excludes.
      */
-    public StaleResourceScanner( long lastUpdatedWithinMsecs, Set sourceIncludes, Set sourceExcludes )
+    public StaleResourceScanner( long lastUpdatedWithinMsecs, Set<String> sourceIncludes, Set<String> sourceExcludes )
     {
         this.lastUpdatedWithinMsecs = lastUpdatedWithinMsecs;
 
@@ -80,19 +79,19 @@ public class StaleResourceScanner
     // ----------------------------------------------------------------------
 
     /** {@inheritDoc} */
-    public Set getIncludedSources( File sourceDir, File targetDir )
+    public Set<File> getIncludedSources( File sourceDir, File targetDir )
         throws InclusionScanException
     {
-        List srcMappings = getSourceMappings();
+        List<SourceMapping> srcMappings = getSourceMappings();
 
         if ( srcMappings.isEmpty() )
         {
-            return Collections.EMPTY_SET;
+            return Collections.<File>emptySet();
         }
 
         String[] potentialIncludes = scanForSources( sourceDir, sourceIncludes, sourceExcludes );
 
-        Set matchingSources = new HashSet();
+        Set<File> matchingSources = new HashSet<File>();
 
         for ( int i = 0; i < potentialIncludes.length; i++ )
         {
@@ -100,19 +99,15 @@ public class StaleResourceScanner
 
             File sourceFile = new File( sourceDir, path );
 
-            staleSourceFileTesting: for ( Iterator patternIt = srcMappings.iterator(); patternIt.hasNext(); )
+            staleSourceFileTesting: for ( SourceMapping mapping : srcMappings )
             {
-                SourceMapping mapping = (SourceMapping) patternIt.next();
-
-                Set targetFiles = mapping.getTargetFiles( targetDir, path );
+                Set<File> targetFiles = mapping.getTargetFiles( targetDir, path );
 
                 // never include files that don't have corresponding target mappings.
                 // the targets don't have to exist on the filesystem, but the
                 // mappers must tell us to look for them.
-                for ( Iterator targetIt = targetFiles.iterator(); targetIt.hasNext(); )
+                for ( File targetFile : targetFiles )
                 {
-                    File targetFile = (File) targetIt.next();
-
                     if ( !targetFile.exists()
                         || ( targetFile.lastModified() + lastUpdatedWithinMsecs < sourceFile.lastModified() ) )
                     {

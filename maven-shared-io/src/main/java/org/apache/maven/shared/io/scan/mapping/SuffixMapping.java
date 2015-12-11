@@ -22,7 +22,6 @@ package org.apache.maven.shared.io.scan.mapping;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -34,7 +33,7 @@ public final class SuffixMapping
 {
     private final String sourceSuffix;
 
-    private final Set targetSuffixes;
+    private final Set<String> targetSuffixes;
 
     /**
      * @param sourceSuffix source suffix.
@@ -51,26 +50,24 @@ public final class SuffixMapping
      * @param sourceSuffix source suffix.
      * @param targetSuffixes target suffixes.
      */
-    public SuffixMapping( String sourceSuffix, Set targetSuffixes )
+    public SuffixMapping( String sourceSuffix, Set<String> targetSuffixes )
     {
         this.sourceSuffix = sourceSuffix;
 
-        this.targetSuffixes = Collections.unmodifiableSet( targetSuffixes );
+        this.targetSuffixes = targetSuffixes;
     }
 
     /** {@inheritDoc} */
-    public Set getTargetFiles( File targetDir, String source )
+    public Set<File> getTargetFiles( File targetDir, String source )
     {
-        Set targetFiles = new HashSet();
+        Set<File> targetFiles = new HashSet<File>();
 
         if ( source.endsWith( sourceSuffix ) )
         {
             String base = source.substring( 0, source.length() - sourceSuffix.length() );
 
-            for ( Iterator it = targetSuffixes.iterator(); it.hasNext(); )
+            for ( String suffix : targetSuffixes )
             {
-                String suffix = (String) it.next();
-
                 targetFiles.add( new File( targetDir, base + suffix ) );
             }
         }

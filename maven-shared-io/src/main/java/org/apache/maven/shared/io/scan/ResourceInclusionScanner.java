@@ -41,6 +41,6 @@ public interface ResourceInclusionScanner
      * @return The included sources.
      * @throws InclusionScanException in case of an error.
      */
-    Set getIncludedSources( File sourceDir, File targetDir )
+    Set<File> getIncludedSources( File sourceDir, File targetDir )
         throws InclusionScanException;
 }

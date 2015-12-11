@@ -19,14 +19,14 @@ package org.apache.maven.shared.io.scan;
  * under the License.
  */
 
-import org.apache.maven.shared.io.scan.mapping.SourceMapping;
-import org.apache.maven.shared.utils.io.DirectoryScanner;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.maven.shared.io.scan.mapping.SourceMapping;
+import org.apache.maven.shared.utils.io.DirectoryScanner;
 
 /**
  * @author jdcasey
@@ -35,7 +35,7 @@ import java.util.Set;
 public abstract class AbstractResourceInclusionScanner
     implements ResourceInclusionScanner
 {
-    private final List sourceMappings = new ArrayList();
+    private final List<SourceMapping> sourceMappings = new ArrayList<SourceMapping>();
 
     /** {@inheritDoc} */
     public final void addSourceMapping( SourceMapping sourceMapping )
@@ -46,7 +46,7 @@ public abstract class AbstractResourceInclusionScanner
     /**
      * @return The source mapping.
      */
-    protected final List getSourceMappings()
+    protected final List<SourceMapping> getSourceMappings()
     {
         return Collections.unmodifiableList( sourceMappings );
     }
@@ -57,7 +57,7 @@ public abstract class AbstractResourceInclusionScanner
      * @param sourceExcludes source excludes.
      * @return The resulting sources.
      */
-    protected String[] scanForSources( File sourceDir, Set sourceIncludes, Set sourceExcludes )
+    protected String[] scanForSources( File sourceDir, Set<String> sourceIncludes, Set<String> sourceExcludes )
     {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setFollowSymlinks( true );

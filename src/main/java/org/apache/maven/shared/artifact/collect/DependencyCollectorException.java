@@ -26,6 +26,15 @@ package org.apache.maven.shared.artifact.collect;
 public class DependencyCollectorException extends Exception
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -180986912170441437L;
+
+    /**
+     * @param message The message you would give for the exception.
+     * @param cause The cause which is related to the message.
+     */
     public DependencyCollectorException( String message, Throwable cause )
     {
         super( message, cause );

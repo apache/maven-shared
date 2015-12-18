@@ -36,18 +36,30 @@ package org.apache.maven.shared.artifact;
  */
 public interface ArtifactCoordinate
 {
+    /**
+     * @return The groupId of the artifact.
+     */
     String getGroupId();
 
+    /**
+     * @return The artifactId of the artifact.
+     */
     String getArtifactId();
 
     /**
      * A version or versionRange
      * 
-     * @return
+     * @return The version.
      */
     String getVersion();
 
+    /**
+     * @return The type of the artifact.
+     */
     String getType();
 
+    /**
+     * @return The classifier of the artifact.
+     */
     String getClassifier();
 }

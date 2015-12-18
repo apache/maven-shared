@@ -32,9 +32,21 @@ import org.apache.maven.project.ProjectBuildingRequest;
 public interface DependencyCollector
 {
 
+    /**
+     * @param buildingRequest {@link ProjectBuildingRequest}
+     * @param root {@link Dependency}
+     * @return {@link CollectorResult}
+     * @throws DependencyCollectorException in case of an error.
+     */
     CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Dependency root )
         throws DependencyCollectorException;
 
+    /**
+     * @param buildingRequest {@link ProjectBuildingRequest}
+     * @param root {@link Artifact}
+     * @return {@link CollectorResult}
+     * @throws DependencyCollectorException in case of an error.
+     */
     CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Artifact root )
         throws DependencyCollectorException;
     

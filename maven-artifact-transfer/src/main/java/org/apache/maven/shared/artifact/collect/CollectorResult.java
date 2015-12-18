@@ -30,5 +30,8 @@ import org.apache.maven.artifact.repository.ArtifactRepository;
  */
 public interface CollectorResult
 {
+    /**
+     * @return {@link ArtifactRepository}
+     */
     List<ArtifactRepository> getRemoteRepositories();
 }

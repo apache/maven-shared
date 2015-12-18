@@ -98,6 +98,9 @@ public class DefaultArtifactCoordinate implements ArtifactCoordinate
         return groupId;
     }
 
+    /**
+     * @param groupId The groupId to be used.
+     */
     public final void setGroupId( String groupId )
     {
         this.groupId = groupId;
@@ -109,6 +112,9 @@ public class DefaultArtifactCoordinate implements ArtifactCoordinate
         return artifactId;
     }
 
+    /**
+     * @param artifactId The artifactId to be used.
+     */
     public final void setArtifactId( String artifactId )
     {
         this.artifactId = artifactId;
@@ -120,6 +126,9 @@ public class DefaultArtifactCoordinate implements ArtifactCoordinate
         return version;
     }
 
+    /**
+     * @param version The version to be used.
+     */
     public final void setVersion( String version )
     {
         this.version = version;
@@ -131,6 +140,9 @@ public class DefaultArtifactCoordinate implements ArtifactCoordinate
         return type != null ? type : "jar";
     }
 
+    /**
+     * @param type The type to be used.
+     */
     public final void setType( String type )
     {
         this.type = type;
@@ -142,6 +154,9 @@ public class DefaultArtifactCoordinate implements ArtifactCoordinate
         return classifier;
     }
 
+    /**
+     * @param classifier The classifier to be used.
+     */
     public final void setClassifier( String classifier )
     {
         this.classifier = classifier;

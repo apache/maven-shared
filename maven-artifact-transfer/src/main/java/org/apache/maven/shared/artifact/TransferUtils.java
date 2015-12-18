@@ -38,6 +38,10 @@ public final class TransferUtils
     {
     }
 
+    /**
+     * @param artifact {@link Artifact}
+     * @return {@link ArtifactCoordinate}
+     */
     public static ArtifactCoordinate toArtifactCoordinate( Artifact artifact )
     {
         DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
@@ -51,6 +55,10 @@ public final class TransferUtils
         return coordinate;
     }
 
+    /**
+     * @param dependency {@link Dependency}
+     * @return {@link ArtifactCoordinate}
+     */
     public static ArtifactCoordinate toArtifactCoordinate( Dependency dependency )
     {
         DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
@@ -64,6 +72,10 @@ public final class TransferUtils
         return coordinate;
     }
 
+    /**
+     * @param extension {@link Extension}
+     * @return {@link ArtifactCoordinate}
+     */
     public static ArtifactCoordinate toArtifactCoordinate( Extension extension )
     {
         DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
@@ -75,6 +87,10 @@ public final class TransferUtils
         return coordinate;
     }
 
+    /**
+     * @param project {@link MavenProject}
+     * @return {@link ArtifactCoordinate}
+     */
     public static ArtifactCoordinate toArtifactCoordinate( MavenProject project )
     {
         DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
@@ -87,6 +103,10 @@ public final class TransferUtils
         return coordinate;
     }
 
+    /**
+     * @param parent {@link Parent}
+     * @return {@link ArtifactCoordinate}
+     */
     public static ArtifactCoordinate toArtifactCoordinate( Parent parent )
     {
         DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
@@ -99,6 +119,10 @@ public final class TransferUtils
         return coordinate;
     }
 
+    /**
+     * @param plugin {@link Plugin}
+     * @return {@link ArtifactCoordinate}
+     */
     public static ArtifactCoordinate toArtifactCoordinate( Plugin plugin )
     {
         DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
@@ -111,6 +135,10 @@ public final class TransferUtils
         return coordinate;
     }
     
+    /**
+     * @param artifact {@link Artifact}
+     * @return {@link Dependency}
+     */
     public static Dependency toDependency( Artifact artifact )
     {
         Dependency dependency = new Dependency();
@@ -125,6 +153,10 @@ public final class TransferUtils
         return dependency;
     }
 
+    /**
+     * @param coordinate {@link ArtifactCoordinate}
+     * @return {@link Dependency}
+     */
     public static Dependency toDependency( ArtifactCoordinate coordinate )
     {
         Dependency dependency = new Dependency();

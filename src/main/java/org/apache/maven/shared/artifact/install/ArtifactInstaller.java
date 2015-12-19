@@ -25,11 +25,16 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
 
 /**
- * 
+ * @author Robert Scholte
  */
 public interface ArtifactInstaller
 {
 
+    /**
+     * @param request {@link ProjectBuildingRequest}
+     * @param mavenArtifacts {@link Artifact}
+     * @throws ArtifactInstallerException in case of an error.
+     */
     void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException;
 }

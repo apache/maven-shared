@@ -41,15 +41,17 @@ import org.eclipse.aether.util.artifact.SubArtifact;
  * 
  */
 @Component( role = ArtifactInstaller.class, hint = "maven31" )
-public class Maven31ArtifactInstaller implements ArtifactInstaller 
+public class Maven31ArtifactInstaller
+    implements ArtifactInstaller
 {
 
     @Requirement
     private RepositorySystem repositorySystem;
-    
+
+    /** {@inheritDoc} */
     public void install( ProjectBuildingRequest buildingRequest,
                          Collection<org.apache.maven.artifact.Artifact> mavenArtifacts )
-        throws ArtifactInstallerException
+                             throws ArtifactInstallerException
     {
         // prepare installRequest
         InstallRequest request = new InstallRequest();

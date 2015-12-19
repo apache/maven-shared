@@ -47,9 +47,10 @@ public class Maven30ArtifactInstaller
     @Requirement
     private RepositorySystem repositorySystem;
 
+    /** {@inheritDoc} */
     public void install( ProjectBuildingRequest buildingRequest,
                          Collection<org.apache.maven.artifact.Artifact> mavenArtifacts )
-        throws ArtifactInstallerException
+                             throws ArtifactInstallerException
     {
         // prepare installRequest
         InstallRequest request = new InstallRequest();
@@ -71,7 +72,7 @@ public class Maven30ArtifactInstaller
                     request.addArtifact( pomArtifact );
                 }
                 else if ( // metadata instanceof SnapshotArtifactRepositoryMetadata ||
-                    metadata instanceof ArtifactRepositoryMetadata )
+                metadata instanceof ArtifactRepositoryMetadata )
                 {
                     // eaten, handled by repo system
                 }

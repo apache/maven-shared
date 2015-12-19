@@ -75,7 +75,7 @@ public class DefaultRepositoryManager
             throw new IllegalStateException( e.getMessage(), e );
         }
     }
-    
+
     @Override
     public ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest request, File basedir )
     {

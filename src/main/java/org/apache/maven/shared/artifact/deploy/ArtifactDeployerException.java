@@ -26,6 +26,15 @@ public class ArtifactDeployerException
     extends Exception
 {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7421964724059077698L;
+
+    /**
+     * @param message The message of the error.
+     * @param e {@link Exception}
+     */
     public ArtifactDeployerException( String message, Exception e )
     {
         super( message, e );

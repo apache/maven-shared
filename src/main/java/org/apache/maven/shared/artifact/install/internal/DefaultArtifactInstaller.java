@@ -43,6 +43,7 @@ public class DefaultArtifactInstaller
 
     private PlexusContainer container;
 
+    /** {@inheritDoc} */
     public void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException
     {
@@ -85,7 +86,7 @@ public class DefaultArtifactInstaller
     /**
      * Injects the Plexus content.
      *
-     * @param context   Plexus context to inject.
+     * @param context Plexus context to inject.
      * @throws ContextException if the PlexusContainer could not be located.
      */
     public void contextualize( Context context )

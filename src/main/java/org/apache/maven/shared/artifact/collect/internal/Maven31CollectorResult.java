@@ -41,6 +41,9 @@ public class Maven31CollectorResult implements CollectorResult
 {
     private final CollectResult collectResult;
     
+    /**
+     * @param collectResult {@link CollectorResult}
+     */
     public Maven31CollectorResult( CollectResult collectResult )
     {
         this.collectResult = collectResult;

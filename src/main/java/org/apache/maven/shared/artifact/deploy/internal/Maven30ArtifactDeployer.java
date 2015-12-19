@@ -57,45 +57,45 @@ public class Maven30ArtifactDeployer
     {
         deploy( buildingRequest, null, mavenArtifacts );
     }
-    
+
     @Override
     public void deploy( ProjectBuildingRequest buildingRequest, ArtifactRepository remoteRepository,
                         Collection<org.apache.maven.artifact.Artifact> mavenArtifacts )
-        throws ArtifactDeployerException
+                            throws ArtifactDeployerException
     {
         // prepare request
         DeployRequest request = new DeployRequest();
 
         RepositorySystemSession session =
-                        (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
-        
+            (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
+
         RemoteRepository defaultRepository = null;
-        
+
         if ( remoteRepository != null )
         {
             defaultRepository = getRemoteRepository( session, remoteRepository );
         }
-        
+
         // transform artifacts
         for ( org.apache.maven.artifact.Artifact mavenArtifact : mavenArtifacts )
         {
             Artifact aetherArtifact =
-                            (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
-                                                       org.apache.maven.artifact.Artifact.class, mavenArtifact );
+                (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                           org.apache.maven.artifact.Artifact.class, mavenArtifact );
             request.addArtifact( aetherArtifact );
-            
+
             RemoteRepository aetherRepository;
             if ( remoteRepository == null )
             {
-                aetherRepository =  getRemoteRepository( session, mavenArtifact.getRepository() );
+                aetherRepository = getRemoteRepository( session, mavenArtifact.getRepository() );
             }
             else
             {
                 aetherRepository = defaultRepository;
             }
-            
+
             request.setRepository( aetherRepository );
-            
+
             for ( ArtifactMetadata metadata : mavenArtifact.getMetadataList() )
             {
                 if ( metadata instanceof ProjectArtifactMetadata )
@@ -105,7 +105,7 @@ public class Maven30ArtifactDeployer
                     request.addArtifact( pomArtifact );
                 }
                 else if ( // metadata instanceof SnapshotArtifactRepositoryMetadata ||
-                    metadata instanceof ArtifactRepositoryMetadata )
+                metadata instanceof ArtifactRepositoryMetadata )
                 {
                     // eaten, handled by repo system
                 }
@@ -115,7 +115,7 @@ public class Maven30ArtifactDeployer
                 }
             }
         }
-        
+
         // deploy
         try
         {
@@ -135,17 +135,17 @@ public class Maven30ArtifactDeployer
                                                                          org.apache.maven.artifact.repository.ArtifactRepository.class,
                                                                          remoteRepository );
         // CHECKSTYLE_ON: LineLength
-        
+
         if ( aetherRepo.getAuthentication() == null )
         {
             aetherRepo.setAuthentication( session.getAuthenticationSelector().getAuthentication( aetherRepo ) );
         }
-        
+
         if ( aetherRepo.getProxy() == null )
         {
             aetherRepo.setProxy( session.getProxySelector().getProxy( aetherRepo ) );
         }
-        
+
         return aetherRepo;
     }
 }

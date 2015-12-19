@@ -33,40 +33,51 @@ import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 public interface ArtifactResolver
 {
 
-    ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact )
+    /**
+     * @param buildingRequest {@link ProjectBuildingRequest}
+     * @param mavenArtifact {@link Artifact}
+     * @return {@link ArtifactResult}
+     * @throws ArtifactResolverException in case of an error.
+     */
+    ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact )
         throws ArtifactResolverException;
 
-    ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest , ArtifactCoordinate coordinate )
-                    throws ArtifactResolverException;
+    /**
+     * @param buildingRequest {@link ProjectBuildingRequest}
+     * @param coordinate {@link ArtifactCoordinate}
+     * @return {@link ArtifactResult}
+     * @throws ArtifactResolverException in case of an error.
+     */
+    ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate )
+        throws ArtifactResolverException;
 
     /**
-     * This will resolve the dependencies of the coordinate, not resolving the the artifact of the coordinate itself.
-     * If the coordinate needs to be resolved too, use 
-     * {@link #resolveDependencies(ProjectBuildingRequest, Collection, Collection, TransformableFilter)} passing 
+     * This will resolve the dependencies of the coordinate, not resolving the the artifact of the coordinate itself. If
+     * the coordinate needs to be resolved too, use
+     * {@link #resolveDependencies(ProjectBuildingRequest, Collection, Collection, TransformableFilter)} passing
      * {@code Collections.singletonList(coordinate)}
      * 
-     * @param buildingRequest
-     * @param coordinate
-     * @param filter
-     * @return
-     * @throws ArtifactResolverException
+     * @param buildingRequest {@link ProjectBuildingRequest}
+     * @param coordinate {@link ArtifactCoordinate}
+     * @param filter {@link TransformableFilter}
+     * @return the resolved dependencies.
+     * @throws ArtifactResolverException in case of an error.
      */
-    Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
-                                                  ArtifactCoordinate coordinate, TransformableFilter filter )
-        throws ArtifactResolverException;
+    Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate,
+                                                  TransformableFilter filter )
+                                                      throws ArtifactResolverException;
 
     /**
-     * 
      * @param buildingRequest the project building request, never {@code null}
      * @param dependencies the dependencies to resolve, never {@code null}
      * @param managedDependencies managed dependencies, can be {@code null}
      * @param filter a filter, can be {@code null}
-     * @return
-     * @throws ArtifactResolverException
+     * @return the resolved dependencies.
+     * @throws ArtifactResolverException in case of an error.
      */
     Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
                                                   Collection<Dependency> dependencies,
                                                   Collection<Dependency> managedDependencies,
                                                   TransformableFilter filter )
-                    throws ArtifactResolverException;
+                                                      throws ArtifactResolverException;
 }

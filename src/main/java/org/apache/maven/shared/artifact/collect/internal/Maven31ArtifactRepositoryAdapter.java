@@ -42,6 +42,9 @@ public class Maven31ArtifactRepositoryAdapter implements ArtifactRepository
     
     private RemoteRepository remoteRepository;
 
+    /**
+     * @param remoteRepository {@link RemoteRepository}
+     */
     public Maven31ArtifactRepositoryAdapter( RemoteRepository remoteRepository )
     {
         this.remoteRepository = remoteRepository;

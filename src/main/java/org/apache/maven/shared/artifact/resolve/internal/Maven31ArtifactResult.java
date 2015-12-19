@@ -30,15 +30,19 @@ import org.eclipse.aether.artifact.Artifact;
  * @author Robert Scholte
  * @since 3.0
  */
-public class Maven31ArtifactResult implements org.apache.maven.shared.artifact.resolve.ArtifactResult
+public class Maven31ArtifactResult
+    implements org.apache.maven.shared.artifact.resolve.ArtifactResult
 {
     private final ArtifactResult artifactResult;
 
+    /**
+     * @param artifactResult {@link ArtifactResult}
+     */
     public Maven31ArtifactResult( ArtifactResult artifactResult )
     {
         this.artifactResult = artifactResult;
     }
-    
+
     @Override
     public org.apache.maven.artifact.Artifact getArtifact()
     {

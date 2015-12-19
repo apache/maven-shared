@@ -51,7 +51,7 @@ public class Maven30RepositoryManager
 
     @Requirement
     private RepositorySystem repositorySystem;
-    
+
     @Requirement
     private ArtifactHandlerManager artifactHandlerManager;
 
@@ -60,15 +60,14 @@ public class Maven30RepositoryManager
                                            org.apache.maven.artifact.Artifact mavenArtifact )
     {
         Artifact aetherArtifact;
-        
+
         RepositorySystemSession session;
-        
+
         // LRM.getPathForLocalArtifact() won't throw an Exception, so translate reflection error to RuntimeException
         try
         {
-            aetherArtifact =
-                (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
-                                           org.apache.maven.artifact.Artifact.class, mavenArtifact );
+            aetherArtifact = (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                                        org.apache.maven.artifact.Artifact.class, mavenArtifact );
 
             session = (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
         }
@@ -79,12 +78,12 @@ public class Maven30RepositoryManager
 
         return session.getLocalRepositoryManager().getPathForLocalArtifact( aetherArtifact );
     }
-    
+
     @Override
     public String getPathForLocalArtifact( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate )
     {
         Artifact aetherArtifact;
-        
+
         RepositorySystemSession session;
 
         // LRM.getPathForLocalArtifact() won't throw an Exception, so translate reflection error to RuntimeException
@@ -93,16 +92,16 @@ public class Maven30RepositoryManager
             ArtifactTypeRegistry typeRegistry =
                 (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
                                                        ArtifactHandlerManager.class, artifactHandlerManager );
-            
+
             aetherArtifact = toArtifact( coordinate, typeRegistry );
-            
+
             session = (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
         }
         catch ( RepositoryManagerException e )
         {
             throw new RuntimeException( e.getMessage(), e );
         }
-       
+
         return session.getLocalRepositoryManager().getPathForLocalArtifact( aetherArtifact );
     }
 
@@ -146,7 +145,7 @@ public class Maven30RepositoryManager
 
         return newRequest;
     }
-    
+
     @Override
     public File getLocalRepositoryBasedir( ProjectBuildingRequest buildingRequest )
     {
@@ -162,11 +161,20 @@ public class Maven30RepositoryManager
         return session.getLocalRepository().getBasedir();
     }
 
+    /**
+     * @param localRepository {@link LocalRepository}
+     * @return the resolved type.
+     */
     protected String resolveRepositoryType( LocalRepository localRepository )
     {
         return localRepository.getContentType();
     }
-    
+
+    /**
+     * @param coordinate {@link ArtifactCoordinate}
+     * @param typeRegistry {link ArtifactType}
+     * @return {@link Artifact}
+     */
     protected Artifact toArtifact( ArtifactCoordinate coordinate, ArtifactTypeRegistry typeRegistry )
     {
         if ( coordinate == null )

@@ -22,9 +22,16 @@ package org.apache.maven.shared.artifact.resolve;
 /**
  * 
  */
-public class ArtifactResolverException extends Exception
+public class ArtifactResolverException
+    extends Exception
 {
 
+    private static final long serialVersionUID = 7252294837746943917L;
+
+    /**
+     * @param message The message for the exception.
+     * @param e The exception itself.
+     */
     public ArtifactResolverException( String message, Exception e )
     {
         super( message, e );

@@ -47,7 +47,7 @@ public class DefaultArtifactResolver
     private PlexusContainer container;
 
     @Override
-    public ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest , Artifact mavenArtifact  )
+    public ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact )
         throws ArtifactResolverException
     {
         try
@@ -63,7 +63,7 @@ public class DefaultArtifactResolver
             throw new ArtifactResolverException( e.getMessage(), e );
         }
     }
-    
+
     @Override
     public ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate )
         throws ArtifactResolverException
@@ -81,13 +81,13 @@ public class DefaultArtifactResolver
             throw new ArtifactResolverException( e.getMessage(), e );
         }
     }
-    
+
     @Override
     public Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
                                                          Collection<Dependency> coordinates,
                                                          Collection<Dependency> managedDependencies,
                                                          TransformableFilter filter )
-        throws ArtifactResolverException
+                                                             throws ArtifactResolverException
     {
         try
         {
@@ -102,11 +102,11 @@ public class DefaultArtifactResolver
             throw new ArtifactResolverException( e.getMessage(), e );
         }
     }
-    
+
     @Override
     public Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
                                                          ArtifactCoordinate coordinate, TransformableFilter filter )
-        throws ArtifactResolverException
+                                                             throws ArtifactResolverException
     {
         try
         {
@@ -121,7 +121,7 @@ public class DefaultArtifactResolver
             throw new ArtifactResolverException( e.getMessage(), e );
         }
     }
-    
+
     /**
      * @return true if the current Maven version is Maven 3.1.
      */

@@ -31,19 +31,29 @@ import org.apache.maven.shared.artifact.ArtifactCoordinate;
 public interface RepositoryManager
 {
 
+    /**
+     * @param buildingRequest {@link ProjectBuildingRequest}
+     * @param artifact {@link Artifact}
+     * @return the path of the local artifact.
+     */
     String getPathForLocalArtifact( ProjectBuildingRequest buildingRequest, Artifact artifact );
 
+    /**
+     * @param buildingRequest {@link ProjectBuildingRequest}
+     * @param coordinate {@link ArtifactCoordinate}
+     * @return the path for the local artifact.
+     */
     String getPathForLocalArtifact( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate );
 
     /**
-     * Create a new {@code ProjectBuildingRequest} with an adjusted repository session. 
+     * Create a new {@code ProjectBuildingRequest} with an adjusted repository session.
      * 
      * @param request the project building request
      * @param basedir the base directory of the local repository
      * @return a new project building request
      */
     ProjectBuildingRequest setLocalRepositoryBasedir( ProjectBuildingRequest request, File basedir );
-    
+
     /**
      * Get the localRepositryBasedir as specified in the repository session of the request
      * 

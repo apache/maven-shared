@@ -22,9 +22,16 @@ package org.apache.maven.shared.artifact.repository;
 /**
  * 
  */
-public class RepositoryManagerException extends Exception
+public class RepositoryManagerException
+    extends Exception
 {
 
+    private static final long serialVersionUID = 8396752347704808545L;
+
+    /**
+     * @param message The message of the exception.
+     * @param cause {@link Throwable}
+     */
     public RepositoryManagerException( String message, Throwable cause )
     {
         super( message, cause );

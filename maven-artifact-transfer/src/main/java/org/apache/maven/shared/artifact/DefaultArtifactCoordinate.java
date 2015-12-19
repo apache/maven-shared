@@ -49,49 +49,49 @@ package org.apache.maven.shared.artifact;
  * 
  * public void setGroupId( String groupId )
  * {
- *   this.artifact.setGroupId( groupId );
+ *     this.artifact.setGroupId( groupId );
  * }
  * 
  * public void setArtifactId( String artifactId )
  * {
- *   this.artifact.setArtifactId( artifactId );
+ *     this.artifact.setArtifactId( artifactId );
  * }
  * 
  * public void setVersion( String version )
  * {
- *   this.artifact.setVersion( version );
+ *     this.artifact.setVersion( version );
  * }
  * 
  * public void setClassifier( String classifier )
  * {
- *   this.artifact.setClassifier( classifier );
+ *     this.artifact.setClassifier( classifier );
  * }
  * 
  * public void setType( String type )
  * {
- *   this.artifact.setType( type );
+ *     this.artifact.setType( type );
  * }
  * </pre>
  * 
- * <strong>Note: </strong> type is not the same as extension! 
- * {@link org.apache.maven.artifact.handler.ArtifactHandler}s are used to map a type to an extension.  
- * 
+ * <strong>Note: </strong> type is not the same as extension! {@link org.apache.maven.artifact.handler.ArtifactHandler}s
+ * are used to map a type to an extension.
  * 
  * @author Robert Scholte
  * @since 3.0
  */
-public class DefaultArtifactCoordinate implements ArtifactCoordinate
+public class DefaultArtifactCoordinate
+    implements ArtifactCoordinate
 {
     private String groupId;
-    
+
     private String artifactId;
-    
+
     private String version;
-    
+
     private String type;
-    
+
     private String classifier;
-    
+
     @Override
     public final String getGroupId()
     {
@@ -161,7 +161,7 @@ public class DefaultArtifactCoordinate implements ArtifactCoordinate
     {
         this.classifier = classifier;
     }
-    
+
     /**
      * @see org.apache.maven.artifact.DefaultArtifact#toString()
      */
@@ -170,15 +170,15 @@ public class DefaultArtifactCoordinate implements ArtifactCoordinate
     {
         StringBuilder sb =
             new StringBuilder().append( groupId ).append( ':' ).append( artifactId ).append( ':' ).append( getType() );
-        
+
         if ( classifier != null )
         {
             sb.append( ':' ).append( classifier );
         }
-        
+
         sb.append( ':' ).append( version );
-        
+
         return sb.toString();
     }
-    
+
 }

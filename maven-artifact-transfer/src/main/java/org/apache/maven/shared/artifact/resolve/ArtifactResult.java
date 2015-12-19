@@ -29,5 +29,8 @@ import org.apache.maven.artifact.Artifact;
  */
 public interface ArtifactResult
 {
+    /**
+     * @return {@link Artifact}
+     */
     Artifact getArtifact();
 }

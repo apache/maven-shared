@@ -81,9 +81,9 @@ final class Invoker
             throw new RepositoryManagerException( e.getMessage(), e );
         }
     }
-    
+
     public static Object invoke( Class<?> objectClazz, String staticMethod, Class<?> argClazz, Object arg )
-                    throws RepositoryManagerException
+        throws RepositoryManagerException
     {
         try
         {

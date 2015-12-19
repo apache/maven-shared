@@ -43,12 +43,13 @@ import org.eclipse.aether.util.artifact.SubArtifact;
  * 
  */
 @Component( role = ArtifactDeployer.class, hint = "maven31" )
-public class Maven31ArtifactDeployer implements ArtifactDeployer
+public class Maven31ArtifactDeployer
+    implements ArtifactDeployer
 {
 
     @Requirement
     private RepositorySystem repositorySystem;
-    
+
     @Override
     public void deploy( ProjectBuildingRequest buildingRequest,
                         Collection<org.apache.maven.artifact.Artifact> mavenArtifacts )
@@ -56,32 +57,33 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
     {
         deploy( buildingRequest, null, mavenArtifacts );
     }
-    
+
+    /** {@inheritDoc} */
     public void deploy( ProjectBuildingRequest buildingRequest, ArtifactRepository remoteRepository,
                         Collection<org.apache.maven.artifact.Artifact> mavenArtifacts )
-        throws ArtifactDeployerException
+                            throws ArtifactDeployerException
     {
         // prepare request
         DeployRequest request = new DeployRequest();
 
         RepositorySystemSession session =
-                        (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
+            (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
 
         RemoteRepository defaultRepository = null;
-        
+
         if ( remoteRepository != null )
         {
             defaultRepository = getRemoteRepository( session, remoteRepository );
         }
-        
+
         // transform artifacts
         for ( org.apache.maven.artifact.Artifact mavenArtifact : mavenArtifacts )
         {
             Artifact aetherArtifact =
-                            (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
-                                                       org.apache.maven.artifact.Artifact.class, mavenArtifact );
+                (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                           org.apache.maven.artifact.Artifact.class, mavenArtifact );
             request.addArtifact( aetherArtifact );
-            
+
             RemoteRepository aetherRepository;
             if ( remoteRepository == null )
             {
@@ -91,7 +93,7 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
             {
                 aetherRepository = defaultRepository;
             }
-            
+
             request.setRepository( aetherRepository );
 
             for ( ArtifactMetadata metadata : mavenArtifact.getMetadataList() )
@@ -103,7 +105,7 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
                     request.addArtifact( pomArtifact );
                 }
                 else if ( // metadata instanceof SnapshotArtifactRepositoryMetadata ||
-                    metadata instanceof ArtifactRepositoryMetadata )
+                metadata instanceof ArtifactRepositoryMetadata )
                 {
                     // eaten, handled by repo system
                 }
@@ -124,30 +126,30 @@ public class Maven31ArtifactDeployer implements ArtifactDeployer
             throw new ArtifactDeployerException( e.getMessage(), e );
         }
     }
-    
+
     private RemoteRepository getRemoteRepository( RepositorySystemSession session, ArtifactRepository remoteRepository )
-                    throws ArtifactDeployerException
+        throws ArtifactDeployerException
     {
         // CHECKSTYLE_OFF: LineLength
         RemoteRepository aetherRepo = (RemoteRepository) Invoker.invoke( RepositoryUtils.class, "toRepo",
                                                                          org.apache.maven.artifact.repository.ArtifactRepository.class,
                                                                          remoteRepository );
         // CHECKSTYLE_ON: LineLength
-        
+
         if ( aetherRepo.getAuthentication() == null || aetherRepo.getProxy() == null )
         {
             RemoteRepository.Builder builder = new RemoteRepository.Builder( aetherRepo );
-            
+
             if ( aetherRepo.getAuthentication() == null )
             {
                 builder.setAuthentication( session.getAuthenticationSelector().getAuthentication( aetherRepo ) );
             }
-            
+
             if ( aetherRepo.getProxy() == null )
             {
                 builder.setProxy( session.getProxySelector().getProxy( aetherRepo ) );
             }
-            
+
             aetherRepo = builder.build();
         }
 

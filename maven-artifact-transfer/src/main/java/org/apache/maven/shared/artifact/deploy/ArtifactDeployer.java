@@ -31,15 +31,20 @@ import org.apache.maven.project.ProjectBuildingRequest;
 public interface ArtifactDeployer
 {
 
+    /**
+     * @param request {@link ProjectBuildingRequest}
+     * @param mavenArtifacts {@link Artifact}
+     * @throws ArtifactDeployerException in case of an error.
+     */
     void deploy( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
-                    throws ArtifactDeployerException;
+        throws ArtifactDeployerException;
 
     /**
      * @param request the building request
-     * @param remoteRepository the repository to deploy to. If {@code null} the {@code mavenArtifact.getRepository()} 
-     *          is used.
+     * @param remoteRepository the repository to deploy to. If {@code null} the {@code mavenArtifact.getRepository()} is
+     *            used.
      * @param mavenArtifacts the artifacts to deploy
-     * @throws ArtifactDeployerException
+     * @throws ArtifactDeployerException in case of an error.
      */
     void deploy( ProjectBuildingRequest request, ArtifactRepository remoteRepository,
                  Collection<Artifact> mavenArtifacts )

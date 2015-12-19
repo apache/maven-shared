@@ -64,7 +64,7 @@ public class Maven31ArtifactResolver
 {
     @Requirement
     private RepositorySystem repositorySystem;
-    
+
     @Requirement
     private ArtifactHandlerManager artifactHandlerManager;
 
@@ -72,37 +72,36 @@ public class Maven31ArtifactResolver
     // CHECKSTYLE_OFF: LineLength
     public org.apache.maven.shared.artifact.resolve.ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest,
                                                                                     org.apache.maven.artifact.Artifact mavenArtifact )
+                                                                                        throws ArtifactResolverException
     // CHECKSTYLE_ON: LineLength
-        throws ArtifactResolverException
     {
-        Artifact aetherArtifact =
-            (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact", org.apache.maven.artifact.Artifact.class,
-                                       mavenArtifact );
+        Artifact aetherArtifact = (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
+                                                             org.apache.maven.artifact.Artifact.class, mavenArtifact );
 
         return resolveArtifact( buildingRequest, aetherArtifact );
     }
-    
+
     @Override
     // CHECKSTYLE_OFF: LineLength
     public org.apache.maven.shared.artifact.resolve.ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest,
                                                                                     ArtifactCoordinate coordinate )
+                                                                                        throws ArtifactResolverException
     // CHECKSTYLE_ON: LineLength
-        throws ArtifactResolverException
     {
         ArtifactTypeRegistry typeRegistry =
-                        (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
-                                                               ArtifactHandlerManager.class, artifactHandlerManager );
+            (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
+                                                   ArtifactHandlerManager.class, artifactHandlerManager );
 
         Dependency aetherDependency = toDependency( coordinate, typeRegistry );
-        
+
         return resolveArtifact( buildingRequest, aetherDependency.getArtifact() );
     }
-    
+
     // CHECKSTYLE_OFF: LineLength
     private org.apache.maven.shared.artifact.resolve.ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest,
                                                                                      Artifact aetherArtifact )
+                                                                                         throws ArtifactResolverException
     // CHECKSTYLE_ON: LineLength
-        throws ArtifactResolverException
     {
         @SuppressWarnings( "unchecked" )
         List<RemoteRepository> aetherRepositories =
@@ -140,15 +139,15 @@ public class Maven31ArtifactResolver
     public Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
                                                                                                   ArtifactCoordinate coordinate,
                                                                                                   TransformableFilter dependencyFilter )
+                                                                                                      throws ArtifactResolverException
     // CHECKSTYLE_ON: LineLength
-        throws ArtifactResolverException
     {
         ArtifactTypeRegistry typeRegistry =
-                        (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
-                                                               ArtifactHandlerManager.class, artifactHandlerManager );
+            (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
+                                                   ArtifactHandlerManager.class, artifactHandlerManager );
 
         Dependency aetherRoot = toDependency( coordinate, typeRegistry );
-        
+
         @SuppressWarnings( "unchecked" )
         List<RemoteRepository> aetherRepositories =
             (List<RemoteRepository>) Invoker.invoke( RepositoryUtils.class, "toRepos", List.class,
@@ -159,16 +158,14 @@ public class Maven31ArtifactResolver
         return resolveDependencies( buildingRequest, aetherRepositories, dependencyFilter, request );
     }
 
-    
-    
     @Override
     // CHECKSTYLE_OFF: LineLength
     public Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
                                                                                                   Collection<org.apache.maven.model.Dependency> mavenDependencies,
                                                                                                   Collection<org.apache.maven.model.Dependency> managedMavenDependencies,
                                                                                                   TransformableFilter filter )
+                                                                                                      throws ArtifactResolverException
     // CHECKSTYLE_ON: LineLength
-        throws ArtifactResolverException
     {
         ArtifactTypeRegistry typeRegistry =
             (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
@@ -216,8 +213,8 @@ public class Maven31ArtifactResolver
                                                                                                    List<RemoteRepository> aetherRepositories,
                                                                                                    TransformableFilter dependencyFilter,
                                                                                                    CollectRequest request )
+                                                                                                       throws ArtifactResolverException
     // CHECKSTYLE_ON: LineLength
-        throws ArtifactResolverException
     {
         try
         {
@@ -250,8 +247,10 @@ public class Maven31ArtifactResolver
                 @Override
                 public Iterator<org.apache.maven.shared.artifact.resolve.ArtifactResult> iterator()
                 {
+                    // CHECKSTYLE_OFF: LineLength
                     Collection<org.apache.maven.shared.artifact.resolve.ArtifactResult> artResults =
-                       new ArrayList<org.apache.maven.shared.artifact.resolve.ArtifactResult>( artifactResults.size() );
+                        new ArrayList<org.apache.maven.shared.artifact.resolve.ArtifactResult>( artifactResults.size() );
+                    // CHECKSTYLE_ON: LineLength
 
                     for ( ArtifactResult artifactResult : artifactResults )
                     {
@@ -275,8 +274,8 @@ public class Maven31ArtifactResolver
     /**
      * Based on RepositoryUtils#toDependency(org.apache.maven.model.Dependency, ArtifactTypeRegistry)
      * 
-     * @param coordinate
-     * @param stereotypes
+     * @param coordinate {@link ArtifactCoordinate}
+     * @param stereotypes {@link ArtifactTypeRegistry
      * @return as Aether Dependency
      */
     private static Dependency toDependency( ArtifactCoordinate coordinate, ArtifactTypeRegistry stereotypes )

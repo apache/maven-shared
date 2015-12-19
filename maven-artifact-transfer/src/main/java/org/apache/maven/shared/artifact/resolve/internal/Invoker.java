@@ -81,9 +81,9 @@ final class Invoker
             throw new ArtifactResolverException( e.getMessage(), e );
         }
     }
-    
+
     public static Object invoke( Class<?> objectClazz, String staticMethod, Class<?> argClazz, Object arg )
-                    throws ArtifactResolverException
+        throws ArtifactResolverException
     {
         try
         {
@@ -102,9 +102,9 @@ final class Invoker
             throw new ArtifactResolverException( e.getMessage(), e );
         }
     }
-    
+
     /**
-     * <strong>Note:</strong> Ensure that argClasses and args have the same number of elements 
+     * <strong>Note:</strong> Ensure that argClasses and args have the same number of elements
      * 
      * @param objectClazz the class of the static method
      * @param staticMethod the static method to call
@@ -114,7 +114,7 @@ final class Invoker
      * @throws ArtifactResolverException if any checked exception occurs
      */
     public static Object invoke( Class<?> objectClazz, String staticMethod, Class<?>[] argClasses, Object[] args )
-                    throws ArtifactResolverException
+        throws ArtifactResolverException
     {
         try
         {

@@ -29,7 +29,7 @@ public interface LocatorStrategy
 {
 
     /**
-     * @param locationSpecification the specifiaction.
+     * @param locationSpecification the specification.
      * @param messageHolder {@link MessageHolder}
      * @return {@link Location}
      */

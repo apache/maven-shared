@@ -17,7 +17,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd' xmlns='http://maven.apache.org/POM/4.0.0'>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>maven-shared-io</artifactId>
-  <version>3.0.0-SNAPSHOT</version>
+  <version>3.0.0</version>
 
   <name>Apache Maven Shared I/O API</name>
   <description>API for I/O support like logging, download or file scanning.</description>
@@ -45,9 +45,9 @@
   </contributors>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-io</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-io</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-io</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-io-3.0.0</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-io-3.0.0</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-shared-io-3.0.0</url>
   </scm>
   <issueManagement>
     <system>jira</system>

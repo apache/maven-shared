@@ -28,7 +28,7 @@ package org.apache.maven.shared.model.fileset.mappers;
  * character, use regular expressions for more complicated
  * situations.</p>
  *
- * <p>This is one of the more useful Mappers, it is used by javac for
+ * <p>This is one of the more useful Mappers, it is used by <code>javac</code> for
  * example.</p>
  *
  * @version $Id$

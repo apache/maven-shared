@@ -24,7 +24,7 @@ package org.apache.maven.shared.model.fileset.mappers;
  * target file name.
  *
  * <p>This is the default FileNameMapper for the archiving tasks and
- * uptodate.</p>
+ * up-to-date.</p>
  *
  * @version $Id$
  */

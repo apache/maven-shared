@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact;
+package org.apache.maven.shared.dependency;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -18,17 +18,17 @@ package org.apache.maven.shared.artifact;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class DefaultArtifactCoordinateTest
+public class DefaultDependencyCoordinateTest
 {
+
     @Test
     public void testToStringWithoutType()
     {
-        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
+        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
         coordinate.setGroupId( "GROUPID" );
         coordinate.setArtifactId( "ARTIFACTID" );
         coordinate.setVersion( "VERSION" );
@@ -38,12 +38,13 @@ public class DefaultArtifactCoordinateTest
     @Test
     public void testToStringWithClassifier()
     {
-        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
+        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
         coordinate.setGroupId( "GROUPID" );
         coordinate.setArtifactId( "ARTIFACTID" );
         coordinate.setVersion( "VERSION" );
         coordinate.setClassifier( "CLASSIFIER" );
-        coordinate.setExtension( "EXTENSION" );
-        assertEquals( "GROUPID:ARTIFACTID:EXTENSION:CLASSIFIER:VERSION", coordinate.toString() );
+        coordinate.setType( "TYPE" );
+        assertEquals( "GROUPID:ARTIFACTID:TYPE:CLASSIFIER:VERSION", coordinate.toString() );
     }
+
 }

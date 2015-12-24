@@ -168,8 +168,8 @@ public class DefaultArtifactCoordinate
     @Override
     public String toString()
     {
-        StringBuilder sb =
-            new StringBuilder().append( groupId ).append( ':' ).append( artifactId ).append( ':' ).append( getExtension() );
+        StringBuilder sb = new StringBuilder().append( groupId ).append( ':' )
+                        .append( artifactId ).append( ':' ).append( getExtension() );
 
         if ( classifier != null )
         {

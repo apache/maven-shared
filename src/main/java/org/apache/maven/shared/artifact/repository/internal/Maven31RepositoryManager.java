@@ -35,7 +35,6 @@ import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.ArtifactType;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.LocalRepositoryManager;
@@ -176,7 +175,6 @@ public class Maven31RepositoryManager
 
     /**
      * @param coordinate {@link ArtifactCoordinate}
-     * @param typeRegistry {@link ArtifactType}
      * @return {@link Artifact}
      */
     protected Artifact toArtifact( ArtifactCoordinate coordinate )

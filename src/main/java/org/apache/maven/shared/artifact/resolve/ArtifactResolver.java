@@ -19,13 +19,9 @@ package org.apache.maven.shared.artifact.resolve;
  * under the License.
  */
 
-import java.util.Collection;
-
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.ArtifactCoordinate;
-import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 
 /**
  * 
@@ -52,8 +48,8 @@ public interface ArtifactResolver
         throws ArtifactResolverException;
 
 //    /**
-//     * This will resolve the dependencies of the coordinate, not resolving the the artifact of the coordinate itself. If
-//     * the coordinate needs to be resolved too, use
+//     * This will resolve the dependencies of the coordinate, not resolving the the artifact of the coordinate itself. 
+//     * If the coordinate needs to be resolved too, use
 //     * {@link #resolveDependencies(ProjectBuildingRequest, Collection, Collection, TransformableFilter)} passing
 //     * {@code Collections.singletonList(coordinate)}
 //     * 
@@ -63,7 +59,7 @@ public interface ArtifactResolver
 //     * @return the resolved dependencies.
 //     * @throws ArtifactResolverException in case of an error.
 //     */
-//    Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate,
+// Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate,
 //                                                  TransformableFilter filter )
 //                                                      throws ArtifactResolverException;
 //

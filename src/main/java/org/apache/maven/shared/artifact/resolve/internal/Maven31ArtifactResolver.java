@@ -19,17 +19,12 @@ package org.apache.maven.shared.artifact.resolve.internal;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.ArtifactCoordinate;
-import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
-import org.apache.maven.shared.artifact.filter.resolve.transform.EclipseAetherFilterTransformer;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolver;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolverException;
 import org.codehaus.plexus.component.annotations.Component;
@@ -37,23 +32,13 @@ import org.codehaus.plexus.component.annotations.Requirement;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.ArtifactType;
-import org.eclipse.aether.artifact.ArtifactTypeRegistry;
 import org.eclipse.aether.artifact.DefaultArtifact;
-import org.eclipse.aether.artifact.DefaultArtifactType;
-import org.eclipse.aether.collection.CollectRequest;
-import org.eclipse.aether.graph.Dependency;
-import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.ArtifactDescriptorException;
 import org.eclipse.aether.resolution.ArtifactDescriptorRequest;
 import org.eclipse.aether.resolution.ArtifactDescriptorResult;
 import org.eclipse.aether.resolution.ArtifactRequest;
 import org.eclipse.aether.resolution.ArtifactResolutionException;
-import org.eclipse.aether.resolution.ArtifactResult;
-import org.eclipse.aether.resolution.DependencyRequest;
-import org.eclipse.aether.resolution.DependencyResolutionException;
-import org.eclipse.aether.resolution.DependencyResult;
 
 /**
  * 
@@ -88,13 +73,11 @@ public class Maven31ArtifactResolver
                                                                                         throws ArtifactResolverException
     // CHECKSTYLE_ON: LineLength
     {
-        ArtifactTypeRegistry typeRegistry =
-            (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
-                                                   ArtifactHandlerManager.class, artifactHandlerManager );
+        Artifact aetherArtifact =
+            new DefaultArtifact( coordinate.getGroupId(), coordinate.getArtifactId(), coordinate.getClassifier(),
+                                 coordinate.getExtension(), coordinate.getVersion() );
 
-        Dependency aetherDependency = toDependency( coordinate, typeRegistry );
-
-        return resolveArtifact( buildingRequest, aetherDependency.getArtifact() );
+        return resolveArtifact( buildingRequest, aetherArtifact );
     }
 
     // CHECKSTYLE_OFF: LineLength
@@ -239,7 +222,7 @@ public class Maven31ArtifactResolver
 //                artifactRequests.add( new ArtifactRequest( artifactResult.getArtifact(), aetherRepositories, null ) );
 //            }
 //
-//            final List<ArtifactResult> artifactResults = repositorySystem.resolveArtifacts( session, artifactRequests );
+//         final List<ArtifactResult> artifactResults = repositorySystem.resolveArtifacts( session, artifactRequests );
 //
 //            // Keep it lazy! Often artifactsResults aren't used, so transforming up front is too expensive
 //            return new Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult>()
@@ -249,7 +232,7 @@ public class Maven31ArtifactResolver
 //                {
 //                    // CHECKSTYLE_OFF: LineLength
 //                    Collection<org.apache.maven.shared.artifact.resolve.ArtifactResult> artResults =
-//                        new ArrayList<org.apache.maven.shared.artifact.resolve.ArtifactResult>( artifactResults.size() );
+//                    new ArrayList<org.apache.maven.shared.artifact.resolve.ArtifactResult>( artifactResults.size() );
 //                    // CHECKSTYLE_ON: LineLength
 //
 //                    for ( ArtifactResult artifactResult : artifactResults )
@@ -271,25 +254,25 @@ public class Maven31ArtifactResolver
 //        }
 //    }
 
-    /**
-     * Based on RepositoryUtils#toDependency(org.apache.maven.model.Dependency, ArtifactTypeRegistry)
-     * 
-     * @param coordinate {@link ArtifactCoordinate}
-     * @param stereotypes {@link ArtifactTypeRegistry
-     * @return as Aether Dependency
-     */
-    private static Dependency toDependency( ArtifactCoordinate coordinate, ArtifactTypeRegistry stereotypes )
-    {
-        ArtifactType stereotype = stereotypes.get( coordinate.getExtension() );
-        if ( stereotype == null )
-        {
-            stereotype = new DefaultArtifactType( coordinate.getExtension() );
-        }
-
-        Artifact artifact =
-            new DefaultArtifact( coordinate.getGroupId(), coordinate.getArtifactId(), coordinate.getClassifier(), null,
-                                 coordinate.getVersion(), null, stereotype );
-
-        return new Dependency( artifact, null );
-    }
+//    /**
+//     * Based on RepositoryUtils#toDependency(org.apache.maven.model.Dependency, ArtifactTypeRegistry)
+//     * 
+//     * @param coordinate {@link ArtifactCoordinate}
+//     * @param stereotypes {@link ArtifactTypeRegistry
+//     * @return as Aether Dependency
+//     */
+//    private static Dependency toDependency( ArtifactCoordinate coordinate, ArtifactTypeRegistry stereotypes )
+//    {
+//        ArtifactType stereotype = stereotypes.get( coordinate.getExtension() );
+//        if ( stereotype == null )
+//        {
+//            stereotype = new DefaultArtifactType( coordinate.getExtension() );
+//        }
+//
+//        Artifact artifact =
+//          new DefaultArtifact( coordinate.getGroupId(), coordinate.getArtifactId(), coordinate.getClassifier(), null,
+//                                 coordinate.getVersion(), null, stereotype );
+//
+//        return new Dependency( artifact, null );
+//    }
 }

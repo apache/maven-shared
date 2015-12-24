@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact;
+package org.apache.maven.shared.dependency;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,17 +20,17 @@ package org.apache.maven.shared.artifact;
  */
 
 /**
- * Common usage of an ArtifactCoordinate for a Mojo
+ * Common usage of an DependencyCoordinate for a Mojo
  * 
  * <pre>
  * &#64;Parameter
- * private DefaultArtifactCoordinate[] artifacts;
+ * private DefaultDependencyCoordinate[] dependencies;
  * </pre>
  * 
  * and
  * 
  * <pre>
- * private DefaultArtifactCoordinate artifact = new DefaultArtifactCoordinate();
+ * private DefaultDependencyCoordinate dependency = new DefaultDependencyCoordinate();
  * 
  * &#64;Parameter( property = "groupId" )
  * private String groupId;
@@ -49,58 +49,54 @@ package org.apache.maven.shared.artifact;
  * 
  * public void setGroupId( String groupId )
  * {
- *     this.artifact.setGroupId( groupId );
+ *   this.dependency.setGroupId( groupId );
  * }
  * 
  * public void setArtifactId( String artifactId )
  * {
- *     this.artifact.setArtifactId( artifactId );
+ *   this.dependency.setArtifactId( artifactId );
  * }
  * 
  * public void setVersion( String version )
  * {
- *     this.artifact.setVersion( version );
+ *   this.dependency.setVersion( version );
  * }
  * 
  * public void setClassifier( String classifier )
  * {
- *     this.artifact.setClassifier( classifier );
+ *   this.dependency.setClassifier( classifier );
  * }
  * 
  * public void setType( String type )
  * {
- *     this.artifact.setType( type );
+ *   this.dependency.setType( type );
  * }
  * </pre>
+ * <strong>Note: </strong> type is not the same as extension! 
+ * {@link org.apache.maven.artifact.handler.ArtifactHandler}s are used to map a type to an extension.  
  * 
- * <strong>Note: </strong> type is not the same as extension! {@link org.apache.maven.artifact.handler.ArtifactHandler}s
- * are used to map a type to an extension.
  * 
  * @author Robert Scholte
  * @since 3.0
  */
-public class DefaultArtifactCoordinate
-    implements ArtifactCoordinate
+public class DefaultDependencyCoordinate implements DependencyCoordinate
 {
     private String groupId;
-
+    
     private String artifactId;
-
+    
     private String version;
-
-    private String extension;
-
+    
+    private String type;
+    
     private String classifier;
-
+    
     @Override
     public final String getGroupId()
     {
         return groupId;
     }
 
-    /**
-     * @param groupId The groupId to be used.
-     */
     public final void setGroupId( String groupId )
     {
         this.groupId = groupId;
@@ -112,9 +108,6 @@ public class DefaultArtifactCoordinate
         return artifactId;
     }
 
-    /**
-     * @param artifactId The artifactId to be used.
-     */
     public final void setArtifactId( String artifactId )
     {
         this.artifactId = artifactId;
@@ -126,42 +119,33 @@ public class DefaultArtifactCoordinate
         return version;
     }
 
-    /**
-     * @param version The version to be used.
-     */
     public final void setVersion( String version )
     {
         this.version = version;
     }
 
     @Override
-    public final String getExtension()
+    public final String getType()
     {
-        return extension != null ? extension : "jar";
+        return type != null ? type : "jar";
     }
 
-    /**
-     * @param extension The extension to be used.
-     */
-    public final void setExtension( String extension )
+    public void setType( String type )
     {
-        this.extension = extension;
+        this.type = type;
     }
-
+    
     @Override
     public final String getClassifier()
     {
         return classifier;
     }
 
-    /**
-     * @param classifier The classifier to be used.
-     */
     public final void setClassifier( String classifier )
     {
         this.classifier = classifier;
     }
-
+    
     /**
      * @see org.apache.maven.artifact.DefaultArtifact#toString()
      */
@@ -169,16 +153,16 @@ public class DefaultArtifactCoordinate
     public String toString()
     {
         StringBuilder sb =
-            new StringBuilder().append( groupId ).append( ':' ).append( artifactId ).append( ':' ).append( getExtension() );
-
+            new StringBuilder().append( groupId ).append( ':' ).append( artifactId ).append( ':' ).append( getType() );
+        
         if ( classifier != null )
         {
             sb.append( ':' ).append( classifier );
         }
-
+        
         sb.append( ':' ).append( version );
-
+        
         return sb.toString();
     }
-
+    
 }

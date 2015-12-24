@@ -33,8 +33,6 @@ import org.codehaus.plexus.component.annotations.Requirement;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
-import org.sonatype.aether.artifact.ArtifactType;
-import org.sonatype.aether.artifact.ArtifactTypeRegistry;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.LocalRepositoryManager;
 import org.sonatype.aether.util.DefaultRepositoryCache;
@@ -89,11 +87,7 @@ public class Maven30RepositoryManager
         // LRM.getPathForLocalArtifact() won't throw an Exception, so translate reflection error to RuntimeException
         try
         {
-            ArtifactTypeRegistry typeRegistry =
-                (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
-                                                       ArtifactHandlerManager.class, artifactHandlerManager );
-
-            aetherArtifact = toArtifact( coordinate, typeRegistry );
+            aetherArtifact = toArtifact( coordinate );
 
             session = (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
         }
@@ -175,18 +169,16 @@ public class Maven30RepositoryManager
      * @param typeRegistry {link ArtifactType}
      * @return {@link Artifact}
      */
-    protected Artifact toArtifact( ArtifactCoordinate coordinate, ArtifactTypeRegistry typeRegistry )
+    protected Artifact toArtifact( ArtifactCoordinate coordinate )
     {
         if ( coordinate == null )
         {
             return null;
         }
 
-        ArtifactType artifactType = typeRegistry.get( coordinate.getType() );
-
         Artifact result =
             new DefaultArtifact( coordinate.getGroupId(), coordinate.getArtifactId(), coordinate.getClassifier(),
-                                 artifactType.getExtension(), coordinate.getVersion(), null, artifactType );
+                                 coordinate.getExtension(), coordinate.getVersion() );
 
         return result;
     }

@@ -20,11 +20,9 @@ package org.apache.maven.shared.artifact;
  */
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Extension;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
-import org.apache.maven.project.MavenProject;
 
 /**
  * Utility class
@@ -48,30 +46,15 @@ public final class TransferUtils
         coordinate.setGroupId( artifact.getGroupId() );
         coordinate.setArtifactId( artifact.getArtifactId() );
         coordinate.setVersion( artifact.getVersion() );
-        coordinate.setType( artifact.getType() );
+        coordinate.setExtension( artifact.getArtifactHandler().getExtension() );
         coordinate.setClassifier( artifact.getClassifier() );
 
         return coordinate;
     }
 
     /**
-     * @param dependency {@link Dependency}
-     * @return {@link ArtifactCoordinate}
-     */
-    public static ArtifactCoordinate toArtifactCoordinate( Dependency dependency )
-    {
-        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
-
-        coordinate.setGroupId( dependency.getGroupId() );
-        coordinate.setArtifactId( dependency.getArtifactId() );
-        coordinate.setVersion( dependency.getVersion() );
-        coordinate.setType( dependency.getType() );
-        coordinate.setClassifier( dependency.getClassifier() );
-
-        return coordinate;
-    }
-
-    /**
+     * Special case: an extension is always of type {@code jar}, so can be transformed to an ArtifactCoordinate.
+     * 
      * @param extension {@link Extension}
      * @return {@link ArtifactCoordinate}
      */
@@ -87,22 +70,8 @@ public final class TransferUtils
     }
 
     /**
-     * @param project {@link MavenProject}
-     * @return {@link ArtifactCoordinate}
-     */
-    public static ArtifactCoordinate toArtifactCoordinate( MavenProject project )
-    {
-        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
-
-        coordinate.setGroupId( project.getGroupId() );
-        coordinate.setArtifactId( project.getArtifactId() );
-        coordinate.setVersion( project.getVersion() );
-        coordinate.setType( project.getPackaging() );
-
-        return coordinate;
-    }
-
-    /**
+     * Special case: a parent is always of type {@code pom}, so can be transformed to an ArtifactCoordinate.
+     * 
      * @param parent {@link Parent}
      * @return {@link ArtifactCoordinate}
      */
@@ -113,12 +82,14 @@ public final class TransferUtils
         coordinate.setGroupId( parent.getGroupId() );
         coordinate.setArtifactId( parent.getArtifactId() );
         coordinate.setVersion( parent.getVersion() );
-        coordinate.setType( "pom" );
+        coordinate.setExtension( "pom" );
 
         return coordinate;
     }
 
     /**
+     * Special case: a plugin is always of type {@code jar}, so can be transformed to an ArtifactCoordinate.
+     * 
      * @param plugin {@link Plugin}
      * @return {@link ArtifactCoordinate}
      */
@@ -129,44 +100,7 @@ public final class TransferUtils
         coordinate.setGroupId( plugin.getGroupId() );
         coordinate.setArtifactId( plugin.getArtifactId() );
         coordinate.setVersion( plugin.getVersion() );
-        coordinate.setType( "maven-plugin" );
 
         return coordinate;
     }
-
-    /**
-     * @param artifact {@link Artifact}
-     * @return {@link Dependency}
-     */
-    public static Dependency toDependency( Artifact artifact )
-    {
-        Dependency dependency = new Dependency();
-
-        dependency.setGroupId( artifact.getGroupId() );
-        dependency.setArtifactId( artifact.getArtifactId() );
-        dependency.setVersion( artifact.getVersion() );
-        dependency.setType( artifact.getType() );
-        dependency.setClassifier( artifact.getClassifier() );
-        dependency.setScope( artifact.getScope() );
-
-        return dependency;
-    }
-
-    /**
-     * @param coordinate {@link ArtifactCoordinate}
-     * @return {@link Dependency}
-     */
-    public static Dependency toDependency( ArtifactCoordinate coordinate )
-    {
-        Dependency dependency = new Dependency();
-
-        dependency.setGroupId( coordinate.getGroupId() );
-        dependency.setArtifactId( coordinate.getArtifactId() );
-        dependency.setVersion( coordinate.getVersion() );
-        dependency.setType( coordinate.getType() );
-        dependency.setClassifier( coordinate.getClassifier() );
-
-        return dependency;
-    }
-
 }

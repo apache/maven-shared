@@ -36,7 +36,6 @@ import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.ArtifactType;
-import org.eclipse.aether.artifact.ArtifactTypeRegistry;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.LocalRepositoryManager;
@@ -87,11 +86,7 @@ public class Maven31RepositoryManager
         // LRM.getPathForLocalArtifact() won't throw an Exception, so translate reflection error to RuntimeException
         try
         {
-            ArtifactTypeRegistry typeRegistry =
-                (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
-                                                       ArtifactHandlerManager.class, artifactHandlerManager );
-
-            aetherArtifact = toArtifact( coordinate, typeRegistry );
+            aetherArtifact = toArtifact( coordinate );
 
             session = (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
         }
@@ -184,18 +179,16 @@ public class Maven31RepositoryManager
      * @param typeRegistry {@link ArtifactType}
      * @return {@link Artifact}
      */
-    protected Artifact toArtifact( ArtifactCoordinate coordinate, ArtifactTypeRegistry typeRegistry )
+    protected Artifact toArtifact( ArtifactCoordinate coordinate )
     {
         if ( coordinate == null )
         {
             return null;
         }
 
-        ArtifactType artifactType = typeRegistry.get( coordinate.getType() );
-
         Artifact result =
             new DefaultArtifact( coordinate.getGroupId(), coordinate.getArtifactId(), coordinate.getClassifier(),
-                                 artifactType.getExtension(), coordinate.getVersion(), null, artifactType );
+                                 coordinate.getExtension(), coordinate.getVersion() );
 
         return result;
     }

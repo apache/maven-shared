@@ -19,17 +19,12 @@ package org.apache.maven.shared.artifact.resolve.internal;
  * under the License.
  */
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.ArtifactCoordinate;
-import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
-import org.apache.maven.shared.artifact.filter.resolve.transform.SonatypeAetherFilterTransformer;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolver;
 import org.apache.maven.shared.artifact.resolve.ArtifactResolverException;
 import org.codehaus.plexus.component.annotations.Component;
@@ -37,21 +32,13 @@ import org.codehaus.plexus.component.annotations.Requirement;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
-import org.sonatype.aether.artifact.ArtifactType;
-import org.sonatype.aether.artifact.ArtifactTypeRegistry;
-import org.sonatype.aether.collection.CollectRequest;
-import org.sonatype.aether.collection.DependencyCollectionException;
-import org.sonatype.aether.graph.Dependency;
-import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.resolution.ArtifactDescriptorException;
 import org.sonatype.aether.resolution.ArtifactDescriptorRequest;
 import org.sonatype.aether.resolution.ArtifactDescriptorResult;
 import org.sonatype.aether.resolution.ArtifactRequest;
 import org.sonatype.aether.resolution.ArtifactResolutionException;
-import org.sonatype.aether.resolution.ArtifactResult;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
-import org.sonatype.aether.util.artifact.DefaultArtifactType;
 
 /**
  * 
@@ -86,13 +73,11 @@ public class Maven30ArtifactResolver
                                                                                         throws ArtifactResolverException
     // CHECKSTYLE_ON: LineLength
     {
-        ArtifactTypeRegistry typeRegistry =
-            (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
-                                                   ArtifactHandlerManager.class, artifactHandlerManager );
+        Artifact aetherArtifact =
+            new DefaultArtifact( coordinate.getGroupId(), coordinate.getArtifactId(), coordinate.getClassifier(),
+                                 coordinate.getExtension(), coordinate.getVersion() );
 
-        Dependency aetherDependency = toDependency( coordinate, typeRegistry );
-
-        return resolveArtifact( buildingRequest, aetherDependency.getArtifact() );
+        return resolveArtifact( buildingRequest, aetherArtifact );
     }
 
     // CHECKSTYLE_OFF: LineLength
@@ -268,25 +253,25 @@ public class Maven30ArtifactResolver
 //        }
 //    }
 
-    /**
-     * Based on RepositoryUtils#toDependency(org.apache.maven.model.Dependency, ArtifactTypeRegistry)
-     * 
-     * @param coordinate
-     * @param stereotypes
-     * @return as Aether Dependency
-     */
-    private static Dependency toDependency( ArtifactCoordinate coordinate, ArtifactTypeRegistry stereotypes )
-    {
-        ArtifactType stereotype = stereotypes.get( coordinate.getExtension() );
-        if ( stereotype == null )
-        {
-            stereotype = new DefaultArtifactType( coordinate.getExtension() );
-        }
-
-        Artifact artifact =
-            new DefaultArtifact( coordinate.getGroupId(), coordinate.getArtifactId(), coordinate.getClassifier(), null,
-                                 coordinate.getVersion(), null, stereotype );
-
-        return new Dependency( artifact, null );
-    }
+//    /**
+//     * Based on RepositoryUtils#toDependency(org.apache.maven.model.Dependency, ArtifactTypeRegistry)
+//     * 
+//     * @param coordinate
+//     * @param stereotypes
+//     * @return as Aether Dependency
+//     */
+//    private static Dependency toDependency( ArtifactCoordinate coordinate, ArtifactTypeRegistry stereotypes )
+//    {
+//        ArtifactType stereotype = stereotypes.get( coordinate.getExtension() );
+//        if ( stereotype == null )
+//        {
+//            stereotype = new DefaultArtifactType( coordinate.getExtension() );
+//        }
+//
+//        Artifact artifact =
+//            new DefaultArtifact( coordinate.getGroupId(), coordinate.getArtifactId(), coordinate.getClassifier(), null,
+//                                 coordinate.getVersion(), null, stereotype );
+//
+//        return new Dependency( artifact, null );
+//    }
 }

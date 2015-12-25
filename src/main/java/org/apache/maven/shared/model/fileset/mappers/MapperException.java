@@ -32,8 +32,8 @@ public class MapperException
     /**
      * Constructor
      *
-     * @param message
-     * @param cause
+     * @param message The error message
+     * @param cause The root cause of the problem.
      */
     public MapperException( String message, Throwable cause )
     {
@@ -43,7 +43,7 @@ public class MapperException
     /**
      * Constructor
      *
-     * @param message
+     * @param message The error message.
      */
     public MapperException( String message )
     {

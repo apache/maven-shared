@@ -36,14 +36,14 @@ public interface FileNameMapper
     /**
      * Sets the from part of the transformation rule.
      *
-     * @param from
+     * @param from The source.
      */
     void setFrom( String from );
 
     /**
      * Sets the to part of the transformation rule.
      *
-     * @param to
+     * @param to The destination.
      */
     void setTo( String to );
 

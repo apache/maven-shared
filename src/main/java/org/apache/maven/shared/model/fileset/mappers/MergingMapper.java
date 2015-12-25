@@ -31,7 +31,7 @@ package org.apache.maven.shared.model.fileset.mappers;
 public class MergingMapper
     implements FileNameMapper
 {
-    protected String mergedFile = null;
+    private String mergedFile = null;
 
     /** {@inheritDoc} */
     public void setFrom( String from )

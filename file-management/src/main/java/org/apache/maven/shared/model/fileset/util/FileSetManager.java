@@ -146,7 +146,7 @@ public class FileSetManager
     // ----------------------------------------------------------------------
 
     /**
-     * @param fileSet
+     * @param fileSet {@link FileSet}
      * @return the included files as map
      * @throws MapperException if any
      * @see #getIncludedFiles(FileSet)

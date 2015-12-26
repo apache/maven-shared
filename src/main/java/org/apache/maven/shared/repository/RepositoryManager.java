@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact.repository;
+package org.apache.maven.shared.repository;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

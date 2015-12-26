@@ -19,6 +19,7 @@ package org.apache.maven.shared.artifact.install;
  * under the License.
  */
 
+import java.io.File;
 import java.util.Collection;
 
 import org.apache.maven.artifact.Artifact;
@@ -37,4 +38,8 @@ public interface ArtifactInstaller
      */
     void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException;
+    
+    void install( ProjectBuildingRequest request, File localRepository, Collection<Artifact> mavenArtifacts )
+                    throws ArtifactInstallerException;
+    
 }

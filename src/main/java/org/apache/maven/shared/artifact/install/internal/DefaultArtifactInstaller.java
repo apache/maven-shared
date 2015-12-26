@@ -19,6 +19,7 @@ package org.apache.maven.shared.artifact.install.internal;
  * under the License.
  */
 
+import java.io.File;
 import java.util.Collection;
 
 import org.apache.maven.artifact.Artifact;
@@ -43,7 +44,7 @@ public class DefaultArtifactInstaller
 
     private PlexusContainer container;
 
-    /** {@inheritDoc} */
+    @Override
     public void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException
     {
@@ -54,6 +55,24 @@ public class DefaultArtifactInstaller
             ArtifactInstaller effectiveArtifactInstaller = container.lookup( ArtifactInstaller.class, hint );
 
             effectiveArtifactInstaller.install( request, mavenArtifacts );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new ArtifactInstallerException( e.getMessage(), e );
+        }
+    }
+    
+    @Override
+    public void install( ProjectBuildingRequest request, File localRepositry, Collection<Artifact> mavenArtifacts )
+        throws ArtifactInstallerException
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : "maven3";
+
+            ArtifactInstaller effectiveArtifactInstaller = container.lookup( ArtifactInstaller.class, hint );
+
+            effectiveArtifactInstaller.install( request, localRepositry, mavenArtifacts );
         }
         catch ( ComponentLookupException e )
         {

@@ -24,7 +24,7 @@ import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.ArtifactCoordinate;
 
 /**
- * 
+ * Resolves the artifact, i.e download the file when required and attach it to the artifact
  */
 public interface ArtifactResolver
 {

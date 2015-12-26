@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact.collect.internal;
+package org.apache.maven.shared.dependency.collect.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -26,27 +26,27 @@ import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.project.ProjectBuildingRequest;
-import org.apache.maven.shared.artifact.collect.CollectorResult;
-import org.apache.maven.shared.artifact.collect.DependencyCollector;
-import org.apache.maven.shared.artifact.collect.DependencyCollectorException;
+import org.apache.maven.shared.dependency.collect.CollectorResult;
+import org.apache.maven.shared.dependency.collect.DependencyCollector;
+import org.apache.maven.shared.dependency.collect.DependencyCollectorException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
-import org.sonatype.aether.RepositorySystem;
-import org.sonatype.aether.RepositorySystemSession;
-import org.sonatype.aether.artifact.ArtifactTypeRegistry;
-import org.sonatype.aether.collection.CollectRequest;
-import org.sonatype.aether.collection.DependencyCollectionException;
-import org.sonatype.aether.graph.Dependency;
-import org.sonatype.aether.repository.RemoteRepository;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.ArtifactTypeRegistry;
+import org.eclipse.aether.collection.CollectRequest;
+import org.eclipse.aether.collection.DependencyCollectionException;
+import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.repository.RemoteRepository;
 
 /**
- * Maven 3.0 implementation of the {@link DependencyCollector}
+ * Maven 3.1+ implementation of the {@link DependencyCollector}
  * 
  * @author Robert Scholte
  *
  */
-@Component( role = DependencyCollector.class, hint = "maven3" )
-public class Maven30DependencyCollector
+@Component( role = DependencyCollector.class, hint = "maven31" )
+public class Maven31DependencyCollector
     implements DependencyCollector
 {
     @Requirement
@@ -54,17 +54,6 @@ public class Maven30DependencyCollector
 
     @Requirement
     private ArtifactHandlerManager artifactHandlerManager;
-
-    @Override
-    public CollectorResult collectDependencies( final ProjectBuildingRequest buildingRequest, Artifact root )
-        throws DependencyCollectorException
-    {
-        Class<?>[] argClasses = new Class<?>[] { Artifact.class, Collection.class };
-        Object[] args = new Object[] { root, null };
-        Dependency aetherRoot = (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
-
-        return collectDependencies( buildingRequest, aetherRoot );
-    }
 
     @Override
     public CollectorResult collectDependencies( final ProjectBuildingRequest buildingRequest,
@@ -75,21 +64,32 @@ public class Maven30DependencyCollector
             (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
                                                    ArtifactHandlerManager.class, artifactHandlerManager );
 
-        Class<?>[] argClasses = new Class<?>[] { Dependency.class, ArtifactTypeRegistry.class };
+        Class<?>[] argClasses = new Class<?>[] { org.apache.maven.model.Dependency.class, ArtifactTypeRegistry.class };
         Object[] args = new Object[] { root, typeRegistry };
         Dependency aetherRoot = (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
 
         return collectDependencies( buildingRequest, aetherRoot );
     }
 
-    private CollectorResult collectDependencies( final ProjectBuildingRequest buildingRequest, Dependency aetherRoot )
+    @Override
+    public CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Artifact root )
         throws DependencyCollectorException
     {
-        RepositorySystemSession session =
-            (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
+        Class<?>[] argClasses = new Class<?>[] { Artifact.class, Collection.class };
+        Object[] args = new Object[] { root, null };
+        Dependency aetherRoot = (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
 
+        return collectDependencies( buildingRequest, aetherRoot );
+    }
+
+    private CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Dependency aetherRoot )
+        throws DependencyCollectorException
+    {
         CollectRequest request = new CollectRequest();
         request.setRoot( aetherRoot );
+
+        RepositorySystemSession session =
+            (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
 
         @SuppressWarnings( "unchecked" )
         List<RemoteRepository> aetherRepositories =
@@ -99,7 +99,7 @@ public class Maven30DependencyCollector
 
         try
         {
-            return new Maven30CollectorResult( repositorySystem.collectDependencies( session, request ) );
+            return new Maven31CollectorResult( repositorySystem.collectDependencies( session, request ) );
         }
         catch ( DependencyCollectionException e )
         {

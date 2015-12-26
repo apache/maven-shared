@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact.collect.internal;
+package org.apache.maven.shared.dependency.collect.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

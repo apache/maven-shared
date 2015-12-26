@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact.collect.internal;
+package org.apache.maven.shared.dependency.collect.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,7 +21,7 @@ package org.apache.maven.shared.artifact.collect.internal;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.maven.shared.artifact.collect.DependencyCollectorException;
+import org.apache.maven.shared.dependency.collect.DependencyCollectorException;
 
 /**
  * Invokes method on objects using reflection.

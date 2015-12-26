@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact.collect.internal;
+package org.apache.maven.shared.dependency.collect.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.shared.artifact.collect.CollectorResult;
+import org.apache.maven.shared.dependency.collect.CollectorResult;
 import org.sonatype.aether.collection.CollectResult;
 import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.graph.DependencyVisitor;

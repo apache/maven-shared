@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact.collect.internal;
+package org.apache.maven.shared.dependency.collect.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,9 +22,9 @@ package org.apache.maven.shared.artifact.collect.internal;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.ProjectBuildingRequest;
-import org.apache.maven.shared.artifact.collect.CollectorResult;
-import org.apache.maven.shared.artifact.collect.DependencyCollector;
-import org.apache.maven.shared.artifact.collect.DependencyCollectorException;
+import org.apache.maven.shared.dependency.collect.CollectorResult;
+import org.apache.maven.shared.dependency.collect.DependencyCollector;
+import org.apache.maven.shared.dependency.collect.DependencyCollectorException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;

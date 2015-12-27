@@ -106,6 +106,22 @@ public class JarClassesAnalyzerTest
         assertFalse( "no debug present", jclass.isDebugPresent() );
     }
 
+    public void testAnalyzeJarVersion18()
+        throws Exception
+    {
+        JarClasses jclass = getJarClasses( "helloworld-1.8.jar" );
+
+        assertEquals( "jdkrevision", "1.8", jclass.getJdkRevision() );
+    }
+
+    public void testAnalyzeJarVersion17()
+        throws Exception
+    {
+        JarClasses jclass = getJarClasses( "helloworld-1.7.jar" );
+
+        assertEquals( "jdkrevision", "1.7", jclass.getJdkRevision() );
+    }
+
     public void testAnalyzeJarVersion16()
         throws Exception
     {

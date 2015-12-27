@@ -1,4 +1,4 @@
-package org.apache.maven.shared.artifact.repository.internal;
+package org.apache.maven.shared.repository.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -24,7 +24,8 @@ import java.io.File;
 import org.apache.maven.project.DefaultProjectBuildingRequest;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
-import org.apache.maven.shared.artifact.repository.RepositoryManager;
+import org.apache.maven.shared.repository.RepositoryManager;
+import org.apache.maven.shared.repository.internal.Maven30RepositoryManager;
 import org.codehaus.plexus.PlexusTestCase;
 import org.sonatype.aether.impl.internal.EnhancedLocalRepositoryManager;
 import org.sonatype.aether.impl.internal.SimpleLocalRepositoryManager;

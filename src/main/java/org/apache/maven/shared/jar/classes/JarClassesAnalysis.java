@@ -45,15 +45,19 @@ import java.util.jar.JarEntry;
 public class JarClassesAnalysis
     extends AbstractLogEnabled
 {
+    private static final double JAVA_1_8_CLASS_VERSION = 52.0;
+
+    private static final double JAVA_1_7_CLASS_VERSION = 51.0;
+
     private static final double JAVA_1_6_CLASS_VERSION = 50.0;
 
     private static final double JAVA_1_5_CLASS_VERSION = 49.0;
 
-    private static final double JAVA_1_4_CLASS_VERSION = 47.0;
+    private static final double JAVA_1_4_CLASS_VERSION = 48.0;
 
-    private static final double JAVA_1_3_CLASS_VERSION = 46.0;
+    private static final double JAVA_1_3_CLASS_VERSION = 47.0;
 
-    private static final double JAVA_1_2_CLASS_VERSION = 45.65536;
+    private static final double JAVA_1_2_CLASS_VERSION = 46.0;
 
     private static final double JAVA_1_1_CLASS_VERSION = 45.3;
 
@@ -104,7 +108,7 @@ public class JarClassesAnalysis
                     double classVersion = javaClass.getMajor();
                     if ( javaClass.getMinor() > 0 )
                     {
-                        classVersion = classVersion + 1 / (double) javaClass.getMinor();
+                        classVersion = classVersion + javaClass.getMinor() / 10.0;
                     }
 
                     if ( classVersion > maxVersion )
@@ -140,34 +144,37 @@ public class JarClassesAnalysis
                 }
             }
 
-            // TODO: check these since they are > instead of >=
-            if ( maxVersion >= JAVA_1_6_CLASS_VERSION )
+            if ( maxVersion == JAVA_1_8_CLASS_VERSION )
+            {
+                classes.setJdkRevision( "1.8" );
+            }
+            else if ( maxVersion == JAVA_1_7_CLASS_VERSION )
+            {
+                classes.setJdkRevision( "1.7" );
+            }
+            else if ( maxVersion == JAVA_1_6_CLASS_VERSION )
             {
                 classes.setJdkRevision( "1.6" );
             }
-            else if ( maxVersion >= JAVA_1_5_CLASS_VERSION )
+            else if ( maxVersion == JAVA_1_5_CLASS_VERSION )
             {
                 classes.setJdkRevision( "1.5" );
             }
-            else if ( maxVersion > JAVA_1_4_CLASS_VERSION )
+            else if ( maxVersion == JAVA_1_4_CLASS_VERSION )
             {
                 classes.setJdkRevision( "1.4" );
             }
-            else if ( maxVersion > JAVA_1_3_CLASS_VERSION )
+            else if ( maxVersion == JAVA_1_3_CLASS_VERSION )
             {
                 classes.setJdkRevision( "1.3" );
             }
-            else if ( maxVersion > JAVA_1_2_CLASS_VERSION )
+            else if ( maxVersion == JAVA_1_2_CLASS_VERSION )
             {
                 classes.setJdkRevision( "1.2" );
             }
-            else if ( maxVersion > JAVA_1_1_CLASS_VERSION )
+            else if ( maxVersion == JAVA_1_1_CLASS_VERSION )
             {
                 classes.setJdkRevision( "1.1" );
-            }
-            else if ( maxVersion > 0 )
-            {
-                classes.setJdkRevision( "1.0" );
             }
 
             jarAnalyzer.getJarData().setJarClasses( classes );

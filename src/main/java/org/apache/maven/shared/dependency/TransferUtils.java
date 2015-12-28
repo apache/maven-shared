@@ -24,6 +24,7 @@ import org.apache.maven.model.Extension;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.ReportPlugin;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -108,4 +109,16 @@ public final class TransferUtils
         
         return coordinate;
     }
+    
+    public static DependencyCoordinate toDependencyCoordinate( ReportPlugin plugin )
+    {
+        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
+        
+        coordinate.setGroupId( plugin.getGroupId() );
+        coordinate.setArtifactId( plugin.getArtifactId() );
+        coordinate.setVersion( plugin.getVersion() );
+        
+        return coordinate;
+    }
+
 }

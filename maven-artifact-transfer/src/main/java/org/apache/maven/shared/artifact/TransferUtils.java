@@ -23,6 +23,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Extension;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.ReportPlugin;
 
 /**
  * Utility class
@@ -103,4 +104,22 @@ public final class TransferUtils
 
         return coordinate;
     }
+    
+    /**
+     * Special case: a reportPlugin is always of type {@code jar}, so can be transformed to an ArtifactCoordinate.
+     * 
+     * @param plugin {@link ReportPlugin}
+     * @return {@link ArtifactCoordinate}
+     */
+    public static ArtifactCoordinate toArtifactCoordinate( ReportPlugin plugin )
+    {
+        DefaultArtifactCoordinate coordinate = new DefaultArtifactCoordinate();
+
+        coordinate.setGroupId( plugin.getGroupId() );
+        coordinate.setArtifactId( plugin.getArtifactId() );
+        coordinate.setVersion( plugin.getVersion() );
+
+        return coordinate;
+    }
+
 }

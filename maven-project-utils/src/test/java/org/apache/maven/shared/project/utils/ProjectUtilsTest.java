@@ -1,12 +1,5 @@
 package org.apache.maven.shared.project.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import java.io.File;
-
-import org.junit.Test;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,6 +18,13 @@ import org.junit.Test;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import java.io.File;
+
+import org.junit.Test;
 
 public class ProjectUtilsTest
 {
@@ -57,7 +57,6 @@ public class ProjectUtilsTest
         assertNull( ProjectUtils.getJoinedFolder( ROOT_FOLDER, null ) );
     }
 
-    
     @Test
     public void getJoinedFolderSameDirectory()
         throws Exception

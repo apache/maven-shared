@@ -42,7 +42,7 @@ public final class ProjectUtils
 {
     // This instance is often used, including in recursive methods, so initiate it for general usage
     private static final MavenXpp3Reader POM_READER = new MavenXpp3Reader();
-    
+
     private ProjectUtils()
     {
     }
@@ -91,7 +91,7 @@ public final class ProjectUtils
         {
             return null;
         }
-        
+
         MavenProject current = project;
 
         while ( !isRootProject( current ) )
@@ -104,15 +104,14 @@ public final class ProjectUtils
 
     /**
      * Return {@code true} if this project has modules, but is <strong>never</strong> the parent of one of them.<br/>
-     * 
      * Return {@code false} if this project has no modules, or if 1 or more modules have this project as its parent.
      * 
      * @param project
-     * @return {@code true} if project is an aggregator, {@code false} if project is standalone or hybrid 
+     * @return {@code true} if project is an aggregator, {@code false} if project is standalone or hybrid
      */
     public static boolean isAggregator( MavenProject project )
     {
-     // (not) being an aggregator must never depend on reactor projects or active profiles
+        // (not) being an aggregator must never depend on reactor projects or active profiles
         Set<String> modules = getAllModules( project ).keySet();
 
         if ( modules.isEmpty() )
@@ -149,23 +148,24 @@ public final class ProjectUtils
         return true;
     }
 
-    private static Model readModel( File moduleFile ) throws IOException, XmlPullParserException
+    private static Model readModel( File moduleFile )
+        throws IOException, XmlPullParserException
     {
         FileReader moduleReader = null;
-        
+
         Model model = null;
-        
+
         try
         {
             moduleReader = new FileReader( moduleFile );
-            
+
             model = POM_READER.read( moduleReader );
         }
         finally
         {
             IOUtil.close( moduleReader );
         }
-        
+
         return model;
     }
 
@@ -173,11 +173,11 @@ public final class ProjectUtils
     {
         return getModuleFile( project.getBasedir(), module );
     }
-    
+
     private static File getModuleFile( File basedir, String module )
     {
         File moduleFile = new File( basedir, module );
-        
+
         if ( moduleFile.isDirectory() )
         {
             moduleFile = new File( moduleFile, "pom.xml" );
@@ -185,7 +185,6 @@ public final class ProjectUtils
         return moduleFile;
     }
 
-    
     /**
      * Returns all modules of a project, including does specified in profiles, both active and inactive. The key of the
      * returned Map is the name of the module, the value refers to the source of the module (the project or a specific
@@ -197,14 +196,14 @@ public final class ProjectUtils
     public static Map<String, String> getAllModules( MavenProject project )
     {
         Model model = project.getModel();
-        
+
         return getAllModules( model );
     }
 
     private static Map<String, String> getAllModules( Model model )
     {
         Map<String, String> modules = new LinkedHashMap<String, String>();
-        
+
         for ( String module : model.getModules() )
         {
             modules.put( module, "project" ); // id?
@@ -217,10 +216,10 @@ public final class ProjectUtils
                 modules.put( module, "profile(id:" + profile.getId() + ")" );
             }
         }
-        
+
         return Collections.unmodifiableMap( modules );
     }
-    
+
     /**
      * Returns the upper most folder of this projects and all of its descendants (i.e. modules, their modules, etc.).
      * 
@@ -233,7 +232,7 @@ public final class ProjectUtils
         {
             return null;
         }
-        
+
         try
         {
             return getJoinedFolder( project.getBasedir(), project.getModel() );
@@ -248,29 +247,29 @@ public final class ProjectUtils
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
-        return null; //@todo fix exception handling
+
+        return null; // @todo fix exception handling
     }
-    
+
     private static File getJoinedFolder( File baseDirectory, Model model )
         throws IOException, XmlPullParserException
     {
         File joinedFolder = baseDirectory;
-        
+
         for ( String module : getAllModules( model ).keySet() )
         {
             File moduleFile = getModuleFile( baseDirectory, module );
-            
+
             Model submodel = readModel( moduleFile );
-            
+
             File modulesJoinedFolder = getJoinedFolder( moduleFile.getParentFile(), submodel );
-            
+
             joinedFolder = getJoinedFolder( joinedFolder, modulesJoinedFolder );
         }
-        
+
         return joinedFolder;
     }
-    
+
     // Don't make this method public, it has nothing to do with a MavenProject.
     // If required on more places, create a separate Utils-class
     protected static File getJoinedFolder( File lhs, File rhs )
@@ -278,33 +277,33 @@ public final class ProjectUtils
         File joinedFolder = null;
 
         Stack<File> lhsStack = new Stack<File>();
-        
+
         File lhsAncestor = lhs;
-        
+
         while ( lhsAncestor != null )
         {
             lhsAncestor = lhsStack.push( lhsAncestor ).getParentFile();
         }
 
         Stack<File> rhsStack = new Stack<File>();
-        
+
         File rhsAncestor = rhs;
-        
+
         while ( rhsAncestor != null )
         {
             rhsAncestor = rhsStack.push( rhsAncestor ).getParentFile();
         }
-        
+
         while ( !lhsStack.isEmpty() && !rhsStack.isEmpty() )
         {
             File nextFile = lhsStack.pop();
-            
+
             if ( nextFile.isDirectory() && nextFile.equals( rhsStack.pop() ) )
             {
                 joinedFolder = nextFile;
             }
         }
-        
+
         return joinedFolder;
     }
 }

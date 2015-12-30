@@ -39,9 +39,8 @@ public final class SiteUtils
     {
         return resolveDistributionManagementSiteUrl( project, true );
     }
-    
+
     /**
-     * 
      * @param project
      * @param useModuleName use the moduleName instead of the artifactId
      * @return
@@ -59,7 +58,7 @@ public final class SiteUtils
                 if ( useModuleName )
                 {
                     Map<String, String> modules = ProjectUtils.getAllModules( project.getParent() );
-                    
+
                     for ( String module : modules.keySet() )
                     {
                         if ( new File( project.getParent().getBasedir(), module ).equals( project.getFile() ) )
@@ -78,11 +77,10 @@ public final class SiteUtils
         }
         return siteUrl;
     }
-    
+
     /**
-     * 
      * @param model
-     * @return return the url if available, otherwise {@code null} 
+     * @return return the url if available, otherwise {@code null}
      */
     protected static String getDistributionManagementSiteUrl( Model model )
     {

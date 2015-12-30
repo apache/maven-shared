@@ -1,20 +1,5 @@
 package org.apache.maven.shared.project.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Scm;
-import org.apache.maven.project.MavenProject;
-import org.junit.Test;
-
-import edu.emory.mathcs.backport.java.util.Collections;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -34,6 +19,21 @@ import edu.emory.mathcs.backport.java.util.Collections;
  * under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+
+import org.apache.maven.model.Model;
+import org.apache.maven.model.Scm;
+import org.apache.maven.project.MavenProject;
+import org.junit.Test;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class ScmUtilsTest
 {
 
@@ -52,7 +52,8 @@ public class ScmUtilsTest
     }
 
     @Test
-    public void resolveScmConnectionByParent() throws IOException
+    public void resolveScmConnectionByParent()
+        throws IOException
     {
         MavenProject parent = mock( MavenProject.class );
         Model parentModel = mock( Model.class );
@@ -77,7 +78,8 @@ public class ScmUtilsTest
     }
 
     @Test
-    public void resolveScmDeveloperConnectionByParent() throws IOException
+    public void resolveScmDeveloperConnectionByParent()
+        throws IOException
     {
         MavenProject parent = mock( MavenProject.class );
         Model parentModel = mock( Model.class );

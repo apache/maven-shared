@@ -213,7 +213,7 @@ Implementation-URL: \${project.url}
               If the manifest will contain these entries:
               <source>
 Specification-Title: \${project.name}
-Specification-Version: \${project.version}
+Specification-Version: \${project.artifact.selectedVersion.majorVersion}.\${project.artifact.selectedVersion.minorVersion}
 Specification-Vendor: \${project.organization.name}
               </source>
               The default value is <code>false</code>.

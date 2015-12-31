@@ -21,6 +21,8 @@ package org.apache.maven.archiver;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.OverConstrainedVersionException;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.ArchiverException;
@@ -386,7 +388,18 @@ public class MavenArchiver
         if ( config.isAddDefaultSpecificationEntries() )
         {
             addManifestAttribute( m, entries, "Specification-Title", project.getName() );
-            addManifestAttribute( m, entries, "Specification-Version", project.getVersion() );
+
+            try
+            {
+                ArtifactVersion version = project.getArtifact().getSelectedVersion();
+                String specVersion = String.format( "%s.%s", version.getMajorVersion(), version.getMinorVersion() );
+                addManifestAttribute( m, entries, "Specification-Version", specVersion );
+            }
+            catch ( OverConstrainedVersionException e )
+            {
+                throw new ManifestException( "Failed to get selected artifact version to calculate"
+                    + " the specification version: " + e.getMessage() );
+            }
 
             if ( project.getOrganization() != null )
             {

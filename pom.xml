@@ -29,7 +29,7 @@
   </parent>
 
   <artifactId>maven-shared-jar</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
 
   <name>Apache Maven JAR Utilities</name>
   <description>
@@ -37,9 +37,9 @@
   </description>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-jar</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-shared-jar</developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-shared-jar</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-jar-1.2</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-shared-jar-1.2</developerConnection>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-shared-jar-1.2</url>
   </scm>
   <issueManagement>
     <system>jira</system>

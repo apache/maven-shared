@@ -297,15 +297,13 @@ class MockArtifact
     public ArtifactVersion getSelectedVersion()
         throws OverConstrainedVersionException
     {
-        // TODO
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return VersionRange.createFromVersion( version ).getSelectedVersion( this );
     }
 
     public boolean isSelectedVersionKnown()
         throws OverConstrainedVersionException
     {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-        // TODO
+        return VersionRange.createFromVersion( version ).isSelectedVersionKnown( this );
     }
 
     public void setGroupId( String groupId )

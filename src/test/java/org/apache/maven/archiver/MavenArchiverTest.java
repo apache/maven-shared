@@ -314,7 +314,7 @@ public class MavenArchiverTest
             Map<Object, Object> entries = jar.getManifest().getMainAttributes();
 
             assertTrue( entries.containsKey( Attributes.Name.IMPLEMENTATION_VERSION ) );
-            assertEquals( "0.1", entries.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
+            assertEquals( "0.1.1", entries.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
         }
         finally
         {
@@ -454,7 +454,7 @@ public class MavenArchiverTest
         assertEquals( "Apache", manifest.get( Attributes.Name.SPECIFICATION_VENDOR ) );
 
         assertEquals( "archiver test", manifest.get( Attributes.Name.IMPLEMENTATION_TITLE ) );
-        assertEquals( "0.1", manifest.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
+        assertEquals( "0.1.1", manifest.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
         assertEquals( "org.apache.dummy", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR_ID ) );
         assertEquals( "Apache", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR ) );
         assertEquals( "http://maven.apache.org", manifest.get( Attributes.Name.IMPLEMENTATION_URL ) );
@@ -504,7 +504,7 @@ public class MavenArchiverTest
         assertEquals( "Apache", manifest.get( Attributes.Name.SPECIFICATION_VENDOR ) );
 
         assertEquals( "archiver test", manifest.get( Attributes.Name.IMPLEMENTATION_TITLE ) );
-        assertEquals( "0.1", manifest.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
+        assertEquals( "0.1.1", manifest.get( Attributes.Name.IMPLEMENTATION_VERSION ) );
         assertEquals( "org.apache.dummy", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR_ID ) );
         assertEquals( "Apache", manifest.get( Attributes.Name.IMPLEMENTATION_VENDOR ) );
         assertEquals( "http://maven.apache.org", manifest.get( Attributes.Name.IMPLEMENTATION_URL ) );
@@ -849,8 +849,8 @@ public class MavenArchiverTest
         MockArtifact artifact = new MockArtifact();
         artifact.setGroupId( "org.apache.dummy" );
         artifact.setArtifactId( "dummy" );
-        artifact.setVersion( "0.1" );
-        artifact.setBaseVersion( "0.1" );
+        artifact.setVersion( "0.1.1" );
+        artifact.setBaseVersion( "0.1.1" );
         artifact.setType( "jar" );
         artifact.setArtifactHandler( new DefaultArtifactHandler( "jar" ) );
         project.setArtifact( artifact );
@@ -866,7 +866,7 @@ public class MavenArchiverTest
         Model model = new Model();
         model.setGroupId( "org.apache.dummy" );
         model.setArtifactId( "dummy" );
-        model.setVersion( "0.1" );
+        model.setVersion( "0.1.1" );
 
         final MavenProject project = new MavenProject( model );
         project.setExtensionArtifacts( Collections.<Artifact>emptySet() );
@@ -906,8 +906,8 @@ public class MavenArchiverTest
         MockArtifact artifact = new MockArtifact();
         artifact.setGroupId( "org.apache.dummy" );
         artifact.setArtifactId( "dummy" );
-        artifact.setVersion( "0.1" );
-        artifact.setBaseVersion( "0.1" );
+        artifact.setVersion( "0.1.1" );
+        artifact.setBaseVersion( "0.1.1" );
         artifact.setType( "jar" );
         artifact.setArtifactHandler( new DefaultArtifactHandler( "jar" ) );
         project.setArtifact( artifact );
@@ -1042,20 +1042,20 @@ public class MavenArchiverTest
         File settings = null;
         List<String> goals = null;
         Date startTime = new Date();
-        
+
         MavenExecutionRequest request = new DefaultMavenExecutionRequest();
         request.setUserProperties( executionProperties );
         request.setGoals( goals );
         request.setStartTime( startTime );
         request.setUserSettingsFile( settings );
-        
+
         MavenExecutionResult result = new DefaultMavenExecutionResult();
-        
+
 
         RepositorySystemSession rss = new DefaultRepositorySystemSession();
-        
+
         return new MavenSession( container, rss, request, result );
-        
+
     }
 
     private Set<Artifact> getArtifacts( Artifact... artifacts )

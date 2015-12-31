@@ -84,7 +84,7 @@ Created-By: Apache Maven ${maven.version}
 Built-By: ${user.name}
 Build-Jdk: ${java.version}
 Specification-Title: ${project.name}
-Specification-Version: ${project.version}
+Specification-Version: ${project.artifact.selectedVersion.majorVersion}.${project.artifact.selectedVersion.minorVersion}
 Specification-Vendor: ${project.organization.name}
 Implementation-Title: ${project.name}
 Implementation-Version: ${project.version}

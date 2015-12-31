@@ -99,7 +99,3 @@ Implementation-URL: ${project.url}
 
  <<Note:>> If your pom.xml does not have a <<<\<url\>>>> element, referenced through interpolation,
  then the <<<Implementation-URL>>> entry will <<not>> be in the manifest.
-
- <<Note:>> If your pom.xml does not have a <<<\<name\>>>> element, then the
- <<<Specification-Title>>> and <<<Implementation-Title>>> entries will have
- "Unnamed - $\{project.groupId\}:$\{project.artifactId\}:$\{project.version\}" as their value.

@@ -102,31 +102,41 @@ public class Maven31DependencyResolver
             (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
                                                    ArtifactHandlerManager.class, artifactHandlerManager );
 
-        List<Dependency> aetherDeps = new ArrayList<Dependency>( mavenDependencies.size() );
-
         final Class<?>[] argClasses =
             new Class<?>[] { org.apache.maven.model.Dependency.class, ArtifactTypeRegistry.class };
 
-        for ( org.apache.maven.model.Dependency mavenDependency : mavenDependencies )
+        List<Dependency> aetherDeps = null;
+
+        if ( mavenDependencies != null )
         {
-            Object[] args = new Object[] { mavenDependency, typeRegistry };
+            aetherDeps = new ArrayList<Dependency>( mavenDependencies.size() );
 
-            Dependency aetherDependency =
-                (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
+            for ( org.apache.maven.model.Dependency mavenDependency : mavenDependencies )
+            {
+                Object[] args = new Object[] { mavenDependency, typeRegistry };
 
-            aetherDeps.add( aetherDependency );
+                Dependency aetherDependency =
+                    (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
+
+                aetherDeps.add( aetherDependency );
+            }
         }
 
-        List<Dependency> aetherManagedDeps = new ArrayList<Dependency>( managedMavenDependencies.size() );
-
-        for ( org.apache.maven.model.Dependency mavenDependency : managedMavenDependencies )
+        List<Dependency> aetherManagedDependencies = null;
+        
+        if ( managedMavenDependencies != null )
         {
-            Object[] args = new Object[] { mavenDependency, typeRegistry };
+            aetherManagedDependencies = new ArrayList<Dependency>( managedMavenDependencies.size() );
 
-            Dependency aetherDependency =
-                (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
+            for ( org.apache.maven.model.Dependency mavenDependency : managedMavenDependencies )
+            {
+                Object[] args = new Object[] { mavenDependency, typeRegistry };
 
-            aetherManagedDeps.add( aetherDependency );
+                Dependency aetherDependency =
+                    (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
+
+                aetherManagedDependencies.add( aetherDependency );
+            }
         }
 
         @SuppressWarnings( "unchecked" )
@@ -134,7 +144,7 @@ public class Maven31DependencyResolver
             (List<RemoteRepository>) Invoker.invoke( RepositoryUtils.class, "toRepos", List.class,
                                                      buildingRequest.getRemoteRepositories() );
 
-        CollectRequest request = new CollectRequest( aetherDeps, aetherManagedDeps, aetherRepos );
+        CollectRequest request = new CollectRequest( aetherDeps, aetherManagedDependencies, aetherRepos );
 
         return resolveDependencies( buildingRequest, aetherRepos, filter, request );
     }

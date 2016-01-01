@@ -50,7 +50,7 @@ public interface DependencyResolver
 
     /**
      * @param buildingRequest the project building request, never {@code null}
-     * @param dependencies the dependencies to resolve, never {@code null}
+     * @param dependencies the dependencies to resolve, can be {@code null}
      * @param managedDependencies managed dependencies, can be {@code null}
      * @param filter a filter, can be {@code null}
      * @return the resolved dependencies.

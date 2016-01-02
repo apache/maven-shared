@@ -28,13 +28,13 @@ Manifest Entries
  If you find that the other configuration options for Maven Archiver are not
  enough for manipulating the manifest, you can add your own entries to it.
  This is done with the <<<\<manifestEntries\>>>> configuration element.
- 
+
  In this example we'll add some entries to the manifest by specifying what we'd
  like in the <<<\<configuration\>>>>/<<<\<archive\>>>> element of
  maven-jar-plugin.
 
  <<Note:>> As with all the examples here, this configuration can be used in all
- plugins that use Maven Archiver, not just maven-jar-plugin as in this example. 
+ plugins that use Maven Archiver, not just maven-jar-plugin as in this example.
 
 +-----+
 <project>
@@ -64,7 +64,7 @@ Manifest Entries
 
  As you see above you can use literal values or you can have values from the
  POM interpolated into literals or simply use straight POM expressions. So this
- is what your resultant manifest will look like inside the generated jar:
+ is what your resultant manifest will look like inside the created jar:
 
 +-----+
 Manifest-Version: 1.0

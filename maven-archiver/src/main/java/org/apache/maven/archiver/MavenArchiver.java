@@ -125,7 +125,7 @@ public class MavenArchiver
                 if ( key.equals( "Class-Path" ) && attr != null )
                 {
                     // Merge the user-supplied Class-Path value with the programmatically
-                    // generated Class-Path. Note that the user-supplied value goes first
+                    // created Class-Path. Note that the user-supplied value goes first
                     // so that resources there will override any in the standard Class-Path.
                     attr.setValue( value + " " + attr.getValue() );
                 }
@@ -328,7 +328,7 @@ public class MavenArchiver
                             else if ( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_REPOSITORY.equals( layoutType ) )
                             {
                                 // we use layout /$groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
-                                // here we must find the Artifact in the project Artifacts to generate the maven layout
+                                // here we must find the Artifact in the project Artifacts to create the maven layout
                                 if ( config.isUseUniqueVersions() )
                                 {
                                     classpath.append( interpolator.interpolate( REPOSITORY_LAYOUT,
@@ -579,7 +579,7 @@ public class MavenArchiver
                 File dir = new File( workingProject.getBuild().getDirectory(), "maven-archiver" );
                 pomPropertiesFile = new File( dir, "pom.properties" );
             }
-            new PomPropertiesUtil().createPomProperties( workingProject, archiver, pomPropertiesFile, forced );
+            new PomPropertiesUtil().createPomProperties( session, workingProject, archiver, pomPropertiesFile, forced );
         }
 
         // ----------------------------------------------------------------------

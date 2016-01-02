@@ -80,7 +80,7 @@
           <tr>
             <td>addMavenDescriptor</td>
             <td>
-              Whether the generated archive will contain these two Maven files:
+              Whether the created archive will contain these two Maven files:
               <ul>
                 <li>
                   The pom file, located in the archive in
@@ -129,7 +129,7 @@
           <tr>
             <td>index</td>
             <td>
-              Whether the generated archive will contain an
+              Whether the created archive will contain an
               <code>INDEX.LIST</code> file.
               The default value is <code>false</code>.
             </td>
@@ -163,7 +163,7 @@
           <tr>
             <td>pomPropertiesFile</td>
             <td>
-              Use this to override the auto generated
+              Use this to override the auto created
               <a href="#pom-properties-content">pom.properties</a> file
               (only if <code>addMavenDescriptor</code> is set to <code>true</code>)
             </td>
@@ -185,7 +185,7 @@
           <tr>
             <td>addClasspath</td>
             <td>
-              Whether to generate a <code>Class-Path</code> manifest entry.
+              Whether to create a <code>Class-Path</code> manifest entry.
               The default value is <code>false</code>.
             </td>
             <td>boolean</td>
@@ -224,7 +224,7 @@ Specification-Vendor: \${project.organization.name}
           <tr>
             <td>addExtensions</td>
             <td>
-              Whether to generate an <code>Extension-List</code> manifest
+              Whether to create an <code>Extension-List</code> manifest
               entry.
               The default value is <code>false</code>.
             </td>
@@ -234,7 +234,7 @@ Specification-Vendor: \${project.organization.name}
           <tr>
             <td>classpathLayoutType</td>
             <td>
-              The type of layout to use when formatting entries in the generated
+              The type of layout to use when formatting entries in the created
               <code>Class-Path</code>. Valid values are: <code>simple</code>,
               <code>repository</code> (the same as a Maven classpath layout) and
               <code>custom</code>.
@@ -249,7 +249,7 @@ Specification-Vendor: \${project.organization.name}
           <tr>
             <td>classpathMavenRepositoryLayout</td>
             <td>
-              The generated <code>Class-Path</code> entry will contain paths
+              The created <code>Class-Path</code> entry will contain paths
               that follow the Maven 2 repository layout:
               <code>${groupId}/${artifactId}/${version}/${fileName}</code>.
               The default value is <code>false</code>.
@@ -337,7 +337,7 @@ Specification-Vendor: \${project.organization.name}
       <a name="pom-properties-content"/>
       <subsection name="pom.properties content">
         <p>
-          The auto generated <code>pom.properties</code> file will contain the
+          The auto created <code>pom.properties</code> file will contain the
           following content:
         </p>
         <source>

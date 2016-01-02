@@ -71,9 +71,9 @@ public class ManifestConfiguration
     private boolean addDefaultImplementationEntries;
 
     /**
-     * The generated Class-Path entry will contains paths that follow the Maven 2 repository layout:
+     * The created Class-Path entry will contains paths that follow the Maven 2 repository layout:
      * $groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
-     * 
+     *
      * @since 2.3
      * @deprecated Use {@link ManifestConfiguration#classpathLayoutType} instead.
      */
@@ -180,7 +180,7 @@ public class ManifestConfiguration
      * @deprecated Use {@link ManifestConfiguration#setClasspathLayoutType(String)}, and use
      *             CLASSPATH_LAYOUT_TYPE_SIMPLE, CLASSPATH_LAYOUT_TYPE_CUSTOM, or CLASSPATH_LAYOUT_TYPE_REPOSITORY, also
      *             declared in {@link ManifestConfiguration}.
-     * @param classpathMavenRepositoryLayout true/false classpath maven repository 
+     * @param classpathMavenRepositoryLayout true/false classpath maven repository
      */
     public void setClasspathMavenRepositoryLayout( boolean classpathMavenRepositoryLayout )
     {
@@ -292,12 +292,12 @@ public class ManifestConfiguration
     }
 
     /**
-     * Retrieve the flag for whether snapshot artifacts should be added to the classpath using the 
-     * timestamp/buildnumber version (the default, when this flag is true), or using the generic 
+     * Retrieve the flag for whether snapshot artifacts should be added to the classpath using the
+     * timestamp/buildnumber version (the default, when this flag is true), or using the generic
      * -SNAPSHOT version (when the flag is false). <br/>
-     * <b>NOTE:</b> If the snapshot was installed locally, this flag will not have an effect on 
+     * <b>NOTE:</b> If the snapshot was installed locally, this flag will not have an effect on
      * that artifact's inclusion, since it will have the same version either way (i.e. -SNAPSHOT naming).
-     * 
+     *
      * @return The state of {@link #useUniqueVersions}
      */
     public boolean isUseUniqueVersions()

@@ -24,8 +24,8 @@ package org.apache.maven.archiver;
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id$
- * @todo is this general enough to be in Plexus Archiver?
  */
+// TODO Is this general enough to be in Plexus Archiver?
 public class ManifestConfiguration
 {
     /**
@@ -230,7 +230,7 @@ public class ManifestConfiguration
      * Return the type of layout to use when formatting classpath entries. Default is taken from the constant
      * CLASSPATH_LAYOUT_TYPE_SIMPLE, declared in this class, which has a value of 'simple'. Other values are:
      * 'repository' (CLASSPATH_LAYOUT_TYPE_REPOSITORY, or the same as a maven classpath layout), and 'custom'
-     * (CLASSPATH_LAYOUT_TYPE_CUSTOM). <br/>
+     * (CLASSPATH_LAYOUT_TYPE_CUSTOM). <br>
      * <b>NOTE:</b> If you specify a type of 'custom' you MUST set
      * {@link ManifestConfiguration#setCustomClasspathLayout(String)}.
      * @return The classpath layout type.
@@ -247,7 +247,7 @@ public class ManifestConfiguration
      * Set the type of layout to use when formatting classpath entries. Should be one of: 'simple'
      * (CLASSPATH_LAYOUT_TYPE_SIMPLE), 'repository' (CLASSPATH_LAYOUT_TYPE_REPOSITORY, or the same as a maven classpath
      * layout), and 'custom' (CLASSPATH_LAYOUT_TYPE_CUSTOM). The constant names noted here are defined in the
-     * {@link ManifestConfiguration} class. <br/>
+     * {@link ManifestConfiguration} class. <br>
      * <b>NOTE:</b> If you specify a type of 'custom' you MUST set
      * {@link ManifestConfiguration#setCustomClasspathLayout(String)}.
      * @param classpathLayoutType The classpath layout type.
@@ -262,10 +262,10 @@ public class ManifestConfiguration
      * {@link ManifestConfiguration#setClasspathLayoutType(String)} has the value 'custom'. <b>The default value is
      * null.</b> Expressions will be evaluated against the following ordered list of classpath-related objects:
      * <ol>
-     * <li>The current {@link Artifact} instance, if one exists.</li>
-     * <li>The current {@link ArtifactHandler} instance from the artifact above.</li>
+     * <li>The current {@code Artifact} instance, if one exists.</li>
+     * <li>The current {@code ArtifactHandler} instance from the artifact above.</li>
      * </ol>
-     * <br/>
+     * <br>
      * <b>NOTE:</b> If you specify a layout type of 'custom' you MUST set this layout expression.
      * @return The custom classpath layout.
      */
@@ -279,10 +279,10 @@ public class ManifestConfiguration
      * {@link ManifestConfiguration#setClasspathLayoutType(String)} has the value 'custom'. Expressions will be
      * evaluated against the following ordered list of classpath-related objects:
      * <ol>
-     * <li>The current {@link Artifact} instance, if one exists.</li>
-     * <li>The current {@link ArtifactHandler} instance from the artifact above.</li>
+     * <li>The current {@code Artifact} instance, if one exists.</li>
+     * <li>The current {@code ArtifactHandler} instance from the artifact above.</li>
      * </ol>
-     * <br/>
+     * <br>
      * <b>NOTE:</b> If you specify a layout type of 'custom' you MUST set this layout expression.
      * @param customClasspathLayout The custom classpath layout.
      */
@@ -294,7 +294,7 @@ public class ManifestConfiguration
     /**
      * Retrieve the flag for whether snapshot artifacts should be added to the classpath using the
      * timestamp/buildnumber version (the default, when this flag is true), or using the generic
-     * -SNAPSHOT version (when the flag is false). <br/>
+     * -SNAPSHOT version (when the flag is false). <br>
      * <b>NOTE:</b> If the snapshot was installed locally, this flag will not have an effect on
      * that artifact's inclusion, since it will have the same version either way (i.e. -SNAPSHOT naming).
      *
@@ -308,7 +308,7 @@ public class ManifestConfiguration
     /**
      * Set the flag for whether snapshot artifacts should be added to the classpath using the timestamp/buildnumber
      * version (the default, when this flag is true), or using the generic -SNAPSHOT version (when the flag is false).
-     * <br/>
+     * <br>
      * <b>NOTE:</b> If the snapshot was installed locally, this flag will not have an effect on that artifact's
      * inclusion, since it will have the same version either way (i.e. -SNAPSHOT naming).
      * @param useUniqueVersions true to use unique versions or not.

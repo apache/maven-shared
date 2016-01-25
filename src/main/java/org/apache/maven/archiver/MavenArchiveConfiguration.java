@@ -30,8 +30,8 @@ import java.util.Map;
  *
  * @author <a href="mailto:brett@apache.org">Brett Porter</a>
  * @version $Id$
- * @todo is this general enough to be in Plexus Archiver?
  */
+// TODO Is this general enough to be in Plexus Archiver?
 public class MavenArchiveConfiguration
 {
     private boolean compress = true;

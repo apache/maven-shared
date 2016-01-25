@@ -25,7 +25,6 @@ import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.OverConstrainedVersionException;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.archiver.ArchiverException;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.Manifest;
 import org.codehaus.plexus.archiver.jar.ManifestException;
@@ -167,13 +166,13 @@ public class MavenArchiver
     /**
      * Return a pre-configured manifest
      *
-     * @todo Add user attributes list and user groups list
      * @param project {@link MavenProject}
      * @param config {@link ManifestConfiguration}
      * @return {@link Manifest}
      * @throws ManifestException Manifest exception.
      * @throws DependencyResolutionRequiredException Dependency resolution exception.
      */
+    // TODO Add user attributes list and user groups list
     public Manifest getManifest( MavenProject project, ManifestConfiguration config )
         throws ManifestException, DependencyResolutionRequiredException
     {
@@ -529,14 +528,14 @@ public class MavenArchiver
      * @param session {@link MavenSession}
      * @param project {@link MavenProject}
      * @param archiveConfiguration {@link MavenArchiveConfiguration}
-     * @throws ArchiverException Archiver Exception.
+     * @throws org.codehaus.plexus.archiver.ArchiverException Archiver Exception.
      * @throws ManifestException Manifest Exception.
      * @throws IOException IO Exception.
      * @throws DependencyResolutionRequiredException Dependency resolution exception.
      */
     public void createArchive( MavenSession session, MavenProject project,
                                MavenArchiveConfiguration archiveConfiguration )
-                                   throws ArchiverException, ManifestException, IOException,
+                                   throws ManifestException, IOException,
                                    DependencyResolutionRequiredException
     {
         // we have to clone the project instance so we can write out the pom with the deployment version,

@@ -30,7 +30,6 @@ import java.util.Properties;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.archiver.Archiver;
-import org.codehaus.plexus.archiver.ArchiverException;
 import org.apache.maven.shared.utils.io.IOUtil;
 
 /**
@@ -112,12 +111,12 @@ public class PomPropertiesUtil
      * @param archiver {@link Archiver}
      * @param pomPropertiesFile The pom properties file.
      * @param forceCreation force creation true/flas.e
-     * @throws ArchiverException archiver exception.
+     * @throws org.codehaus.plexus.archiver.ArchiverException archiver exception.
      * @throws IOException IO exception.
      */
     public void createPomProperties( MavenSession session, MavenProject project, Archiver archiver,
                                      File pomPropertiesFile, boolean forceCreation )
-        throws ArchiverException, IOException
+        throws IOException
     {
         final String artifactId = project.getArtifactId();
         final String groupId = project.getGroupId();

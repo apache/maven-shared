@@ -2,6 +2,7 @@ package org.apache.maven.archiver;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,6 +18,9 @@ import java.util.TreeSet;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+
+import junit.framework.TestCase;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
@@ -34,12 +38,12 @@ import org.apache.maven.model.Organization;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.StringUtils;
 import org.apache.maven.shared.utils.io.FileUtils;
+import org.apache.maven.shared.utils.io.IOUtil;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.ManifestException;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.util.DefaultRepositorySystemSession;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -58,8 +62,6 @@ import org.sonatype.aether.util.DefaultRepositorySystemSession;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import junit.framework.TestCase;
 
 public class MavenArchiverTest
     extends TestCase
@@ -819,6 +821,76 @@ public class MavenArchiverTest
         assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
     }
 
+    public void testDefaultPomProperties()
+            throws Exception
+    {
+        MavenSession session = getDummySession();
+        MavenProject project = getDummyProject();
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
+
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
+
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
+
+        final String groupId = project.getGroupId();
+        final String artifactId = project.getArtifactId();
+        final String version = project.getVersion();
+
+        JarFile virtJarFile = new JarFile( jarFile );
+        ZipEntry pomPropertiesEntry = virtJarFile.getEntry( "META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties" );
+        assertNotNull( pomPropertiesEntry );
+
+        InputStream is = virtJarFile.getInputStream( pomPropertiesEntry );
+        Properties p = loadProperties( is );
+
+        assertEquals( groupId, p.getProperty( "groupId" ) );
+        assertEquals( artifactId, p.getProperty( "artifactId" ) );
+        assertEquals( version, p.getProperty( "version" ) );
+
+        virtJarFile.close();
+    }
+
+    public void testCustomPomProperties()
+            throws Exception
+    {
+        MavenSession session = getDummySession();
+        MavenProject project = getDummyProject();
+        File jarFile = new File( "target/test/dummy.jar" );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
+
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
+
+        File customPomPropertiesFile = new File( "src/test/resources/custom-pom.properties" );
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.setPomPropertiesFile( customPomPropertiesFile );
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
+
+        final String groupId = project.getGroupId();
+        final String artifactId = project.getArtifactId();
+        final String version = project.getVersion();
+
+        JarFile virtJarFile = new JarFile( jarFile );
+        ZipEntry pomPropertiesEntry = virtJarFile.getEntry( "META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties" );
+        assertNotNull( pomPropertiesEntry );
+
+        InputStream is = virtJarFile.getInputStream( pomPropertiesEntry );
+        Properties p = loadProperties( is );
+
+        assertEquals( groupId, p.getProperty( "groupId" ) );
+        assertEquals( artifactId, p.getProperty( "artifactId" ) );
+        assertEquals( version, p.getProperty( "version" ) );
+        assertEquals( "1337", p.getProperty("build.revision" ) );
+        assertEquals( "tags/0.1.1", p.getProperty("build.branch" ) );
+
+        virtJarFile.close();
+    }
+
     private JarArchiver getCleanJarArchiver( File jarFile )
     {
         deleteAndAssertNotPresent( jarFile );
@@ -1068,6 +1140,23 @@ public class MavenArchiverTest
             result.add( artifact );
         }
         return result;
+    }
+
+    private Properties loadProperties( InputStream is )
+        throws IOException
+    {
+        Properties p = new Properties();
+        try
+        {
+            p.load( is );
+            is.close();
+            is = null;
+            return p;
+        }
+        finally
+        {
+            IOUtil.close( is );
+        }
     }
 
     public Manifest getJarFileManifest( File jarFile )

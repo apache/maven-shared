@@ -221,7 +221,7 @@ public class MavenArchiverTest
         throws Exception
     {
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -259,7 +259,7 @@ public class MavenArchiverTest
         try
         {
             File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+            JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
             MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -293,7 +293,7 @@ public class MavenArchiverTest
         try
         {
             File jarFile = new File( "target/test/dummy.jar" );
-            JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+            JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
             MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -338,7 +338,7 @@ public class MavenArchiverTest
         throws IOException, ManifestException, DependencyResolutionRequiredException
     {
         File jarFile = new File( "target/test/dummyWithDashes.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -367,7 +367,7 @@ public class MavenArchiverTest
         throws IOException, ManifestException, DependencyResolutionRequiredException
     {
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
         MavenSession session = getDummySession();
@@ -400,7 +400,7 @@ public class MavenArchiverTest
         throws Exception
     {
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -431,7 +431,7 @@ public class MavenArchiverTest
         throws Exception
     {
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -467,7 +467,7 @@ public class MavenArchiverTest
         throws Exception
     {
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -529,7 +529,7 @@ public class MavenArchiverTest
         throws Exception
     {
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -584,7 +584,7 @@ public class MavenArchiverTest
         MavenSession session = getDummySession();
         MavenProject project = getDummyProject();
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -617,7 +617,7 @@ public class MavenArchiverTest
         MavenSession session = getDummySession();
         MavenProject project = getDummyProjectWithSnapshot();
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -645,7 +645,7 @@ public class MavenArchiverTest
         MavenSession session = getDummySession();
         MavenProject project = getDummyProject();
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -679,7 +679,7 @@ public class MavenArchiverTest
         MavenSession session = getDummySession();
         MavenProject project = getDummyProjectWithSnapshot();
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -714,7 +714,7 @@ public class MavenArchiverTest
         MavenSession session = getDummySession();
         MavenProject project = getDummyProject();
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -751,7 +751,7 @@ public class MavenArchiverTest
         MavenSession session = getDummySession();
         MavenProject project = getDummyProjectWithSnapshot();
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
         MavenArchiveConfiguration config = new MavenArchiveConfiguration();
@@ -789,7 +789,7 @@ public class MavenArchiverTest
         MavenSession session = getDummySession();
         MavenProject project = getDummyProjectWithSnapshot();
         File jarFile = new File( "target/test/dummy.jar" );
-        JarArchiver jarArchiver = getCleanJarArciver( jarFile );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
 
         MavenArchiver archiver = getMavenArchiver( jarArchiver );
 
@@ -819,7 +819,7 @@ public class MavenArchiverTest
         assertEquals( "org/apache/dummy/bar/dummy3/2.0/TEST-dummy3-2.0.jar", classPathEntries[2] );
     }
 
-    private JarArchiver getCleanJarArciver( File jarFile )
+    private JarArchiver getCleanJarArchiver( File jarFile )
     {
         deleteAndAssertNotPresent( jarFile );
         JarArchiver jarArchiver = new JarArchiver();

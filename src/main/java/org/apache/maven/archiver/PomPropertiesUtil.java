@@ -41,13 +41,9 @@ public class PomPropertiesUtil
 {
     private static final String CREATED_BY_MAVEN = "Created by Apache Maven";
 
-    private boolean sameContents( Properties props, File file )
+    private Properties loadPropertiesFile( File file )
         throws IOException
     {
-        if ( !file.isFile() )
-        {
-            return false;
-        }
         Properties fileProps = new Properties();
         InputStream istream = null;
         try
@@ -56,16 +52,24 @@ public class PomPropertiesUtil
             fileProps.load( istream );
             istream.close();
             istream = null;
-            return fileProps.equals( props );
-        }
-        catch ( IOException e )
-        {
-            return false;
+            return fileProps;
         }
         finally
         {
             IOUtil.close( istream );
         }
+    }
+
+    private boolean sameContents( Properties props, File file )
+        throws IOException
+    {
+        if ( !file.isFile() )
+        {
+            return false;
+        }
+
+        Properties fileProps = loadPropertiesFile( file );
+        return fileProps.equals( props );
     }
 
     private void createPropertiesFile( MavenSession session, Properties properties, File outputFile,
@@ -106,28 +110,39 @@ public class PomPropertiesUtil
 
     /**
      * Creates the pom.properties file.
-     * @param session TODO
+     * @param session {@link MavenSession}
      * @param project {@link MavenProject}
      * @param archiver {@link Archiver}
+     * @param customPomPropertiesFile optional custom pom properties file
      * @param pomPropertiesFile The pom properties file.
-     * @param forceCreation force creation true/flas.e
+     * @param forceCreation force creation true/false
      * @throws org.codehaus.plexus.archiver.ArchiverException archiver exception.
      * @throws IOException IO exception.
      */
     public void createPomProperties( MavenSession session, MavenProject project, Archiver archiver,
-                                     File pomPropertiesFile, boolean forceCreation )
+                                     File customPomPropertiesFile, File pomPropertiesFile, boolean forceCreation )
         throws IOException
     {
-        final String artifactId = project.getArtifactId();
         final String groupId = project.getGroupId();
+        final String artifactId = project.getArtifactId();
+        final String version = project.getVersion();
 
-        Properties p = new Properties();
+        Properties p;
 
-        p.setProperty( "groupId", project.getGroupId() );
+        if ( customPomPropertiesFile != null )
+        {
+            p = loadPropertiesFile( customPomPropertiesFile );
+        }
+        else
+        {
+            p = new Properties();
+        }
 
-        p.setProperty( "artifactId", project.getArtifactId() );
+        p.setProperty( "groupId", groupId );
 
-        p.setProperty( "version", project.getVersion() );
+        p.setProperty( "artifactId", artifactId );
+
+        p.setProperty( "version", version );
 
         createPropertiesFile( session, p, pomPropertiesFile, forceCreation );
 

@@ -572,13 +572,12 @@ public class MavenArchiver
             // Create pom.properties file
             // ----------------------------------------------------------------------
 
-            File pomPropertiesFile = archiveConfiguration.getPomPropertiesFile();
-            if ( pomPropertiesFile == null )
-            {
-                File dir = new File( workingProject.getBuild().getDirectory(), "maven-archiver" );
-                pomPropertiesFile = new File( dir, "pom.properties" );
-            }
-            new PomPropertiesUtil().createPomProperties( session, workingProject, archiver, pomPropertiesFile, forced );
+            File customPomPropertiesFile = archiveConfiguration.getPomPropertiesFile();
+            File dir = new File( workingProject.getBuild().getDirectory(), "maven-archiver" );
+            File pomPropertiesFile = new File( dir, "pom.properties" );
+
+            new PomPropertiesUtil().createPomProperties( session, workingProject, archiver,
+                customPomPropertiesFile, pomPropertiesFile, forced );
         }
 
         // ----------------------------------------------------------------------

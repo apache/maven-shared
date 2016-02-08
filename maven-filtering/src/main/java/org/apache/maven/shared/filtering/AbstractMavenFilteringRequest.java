@@ -331,6 +331,39 @@ public class AbstractMavenFilteringRequest
     }
 
     /**
+     * @param delimiters If {@code null} than nothing will happen. If not {@code null} the delimiters will be set
+     *            according to the contents. If delimiter entries are {@code null} those entries will be set to '${*}'.
+     * @param useDefaultDelimiters true if the default delimiters will be used false otherwise.
+     */
+    public void setDelimiters( LinkedHashSet<String> delimiters, boolean useDefaultDelimiters )
+    {
+        if ( delimiters != null && !delimiters.isEmpty() )
+        {
+            LinkedHashSet<String> delims = new LinkedHashSet<String>();
+            if ( useDefaultDelimiters )
+            {
+                delims.addAll( this.getDelimiters() );
+            }
+
+            for ( String delim : delimiters )
+            {
+                if ( delim == null )
+                {
+                    // FIXME: ${filter:*} could also trigger this condition. Need a better long-term solution.
+                    delims.add( "${*}" );
+                }
+                else
+                {
+                    delims.add( delim );
+                }
+            }
+
+            this.setDelimiters( delims );
+        }
+
+    }
+
+    /**
      * @return If support multiple line filtering is active or not.
      */
     public boolean isSupportMultiLineFiltering()

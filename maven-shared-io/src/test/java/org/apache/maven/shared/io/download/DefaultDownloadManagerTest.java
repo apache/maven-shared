@@ -19,6 +19,14 @@ package org.apache.maven.shared.io.download;
  * under the License.
  */
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.anyString;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -39,8 +47,6 @@ import org.apache.maven.wagon.events.TransferListener;
 import org.apache.maven.wagon.proxy.ProxyInfo;
 import org.apache.maven.wagon.repository.Repository;
 import org.codehaus.plexus.PlexusTestCase;
-
-import static org.easymock.EasyMock.*;
 
 public class DefaultDownloadManagerTest
     extends PlexusTestCase

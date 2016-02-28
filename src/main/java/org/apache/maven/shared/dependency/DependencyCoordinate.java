@@ -36,10 +36,9 @@ package org.apache.maven.shared.dependency;
  */
 public interface DependencyCoordinate
 {
-	/**
-	 * 
-	 * @return the groupId of the dependency
-	 */
+    /**
+     * @return the groupId of the dependency
+     */
     String getGroupId();
 
     /**
@@ -57,7 +56,7 @@ public interface DependencyCoordinate
 
     /**
      * 
-     * @return the type of the artifact
+     * @return the type of the dependency
      */
     String getType();
 

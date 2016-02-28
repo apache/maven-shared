@@ -24,10 +24,6 @@ package org.apache.maven.shared.artifact;
  * Contains all required elements of a Maven Artifact to resolve and calculate its path for either a local or
  * remote Maven2 repository.
  * </p>
- * <p>
- * The type will be translated to an extension based on the artifact descriptor ({@code pom.xml} matching the groupId,
- * artifactId and version.
- * </p>
  * 
  * @author Robert Scholte
  */
@@ -44,14 +40,16 @@ public interface ArtifactCoordinate
     String getArtifactId();
 
     /**
-     * A version or versionRange
+     * A version, never a versionRange
      * 
      * @return The version.
      */
     String getVersion();
 
     /**
-     * @return The type of the artifact.
+     * The file-extension of the artifact.
+     * 
+     * @return The extension.
      */
     String getExtension();
 

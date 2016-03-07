@@ -58,6 +58,35 @@ public class MavenResourcesExecution
     private String encoding;
 
     /**
+     * By default files like {@code .gitignore}, {@code .cvsignore} etc. are
+     * excluded which means they will not being copied.
+     * If you need them for a particular reason you can do that by  
+     * settings this to {@code false}. This means
+     * all files like the following will be copied.
+     * <ul>
+     * <li>Misc: &#42;&#42;/&#42;~, &#42;&#42;/#&#42;#, &#42;&#42;/.#&#42;, &#42;&#42;/%&#42;%, &#42;&#42;/._&#42; </li>
+     * <li>CVS: &#42;&#42;/CVS, &#42;&#42;/CVS/&#42;&#42;, &#42;&#42;/.cvsignore</li>
+     * <li>RCS: &#42;&#42;/RCS, &#42;&#42;/RCS/&#42;&#42;</li>
+     * <li>SCCS: &#42;&#42;/SCCS, &#42;&#42;/SCCS/&#42;&#42;</li>
+     * <li>VSSercer: &#42;&#42;/vssver.scc</li>
+     * <li>MKS: &#42;&#42;/project.pj</li>
+     * <li>SVN: &#42;&#42;/.svn, &#42;&#42;/.svn/&#42;&#42;</li>
+     * <li>GNU: &#42;&#42;/.arch-ids, &#42;&#42;/.arch-ids/&#42;&#42;</li>
+     * <li>Bazaar: &#42;&#42;/.bzr, &#42;&#42;/.bzr/&#42;&#42;</li>
+     * <li>SurroundSCM: &#42;&#42;/.MySCMServerInfo</li>
+     * <li>Mac: &#42;&#42;/.DS_Store</li>
+     * <li>Serena Dimension: &#42;&#42;/.metadata, &#42;&#42;/.metadata/&#42;&#42;</li>
+     * <li>Mercurial: &#42;&#42;/.hg, &#42;&#42;/.hg/&#42;&#42;</li>
+     * <li>GIT: &#42;&#42;/.git, &#42;&#42;/.gitignore, &#42;&#42;/.gitattributes, &#42;&#42;/.git/&#42;&#42;</li>
+     * <li>Bitkeeper: &#42;&#42;/BitKeeper, &#42;&#42;/BitKeeper/&#42;&#42;, &#42;&#42;/ChangeSet, &#42;&#42;/ChangeSet/&#42;&#42;</li>
+     * <li>Darcs: &#42;&#42;/_darcs, &#42;&#42;/_darcs/&#42;&#42;, &#42;&#42;/.darcsrepo, &#42;&#42;/.darcsrepo/&#42;&#42;&#42;&#42;/-darcs-backup&#42;, &#42;&#42;/.darcs-temp-mail
+     * </ul>
+     * 
+     * @since 3.1.0
+     */
+    private boolean addDefaultExcludes = true;
+
+    /**
      * Overwrite existing files even if the destination files are newer. <code>false</code> by default.
      *
      * @since 1.0-beta-2
@@ -87,7 +116,8 @@ public class MavenResourcesExecution
     }
 
     /**
-     * As we use a Maven project <code>useDefaultFilterWrappers</code> will be set to <code>true</code>.
+     * As we use a Maven project <code>useDefaultFilterWrappers</code> will be set to <code>true</code>. The
+     * {@code useDefaultExcludes} is set to {@code true}.
      *
      * @param resources The list of resources.
      * @param outputDirectory The output directory.
@@ -107,6 +137,7 @@ public class MavenResourcesExecution
         this.outputDirectory = outputDirectory;
         this.nonFilteredFileExtensions = nonFilteredFileExtensions;
         this.useDefaultFilterWrappers = true;
+        this.addDefaultExcludes = true;
         this.resourcesBaseDirectory = mavenProject.getBasedir();
     }
 
@@ -288,6 +319,22 @@ public class MavenResourcesExecution
     }
 
     /**
+     * @return add the default excludes.
+     */
+    public boolean isAddDefaultExcludes()
+    {
+        return addDefaultExcludes;
+    }
+
+    /**
+     * @param addDefaultExcludes {@link #addDefaultExcludes}
+     */
+    public void setAddDefaultExcludes( boolean addDefaultExcludes )
+    {
+        this.addDefaultExcludes = addDefaultExcludes;
+    }
+
+    /**
      * Overwrite existing files even if the destination files are newer.
      *
      * @return {@link #overwrite}
@@ -372,6 +419,7 @@ public class MavenResourcesExecution
         mre.setResources( copyList( mre.getResources() ) );
         mre.setResourcesBaseDirectory( mre.getResourcesBaseDirectory() );
         mre.setUseDefaultFilterWrappers( mre.isUseDefaultFilterWrappers() );
+        mre.setAddDefaultExcludes( mre.isAddDefaultExcludes() );
         mre.setSupportMultiLineFiltering( mre.isSupportMultiLineFiltering() );
         return mre;
     }

@@ -167,7 +167,7 @@ public class DefaultMavenResourcesFiltering
                                 : resource.getIncludes().toString() );
 
                 // @formatter:on
-                getLogger().debug( debugMessage.toString() );
+                getLogger().info( debugMessage.toString() );
             }
 
             String targetPath = resource.getTargetPath();
@@ -197,10 +197,10 @@ public class DefaultMavenResourcesFiltering
 
             boolean ignoreDelta = !outputExists || buildContext.hasDelta( mavenResourcesExecution.getFileFilters() )
                 || buildContext.hasDelta( getRelativeOutputDirectory( mavenResourcesExecution ) );
-            getLogger().debug( "ignoreDelta " + ignoreDelta );
+            getLogger().info( "ignoreDelta " + ignoreDelta );
             Scanner scanner = buildContext.newScanner( resourceDirectory, ignoreDelta );
 
-            setupScanner( resource, scanner );
+            setupScanner( resource, scanner, mavenResourcesExecution.isAddDefaultExcludes() );
 
             scanner.scan();
 
@@ -227,6 +227,7 @@ public class DefaultMavenResourcesFiltering
             for ( String name : includedFiles )
             {
 
+                getLogger().info( "Copying file " + name );
                 File source = new File( resourceDirectory, name );
 
                 File destinationFile = getDestinationFile( outputDirectory, targetPath, name, mavenResourcesExecution );
@@ -244,7 +245,7 @@ public class DefaultMavenResourcesFiltering
 
             scanner = buildContext.newDeleteScanner( resourceDirectory );
 
-            setupScanner( resource, scanner );
+            setupScanner( resource, scanner, mavenResourcesExecution.isAddDefaultExcludes() );
 
             scanner.scan();
 
@@ -292,7 +293,7 @@ public class DefaultMavenResourcesFiltering
         return destinationFile;
     }
 
-    private String[] setupScanner( Resource resource, Scanner scanner )
+    private String[] setupScanner( Resource resource, Scanner scanner, boolean addDefaultExcludes )
     {
         String[] includes = null;
         if ( resource.getIncludes() != null && !resource.getIncludes().isEmpty() )
@@ -312,7 +313,10 @@ public class DefaultMavenResourcesFiltering
             scanner.setExcludes( excludes );
         }
 
-        scanner.addDefaultExcludes();
+        if ( addDefaultExcludes )
+        {
+            scanner.addDefaultExcludes();
+        }
         return includes;
     }
 

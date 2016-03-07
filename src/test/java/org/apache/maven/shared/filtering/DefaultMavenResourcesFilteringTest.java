@@ -694,6 +694,70 @@ public class DefaultMavenResourcesFilteringTest
         }
     }
 
+    public void testShouldReturnGitIgnoreFiles()
+        throws Exception
+    {
+        File outputDirectory = new File( getBasedir(), "target/testGitIgnoreFile" );
+        File baseDir = new File( "c:\\foo\\bar" );
+        StubMavenProject mavenProject = new StubMavenProject( baseDir );
+        mavenProject.setVersion( "1.0" );
+        mavenProject.setGroupId( "org.apache" );
+        mavenProject.setName( "test project" );
+
+        MavenResourcesFiltering mavenResourcesFiltering = lookup( MavenResourcesFiltering.class );
+
+        List<Resource> resources = new ArrayList<Resource>();
+        resources.add( new Resource()
+        {
+            {
+                setDirectory( getBasedir() + "/src/test/units-files/include-git-files" );
+                setIncludes( Arrays.asList( "**/*" ) );
+            }
+        } );
+        MavenResourcesExecution mavenResourcesExecution =
+            new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8",
+                                         Collections.<String>emptyList(), Collections.<String>emptyList(),
+                                         new StubMavenSession() );
+        mavenResourcesExecution.setIncludeEmptyDirs( true );
+        mavenResourcesExecution.setAddDefaultExcludes( false );
+        mavenResourcesFiltering.filterResources( mavenResourcesExecution );
+
+        File[] childs = outputDirectory.listFiles();
+        assertNotNull( childs );
+        assertEquals( 3, childs.length );
+
+        for ( File file : childs )
+        {
+            if ( file.getName().endsWith( "dir1" ) || file.getName().endsWith( "empty-directory" )
+                || file.getName().endsWith( "empty-directory-child" ) )
+            {
+                if ( file.getName().endsWith( "dir1" ) )
+                {
+                    assertEquals( 1, file.list().length );
+                    assertTrue( file.listFiles()[0].getName().endsWith( "foo.txt" ) );
+                }
+                if ( file.getName().endsWith( "empty-directory" ) )
+                {
+
+                    assertEquals( 1, file.list().length );
+                    assertTrue ( file.listFiles()[0].getName().endsWith( ".gitignore" ) );
+                }
+                if ( file.getName().endsWith( "empty-directory-child" ) )
+                {
+                    assertEquals( 1, file.list().length );
+                    assertTrue( file.listFiles()[0].isDirectory() );
+                    assertEquals( 1, file.listFiles()[0].listFiles().length );
+                  
+                    assertTrue( file.listFiles()[0].listFiles()[0].getName().endsWith( ".gitignore" ) );
+                }
+            }
+            else
+            {
+                fail( "unknow child file found " + file.getName() );
+            }
+        }
+    }
+
     /**
      * unit test for MSHARED-81 : https://issues.apache.org/jira/browse/MSHARED-81
      */

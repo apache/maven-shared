@@ -21,8 +21,13 @@ package org.apache.maven.shared.filtering;
 
 import java.util.Properties;
 
+import org.apache.maven.execution.DefaultMavenExecutionRequest;
+import org.apache.maven.execution.MavenExecutionRequest;
+import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.settings.Settings;
+import org.codehaus.plexus.PlexusContainer;
+import org.sonatype.aether.RepositorySystemSession;
 
 /**
  * @author Olivier Lamy
@@ -54,7 +59,9 @@ public class StubMavenSession
 
     public StubMavenSession( Properties executionProperties, Settings settings )
     {
-        super( null, null, null, null, null, null, null, null, null );
+
+        super( (PlexusContainer) null, (RepositorySystemSession) null, new DefaultMavenExecutionRequest(),
+               (MavenExecutionResult) null );
 
         this.settings = settings;
         this.executionProperties = new Properties();

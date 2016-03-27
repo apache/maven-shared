@@ -83,7 +83,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>1.5.15</version>
+      <version>3.0.22</version>
     </dependency>
 
     <dependency>

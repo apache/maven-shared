@@ -91,11 +91,15 @@
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>
           <configuration>
+            <!--
+              ! Using append to prevent overwriting of
+              ! inherited configuration.
+            -->
             <excludes combine.children="append">
               <!--
                 ! Binary file so no license possible
               -->
-              <exclude>src/test/keystory</exclude>
+              <exclude>src/test/keystore</exclude>
             </excludes>
           </configuration>
         </plugin>
@@ -114,15 +118,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>src/test/keystore</exclude>
-          </excludes>
-        </configuration>
       </plugin>
     </plugins>
   </build>

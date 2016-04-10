@@ -275,32 +275,7 @@ public class MavenArchiver
                     {
                         List<ValueSource> valueSources = new ArrayList<ValueSource>();
 
-                        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact,
-                                                                         true ) );
-                        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES,
-                                                                         artifact.getArtifactHandler(), true ) );
-
-                        Properties extraExpressions = new Properties();
-                        // FIXME: This query method SHOULD NOT affect the internal
-                        // state of the artifact version, but it does.
-                        if ( !artifact.isSnapshot() )
-                        {
-                            extraExpressions.setProperty( "baseVersion", artifact.getVersion() );
-                        }
-
-                        extraExpressions.setProperty( "groupIdPath", artifact.getGroupId().replace( '.', '/' ) );
-                        if ( StringUtils.isNotEmpty( artifact.getClassifier() ) )
-                        {
-                            extraExpressions.setProperty( "dashClassifier", "-" + artifact.getClassifier() );
-                            extraExpressions.setProperty( "dashClassifier?", "-" + artifact.getClassifier() );
-                        }
-                        else
-                        {
-                            extraExpressions.setProperty( "dashClassifier", "" );
-                            extraExpressions.setProperty( "dashClassifier?", "" );
-                        }
-                        valueSources.add( new PrefixedPropertiesValueSource( ARTIFACT_EXPRESSION_PREFIXES,
-                                                                             extraExpressions, true ) );
+                        handleExtraExpression( artifact, valueSources );
 
                         for ( ValueSource vs : valueSources )
                         {
@@ -386,42 +361,12 @@ public class MavenArchiver
 
         if ( config.isAddDefaultSpecificationEntries() )
         {
-            addManifestAttribute( m, entries, "Specification-Title", project.getName() );
-
-            try
-            {
-                ArtifactVersion version = project.getArtifact().getSelectedVersion();
-                String specVersion = String.format( "%s.%s", version.getMajorVersion(), version.getMinorVersion() );
-                addManifestAttribute( m, entries, "Specification-Version", specVersion );
-            }
-            catch ( OverConstrainedVersionException e )
-            {
-                throw new ManifestException( "Failed to get selected artifact version to calculate"
-                    + " the specification version: " + e.getMessage() );
-            }
-
-            if ( project.getOrganization() != null )
-            {
-                addManifestAttribute( m, entries, "Specification-Vendor", project.getOrganization().getName() );
-            }
+            handleSpecificationEntries( project, entries, m );
         }
 
         if ( config.isAddDefaultImplementationEntries() )
         {
-            addManifestAttribute( m, entries, "Implementation-Title", project.getName() );
-            addManifestAttribute( m, entries, "Implementation-Version", project.getVersion() );
-            // MJAR-5
-            addManifestAttribute( m, entries, "Implementation-Vendor-Id", project.getGroupId() );
-
-            if ( project.getOrganization() != null )
-            {
-                addManifestAttribute( m, entries, "Implementation-Vendor", project.getOrganization().getName() );
-            }
-
-            if ( project.getUrl() != null )
-            {
-                addManifestAttribute( m, entries, "Implementation-URL", project.getUrl() );
-            }
+            handleImplementationEntries( project, entries, m );
         }
 
         String mainClass = config.getMainClass();
@@ -430,57 +375,134 @@ public class MavenArchiver
             addManifestAttribute( m, entries, "Main-Class", mainClass );
         }
 
-        // Added extensions
         if ( config.isAddExtensions() )
         {
-            // TODO: this is only for applets - should we distinguish them as a packaging?
-            StringBuilder extensionsList = new StringBuilder();
-            Set<Artifact> artifacts = (Set<Artifact>) project.getArtifacts();
+            handleExtensions( project, entries, m );
+        }
 
-            for ( Artifact artifact : artifacts )
-            {
-                if ( !Artifact.SCOPE_TEST.equals( artifact.getScope() ) )
-                {
-                    if ( "jar".equals( artifact.getType() ) )
-                    {
-                        if ( extensionsList.length() > 0 )
-                        {
-                            extensionsList.append( " " );
-                        }
-                        extensionsList.append( artifact.getArtifactId() );
-                    }
-                }
-            }
+        return m;
+    }
 
-            if ( extensionsList.length() > 0 )
-            {
-                addManifestAttribute( m, entries, "Extension-List", extensionsList.toString() );
-            }
+    private void handleExtraExpression( Artifact artifact, List<ValueSource> valueSources )
+    {
+        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES, artifact,
+                                                         true ) );
+        valueSources.add( new PrefixedObjectValueSource( ARTIFACT_EXPRESSION_PREFIXES,
+                                                         artifact.getArtifactHandler(), true ) );
 
-            for ( Object artifact1 : artifacts )
+        Properties extraExpressions = new Properties();
+        // FIXME: This query method SHOULD NOT affect the internal
+        // state of the artifact version, but it does.
+        if ( !artifact.isSnapshot() )
+        {
+            extraExpressions.setProperty( "baseVersion", artifact.getVersion() );
+        }
+
+        extraExpressions.setProperty( "groupIdPath", artifact.getGroupId().replace( '.', '/' ) );
+        if ( StringUtils.isNotEmpty( artifact.getClassifier() ) )
+        {
+            extraExpressions.setProperty( "dashClassifier", "-" + artifact.getClassifier() );
+            extraExpressions.setProperty( "dashClassifier?", "-" + artifact.getClassifier() );
+        }
+        else
+        {
+            extraExpressions.setProperty( "dashClassifier", "" );
+            extraExpressions.setProperty( "dashClassifier?", "" );
+        }
+        valueSources.add( new PrefixedPropertiesValueSource( ARTIFACT_EXPRESSION_PREFIXES,
+                                                             extraExpressions, true ) );
+    }
+
+    private void handleExtensions( MavenProject project, Map<String, String> entries, Manifest m )
+        throws ManifestException
+    {
+        // TODO: this is only for applets - should we distinguish them as a packaging?
+        StringBuilder extensionsList = new StringBuilder();
+        Set<Artifact> artifacts = (Set<Artifact>) project.getArtifacts();
+
+        for ( Artifact artifact : artifacts )
+        {
+            if ( !Artifact.SCOPE_TEST.equals( artifact.getScope() ) )
             {
-                // TODO: the correct solution here would be to have an extension type, and to read
-                // the real extension values either from the artifact's manifest or some part of the POM
-                Artifact artifact = (Artifact) artifact1;
                 if ( "jar".equals( artifact.getType() ) )
                 {
-                    String artifactId = artifact.getArtifactId().replace( '.', '_' );
-                    String ename = artifactId + "-Extension-Name";
-                    addManifestAttribute( m, entries, ename, artifact.getArtifactId() );
-                    String iname = artifactId + "-Implementation-Version";
-                    addManifestAttribute( m, entries, iname, artifact.getVersion() );
-
-                    if ( artifact.getRepository() != null )
+                    if ( extensionsList.length() > 0 )
                     {
-                        iname = artifactId + "-Implementation-URL";
-                        String url = artifact.getRepository().getUrl() + "/" + artifact.toString();
-                        addManifestAttribute( m, entries, iname, url );
+                        extensionsList.append( " " );
                     }
+                    extensionsList.append( artifact.getArtifactId() );
                 }
             }
         }
 
-        return m;
+        if ( extensionsList.length() > 0 )
+        {
+            addManifestAttribute( m, entries, "Extension-List", extensionsList.toString() );
+        }
+
+        for ( Object artifact1 : artifacts )
+        {
+            // TODO: the correct solution here would be to have an extension type, and to read
+            // the real extension values either from the artifact's manifest or some part of the POM
+            Artifact artifact = (Artifact) artifact1;
+            if ( "jar".equals( artifact.getType() ) )
+            {
+                String artifactId = artifact.getArtifactId().replace( '.', '_' );
+                String ename = artifactId + "-Extension-Name";
+                addManifestAttribute( m, entries, ename, artifact.getArtifactId() );
+                String iname = artifactId + "-Implementation-Version";
+                addManifestAttribute( m, entries, iname, artifact.getVersion() );
+
+                if ( artifact.getRepository() != null )
+                {
+                    iname = artifactId + "-Implementation-URL";
+                    String url = artifact.getRepository().getUrl() + "/" + artifact.toString();
+                    addManifestAttribute( m, entries, iname, url );
+                }
+            }
+        }
+    }
+
+    private void handleImplementationEntries( MavenProject project, Map<String, String> entries, Manifest m )
+        throws ManifestException
+    {
+        addManifestAttribute( m, entries, "Implementation-Title", project.getName() );
+        addManifestAttribute( m, entries, "Implementation-Version", project.getVersion() );
+        // MJAR-5
+        addManifestAttribute( m, entries, "Implementation-Vendor-Id", project.getGroupId() );
+
+        if ( project.getOrganization() != null )
+        {
+            addManifestAttribute( m, entries, "Implementation-Vendor", project.getOrganization().getName() );
+        }
+
+        if ( project.getUrl() != null )
+        {
+            addManifestAttribute( m, entries, "Implementation-URL", project.getUrl() );
+        }
+    }
+
+    private void handleSpecificationEntries( MavenProject project, Map<String, String> entries, Manifest m )
+        throws ManifestException
+    {
+        addManifestAttribute( m, entries, "Specification-Title", project.getName() );
+
+        try
+        {
+            ArtifactVersion version = project.getArtifact().getSelectedVersion();
+            String specVersion = String.format( "%s.%s", version.getMajorVersion(), version.getMinorVersion() );
+            addManifestAttribute( m, entries, "Specification-Version", specVersion );
+        }
+        catch ( OverConstrainedVersionException e )
+        {
+            throw new ManifestException( "Failed to get selected artifact version to calculate"
+                + " the specification version: " + e.getMessage() );
+        }
+
+        if ( project.getOrganization() != null )
+        {
+            addManifestAttribute( m, entries, "Specification-Vendor", project.getOrganization().getName() );
+        }
     }
 
     private void addCustomEntries( Manifest m, Map<String, String> entries, ManifestConfiguration config )

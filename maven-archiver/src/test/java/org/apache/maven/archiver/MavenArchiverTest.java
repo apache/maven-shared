@@ -111,12 +111,6 @@ public class MavenArchiverTest
 
         assertNotNull( manifest.getMainAttributes() );
 
-        for ( Map.Entry<String, Attributes> entry : manifest.getEntries().entrySet() )
-        {
-            System.out.println( entry.getKey() + " " + entry.getValue().getValue( "Extension-List" ) );
-
-        }
-
         assertEquals( null, manifest.getMainAttributes().getValue( "Extension-List" ) );
 
         MockArtifact artifact1 = new MockArtifact();

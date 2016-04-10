@@ -70,15 +70,6 @@ public class ManifestConfiguration
      */
     private boolean addDefaultImplementationEntries;
 
-    /**
-     * The created Class-Path entry will contains paths that follow the Maven 2 repository layout:
-     * $groupId[0]/../${groupId[n]/$artifactId/$version/{fileName}
-     *
-     * @since 2.3
-     * @deprecated Use {@link ManifestConfiguration#classpathLayoutType} instead.
-     */
-    private boolean classpathMavenRepositoryLayout = false;
-
     private String classpathLayoutType = CLASSPATH_LAYOUT_TYPE_SIMPLE;
 
     private String customClasspathLayout;
@@ -134,17 +125,6 @@ public class ManifestConfiguration
     }
 
     /**
-     * @deprecated Use {@link ManifestConfiguration#getClasspathLayoutType()}, and compare to
-     *             CLASSPATH_LAYOUT_TYPE_SIMPLE or CLASSPATH_LAYOUT_TYPE_REPOSITORY, also declared in
-     *             {@link ManifestConfiguration}.
-     * @return The state of classpath Maven repository layout.
-     */
-    public boolean isClasspathMavenRepositoryLayout()
-    {
-        return classpathMavenRepositoryLayout;
-    }
-
-    /**
      * @param addClasspath turn on addClasspath or off.
      */
     public void setAddClasspath( boolean addClasspath )
@@ -174,17 +154,6 @@ public class ManifestConfiguration
     public void setAddExtensions( boolean addExtensions )
     {
         this.addExtensions = addExtensions;
-    }
-
-    /**
-     * @deprecated Use {@link ManifestConfiguration#setClasspathLayoutType(String)}, and use
-     *             CLASSPATH_LAYOUT_TYPE_SIMPLE, CLASSPATH_LAYOUT_TYPE_CUSTOM, or CLASSPATH_LAYOUT_TYPE_REPOSITORY, also
-     *             declared in {@link ManifestConfiguration}.
-     * @param classpathMavenRepositoryLayout true/false classpath maven repository
-     */
-    public void setClasspathMavenRepositoryLayout( boolean classpathMavenRepositoryLayout )
-    {
-        this.classpathMavenRepositoryLayout = classpathMavenRepositoryLayout;
     }
 
     /**
@@ -238,7 +207,7 @@ public class ManifestConfiguration
     public String getClasspathLayoutType()
     {
         // CHECKSTYLE_OFF: LineLength
-        return CLASSPATH_LAYOUT_TYPE_SIMPLE.equals( classpathLayoutType ) && classpathMavenRepositoryLayout ? CLASSPATH_LAYOUT_TYPE_REPOSITORY
+        return CLASSPATH_LAYOUT_TYPE_SIMPLE.equals( classpathLayoutType ) ? CLASSPATH_LAYOUT_TYPE_REPOSITORY
                         : classpathLayoutType;
         // CHECKSTYLE_ON: LineLength
     }
@@ -284,6 +253,14 @@ public class ManifestConfiguration
      * </ol>
      * <br>
      * <b>NOTE:</b> If you specify a layout type of 'custom' you MUST set this layout expression.
+     * You can take a look at 
+     * <ol>
+     * <li>{@link MavenArchiver#SIMPLE_LAYOUT}</li>
+     * <li>{@link MavenArchiver#SIMPLE_LAYOUT_NONUNIQUE}</li>
+     * <li>{@link MavenArchiver#REPOSITORY_LAYOUT}</li>
+     * <li>{@link MavenArchiver#REPOSITORY_LAYOUT_NONUNIQUE}</li>
+     * </ol>
+     * how such an expression looks like.
      * @param customClasspathLayout The custom classpath layout.
      */
     public void setCustomClasspathLayout( String customClasspathLayout )

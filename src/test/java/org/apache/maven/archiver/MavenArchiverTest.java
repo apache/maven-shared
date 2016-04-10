@@ -1,5 +1,24 @@
 package org.apache.maven.archiver;
 
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,24 +63,6 @@ import org.codehaus.plexus.archiver.jar.JarArchiver;
 import org.codehaus.plexus.archiver.jar.ManifestException;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.util.DefaultRepositorySystemSession;
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 
 public class MavenArchiverTest
     extends TestCase
@@ -185,7 +186,7 @@ public class MavenArchiverTest
             Model model = new Model();
             model.setArtifactId( "dummy" );
 
-            MavenProject project = new MavenProject( model )
+            MavenProject project = new MavenProject( model)
             {
                 public List<String> getRuntimeClasspathElements()
                 {
@@ -214,7 +215,7 @@ public class MavenArchiverTest
         }
         finally
         {
-            //noinspection ResultOfMethodCallIgnored
+            // noinspection ResultOfMethodCallIgnored
             tempFile.delete();
         }
     }
@@ -415,8 +416,9 @@ public class MavenArchiverTest
         config.setForced( true );
         config.getManifest().setAddDefaultImplementationEntries( true );
         config.addManifestEntry( "Description", project.getDescription() );
-        // config.addManifestEntry( "EntryWithTab", " foo tab " + ( '\u0009' ) + ( '\u0009' ) + " bar tab" + (
-        // '\u0009' ) );
+        // config.addManifestEntry( "EntryWithTab", " foo tab " + ( '\u0009' ) + ( '\u0009' ) 
+        // + " bar tab" + ( // '\u0009'
+        // ) ); 
         archiver.createArchive( session, project, config );
         assertTrue( jarFile.exists() );
 
@@ -443,7 +445,7 @@ public class MavenArchiverTest
         config.getManifest().setAddDefaultImplementationEntries( true );
         config.getManifest().setAddDefaultSpecificationEntries( true );
 
-        //noinspection deprecation
+        // noinspection deprecation
         MavenSession session = getDummySessionWithoutMavenVersion();
         archiver.createArchive( session, project, config );
         assertTrue( jarFile.exists() );
@@ -727,8 +729,7 @@ public class MavenArchiverTest
         config.getManifest().setMainClass( "org.apache.maven.Foo" );
         config.getManifest().setAddClasspath( true );
         config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
-        config.getManifest().setCustomClasspathLayout(
-            "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.version}/TEST-${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}" );
+        config.getManifest().setCustomClasspathLayout( "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.version}/TEST-${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}" );
         archiver.createArchive( session, project, config );
         assertTrue( jarFile.exists() );
         Manifest manifest = archiver.getManifest( session, project, config );
@@ -763,8 +764,7 @@ public class MavenArchiverTest
         config.getManifest().setMainClass( "org.apache.maven.Foo" );
         config.getManifest().setAddClasspath( true );
         config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
-        config.getManifest().setCustomClasspathLayout(
-            "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.baseVersion}/TEST-${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}" );
+        config.getManifest().setCustomClasspathLayout( "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.baseVersion}/TEST-${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}" );
         archiver.createArchive( session, project, config );
         assertTrue( jarFile.exists() );
 
@@ -802,8 +802,7 @@ public class MavenArchiverTest
         config.getManifest().setMainClass( "org.apache.maven.Foo" );
         config.getManifest().setAddClasspath( true );
         config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
-        config.getManifest().setCustomClasspathLayout(
-            "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.baseVersion}/TEST-${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}" );
+        config.getManifest().setCustomClasspathLayout( "${artifact.groupIdPath}/${artifact.artifactId}/${artifact.baseVersion}/TEST-${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}" );
         archiver.createArchive( session, project, config );
         assertTrue( jarFile.exists() );
         Manifest manifest = archiver.getManifest( session, project, config );
@@ -822,7 +821,7 @@ public class MavenArchiverTest
     }
 
     public void testDefaultPomProperties()
-            throws Exception
+        throws Exception
     {
         MavenSession session = getDummySession();
         MavenProject project = getDummyProject();
@@ -841,7 +840,8 @@ public class MavenArchiverTest
         final String version = project.getVersion();
 
         JarFile virtJarFile = new JarFile( jarFile );
-        ZipEntry pomPropertiesEntry = virtJarFile.getEntry( "META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties" );
+        ZipEntry pomPropertiesEntry =
+            virtJarFile.getEntry( "META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties" );
         assertNotNull( pomPropertiesEntry );
 
         InputStream is = virtJarFile.getInputStream( pomPropertiesEntry );
@@ -855,7 +855,7 @@ public class MavenArchiverTest
     }
 
     public void testCustomPomProperties()
-            throws Exception
+        throws Exception
     {
         MavenSession session = getDummySession();
         MavenProject project = getDummyProject();
@@ -876,7 +876,8 @@ public class MavenArchiverTest
         final String version = project.getVersion();
 
         JarFile virtJarFile = new JarFile( jarFile );
-        ZipEntry pomPropertiesEntry = virtJarFile.getEntry( "META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties" );
+        ZipEntry pomPropertiesEntry =
+            virtJarFile.getEntry( "META-INF/maven/" + groupId + "/" + artifactId + "/pom.properties" );
         assertNotNull( pomPropertiesEntry );
 
         InputStream is = virtJarFile.getInputStream( pomPropertiesEntry );
@@ -885,8 +886,8 @@ public class MavenArchiverTest
         assertEquals( groupId, p.getProperty( "groupId" ) );
         assertEquals( artifactId, p.getProperty( "artifactId" ) );
         assertEquals( version, p.getProperty( "version" ) );
-        assertEquals( "1337", p.getProperty("build.revision" ) );
-        assertEquals( "tags/0.1.1", p.getProperty("build.branch" ) );
+        assertEquals( "1337", p.getProperty( "build.revision" ) );
+        assertEquals( "tags/0.1.1", p.getProperty( "build.branch" ) );
 
         virtJarFile.close();
     }
@@ -941,12 +942,11 @@ public class MavenArchiverTest
         model.setVersion( "0.1.1" );
 
         final MavenProject project = new MavenProject( model );
-        project.setExtensionArtifacts( Collections.<Artifact>emptySet() );
-        project.setRemoteArtifactRepositories( Collections.<ArtifactRepository>emptyList() );
-        project.setPluginArtifactRepositories( Collections.<ArtifactRepository>emptyList() );
+        project.setExtensionArtifacts( Collections.<Artifact> emptySet() );
+        project.setRemoteArtifactRepositories( Collections.<ArtifactRepository> emptyList() );
+        project.setPluginArtifactRepositories( Collections.<ArtifactRepository> emptyList() );
         return project;
     }
-
 
     private MockArtifact getMockArtifact3()
     {
@@ -1122,7 +1122,6 @@ public class MavenArchiverTest
         request.setUserSettingsFile( settings );
 
         MavenExecutionResult result = new DefaultMavenExecutionResult();
-
 
         RepositorySystemSession rss = new DefaultRepositorySystemSession();
 

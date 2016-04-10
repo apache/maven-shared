@@ -20,8 +20,8 @@ package org.apache.maven.archiver;
  */
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,11 +44,12 @@ public class MavenArchiveConfiguration
 
     private File manifestFile;
 
+    //TODO: Rename this attribute to manifestConfiguration;
     private ManifestConfiguration manifest;
 
-    private Map<String, String> manifestEntries = new HashMap<String, String>();
+    private Map<String, String> manifestEntries = new LinkedHashMap<String, String>();
 
-    private List<ManifestSection> manifestSections = new ArrayList<ManifestSection>();
+    private List<ManifestSection> manifestSections = new LinkedList<ManifestSection>();
 
     /**
      * @since 2.2
@@ -111,6 +112,7 @@ public class MavenArchiveConfiguration
     /**
      * @return {@link #manifest}
      */
+    //TODO: Change the name of this method into getManifestConfiguration()
     public ManifestConfiguration getManifest()
     {
         if ( manifest == null )

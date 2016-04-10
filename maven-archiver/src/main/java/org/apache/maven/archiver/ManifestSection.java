@@ -19,7 +19,7 @@ package org.apache.maven.archiver;
  * under the License.
  */
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -30,7 +30,7 @@ public class ManifestSection
 
     private String name = null;
 
-    private Map<String, String> manifestEntries = new HashMap<String, String>();
+    private Map<String, String> manifestEntries = new LinkedHashMap<String, String>();
 
     /**
      * @param key The key of the manifest entry.

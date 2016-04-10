@@ -598,6 +598,8 @@ public class MavenArchiverTest
         config.getManifest().setAddDefaultSpecificationEntries( true );
         config.getManifest().setMainClass( "org.apache.maven.Foo" );
         config.getManifest().setAddClasspath( true );
+        config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
+        config.getManifest().setCustomClasspathLayout( "${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}" );
         archiver.createArchive( session, project, config );
         assertTrue( jarFile.exists() );
         final Manifest manifest = getJarFileManifest( jarFile );
@@ -631,6 +633,8 @@ public class MavenArchiverTest
         config.getManifest().setAddDefaultSpecificationEntries( true );
         config.getManifest().setMainClass( "org.apache.maven.Foo" );
         config.getManifest().setAddClasspath( true );
+        config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
+        config.getManifest().setCustomClasspathLayout( "${artifact.artifactId}-${artifact.version}${dashClassifier?}.${artifact.extension}" );
         archiver.createArchive( session, project, config );
         assertTrue( jarFile.exists() );
 

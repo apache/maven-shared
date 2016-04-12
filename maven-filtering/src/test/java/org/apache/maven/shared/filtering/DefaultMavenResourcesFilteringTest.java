@@ -129,7 +129,7 @@ public class DefaultMavenResourcesFilteringTest
         mre.setEncoding( "UTF-8" );
         mre.setMavenProject( mavenProject );
         mre.setFilters( filtersFile );
-        mre.setNonFilteredFileExtensions( Collections.<String>emptyList() );
+        mre.setNonFilteredFileExtensions( Collections.<String> emptyList() );
         mre.setMavenSession( session );
         mre.setUseDefaultFilterWrappers( true );
 
@@ -374,7 +374,7 @@ public class DefaultMavenResourcesFilteringTest
         mre.setEncoding( "UTF-8" );
         mre.setMavenProject( mavenProject );
         mre.setFilters( null );
-        mre.setNonFilteredFileExtensions( Collections.<String>emptyList() );
+        mre.setNonFilteredFileExtensions( Collections.<String> emptyList() );
         mre.setMavenSession( new StubMavenSession() );
 
         mavenResourcesFiltering.filterResources( mre );
@@ -459,7 +459,7 @@ public class DefaultMavenResourcesFilteringTest
 
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
-                                         Collections.<String>emptyList(), new StubMavenSession() );
+                                         Collections.<String> emptyList(), new StubMavenSession() );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
         File[] files = outputDirectory.listFiles();
@@ -495,7 +495,7 @@ public class DefaultMavenResourcesFilteringTest
 
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
-                                         Collections.<String>emptyList(), new StubMavenSession() );
+                                         Collections.<String> emptyList(), new StubMavenSession() );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
         File[] files = outputDirectory.listFiles();
@@ -536,7 +536,7 @@ public class DefaultMavenResourcesFilteringTest
 
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
-                                         Collections.<String>emptyList(), new StubMavenSession() );
+                                         Collections.<String> emptyList(), new StubMavenSession() );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
         File[] files = outputDirectory.listFiles();
@@ -592,7 +592,7 @@ public class DefaultMavenResourcesFilteringTest
 
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
-                                         Collections.<String>emptyList(), new StubMavenSession() );
+                                         Collections.<String> emptyList(), new StubMavenSession() );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
         File[] files = targetPathFile.listFiles();
@@ -626,7 +626,7 @@ public class DefaultMavenResourcesFilteringTest
 
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8", filtersFile,
-                                         Collections.<String>emptyList(), new StubMavenSession() );
+                                         Collections.<String> emptyList(), new StubMavenSession() );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
 
         File targetPathFile = new File( outputDirectory, "testTargetPath" );
@@ -657,7 +657,7 @@ public class DefaultMavenResourcesFilteringTest
         } );
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8",
-                                         Collections.<String>emptyList(), Collections.<String>emptyList(),
+                                         Collections.<String> emptyList(), Collections.<String> emptyList(),
                                          new StubMavenSession() );
         mavenResourcesExecution.setIncludeEmptyDirs( true );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );
@@ -697,7 +697,12 @@ public class DefaultMavenResourcesFilteringTest
     public void testShouldReturnGitIgnoreFiles()
         throws Exception
     {
-        File outputDirectory = new File( getBasedir(), "target/testGitIgnoreFile" );
+        File sourceDirectory = new File( getBasedir(), "/target/sourceTestGitIgnoreFile" );
+        FileUtils.forceDelete( sourceDirectory );
+
+        createTestDataStructure( sourceDirectory );
+
+        File outputDirectory = new File( getBasedir(), "/target/testGitIgnoreFile" );
         File baseDir = new File( "c:\\foo\\bar" );
         StubMavenProject mavenProject = new StubMavenProject( baseDir );
         mavenProject.setVersion( "1.0" );
@@ -710,13 +715,13 @@ public class DefaultMavenResourcesFilteringTest
         resources.add( new Resource()
         {
             {
-                setDirectory( getBasedir() + "/src/test/units-files/include-git-files" );
+                setDirectory( getBasedir() + "/target/sourceTestGitIgnoreFile" );
                 setIncludes( Arrays.asList( "**/*" ) );
             }
         } );
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( resources, outputDirectory, mavenProject, "UTF-8",
-                                         Collections.<String>emptyList(), Collections.<String>emptyList(),
+                                         Collections.<String> emptyList(), Collections.<String> emptyList(),
                                          new StubMavenSession() );
         mavenResourcesExecution.setIncludeEmptyDirs( true );
         mavenResourcesExecution.setAddDefaultExcludes( false );
@@ -740,14 +745,14 @@ public class DefaultMavenResourcesFilteringTest
                 {
 
                     assertEquals( 1, file.list().length );
-                    assertTrue ( file.listFiles()[0].getName().endsWith( ".gitignore" ) );
+                    assertTrue( file.listFiles()[0].getName().endsWith( ".gitignore" ) );
                 }
                 if ( file.getName().endsWith( "empty-directory-child" ) )
                 {
                     assertEquals( 1, file.list().length );
                     assertTrue( file.listFiles()[0].isDirectory() );
                     assertEquals( 1, file.listFiles()[0].listFiles().length );
-                  
+
                     assertTrue( file.listFiles()[0].listFiles()[0].getName().endsWith( ".gitignore" ) );
                 }
             }
@@ -756,6 +761,35 @@ public class DefaultMavenResourcesFilteringTest
                 fail( "unknow child file found " + file.getName() );
             }
         }
+    }
+
+    /**
+     * The folder and file structure will be created instead of letting this resource plugin copying the structure which
+     * will not work.
+     * 
+     * @param sourceDirectory The source folder where the structure will be created.
+     * @throws IOException
+     */
+    private void createTestDataStructure( File sourceDirectory )
+        throws IOException
+    {
+        File dir1 = new File( sourceDirectory, "dir1" );
+
+        dir1.mkdirs();
+        FileUtils.fileWrite( new File( dir1, "foo.txt" ), "UTF-8", "This is a Test File" );
+
+        File emptyDirectory = new File( sourceDirectory, "empty-directory" );
+        emptyDirectory.mkdirs();
+
+        FileUtils.fileWrite( new File( emptyDirectory, ".gitignore" ), "UTF-8", "# .gitignore file" );
+
+        File emptyDirectoryChild = new File( sourceDirectory, "empty-directory-child" );
+        emptyDirectory.mkdirs();
+
+        File emptyDirectoryChildEmptyChild = new File( emptyDirectoryChild, "empty-child" );
+        emptyDirectoryChildEmptyChild.mkdirs();
+
+        FileUtils.fileWrite( new File( emptyDirectoryChildEmptyChild, ".gitignore" ), "UTF-8", "# .gitignore file" );
     }
 
     /**
@@ -792,8 +826,8 @@ public class DefaultMavenResourcesFilteringTest
         } );
         File output = new File( outputDirectory, "MSHARED-81" );
         MavenResourcesExecution mavenResourcesExecution =
-            new MavenResourcesExecution( resources, output, mavenProject, "UTF-8", Collections.<String>emptyList(),
-                                         Collections.<String>emptyList(), new StubMavenSession() );
+            new MavenResourcesExecution( resources, output, mavenProject, "UTF-8", Collections.<String> emptyList(),
+                                         Collections.<String> emptyList(), new StubMavenSession() );
         mavenResourcesExecution.setIncludeEmptyDirs( true );
         mavenResourcesExecution.setEscapeString( "\\" );
 
@@ -854,8 +888,8 @@ public class DefaultMavenResourcesFilteringTest
         } );
         File output = new File( outputDirectory, "edge-cases" );
         MavenResourcesExecution mavenResourcesExecution =
-            new MavenResourcesExecution( resources, output, mavenProject, "UTF-8", Collections.<String>emptyList(),
-                                         Collections.<String>emptyList(), new StubMavenSession() );
+            new MavenResourcesExecution( resources, output, mavenProject, "UTF-8", Collections.<String> emptyList(),
+                                         Collections.<String> emptyList(), new StubMavenSession() );
         mavenResourcesExecution.setIncludeEmptyDirs( true );
         mavenResourcesExecution.setEscapeString( "\\" );
 
@@ -904,7 +938,7 @@ public class DefaultMavenResourcesFilteringTest
 
         MavenResourcesExecution mavenResourcesExecution =
             new MavenResourcesExecution( Collections.singletonList( resource ), outputDirectory, mavenProject, "UTF-8",
-                                         Collections.<String>emptyList(), Collections.<String>emptyList(),
+                                         Collections.<String> emptyList(), Collections.<String> emptyList(),
                                          new StubMavenSession() );
         mavenResourcesExecution.setFilterFilenames( true );
         mavenResourcesFiltering.filterResources( mavenResourcesExecution );

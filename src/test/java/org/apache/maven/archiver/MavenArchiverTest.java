@@ -1095,10 +1095,10 @@ public class MavenArchiverTest
 
     private MavenSession getDummySession()
     {
-        Properties executionProperties = new Properties();
-        executionProperties.put( "maven.version", "3.0.4" );
+        Properties systemProperties = new Properties();
+        systemProperties.put( "maven.version", "3.0.4" );
 
-        return getDummySession( executionProperties );
+        return getDummySession( systemProperties );
     }
 
     private MavenSession getDummySessionWithoutMavenVersion()
@@ -1106,7 +1106,7 @@ public class MavenArchiverTest
         return getDummySession( new Properties() );
     }
 
-    private MavenSession getDummySession( Properties executionProperties )
+    private MavenSession getDummySession( Properties systemProperties )
     {
         PlexusContainer container = null;
         File settings = null;
@@ -1114,7 +1114,7 @@ public class MavenArchiverTest
         Date startTime = new Date();
 
         MavenExecutionRequest request = new DefaultMavenExecutionRequest();
-        request.setUserProperties( executionProperties );
+        request.setSystemProperties( systemProperties );
         request.setGoals( goals );
         request.setStartTime( startTime );
         request.setUserSettingsFile( settings );

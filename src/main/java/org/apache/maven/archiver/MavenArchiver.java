@@ -655,7 +655,7 @@ public class MavenArchiver
         String createdBy = "Apache Maven";
         if ( session != null ) // can be null due to API backwards compatibility
         {
-            String mavenVersion = session.getUserProperties().getProperty( "maven.version" );
+            String mavenVersion = session.getSystemProperties().getProperty( "maven.version" );
             if ( mavenVersion != null )
             {
                 createdBy += " " + mavenVersion;

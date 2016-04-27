@@ -91,7 +91,7 @@ public class PomPropertiesUtil
             String createdBy = CREATED_BY_MAVEN;
             if ( session != null ) // can be null due to API backwards compatibility
             {
-                String mavenVersion = session.getUserProperties().getProperty( "maven.version" );
+                String mavenVersion = session.getSystemProperties().getProperty( "maven.version" );
                 if ( mavenVersion != null )
                 {
                     createdBy += " " + mavenVersion;

@@ -71,7 +71,6 @@ public class DefaultMavenResourcesFiltering
     public void initialize()
         throws InitializationException
     {
-        // jpg,jpeg,gif,bmp,png
         this.defaultNonFilteredFileExtensions = new ArrayList<String>( 5 );
         this.defaultNonFilteredFileExtensions.add( "jpg" );
         this.defaultNonFilteredFileExtensions.add( "jpeg" );
@@ -186,7 +185,8 @@ public class DefaultMavenResourcesFiltering
                 continue;
             }
 
-            // this part is required in case the user specified "../something" as destination
+            // this part is required in case the user specified "../something"
+            // as destination
             // see MNG-1345
             File outputDirectory = mavenResourcesExecution.getOutputDirectory();
             boolean outputExists = outputDirectory.exists();

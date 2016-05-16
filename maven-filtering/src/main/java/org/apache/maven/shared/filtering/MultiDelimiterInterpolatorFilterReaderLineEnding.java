@@ -232,7 +232,6 @@ public class MultiDelimiterInterpolatorFilterReaderLineEnding
         int ch = in.read();
         if ( ch == -1 || ( ch == '\n' && !supportMultiLineFiltering ) )
         {
-            in.close();
             return ch;
         }
 

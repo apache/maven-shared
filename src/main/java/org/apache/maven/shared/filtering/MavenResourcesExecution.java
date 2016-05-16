@@ -216,7 +216,7 @@ public class MavenResourcesExecution
     }
 
     /**
-     * @return List of {@link String} file extensions to not filter
+     * @return List of {@link String} file extensions not to filter
      */
     public List<String> getNonFilteredFileExtensions()
     {

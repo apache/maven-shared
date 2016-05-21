@@ -227,7 +227,6 @@ public class InterpolatorFilterReaderLineEnding
                 }
 
                 ch = in.read();
-
             }
 
         }

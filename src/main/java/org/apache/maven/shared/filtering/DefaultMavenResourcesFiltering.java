@@ -129,13 +129,7 @@ public class DefaultMavenResourcesFiltering
 
         if ( mavenResourcesExecution.isUseDefaultFilterWrappers() )
         {
-            List<FileUtils.FilterWrapper> filterWrappers = new ArrayList<FileUtils.FilterWrapper>();
-            if ( mavenResourcesExecution.getFilterWrappers() != null )
-            {
-                filterWrappers.addAll( mavenResourcesExecution.getFilterWrappers() );
-            }
-            filterWrappers.addAll( mavenFileFilter.getDefaultFilterWrappers( mavenResourcesExecution ) );
-            mavenResourcesExecution.setFilterWrappers( filterWrappers );
+            handleDefaultFilterWrappers( mavenResourcesExecution );
         }
 
         if ( mavenResourcesExecution.getEncoding() == null || mavenResourcesExecution.getEncoding().length() < 1 )
@@ -262,6 +256,18 @@ public class DefaultMavenResourcesFiltering
 
         }
 
+    }
+
+    private void handleDefaultFilterWrappers( MavenResourcesExecution mavenResourcesExecution )
+        throws MavenFilteringException
+    {
+        List<FileUtils.FilterWrapper> filterWrappers = new ArrayList<FileUtils.FilterWrapper>();
+        if ( mavenResourcesExecution.getFilterWrappers() != null )
+        {
+            filterWrappers.addAll( mavenResourcesExecution.getFilterWrappers() );
+        }
+        filterWrappers.addAll( mavenFileFilter.getDefaultFilterWrappers( mavenResourcesExecution ) );
+        mavenResourcesExecution.setFilterWrappers( filterWrappers );
     }
 
     private File getDestinationFile( File outputDirectory, String targetPath, String name,

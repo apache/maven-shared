@@ -22,7 +22,6 @@ package org.apache.maven.shared.filtering;
 import java.util.Properties;
 
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
-import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.settings.Settings;
@@ -38,38 +37,47 @@ public class StubMavenSession
     extends MavenSession
 {
 
-    private Properties executionProperties;
+    private Properties userProperties;
+
+    private Properties systemProperties;
 
     private final Settings settings;
 
     public StubMavenSession( Settings settings )
     {
-        this( null, settings );
+        this( null, null, settings );
     }
 
     public StubMavenSession()
     {
-        this( null, null );
+        this( null, null, null );
     }
 
-    public StubMavenSession( Properties executionProperties )
+    public StubMavenSession( Properties userProperties )
     {
-        this( executionProperties, null );
+        this( null, userProperties, null );
     }
 
-    public StubMavenSession( Properties executionProperties, Settings settings )
+    public StubMavenSession( Properties systemProperties, Properties userProperties, Settings settings )
     {
 
         super( (PlexusContainer) null, (RepositorySystemSession) null, new DefaultMavenExecutionRequest(),
                (MavenExecutionResult) null );
 
         this.settings = settings;
-        this.executionProperties = new Properties();
-        if ( executionProperties != null )
+
+        this.systemProperties = new Properties();
+        if ( systemProperties != null )
         {
-            this.executionProperties.putAll( executionProperties );
+            this.systemProperties.putAll( systemProperties );
         }
-        this.executionProperties.putAll( System.getProperties() );
+        this.systemProperties.putAll( System.getProperties() );
+
+        this.userProperties = new Properties();
+        if ( userProperties != null )
+        {
+            this.userProperties.putAll( userProperties );
+        }
     }
 
     public Settings getSettings()
@@ -77,9 +85,14 @@ public class StubMavenSession
         return settings;
     }
 
-    public Properties getExecutionProperties()
+    public Properties getSystemProperties()
     {
-        return this.executionProperties;
+        return this.systemProperties;
+    }
+
+    public Properties getUserProperties()
+    {
+        return this.userProperties;
     }
 
 }

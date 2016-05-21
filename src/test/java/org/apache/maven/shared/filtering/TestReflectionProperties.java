@@ -44,8 +44,8 @@ public class TestReflectionProperties
             MavenProject mavenProject = new MavenProject();
             mavenProject.setVersion( "1.0" );
             mavenProject.setGroupId( "org.apache" );
-            Properties executionProperties = new Properties();
-            executionProperties.setProperty( "foo", "bar" );
+            Properties userProperties = new Properties();
+            userProperties.setProperty( "foo", "bar" );
             MavenFileFilter mavenFileFilter = lookup( MavenFileFilter.class );
 
             File from = new File( getBasedir() + "/src/test/units-files/reflection-test.properties" );
@@ -57,7 +57,7 @@ public class TestReflectionProperties
             }
 
             mavenFileFilter.copyFile( from, to, true, mavenProject, null, false, null,
-                                      new StubMavenSession( executionProperties ) );
+                                      new StubMavenSession( userProperties ) );
 
             Properties reading = new Properties();
             readFileInputStream = new FileInputStream( to );
@@ -86,8 +86,8 @@ public class TestReflectionProperties
             MavenProject mavenProject = new MavenProject();
             mavenProject.setVersion( "1.0" );
             mavenProject.setGroupId( "org.apache" );
-            Properties executionProperties = new Properties();
-            executionProperties.setProperty( "foo", "bar" );
+            Properties userProperties = new Properties();
+            userProperties.setProperty( "foo", "bar" );
             MavenFileFilter mavenFileFilter = lookup( MavenFileFilter.class );
 
             File from = new File( getBasedir() + "/src/test/units-files/reflection-test.properties" );
@@ -99,7 +99,7 @@ public class TestReflectionProperties
             }
 
             mavenFileFilter.copyFile( from, to, false, mavenProject, null, false, null,
-                                      new StubMavenSession( executionProperties ) );
+                                      new StubMavenSession( userProperties ) );
 
             Properties reading = new Properties();
             readFileInputStream = new FileInputStream( to );

@@ -636,6 +636,7 @@ public class DefaultMavenResourcesFilteringTest
         assertEquals( "includefile.txt", files[0].getName() );
     }
 
+    @SuppressWarnings( "serial" )
     public void testEmptyDirectories()
         throws Exception
     {
@@ -694,6 +695,7 @@ public class DefaultMavenResourcesFilteringTest
         }
     }
 
+    @SuppressWarnings( "serial" )
     public void testShouldReturnGitIgnoreFiles()
         throws Exception
     {
@@ -795,6 +797,7 @@ public class DefaultMavenResourcesFilteringTest
     /**
      * unit test for MSHARED-81 : https://issues.apache.org/jira/browse/MSHARED-81
      */
+    @SuppressWarnings( "serial" )
     public void testMSHARED81()
         throws Exception
     {
@@ -856,6 +859,7 @@ public class DefaultMavenResourcesFilteringTest
     /**
      * unit test for edge cases : https://issues.apache.org/jira/browse/MSHARED-228
      */
+    @SuppressWarnings( "serial" )
     public void testEdgeCases()
         throws Exception
     {

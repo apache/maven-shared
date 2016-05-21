@@ -19,18 +19,20 @@ package org.apache.maven.archiver;
  * under the License.
  */
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Properties;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.archiver.Archiver;
 import org.apache.maven.shared.utils.io.IOUtil;
+import org.codehaus.plexus.archiver.Archiver;
 
 /**
  * This class is responsible for creating the pom.properties file.
@@ -85,7 +87,7 @@ public class PomPropertiesUtil
         {
             return;
         }
-        OutputStream os = new FileOutputStream( outputFile );
+        PrintWriter pw = new PrintWriter( outputFile, "ISO-8859-1" );
         try
         {
             String createdBy = CREATED_BY_MAVEN;
@@ -98,13 +100,31 @@ public class PomPropertiesUtil
                 }
             }
 
-            properties.store( os, createdBy );
-            os.close(); // stream is flushed but not closed by Properties.store()
-            os = null;
+            StringWriter sw = new StringWriter();
+            properties.store( sw, null );
+
+            BufferedReader r = new BufferedReader( new StringReader( sw.toString() ) );
+
+            pw.println( "#" + createdBy );
+            String line;
+            while ( ( line = r.readLine() ) != null )
+            {
+                if ( !line.startsWith( "#" ) )
+                {
+                    pw.println( line );
+                }
+            }
+
+            r.close();
+            r = null;
+            sw.close();
+            sw = null;
+            pw.close();
+            pw = null;
         }
         finally
         {
-            IOUtil.close( os );
+            IOUtil.close( pw );
         }
     }
 

@@ -104,12 +104,13 @@ class BaseFilter
         //
         // khmarbaise: 2016-05-21:
         // If we throw an MavenFilteringException tests will fail which is
-        // caused by for example:     
-        // void copyFile( File from, final File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers, String encoding )
+        // caused by for example:
+        // void copyFile( File from, final File to, boolean filtering, List<FileUtils.FilterWrapper> filterWrappers,
+        // String encoding )
         // in MavenFileFilter interface where no MavenSession is given.
         // So changing here to throw a MavenFilteringException would make
         // it necessary to change the interface or we need to find a better solution.
-        // 
+        //
         if ( request.getMavenSession() != null )
         {
             // User properties have precedence over system properties

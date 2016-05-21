@@ -197,7 +197,7 @@ public class DefaultMavenResourcesFiltering
 
             boolean ignoreDelta = !outputExists || buildContext.hasDelta( mavenResourcesExecution.getFileFilters() )
                 || buildContext.hasDelta( getRelativeOutputDirectory( mavenResourcesExecution ) );
-            getLogger().info( "ignoreDelta " + ignoreDelta );
+            getLogger().debug( "ignoreDelta " + ignoreDelta );
             Scanner scanner = buildContext.newScanner( resourceDirectory, ignoreDelta );
 
             setupScanner( resource, scanner, mavenResourcesExecution.isAddDefaultExcludes() );

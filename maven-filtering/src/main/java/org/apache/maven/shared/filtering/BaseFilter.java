@@ -36,7 +36,6 @@ import org.codehaus.plexus.interpolation.ValueSource;
 import org.codehaus.plexus.interpolation.multi.MultiDelimiterStringSearchInterpolator;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -45,6 +44,8 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
+
+import javax.annotation.Nonnull;
 
 class BaseFilter
     extends AbstractLogEnabled
@@ -102,8 +103,9 @@ class BaseFilter
         // or do we have to throw an MavenFilteringException with mavenSession cannot be null
         if ( request.getMavenSession() != null )
         {
-            // execution properties wins
-            baseProps.putAll( request.getMavenSession().getExecutionProperties() );
+            // User properties have precedence over system properties
+            baseProps.putAll( request.getMavenSession().getSystemProperties() );
+            baseProps.putAll( request.getMavenSession().getUserProperties() );
         }
 
         // now we build properties to use for resources interpolation
@@ -139,8 +141,9 @@ class BaseFilter
         }
         if ( request.getMavenSession() != null )
         {
-            // execution properties wins
-            filterProperties.putAll( request.getMavenSession().getExecutionProperties() );
+            // User properties have precedence over system properties
+            filterProperties.putAll( request.getMavenSession().getSystemProperties() );
+            filterProperties.putAll( request.getMavenSession().getUserProperties() );
         }
 
         if ( request.getAdditionalProperties() != null )

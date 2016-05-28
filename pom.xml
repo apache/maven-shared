@@ -43,7 +43,7 @@
     <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-filtering</url>
   </scm>
   <issueManagement>
-    <system>jira</system>
+    <system>JIRA</system>
     <url>https://issues.apache.org/jira/browse/MSHARED/component/12326444</url>
   </issueManagement>
   <distributionManagement>
@@ -157,7 +157,8 @@
               <onlyCurrentVersion>true</onlyCurrentVersion>
               <sortColumnNames>Key</sortColumnNames>
               <versionPrefix>maven-filtering-</versionPrefix>
-              <fixVersionIds>12331472</fixVersionIds>
+              <fixVersionIds>12335751</fixVersionIds>
+              <onlyCurrentVersion>true</onlyCurrentVersion>
             </configuration>
             <reportSets>
               <reportSet>

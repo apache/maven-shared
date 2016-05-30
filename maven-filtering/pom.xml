@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>maven-filtering</artifactId>
-  <version>3.1.2-SNAPSHOT</version>
+  <version>3.1.1-SNAPSHOT</version>
 
   <name>Apache Maven Filtering</name>
   <description>A component to assist in filtering of resource files with properties from a Maven project.</description>

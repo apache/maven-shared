@@ -160,7 +160,7 @@ public class DefaultMavenResourcesFiltering
                                 : resource.getIncludes().toString() );
 
                 // @formatter:on
-                getLogger().info( debugMessage.toString() );
+                getLogger().debug( debugMessage.toString() );
             }
 
             String targetPath = resource.getTargetPath();

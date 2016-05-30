@@ -221,7 +221,7 @@ public class DefaultMavenResourcesFiltering
             for ( String name : includedFiles )
             {
 
-                getLogger().info( "Copying file " + name );
+                getLogger().debug( "Copying file " + name );
                 File source = new File( resourceDirectory, name );
 
                 File destinationFile = getDestinationFile( outputDirectory, targetPath, name, mavenResourcesExecution );

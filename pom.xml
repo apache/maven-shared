@@ -79,8 +79,8 @@
       <version>3.0.1</version>
     </dependency>
     <!--
-    Pulled in as a direct dependency to resolve conflicts.
-    We want the most recent commons-io compatible to the target JDK.
+      ! Pulled in as a direct dependency to resolve conflicts.
+      ! We want the most recent commons-io compatible to the target JDK.
     -->
     <dependency>
       <groupId>commons-io</groupId>
@@ -93,7 +93,10 @@
       <artifactId>plexus-archiver</artifactId>
       <version>3.3</version>
     </dependency>
-    <!-- plexus-archiver needs this, or else maven-artifact will pull in a version from the pliocene era -->
+    <!--
+      ! plexus-archiver needs this, or else maven-artifact will 
+      ! pull in a version from the pliocene era
+    -->
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>

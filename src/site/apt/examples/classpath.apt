@@ -163,7 +163,7 @@ Class-Path: plexus-utils-1.1.jar commons-lang-2.1.jar
   \[{{{Contents}Top}}\]
 
  Sometimes it is useful to be able to alter the classpath, for example when
- {{{http://maven.apache.org/plugins/maven-war-plugin/examples/skinny-wars.html}creating skinny war-files}}.
+ {{{/plugins/maven-war-plugin/examples/skinny-wars.html}creating skinny war-files}}.
  This can be achieved with the <<<\<classpathPrefix\>>>> configuration element.
 
 +-----+
@@ -364,7 +364,7 @@ Class-Path: WEB-INF/lib/org/codehaus/plexus/plexus-utils-1.1.jar WEB-INF/lib/com
   Depending on how you construct your archive, you may have the ability to specify whether 
   snapshot dependency archives are included with the version suffix <<<'-SNAPSHOT'>>>, or
   whether the unique timestamp and build-number for that archive is used. For instance,
-  the {{{http://maven.apache.org/plugins/maven-assembly-plugin}Assembly Plugin}} allows
+  the {{{/plugins/maven-assembly-plugin}Assembly Plugin}} allows
   you to make this decision in the <<<\<outputFileNameMapping\>>>> element of its 
   <<<\<dependencySet>>>> descriptor section.
   

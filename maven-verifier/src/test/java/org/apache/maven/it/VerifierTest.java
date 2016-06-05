@@ -67,4 +67,10 @@ public class VerifierTest
         verifier.assertFileNotPresent( "mshared104.jar!/fud.xml" );
     }
 
+    public void testStripAnsi()
+    {
+        assertEquals( "--- plugin:version:goal (id) @ artifactId ---",
+                      Verifier.stripAnsi( "\u001B[1m--- \u001B[0;32mplugin:version:goal\u001B[0;1m (id)\u001B[m @ "
+                          + "\u001B[36martifactId\u001B[0;1m ---\u001B[m" ) );
+    }
 }

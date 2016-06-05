@@ -281,7 +281,7 @@ public class Verifier
         for ( String line : lines )
         {
             // A hack to keep stupid velocity resource loader errors from triggering failure
-            if ( line.contains( "[ERROR]" ) && !isVelocityError( line ) )
+            if ( stripAnsi( line ).contains( "[ERROR]" ) && !isVelocityError( line ) )
             {
                 throw new VerificationException( "Error in execution: " + line );
             }
@@ -314,7 +314,7 @@ public class Verifier
         boolean result = false;
         for ( String line : lines )
         {
-            if ( line.contains( text ) )
+            if ( stripAnsi( line ).contains( text ) )
             {
                 result = true;
                 break;
@@ -324,6 +324,11 @@ public class Verifier
         {
             throw new VerificationException( "Text not found in log: " + text );
         }
+    }
+
+    static String stripAnsi( String msg )
+    {
+        return msg.replaceAll( "\u001B\\[[;\\d]*[ -/]*[@-~]", "" );
     }
 
     public Properties loadProperties( String filename )

@@ -207,7 +207,7 @@ public class ManifestConfiguration
     public String getClasspathLayoutType()
     {
         // CHECKSTYLE_OFF: LineLength
-        return CLASSPATH_LAYOUT_TYPE_SIMPLE.equals( classpathLayoutType ) ? CLASSPATH_LAYOUT_TYPE_REPOSITORY
+        return CLASSPATH_LAYOUT_TYPE_REPOSITORY.equals( classpathLayoutType ) ? CLASSPATH_LAYOUT_TYPE_REPOSITORY
                         : classpathLayoutType;
         // CHECKSTYLE_ON: LineLength
     }

@@ -326,7 +326,7 @@ public class Verifier
         }
     }
 
-    static String stripAnsi( String msg )
+    public static String stripAnsi( String msg )
     {
         return msg.replaceAll( "\u001B\\[[;\\d]*[ -/]*[@-~]", "" );
     }

@@ -61,4 +61,15 @@ public final class MavenUtils
 
         return properties.getProperty( "version" ).trim();
     }
+
+    /**
+     * Get Maven version as major.minor float
+     * 
+     * @return
+     */
+    public static float getMavenVersionAsFloat()
+    {
+        String[] digits = getMavenVersion().split( "\\." );
+        return Float.parseFloat( digits[0] + '.' + digits[1] );
+    }
 }

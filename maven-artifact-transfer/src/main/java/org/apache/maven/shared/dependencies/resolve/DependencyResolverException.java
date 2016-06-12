@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.resolve;
+package org.apache.maven.shared.dependencies.resolve;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one

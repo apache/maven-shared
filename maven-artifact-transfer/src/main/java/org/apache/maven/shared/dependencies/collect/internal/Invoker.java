@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.resolve.internal;
+package org.apache.maven.shared.dependencies.collect.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,7 +21,7 @@ package org.apache.maven.shared.dependency.resolve.internal;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.apache.maven.shared.dependency.resolve.DependencyResolverException;
+import org.apache.maven.shared.dependencies.collect.DependencyCollectorException;
 
 /**
  * Invokes method on objects using reflection.
@@ -34,13 +34,13 @@ final class Invoker
     }
 
     public static Object invoke( Object object, String method )
-        throws DependencyResolverException
+        throws DependencyCollectorException
     {
         return invoke( object.getClass(), object, method );
     }
 
     public static Object invoke( Class<?> objectClazz, Object object, String method )
-        throws DependencyResolverException
+        throws DependencyCollectorException
     {
         try
         {
@@ -48,20 +48,20 @@ final class Invoker
         }
         catch ( IllegalAccessException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
         catch ( InvocationTargetException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
         catch ( NoSuchMethodException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
     }
 
     public static Object invoke( Object object, String method, Class<?> argClazz, Object arg )
-        throws DependencyResolverException
+        throws DependencyCollectorException
     {
         try
         {
@@ -70,20 +70,20 @@ final class Invoker
         }
         catch ( IllegalAccessException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
         catch ( InvocationTargetException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
         catch ( NoSuchMethodException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
     }
-
+    
     public static Object invoke( Class<?> objectClazz, String staticMethod, Class<?> argClazz, Object arg )
-        throws DependencyResolverException
+                    throws DependencyCollectorException
     {
         try
         {
@@ -91,30 +91,30 @@ final class Invoker
         }
         catch ( IllegalAccessException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
         catch ( InvocationTargetException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
         catch ( NoSuchMethodException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
     }
-
+    
     /**
-     * <strong>Note:</strong> Ensure that argClasses and args have the same number of elements
+     * <strong>Note:</strong> Ensure that argClasses and args have the same number of elements 
      * 
      * @param objectClazz the class of the static method
      * @param staticMethod the static method to call
      * @param argClasses the classes of the argument, used to select the right static method
      * @param args the actual arguments to be passed
      * @return the result of the method invocation
-     * @throws ArtifactResolverException if any checked exception occurs
+     * @throws DependencyCollectorException if any checked exception occurs
      */
     public static Object invoke( Class<?> objectClazz, String staticMethod, Class<?>[] argClasses, Object[] args )
-        throws DependencyResolverException
+                    throws DependencyCollectorException
     {
         try
         {
@@ -122,15 +122,44 @@ final class Invoker
         }
         catch ( IllegalAccessException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
         catch ( InvocationTargetException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
         catch ( NoSuchMethodException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new DependencyCollectorException( e.getMessage(), e );
+        }
+    }
+
+    public static Object newInstance( Class<?> objectClazz, Class<?> argClazz, Object arg )
+        throws DependencyCollectorException
+    {
+        try
+        {
+            return objectClazz.getConstructor( argClazz ).newInstance( arg );
+        }
+        catch ( InstantiationException e )
+        {
+            throw new DependencyCollectorException( e.getMessage(), e );
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new DependencyCollectorException( e.getMessage(), e );
+        }
+        catch ( IllegalArgumentException e )
+        {
+            throw new DependencyCollectorException( e.getMessage(), e );
+        }
+        catch ( InvocationTargetException e )
+        {
+            throw new DependencyCollectorException( e.getMessage(), e );
+        }
+        catch ( NoSuchMethodException e )
+        {
+            throw new DependencyCollectorException( e.getMessage(), e );
         }
     }
 }

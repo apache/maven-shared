@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.collect.internal;
+package org.apache.maven.shared.dependencies.collect.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -28,8 +28,8 @@ import org.apache.maven.artifact.repository.ArtifactRepositoryPolicy;
 import org.apache.maven.artifact.repository.Authentication;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.repository.Proxy;
-import org.sonatype.aether.repository.RemoteRepository;
-import org.sonatype.aether.repository.RepositoryPolicy;
+import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.repository.RepositoryPolicy;
 
 /**
  * ArtifactRepository wrapper around {@link RemoteRepository}
@@ -37,7 +37,7 @@ import org.sonatype.aether.repository.RepositoryPolicy;
  * @author Robert Scholte
  *
  */
-public class Maven30ArtifactRepositoryAdapter implements ArtifactRepository
+public class Maven31ArtifactRepositoryAdapter implements ArtifactRepository
 {
     
     private RemoteRepository remoteRepository;
@@ -45,7 +45,7 @@ public class Maven30ArtifactRepositoryAdapter implements ArtifactRepository
     /**
      * @param remoteRepository {@link RemoteRepository}
      */
-    public Maven30ArtifactRepositoryAdapter( RemoteRepository remoteRepository )
+    public Maven31ArtifactRepositoryAdapter( RemoteRepository remoteRepository )
     {
         this.remoteRepository = remoteRepository;
     }
@@ -249,7 +249,7 @@ public class Maven30ArtifactRepositoryAdapter implements ArtifactRepository
             return false;
         }
         
-        Maven30ArtifactRepositoryAdapter other = (Maven30ArtifactRepositoryAdapter) obj;
+        Maven31ArtifactRepositoryAdapter other = (Maven31ArtifactRepositoryAdapter) obj;
         if ( remoteRepository == null )
         {
             if ( other.remoteRepository != null )

@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.collect.internal;
+package org.apache.maven.shared.dependencies.collect.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,26 +25,26 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.shared.dependency.collect.CollectorResult;
-import org.sonatype.aether.collection.CollectResult;
-import org.sonatype.aether.graph.DependencyNode;
-import org.sonatype.aether.graph.DependencyVisitor;
-import org.sonatype.aether.repository.RemoteRepository;
+import org.apache.maven.shared.dependencies.collect.CollectorResult;
+import org.eclipse.aether.collection.CollectResult;
+import org.eclipse.aether.graph.DependencyNode;
+import org.eclipse.aether.graph.DependencyVisitor;
+import org.eclipse.aether.repository.RemoteRepository;
 
 /**
- * CollectorResult wrapper around {@link CollectResult} 
+ * CollectorResult wrapper around {@link CollectResult}
  * 
  * @author Robert Scholte
  *
  */
-public class Maven30CollectorResult implements CollectorResult
+public class Maven31CollectorResult implements CollectorResult
 {
     private final CollectResult collectResult;
     
     /**
      * @param collectResult {@link CollectorResult}
      */
-    public Maven30CollectorResult( CollectResult collectResult )
+    public Maven31CollectorResult( CollectResult collectResult )
     {
         this.collectResult = collectResult;
     }
@@ -76,7 +76,7 @@ public class Maven30CollectorResult implements CollectorResult
         
         for ( RemoteRepository aetherRepository : aetherRepositories )
         {
-            mavenRepositories.add( new Maven30ArtifactRepositoryAdapter( aetherRepository ) );
+            mavenRepositories.add( new Maven31ArtifactRepositoryAdapter( aetherRepository ) );
         }
         
         return mavenRepositories;

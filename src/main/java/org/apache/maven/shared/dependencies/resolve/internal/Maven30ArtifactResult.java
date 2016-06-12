@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.resolve.internal;
+package org.apache.maven.shared.dependencies.resolve.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,7 +20,7 @@ package org.apache.maven.shared.dependency.resolve.internal;
  */
 
 import org.apache.maven.RepositoryUtils;
-import org.apache.maven.shared.dependency.resolve.DependencyResolverException;
+import org.apache.maven.shared.dependencies.resolve.DependencyResolverException;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.resolution.ArtifactResult;
 

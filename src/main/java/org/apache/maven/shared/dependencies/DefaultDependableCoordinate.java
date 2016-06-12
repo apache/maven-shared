@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency;
+package org.apache.maven.shared.dependencies;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -20,17 +20,17 @@ package org.apache.maven.shared.dependency;
  */
 
 /**
- * Common usage of an DependencyCoordinate for a Mojo
+ * Common usage of an DependableCoordinate for a Mojo
  * 
  * <pre>
  * &#64;Parameter
- * private DefaultDependencyCoordinate[] dependencies;
+ * private DefaultDependableCoordinate[] dependencies;
  * </pre>
  * 
  * and
  * 
  * <pre>
- * private DefaultDependencyCoordinate dependency = new DefaultDependencyCoordinate();
+ * private DefaultDependableCoordinate dependable = new DefaultDependableCoordinate();
  * 
  * &#64;Parameter( property = "groupId" )
  * private String groupId;
@@ -49,27 +49,27 @@ package org.apache.maven.shared.dependency;
  * 
  * public void setGroupId( String groupId )
  * {
- *   this.dependency.setGroupId( groupId );
+ *   this.dependable.setGroupId( groupId );
  * }
  * 
  * public void setArtifactId( String artifactId )
  * {
- *   this.dependency.setArtifactId( artifactId );
+ *   this.dependable.setArtifactId( artifactId );
  * }
  * 
  * public void setVersion( String version )
  * {
- *   this.dependency.setVersion( version );
+ *   this.dependable.setVersion( version );
  * }
  * 
  * public void setClassifier( String classifier )
  * {
- *   this.dependency.setClassifier( classifier );
+ *   this.dependable.setClassifier( classifier );
  * }
  * 
  * public void setType( String type )
  * {
- *   this.dependency.setType( type );
+ *   this.dependable.setType( type );
  * }
  * </pre>
  * <strong>Note: </strong> type is not the same as extension! 
@@ -79,7 +79,7 @@ package org.apache.maven.shared.dependency;
  * @author Robert Scholte
  * @since 3.0
  */
-public class DefaultDependencyCoordinate implements DependencyCoordinate
+public class DefaultDependableCoordinate implements DependableCoordinate
 {
     private String groupId;
     

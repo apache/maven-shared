@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.resolve;
+package org.apache.maven.shared.dependencies.resolve;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,7 +25,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.apache.maven.shared.artifact.resolve.ArtifactResult;
-import org.apache.maven.shared.dependency.DependencyCoordinate;
+import org.apache.maven.shared.dependencies.DependableCoordinate;
 
 /**
  * 
@@ -39,13 +39,13 @@ public interface DependencyResolver
      * {@code Collections.singletonList(coordinate)}
      * 
      * @param buildingRequest {@link ProjectBuildingRequest}
-     * @param coordinate {@link DependencyCoordinate}
+     * @param coordinate {@link DependableCoordinate}
      * @param filter {@link TransformableFilter}
      * @return the resolved dependencies.
      * @throws DependencyResolverException in case of an error.
      */
     Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest, 
-                                                  DependencyCoordinate coordinate,
+                                                  DependableCoordinate coordinate,
                                                   TransformableFilter filter ) throws DependencyResolverException;
 
     /**

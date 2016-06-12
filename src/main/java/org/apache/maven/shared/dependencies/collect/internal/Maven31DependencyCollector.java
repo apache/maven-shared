@@ -22,16 +22,21 @@ package org.apache.maven.shared.dependencies.collect.internal;
 import java.util.List;
 
 import org.apache.maven.RepositoryUtils;
+import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.shared.dependencies.DependableCoordinate;
 import org.apache.maven.shared.dependencies.collect.CollectorResult;
 import org.apache.maven.shared.dependencies.collect.DependencyCollector;
 import org.apache.maven.shared.dependencies.collect.DependencyCollectorException;
+import org.apache.maven.shared.project.ProjectCoordinate;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.ArtifactTypeRegistry;
+import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.collection.DependencyCollectionException;
 import org.eclipse.aether.graph.Dependency;
@@ -65,6 +70,39 @@ public class Maven31DependencyCollector
         Class<?>[] argClasses = new Class<?>[] { org.apache.maven.model.Dependency.class, ArtifactTypeRegistry.class };
         Object[] args = new Object[] { root, typeRegistry };
         Dependency aetherRoot = (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
+
+        return collectDependencies( buildingRequest, aetherRoot );
+    }
+    
+    @Override
+    public CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, DependableCoordinate root )
+        throws DependencyCollectorException
+    {
+        ArtifactHandler artifactHandler = artifactHandlerManager.getArtifactHandler( root.getType() );
+        
+        String extension = artifactHandler != null ? artifactHandler.getExtension() : null;
+        
+        Artifact aetherArtifact = new DefaultArtifact( root.getGroupId(), root.getArtifactId(), root.getClassifier(),
+                                                       extension, root.getVersion() );
+        
+        Dependency aetherRoot = new Dependency( aetherArtifact, null );
+
+        return collectDependencies( buildingRequest, aetherRoot );
+    }
+    
+    @Override
+    public CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, ProjectCoordinate root )
+        throws DependencyCollectorException
+    {
+        // Are there examples where packaging and type are NOT in sync
+        ArtifactHandler artifactHandler = artifactHandlerManager.getArtifactHandler( root.getPackaging() );
+        
+        String extension = artifactHandler != null ? artifactHandler.getExtension() : null;
+        
+        Artifact aetherArtifact =
+            new DefaultArtifact( root.getGroupId(), root.getArtifactId(), extension, root.getVersion() );
+        
+        Dependency aetherRoot = new Dependency( aetherArtifact, null );
 
         return collectDependencies( buildingRequest, aetherRoot );
     }

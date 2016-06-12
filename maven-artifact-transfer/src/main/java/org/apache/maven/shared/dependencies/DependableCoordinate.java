@@ -31,8 +31,8 @@ package org.apache.maven.shared.dependencies;
  * The type will be translated to an extension based on the artifact descriptor ({@code pom.xml} matching the groupId,
  * artifactId and version.
  * </p>
- * A MavenProject is not considered a DependableCoordinate because is should never have a versionRange, and it has packaging 
- * instead of type.
+ * A MavenProject is not considered a DependableCoordinate because is should never have a versionRange, and it has 
+ * packaging instead of type.
  * 
  * @author Robert Scholte
  */

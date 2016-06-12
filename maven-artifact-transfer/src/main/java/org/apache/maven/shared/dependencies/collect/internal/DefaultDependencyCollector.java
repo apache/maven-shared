@@ -21,9 +21,11 @@ package org.apache.maven.shared.dependencies.collect.internal;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.shared.dependencies.DependableCoordinate;
 import org.apache.maven.shared.dependencies.collect.CollectorResult;
 import org.apache.maven.shared.dependencies.collect.DependencyCollector;
 import org.apache.maven.shared.dependencies.collect.DependencyCollectorException;
+import org.apache.maven.shared.project.ProjectCoordinate;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
@@ -44,6 +46,42 @@ public class DefaultDependencyCollector implements DependencyCollector, Contextu
    
     @Override
     public CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Dependency root )
+        throws DependencyCollectorException
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : "maven3";
+
+            DependencyCollector effectiveDependencyCollector = container.lookup( DependencyCollector.class, hint );
+
+            return effectiveDependencyCollector.collectDependencies( buildingRequest, root );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new DependencyCollectorException( e.getMessage(), e );
+        }
+    }
+    
+    @Override
+    public CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, DependableCoordinate root )
+        throws DependencyCollectorException
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : "maven3";
+
+            DependencyCollector effectiveDependencyCollector = container.lookup( DependencyCollector.class, hint );
+
+            return effectiveDependencyCollector.collectDependencies( buildingRequest, root );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new DependencyCollectorException( e.getMessage(), e );
+        }
+    }
+    
+    @Override
+    public CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, ProjectCoordinate root )
         throws DependencyCollectorException
     {
         try

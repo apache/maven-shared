@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency;
+package org.apache.maven.shared.dependencies;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -21,8 +21,8 @@ package org.apache.maven.shared.dependency;
 
 /**
  * <p>
- * Contains all required elements of a Maven Dependency to resolve and calculate its path for either a local or
- * remote Maven2 repository.
+ * Represents any instance which may contain Maven Dependencies, both explicit or implicit to (transitively) resolve 
+ * and calculate its path for either a local or remote Maven2 repository.
  * </p>
  * <p>
  * The version can be a version range. Based on the groupId and artifactId it will be resolved to the actual version.
@@ -31,19 +31,21 @@ package org.apache.maven.shared.dependency;
  * The type will be translated to an extension based on the artifact descriptor ({@code pom.xml} matching the groupId,
  * artifactId and version.
  * </p>
+ * A MavenProject is not considered a DependableCoordinate because is should never have a versionRange, and it has 
+ * packaging instead of type.
  * 
  * @author Robert Scholte
  */
-public interface DependencyCoordinate
+public interface DependableCoordinate
 {
     /**
-     * @return the groupId of the dependency
+     * @return the groupId of the coordinate
      */
     String getGroupId();
 
     /**
      * 
-     * @return the artifact of the dependency
+     * @return the artifact of the coordinate
      */
     String getArtifactId();
 
@@ -56,7 +58,7 @@ public interface DependencyCoordinate
 
     /**
      * 
-     * @return the type of the dependency
+     * @return the type of the coordinate
      */
     String getType();
 

@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency;
+package org.apache.maven.shared.dependencies;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,7 +25,6 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.ReportPlugin;
-import org.apache.maven.project.MavenProject;
 
 /**
  * Utility class
@@ -39,9 +38,9 @@ public final class TransferUtils
     {
     }
     
-    public static DependencyCoordinate toDependencyCoordinate( Dependency dependency )
+    public static DependableCoordinate toDependableCoordinate( Dependency dependency )
     {
-        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
+        DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
         
         coordinate.setGroupId( dependency.getGroupId() );
         coordinate.setArtifactId( dependency.getArtifactId() );
@@ -52,9 +51,9 @@ public final class TransferUtils
         return coordinate;
     }
 
-    public static DependencyCoordinate toDependencyCoordinate( Extension extension )
+    public static DependableCoordinate toDependableCoordinate( Extension extension )
     {
-        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
+        DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
         
         coordinate.setGroupId( extension.getGroupId() );
         coordinate.setArtifactId( extension.getArtifactId() );
@@ -63,21 +62,9 @@ public final class TransferUtils
         return coordinate;
     }
 
-    public static DependencyCoordinate toDependencyCoordinate( MavenProject project )
+    public static DependableCoordinate toDependableCoordinate( Model model )
     {
-        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
-        
-        coordinate.setGroupId( project.getGroupId() );
-        coordinate.setArtifactId( project.getArtifactId() );
-        coordinate.setVersion( project.getVersion() );
-        coordinate.setType( project.getPackaging() );
-        
-        return coordinate;
-    }
-
-    public static DependencyCoordinate toDependencyCoordinate( Model model )
-    {
-        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
+        DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
         
         coordinate.setGroupId( model.getGroupId() );
         coordinate.setArtifactId( model.getArtifactId() );
@@ -87,9 +74,9 @@ public final class TransferUtils
         return coordinate;
     }
 
-    public static DependencyCoordinate toDependencyCoordinate( Parent parent )
+    public static DependableCoordinate toDependableCoordinate( Parent parent )
     {
-        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
+        DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
         
         coordinate.setGroupId( parent.getGroupId() );
         coordinate.setArtifactId( parent.getArtifactId() );
@@ -99,9 +86,9 @@ public final class TransferUtils
         return coordinate;
     }
 
-    public static DependencyCoordinate toDependencyCoordinate( Plugin plugin )
+    public static DependableCoordinate toDependableCoordinate( Plugin plugin )
     {
-        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
+        DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
         
         coordinate.setGroupId( plugin.getGroupId() );
         coordinate.setArtifactId( plugin.getArtifactId() );
@@ -110,9 +97,9 @@ public final class TransferUtils
         return coordinate;
     }
     
-    public static DependencyCoordinate toDependencyCoordinate( ReportPlugin plugin )
+    public static DependableCoordinate toDependableCoordinate( ReportPlugin plugin )
     {
-        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
+        DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
         
         coordinate.setGroupId( plugin.getGroupId() );
         coordinate.setArtifactId( plugin.getArtifactId() );

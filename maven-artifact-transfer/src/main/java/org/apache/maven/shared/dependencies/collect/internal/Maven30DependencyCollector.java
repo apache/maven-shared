@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.collect.internal;
+package org.apache.maven.shared.dependencies.collect.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,16 +19,14 @@ package org.apache.maven.shared.dependency.collect.internal;
  * under the License.
  */
 
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.maven.RepositoryUtils;
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.project.ProjectBuildingRequest;
-import org.apache.maven.shared.dependency.collect.CollectorResult;
-import org.apache.maven.shared.dependency.collect.DependencyCollector;
-import org.apache.maven.shared.dependency.collect.DependencyCollectorException;
+import org.apache.maven.shared.dependencies.collect.CollectorResult;
+import org.apache.maven.shared.dependencies.collect.DependencyCollector;
+import org.apache.maven.shared.dependencies.collect.DependencyCollectorException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.sonatype.aether.RepositorySystem;
@@ -54,17 +52,6 @@ public class Maven30DependencyCollector
 
     @Requirement
     private ArtifactHandlerManager artifactHandlerManager;
-
-    @Override
-    public CollectorResult collectDependencies( final ProjectBuildingRequest buildingRequest, Artifact root )
-        throws DependencyCollectorException
-    {
-        Class<?>[] argClasses = new Class<?>[] { Artifact.class, Collection.class };
-        Object[] args = new Object[] { root, null };
-        Dependency aetherRoot = (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
-
-        return collectDependencies( buildingRequest, aetherRoot );
-    }
 
     @Override
     public CollectorResult collectDependencies( final ProjectBuildingRequest buildingRequest,

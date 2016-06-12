@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.collect;
+package org.apache.maven.shared.dependencies.collect;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,19 +19,25 @@ package org.apache.maven.shared.dependency.collect;
  * under the License.
  */
 
-import java.util.List;
-
-import org.apache.maven.artifact.repository.ArtifactRepository;
-
 /**
  * 
  * @author Robert Scholte
- *
  */
-public interface CollectorResult
+public class DependencyCollectorException extends Exception
 {
+
     /**
-     * @return {@link ArtifactRepository}
+     * 
      */
-    List<ArtifactRepository> getRemoteRepositories();
+    private static final long serialVersionUID = -180986912170441437L;
+
+    /**
+     * @param message The message you would give for the exception.
+     * @param cause The cause which is related to the message.
+     */
+    public DependencyCollectorException( String message, Throwable cause )
+    {
+        super( message, cause );
+    }
+
 }

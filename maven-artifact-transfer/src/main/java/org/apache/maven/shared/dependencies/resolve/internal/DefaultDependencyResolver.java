@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.collect.internal;
+package org.apache.maven.shared.dependencies.resolve.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,12 +19,15 @@ package org.apache.maven.shared.dependency.collect.internal;
  * under the License.
  */
 
-import org.apache.maven.artifact.Artifact;
+import java.util.Collection;
+
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.ProjectBuildingRequest;
-import org.apache.maven.shared.dependency.collect.CollectorResult;
-import org.apache.maven.shared.dependency.collect.DependencyCollector;
-import org.apache.maven.shared.dependency.collect.DependencyCollectorException;
+import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
+import org.apache.maven.shared.artifact.resolve.ArtifactResult;
+import org.apache.maven.shared.dependencies.DependableCoordinate;
+import org.apache.maven.shared.dependencies.resolve.DependencyResolver;
+import org.apache.maven.shared.dependencies.resolve.DependencyResolverException;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
@@ -34,48 +37,51 @@ import org.codehaus.plexus.context.ContextException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
 
 /**
- * This DependencyCollector passes the request to the proper Maven 3.x implementation
- *  
- * @author Robert Scholte
+ * 
  */
-@Component( role = DependencyCollector.class, hint = "default" )
-public class DefaultDependencyCollector implements DependencyCollector, Contextualizable 
+@Component( role = DependencyResolver.class, hint = "default" )
+public class DefaultDependencyResolver
+    implements DependencyResolver, Contextualizable
 {
     private PlexusContainer container;
-   
+
     @Override
-    public CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Dependency root )
-        throws DependencyCollectorException
+    public Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
+                                                         Collection<Dependency> coordinates,
+                                                         Collection<Dependency> managedDependencies,
+                                                         TransformableFilter filter )
+                                                             throws DependencyResolverException
     {
         try
         {
             String hint = isMaven31() ? "maven31" : "maven3";
 
-            DependencyCollector effectiveDependencyCollector = container.lookup( DependencyCollector.class, hint );
+            DependencyResolver effectiveArtifactResolver = container.lookup( DependencyResolver.class, hint );
 
-            return effectiveDependencyCollector.collectDependencies( buildingRequest, root );
+            return effectiveArtifactResolver.resolveDependencies( buildingRequest, coordinates, null, filter );
         }
         catch ( ComponentLookupException e )
         {
-            throw new DependencyCollectorException( e.getMessage(), e );
+            throw new DependencyResolverException( e.getMessage(), e );
         }
     }
 
     @Override
-    public CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Artifact root )
-        throws DependencyCollectorException
+    public Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
+                                                         DependableCoordinate coordinate, TransformableFilter filter )
+                                                             throws DependencyResolverException
     {
         try
         {
             String hint = isMaven31() ? "maven31" : "maven3";
 
-            DependencyCollector effectiveDependencyCollector = container.lookup( DependencyCollector.class, hint );
+            DependencyResolver effectiveArtifactResolver = container.lookup( DependencyResolver.class, hint );
 
-            return effectiveDependencyCollector.collectDependencies( buildingRequest, root );
+            return effectiveArtifactResolver.resolveDependencies( buildingRequest, coordinate, filter );
         }
         catch ( ComponentLookupException e )
         {
-            throw new DependencyCollectorException( e.getMessage(), e );
+            throw new DependencyResolverException( e.getMessage(), e );
         }
     }
 
@@ -112,5 +118,4 @@ public class DefaultDependencyCollector implements DependencyCollector, Contextu
     {
         container = (PlexusContainer) context.get( PlexusConstants.PLEXUS_KEY );
     }
-
 }

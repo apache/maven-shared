@@ -20,6 +20,7 @@ package org.apache.maven.shared.dependency;
  */
 import static org.junit.Assert.assertEquals;
 
+import org.apache.maven.shared.dependencies.DefaultDependableCoordinate;
 import org.junit.Test;
 
 public class DefaultDependencyCoordinateTest
@@ -28,7 +29,7 @@ public class DefaultDependencyCoordinateTest
     @Test
     public void testToStringWithoutType()
     {
-        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
+        DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
         coordinate.setGroupId( "GROUPID" );
         coordinate.setArtifactId( "ARTIFACTID" );
         coordinate.setVersion( "VERSION" );
@@ -38,7 +39,7 @@ public class DefaultDependencyCoordinateTest
     @Test
     public void testToStringWithClassifier()
     {
-        DefaultDependencyCoordinate coordinate = new DefaultDependencyCoordinate();
+        DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
         coordinate.setGroupId( "GROUPID" );
         coordinate.setArtifactId( "ARTIFACTID" );
         coordinate.setVersion( "VERSION" );

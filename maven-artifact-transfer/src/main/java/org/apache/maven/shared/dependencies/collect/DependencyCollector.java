@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.collect;
+package org.apache.maven.shared.dependencies.collect;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,7 +19,6 @@ package org.apache.maven.shared.dependency.collect;
  * under the License.
  */
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.ProjectBuildingRequest;
 
@@ -39,15 +38,6 @@ public interface DependencyCollector
      * @throws DependencyCollectorException in case of an error.
      */
     CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Dependency root )
-        throws DependencyCollectorException;
-
-    /**
-     * @param buildingRequest {@link ProjectBuildingRequest}
-     * @param root {@link Artifact}
-     * @return {@link CollectorResult}
-     * @throws DependencyCollectorException in case of an error.
-     */
-    CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Artifact root )
         throws DependencyCollectorException;
     
 }

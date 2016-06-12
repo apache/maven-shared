@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependency.collect;
+package org.apache.maven.shared.project;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -22,22 +22,31 @@ package org.apache.maven.shared.dependency.collect;
 /**
  * 
  * @author Robert Scholte
+ *
  */
-public class DependencyCollectorException extends Exception
+public interface ProjectCoordinate
 {
-
     /**
      * 
+     * @return the groupId of the project
      */
-    private static final long serialVersionUID = -180986912170441437L;
-
+    String getGroupId();
+    
     /**
-     * @param message The message you would give for the exception.
-     * @param cause The cause which is related to the message.
+     * 
+     * @return the artifactId of the project
      */
-    public DependencyCollectorException( String message, Throwable cause )
-    {
-        super( message, cause );
-    }
-
+    String getArtifactId();
+    
+    /**
+     * 
+     * @return the version of the project, cannot be a range
+     */
+    String getVersion();
+    
+    /**
+     * 
+     * @return the packaging of the project
+     */
+    String getPackaging();
 }

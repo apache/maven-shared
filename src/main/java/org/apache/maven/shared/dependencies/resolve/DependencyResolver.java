@@ -26,6 +26,7 @@ import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.apache.maven.shared.artifact.resolve.ArtifactResult;
 import org.apache.maven.shared.dependencies.DependableCoordinate;
+import org.apache.maven.shared.project.ProjectCoordinate;
 
 /**
  * 
@@ -46,6 +47,10 @@ public interface DependencyResolver
      */
     Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest, 
                                                   DependableCoordinate coordinate,
+                                                  TransformableFilter filter ) throws DependencyResolverException;
+    
+    Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest, 
+                                                  ProjectCoordinate coordinate,
                                                   TransformableFilter filter ) throws DependencyResolverException;
 
     /**

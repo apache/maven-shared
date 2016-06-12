@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.maven.RepositoryUtils;
+import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
@@ -32,6 +33,7 @@ import org.apache.maven.shared.artifact.filter.resolve.transform.EclipseAetherFi
 import org.apache.maven.shared.dependencies.DependableCoordinate;
 import org.apache.maven.shared.dependencies.resolve.DependencyResolver;
 import org.apache.maven.shared.dependencies.resolve.DependencyResolverException;
+import org.apache.maven.shared.project.ProjectCoordinate;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.eclipse.aether.RepositorySystem;
@@ -79,6 +81,34 @@ public class Maven31DependencyResolver
 
         Dependency aetherRoot = toDependency( coordinate, typeRegistry );
 
+        @SuppressWarnings( "unchecked" )
+        List<RemoteRepository> aetherRepositories =
+            (List<RemoteRepository>) Invoker.invoke( RepositoryUtils.class, "toRepos", List.class,
+                                                     buildingRequest.getRemoteRepositories() );
+
+        CollectRequest request = new CollectRequest( aetherRoot, aetherRepositories );
+
+        return resolveDependencies( buildingRequest, aetherRepositories, dependencyFilter, request );
+    }
+    
+    @Override
+    // CHECKSTYLE_OFF: LineLength
+    public Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
+                                                                                                  ProjectCoordinate root,
+                                                                                                  TransformableFilter dependencyFilter )
+    // CHECKSTYLE_ON: LineLength
+        throws DependencyResolverException
+    {
+     // Are there examples where packaging and type are NOT in sync
+        ArtifactHandler artifactHandler = artifactHandlerManager.getArtifactHandler( root.getPackaging() );
+        
+        String extension = artifactHandler != null ? artifactHandler.getExtension() : null;
+        
+        Artifact aetherArtifact =
+            new DefaultArtifact( root.getGroupId(), root.getArtifactId(), extension, root.getVersion() );
+        
+        Dependency aetherRoot = new Dependency( aetherArtifact, null );
+        
         @SuppressWarnings( "unchecked" )
         List<RemoteRepository> aetherRepositories =
             (List<RemoteRepository>) Invoker.invoke( RepositoryUtils.class, "toRepos", List.class,

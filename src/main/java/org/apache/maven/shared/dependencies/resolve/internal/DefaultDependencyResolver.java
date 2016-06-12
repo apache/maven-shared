@@ -28,6 +28,7 @@ import org.apache.maven.shared.artifact.resolve.ArtifactResult;
 import org.apache.maven.shared.dependencies.DependableCoordinate;
 import org.apache.maven.shared.dependencies.resolve.DependencyResolver;
 import org.apache.maven.shared.dependencies.resolve.DependencyResolverException;
+import org.apache.maven.shared.project.ProjectCoordinate;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
@@ -70,6 +71,25 @@ public class DefaultDependencyResolver
     public Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
                                                          DependableCoordinate coordinate, TransformableFilter filter )
                                                              throws DependencyResolverException
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : "maven3";
+
+            DependencyResolver effectiveArtifactResolver = container.lookup( DependencyResolver.class, hint );
+
+            return effectiveArtifactResolver.resolveDependencies( buildingRequest, coordinate, filter );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new DependencyResolverException( e.getMessage(), e );
+        }
+    }
+    
+    @Override
+    public Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
+                                                         ProjectCoordinate coordinate, TransformableFilter filter )
+        throws DependencyResolverException
     {
         try
         {

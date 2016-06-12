@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -63,13 +64,15 @@ public final class MavenUtils
     }
 
     /**
-     * Get Maven version as major.minor float
+     * Returns a positive value if the version parameter is bigger compared to the runtime Maven version
+     * Returns a negative value if the version parameter is less compared to the runtime Maven version
+     * Returns 0 if they are the same.
      * 
-     * @return
+     * @param version the version to compare
+     * @return 
      */
-    public static float getMavenVersionAsFloat()
+    public static int compareToVersion( String version )
     {
-        String[] digits = getMavenVersion().split( "\\." );
-        return Float.parseFloat( digits[0] + '.' + digits[1] );
+        return new DefaultArtifactVersion( version ).compareTo( new DefaultArtifactVersion( getMavenVersion() ) );
     }
 }

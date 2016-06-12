@@ -198,17 +198,8 @@ public class Maven30DependencyResolver
             RepositorySystemSession session =
                 (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
 
-            List<ArtifactResult> dependencyResults =
+            final List<ArtifactResult> dependencyResults =
                 repositorySystem.resolveDependencies( session, request, depFilter );
-
-            Collection<ArtifactRequest> artifactRequests = new ArrayList<ArtifactRequest>( dependencyResults.size() );
-
-            for ( ArtifactResult artifactResult : dependencyResults )
-            {
-                artifactRequests.add( new ArtifactRequest( artifactResult.getArtifact(), aetherRepositories, null ) );
-            }
-
-            final List<ArtifactResult> artifactResults = repositorySystem.resolveArtifacts( session, artifactRequests );
 
             // Keep it lazy! Often artifactsResults aren't used, so transforming up front is too expensive
             return new Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult>()
@@ -216,10 +207,12 @@ public class Maven30DependencyResolver
                 @Override
                 public Iterator<org.apache.maven.shared.artifact.resolve.ArtifactResult> iterator()
                 {
+                    // CHECKSTYLE_OFF: LineLength
                     Collection<org.apache.maven.shared.artifact.resolve.ArtifactResult> artResults =
-                        new ArrayList<org.apache.maven.shared.artifact.resolve.ArtifactResult>( artifactResults.size() );
-
-                    for ( ArtifactResult artifactResult : artifactResults )
+                        new ArrayList<org.apache.maven.shared.artifact.resolve.ArtifactResult>( dependencyResults.size() );
+                    // CHECKSTYLE_ON: LineLength
+                    
+                    for ( ArtifactResult artifactResult : dependencyResults )
                     {
                         artResults.add( new Maven30ArtifactResult( artifactResult ) );
                     }

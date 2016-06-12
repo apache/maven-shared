@@ -200,17 +200,7 @@ public class Maven31DependencyResolver
             RepositorySystemSession session =
                 (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
 
-            DependencyResult dependencyResults = repositorySystem.resolveDependencies( session, depRequest );
-
-            Collection<ArtifactRequest> artifactRequests =
-                new ArrayList<ArtifactRequest>( dependencyResults.getArtifactResults().size() );
-
-            for ( ArtifactResult artifactResult : dependencyResults.getArtifactResults() )
-            {
-                artifactRequests.add( new ArtifactRequest( artifactResult.getArtifact(), aetherRepositories, null ) );
-            }
-
-         final List<ArtifactResult> artifactResults = repositorySystem.resolveArtifacts( session, artifactRequests );
+            final DependencyResult dependencyResults = repositorySystem.resolveDependencies( session, depRequest );
 
             // Keep it lazy! Often artifactsResults aren't used, so transforming up front is too expensive
             return new Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult>()
@@ -220,10 +210,10 @@ public class Maven31DependencyResolver
                 {
                     // CHECKSTYLE_OFF: LineLength
                     Collection<org.apache.maven.shared.artifact.resolve.ArtifactResult> artResults =
-                    new ArrayList<org.apache.maven.shared.artifact.resolve.ArtifactResult>( artifactResults.size() );
+                        new ArrayList<org.apache.maven.shared.artifact.resolve.ArtifactResult>( dependencyResults.getArtifactResults().size() );
                     // CHECKSTYLE_ON: LineLength
 
-                    for ( ArtifactResult artifactResult : artifactResults )
+                    for ( ArtifactResult artifactResult : dependencyResults.getArtifactResults() )
                     {
                         artResults.add( new Maven31ArtifactResult( artifactResult ) );
                     }
@@ -231,10 +221,6 @@ public class Maven31DependencyResolver
                     return artResults.iterator();
                 }
             };
-        }
-        catch ( ArtifactResolutionException e )
-        {
-            throw new DependencyResolverException( e.getMessage(), e );
         }
         catch ( DependencyResolutionException e )
         {

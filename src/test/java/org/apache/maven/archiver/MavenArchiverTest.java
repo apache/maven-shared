@@ -1,6 +1,5 @@
 package org.apache.maven.archiver;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -46,6 +45,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
+import org.apache.commons.io.filefilter.MagicNumberFileFilter;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.handler.ArtifactHandler;
@@ -677,20 +677,21 @@ public class MavenArchiverTest
         config.getManifest().setAddDefaultSpecificationEntries( true );
         config.getManifest().setMainClass( "org.apache.maven.Foo" );
         config.getManifest().setAddClasspath( true );
+        config.getManifest().setUseUniqueVersions( true );
         config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_REPOSITORY );
         archiver.createArchive( session, project, config );
         assertTrue( jarFile.exists() );
         Manifest manifest = archiver.getManifest( session, project, config );
         String[] classPathEntries =
             StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ), " " );
-        assertEquals( "org/apache/dummy/dummy1/1.0/dummy1-1.0.jar", classPathEntries[0] );
+        assertEquals( "org/apache/dummy/dummy1/1.0.1/dummy1-1.0.jar", classPathEntries[0] );
         assertEquals( "org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
         assertEquals( "org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
 
         String classPath = getJarFileManifest( jarFile ).getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
         assertNotNull( classPath );
         classPathEntries = StringUtils.split( classPath, " " );
-        assertEquals( "org/apache/dummy/dummy1/1.0/dummy1-1.0.jar", classPathEntries[0] );
+        assertEquals( "org/apache/dummy/dummy1/1.0.1/dummy1-1.0.jar", classPathEntries[0] );
         assertEquals( "org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
         assertEquals( "org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
     }
@@ -731,6 +732,162 @@ public class MavenArchiverTest
         assertEquals( "lib/dummy1-1.0.jar", classPathEntries[0] );
         assertEquals( "lib/dummy2-1.5.jar", classPathEntries[1] );
         assertEquals( "lib/dummy3-2.0.jar", classPathEntries[2] );
+    }
+
+    @Test
+    public void shouldCreateArchiveCustomerLayoutSimple()
+        throws Exception
+    {
+        MavenSession session = getDummySession();
+        MavenProject project = getDummyProject();
+        File jarFile = new File( "target/test/dummy-custom-layout-simple.jar" );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
+
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
+
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        config.getManifest().setAddClasspath( true );
+        config.getManifest().setClasspathPrefix( "lib" );
+        config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
+        config.getManifest().setCustomClasspathLayout( MavenArchiver.SIMPLE_LAYOUT);
+
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
+        Manifest manifest = archiver.getManifest( session, project, config );
+        String[] classPathEntries =
+            StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ), " " );
+        assertEquals( "lib/dummy1-1.0.jar", classPathEntries[0] );
+        assertEquals( "lib/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "lib/dummy3-2.0.jar", classPathEntries[2] );
+
+        String classPath = getJarFileManifest( jarFile ).getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+
+        assertNotNull( classPath );
+        classPathEntries = StringUtils.split( classPath, " " );
+        assertEquals( "lib/dummy1-1.0.jar", classPathEntries[0] );
+        assertEquals( "lib/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "lib/dummy3-2.0.jar", classPathEntries[2] );
+    }
+
+    @Test
+    public void shouldCreateArchiveCustomLayoutSimpleNonUnique()
+        throws Exception
+    {
+        MavenSession session = getDummySession();
+        MavenProject project = getDummyProject();
+        File jarFile = new File( "target/test/dummy-custom-layout-simple-non-unique.jar" );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
+
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
+
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        config.getManifest().setAddClasspath( true );
+        config.getManifest().setClasspathPrefix( "lib" );
+        config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
+        config.getManifest().setCustomClasspathLayout( MavenArchiver.SIMPLE_LAYOUT_NONUNIQUE);
+
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
+        Manifest manifest = archiver.getManifest( session, project, config );
+        String[] classPathEntries =
+            StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ), " " );
+        assertEquals( "lib/dummy1-1.0.1.jar", classPathEntries[0] );
+        assertEquals( "lib/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "lib/dummy3-2.0.jar", classPathEntries[2] );
+
+        String classPath = getJarFileManifest( jarFile ).getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+
+        assertNotNull( classPath );
+        classPathEntries = StringUtils.split( classPath, " " );
+        assertEquals( "lib/dummy1-1.0.1.jar", classPathEntries[0] );
+        assertEquals( "lib/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "lib/dummy3-2.0.jar", classPathEntries[2] );
+    }
+
+    @Test
+    public void shouldCreateArchiveCustomLayoutRepository()
+        throws Exception
+    {
+        MavenSession session = getDummySession();
+        MavenProject project = getDummyProject();
+        File jarFile = new File( "target/test/dummy-custom-layout-repo.jar" );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
+
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
+
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        config.getManifest().setAddClasspath( true );
+        config.getManifest().setClasspathPrefix( "lib" );
+        config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
+        config.getManifest().setCustomClasspathLayout( MavenArchiver.REPOSITORY_LAYOUT );
+
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
+        Manifest manifest = archiver.getManifest( session, project, config );
+        String[] classPathEntries =
+            StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ), " " );
+        assertEquals( "lib/org/apache/dummy/dummy1/1.0.1/dummy1-1.0.jar", classPathEntries[0] );
+        assertEquals( "lib/org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "lib/org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
+
+        String classPath = getJarFileManifest( jarFile ).getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+
+        assertNotNull( classPath );
+        classPathEntries = StringUtils.split( classPath, " " );
+        assertEquals( "lib/org/apache/dummy/dummy1/1.0.1/dummy1-1.0.jar", classPathEntries[0] );
+        assertEquals( "lib/org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "lib/org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
+    }
+
+    @Test
+    public void shouldCreateArchiveCustomLayoutRepositoryNonUnique()
+        throws Exception
+    {
+        MavenSession session = getDummySession();
+        MavenProject project = getDummyProject();
+        File jarFile = new File( "target/test/dummy-custom-layout-repo-non-unique.jar" );
+        JarArchiver jarArchiver = getCleanJarArchiver( jarFile );
+
+        MavenArchiver archiver = getMavenArchiver( jarArchiver );
+
+        MavenArchiveConfiguration config = new MavenArchiveConfiguration();
+        config.setForced( true );
+        config.getManifest().setAddDefaultImplementationEntries( true );
+        config.getManifest().setAddDefaultSpecificationEntries( true );
+        config.getManifest().setMainClass( "org.apache.maven.Foo" );
+        config.getManifest().setAddClasspath( true );
+        config.getManifest().setClasspathPrefix( "lib" );
+        config.getManifest().setClasspathLayoutType( ManifestConfiguration.CLASSPATH_LAYOUT_TYPE_CUSTOM );
+        config.getManifest().setCustomClasspathLayout( MavenArchiver.REPOSITORY_LAYOUT_NONUNIQUE );
+
+        archiver.createArchive( session, project, config );
+        assertTrue( jarFile.exists() );
+        Manifest manifest = archiver.getManifest( session, project, config );
+        String[] classPathEntries =
+            StringUtils.split( new String( manifest.getMainAttributes().getValue( "Class-Path" ).getBytes() ), " " );
+        assertEquals( "lib/org/apache/dummy/dummy1/1.0.1/dummy1-1.0.1.jar", classPathEntries[0] );
+        assertEquals( "lib/org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "lib/org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
+
+        String classPath = getJarFileManifest( jarFile ).getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+
+        assertNotNull( classPath );
+        classPathEntries = StringUtils.split( classPath, " " );
+        assertEquals( "lib/org/apache/dummy/dummy1/1.0.1/dummy1-1.0.1.jar", classPathEntries[0] );
+        assertEquals( "lib/org/apache/dummy/foo/dummy2/1.5/dummy2-1.5.jar", classPathEntries[1] );
+        assertEquals( "lib/org/apache/dummy/bar/dummy3/2.0/dummy3-2.0.jar", classPathEntries[2] );
     }
 
     @Test
@@ -1021,7 +1178,7 @@ public class MavenArchiverTest
         artifact.setGroupId( "org.apache.dummy" );
         artifact.setArtifactId( "dummy" );
         artifact.setVersion( "0.1.1" );
-        artifact.setBaseVersion( "0.1.1" );
+        artifact.setBaseVersion( "0.1.2" );
         artifact.setType( "jar" );
         artifact.setArtifactHandler( new DefaultArtifactHandler( "jar" ) );
         project.setArtifact( artifact );
@@ -1174,6 +1331,7 @@ public class MavenArchiverTest
         artifact1.setGroupId( "org.apache.dummy" );
         artifact1.setArtifactId( "dummy1" );
         artifact1.setVersion( "1.0" );
+        artifact1.setBaseVersion( "1.0.1" );
         artifact1.setType( "jar" );
         artifact1.setScope( "runtime" );
         artifact1.setFile( getClasspathFile( artifact1.getArtifactId() + "-" + artifact1.getVersion() + ".jar" ) );

@@ -72,14 +72,14 @@ public class MavenArchiver
      * simple layout non unique.
      */
     public static final String SIMPLE_LAYOUT_NONUNIQUE =
-        "${artifact.artfctId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
+        "${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
 
     /**
      * Repository layout non unique.
      */
     public static final String REPOSITORY_LAYOUT_NONUNIQUE =
         "${artifact.groupIdPath}/${artifact.artifactId}/" + "${artifact.baseVersion}/${artifact.artifactId}-"
-            + "${artifact.baseVrsion}${dashClassifier?}.${artifact.extension}";
+            + "${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
 
     private static final List<String> ARTIFACT_EXPRESSION_PREFIXES;
 

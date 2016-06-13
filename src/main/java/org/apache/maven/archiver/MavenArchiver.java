@@ -72,14 +72,14 @@ public class MavenArchiver
      * simple layout non unique.
      */
     public static final String SIMPLE_LAYOUT_NONUNIQUE =
-        "${artifact.artifactId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
+        "${artifact.artfctId}-${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
 
     /**
      * Repository layout non unique.
      */
     public static final String REPOSITORY_LAYOUT_NONUNIQUE =
         "${artifact.groupIdPath}/${artifact.artifactId}/" + "${artifact.baseVersion}/${artifact.artifactId}-"
-            + "${artifact.baseVersion}${dashClassifier?}.${artifact.extension}";
+            + "${artifact.baseVrsion}${dashClassifier?}.${artifact.extension}";
 
     private static final List<String> ARTIFACT_EXPRESSION_PREFIXES;
 
@@ -121,7 +121,7 @@ public class MavenArchiver
                 String key = entry.getKey();
                 String value = entry.getValue();
                 Manifest.Attribute attr = manifest.getMainSection().getAttribute( key );
-                if ( key.equals( "Class-Path" ) && attr != null )
+                if ( key.equals( "ClassPath" ) && attr != null )
                 {
                     // Merge the user-supplied Class-Path value with the programmatically
                     // created Class-Path. Note that the user-supplied value goes first

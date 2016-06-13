@@ -1,4 +1,4 @@
-package org.apache.maven.shared.dependencies.resolve;
+package org.apache.maven.shared.dependencies.resolve.internal;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -19,24 +19,37 @@ package org.apache.maven.shared.dependencies.resolve;
  * under the License.
  */
 
+import java.util.List;
+
+import org.apache.maven.shared.dependencies.resolve.DependencyResolverException;
+import org.apache.maven.shared.dependencies.resolve.DependencyResult;
+import org.eclipse.aether.resolution.DependencyResolutionException;
+
 /**
  * 
+ * @author Robert Scholte
+ *
  */
-public class DependencyResolverException
-    extends Exception
+class Maven31DependencyResolverException extends DependencyResolverException
 {
-    protected DependencyResolverException( Exception cause )
-    {
-        super( cause );
-    }
+    private DependencyResolutionException e;
 
-    public DependencyResolverException( String message, Exception e )
+    public Maven31DependencyResolverException( DependencyResolutionException e )
     {
-        super( message, e );
+        super( e );
+        this.e = e;
     }
     
+    @Override
     public DependencyResult getResult()
     {
-        return null;
+        return new DependencyResult()
+        {
+            @Override
+            public List<Exception> getCollectorExceptions()
+            {
+                return e.getResult().getCollectExceptions();
+            }
+        };
     }
 }

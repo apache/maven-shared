@@ -19,24 +19,19 @@ package org.apache.maven.shared.dependencies.resolve;
  * under the License.
  */
 
+import java.util.List;
+
 /**
  * 
+ * @author Robert Scholte
+ *
  */
-public class DependencyResolverException
-    extends Exception
+public interface DependencyResult
 {
-    protected DependencyResolverException( Exception cause )
-    {
-        super( cause );
-    }
-
-    public DependencyResolverException( String message, Exception e )
-    {
-        super( message, e );
-    }
-    
-    public DependencyResult getResult()
-    {
-        return null;
-    }
+    /**
+     * Gets the exceptions that occurred while building the dependency graph.
+     * 
+     * @return
+     */
+    List<Exception> getCollectorExceptions();
 }

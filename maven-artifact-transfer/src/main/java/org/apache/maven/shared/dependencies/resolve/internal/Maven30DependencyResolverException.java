@@ -19,41 +19,46 @@ package org.apache.maven.shared.dependencies.resolve.internal;
  * under the License.
  */
 
-import org.apache.maven.RepositoryUtils;
+import java.util.List;
+
 import org.apache.maven.shared.dependencies.resolve.DependencyResolverException;
-import org.sonatype.aether.artifact.Artifact;
-import org.sonatype.aether.resolution.ArtifactResult;
+import org.apache.maven.shared.dependencies.resolve.DependencyResult;
+import org.sonatype.aether.collection.DependencyCollectionException;
+import org.sonatype.aether.resolution.ArtifactResolutionException;
 
 /**
- * {@link org.apache.maven.shared.artifact.resolve.ArtifactResult} wrapper for {@link ArtifactResult}
  * 
  * @author Robert Scholte
- * @since 3.0
+ *
  */
-class Maven30ArtifactResult
-    implements org.apache.maven.shared.artifact.resolve.ArtifactResult
+class Maven30DependencyResolverException extends DependencyResolverException
 {
-    private final ArtifactResult artifactResult;
+    private DependencyCollectionException dce;
+    
+    private ArtifactResolutionException are;
 
-    /**
-     * @param artifactResult {@link ArtifactResult}
-     */
-    public Maven30ArtifactResult( ArtifactResult artifactResult )
+    protected Maven30DependencyResolverException( DependencyCollectionException e )
     {
-        this.artifactResult = artifactResult;
+        super( e );
+        this.dce = e;
     }
-
-    @Override
-    public org.apache.maven.artifact.Artifact getArtifact()
+    
+    public Maven30DependencyResolverException( ArtifactResolutionException e )
     {
-        try
+        super( e );
+        this.are = e;
+    }
+    
+    @Override
+    public DependencyResult getResult()
+    {
+        return new DependencyResult()
         {
-            return (org.apache.maven.artifact.Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
-                                                                        Artifact.class, artifactResult.getArtifact() );
-        }
-        catch ( DependencyResolverException e )
-        {
-            throw new RuntimeException( e );
-        }
+            @Override
+            public List<Exception> getCollectorExceptions()
+            {
+                return dce.getResult().getExceptions();
+            }
+        };
     }
 }

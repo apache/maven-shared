@@ -222,7 +222,7 @@ public class Maven31DependencyResolver
         }
         catch ( DependencyResolutionException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new Maven31DependencyResolverException( e );
         }
     }
 

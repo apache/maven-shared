@@ -222,11 +222,11 @@ public class Maven30DependencyResolver
         }
         catch ( ArtifactResolutionException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new Maven30DependencyResolverException( e );
         }
         catch ( DependencyCollectionException e )
         {
-            throw new DependencyResolverException( e.getMessage(), e );
+            throw new Maven30DependencyResolverException( e );
         }
     }
 

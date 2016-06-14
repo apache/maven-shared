@@ -22,6 +22,8 @@ package org.apache.maven.shared.artifact.filter.resolve.transform;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.maven.shared.artifact.filter.resolve.AbstractFilter;
 import org.apache.maven.shared.artifact.filter.resolve.AndFilter;
@@ -93,6 +95,18 @@ public class SonatypeAetherFilterTransformer
     @Override
     public DependencyFilter transform( PatternInclusionsFilter filter )
     {
+     // if any include contains a classifier:
+        // split all includes and make it an or-filter for every include
+        // for the classifier, add an and-filter with a classifierfilter and patterninclusionfilter
+        
+        for ( String include : filter.getIncludes() )
+        {
+            if ( include.matches( ".*:.*:.*:.*:.*" ) )
+            {
+                return newAdvancedPatternInclusionFilter( filter.getIncludes() );
+            }
+        }
+        
         return new PatternInclusionsDependencyFilter( filter.getIncludes() );
     }
     
@@ -107,5 +121,48 @@ public class SonatypeAetherFilterTransformer
                 return filter.accept( new SonatypeAetherNode( node ), null );
             }
         };
+    }
+    
+    private DependencyFilter newAdvancedPatternInclusionFilter( Collection<String> includes )
+    {
+        List<DependencyFilter> filters = new ArrayList<DependencyFilter>( includes.size() );
+
+        Pattern pattern = Pattern.compile( "(.*:.*:.*):(.+)(:.*)" );
+        for ( String include : includes )
+        {
+            Matcher matcher = pattern.matcher( include );
+            if ( matcher.matches() )
+            {
+                DependencyFilter patternFilter =
+                    new PatternInclusionsDependencyFilter( matcher.group( 1 ) + matcher.group( 3 ) );
+
+                final String classifier = matcher.group( 2 );
+                
+                DependencyFilter classifierFilter = new DependencyFilter()
+                {
+                    @Override
+                    public boolean accept( DependencyNode node, List<DependencyNode> parents )
+                    {
+                        String nodeClassifier = node.getDependency().getArtifact().getClassifier();
+                        
+                        if ( nodeClassifier == null )
+                        {
+                            return false;
+                        }
+                        else 
+                        {
+                            return "*".equals( classifier ) || nodeClassifier.matches( classifier );
+                        }
+                    }
+                };
+
+                filters.add( new AndDependencyFilter( patternFilter, classifierFilter ) );
+            }
+            else
+            {
+                filters.add( new PatternInclusionsDependencyFilter( include ) );
+            }
+        }
+        return new OrDependencyFilter( filters );
     }
 }

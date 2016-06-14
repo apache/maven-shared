@@ -141,6 +141,22 @@ public class SonatypeAetherFilterTransformerTest
         assertFalse( dependencyFilter.accept( newDependencyNode( "x:a:v", "runtime" ), null ) );
     }
     
+
+    @Test
+    public void testTransformClassifierPatternInclusionsFilter()
+    {
+        PatternInclusionsFilter filter =
+            new PatternInclusionsFilter( Collections.singletonList( "g:*:*:c:*" ) );
+
+        DependencyFilter dependencyFilter = filter.transform( transformer );
+
+        assertTrue( dependencyFilter.accept( newDependencyNode( "g:a:v:c:*", "runtime" ), null ) );
+
+        assertFalse( dependencyFilter.accept( newDependencyNode( "g:a:v", "runtime" ), null ) );
+        
+        assertFalse( dependencyFilter.accept( newDependencyNode( "x:a:v:c:*", "runtime" ), null ) );
+    }
+    
     @Test
     public void testTransformAbstractFilter() throws Exception
     {

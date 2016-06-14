@@ -40,6 +40,8 @@ public class Java7Support
 
     private static Method delete;
 
+    private static Method deleteIfExists;
+
     private static Method toPath;
 
     private static Method exists;
@@ -66,6 +68,7 @@ public class Java7Support
             Class<?> linkOption = cl.loadClass( "java.nio.file.LinkOption" );
             isSymbolicLink = files.getMethod( "isSymbolicLink", path );
             delete = files.getMethod( "delete", path );
+            deleteIfExists = files.getMethod( "deleteIfExists", path );
             readSymlink = files.getMethod( "readSymbolicLink", path );
 
             emptyFileAttributes = Array.newInstance( fa, 0 );
@@ -170,13 +173,10 @@ public class Java7Support
     {
         try
         {
-            if ( !exists( symlink ) )
-            {
-                Object link = toPath.invoke( symlink );
-                Object path = createSymlink.invoke( null, link, toPath.invoke( target ), emptyFileAttributes );
-                return (File) toFile.invoke( path );
-            }
-            return symlink;
+            Object link = toPath.invoke( symlink );
+            deleteIfExists.invoke( null, link );
+            Object path = createSymlink.invoke( null, link, toPath.invoke( target ), emptyFileAttributes );
+            return (File) toFile.invoke( path );
         }
         catch ( IllegalAccessException e )
         {

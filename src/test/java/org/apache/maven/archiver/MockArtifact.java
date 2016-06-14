@@ -1,9 +1,5 @@
 package org.apache.maven.archiver;
 
-import java.io.File;
-import java.util.Collection;
-import java.util.List;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,6 +27,10 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.OverConstrainedVersionException;
 import org.apache.maven.artifact.versioning.VersionRange;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @todo move to maven-artifact-test

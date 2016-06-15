@@ -27,6 +27,7 @@ import java.util.Collections;
  * 
  * <pre>
  * [groupId]:[artifactId]:[extension]:[version]
+ * [groupId]:[artifactId]:[extension]:[classifier]:[version]
  * </pre>
  * <p>
  * Where each pattern segment is optional and supports full and partial <code>*</code> wildcards. An empty pattern

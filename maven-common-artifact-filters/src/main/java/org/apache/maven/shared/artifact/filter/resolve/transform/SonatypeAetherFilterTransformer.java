@@ -52,6 +52,12 @@ import org.sonatype.aether.util.filter.ScopeDependencyFilter;
 public class SonatypeAetherFilterTransformer
     implements FilterTransformer<DependencyFilter>
 {
+    /**
+     * When using as regular expression, group(1) + group(3) will be the coordinate, 
+     * group(2) will be the classifier.
+     */
+    private static final String GAV_C_E = "(.*:.*:.*):(.+)(:.*)";
+    
     @Override
     public AndDependencyFilter transform( AndFilter filter )
     {
@@ -101,7 +107,7 @@ public class SonatypeAetherFilterTransformer
         
         for ( String include : filter.getIncludes() )
         {
-            if ( include.matches( ".*:.*:.*:.*:.*" ) )
+            if ( include.matches( GAV_C_E ) )
             {
                 return newAdvancedPatternInclusionFilter( filter.getIncludes() );
             }
@@ -127,7 +133,7 @@ public class SonatypeAetherFilterTransformer
     {
         List<DependencyFilter> filters = new ArrayList<DependencyFilter>( includes.size() );
 
-        Pattern pattern = Pattern.compile( "(.*:.*:.*):(.+)(:.*)" );
+        Pattern pattern = Pattern.compile( GAV_C_E );
         for ( String include : includes )
         {
             Matcher matcher = pattern.matcher( include );

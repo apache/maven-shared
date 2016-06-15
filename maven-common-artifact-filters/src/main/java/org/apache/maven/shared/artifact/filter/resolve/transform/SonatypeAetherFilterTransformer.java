@@ -56,7 +56,7 @@ public class SonatypeAetherFilterTransformer
      * When using as regular expression, group(1) + group(3) will be the coordinate, 
      * group(2) will be the classifier.
      */
-    private static final String GAV_C_E = "(.*:.*:.*):(.+)(:.*)";
+    private static final String GAE_C_V = "(.*:.*:.*):(.+)(:.*)";
     
     @Override
     public AndDependencyFilter transform( AndFilter filter )
@@ -107,7 +107,7 @@ public class SonatypeAetherFilterTransformer
         
         for ( String include : filter.getIncludes() )
         {
-            if ( include.matches( GAV_C_E ) )
+            if ( include.matches( GAE_C_V ) )
             {
                 return newAdvancedPatternInclusionFilter( filter.getIncludes() );
             }
@@ -133,7 +133,7 @@ public class SonatypeAetherFilterTransformer
     {
         List<DependencyFilter> filters = new ArrayList<DependencyFilter>( includes.size() );
 
-        Pattern pattern = Pattern.compile( GAV_C_E );
+        Pattern pattern = Pattern.compile( GAE_C_V );
         for ( String include : includes )
         {
             Matcher matcher = pattern.matcher( include );

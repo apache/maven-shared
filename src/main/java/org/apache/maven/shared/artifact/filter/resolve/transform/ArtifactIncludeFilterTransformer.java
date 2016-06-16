@@ -49,6 +49,21 @@ import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
  */
 public class ArtifactIncludeFilterTransformer implements FilterTransformer<ArtifactFilter>
 {
+    
+    private boolean includeNullScope = true;
+    
+    /**
+     * Used by {@link #transform(ScopeFilter)}
+     * 
+     * When filtering on artifacts it is possible that the scope is unknown.
+     * Decide if artifact should be included is its scoop is {@code null}, default is {@code true}
+     * 
+     * @param includeNullScope set to {@code false} if {@code null}-scoped Artifacts should not be included
+     */
+    public void setIncludeNullScope( boolean includeNullScope )
+    {
+        this.includeNullScope = includeNullScope;
+    }
 
     @Override
     public ArtifactFilter transform( final ScopeFilter scopeFilter )
@@ -58,6 +73,11 @@ public class ArtifactIncludeFilterTransformer implements FilterTransformer<Artif
             @Override
             public boolean include( Artifact artifact )
             {
+                if ( artifact.getScope() == null )
+                {
+                    return includeNullScope;
+                }
+                
                 boolean isIncluded;
                 
                 if ( scopeFilter.getIncluded() != null )

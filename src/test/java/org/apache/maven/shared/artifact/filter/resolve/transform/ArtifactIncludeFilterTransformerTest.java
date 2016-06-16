@@ -42,15 +42,22 @@ import org.apache.maven.shared.artifact.filter.resolve.PatternExclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.PatternInclusionsFilter;
 import org.apache.maven.shared.artifact.filter.resolve.ScopeFilter;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
+import org.junit.Before;
 import org.junit.Test;
 
 public class ArtifactIncludeFilterTransformerTest
 {
 
-    private ArtifactIncludeFilterTransformer transformer = new ArtifactIncludeFilterTransformer();
+    private ArtifactIncludeFilterTransformer transformer;
 
     private ArtifactStubFactory artifactFactory = new ArtifactStubFactory();
 
+    @Before
+    public void setUp()
+    {
+        transformer = new ArtifactIncludeFilterTransformer();
+    }
+    
     @Test
     public void testTransformAndFilter()
         throws Exception
@@ -107,13 +114,28 @@ public class ArtifactIncludeFilterTransformerTest
     {
         ScopeFilter filter = ScopeFilter.including( Collections.singletonList( "runtime" ) );
 
-        ArtifactFilter dependencyFilter = (ArtifactFilter) filter.transform( transformer );
+        ArtifactFilter dependencyFilter = filter.transform( transformer );
 
         assertTrue( dependencyFilter.include( newArtifact( "g:a:v", "runtime" ) ) );
 
         assertFalse( dependencyFilter.include( newArtifact( "g:a:v", "compile" ) ) );
 
         assertFalse( dependencyFilter.include( newArtifact( "g:a:v", "test" ) ) );
+    }
+    
+    @Test
+    public void testTransformScopeFilterIncludeNullScope() throws Exception
+    {
+        ScopeFilter filter = ScopeFilter.including();
+
+        Artifact artifact = newArtifact( "g:a:v", null );
+
+        // default
+        assertTrue( filter.transform( transformer ).include( artifact ) );
+
+        transformer.setIncludeNullScope( false );
+        
+        assertFalse( filter.transform( transformer ).include( artifact ) );
     }
 
     @Test

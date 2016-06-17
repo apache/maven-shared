@@ -259,4 +259,10 @@ public class AnsiUtils
         ansi.format( pattern, args );
         return this;
     }
+
+    @Override
+    public String toString()
+    {
+        return ansi.toString();
+    }
 }

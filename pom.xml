@@ -81,12 +81,14 @@
                   <include>org.eclipse.aether:aether-util</include>
                 </includes>
               </artifactSet>
-              <!-- to prevent java.lang.ClassNotFoundException: org.eclipse.aether.util.artifact.SubArtifact (M3.1.1 - M3.3.3) -->
               <filters>
                 <filter>
                   <artifact>org.eclipse.aether:aether-util</artifact>
                   <includes>
+                    <!-- to prevent java.lang.ClassNotFoundException: org.eclipse.aether.util.artifact.SubArtifact (M3.1.1 - M3.3.3) -->
                     <include>org/eclipse/aether/util/artifact/SubArtifact.class</include>
+                    <!-- to prevent java.lang.ClassNotFoundException: org.eclipse.aether.util.filter.* (M3.1.1+ ) -->
+                    <include>org/eclipse/aether/util/filter/*</include>
                   </includes>
                 </filter>
               </filters>
@@ -198,7 +200,6 @@
       <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-util</artifactId>
       <version>0.9.0.M2</version>
-      <!-- will be shaded -->
     </dependency>
 
     <!-- TEST -->

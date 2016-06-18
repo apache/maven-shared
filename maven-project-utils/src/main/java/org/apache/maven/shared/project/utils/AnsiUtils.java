@@ -144,10 +144,10 @@ public class AnsiUtils
     }
 
     /**
-     * Insert color for highlighted message display.
+     * Insert color for strong message display.
      * @return by default, bold
      */
-    public AnsiUtils highlight()
+    public AnsiUtils strong()
     {
         ansi.bold();
         return this;

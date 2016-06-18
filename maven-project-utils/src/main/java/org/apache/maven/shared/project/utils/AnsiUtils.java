@@ -34,17 +34,17 @@ public class AnsiUtils
 
     private AnsiUtils()
     {
-        ansi = new Ansi();
+        ansi = Ansi.ansi();
     }
 
     private AnsiUtils( StringBuilder builder )
     {
-        ansi = new Ansi( builder );
+        ansi = Ansi.ansi( builder );
     }
 
     private AnsiUtils( int size )
     {
-        ansi = new Ansi( size );
+        ansi = Ansi.ansi( size );
     }
 
     public static void systemInstall()

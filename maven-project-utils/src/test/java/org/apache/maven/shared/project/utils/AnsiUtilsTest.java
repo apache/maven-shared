@@ -23,7 +23,6 @@ import static org.apache.maven.shared.project.utils.AnsiUtils.ansi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import org.fusesource.jansi.Ansi;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,25 +34,25 @@ public class AnsiUtilsTest
     @Before
     public void saveAnsiState()
     {
-        savedAnsiEnable = Ansi.isEnabled();
+        savedAnsiEnable = AnsiUtils.isEnabled();
     }
 
     @After
     public void restoreAnsiState()
     {
-        Ansi.setEnabled( savedAnsiEnable );
+        AnsiUtils.setEnabled( savedAnsiEnable );
     }
 
     @Test
     public void constructors()
     {
         // check that ANSI color disable is taken into account
-        Ansi.setEnabled( false );
+        AnsiUtils.setEnabled( false );
         assertEquals( "test", ansi().error().a( "test" ).reset().toString() );
         assertEquals( "test", ansi( 16 ).error().a( "test" ).reset().toString() );
         assertEquals( "test", ansi( new StringBuilder() ).error().a( "test" ).reset().toString() );
 
-        Ansi.setEnabled( true );
+        AnsiUtils.setEnabled( true );
         assertNotEquals( "test", ansi().error().a( "test" ).reset().toString() );
         assertNotEquals( "test", ansi( 16 ).error().a( "test" ).reset().toString() );
         assertNotEquals( "test", ansi( new StringBuilder() ).error().a( "test" ).reset().toString() );
@@ -74,7 +73,7 @@ public class AnsiUtilsTest
     @Test
     public void messages()
     {
-        Ansi.setEnabled( true );
+        AnsiUtils.setEnabled( true );
         assertEquals( ansi().warning().a( "test" ).reset().toString(), ansi().warning( "test" ).toString() );
         assertEquals( ansi().success().a( "test" ).reset().toString(), ansi().success( "test" ).toString() );
         assertEquals( ansi().failure().a( "test" ).reset().toString(), ansi().failure( "test" ).toString() );

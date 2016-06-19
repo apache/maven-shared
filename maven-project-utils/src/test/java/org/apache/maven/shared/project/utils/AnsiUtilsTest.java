@@ -75,6 +75,7 @@ public class AnsiUtilsTest
     public void messages()
     {
         Ansi.setEnabled( true );
+        assertEquals( ansi().warning().a( "test" ).reset().toString(), ansi().warning( "test" ).toString() );
         assertEquals( ansi().success().a( "test" ).reset().toString(), ansi().success( "test" ).toString() );
         assertEquals( ansi().failure().a( "test" ).reset().toString(), ansi().failure( "test" ).toString() );
         assertEquals( ansi().strong().a( "test" ).reset().toString(), ansi().strong( "test" ).toString() );

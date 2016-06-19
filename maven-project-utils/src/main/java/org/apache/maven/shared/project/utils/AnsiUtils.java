@@ -114,6 +114,14 @@ public class AnsiUtils
     }
     
     /**
+     * Append warning message: equivalent to appending warning color, then message, then reset.
+     */
+    public AnsiUtils warning( Object message )
+    {
+        return warning().a( message ).reset();
+    }
+    
+    /**
      * Insert color for ERROR level display.
      * By default, bold red
      */

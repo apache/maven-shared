@@ -35,7 +35,7 @@ public class AnsiUtilsTest
     @Before
     public void saveAnsiState()
     {
-        boolean savedAnsiEnable = Ansi.isEnabled();
+        savedAnsiEnable = Ansi.isEnabled();
     }
 
     @After

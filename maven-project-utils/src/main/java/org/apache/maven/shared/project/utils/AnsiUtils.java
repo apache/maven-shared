@@ -62,6 +62,16 @@ public class AnsiUtils
         AnsiConsole.systemUninstall();
     }
 
+    public static void setEnabled( boolean flag )
+    {
+        Ansi.setEnabled( flag );
+    }
+
+    public static boolean isEnabled()
+    {
+        return Ansi.isEnabled();
+    }
+
     public static AnsiUtils ansi()
     {
         return new AnsiUtils();

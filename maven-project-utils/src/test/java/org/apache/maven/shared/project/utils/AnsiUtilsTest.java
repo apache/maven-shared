@@ -24,31 +24,39 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 import org.fusesource.jansi.Ansi;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class AnsiUtilsTest
 {
+    private boolean savedAnsiEnable;
+
+    @Before
+    public void saveAnsiState()
+    {
+        boolean savedAnsiEnable = Ansi.isEnabled();
+    }
+
+    @After
+    public void restoreAnsiState()
+    {
+        Ansi.setEnabled( savedAnsiEnable );
+    }
+
     @Test
     public void constructors()
     {
-        boolean enabled = Ansi.isEnabled();
-        try
-        {
-            // check that ANSI color disable is taken into account
-            Ansi.setEnabled( false );
-            assertEquals( "test", ansi().error().a( "test" ).reset().toString() );
-            assertEquals( "test", ansi( 16 ).error().a( "test" ).reset().toString() );
-            assertEquals( "test", ansi( new StringBuilder() ).error().a( "test" ).reset().toString() );
-    
-            Ansi.setEnabled( true );
-            assertNotEquals( "test", ansi().error().a( "test" ).reset().toString() );
-            assertNotEquals( "test", ansi( 16 ).error().a( "test" ).reset().toString() );
-            assertNotEquals( "test", ansi( new StringBuilder() ).error().a( "test" ).reset().toString() );
-        }
-        finally
-        {
-            Ansi.setEnabled( enabled );
-        }
+        // check that ANSI color disable is taken into account
+        Ansi.setEnabled( false );
+        assertEquals( "test", ansi().error().a( "test" ).reset().toString() );
+        assertEquals( "test", ansi( 16 ).error().a( "test" ).reset().toString() );
+        assertEquals( "test", ansi( new StringBuilder() ).error().a( "test" ).reset().toString() );
+
+        Ansi.setEnabled( true );
+        assertNotEquals( "test", ansi().error().a( "test" ).reset().toString() );
+        assertNotEquals( "test", ansi( 16 ).error().a( "test" ).reset().toString() );
+        assertNotEquals( "test", ansi( new StringBuilder() ).error().a( "test" ).reset().toString() );
     }
 
     @Test
@@ -61,5 +69,16 @@ public class AnsiUtilsTest
         assertEquals( "-1.212", ansi().a( -1.212d ).toString() );
         assertEquals( "true", ansi().a( true ).toString() );
         assertEquals( "c", ansi().a( 'c' ).toString() );
+    }
+
+    @Test
+    public void messages()
+    {
+        Ansi.setEnabled( true );
+        assertEquals( ansi().success().a( "test" ).reset().toString(), ansi().success( "test" ).toString() );
+        assertEquals( ansi().failure().a( "test" ).reset().toString(), ansi().failure( "test" ).toString() );
+        assertEquals( ansi().strong().a( "test" ).reset().toString(), ansi().strong( "test" ).toString() );
+        assertEquals( ansi().mojo().a( "test" ).reset().toString(), ansi().mojo( "test" ).toString() );
+        assertEquals( ansi().project().a( "test" ).reset().toString(), ansi().project( "test" ).toString() );
     }
 }

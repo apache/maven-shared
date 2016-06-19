@@ -85,7 +85,7 @@ public class AnsiUtils
     //
     /**
      * Insert color for DEBUG level display.
-     * @return by default, bold cyan
+     * By default, bold cyan
      */
     public AnsiUtils debug()
     {
@@ -95,7 +95,7 @@ public class AnsiUtils
     
     /**
      * Insert color for INFO level display.
-     * @return by default, bold blue
+     * By default, bold blue
      */
     public AnsiUtils info()
     {
@@ -105,7 +105,7 @@ public class AnsiUtils
     
     /**
      * Insert color for WARNING level or warning message display.
-     * @return by default, bold yellow
+     * By default, bold yellow
      */
     public AnsiUtils warning()
     {
@@ -115,7 +115,7 @@ public class AnsiUtils
     
     /**
      * Insert color for ERROR level display.
-     * @return by default, bold red
+     * By default, bold red
      */
     public AnsiUtils error()
     {
@@ -125,7 +125,7 @@ public class AnsiUtils
     
     /**
      * Insert color for success message display.
-     * @return by default, bold green
+     * By default, bold green
      */
     public AnsiUtils success()
     {
@@ -134,8 +134,16 @@ public class AnsiUtils
     }
     
     /**
+     * Append success message: equivalent to appending success color, then message, then reset.
+     */
+    public AnsiUtils success( Object message )
+    {
+        return success().a( message ).reset();
+    }
+    
+    /**
      * Insert color for failure message display.
-     * @return by default, bold red
+     * By default, bold red
      */
     public AnsiUtils failure()
     {
@@ -144,8 +152,16 @@ public class AnsiUtils
     }
 
     /**
+     * Append failure message: equivalent to appending failure color, then message, then reset.
+     */
+    public AnsiUtils failure( Object message )
+    {
+        return failure().a( message ).reset();
+    }
+    
+    /**
      * Insert color for strong message display.
-     * @return by default, bold
+     * By default, bold
      */
     public AnsiUtils strong()
     {
@@ -154,8 +170,16 @@ public class AnsiUtils
     }
 
     /**
+     * Append strong message: equivalent to appending strong color, then message, then reset.
+     */
+    public AnsiUtils strong( Object message )
+    {
+        return strong().a( message ).reset();
+    }
+    
+    /**
      * Insert color for mojo message display.
-     * @return by default, green
+     * By default, green
      */
     public AnsiUtils mojo()
     {
@@ -164,8 +188,16 @@ public class AnsiUtils
     }
 
     /**
+     * Append mojo message: equivalent to appending mojo color, then message, then reset.
+     */
+    public AnsiUtils mojo( Object message )
+    {
+        return mojo().a( message ).reset();
+    }
+    
+    /**
      * Insert color for project message display.
-     * @return by default, cyan
+     * By default, cyan
      */
     public AnsiUtils project()
     {
@@ -173,6 +205,14 @@ public class AnsiUtils
         return this;
     }
 
+    /**
+     * Append project message: equivalent to appending project color, then message, then reset.
+     */
+    public AnsiUtils project( Object message )
+    {
+        return project().a( message ).reset();
+    }
+    
     //
     // message building methods (modelled after Ansi methods)
     //

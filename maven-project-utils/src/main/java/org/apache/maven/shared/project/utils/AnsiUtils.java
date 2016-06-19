@@ -182,18 +182,6 @@ public class AnsiUtils
         return this;
     }
 
-    public AnsiUtils a( boolean value )
-    {
-        ansi.a( value );
-        return this;
-    }
-
-    public AnsiUtils a( char value )
-    {
-        ansi.a( value );
-        return this;
-    }
-
     public AnsiUtils a( char[] value, int offset, int len )
     {
         ansi.a( value, offset, len );
@@ -213,30 +201,6 @@ public class AnsiUtils
     }
 
     public AnsiUtils a( CharSequence value )
-    {
-        ansi.a( value );
-        return this;
-    }
-
-    public AnsiUtils a( double value )
-    {
-        ansi.a( value );
-        return this;
-    }
-
-    public AnsiUtils a( float value )
-    {
-        ansi.a( value );
-        return this;
-    }
-
-    public AnsiUtils a( int value )
-    {
-        ansi.a( value );
-        return this;
-    }
-
-    public AnsiUtils a( long value )
     {
         ansi.a( value );
         return this;

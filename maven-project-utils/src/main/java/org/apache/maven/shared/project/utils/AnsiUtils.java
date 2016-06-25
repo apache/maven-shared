@@ -28,7 +28,7 @@ import org.fusesource.jansi.AnsiConsole;
  */
 public class AnsiUtils
 {
-    private static final String MINIMUM_MAVEN_VERSION = "3.4.0"; // color added in Maven 3.4.0: see MNG-3507
+    private static final String MINIMUM_MAVEN_VERSION = "3.4.0-alpha"; // color added in Maven 3.4.0: see MNG-3507
 
     private Ansi ansi;
 
@@ -50,7 +50,7 @@ public class AnsiUtils
     public static void systemInstall()
     {
         AnsiConsole.systemInstall();
-        if ( MavenUtils.compareToVersion( MINIMUM_MAVEN_VERSION ) >= 0 )
+        if ( MavenUtils.compareToVersion( MINIMUM_MAVEN_VERSION ) < 0 )
         {
             // ANSI color support was added in Maven 3.4.0: don't enable color if executing older Maven versions
             Ansi.setEnabled( false );

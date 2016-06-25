@@ -64,8 +64,9 @@ public final class MavenUtils
     }
 
     /**
-     * Returns a positive value if the version parameter is bigger compared to the runtime Maven version
-     * Returns a negative value if the version parameter is less compared to the runtime Maven version
+     * Compares the runtime Maven version to the version parameter.
+     * Returns a positive value if the runtime Maven version is bigger than the version parameter. 
+     * Returns a negative value if the runtime Maven version is less than the version parameter. 
      * Returns 0 if they are the same.
      * 
      * @param version the version to compare
@@ -73,6 +74,6 @@ public final class MavenUtils
      */
     public static int compareToVersion( String version )
     {
-        return new DefaultArtifactVersion( version ).compareTo( new DefaultArtifactVersion( getMavenVersion() ) );
+        return new DefaultArtifactVersion( getMavenVersion() ).compareTo( new DefaultArtifactVersion( version ) );
     }
 }

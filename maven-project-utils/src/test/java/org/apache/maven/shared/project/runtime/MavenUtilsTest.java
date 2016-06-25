@@ -29,8 +29,8 @@ public class MavenUtilsTest
     @Test
     public void testCompareToVersion()
     {
-        assertTrue( MavenUtils.compareToVersion( "101.0.0" ) > 0 );
+        assertTrue( MavenUtils.compareToVersion( "101.0.0" ) < 0 );
         assertTrue( MavenUtils.compareToVersion( MavenUtils.getMavenVersion() ) == 0 );
-        assertTrue( MavenUtils.compareToVersion( "0.0.1" ) < 0 );
+        assertTrue( MavenUtils.compareToVersion( "0.0.1" ) > 0 );
     }
 }

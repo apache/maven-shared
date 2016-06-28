@@ -152,6 +152,31 @@ public class ArtifactIncludeFilterTransformerTest
     }
 
     @Test
+    public void testTransformPatternExclusionsFilterActTransitivily()
+        throws Exception
+    {
+        PatternExclusionsFilter filter = new PatternExclusionsFilter( Collections.singletonList( "x:*" ) );
+        
+        transformer.setActTransitivelyPattern( true );
+
+        Artifact parentArtifact = newArtifact( "x:a:v", null );
+        
+        Artifact artifact = newArtifact( "g:a:v", null );
+        
+        artifact.setDependencyTrail( Arrays.asList( parentArtifact.getId(), artifact.getId() ) );
+
+        PatternExcludesArtifactFilter dependencyFilter = (PatternExcludesArtifactFilter) filter.transform( transformer );
+        
+        assertFalse( dependencyFilter.include( artifact ) );
+        
+        transformer.setActTransitivelyPattern( false );
+        
+        dependencyFilter = (PatternExcludesArtifactFilter) filter.transform( transformer );
+
+        assertTrue( dependencyFilter.include( artifact ) );
+    }
+
+    @Test
     public void testTransformPatternInclusionsFilter()
         throws Exception
     {
@@ -162,6 +187,31 @@ public class ArtifactIncludeFilterTransformerTest
         assertTrue( dependencyFilter.include( newArtifact( "g:a:v", "runtime" ) ) );
 
         assertFalse( dependencyFilter.include( newArtifact( "x:a:v", "runtime" ) ) );
+    }
+    
+    @Test
+    public void testTransformPatternInclusionsFilterActTransitivily()
+        throws Exception
+    {
+        PatternInclusionsFilter filter = new PatternInclusionsFilter( Collections.singletonList( "x:*" ) );
+
+        transformer.setActTransitivelyPattern( true );
+        
+        Artifact parentArtifact = newArtifact( "x:a:v", null );
+        
+        Artifact artifact = newArtifact( "g:a:v", null );
+        
+        artifact.setDependencyTrail( Arrays.asList( parentArtifact.getId(), artifact.getId() ) );
+        
+        PatternIncludesArtifactFilter dependencyFilter = (PatternIncludesArtifactFilter) filter.transform( transformer );
+
+        assertTrue( dependencyFilter.include( artifact ) );
+        
+        transformer.setActTransitivelyPattern( false );
+        
+        dependencyFilter = (PatternIncludesArtifactFilter) filter.transform( transformer );
+
+        assertFalse( dependencyFilter.include( artifact ) );
     }
     
     @Test

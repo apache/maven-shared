@@ -31,17 +31,22 @@ class AnsiMessageBuffer
 
     AnsiMessageBuffer()
     {
-        ansi = Ansi.ansi();
+        this( Ansi.ansi() );
     }
 
     AnsiMessageBuffer( StringBuilder builder )
     {
-        ansi = Ansi.ansi( builder );
+        this( Ansi.ansi( builder ) );
     }
 
     AnsiMessageBuffer( int size )
     {
-        ansi = Ansi.ansi( size );
+        this( Ansi.ansi( size ) );
+    }
+
+    AnsiMessageBuffer( Ansi ansi )
+    {
+        this.ansi = ansi;
     }
 
     // consistent color management
@@ -54,24 +59,24 @@ class AnsiMessageBuffer
         ansi.bold().fgCyan();
         return this;
     }
-    
+
     public AnsiMessageBuffer info()
     {
         ansi.bold().fgBlue();
         return this;
     }
-    
+
     public AnsiMessageBuffer warning()
     {
         ansi.bold().fgYellow();
         return this;
     }
-    
+
     public AnsiMessageBuffer warning( Object message )
     {
         return warning().a( message ).reset();
     }
-    
+
     public AnsiMessageBuffer error()
     {
         ansi.bold().fgRed();
@@ -121,7 +126,7 @@ class AnsiMessageBuffer
     {
         return mojo().a( message ).reset();
     }
-    
+
 
     public AnsiMessageBuffer project()
     {

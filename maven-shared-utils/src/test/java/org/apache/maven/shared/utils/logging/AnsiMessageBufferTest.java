@@ -20,6 +20,7 @@ package org.apache.maven.shared.utils.logging;
  */
 
 import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.Ansi.Attribute;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,7 +28,14 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import static org.fusesource.jansi.Ansi.Attribute.INTENSITY_BOLD;
+import static org.fusesource.jansi.Ansi.Color.BLUE;
+import static org.fusesource.jansi.Ansi.Color.CYAN;
+import static org.fusesource.jansi.Ansi.Color.GREEN;
+import static org.fusesource.jansi.Ansi.Color.RED;
+import static org.fusesource.jansi.Ansi.Color.YELLOW;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
 public class AnsiMessageBufferTest
@@ -43,7 +51,7 @@ public class AnsiMessageBufferTest
 
     @Before
     public void makesAnsiFluent() throws Exception {
-        given( ansi.bold() ).willReturn( ansi );
+        given( ansi.a( any( Attribute.class ) ) ).willReturn( ansi );
     }
 
     @Before
@@ -58,8 +66,8 @@ public class AnsiMessageBufferTest
         ansiMessageBuffer.debug();
 
         // then
-        verify( ansi ).bold();
-        verify( ansi ).fgCyan();
+        verify( ansi ).a( INTENSITY_BOLD );
+        verify( ansi ).fg( CYAN );
     }
 
     @Test
@@ -69,8 +77,8 @@ public class AnsiMessageBufferTest
         ansiMessageBuffer.info();
 
         // then
-        verify( ansi ).bold();
-        verify( ansi ).fgBlue();
+        verify( ansi ).a( INTENSITY_BOLD );
+        verify( ansi ).fg( BLUE );
     }
 
     @Test
@@ -80,8 +88,8 @@ public class AnsiMessageBufferTest
         ansiMessageBuffer.warning();
 
         // then
-        verify( ansi ).bold();
-        verify( ansi ).fgYellow();
+        verify( ansi ).a( INTENSITY_BOLD );
+        verify( ansi ).fg( YELLOW );
     }
 
     @Test
@@ -91,8 +99,8 @@ public class AnsiMessageBufferTest
         ansiMessageBuffer.error();
 
         // then
-        verify( ansi ).bold();
-        verify( ansi ).fgRed();
+        verify( ansi ).a( INTENSITY_BOLD );
+        verify( ansi ).fg( RED );
     }
 
     @Test
@@ -102,8 +110,8 @@ public class AnsiMessageBufferTest
         ansiMessageBuffer.success();
 
         // then
-        verify( ansi ).bold();
-        verify( ansi ).fgGreen();
+        verify( ansi ).a( INTENSITY_BOLD );
+        verify( ansi ).fg( GREEN );
     }
 
     @Test
@@ -113,8 +121,8 @@ public class AnsiMessageBufferTest
         ansiMessageBuffer.failure();
 
         // then
-        verify( ansi ).bold();
-        verify( ansi ).fgRed();
+        verify( ansi ).a( INTENSITY_BOLD );
+        verify( ansi ).fg( RED );
     }
 
     @Test
@@ -124,7 +132,7 @@ public class AnsiMessageBufferTest
         ansiMessageBuffer.strong();
 
         // then
-        verify( ansi ).bold();
+        verify( ansi ).a( INTENSITY_BOLD );
     }
 
     @Test
@@ -134,7 +142,7 @@ public class AnsiMessageBufferTest
         ansiMessageBuffer.mojo();
 
         // then
-        verify( ansi ).fgGreen();
+        verify( ansi ).fg( GREEN );
     }
 
     @Test
@@ -144,7 +152,7 @@ public class AnsiMessageBufferTest
         ansiMessageBuffer.project();
 
         // then
-        verify( ansi ).fgCyan();
+        verify( ansi ).fg( CYAN );
     }
 
 }

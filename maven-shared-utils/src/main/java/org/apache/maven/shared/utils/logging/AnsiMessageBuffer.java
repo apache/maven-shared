@@ -21,6 +21,16 @@ package org.apache.maven.shared.utils.logging;
 
 import org.fusesource.jansi.Ansi;
 
+import static org.apache.maven.shared.utils.logging.Style.DEBUG;
+import static org.apache.maven.shared.utils.logging.Style.ERROR;
+import static org.apache.maven.shared.utils.logging.Style.FAILURE;
+import static org.apache.maven.shared.utils.logging.Style.INFO;
+import static org.apache.maven.shared.utils.logging.Style.MOJO;
+import static org.apache.maven.shared.utils.logging.Style.PROJECT;
+import static org.apache.maven.shared.utils.logging.Style.STRONG;
+import static org.apache.maven.shared.utils.logging.Style.SUCCESS;
+import static org.apache.maven.shared.utils.logging.Style.WARNING;
+
 /**
  * Message buffer implementation that supports ANSI colors through JAnsi.
  */
@@ -49,26 +59,21 @@ class AnsiMessageBuffer
         this.ansi = ansi;
     }
 
-    // consistent color management
-    // TODO make configurable
-    // settings.xml? during systemInstall(Settings)?
-    // or project properties (that can be injected by settings)?
-    //
     public AnsiMessageBuffer debug()
     {
-        ansi.bold().fgCyan();
+        DEBUG.apply( ansi );
         return this;
     }
 
     public AnsiMessageBuffer info()
     {
-        ansi.bold().fgBlue();
+        INFO.apply( ansi );
         return this;
     }
 
     public AnsiMessageBuffer warning()
     {
-        ansi.bold().fgYellow();
+        WARNING.apply( ansi );
         return this;
     }
 
@@ -79,13 +84,13 @@ class AnsiMessageBuffer
 
     public AnsiMessageBuffer error()
     {
-        ansi.bold().fgRed();
+        ERROR.apply( ansi );
         return this;
     }
 
     public AnsiMessageBuffer success()
     {
-        ansi.bold().fgGreen();
+        SUCCESS.apply( ansi );
         return this;
     }
 
@@ -96,7 +101,7 @@ class AnsiMessageBuffer
 
     public AnsiMessageBuffer failure()
     {
-        ansi.bold().fgRed();
+        FAILURE.apply( ansi );
         return this;
     }
 
@@ -107,7 +112,7 @@ class AnsiMessageBuffer
 
     public AnsiMessageBuffer strong()
     {
-        ansi.bold();
+        STRONG.apply( ansi );
         return this;
     }
 
@@ -118,7 +123,7 @@ class AnsiMessageBuffer
 
     public AnsiMessageBuffer mojo()
     {
-        ansi.fgGreen();
+        MOJO.apply( ansi );
         return this;
     }
 
@@ -130,7 +135,7 @@ class AnsiMessageBuffer
 
     public AnsiMessageBuffer project()
     {
-        ansi.fgCyan();
+        PROJECT.apply( ansi );
         return this;
     }
 

@@ -21,48 +21,47 @@ package org.apache.maven.shared.utils.logging;
 
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.Ansi.Attribute;
-import org.fusesource.jansi.Ansi.Color;
+
+import java.lang.reflect.Method;
 
 import static org.fusesource.jansi.Ansi.Attribute.INTENSITY_BOLD;
 
-import java.util.Locale;
-
 /**
- * Configurable message styles.
+ *
  */
 enum Style
 {
 
-    DEBUG(   "bold,cyan"   ),
-    INFO(    "bold,blue"   ),
-    WARNING( "bold,yellow" ),
-    ERROR(   "bold,red"    ),
-    SUCCESS( "bold,green"  ),
-    FAILURE( "bold,red"    ),
+    DEBUG(   "bold,fgCyan"   ),
+    INFO(    "bold,fgBlue"   ),
+    WARNING( "bold,fgYellow" ),
+    ERROR(   "bold,fgRed"    ),
+    SUCCESS( "bold,fgGreen"  ),
+    FAILURE( "bold,fgRed"    ),
     STRONG(  "bold"        ),
-    MOJO(    "green"       ),
-    PROJECT( "cyan"        );
+    MOJO(        "fgGreen"   ),
+    PROJECT(     "fgCyan"    );
 
     private final Attribute attribute;
 
-    private final Color color;
+    private final String fgColor;
+    private final String bgColor;
 
-    Style( String defaultValue )
+    Style( String defaultConfiguration )
     {
         Attribute currentAttribute = null;
-        Color currentColor = null;
+        String currentFgColor = null;
+        String currentBgColor = null;
 
-        String value = System.getProperty( "style." + name().toLowerCase( Locale.ENGLISH ), defaultValue );
-
-        for ( String token : value.split( "," ) )
+        for ( String token : System.getProperty( "style." + name().toLowerCase(), defaultConfiguration ).split( "," ) )
         {
-            for ( Color color : Color.values() )
+            if ( token.startsWith( "fg" ) )
             {
-                if ( color.toString().equalsIgnoreCase( token ) )
-                {
-                    currentColor = color;
-                    break;
-                }
+                currentFgColor = token;
+            }
+            if ( token.startsWith( "bg" ) )
+            {
+                currentBgColor = token;
             }
 
             if ( "bold".equalsIgnoreCase( token ) )
@@ -72,7 +71,8 @@ enum Style
         }
 
         this.attribute = currentAttribute;
-        this.color = currentColor;
+        this.fgColor = currentFgColor;
+        this.bgColor = currentBgColor;
     }
 
     void apply( Ansi ansi )
@@ -81,28 +81,56 @@ enum Style
         {
             ansi.a( attribute );
         }
-        if ( color != null )
+
+        if ( fgColor != null )
         {
-            ansi.fg( color );
+            applyColor( ansi, fgColor );
+        }
+        if ( bgColor != null )
+        {
+            applyColor( ansi, bgColor );
         }
     }
 
     @Override
     public String toString()
     {
-        if ( attribute == null && color == null )
+        StringBuilder s = new StringBuilder( name() );
+        if ( attribute != null || fgColor != null || bgColor != null )
         {
-            return name();
+            s.append( "=" );
+            String prefix = "";
+            if ( attribute == null )
+            {
+                prefix = ",";
+                s.append( attribute.toString() );
+            }
+            if ( fgColor == null )
+            {
+                s.append( prefix );
+                prefix = ",";
+                s.append( fgColor );
+            }
+            if ( bgColor == null )
+            {
+                s.append( prefix );
+                s.append( bgColor );
+            }
         }
-        if ( attribute == null )
+        return s.toString();
+    }
+
+    private void applyColor( Ansi ansi, String c )
+    {
+        try
         {
-            return name() + "=" + color.toString();
+            Method m = ansi.getClass().getMethod( c );
+            m.invoke( ansi );
         }
-        if ( color == null )
+        catch ( Exception e )
         {
-            return name() + "=" + attribute.toString();
+            e.printStackTrace();
         }
-        return name() + "=" + attribute + "," + color;
     }
 
 }

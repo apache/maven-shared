@@ -68,7 +68,7 @@ under the License.
     </dependency>
     <dependency>
       <!--
-        ! Can be removed if updated to maven-shared-components parent to version 31
+        ! Can be removed if update to maven-shared-components parent to version 31
       -->
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-annotations</artifactId>
@@ -105,7 +105,7 @@ under the License.
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-metadata</artifactId>
         <!--
-          ! Can be removed if updated to maven-shared-components parent to version 31
+          ! Can be removed if update to maven-shared-components parent to version 31
         -->
         <version>1.7</version>
         <executions>

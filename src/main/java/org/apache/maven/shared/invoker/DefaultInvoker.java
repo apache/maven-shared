@@ -81,13 +81,12 @@ public class DefaultInvoker
         {
             cliBuilder.setMavenHome( getMavenHome() );
         }
-        
+
         File mavenExecutable = getMavenExecutable();
         if ( mavenExecutable != null )
         {
             cliBuilder.setMavenExecutable( mavenExecutable );
         }
-        
 
         File workingDirectory = getWorkingDirectory();
         if ( workingDirectory != null )
@@ -134,22 +133,8 @@ public class DefaultInvoker
         {
             getLogger().debug( "Executing: " + cli );
         }
-        if ( request.isInteractive() )
-        {
-            if ( inputStream == null )
-            {
-                getLogger().warn(
-                                  "Maven will be executed in interactive mode"
-                                      + ", but no input stream has been configured for this MavenInvoker instance." );
 
-                result = CommandLineUtils.executeCommandLine( cli, outputHandler, errorHandler );
-            }
-            else
-            {
-                result = CommandLineUtils.executeCommandLine( cli, inputStream, outputHandler, errorHandler );
-            }
-        }
-        else
+        if ( request.isBatchMode() )
         {
             if ( inputStream != null )
             {
@@ -157,6 +142,20 @@ public class DefaultInvoker
             }
 
             result = CommandLineUtils.executeCommandLine( cli, outputHandler, errorHandler );
+        }
+        else
+        {
+            if ( inputStream == null )
+            {
+                getLogger().warn( "Maven will be executed in interactive mode"
+                    + ", but no input stream has been configured for this MavenInvoker instance." );
+
+                result = CommandLineUtils.executeCommandLine( cli, outputHandler, errorHandler );
+            }
+            else
+            {
+                result = CommandLineUtils.executeCommandLine( cli, inputStream, outputHandler, errorHandler );
+            }
         }
 
         return result;

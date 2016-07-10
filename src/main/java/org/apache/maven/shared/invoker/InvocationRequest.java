@@ -33,21 +33,20 @@ import java.util.Properties;
 public interface InvocationRequest
 {
 
-    // TODO: handle forced-reactor executions using -r/includes/excludes
-
     /**
-     * Gets the interaction mode of the Maven invocation. By default, Maven is executed in batch mode.
+     * By default, Maven is executed in batch mode. This mean no interaction with the Maven process can be done.
      * 
-     * @return <code>true</code> if Maven should be executed in interactive mode, <code>false</code> if the batch
-     *         mode is used.
+     * @return <code>true</code> if Maven should be executed in batch mode, <code>false</code> if Maven is executed in
+     *         interactive mode.
+     * @since 3.0.0
      */
-    boolean isInteractive();
+    boolean isBatchMode();
 
     /**
      * Gets the network mode of the Maven invocation. By default, Maven is executed in online mode.
      * 
-     * @return <code>true</code> if Maven should be executed in offline mode, <code>false</code> if the online mode
-     *         is used.
+     * @return <code>true</code> if Maven should be executed in offline mode, <code>false</code> if the online mode is
+     *         used.
      */
     boolean isOffline();
 
@@ -67,28 +66,8 @@ public interface InvocationRequest
     boolean isRecursive();
 
     /**
-     * Gets whether Maven should search subdirectories to build a dynamic reactor
-     * @return <code>true</code> if we should search subdirectories, <code>false</code> otherwise
-     */
-    boolean isActivatedReactor();
-
-    /**
-     * Gets the list of subdirectory patterns to search
-     * @return list of subdirectory patterns to search, or <code>null</code> in which case defaults should be used
-     */
-    String[] getActivatedReactorIncludes();
-
-    /**
-     * Gets the list of subdirectory patterns to exclude from search
-     * 
-     * @return list of subdirectory patterns to exclude search, or <code>null</code> in which case nothing should be
-     *         excluded
-     */
-    String[] getActivatedReactorExcludes();
-
-    /**
-     * A list of specified reactor projects to build instead of all projects. 
-     * A project can be specified by [groupId]:artifactId or by its relative path.
+     * A list of specified reactor projects to build instead of all projects. A project can be specified by
+     * [groupId]:artifactId or by its relative path.
      * 
      * @return the list of projects to add to reactor build, otherwise {@code null}
      * @since 2.1
@@ -122,8 +101,8 @@ public interface InvocationRequest
     /**
      * Gets the debug mode of the Maven invocation. By default, Maven is executed in normal mode.
      * 
-     * @return <code>true</code> if Maven should be executed in debug mode, <code>false</code> if the normal mode
-     *         should be used.
+     * @return <code>true</code> if Maven should be executed in debug mode, <code>false</code> if the normal mode should
+     *         be used.
      */
     boolean isDebug();
 
@@ -151,20 +130,22 @@ public interface InvocationRequest
     boolean isNonPluginUpdates();
 
     /**
-     * Gets the failure mode of the Maven invocation. By default, the mode {@link #REACTOR_FAIL_FAST} is used.
+     * Gets the failure mode of the Maven invocation. By default, the mode {@link ReactorFailureBehavior#FailFast} is
+     * used.
      * 
-     * @return The failure mode, one of {@link #REACTOR_FAIL_FAST}, {@link #REACTOR_FAIL_AT_END} and
-     *         {@link #REACTOR_FAIL_NEVER}.
+     * @return The failure mode, one of {@link ReactorFailureBehavior#FailFast},
+     *         {@link ReactorFailureBehavior#FailAtEnd} and {@link ReactorFailureBehavior#FailNever}.
+     * @since 3.0.0
      */
-    String getFailureBehavior();
+    ReactorFailureBehavior getReactorFailureBehavior();
 
     /**
      * Gets the path to the base directory of the local repository to use for the Maven invocation.
      * 
      * @param defaultDirectory The default location to use if no location is configured for this request, may be
      *            <code>null</code>.
-     * @return The path to the base directory of the local repository or <code>null</code> to use the location from
-     *         the <code>settings.xml</code>.
+     * @return The path to the base directory of the local repository or <code>null</code> to use the location from the
+     *         <code>settings.xml</code>.
      */
     File getLocalRepositoryDirectory( File defaultDirectory );
 
@@ -228,8 +209,8 @@ public interface InvocationRequest
     /**
      * Gets the path to the base directory of the Java installation used to run Maven.
      * 
-     * @return The path to the base directory of the Java installation used to run Maven or <code>null</code> to use
-     *         the default Java home.
+     * @return The path to the base directory of the Java installation used to run Maven or <code>null</code> to use the
+     *         default Java home.
      */
     File getJavaHome();
 
@@ -263,7 +244,7 @@ public interface InvocationRequest
      * @since 2.1
      */
     File getGlobalSettingsFile();
-    
+
     /**
      * Gets the path to the custom toolchains file
      * 
@@ -274,11 +255,21 @@ public interface InvocationRequest
     File getToolchainsFile();
 
     /**
+     * Alternate path for the global toolchains file <b>Note. This is available starting with Maven 3.3.1</b>
+     * 
+     * @return The path to the custom global toolchains file or <code>null</code> to load the global toolchains from the
+     *         default location.
+     * @since 3.0.0
+     */
+    File getGlobalToolchainsFile();
+
+    /**
      * Gets the checksum mode of the Maven invocation.
      * 
-     * @return The checksum mode, one of {@link #CHECKSUM_POLICY_WARN} and {@link #CHECKSUM_POLICY_FAIL}.
+     * @return The checksum mode, one of {@link CheckSumPolicy#Warn} and {@link CheckSumPolicy#Fail}.
+     * @since 3.0.0
      */
-    String getGlobalChecksumPolicy();
+    CheckSumPolicy getGlobalChecksumPolicy();
 
     /**
      * Gets the profiles for the Maven invocation.
@@ -300,10 +291,11 @@ public interface InvocationRequest
      * @return The value of the <code>MAVEN_OPTS</code> environment variable or <code>null</code> if not set.
      */
     String getMavenOpts();
-    
+
     /**
-     * The show version behaviour (-V option)
-     * @return The show version behaviour 
+     * The show version behavior (-V option)
+     * 
+     * @return The show version behavior
      * @since 2.0.11
      */
     boolean isShowVersion();
@@ -321,71 +313,119 @@ public interface InvocationRequest
     // ----------------------------------------------------------------------
 
     /**
-     * The failure mode "fail-fast" where the build is stopped by the first failure.
+     * The reactor failure behavior which to be used during Maven invocation.
      */
-    String REACTOR_FAIL_FAST = "fail-fast";
+    enum ReactorFailureBehavior
+    {
+        /**
+         * Stop at first failure in reactor builds
+         */
+        FailFast( "ff", "fail-fast" ),
+        /**
+         * Only fail the build afterwards. allow all non-impacted builds to continue.
+         */
+        FailAtEnd( "fae", "fail-at-end" ),
+        /**
+         * <b>NEVER</b> fail the build, regardless of project result
+         */
+        FailNever( "fn", "fail-never" );
 
-    /**
-     * The failure mode "fail-at-end" where the build is only failed at its very end if necessary.
-     */
-    String REACTOR_FAIL_AT_END = "fail-at-end";
+        private String shortOption;
 
-    /**
-     * The failure mode "fail-never" in which Maven will always exit with code 0 regardless of build failures.
-     */
-    String REACTOR_FAIL_NEVER = "fail-never";
+        private String longOption;
+
+        private ReactorFailureBehavior( String shortOption, String longOption )
+        {
+            this.shortOption = shortOption;
+            this.longOption = longOption;
+        }
+
+        public String getShortOption()
+        {
+            return this.shortOption;
+        }
+
+        public String getLongOption()
+        {
+            return this.longOption;
+        }
+
+        /**
+         * Returns the enumeration type which is related to the given long option.
+         * 
+         * @param longOption The type which is searched for.
+         * @return The appropriate {@link ReactorFailureBehavior}
+         * @throws IllegalArgumentException in case of an long option which does not exists.
+         */
+        public static ReactorFailureBehavior valueOfByLongOption( String longOption )
+        {
+            for ( ReactorFailureBehavior item : ReactorFailureBehavior.values() )
+            {
+                if ( item.getLongOption().equals( longOption ) )
+                {
+                    return item;
+                }
+            }
+            throw new IllegalArgumentException( "The string '" + longOption
+                + "' can not be converted to enumeration." );
+        }
+    };
 
     // ----------------------------------------------------------------------
     // Artifact repository policies
     // ----------------------------------------------------------------------
 
     /**
-     * The strict checksum policy which fails the build if a corrupt artifact is detected.
+     * The kind of checksum policy which should be used during Maven invocation.
      */
-    String CHECKSUM_POLICY_FAIL = "fail";
+    enum CheckSumPolicy
+    {
 
-    /**
-     * The lax checksum policy which only outputs a warning if a corrupt artifact is detected.
-     */
-    String CHECKSUM_POLICY_WARN = "warn";
+        /**
+         * Strict checksum checking equivalent of {@code --strict-checksums}
+         */
+        Fail,
+        /**
+         * Warn checksum failures equivalent {@code --lax-checksums}.
+         */
+        Warn;
+
+    }
 
     // ----------------------------------------------------------------------
     //
     // ----------------------------------------------------------------------
 
     /**
-     * Sets the interaction mode of the Maven invocation.
-     * <em>Inverse</em> equivalent of {@code -B} and {@code --batch-mode} 
+     * Sets the interaction mode of the Maven invocation. Equivalent of {@code -B} and {@code --batch-mode}
      * 
-     * @param interactive <code>true</code> if Maven should be executed in interactive mode, <code>false</code> if
-     *            the batch mode is used.
+     * @param batchMode <code>true</code> if Maven should be executed in non-interactive mode, <code>false</code> if the
+     *            interactive modes is used.
      * @return This invocation request.
+     * @since 3.0.0
      */
-    InvocationRequest setInteractive( boolean interactive );
+    InvocationRequest setBatchMode( boolean batchMode );
 
     /**
-     * Sets the network mode of the Maven invocation.
-     * Equivalent of {@code -o} and {@code --offline}
+     * Sets the network mode of the Maven invocation. Equivalent of {@code -o} and {@code --offline}
      * 
-     * @param offline <code>true</code> if Maven should be executed in offline mode, <code>false</code> if the
-     *            online mode is used.
+     * @param offline <code>true</code> if Maven should be executed in offline mode, <code>false</code> if the online
+     *            mode is used.
      * @return This invocation request.
      */
     InvocationRequest setOffline( boolean offline );
 
     /**
-     * Sets the debug mode of the Maven invocation.
-     * Equivalent of {@code -X} and {@code --debug}
+     * Sets the debug mode of the Maven invocation. Equivalent of {@code -X} and {@code --debug}
      * 
-     * @param debug <code>true</code> if Maven should be executed in debug mode, <code>false</code> if the normal
-     *            mode should be used.
+     * @param debug <code>true</code> if Maven should be executed in debug mode, <code>false</code> if the normal mode
+     *            should be used.
      * @return This invocation request.
      */
     InvocationRequest setDebug( boolean debug );
 
     /**
-     * Sets the exception output mode of the Maven invocation.
-     * Equivalent of {@code -e} and {@code --errors}
+     * Sets the exception output mode of the Maven invocation. Equivalent of {@code -e} and {@code --errors}
      * 
      * @param showErrors <code>true</code> if Maven should print stack traces, <code>false</code> otherwise.
      * @return This invocation request.
@@ -393,8 +433,8 @@ public interface InvocationRequest
     InvocationRequest setShowErrors( boolean showErrors );
 
     /**
-     * Specifies whether Maven should enforce an update check for plugins and snapshots.
-     * Equivalent of {@code -U} and {@code --update-snapshots}
+     * Specifies whether Maven should enforce an update check for plugins and snapshots. Equivalent of {@code -U} and
+     * {@code --update-snapshots}
      * 
      * @param updateSnapshots <code>true</code> if plugins and snapshots should be updated, <code>false</code>
      *            otherwise.
@@ -406,19 +446,12 @@ public interface InvocationRequest
      * Sets the failure mode of the Maven invocation. Equivalent of {@code -ff} and {@code --fail-fast}, {@code -fae}
      * and {@code --fail-at-end}, {@code -fn} and {@code --fail-never}
      * 
-     * @param failureBehavior The failure mode, must be one of {@link #REACTOR_FAIL_FAST}, {@link #REACTOR_FAIL_AT_END}
-     *            and {@link #REACTOR_FAIL_NEVER}.
+     * @param failureBehavior The failure mode, must be one of {@link ReactorFailureBehavior#FailFast},
+     *            {@link ReactorFailureBehavior#FailAtEnd} and {@link ReactorFailureBehavior#FailNever}.
      * @return This invocation request.
+     * @since 3.0.0
      */
-    InvocationRequest setFailureBehavior( String failureBehavior );
-
-    /**
-     * Dynamically constructs a reactor using the subdirectories of the current directory
-     * @param includes a list of filename patterns to include, or null, in which case the default is &#x2a;/pom.xml
-     * @param excludes a list of filename patterns to exclude, or null, in which case nothing is excluded
-     * @return This invocation request
-     */
-    InvocationRequest activateReactor( String[] includes, String[] excludes );
+    InvocationRequest setReactorFailureBehavior( ReactorFailureBehavior failureBehavior );
 
     /**
      * Sets the path to the base directory of the local repository to use for the Maven invocation.
@@ -509,8 +542,7 @@ public interface InvocationRequest
     InvocationRequest setGoals( List<String> goals );
 
     /**
-     * Sets the profiles for the Maven invocation.
-     * Equivalent of {@code -P} and {@code --active-profiles}
+     * Sets the profiles for the Maven invocation. Equivalent of {@code -P} and {@code --active-profiles}
      * 
      * @param profiles The profiles for the Maven invocation, may be <code>null</code> to use the default profiles.
      * @return This invocation request.
@@ -527,18 +559,17 @@ public interface InvocationRequest
     InvocationRequest setShellEnvironmentInherited( boolean shellEnvironmentInherited );
 
     /**
-     * Sets the path to the user settings for the Maven invocation.
-     * Equivalent of {@code -s} and {@code --settings}
-     *  
-     * @param userSettings The path to the user settings for the Maven invocation, may be <code>null</code> to load
-     *            the user settings from the default location.
+     * Sets the path to the user settings for the Maven invocation. Equivalent of {@code -s} and {@code --settings}
+     * 
+     * @param userSettings The path to the user settings for the Maven invocation, may be <code>null</code> to load the
+     *            user settings from the default location.
      * @return This invocation request.
      */
     InvocationRequest setUserSettingsFile( File userSettings );
 
     /**
-     * Sets the path to the global settings for the Maven invocation.
-     * Equivalent of {@code -gs} and {@code --global-settings}
+     * Sets the path to the global settings for the Maven invocation. Equivalent of {@code -gs} and
+     * {@code --global-settings}
      * 
      * @param globalSettings The path to the global settings for the Maven invocation, may be <code>null</code> to load
      *            the global settings from the default location.
@@ -548,42 +579,49 @@ public interface InvocationRequest
     InvocationRequest setGlobalSettingsFile( File globalSettings );
 
     /**
-     * Sets the alternate path for the user toolchains file
-     * Equivalent of {@code -t} or {@code --toolchains}
-     * <p>
-     * <strong>note: </strong>available since Maven3
-     * </p>
+     * Sets the alternate path for the user toolchains file Equivalent of {@code -t} or {@code --toolchains}
      * 
      * @param toolchains the alternate path for the user toolchains file
      * @return This invocation request
      * @since 2.1
      */
     InvocationRequest setToolchainsFile( File toolchains );
+
     /**
-     * Sets the checksum mode of the Maven invocation.
-     * Equivalent of {@code -c} or {@code --lax-checksums}, {@code -C} or {@code --strict-checksums} 
+     * Sets the alternate path for the global toolchains file Equivalent of {@code -gt} or {@code --global-toolchains}
      * 
-     * @param globalChecksumPolicy The checksum mode, must be one of {@link #CHECKSUM_POLICY_WARN} and
-     *            {@link #CHECKSUM_POLICY_FAIL}.
-     * @return This invocation request.
+     * @param toolchains the alternate path for the global toolchains file
+     * @return This invocation request
+     * @since 3.0.0
      */
-    InvocationRequest setGlobalChecksumPolicy( String globalChecksumPolicy );
+    InvocationRequest setGlobalToolchainsFile( File toolchains );
+
+    /**
+     * Sets the checksum mode of the Maven invocation. Equivalent of {@code -c} or {@code --lax-checksums}, {@code -C}
+     * or {@code --strict-checksums}
+     * 
+     * @param globalChecksumPolicy The checksum mode, must be one of {@link CheckSumPolicy#Warn} and
+     *            {@link CheckSumPolicy#Fail}.
+     * @return This invocation request.
+     * @since 3.0.0
+     */
+    InvocationRequest setGlobalChecksumPolicy( CheckSumPolicy globalChecksumPolicy );
 
     /**
      * Specifies whether Maven should check for plugin updates.
      * <p>
-     * Equivalent of {@code -npu} or {@code --no-plugin-updates}<br/> 
+     * Equivalent of {@code -npu} or {@code --no-plugin-updates}<br/>
      * <strong>note: </strong>Ineffective with Maven3, only kept for backward compatibility
      * </p>
-     * @param nonPluginUpdates <code>true</code> if plugin updates should be suppressed, <code>false</code>
-     *            otherwise.
+     * 
+     * @param nonPluginUpdates <code>true</code> if plugin updates should be suppressed, <code>false</code> otherwise.
      * @return This invocation request.
      */
     InvocationRequest setNonPluginUpdates( boolean nonPluginUpdates );
 
     /**
-     * Sets the recursion behavior of a reactor invocation.
-     * <em>Inverse</em> equivalent of {@code -N} and {@code --non-recursive}
+     * Sets the recursion behavior of a reactor invocation. <em>Inverse</em> equivalent of {@code -N} and
+     * {@code --non-recursive}
      * 
      * @param recursive <code>true</code> if sub modules should be build, <code>false</code> otherwise.
      * @return This invocation request.
@@ -602,25 +640,23 @@ public interface InvocationRequest
     /**
      * Sets the value of the <code>MAVEN_OPTS</code> environment variable.
      * 
-     * @param mavenOpts The value of the <code>MAVEN_OPTS</code> environment variable, may be <code>null</code> to
-     *            use the default options.
+     * @param mavenOpts The value of the <code>MAVEN_OPTS</code> environment variable, may be <code>null</code> to use
+     *            the default options.
      * @return This invocation request.
      */
     InvocationRequest setMavenOpts( String mavenOpts );
-    
+
     /**
-     * enable displaying version without stopping the build
-     * Equivalent of {@code -V} or {@code --show-version}
+     * enable displaying version without stopping the build Equivalent of {@code -V} or {@code --show-version}
      * 
-     * @param showVersion enable displaying version 
+     * @param showVersion enable displaying version
      * @return This invocation request.
      * @since 2.0.11
      */
     InvocationRequest setShowVersion( boolean showVersion );
 
     /**
-     * Thread count, for instance 2.0C where C is core multiplied
-     * Equivalent of {@code -T} or {@code --threads}
+     * Thread count, for instance 2.0C where C is core multiplied Equivalent of {@code -T} or {@code --threads}
      * <p>
      * <strong>note: </strong>available since Maven3
      * </p>
@@ -632,20 +668,18 @@ public interface InvocationRequest
     InvocationRequest setThreads( String threads );
 
     /**
-     * Sets the reactor project list.
-     * Equivalent of {@code -P} or {@code --projects}
+     * Sets the reactor project list. Equivalent of {@code -pl} or {@code --projects}
      * 
-     * @param projects the reactor project list 
+     * @param projects the reactor project list
      * @return This invocation request.
      * @since 2.1
      */
     InvocationRequest setProjects( List<String> projects );
 
     /**
-     * Enable the 'also make' mode.
-     * Equivalent of {@code -am} or {@code --also-make}
+     * Enable the 'also make' mode. Equivalent of {@code -am} or {@code --also-make}
      * 
-     * @param alsoMake enable 'also make' mode 
+     * @param alsoMake enable 'also make' mode
      * @return This invocation request.
      * @since 2.1
      */
@@ -661,13 +695,28 @@ public interface InvocationRequest
     InvocationRequest setAlsoMakeDependents( boolean alsoMakeDependents );
 
     /**
-     * Resume reactor from specified project.
-     * Equivalent of {@code -rf} or {@code --resume-from}
+     * Resume reactor from specified project. Equivalent of {@code -rf} or {@code --resume-from}
      * 
      * @param resumeFrom set the project to resume from
      * @return This invocation request
      * @since 2.1
      */
     InvocationRequest setResumeFrom( String resumeFrom );
-    
+
+    /**
+     * The id of the build strategy to use. equivalent of {@code --builder id}.
+     * 
+     * @param id The builder id.
+     * @return {@link InvocationRequest} FIXME: How to identify if this is a valid command line option?
+     * @since 3.2.1
+     */
+    InvocationRequest setBuilder( String id );
+
+    /**
+     * Get the current set builder strategy id equivalent of {@code --builder id}.
+     * 
+     * @return The current set build id.
+     */
+    String getBuilder();
+
 }

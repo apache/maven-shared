@@ -67,9 +67,12 @@ under the License.
       <version>3.0.24</version>
     </dependency>
     <dependency>
+      <!--
+        ! Can be removed if updated to maven-shared-components parent to version 31
+      -->
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-annotations</artifactId>
-      <version>1.6</version>
+      <version>1.7</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -101,7 +104,10 @@ under the License.
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-metadata</artifactId>
-        <version>1.6</version>
+        <!--
+          ! Can be removed if updated to maven-shared-components parent to version 31
+        -->
+        <version>1.7</version>
         <executions>
           <execution>
             <id>create-component-descriptor</id>

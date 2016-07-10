@@ -386,7 +386,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb.setFlags( newRequest().setInteractive( false ), cli );
+        tcb.setFlags( newRequest().setBatchMode( true ), cli );
 
         assertArgumentsPresent( cli, Collections.singleton( "-B" ) );
     }
@@ -455,41 +455,6 @@ public class MavenCommandLineBuilderTest
 
         assertArgumentsPresent( cli, Collections.singleton( "-X" ) );
         assertArgumentsNotPresent( cli, Collections.singleton( "-e" ) );
-    }
-
-    @Test
-    public void testActivateReactor()
-    {
-        logTestStart();
-
-        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
-        Commandline cli = new Commandline();
-
-        tcb.setReactorBehavior( newRequest().activateReactor( null, null ), cli );
-
-        assertArgumentsPresent( cli, Collections.singleton( "-r" ) );
-    }
-
-    @Test
-    public void testActivateReactorIncludesExcludes()
-    {
-        logTestStart();
-
-        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
-        Commandline cli = new Commandline();
-
-        String[] includes = new String[] { "foo", "bar" };
-        String[] excludes = new String[] { "baz", "quz" };
-
-        tcb.setReactorBehavior( newRequest().activateReactor( includes, excludes ), cli );
-
-        Set<String> args = new HashSet<String>();
-        args.add( "-r" );
-        args.add( "-D" );
-        args.add( "maven.reactor.includes=foo,bar" );
-        args.add( "maven.reactor.excludes=baz,quz" );
-
-        assertArgumentsPresent( cli, args );
     }
 
     @Test
@@ -583,7 +548,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb.setFlags( newRequest().setGlobalChecksumPolicy( InvocationRequest.CHECKSUM_POLICY_FAIL ), cli );
+        tcb.setFlags( newRequest().setGlobalChecksumPolicy( InvocationRequest.CheckSumPolicy.Fail ), cli );
 
         assertArgumentsPresent( cli, Collections.singleton( "-C" ) );
     }
@@ -596,7 +561,7 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb.setFlags( newRequest().setGlobalChecksumPolicy( InvocationRequest.CHECKSUM_POLICY_WARN ), cli );
+        tcb.setFlags( newRequest().setGlobalChecksumPolicy( InvocationRequest.CheckSumPolicy.Warn ), cli );
 
         assertArgumentsPresent( cli, Collections.singleton( "-c" ) );
     }
@@ -609,7 +574,8 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb.setReactorBehavior( newRequest().setFailureBehavior( InvocationRequest.REACTOR_FAIL_AT_END ), cli );
+        tcb.setReactorBehavior( newRequest().setReactorFailureBehavior( InvocationRequest.ReactorFailureBehavior.FailAtEnd ),
+                                cli );
 
         assertArgumentsPresent( cli, Collections.singleton( "-fae" ) );
     }
@@ -622,7 +588,8 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb.setReactorBehavior( newRequest().setFailureBehavior( InvocationRequest.REACTOR_FAIL_NEVER ), cli );
+        tcb.setReactorBehavior( newRequest().setReactorFailureBehavior( InvocationRequest.ReactorFailureBehavior.FailNever ),
+                                cli );
 
         assertArgumentsPresent( cli, Collections.singleton( "-fn" ) );
     }
@@ -635,7 +602,8 @@ public class MavenCommandLineBuilderTest
         TestCommandLineBuilder tcb = new TestCommandLineBuilder();
         Commandline cli = new Commandline();
 
-        tcb.setReactorBehavior( newRequest().setFailureBehavior( InvocationRequest.REACTOR_FAIL_FAST ), cli );
+        tcb.setReactorBehavior( newRequest().setReactorFailureBehavior( InvocationRequest.ReactorFailureBehavior.FailFast ),
+                                cli );
 
         Set<String> banned = new HashSet<String>();
         banned.add( "-fae" );
@@ -1312,7 +1280,7 @@ public class MavenCommandLineBuilderTest
         }
 
         assertEquals( "Arguments: " + expected + " were not found or are in the wrong order: "
-                          + Arrays.asList( arguments ), expected.size(), expectedCounter );
+            + Arrays.asList( arguments ), expected.size(), expectedCounter );
     }
 
     private void assertArgumentsPresent( Commandline cli, Set<String> requiredArgs )

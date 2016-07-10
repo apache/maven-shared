@@ -42,7 +42,7 @@ public class DefaultInvocationRequest
 
     private InvocationOutputHandler errorHandler;
 
-    private String failureBehavior = REACTOR_FAIL_FAST;
+    private ReactorFailureBehavior failureBehavior = ReactorFailureBehavior.FailFast;
 
     private List<String> goals;
 
@@ -71,10 +71,12 @@ public class DefaultInvocationRequest
     private File userSettings;
 
     private File globalSettings;
-    
+
     private File toolchains;
 
-    private String globalChecksumPolicy;
+    private File globalToolchains;
+
+    private CheckSumPolicy globalChecksumPolicy;
 
     private String pomFilename;
 
@@ -87,11 +89,7 @@ public class DefaultInvocationRequest
     private Map<String, String> shellEnvironments;
 
     private String mavenOpts;
-    
-    private boolean activatedReactor;
 
-    private String[] activatedReactorIncludes, activatedReactorExcludes;
-    
     private List<String> projects;
 
     private boolean alsoMake;
@@ -104,13 +102,7 @@ public class DefaultInvocationRequest
 
     private String threads;
 
-    public InvocationRequest activateReactor( String[] includes, String[] excludes )
-    {
-        activatedReactor = true;
-        activatedReactorIncludes = includes;
-        activatedReactorExcludes = excludes;
-        return this;
-    }
+    private String builderId;
 
     public File getBaseDirectory()
     {
@@ -127,7 +119,7 @@ public class DefaultInvocationRequest
         return errorHandler == null ? defaultHandler : errorHandler;
     }
 
-    public String getFailureBehavior()
+    public ReactorFailureBehavior getReactorFailureBehavior()
     {
         return failureBehavior;
     }
@@ -167,7 +159,7 @@ public class DefaultInvocationRequest
         return debug;
     }
 
-    public boolean isInteractive()
+    public boolean isBatchMode()
     {
         return interactive;
     }
@@ -216,7 +208,7 @@ public class DefaultInvocationRequest
         return this;
     }
 
-    public InvocationRequest setFailureBehavior( String failureBehavior )
+    public InvocationRequest setReactorFailureBehavior( ReactorFailureBehavior failureBehavior )
     {
         this.failureBehavior = failureBehavior;
         return this;
@@ -234,7 +226,7 @@ public class DefaultInvocationRequest
         return this;
     }
 
-    public InvocationRequest setInteractive( boolean interactive )
+    public InvocationRequest setBatchMode( boolean interactive )
     {
         this.interactive = interactive;
         return this;
@@ -301,83 +293,146 @@ public class DefaultInvocationRequest
         return javaHome;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public InvocationRequest setJavaHome( File javaHome )
     {
         this.javaHome = javaHome;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public File getUserSettingsFile()
     {
         return userSettings;
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     public InvocationRequest setUserSettingsFile( File userSettings )
     {
         this.userSettings = userSettings;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public File getGlobalSettingsFile()
     {
         return globalSettings;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public InvocationRequest setGlobalSettingsFile( File globalSettings )
     {
         this.globalSettings = globalSettings;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public File getToolchainsFile()
     {
         return toolchains;
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     public InvocationRequest setToolchainsFile( File toolchains )
     {
         this.toolchains = toolchains;
         return this;
     }
-    
-    public String getGlobalChecksumPolicy()
+
+    /**
+     * {@inheritDoc}
+     */
+    public File getGlobalToolchainsFile()
+    {
+        return globalToolchains;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public InvocationRequest setGlobalToolchainsFile( File toolchains )
+    {
+        this.globalToolchains = toolchains;
+        return this;
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public CheckSumPolicy getGlobalChecksumPolicy()
     {
         return globalChecksumPolicy;
     }
 
-    public InvocationRequest setGlobalChecksumPolicy( String globalChecksumPolicy )
+    /**
+     * {@inheritDoc}
+     */
+    public InvocationRequest setGlobalChecksumPolicy( CheckSumPolicy globalChecksumPolicy )
     {
         this.globalChecksumPolicy = globalChecksumPolicy;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getPomFileName()
     {
         return pomFilename;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public InvocationRequest setPomFileName( String pomFilename )
     {
         this.pomFilename = pomFilename;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public List<String> getProfiles()
     {
         return profiles;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public InvocationRequest setProfiles( List<String> profiles )
     {
         this.profiles = profiles;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isNonPluginUpdates()
     {
         return nonPluginUpdates;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public InvocationRequest setNonPluginUpdates( boolean nonPluginUpdates )
     {
         this.nonPluginUpdates = nonPluginUpdates;
@@ -409,21 +464,6 @@ public class DefaultInvocationRequest
         this.mavenOpts = mavenOpts;
         return this;
     }
-    
-    public boolean isActivatedReactor()
-    {
-        return activatedReactor;
-    }
-
-    public String[] getActivatedReactorIncludes()
-    {
-        return activatedReactorIncludes;
-    }
-
-    public String[] getActivatedReactorExcludes()
-    {
-        return activatedReactorExcludes;
-    }
 
     /**
      * @see org.apache.maven.shared.invoker.InvocationRequest#isShowVersion()
@@ -441,7 +481,7 @@ public class DefaultInvocationRequest
         this.showVersion = showVersion;
         return this;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -449,7 +489,7 @@ public class DefaultInvocationRequest
     {
         return threads;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -526,5 +566,22 @@ public class DefaultInvocationRequest
         this.resumeFrom = resumeFrom;
         return this;
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
+    public InvocationRequest setBuilder( String id )
+    {
+        this.builderId = id;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getBuilder()
+    {
+        return this.builderId;
+    }
+
 }

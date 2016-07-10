@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.apache.maven.shared.invoker.InvocationRequest.CheckSumPolicy;
+import org.apache.maven.shared.invoker.InvocationRequest.ReactorFailureBehavior;
 import org.codehaus.plexus.util.Os;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.cli.CommandLineUtils;
@@ -96,7 +98,7 @@ public class MavenCommandLineBuilder
         setSettingsLocation( request, cli );
 
         setToolchainsLocation( request, cli );
-        
+
         setProperties( request, cli );
 
         setProfiles( request, cli );
@@ -104,7 +106,7 @@ public class MavenCommandLineBuilder
         setGoals( request, cli );
 
         setThreads( request, cli );
-        
+
         return cli;
     }
 
@@ -149,7 +151,7 @@ public class MavenCommandLineBuilder
             cli.createArg().setValue( "-s" );
             cli.createArg().setValue( userSettingsFile.getPath() );
         }
-        
+
         File globalSettingsFile = request.getGlobalSettingsFile();
 
         if ( globalSettingsFile != null )
@@ -170,7 +172,7 @@ public class MavenCommandLineBuilder
         }
 
     }
-    
+
     protected void setToolchainsLocation( InvocationRequest request, Commandline cli )
     {
         File toolchainsFile = request.getToolchainsFile();
@@ -202,7 +204,8 @@ public class MavenCommandLineBuilder
             {
                 cli.addSystemEnvironment();
                 cli.addEnvironment( "MAVEN_TERMINATE_CMD", "on" );
-                // MSHARED-261: Ensure M2_HOME is not inherited, but gets a proper value
+                // MSHARED-261: Ensure M2_HOME is not inherited, but gets a
+                // proper value
                 cli.addEnvironment( "M2_HOME", getMavenHome().getAbsolutePath() );
             }
             catch ( IOException e )
@@ -415,35 +418,19 @@ public class MavenCommandLineBuilder
     protected void setReactorBehavior( InvocationRequest request, Commandline cli )
     {
         // NOTE: The default is "fail-fast"
-        String failureBehavior = request.getFailureBehavior();
+        ReactorFailureBehavior failureBehavior = request.getReactorFailureBehavior();
 
-        if ( StringUtils.isNotEmpty( failureBehavior ) )
+        if ( failureBehavior != null )
         {
-            if ( InvocationRequest.REACTOR_FAIL_AT_END.equals( failureBehavior ) )
+            if ( ReactorFailureBehavior.FailAtEnd.equals( failureBehavior ) )
             {
-                cli.createArg().setValue( "-fae" );
+                cli.createArg().setValue( "-" + ReactorFailureBehavior.FailAtEnd.getShortOption() );
             }
-            else if ( InvocationRequest.REACTOR_FAIL_NEVER.equals( failureBehavior ) )
+            else if ( ReactorFailureBehavior.FailNever.equals( failureBehavior ) )
             {
-                cli.createArg().setValue( "-fn" );
+                cli.createArg().setValue( "-" + ReactorFailureBehavior.FailNever.getShortOption() );
             }
-        }
 
-        if ( request.isActivatedReactor() )
-        {
-            cli.createArg().setValue( "-r" );
-            String[] includes = request.getActivatedReactorIncludes();
-            String[] excludes = request.getActivatedReactorExcludes();
-            if ( includes != null )
-            {
-                cli.createArg().setValue( "-D" );
-                cli.createArg().setValue( "maven.reactor.includes=" + StringUtils.join( includes, "," ) );
-            }
-            if ( excludes != null )
-            {
-                cli.createArg().setValue( "-D" );
-                cli.createArg().setValue( "maven.reactor.excludes=" + StringUtils.join( excludes, "," ) );
-            }
         }
 
         if ( StringUtils.isNotEmpty( request.getResumeFrom() ) )
@@ -472,7 +459,7 @@ public class MavenCommandLineBuilder
 
     protected void setFlags( InvocationRequest request, Commandline cli )
     {
-        if ( !request.isInteractive() )
+        if ( request.isBatchMode() )
         {
             cli.createArg().setValue( "-B" );
         }
@@ -496,18 +483,18 @@ public class MavenCommandLineBuilder
         {
             cli.createArg().setValue( "-X" );
         }
-        // this is superceded by -X, if it exists.
+        // this is superseded by -X, if it exists.
         else if ( request.isShowErrors() )
         {
             cli.createArg().setValue( "-e" );
         }
 
-        String checksumPolicy = request.getGlobalChecksumPolicy();
-        if ( InvocationRequest.CHECKSUM_POLICY_FAIL.equals( checksumPolicy ) )
+        CheckSumPolicy checksumPolicy = request.getGlobalChecksumPolicy();
+        if ( CheckSumPolicy.Fail.equals( checksumPolicy ) )
         {
             cli.createArg().setValue( "-C" );
         }
-        else if ( InvocationRequest.CHECKSUM_POLICY_WARN.equals( checksumPolicy ) )
+        else if ( CheckSumPolicy.Warn.equals( checksumPolicy ) )
         {
             cli.createArg().setValue( "-c" );
         }
@@ -515,10 +502,15 @@ public class MavenCommandLineBuilder
         {
             cli.createArg().setValue( "-npu" );
         }
-        
+
         if ( request.isShowVersion() )
         {
             cli.createArg().setValue( "-V" );
+        }
+
+        if ( request.getBuilder() != null )
+        {
+            cli.createArg().setValue( request.getBuilder() );
         }
     }
 
@@ -530,7 +522,7 @@ public class MavenCommandLineBuilder
             cli.createArg().setValue( "-T" );
             cli.createArg().setValue( threads );
         }
-        
+
     }
 
     protected File findMavenExecutable()
@@ -589,9 +581,9 @@ public class MavenCommandLineBuilder
             {
                 executable = "mvn";
             }
-            
+
             mavenExecutable = new File( mavenHome, "/bin/" + executable );
-            
+
             try
             {
                 File canonicalMvn = mavenExecutable.getCanonicalFile();
@@ -682,7 +674,7 @@ public class MavenCommandLineBuilder
     }
 
     /**
-     * {@code mavenExecutable} can either be relative to ${maven.home}/bin/ or absolute 
+     * {@code mavenExecutable} can either be relative to ${maven.home}/bin/ or absolute
      * 
      * @param mavenExecutable the executable
      */

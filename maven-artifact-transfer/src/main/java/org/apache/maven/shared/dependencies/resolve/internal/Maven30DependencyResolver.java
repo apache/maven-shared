@@ -27,13 +27,14 @@ import java.util.List;
 import org.apache.maven.RepositoryUtils;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
+import org.apache.maven.model.DependencyManagement;
+import org.apache.maven.model.Model;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.apache.maven.shared.artifact.filter.resolve.transform.SonatypeAetherFilterTransformer;
 import org.apache.maven.shared.dependencies.DependableCoordinate;
 import org.apache.maven.shared.dependencies.resolve.DependencyResolver;
 import org.apache.maven.shared.dependencies.resolve.DependencyResolverException;
-import org.apache.maven.shared.project.ProjectCoordinate;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 
@@ -92,18 +93,18 @@ public class Maven30DependencyResolver
     @Override
     // CHECKSTYLE_OFF: LineLength
     public Iterable<org.apache.maven.shared.artifact.resolve.ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
-                                                                                                  ProjectCoordinate root,
+                                                                                                  Model model,
                                                                                                   TransformableFilter dependencyFilter )
     // CHECKSTYLE_ON: LineLength
         throws DependencyResolverException
     {
         // Are there examples where packaging and type are NOT in sync
-        ArtifactHandler artifactHandler = artifactHandlerManager.getArtifactHandler( root.getPackaging() );
+        ArtifactHandler artifactHandler = artifactHandlerManager.getArtifactHandler( model.getPackaging() );
         
         String extension = artifactHandler != null ? artifactHandler.getExtension() : null;
         
         Artifact aetherArtifact =
-            new DefaultArtifact( root.getGroupId(), root.getArtifactId(), extension, root.getVersion() );
+            new DefaultArtifact( model.getGroupId(), model.getArtifactId(), extension, model.getVersion() );
         
         Dependency aetherRoot = new Dependency( aetherArtifact, null );
         
@@ -113,6 +114,31 @@ public class Maven30DependencyResolver
                                                      buildingRequest.getRemoteRepositories() );
 
         CollectRequest request = new CollectRequest( aetherRoot, aetherRepositories );
+        
+        ArtifactTypeRegistry typeRegistry =
+                        (ArtifactTypeRegistry) Invoker.invoke( RepositoryUtils.class, "newArtifactTypeRegistry",
+                                                               ArtifactHandlerManager.class, artifactHandlerManager );
+
+        List<Dependency> aetherDependencies = new ArrayList<Dependency>( model.getDependencies().size() );
+        for ( org.apache.maven.model.Dependency mavenDependency : model.getDependencies() )
+        {
+            aetherDependencies.add( toDependency( mavenDependency, typeRegistry ) );
+        }
+        request.setDependencies( aetherDependencies );
+
+        DependencyManagement mavenDependencyManagement = model.getDependencyManagement();
+        if ( mavenDependencyManagement != null )
+        {
+            List<Dependency> aetherManagerDependencies =
+                new ArrayList<Dependency>( mavenDependencyManagement.getDependencies().size() );
+            
+            for ( org.apache.maven.model.Dependency mavenDependency : mavenDependencyManagement.getDependencies() )
+            {
+                aetherManagerDependencies.add( toDependency( mavenDependency, typeRegistry ) );
+            }
+            
+            request.setManagedDependencies( aetherManagerDependencies );
+        }
 
         return resolveDependencies( buildingRequest, aetherRepositories, dependencyFilter, request );
     }
@@ -251,4 +277,15 @@ public class Maven30DependencyResolver
 
         return new Dependency( artifact, null );
     }
+    
+    private static Dependency toDependency( org.apache.maven.model.Dependency mavenDependency,
+                                            ArtifactTypeRegistry typeRegistry )
+        throws DependencyResolverException
+    {
+        Class<?>[] argClasses = new Class<?>[] { Dependency.class, ArtifactTypeRegistry.class };
+
+        Object[] args = new Object[] { mavenDependency, typeRegistry };
+
+        return (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
+    }  
 }

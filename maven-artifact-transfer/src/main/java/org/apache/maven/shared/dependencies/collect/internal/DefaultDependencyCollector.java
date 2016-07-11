@@ -20,12 +20,12 @@ package org.apache.maven.shared.dependencies.collect.internal;
  */
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.dependencies.DependableCoordinate;
 import org.apache.maven.shared.dependencies.collect.CollectorResult;
 import org.apache.maven.shared.dependencies.collect.DependencyCollector;
 import org.apache.maven.shared.dependencies.collect.DependencyCollectorException;
-import org.apache.maven.shared.project.ProjectCoordinate;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
@@ -81,7 +81,7 @@ public class DefaultDependencyCollector implements DependencyCollector, Contextu
     }
     
     @Override
-    public CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, ProjectCoordinate root )
+    public CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Model root )
         throws DependencyCollectorException
     {
         try

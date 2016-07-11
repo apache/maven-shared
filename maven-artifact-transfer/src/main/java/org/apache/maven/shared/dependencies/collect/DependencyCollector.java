@@ -20,9 +20,9 @@ package org.apache.maven.shared.dependencies.collect;
  */
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.dependencies.DependableCoordinate;
-import org.apache.maven.shared.project.ProjectCoordinate;
 
 /**
  * Will only download the pom files when not available, never the artifact. 
@@ -47,7 +47,7 @@ public interface DependencyCollector
     CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, DependableCoordinate root )
                     throws DependencyCollectorException;
 
-    CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, ProjectCoordinate root )
+    CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Model root )
                     throws DependencyCollectorException;
 
 }

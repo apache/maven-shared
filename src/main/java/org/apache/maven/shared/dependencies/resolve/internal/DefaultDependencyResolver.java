@@ -22,13 +22,13 @@ package org.apache.maven.shared.dependencies.resolve.internal;
 import java.util.Collection;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.apache.maven.shared.artifact.resolve.ArtifactResult;
 import org.apache.maven.shared.dependencies.DependableCoordinate;
 import org.apache.maven.shared.dependencies.resolve.DependencyResolver;
 import org.apache.maven.shared.dependencies.resolve.DependencyResolverException;
-import org.apache.maven.shared.project.ProjectCoordinate;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
@@ -88,7 +88,7 @@ public class DefaultDependencyResolver
     
     @Override
     public Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
-                                                         ProjectCoordinate coordinate, TransformableFilter filter )
+                                                         Model model, TransformableFilter filter )
         throws DependencyResolverException
     {
         try
@@ -97,7 +97,7 @@ public class DefaultDependencyResolver
 
             DependencyResolver effectiveArtifactResolver = container.lookup( DependencyResolver.class, hint );
 
-            return effectiveArtifactResolver.resolveDependencies( buildingRequest, coordinate, filter );
+            return effectiveArtifactResolver.resolveDependencies( buildingRequest, model, filter );
         }
         catch ( ComponentLookupException e )
         {

@@ -22,11 +22,11 @@ package org.apache.maven.shared.dependencies.resolve;
 import java.util.Collection;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Model;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.filter.resolve.TransformableFilter;
 import org.apache.maven.shared.artifact.resolve.ArtifactResult;
 import org.apache.maven.shared.dependencies.DependableCoordinate;
-import org.apache.maven.shared.project.ProjectCoordinate;
 
 /**
  * 
@@ -50,7 +50,7 @@ public interface DependencyResolver
                                                   TransformableFilter filter ) throws DependencyResolverException;
     
     Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest, 
-                                                  ProjectCoordinate coordinate,
+                                                  Model model,
                                                   TransformableFilter filter ) throws DependencyResolverException;
 
     /**

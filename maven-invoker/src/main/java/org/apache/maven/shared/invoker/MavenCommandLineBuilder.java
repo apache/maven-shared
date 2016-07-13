@@ -603,25 +603,6 @@ public class MavenCommandLineBuilder
         return mavenExecutable;
     }
 
-    /**
-     * Wraps a path with quotes to handle paths with spaces. If no spaces are found, the original string is returned.
-     * 
-     * @param path string to wrap if containing spaces
-     * @return quote wrapped string
-     * @deprecated Quoting of command line arguments should be left to the Commandline from plexus-utils.
-     */
-    public String wrapStringWithQuotes( String path )
-    {
-        if ( path.indexOf( " " ) > -1 )
-        {
-            return "\"" + path + "\"";
-        }
-        else
-        {
-            return path;
-        }
-    }
-
     private Properties getSystemEnvVars()
         throws IOException
     {

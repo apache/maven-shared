@@ -21,8 +21,6 @@ package org.apache.maven.shared.invoker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -53,21 +51,6 @@ public class MavenCommandLineBuilderTest
     private List<File> toDelete = new ArrayList<File>();
 
     private Properties sysProps;
-
-    @Test
-    public void testWrapwithQuotes()
-    {
-        TestCommandLineBuilder tcb = new TestCommandLineBuilder();
-        String test = "noSpacesInHere";
-
-        assertSame( test, tcb.wrapStringWithQuotes( test ) );
-        assertEquals( "noSpacesInHere", tcb.wrapStringWithQuotes( test ) );
-
-        test = "bunch of spaces in here";
-        assertNotSame( test, tcb.wrapStringWithQuotes( test ) );
-        assertEquals( "\"bunch of spaces in here\"", tcb.wrapStringWithQuotes( test ) );
-
-    }
 
     @Test
     public void testShouldFailToSetLocalRepoLocationGloballyWhenItIsAFile()

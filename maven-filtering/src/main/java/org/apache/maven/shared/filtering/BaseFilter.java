@@ -208,7 +208,7 @@ class BaseFilter
                 try
                 {
                     File propFile = FileUtils.resolveFile( basedir, filterFile );
-                    Properties properties = PropertyUtils.loadPropertyFile( propFile, workProperties );
+                    Properties properties = PropertyUtils.loadPropertyFile( propFile, workProperties, getLogger() );
                     filterProperties.putAll( properties );
                     workProperties.putAll( properties );
                 }

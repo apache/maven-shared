@@ -166,7 +166,6 @@ public class Maven30RepositoryManager
 
     /**
      * @param coordinate {@link ArtifactCoordinate}
-     * @param typeRegistry {link ArtifactType}
      * @return {@link Artifact}
      */
     protected Artifact toArtifact( ArtifactCoordinate coordinate )

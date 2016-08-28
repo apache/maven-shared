@@ -29,7 +29,7 @@
 
   <groupId>org.apache.maven.reporting</groupId>
   <artifactId>maven-reporting-impl</artifactId>
-  <version>3.0-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
 
   <name>Apache Maven Reporting Implementation</name>
   <description>Abstract classes to manage report generation.</description>

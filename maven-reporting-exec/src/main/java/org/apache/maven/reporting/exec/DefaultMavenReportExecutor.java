@@ -292,27 +292,25 @@ public class DefaultMavenReportExecutor
 
             if ( !mojoExecution.getForkedExecutions().isEmpty() )
             {
-                String execution;
-                if ( StringUtils.isNotEmpty( mojoDescriptor.getExecutePhase() ) )
-                {
-                    // forked phase
-                    execution = "'"
-                        + ( StringUtils.isEmpty( mojoDescriptor.getExecuteLifecycle() ) ? ""
-                                        : ( '[' + mojoDescriptor.getExecuteLifecycle() + ']' ) )
-                        + mojoDescriptor.getExecutePhase() + "' forked phase execution";
-                }
-                else
-                {
-                    // forked goal
-                    execution = "'" + mojoDescriptor.getExecuteGoal() + "' forked goal execution";
-                }
+				String reportDescription = pluginDescriptor.getArtifactId() + ":" + report.getGoal() + " report";
 
-                logger.info( "preparing '" + report.getGoal() + "' report requires " + execution );
+				String execution;
+				if (StringUtils.isNotEmpty(mojoDescriptor.getExecutePhase())) {
+					// forked phase
+					execution = "'"
+							+ (StringUtils.isEmpty(mojoDescriptor.getExecuteLifecycle()) ? ""
+									: ('[' + mojoDescriptor.getExecuteLifecycle() + ']'))
+							+ mojoDescriptor.getExecutePhase() + "' forked phase execution";
+				} else {
+					// forked goal
+					execution = "'" + mojoDescriptor.getExecuteGoal() + "' forked goal execution";
+				}
 
-                lifecycleExecutor.executeForkedExecutions( mojoExecution,
-                                                           mavenReportExecutorRequest.getMavenSession() );
+				logger.info("preparing " + reportDescription + " requires " + execution);
 
-                logger.info( execution + " for '" + report.getGoal() + "' report preparation done" );
+				lifecycleExecutor.executeForkedExecutions(mojoExecution, mavenReportExecutorRequest.getMavenSession());
+
+				logger.info(execution + " for " + reportDescription + " preparation done");
             }
 
             // ok, report is ready to generate

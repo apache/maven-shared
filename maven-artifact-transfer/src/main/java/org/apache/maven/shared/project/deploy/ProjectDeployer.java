@@ -34,9 +34,9 @@ public interface ProjectDeployer
      * appropriate remote repository.
      * 
      * @param buildingRequest {@link ProjectBuildingRequest}
-     * @param request {@link ProjectDeployRequest}
+     * @param request {@link ProjectDeployerRequest}
      * @param artifactRepository {@link ArtifactRepository}
      */
-    void deployProject( ProjectBuildingRequest buildingRequest, ProjectDeployRequest request,
+    void deployProject( ProjectBuildingRequest buildingRequest, ProjectDeployerRequest request,
                         ArtifactRepository artifactRepository );
 }

@@ -498,6 +498,7 @@ public class MavenCommandLineBuilder
         {
             cli.createArg().setValue( "-c" );
         }
+
         if ( request.isNonPluginUpdates() )
         {
             cli.createArg().setValue( "-npu" );

@@ -255,7 +255,7 @@ public interface InvocationRequest
     File getToolchainsFile();
 
     /**
-     * Alternate path for the global toolchains file <b>Note. This is available starting with Maven 3.3.1</b>
+     * Alternate path for the global toolchains file <b>Note. This is available since Maven 3.3.1</b>
      * 
      * @return The path to the custom global toolchains file or <code>null</code> to load the global toolchains from the
      *         default location.
@@ -704,18 +704,21 @@ public interface InvocationRequest
     InvocationRequest setResumeFrom( String resumeFrom );
 
     /**
-     * The id of the build strategy to use. equivalent of {@code --builder id}.
+     * The id of the build strategy to use. equivalent of {@code --builder id}. <b>Note. This is available since Maven
+     * 3.2.1</b>
      * 
      * @param id The builder id.
      * @return {@link InvocationRequest} FIXME: How to identify if this is a valid command line option?
-     * @since 3.2.1
+     * @since 3.0.0
      */
     InvocationRequest setBuilder( String id );
 
     /**
-     * Get the current set builder strategy id equivalent of {@code --builder id}.
+     * Get the current set builder strategy id equivalent of {@code --builder id}. <b>Note. This is available since
+     * Maven 3.2.1</b>
      * 
-     * @return The current set build id.
+     * @return The current set builder id.
+     * @since 3.0.0
      */
     String getBuilder();
 

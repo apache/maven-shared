@@ -33,7 +33,7 @@ import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.apache.maven.shared.artifact.deploy.ArtifactDeployer;
 import org.apache.maven.shared.artifact.deploy.ArtifactDeployerException;
 import org.apache.maven.shared.project.deploy.ProjectDeployer;
-import org.apache.maven.shared.project.deploy.ProjectDeployRequest;
+import org.apache.maven.shared.project.deploy.ProjectDeployerRequest;
 import org.codehaus.plexus.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,10 +59,10 @@ public class DefaultProjectDeployer implements ProjectDeployer
      * into the appropriate remote repository.
      * 
      * @param buildingRequest {@link ProjectBuildingRequest}
-     * @param request {@link ProjectDeployRequest}
+     * @param request {@link ProjectDeployerRequest}
      * @param artifactRepository {@link ArtifactRepository}
      */
-    public void deployProject( ProjectBuildingRequest buildingRequest, ProjectDeployRequest request,
+    public void deployProject( ProjectBuildingRequest buildingRequest, ProjectDeployerRequest request,
                                ArtifactRepository artifactRepository )
     {
         List<Artifact> deployableArtifacts = new ArrayList<Artifact>();

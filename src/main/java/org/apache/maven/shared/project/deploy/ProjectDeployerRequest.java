@@ -25,7 +25,7 @@ import org.apache.maven.project.MavenProject;
  * 
  * @author Robert Scholte
  */
-public class ProjectDeployRequest
+public class ProjectDeployerRequest
 {
 
     // From AbstractDeployMojo
@@ -55,7 +55,7 @@ public class ProjectDeployRequest
     /**
      * @param updateReleaseInfo the updateReleaseInfo to set
      */
-    public ProjectDeployRequest setUpdateReleaseInfo( boolean updateReleaseInfo )
+    public ProjectDeployerRequest setUpdateReleaseInfo( boolean updateReleaseInfo )
     {
         this.updateReleaseInfo = updateReleaseInfo;
         return this;
@@ -72,7 +72,7 @@ public class ProjectDeployRequest
     /**
      * @param retryFailedDeploymentCount the retryFailedDeploymentCount to set
      */
-    public ProjectDeployRequest setRetryFailedDeploymentCount( int retryFailedDeploymentCount )
+    public ProjectDeployerRequest setRetryFailedDeploymentCount( int retryFailedDeploymentCount )
     {
         this.retryFailedDeploymentCount = retryFailedDeploymentCount;
         return this;
@@ -89,7 +89,7 @@ public class ProjectDeployRequest
     /**
      * @param project the project to set
      */
-    public ProjectDeployRequest setProject( MavenProject project )
+    public ProjectDeployerRequest setProject( MavenProject project )
     {
         this.project = project;
         return this;
@@ -106,7 +106,7 @@ public class ProjectDeployRequest
     /**
      * @param altDeploymentRepository the altDeploymentRepository to set
      */
-    public ProjectDeployRequest setAltDeploymentRepository( String altDeploymentRepository )
+    public ProjectDeployerRequest setAltDeploymentRepository( String altDeploymentRepository )
     {
         this.altDeploymentRepository = altDeploymentRepository;
         return this;
@@ -123,7 +123,7 @@ public class ProjectDeployRequest
     /**
      * @param altSnapshotDeploymentRepository the altSnapshotDeploymentRepository to set
      */
-    public ProjectDeployRequest setAltSnapshotDeploymentRepository( String altSnapshotDeploymentRepository )
+    public ProjectDeployerRequest setAltSnapshotDeploymentRepository( String altSnapshotDeploymentRepository )
     {
         this.altSnapshotDeploymentRepository = altSnapshotDeploymentRepository;
         return this;
@@ -140,7 +140,7 @@ public class ProjectDeployRequest
     /**
      * @param altReleaseDeploymentRepository the altReleaseDeploymentRepository to set
      */
-    public ProjectDeployRequest setAltReleaseDeploymentRepository( String altReleaseDeploymentRepository )
+    public ProjectDeployerRequest setAltReleaseDeploymentRepository( String altReleaseDeploymentRepository )
     {
         this.altReleaseDeploymentRepository = altReleaseDeploymentRepository;
         return this;

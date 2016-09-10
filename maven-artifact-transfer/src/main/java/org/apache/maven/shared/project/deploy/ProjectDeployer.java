@@ -27,7 +27,7 @@ import org.apache.maven.project.ProjectBuildingRequest;
  * 
  * @author Karl Heinz Marbaise <a href="mailto:khmarbaise@apache.org">khmarbaise@apache.org</a>
  */
-public interface DeployProject
+public interface ProjectDeployer
 {
     /**
      * This will deploy a single project which may contain several artifacts. Those artifacts will be deployed into the

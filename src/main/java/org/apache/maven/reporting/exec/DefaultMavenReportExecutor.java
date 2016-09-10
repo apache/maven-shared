@@ -292,28 +292,27 @@ public class DefaultMavenReportExecutor
 
             if ( !mojoExecution.getForkedExecutions().isEmpty() )
             {
-                String msg = "preparing '" + report.getGoal() + "' report requires '";
-                boolean isPhase = StringUtils.isNotEmpty( mojoDescriptor.getExecutePhase() );
-                if ( isPhase )
+                String execution;
+                if ( StringUtils.isNotEmpty( mojoDescriptor.getExecutePhase() ) )
                 {
                     // forked phase
-                    String lifecycleId =
-                        StringUtils.isEmpty( mojoDescriptor.getExecuteLifecycle() ) ? ""
-                                        : ( '[' + mojoDescriptor.getExecuteLifecycle() + ']' );
-                    logger.info( msg + lifecycleId + mojoDescriptor.getExecutePhase() + "' forked phase execution" );
+                    execution = "'"
+                        + ( StringUtils.isEmpty( mojoDescriptor.getExecuteLifecycle() ) ? ""
+                                        : ( '[' + mojoDescriptor.getExecuteLifecycle() + ']' ) )
+                        + mojoDescriptor.getExecutePhase() + "' forked phase execution";
                 }
                 else
                 {
                     // forked goal
-                    logger.info( msg + mojoDescriptor.getExecuteGoal() + "' forked goal execution" );
+                    execution = "'" + mojoDescriptor.getExecuteGoal() + "' forked goal execution";
                 }
+
+                logger.info( "preparing '" + report.getGoal() + "' report requires " + execution );
 
                 lifecycleExecutor.executeForkedExecutions( mojoExecution,
                                                            mavenReportExecutorRequest.getMavenSession() );
 
-                logger.info( "" );
-                logger.info( "forked " + ( isPhase ? "phase" : "goal" ) + " execution for '" + report.getGoal()
-                    + "' report preparation done" );
+                logger.info( execution + " for '" + report.getGoal() + "' report preparation done" );
             }
 
             // ok, report is ready to generate

@@ -292,25 +292,29 @@ public class DefaultMavenReportExecutor
 
             if ( !mojoExecution.getForkedExecutions().isEmpty() )
             {
-				String reportDescription = pluginDescriptor.getArtifactId() + ":" + report.getGoal() + " report";
+                String reportDescription = pluginDescriptor.getArtifactId() + ":" + report.getGoal() + " report";
 
-				String execution;
-				if (StringUtils.isNotEmpty(mojoDescriptor.getExecutePhase())) {
-					// forked phase
-					execution = "'"
-							+ (StringUtils.isEmpty(mojoDescriptor.getExecuteLifecycle()) ? ""
-									: ('[' + mojoDescriptor.getExecuteLifecycle() + ']'))
-							+ mojoDescriptor.getExecutePhase() + "' forked phase execution";
-				} else {
-					// forked goal
-					execution = "'" + mojoDescriptor.getExecuteGoal() + "' forked goal execution";
-				}
+                String execution;
+                if ( StringUtils.isNotEmpty( mojoDescriptor.getExecutePhase() ) )
+                {
+                    // forked phase
+                    execution = "'"
+                        + ( StringUtils.isEmpty( mojoDescriptor.getExecuteLifecycle() ) ? ""
+                                        : ( '[' + mojoDescriptor.getExecuteLifecycle() + ']' ) )
+                        + mojoDescriptor.getExecutePhase() + "' forked phase execution";
+                }
+                else
+                {
+                    // forked goal
+                    execution = "'" + mojoDescriptor.getExecuteGoal() + "' forked goal execution";
+                }
 
-				logger.info("preparing " + reportDescription + " requires " + execution);
+                logger.info( "preparing " + reportDescription + " requires " + execution );
 
-				lifecycleExecutor.executeForkedExecutions(mojoExecution, mavenReportExecutorRequest.getMavenSession());
+                lifecycleExecutor.executeForkedExecutions( mojoExecution,
+                                                           mavenReportExecutorRequest.getMavenSession() );
 
-				logger.info(execution + " for " + reportDescription + " preparation done");
+                logger.info( execution + " for " + reportDescription + " preparation done" );
             }
 
             // ok, report is ready to generate

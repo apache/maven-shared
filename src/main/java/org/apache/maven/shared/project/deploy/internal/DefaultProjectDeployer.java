@@ -32,7 +32,7 @@ import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.apache.maven.shared.artifact.deploy.ArtifactDeployer;
 import org.apache.maven.shared.artifact.deploy.ArtifactDeployerException;
-import org.apache.maven.shared.project.deploy.DeployProject;
+import org.apache.maven.shared.project.deploy.ProjectDeployer;
 import org.apache.maven.shared.project.deploy.ProjectDeployRequest;
 import org.codehaus.plexus.component.annotations.Component;
 import org.slf4j.Logger;
@@ -46,10 +46,10 @@ import org.slf4j.LoggerFactory;
  * Most of the code is taken from maven-dependency-plugin.
  * 
  */
-@Component( role = DeployProject.class )
-public class DefaultDeployProject implements DeployProject
+@Component( role = ProjectDeployer.class )
+public class DefaultProjectDeployer implements ProjectDeployer
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultDeployProject.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger( DefaultProjectDeployer.class );
 
     @Inject
     private ArtifactDeployer deployer;

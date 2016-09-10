@@ -293,7 +293,8 @@ public class DefaultMavenReportExecutor
             if ( !mojoExecution.getForkedExecutions().isEmpty() )
             {
                 String msg = "preparing '" + report.getGoal() + "' report requires '";
-                if ( StringUtils.isNotEmpty( mojoDescriptor.getExecutePhase() ) )
+                boolean isPhase = StringUtils.isNotEmpty( mojoDescriptor.getExecutePhase() );
+                if ( isPhase )
                 {
                     // forked phase
                     String lifecycleId =
@@ -309,6 +310,10 @@ public class DefaultMavenReportExecutor
 
                 lifecycleExecutor.executeForkedExecutions( mojoExecution,
                                                            mavenReportExecutorRequest.getMavenSession() );
+
+                logger.info( "" );
+                logger.info( "forked " + ( isPhase ? "phase" : "goal" ) + " execution for '" + report.getGoal()
+                    + "' report preparation done" );
             }
 
             // ok, report is ready to generate

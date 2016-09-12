@@ -33,10 +33,28 @@ public interface ProjectDeployer
      * This will deploy a single project which may contain several artifacts. Those artifacts will be deployed into the
      * appropriate remote repository.
      * 
+     * <pre class="java">
+     *  ..
+     *  MavenSession session;
+     *  MavenProject project;
+     *  ..
+     *  &#64;Inject
+     *  ProjectDeployer deployer;
+     *  
+     *  ProjectBuildingRequest pbr = 
+     *    new ProjectBuildingRequest()
+     *    .setProject (project)
+     *    .setUpdateReleaseInfo( true );
+     *    
+     *  deployer.deploy (session.getProjectBuildingRequest(), pbr, artifactRepository);
+     *  
+     * </pre>
+     * 
      * @param buildingRequest {@link ProjectBuildingRequest}
      * @param request {@link ProjectDeployerRequest}
      * @param artifactRepository {@link ArtifactRepository}
      */
     void deployProject( ProjectBuildingRequest buildingRequest, ProjectDeployerRequest request,
                         ArtifactRepository artifactRepository );
+
 }

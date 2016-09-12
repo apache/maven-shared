@@ -110,11 +110,13 @@ public class DefaultProjectDeployer implements ProjectDeployer
                 }
                 else if ( !attachedArtifacts.isEmpty() )
                 {
+                    //TODO: Reconsider this exception? Better Exception type?
                     throw new IllegalArgumentException( "The packaging plugin for this project did not assign "
                         + "a main file to the project but it has attachments. Change packaging to 'pom'." );
                 }
                 else
                 {
+                    //TODO: Reconsider this exception? Better Exception type?
                     throw new IllegalArgumentException( "The packaging for this project did not assign "
                         + "a file to the build artifact" );
                 }

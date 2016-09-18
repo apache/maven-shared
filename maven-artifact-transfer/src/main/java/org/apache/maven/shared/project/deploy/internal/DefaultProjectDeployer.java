@@ -20,6 +20,7 @@ package org.apache.maven.shared.project.deploy.internal;
  */
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.apache.maven.shared.artifact.deploy.ArtifactDeployer;
 import org.apache.maven.shared.artifact.deploy.ArtifactDeployerException;
+import org.apache.maven.shared.project.NoFileAssignedException;
 import org.apache.maven.shared.project.deploy.ProjectDeployer;
 import org.apache.maven.shared.project.deploy.ProjectDeployerRequest;
 import org.codehaus.plexus.component.annotations.Component;
@@ -40,13 +42,12 @@ import org.slf4j.LoggerFactory;
 /**
  * This will deploy a whole project into the appropriate remote repository.
  * 
- * @author Karl Heinz Marbaise <a href="mailto:khmarbaise@apache.org">khmarbaise@apache.org</a>
- *
- * Most of the code is taken from maven-dependency-plugin.
- * 
+ * @author Karl Heinz Marbaise <a href="mailto:khmarbaise@apache.org">khmarbaise@apache.org</a> Most of the code is
+ *         taken from maven-dependency-plugin.
  */
 @Component( role = ProjectDeployer.class )
-public class DefaultProjectDeployer implements ProjectDeployer
+public class DefaultProjectDeployer
+    implements ProjectDeployer
 {
     private static final Logger LOGGER = LoggerFactory.getLogger( DefaultProjectDeployer.class );
 
@@ -54,15 +55,17 @@ public class DefaultProjectDeployer implements ProjectDeployer
     private ArtifactDeployer deployer;
 
     /**
-     * This will deploy a single project which may contain several artifacts
-     * into the appropriate remote repository.
+     * This will deploy a single project which may contain several artifacts into the appropriate remote repository.
      * 
      * @param buildingRequest {@link ProjectBuildingRequest}
      * @param request {@link ProjectDeployerRequest}
      * @param artifactRepository {@link ArtifactRepository}
+     * @throws IllegalArgumentException in case of artifact is not correctly assigned.
+     * @throws NoFileAssignedException 
      */
     public void deployProject( ProjectBuildingRequest buildingRequest, ProjectDeployerRequest request,
                                ArtifactRepository artifactRepository )
+        throws IOException, NoFileAssignedException
     {
         List<Artifact> deployableArtifacts = new ArrayList<Artifact>();
 
@@ -109,14 +112,14 @@ public class DefaultProjectDeployer implements ProjectDeployer
                 }
                 else if ( !attachedArtifacts.isEmpty() )
                 {
-                    //TODO: Reconsider this exception? Better Exception type?
-                    throw new IllegalArgumentException( "The packaging plugin for this project did not assign "
+                    // TODO: Reconsider this exception? Better Exception type?
+                    throw new NoFileAssignedException( "The packaging plugin for this project did not assign "
                         + "a main file to the project but it has attachments. Change packaging to 'pom'." );
                 }
                 else
                 {
-                    //TODO: Reconsider this exception? Better Exception type?
-                    throw new IllegalArgumentException( "The packaging for this project did not assign "
+                    // TODO: Reconsider this exception? Better Exception type?
+                    throw new NoFileAssignedException( "The packaging for this project did not assign "
                         + "a file to the build artifact" );
                 }
             }

@@ -35,6 +35,7 @@ import org.apache.maven.project.artifact.ProjectArtifact;
 import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.apache.maven.shared.artifact.install.ArtifactInstaller;
 import org.apache.maven.shared.artifact.install.ArtifactInstallerException;
+import org.apache.maven.shared.project.NoFileAssignedException;
 import org.apache.maven.shared.project.install.ProjectInstaller;
 import org.apache.maven.shared.project.install.ProjectInstallerRequest;
 import org.apache.maven.shared.repository.RepositoryManager;
@@ -64,9 +65,12 @@ public class DefaultProjectInstaller
 
     private final DualDigester digester = new DualDigester();
 
+    /**
+     * {@inheritDoc}
+     */
     public void installProject( ProjectBuildingRequest buildingRequest, ProjectInstallerRequest request,
                                 ArtifactRepository artifactRepository )
-        throws IOException, ArtifactInstallerException, IllegalArgumentException
+        throws IOException, ArtifactInstallerException, NoFileAssignedException
     {
 
         MavenProject project = request.getProject();
@@ -93,7 +97,6 @@ public class DefaultProjectInstaller
 
         if ( isPomArtifact )
         {
-            // installer.install( pomFile, artifact, localRepository );
             installer.install( buildingRequest, Collections.<Artifact>singletonList( new ProjectArtifact( project ) ) );
             installChecksums( buildingRequest, artifactRepository, artifact, createChecksum );
             addMetaDataFilesForArtifact( artifactRepository, artifact, metadataFiles, createChecksum );
@@ -115,20 +118,19 @@ public class DefaultProjectInstaller
             }
             else if ( !attachedArtifacts.isEmpty() )
             {
-                throw new IllegalArgumentException( "The packaging plugin for this project did not assign "
+                throw new NoFileAssignedException( "The packaging plugin for this project did not assign "
                     + "a main file to the project but it has attachments. Change packaging to 'pom'." );
             }
             else
             {
                 // CHECKSTYLE_OFF: LineLength
-                throw new IllegalArgumentException( "The packaging for this project did not assign a file to the build artifact" );
+                throw new NoFileAssignedException( "The packaging for this project did not assign a file to the build artifact" );
                 // CHECKSTYLE_ON: LineLength
             }
         }
 
         for ( Artifact attached : attachedArtifacts )
         {
-            // installer.install( attached.getFile(), attached, localRepository );
             installer.install( buildingRequest, Collections.singletonList( attached ) );
             installChecksums( buildingRequest, artifactRepository, attached, createChecksum );
             addMetaDataFilesForArtifact( artifactRepository, attached, metadataFiles, createChecksum );
@@ -162,8 +164,8 @@ public class DefaultProjectInstaller
     }
 
     // CHECKSTYLE_OFF: LineLength
-    protected void addMetaDataFilesForArtifact( ArtifactRepository artifactRepository, Artifact artifact,
-                                                Collection<File> targetMetadataFiles, boolean createChecksum )
+    private void addMetaDataFilesForArtifact( ArtifactRepository artifactRepository, Artifact artifact,
+                                              Collection<File> targetMetadataFiles, boolean createChecksum )
     // CHECKSTYLE_ON: LineLength
     {
         if ( !createChecksum )
@@ -188,7 +190,7 @@ public class DefaultProjectInstaller
      * @param metadataFiles The collection of metadata files to install checksums for, must not be <code>null</code>.
      * @throws IOException If the checksums could not be installed.
      */
-    protected void installChecksums( Collection<File> metadataFiles )
+    private void installChecksums( Collection<File> metadataFiles )
         throws IOException
     {
         for ( File metadataFile : metadataFiles )

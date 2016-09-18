@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.install.ArtifactInstallerException;
+import org.apache.maven.shared.project.NoFileAssignedException;
 
 /**
  * This defines the interface to install a single Maven Project.
@@ -39,12 +40,12 @@ public interface ProjectInstaller
      * @param projectBuildingRequest {@link ProjectBuildingRequest}
      * @param projectInstallerRequest {@link ProjectInstallerRequest}
      * @param artifactRepository {@link ArtifactRepository}
-     * @throws IOException In case of problem to install project.
+     * @throws IOException In case of problems related to checksums.
      * @throws ArtifactInstallerException In case of problems to install artifacts.
-     * @throws IllegalArgumentException In case of no file has been assigned. 
+     * @throws NoFileAssignedException If no file has been assigned to the project.
      */
     void installProject( ProjectBuildingRequest projectBuildingRequest, ProjectInstallerRequest projectInstallerRequest,
                          ArtifactRepository artifactRepository )
-        throws IOException, ArtifactInstallerException, IllegalArgumentException; 
+        throws IOException, ArtifactInstallerException, NoFileAssignedException;
 
 }

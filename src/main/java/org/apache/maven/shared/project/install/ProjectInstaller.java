@@ -41,9 +41,10 @@ public interface ProjectInstaller
      * @param artifactRepository {@link ArtifactRepository}
      * @throws IOException In case of problem to install project.
      * @throws ArtifactInstallerException In case of problems to install artifacts.
+     * @throws IllegalArgumentException In case of no file has been assigned. 
      */
     void installProject( ProjectBuildingRequest projectBuildingRequest, ProjectInstallerRequest projectInstallerRequest,
                          ArtifactRepository artifactRepository )
-        throws IOException, ArtifactInstallerException;
+        throws IOException, ArtifactInstallerException, IllegalArgumentException; 
 
 }

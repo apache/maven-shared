@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -41,6 +39,7 @@ import org.apache.maven.shared.project.install.ProjectInstaller;
 import org.apache.maven.shared.project.install.ProjectInstallerRequest;
 import org.apache.maven.shared.repository.RepositoryManager;
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,17 +56,17 @@ public class DefaultProjectInstaller
 
     private static final Logger LOGGER = LoggerFactory.getLogger( DefaultProjectInstaller.class );
 
-    @Inject
+    @Requirement
     private ArtifactInstaller installer;
 
-    @Inject
+    @Requirement
     private RepositoryManager repositoryManager;
 
     private final DualDigester digester = new DualDigester();
 
     public void installProject( ProjectBuildingRequest buildingRequest, ProjectInstallerRequest request,
                                 ArtifactRepository artifactRepository )
-        throws IOException, ArtifactInstallerException
+        throws IOException, ArtifactInstallerException, IllegalArgumentException
     {
 
         MavenProject project = request.getProject();

@@ -68,7 +68,7 @@ public class DefaultProjectInstaller
     /**
      * {@inheritDoc}
      */
-    public void installProject( ProjectBuildingRequest buildingRequest, ProjectInstallerRequest request,
+    public void install( ProjectBuildingRequest buildingRequest, ProjectInstallerRequest request,
                                 ArtifactRepository artifactRepository )
         throws IOException, ArtifactInstallerException, NoFileAssignedException
     {

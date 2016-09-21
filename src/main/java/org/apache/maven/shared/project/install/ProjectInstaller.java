@@ -37,6 +37,25 @@ public interface ProjectInstaller
      * This will install a single project which may contain several artifacts. Those artifacts will be installed into
      * the appropriate repository.
      * 
+     * <pre class="java">
+     *  @Parameter( defaultValue = "${session}", required=true, readonly = true)
+     *  MavenSession session;
+     *  @Parameter( defaultValue = "${project}", required=true, readonly = true)
+     *  MavenProject project;
+     *  ..
+     *  &#64;Component
+     *  ProjectInstaller installer;
+     *  
+     *    ProjectInstallerRequest pir =
+     *      new ProjectInstallerRequest()
+     *         .setProject( mavenProject )
+     *         .setCreateChecksum( false )
+     *         .setUpdateReleaseInfo( false );
+     *  
+     *  installer.install (session.getProjectBuildingRequest(), pir, artifactRepository);
+     * </pre>
+     * 
+     * 
      * @param projectBuildingRequest {@link ProjectBuildingRequest}
      * @param projectInstallerRequest {@link ProjectInstallerRequest}
      * @param artifactRepository {@link ArtifactRepository}
@@ -44,7 +63,7 @@ public interface ProjectInstaller
      * @throws ArtifactInstallerException In case of problems to install artifacts.
      * @throws NoFileAssignedException If no file has been assigned to the project.
      */
-    void installProject( ProjectBuildingRequest projectBuildingRequest, ProjectInstallerRequest projectInstallerRequest,
+    void install( ProjectBuildingRequest projectBuildingRequest, ProjectInstallerRequest projectInstallerRequest,
                          ArtifactRepository artifactRepository )
         throws IOException, ArtifactInstallerException, NoFileAssignedException;
 

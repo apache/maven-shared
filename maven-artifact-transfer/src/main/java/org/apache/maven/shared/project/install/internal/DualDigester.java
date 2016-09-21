@@ -37,7 +37,10 @@ import org.codehaus.plexus.util.IOUtil;
  *
  * @author Kristian Rosenvold
  */
-public class DualDigester
+//TODO: Think about this class if we could use the ChecksumUtils class of
+// aether-util ? I think we need to go via reflection.
+//
+class DualDigester
 {
     private final MessageDigest md5 = getDigester( "MD5" );
 

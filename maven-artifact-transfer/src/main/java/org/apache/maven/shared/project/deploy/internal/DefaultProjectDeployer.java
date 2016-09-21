@@ -42,8 +42,9 @@ import org.slf4j.LoggerFactory;
 /**
  * This will deploy a whole project into the appropriate remote repository.
  * 
- * @author Karl Heinz Marbaise <a href="mailto:khmarbaise@apache.org">khmarbaise@apache.org</a> Most of the code is
- *         taken from maven-dependency-plugin.
+ * @author Karl Heinz Marbaise <a href="mailto:khmarbaise@apache.org">khmarbaise@apache.org</a> 
+ * 
+ * Most of the code is taken from maven-deploy-plugin.
  */
 @Component( role = ProjectDeployer.class )
 public class DefaultProjectDeployer
@@ -61,13 +62,12 @@ public class DefaultProjectDeployer
      * @param request {@link ProjectDeployerRequest}
      * @param artifactRepository {@link ArtifactRepository}
      * @throws IllegalArgumentException in case of artifact is not correctly assigned.
-     * @throws NoFileAssignedException 
+     * @throws NoFileAssignedException
      */
-    public void deployProject( ProjectBuildingRequest buildingRequest, ProjectDeployerRequest request,
-                               ArtifactRepository artifactRepository )
+    public void deploy( ProjectBuildingRequest buildingRequest, ProjectDeployerRequest request,
+                        ArtifactRepository artifactRepository )
         throws IOException, NoFileAssignedException
     {
-        List<Artifact> deployableArtifacts = new ArrayList<Artifact>();
 
         Artifact artifact = request.getProject().getArtifact();
         String packaging = request.getProject().getPackaging();
@@ -98,6 +98,7 @@ public class DefaultProjectDeployer
 
         try
         {
+            List<Artifact> deployableArtifacts = new ArrayList<Artifact>();
             if ( isPomArtifact )
             {
                 deployableArtifacts.add( artifact );

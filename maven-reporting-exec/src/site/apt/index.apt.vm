@@ -58,7 +58,7 @@ ${project.name}
   {{{/ref/current/maven-model/maven.html#class_reporting}<<<\<reporting\>>>> section of POM}}:
 
   * without <<<\<inherited\>>>> element: reporting plugins configuration inheritance is not supported at this level
-  (see {{{http://jira.codehaus.org/browse/MSITE-484}MSITE-484}}),
+  (see {{{https://issues.apache.org/jira/browse/MSITE-484}MSITE-484}}),
 
   * with additional <<<\<reports\>>>> list outside <<<\<reportSet\>>>> that simplifies reports configuration in usual cases,
 

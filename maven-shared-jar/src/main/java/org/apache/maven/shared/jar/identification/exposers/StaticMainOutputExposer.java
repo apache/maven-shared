@@ -24,7 +24,6 @@ import org.apache.maven.shared.jar.identification.JarIdentification;
 import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -40,21 +39,16 @@ public class StaticMainOutputExposer
 {
     public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
-        List staticMains = findStaticMainVersions();
-        if ( !staticMains.isEmpty() )
+        List<String> staticMains = findStaticMainVersions();
+        for ( String ver : staticMains )
         {
-            Iterator itvers = staticMains.iterator();
-            while ( itvers.hasNext() )
-            {
-                String ver = (String) itvers.next();
-                identification.addVersion( ver );
-            }
+            identification.addVersion( ver );
         }
     }
 
-    private List findStaticMainVersions()
+    private List<String> findStaticMainVersions()
     {
         // TODO: Execute the static main methods of classes with 'Version' in their name.
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

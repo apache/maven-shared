@@ -48,7 +48,7 @@ public class ImportVisitorTest
         DescendingVisitor descVisitor = new DescendingVisitor( javaClass, importVisitor );
         javaClass.accept( descVisitor );
 
-        List imports = importVisitor.getImports();
+        List<String> imports = importVisitor.getImports();
         assertNotNull( "Import List", imports );
 
         assertNotContainsRegex( "Import List", "[\\[\\)\\(\\;]", imports );
@@ -69,7 +69,7 @@ public class ImportVisitorTest
         DescendingVisitor descVisitor = new DescendingVisitor( javaClass, importVisitor );
         javaClass.accept( descVisitor );
 
-        List imports = importVisitor.getImports();
+        List<String> imports = importVisitor.getImports();
         assertNotNull( "Import List", imports );
 
         assertNotContainsRegex( "Import List", "[\\[\\)\\(\\;]", imports );

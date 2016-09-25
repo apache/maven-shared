@@ -47,7 +47,7 @@ public class EmbeddedMavenModelExposer
 {
     public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
-        List entries = jarAnalyzer.getMavenPomEntries();
+        List<JarEntry> entries = jarAnalyzer.getMavenPomEntries();
         if ( entries.isEmpty() )
         {
             return;

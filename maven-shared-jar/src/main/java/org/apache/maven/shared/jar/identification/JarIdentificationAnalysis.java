@@ -23,7 +23,6 @@ import org.apache.maven.shared.jar.JarAnalyzer;
 import org.apache.maven.shared.utils.StringUtils;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -47,7 +46,7 @@ public class JarIdentificationAnalysis
      *
      * @plexus.requirement role="org.apache.maven.shared.jar.identification.JarIdentificationExposer"
      */
-    private List exposers;
+    private List<JarIdentificationExposer> exposers;
 
     /**
      * Analyze a JAR and find any associated Maven metadata. Note that if the provided JAR analyzer has previously
@@ -67,9 +66,8 @@ public class JarIdentificationAnalysis
 
         taxon = new JarIdentification();
 
-        for ( Iterator i = exposers.iterator(); i.hasNext(); )
+        for ( JarIdentificationExposer exposer : exposers )
         {
-            JarIdentificationExposer exposer = (JarIdentificationExposer) i.next();
             exposer.expose( taxon, jarAnalyzer );
         }
 
@@ -108,56 +106,45 @@ public class JarIdentificationAnalysis
         }
     }
 
-    private String pickSmallest( List list )
+    private String pickSmallest( List<String> list )
     {
         String smallest = null;
 
-        if ( !list.isEmpty() )
+        int size = Integer.MAX_VALUE;
+        for ( String val : list )
         {
-            int size = Integer.MAX_VALUE;
-            Iterator it = list.iterator();
-            while ( it.hasNext() )
+            if ( StringUtils.isNotEmpty( val ) )
             {
-                String val = (String) it.next();
-
-                if ( StringUtils.isNotEmpty( val ) )
+                if ( val.length() < size )
                 {
-                    if ( val.length() < size )
-                    {
-                        smallest = val;
-                        size = val.length();
-                    }
+                    smallest = val;
+                    size = val.length();
                 }
             }
         }
-
+        
         return smallest;
     }
 
-    private String pickLargest( List list )
+    private String pickLargest( List<String> list )
     {
         String largest = null;
-        if ( !list.isEmpty() )
+        int size = Integer.MIN_VALUE;
+        for ( String val : list )
         {
-            int size = Integer.MIN_VALUE;
-            Iterator it = list.iterator();
-            while ( it.hasNext() )
+            if ( StringUtils.isNotEmpty( val ) )
             {
-                String val = (String) it.next();
-                if ( StringUtils.isNotEmpty( val ) )
+                if ( val.length() > size )
                 {
-                    if ( val.length() > size )
-                    {
-                        largest = val;
-                        size = val.length();
-                    }
+                    largest = val;
+                    size = val.length();
                 }
             }
         }
         return largest;
     }
 
-    public void setExposers( List exposers )
+    public void setExposers( List<JarIdentificationExposer> exposers )
     {
         this.exposers = Collections.unmodifiableList( exposers );
     }

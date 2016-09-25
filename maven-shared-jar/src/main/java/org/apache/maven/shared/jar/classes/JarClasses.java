@@ -35,22 +35,22 @@ public class JarClasses
     /**
      * The list of imports in the classes in the JAR.
      */
-    private List imports;
+    private List<String> imports;
 
     /**
      * A list of packages represented by classes in the JAR.
      */
-    private List packages;
+    private List<String> packages;
 
     /**
      * A list of the classes that in the JAR.
      */
-    private List classNames;
+    private List<String> classNames;
 
     /**
      * A list of methods within the classes in the JAR.
      */
-    private List methods;
+    private List<String> methods;
 
     /**
      * Whether the JAR contains any code with debug information. If there is a mix of debug and release code, this will
@@ -71,10 +71,10 @@ public class JarClasses
     {
         // Unique list decorators are used to ensure natural ordering is retained, the list interface is availble, and
         // that duplicates are not entered.
-        imports = SetUniqueList.decorate( new ArrayList() );
-        packages = SetUniqueList.decorate( new ArrayList() );
-        classNames = SetUniqueList.decorate( new ArrayList() );
-        methods = SetUniqueList.decorate( new ArrayList() );
+        imports = SetUniqueList.decorate( new ArrayList<String>() );
+        packages = SetUniqueList.decorate( new ArrayList<String>() );
+        classNames = SetUniqueList.decorate( new ArrayList<String>() );
+        methods = SetUniqueList.decorate( new ArrayList<String>() );
     }
 
     /**
@@ -112,22 +112,22 @@ public class JarClasses
      *
      * @param imports the imports to add. Each item should be a String to avoid down the line ClassCastExceptions.
      */
-    public void addImports( List imports )
+    public void addImports( List<String> imports )
     {
         this.imports.addAll( imports );
     }
 
-    public List getImports()
+    public List<String> getImports()
     {
         return Collections.unmodifiableList( imports );
     }
 
-    public List getClassNames()
+    public List<String> getClassNames()
     {
         return Collections.unmodifiableList( classNames );
     }
 
-    public List getPackages()
+    public List<String> getPackages()
     {
         return Collections.unmodifiableList( packages );
     }
@@ -152,7 +152,7 @@ public class JarClasses
         this.jdkRevision = jdkRevision;
     }
 
-    public List getMethods()
+    public List<String> getMethods()
     {
         return Collections.unmodifiableList( methods );
     }

@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.jar.JarEntry;
 
@@ -48,28 +47,20 @@ public class TextFileExposer
 {
     public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
-        List textFiles = findTextFileVersions( jarAnalyzer );
-        if ( !textFiles.isEmpty() )
+        List<String> textFiles = findTextFileVersions( jarAnalyzer );
+        for ( String ver : textFiles )
         {
-            Iterator ithits = textFiles.iterator();
-            while ( ithits.hasNext() )
-            {
-                String ver = (String) ithits.next();
-                identification.addVersion( ver );
-            }
+            identification.addVersion( ver );
         }
     }
 
-    private List findTextFileVersions( JarAnalyzer jarAnalyzer )
+    private List<String> findTextFileVersions( JarAnalyzer jarAnalyzer )
     {
-        List textVersions = new ArrayList();
-        List hits = jarAnalyzer.getVersionEntries();
+        List<String> textVersions = new ArrayList<String>();
+        List<JarEntry> hits = jarAnalyzer.getVersionEntries();
 
-        Iterator it = hits.iterator();
-        while ( it.hasNext() )
+        for ( JarEntry entry : hits )
         {
-            JarEntry entry = (JarEntry) it.next();
-
             // skip this entry if it's a class file.
             if ( !entry.getName().endsWith( ".class" ) ) //$NON-NLS-1$
             {

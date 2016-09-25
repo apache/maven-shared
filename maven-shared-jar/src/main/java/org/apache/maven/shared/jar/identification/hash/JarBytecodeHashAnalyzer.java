@@ -28,7 +28,7 @@ import org.apache.maven.shared.utils.io.IOUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
+import java.util.List;
 import java.util.jar.JarEntry;
 
 /**
@@ -58,14 +58,13 @@ public class JarBytecodeHashAnalyzer
         String result = jarData.getBytecodeHash();
         if ( result == null )
         {
-            Iterator it = jarAnalyzer.getClassEntries().iterator();
+            List<JarEntry> entries = jarAnalyzer.getClassEntries();
 
             try
             {
                 digester.reset();
-                while ( it.hasNext() )
+                for ( JarEntry entry : entries )
                 {
-                    JarEntry entry = (JarEntry) it.next();
                     computeEntryBytecodeHash( jarAnalyzer.getEntryInputStream( entry ) );
                 }
                 result = digester.calc();

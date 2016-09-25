@@ -23,8 +23,6 @@ import org.apache.maven.shared.jar.JarAnalyzer;
 import org.apache.maven.shared.jar.identification.JarIdentification;
 import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
 
-import java.util.Iterator;
-import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -43,13 +41,8 @@ public class ManifestExposer
         {
             addManifestAttributeValues( manifest.getMainAttributes(), identification );
 
-            Map entries = manifest.getEntries();
-            Iterator itentries = entries.entrySet().iterator();
-            while ( itentries.hasNext() )
+            for ( Attributes attribs : manifest.getEntries().values() )
             {
-                Map.Entry entry = (Map.Entry) itentries.next();
-                Attributes attribs = (Attributes) entry.getValue();
-
                 addManifestAttributeValues( attribs, identification );
             }
         }

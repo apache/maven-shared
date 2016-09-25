@@ -28,7 +28,6 @@ import org.apache.maven.shared.jar.identification.repository.RepositoryHashSearc
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -71,7 +70,7 @@ public class RepositorySearchExposer
 
     public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
-        List repohits = new ArrayList();
+        List<Artifact> repohits = new ArrayList<Artifact>();
 
         String hash = fileHashAnalyzer.computeHash( jarAnalyzer );
         if ( hash != null )
@@ -85,17 +84,12 @@ public class RepositorySearchExposer
             repohits.addAll( repositoryHashSearch.searchBytecodeHash( bytecodehash ) );
         }
 
-        if ( !repohits.isEmpty() )
+        // Found hits in the repository.
+        for ( Artifact artifact : repohits )
         {
-            // Found hits in the repository.
-            Iterator it = repohits.iterator();
-            while ( it.hasNext() )
-            {
-                Artifact artifact = (Artifact) it.next();
-                identification.addAndSetGroupId( artifact.getGroupId() );
-                identification.addAndSetArtifactId( artifact.getArtifactId() );
-                identification.addAndSetVersion( artifact.getVersion() );
-            }
+            identification.addAndSetGroupId( artifact.getGroupId() );
+            identification.addAndSetArtifactId( artifact.getArtifactId() );
+            identification.addAndSetVersion( artifact.getVersion() );
         }
     }
 

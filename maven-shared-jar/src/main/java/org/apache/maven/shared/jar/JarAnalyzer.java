@@ -25,7 +25,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -113,16 +112,13 @@ public class JarAnalyzer
         }
 
         // Obtain entries list.
-        List entries = Collections.list( jarFile.entries() );
+        List<JarEntry> entries = Collections.list( jarFile.entries() );
 
         // Sorting of list is done by name to ensure a bytecode hash is always consistent.
-        Collections.sort( entries, new Comparator()
+        Collections.sort( entries, new Comparator<JarEntry>()
         {
-            public int compare( Object o1, Object o2 )
+            public int compare( JarEntry entry1, JarEntry entry2 )
             {
-                JarEntry entry1 = (JarEntry) o1;
-                JarEntry entry2 = (JarEntry) o2;
-
                 return entry1.getName().compareTo( entry2.getName() );
             }
         } );
@@ -175,15 +171,12 @@ public class JarAnalyzer
      * @param pattern the pattern to filter against
      * @return the list of files found, in {@link java.util.jar.JarEntry} elements
      */
-    public List filterEntries( Pattern pattern )
+    public List<JarEntry> filterEntries( Pattern pattern )
     {
-        List ret = new ArrayList();
+        List<JarEntry> ret = new ArrayList<JarEntry>();
 
-        Iterator it = getEntries().iterator();
-        while ( it.hasNext() )
+        for ( JarEntry entry : getEntries() )
         {
-            JarEntry entry = (JarEntry) it.next();
-
             Matcher mat = pattern.matcher( entry.getName() );
             if ( mat.find() )
             {
@@ -198,7 +191,7 @@ public class JarAnalyzer
      *
      * @return the list of files found, in {@link java.util.jar.JarEntry} elements
      */
-    public List getClassEntries()
+    public List<JarEntry> getClassEntries()
     {
         return filterEntries( CLASS_FILTER );
     }
@@ -208,7 +201,7 @@ public class JarAnalyzer
      *
      * @return the list of files found, in {@link java.util.jar.JarEntry} elements
      */
-    public List getMavenPomEntries()
+    public List<JarEntry> getMavenPomEntries()
     {
         return filterEntries( MAVEN_POM_FILTER );
     }
@@ -218,7 +211,7 @@ public class JarAnalyzer
      *
      * @return the list of files found, in {@link java.util.jar.JarEntry} elements
      */
-    public List getVersionEntries()
+    public List<JarEntry> getVersionEntries()
     {
         return filterEntries( VERSION_FILTER );
     }
@@ -228,7 +221,7 @@ public class JarAnalyzer
      *
      * @return the list of files found, in {@link java.util.jar.JarEntry} elements
      */
-    public List getEntries()
+    public List<JarEntry> getEntries()
     {
         return jarData.getEntries();
     }

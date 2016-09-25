@@ -28,7 +28,6 @@ import java.net.MalformedURLException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,14 +46,12 @@ public abstract class AbstractJarAnalyzerTestCase
         return new File( URLDecoder.decode( path, "UTF-8" ) );
     }
 
-    public void assertNotContainsRegex( String msg, String regex, Collection coll )
+    public void assertNotContainsRegex( String msg, String regex, Collection<String> coll )
     {
-        List failures = new ArrayList();
+        List<String> failures = new ArrayList<String>();
         Pattern pat = Pattern.compile( regex );
-        Iterator it = coll.iterator();
-        while ( it.hasNext() )
+        for ( String value : coll )
         {
-            String value = (String) it.next();
             Matcher mat = pat.matcher( value );
             if ( mat.find() )
             {
@@ -66,10 +63,9 @@ public abstract class AbstractJarAnalyzerTestCase
         {
             StringBuffer sb = new StringBuffer();
             sb.append( msg ).append( " collection has illegal regex \"" ).append( regex ).append( "\"" );
-            it = failures.iterator();
-            while ( it.hasNext() )
+            for ( String failure : failures )
             {
-                sb.append( "\n   - \"" ).append( it.next() ).append( "\"" );
+                sb.append( "\n   - \"" ).append( failure ).append( "\"" );
             }
             throw new AssertionFailedError( sb.toString() );
         }

@@ -28,7 +28,6 @@ import org.apache.maven.shared.utils.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.jar.JarEntry;
@@ -43,28 +42,24 @@ public class TimestampExposer
 {
     public void expose( JarIdentification identification, JarAnalyzer jarAnalyzer )
     {
-        List entries = jarAnalyzer.getEntries();
+        List<JarEntry> entries = jarAnalyzer.getEntries();
         SimpleDateFormat tsformat = new SimpleDateFormat( "yyyyMMdd", Locale.US ); //$NON-NLS-1$
         Bag timestamps = new HashBag();
-        Iterator it = entries.iterator();
-        while ( it.hasNext() )
+        for ( JarEntry entry : entries )
         {
-            JarEntry entry = (JarEntry) it.next();
             long time = entry.getTime();
             String timestamp = tsformat.format( new Date( time ) );
             timestamps.add( timestamp );
         }
 
-        it = timestamps.iterator();
         String ts = "";
         int tsmax = 0;
-        while ( it.hasNext() )
+        for ( Object timestamp : timestamps )
         {
-            String timestamp = (String) it.next();
             int count = timestamps.getCount( timestamp );
             if ( count > tsmax )
             {
-                ts = timestamp;
+                ts = (String) timestamp;
                 tsmax = count;
             }
         }

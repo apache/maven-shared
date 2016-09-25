@@ -57,27 +57,27 @@ public class JarIdentification
     /**
      * The list of possible group IDs discovered.
      */
-    private List potentialGroupIds = new ArrayList();
+    private List<String> potentialGroupIds = new ArrayList<String>();
 
     /**
      * The list of possible artifact IDs discovered.
      */
-    private List potentialArtifactIds = new ArrayList();
+    private List<String> potentialArtifactIds = new ArrayList<String>();
 
     /**
      * The list of possible versions discovered.
      */
-    private List potentialVersions = new ArrayList();
+    private List<String> potentialVersions = new ArrayList<String>();
 
     /**
      * The list of possible artifact names discovered.
      */
-    private List potentialNames = new ArrayList();
+    private List<String> potentialNames = new ArrayList<String>();
 
     /**
      * The list of possible vendors discovered.
      */
-    private List potentialVendors = new ArrayList();
+    private List<String> potentialVendors = new ArrayList<String>();
 
     /**
      * Add a validated group ID.
@@ -204,7 +204,7 @@ public class JarIdentification
         addUnique( potentialNames, name );
     }
 
-    private static void addUnique( List list, String value )
+    private static void addUnique( List<String> list, String value )
     {
         if ( value != null )
         {
@@ -265,27 +265,27 @@ public class JarIdentification
         this.version = version;
     }
 
-    public List getPotentialVersions()
+    public List<String> getPotentialVersions()
     {
         return potentialVersions;
     }
 
-    public List getPotentialNames()
+    public List<String> getPotentialNames()
     {
         return potentialNames;
     }
 
-    public List getPotentialGroupIds()
+    public List<String> getPotentialGroupIds()
     {
         return potentialGroupIds;
     }
 
-    public List getPotentialArtifactIds()
+    public List<String> getPotentialArtifactIds()
     {
         return potentialArtifactIds;
     }
 
-    public List getPotentialVendors()
+    public List<String> getPotentialVendors()
     {
         return potentialVendors;
     }

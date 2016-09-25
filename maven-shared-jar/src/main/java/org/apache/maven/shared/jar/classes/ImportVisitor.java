@@ -39,7 +39,7 @@ public class ImportVisitor
     /**
      * The list of imports discovered.
      */
-    private List imports;
+    private List<String> imports;
 
     /**
      * The Java class that is being analyzed.
@@ -68,7 +68,7 @@ public class ImportVisitor
 
         // Create a list that is guaranteed to be unique while retaining it's list qualities (LinkedHashSet does not
         // expose the list interface even if natural ordering is retained)  
-        this.imports = SetUniqueList.decorate( new ArrayList() );
+        this.imports = SetUniqueList.decorate( new ArrayList<String>() );
     }
 
     /**
@@ -76,7 +76,7 @@ public class ImportVisitor
      *
      * @return Returns the imports.
      */
-    public List getImports()
+    public List<String> getImports()
     {
         return imports;
     }

@@ -29,7 +29,6 @@ import org.apache.maven.shared.jar.JarAnalyzer;
 import org.codehaus.plexus.logging.AbstractLogEnabled;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.jar.JarEntry;
 
@@ -77,16 +76,14 @@ public class JarClassesAnalysis
             String jarfilename = jarAnalyzer.getFile().getAbsolutePath();
             classes = new JarClasses();
 
-            List classList = jarAnalyzer.getClassEntries();
+            List<JarEntry> classList = jarAnalyzer.getClassEntries();
 
             classes.setDebugPresent( false );
 
             double maxVersion = 0.0;
 
-            Iterator it = classList.iterator();
-            while ( it.hasNext() )
+            for ( JarEntry entry : classList )
             {
-                JarEntry entry = (JarEntry) it.next();
                 String classname = entry.getName();
 
                 try

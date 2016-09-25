@@ -22,6 +22,8 @@ package org.apache.maven.shared.jar.identification.repository;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.maven.artifact.Artifact;
+
 /**
  * Empty repository hash search.  Always returns an empty list.
  * <p/>
@@ -34,13 +36,13 @@ import java.util.List;
 public class EmptyRepositoryHashSearch
     implements RepositoryHashSearch
 {
-    public List searchBytecodeHash( String hash )
+    public List<Artifact> searchBytecodeHash( String hash )
     {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
-    public List searchFileHash( String hash )
+    public List<Artifact> searchFileHash( String hash )
     {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

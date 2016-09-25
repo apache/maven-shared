@@ -25,9 +25,6 @@ import org.apache.maven.shared.jar.classes.JarClassesAnalysis;
 import org.apache.maven.shared.jar.identification.JarIdentification;
 import org.apache.maven.shared.jar.identification.JarIdentificationExposer;
 
-import java.util.Iterator;
-
-
 /**
  * Exposer that examines a JAR file to derive Maven metadata from the classes in a JAR. It will currently identify
  * potential group IDs from the class packages.
@@ -49,10 +46,8 @@ public class JarClassesExposer
     {
         JarClasses jarclasses = analyzer.analyze( jarAnalyzer );
 
-        Iterator it = jarclasses.getPackages().iterator();
-        while ( it.hasNext() )
+        for ( String packagename : jarclasses.getPackages() )
         {
-            String packagename = (String) it.next();
             identification.addGroupId( packagename );
         }
     }

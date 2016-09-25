@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
 import java.util.jar.Manifest;
 
 /**
@@ -67,7 +68,7 @@ public final class JarData
     /**
      * The JAR entries.
      */
-    private final List entries;
+    private final List<JarEntry> entries;
 
     /**
      * Information about the JAR's identifying features.
@@ -81,7 +82,7 @@ public final class JarData
      * @param manifest the JAR manifest
      * @param entries  the JAR entries
      */
-    public JarData( File file, Manifest manifest, List entries )
+    public JarData( File file, Manifest manifest, List<JarEntry> entries )
     {
         this.file = file;
 
@@ -101,7 +102,7 @@ public final class JarData
         this.sealed = sealed;
     }
 
-    public List getEntries()
+    public List<JarEntry> getEntries()
     {
         return entries;
     }

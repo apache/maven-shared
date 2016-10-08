@@ -97,14 +97,21 @@ public class DefaultProjectInstaller
 
         if ( isPomArtifact )
         {
-            installer.install( buildingRequest, Collections.<Artifact>singletonList( new ProjectArtifact( project ) ) );
-            installChecksums( buildingRequest, artifactRepository, artifact, createChecksum );
-            addMetaDataFilesForArtifact( artifactRepository, artifact, metadataFiles, createChecksum );
+            if ( pomFile != null )
+            {
+                installer.install( buildingRequest,
+                                   Collections.<Artifact>singletonList( new ProjectArtifact( project ) ) );
+                installChecksums( buildingRequest, artifactRepository, artifact, createChecksum );
+                addMetaDataFilesForArtifact( artifactRepository, artifact, metadataFiles, createChecksum );
+            }
         }
         else
         {
-            metadata = new ProjectArtifactMetadata( artifact, pomFile );
-            artifact.addMetadata( metadata );
+            if ( pomFile != null )
+            {
+                metadata = new ProjectArtifactMetadata( artifact, pomFile );
+                artifact.addMetadata( metadata );
+            }
 
             File file = artifact.getFile();
 

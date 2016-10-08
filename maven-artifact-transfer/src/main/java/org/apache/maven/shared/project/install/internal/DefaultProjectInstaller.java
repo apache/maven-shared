@@ -101,7 +101,7 @@ public class DefaultProjectInstaller
             {
                 installer.install( buildingRequest,
                                    Collections.<Artifact>singletonList( new ProjectArtifact( project ) ) );
-                installChecksums( buildingRequest, artifactRepository, artifact, createChecksum );
+                installChecksums( buildingRequest, artifact, createChecksum );
                 addMetaDataFilesForArtifact( artifactRepository, artifact, metadataFiles, createChecksum );
             }
         }
@@ -120,7 +120,7 @@ public class DefaultProjectInstaller
             if ( file != null && file.isFile() )
             {
                 installer.install( buildingRequest, Collections.<Artifact>singletonList( artifact ) );
-                installChecksums( buildingRequest, artifactRepository, artifact, createChecksum );
+                installChecksums( buildingRequest, artifact, createChecksum );
                 addMetaDataFilesForArtifact( artifactRepository, artifact, metadataFiles, createChecksum );
             }
             else if ( !attachedArtifacts.isEmpty() )
@@ -139,7 +139,7 @@ public class DefaultProjectInstaller
         for ( Artifact attached : attachedArtifacts )
         {
             installer.install( buildingRequest, Collections.singletonList( attached ) );
-            installChecksums( buildingRequest, artifactRepository, attached, createChecksum );
+            installChecksums( buildingRequest, attached, createChecksum );
             addMetaDataFilesForArtifact( artifactRepository, attached, metadataFiles, createChecksum );
         }
 
@@ -153,12 +153,12 @@ public class DefaultProjectInstaller
      * the original POM file (cf. MNG-2820). While the plugin currently requires Maven 2.0.6, we continue to hash the
      * installed POM for robustness with regard to future changes like re-introducing some kind of POM filtering.
      *
+     * @param buildingRequest The project building request, must not be <code>null</code>.
      * @param artifact The artifact for which to create checksums, must not be <code>null</code>.
      * @param createChecksum {@code true} if checksum should be created, otherwise {@code false}.
      * @throws IOException If the checksums could not be installed.
      */
-    private void installChecksums( ProjectBuildingRequest buildingRequest, ArtifactRepository artifactRepository,
-                                   Artifact artifact, boolean createChecksum )
+    private void installChecksums( ProjectBuildingRequest buildingRequest, Artifact artifact, boolean createChecksum )
         throws IOException
     {
         if ( !createChecksum )
@@ -166,7 +166,7 @@ public class DefaultProjectInstaller
             return;
         }
 
-        File artifactFile = getLocalRepoFile( buildingRequest, artifactRepository, artifact );
+        File artifactFile = getLocalRepoFile( buildingRequest, artifact );
         installChecksums( artifactFile );
     }
 
@@ -257,14 +257,14 @@ public class DefaultProjectInstaller
      * Gets the path of the specified artifact within the local repository. Note that the returned path need not exist
      * (yet).
      *
+     * @param buildingRequest The project building request, must not be <code>null</code>.
      * @param artifact The artifact whose local repo path should be determined, must not be <code>null</code>.
      * @return The absolute path to the artifact when installed, never <code>null</code>.
      */
-    private File getLocalRepoFile( ProjectBuildingRequest buildingRequest, ArtifactRepository artifactRepository,
-                                   Artifact artifact )
+    private File getLocalRepoFile( ProjectBuildingRequest buildingRequest, Artifact artifact )
     {
         String path = repositoryManager.getPathForLocalArtifact( buildingRequest, artifact );
-        return new File( artifactRepository.getBasedir(), path );
+        return new File( repositoryManager.getLocalRepositoryBasedir( buildingRequest ), path );
     }
 
     /**

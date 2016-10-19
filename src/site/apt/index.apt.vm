@@ -75,7 +75,7 @@ ${project.name}
 
   []
 
-  Since <<<maven-reporting-exec>>> 1.2 (which will be used by <<<maven-site-plugin>>> 3.4), plugin configuration in
+  Since <<<maven-reporting-exec>>> 1.2 (which is used by <<<maven-site-plugin>>> 3.4), plugin configuration in
   <<<build/pluginManagement>>> is injected into reports.
 
   Maven 3 core makes an automatic transformation of <<<\<reporting\>>>> POM section (which supports configuration inheritance)

@@ -191,7 +191,18 @@ public class PatternIncludesArtifactFilter
         final String[] tokens = value.split( ":" );
         for ( String pattern : patterns )
         {
-            final String[] patternTokens = pattern.split( ":" );
+            String[] patternTokens = pattern.split( ":" );
+            
+            if ( patternTokens.length == 5 && tokens.length < 5 )
+            {
+                // 4th element is the classifier
+                if ( !"*".equals( patternTokens[3] ) )
+                {
+                    // classifier required, cannot be a match
+                    return false;
+                }
+                patternTokens = new String[] { patternTokens[0], patternTokens[1], patternTokens[2], patternTokens[4] };
+            }
 
             // fail immediately if pattern tokens outnumber tokens to match
             boolean matched = patternTokens.length <= tokens.length;

@@ -463,6 +463,33 @@ public abstract class AbstractPatternArtifactFilterTest
 
         verify( mac.getMock(), otherMac.getMock() );
     }
+    
+    public void testShouldIncludeJarsWithAndWithoutClassifier()
+    {
+        final String groupId = "com.mycompany.myproject";
+        final String artifactId = "some-artifact-id";
+
+        final ArtifactMockAndControl mac = new ArtifactMockAndControl( groupId, artifactId );
+
+        replay( mac.getMock() );
+
+        final List<String> patterns = new ArrayList<String>();
+
+        patterns.add( "com.mycompany.*:*:jar:*:*" );
+
+        final ArtifactFilter filter = createFilter( patterns );
+
+        if ( !isInclusionExpected() )
+        {
+            assertFalse( filter.include( mac.artifact ) );
+        }
+        else
+        {
+            assertTrue( filter.include( mac.artifact ) );
+        }
+
+        verify( mac.getMock() );
+    }
 
     // FIXME: Not sure what this is even trying to test.
     // public void testShouldIncludeDirectDependencyWhenInvertedWildcardMatchesButDoesntMatchTransitiveChild(

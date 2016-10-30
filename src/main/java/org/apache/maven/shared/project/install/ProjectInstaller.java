@@ -21,7 +21,6 @@ package org.apache.maven.shared.project.install;
 
 import java.io.IOException;
 
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.install.ArtifactInstallerException;
 import org.apache.maven.shared.project.NoFileAssignedException;
@@ -73,11 +72,6 @@ public interface ProjectInstaller
      * @throws NoFileAssignedException If no file has been assigned to the project.
      */
     void install( ProjectBuildingRequest projectBuildingRequest, ProjectInstallerRequest projectInstallerRequest )
-        throws IOException, ArtifactInstallerException, NoFileAssignedException;
-
-    // to be removed
-    void install( ProjectBuildingRequest projectBuildingRequest, ProjectInstallerRequest projectInstallerRequest,
-                  ArtifactRepository artifactRepository )
         throws IOException, ArtifactInstallerException, NoFileAssignedException;
 
 }

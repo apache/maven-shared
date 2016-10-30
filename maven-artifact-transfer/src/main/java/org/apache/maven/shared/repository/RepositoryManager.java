@@ -22,6 +22,7 @@ package org.apache.maven.shared.repository;
 import java.io.File;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.ArtifactCoordinate;
 
@@ -44,6 +45,13 @@ public interface RepositoryManager
      * @return the path for the local artifact.
      */
     String getPathForLocalArtifact( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate );
+    
+    /**
+     * @param buildingRequest {@link ProjectBuildingRequest}
+     * @param metadata {@link ArtifactMetadata}
+     * @return the path of the local metadata.
+     */
+    String getPathForLocalMetadata( ProjectBuildingRequest buildingRequest, ArtifactMetadata metadata );
 
     /**
      * Create a new {@code ProjectBuildingRequest} with an adjusted repository session.

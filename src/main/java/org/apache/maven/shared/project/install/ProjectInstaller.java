@@ -38,13 +38,13 @@ public interface ProjectInstaller
      * the appropriate repository.
      * 
      * <pre class="java">
-     *  @Parameter( defaultValue = "${session}", required=true, readonly = true)
-     *  MavenSession session;
-     *  @Parameter( defaultValue = "${project}", required=true, readonly = true)
-     *  MavenProject project;
+     *  &#64;Parameter( defaultValue = "${session}", required=true, readonly = true)
+     *  private MavenSession session;
+     *  &#64;Parameter( defaultValue = "${project}", required=true, readonly = true)
+     *  private MavenProject project;
      *  ..
      *  &#64;Component
-     *  ProjectInstaller installer;
+     *  private ProjectInstaller installer;
      *  
      *    ProjectInstallerRequest pir =
      *      new ProjectInstallerRequest()
@@ -52,19 +52,32 @@ public interface ProjectInstaller
      *         .setCreateChecksum( false )
      *         .setUpdateReleaseInfo( false );
      *  
-     *  installer.install (session.getProjectBuildingRequest(), pir, artifactRepository);
+     *  installer.install( session.getProjectBuildingRequest(), pir );
      * </pre>
      * 
+     * To set a different local repository than the current one in the Maven session, you can inject an instance of
+     * the <code>RepositoryManager</code> and set the path to the local repository, called 
+     * <code>localRepositoryPath</code>, as such:
+     * 
+     * <pre class="java">
+     *  &#64;Component
+     *  private RepositoryManager repositoryManager;
+     * 
+     *  buildingRequest = repositoryManager.setLocalRepositoryBasedir( buildingRequest, localRepositoryPath );
+     * </pre>
      * 
      * @param projectBuildingRequest {@link ProjectBuildingRequest}
      * @param projectInstallerRequest {@link ProjectInstallerRequest}
-     * @param artifactRepository {@link ArtifactRepository}
      * @throws IOException In case of problems related to checksums.
      * @throws ArtifactInstallerException In case of problems to install artifacts.
      * @throws NoFileAssignedException If no file has been assigned to the project.
      */
+    void install( ProjectBuildingRequest projectBuildingRequest, ProjectInstallerRequest projectInstallerRequest )
+        throws IOException, ArtifactInstallerException, NoFileAssignedException;
+
+    // to be removed
     void install( ProjectBuildingRequest projectBuildingRequest, ProjectInstallerRequest projectInstallerRequest,
-                         ArtifactRepository artifactRepository )
+                  ArtifactRepository artifactRepository )
         throws IOException, ArtifactInstallerException, NoFileAssignedException;
 
 }

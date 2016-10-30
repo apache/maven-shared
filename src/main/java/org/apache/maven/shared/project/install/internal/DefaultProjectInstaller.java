@@ -65,11 +65,17 @@ public class DefaultProjectInstaller
 
     private final DualDigester digester = new DualDigester();
 
+    public void install( ProjectBuildingRequest buildingRequest, ProjectInstallerRequest request,
+                         ArtifactRepository artifactRepository )
+        throws IOException, ArtifactInstallerException, NoFileAssignedException
+    {
+        install( buildingRequest, request );
+    }
+
     /**
      * {@inheritDoc}
      */
-    public void install( ProjectBuildingRequest buildingRequest, ProjectInstallerRequest request,
-                                ArtifactRepository artifactRepository )
+    public void install( ProjectBuildingRequest buildingRequest, ProjectInstallerRequest request )
         throws IOException, ArtifactInstallerException, NoFileAssignedException
     {
 
@@ -102,7 +108,7 @@ public class DefaultProjectInstaller
                 installer.install( buildingRequest,
                                    Collections.<Artifact>singletonList( new ProjectArtifact( project ) ) );
                 installChecksums( buildingRequest, artifact, createChecksum );
-                addMetaDataFilesForArtifact( artifactRepository, artifact, metadataFiles, createChecksum );
+                addMetaDataFilesForArtifact( buildingRequest, artifact, metadataFiles, createChecksum );
             }
         }
         else
@@ -121,7 +127,7 @@ public class DefaultProjectInstaller
             {
                 installer.install( buildingRequest, Collections.<Artifact>singletonList( artifact ) );
                 installChecksums( buildingRequest, artifact, createChecksum );
-                addMetaDataFilesForArtifact( artifactRepository, artifact, metadataFiles, createChecksum );
+                addMetaDataFilesForArtifact( buildingRequest, artifact, metadataFiles, createChecksum );
             }
             else if ( !attachedArtifacts.isEmpty() )
             {
@@ -140,7 +146,7 @@ public class DefaultProjectInstaller
         {
             installer.install( buildingRequest, Collections.singletonList( attached ) );
             installChecksums( buildingRequest, attached, createChecksum );
-            addMetaDataFilesForArtifact( artifactRepository, attached, metadataFiles, createChecksum );
+            addMetaDataFilesForArtifact( buildingRequest, attached, metadataFiles, createChecksum );
         }
 
         installChecksums( metadataFiles );
@@ -171,7 +177,7 @@ public class DefaultProjectInstaller
     }
 
     // CHECKSTYLE_OFF: LineLength
-    private void addMetaDataFilesForArtifact( ArtifactRepository artifactRepository, Artifact artifact,
+    private void addMetaDataFilesForArtifact( ProjectBuildingRequest buildingRequest, Artifact artifact,
                                               Collection<File> targetMetadataFiles, boolean createChecksum )
     // CHECKSTYLE_ON: LineLength
     {
@@ -185,7 +191,7 @@ public class DefaultProjectInstaller
         {
             for ( ArtifactMetadata metadata : metadatas )
             {
-                File metadataFile = getLocalRepoFile( artifactRepository, metadata );
+                File metadataFile = getLocalRepoFile( buildingRequest, metadata );
                 targetMetadataFiles.add( metadataFile );
             }
         }
@@ -271,13 +277,14 @@ public class DefaultProjectInstaller
      * Gets the path of the specified artifact metadata within the local repository. Note that the returned path need
      * not exist (yet).
      *
+     * @param buildingRequest The project building request, must not be <code>null</code>.
      * @param metadata The artifact metadata whose local repo path should be determined, must not be <code>null</code>.
      * @return The absolute path to the artifact metadata when installed, never <code>null</code>.
      */
-    private File getLocalRepoFile( ArtifactRepository artifactRepository, ArtifactMetadata metadata )
+    private File getLocalRepoFile( ProjectBuildingRequest buildingRequest, ArtifactMetadata metadata )
     {
-        String path = artifactRepository.pathOfLocalRepositoryMetadata( metadata, artifactRepository );
-        return new File( artifactRepository.getBasedir(), path );
+        String path = repositoryManager.getPathForLocalMetadata( buildingRequest, metadata );
+        return new File( repositoryManager.getLocalRepositoryBasedir( buildingRequest ), path );
     }
 
 }

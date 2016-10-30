@@ -28,7 +28,6 @@ import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadata;
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.artifact.ProjectArtifact;
@@ -65,16 +64,10 @@ public class DefaultProjectInstaller
 
     private final DualDigester digester = new DualDigester();
 
-    public void install( ProjectBuildingRequest buildingRequest, ProjectInstallerRequest request,
-                         ArtifactRepository artifactRepository )
-        throws IOException, ArtifactInstallerException, NoFileAssignedException
-    {
-        install( buildingRequest, request );
-    }
-
     /**
      * {@inheritDoc}
      */
+    @Override
     public void install( ProjectBuildingRequest buildingRequest, ProjectInstallerRequest request )
         throws IOException, ArtifactInstallerException, NoFileAssignedException
     {

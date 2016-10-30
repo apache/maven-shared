@@ -22,8 +22,11 @@ package org.apache.maven.shared.repository.internal;
 import java.io.File;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.project.ProjectBuildingRequest;
+import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 import org.apache.maven.shared.artifact.ArtifactCoordinate;
+import org.apache.maven.shared.artifact.DefaultArtifactCoordinate;
 import org.apache.maven.shared.repository.RepositoryManager;
 import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.PlexusContainer;
@@ -69,6 +72,34 @@ public class DefaultRepositoryManager
             RepositoryManager effectiveRepositoryManager = container.lookup( RepositoryManager.class, hint );
 
             return effectiveRepositoryManager.getPathForLocalArtifact( buildingRequest, coor );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new IllegalStateException( e.getMessage(), e );
+        }
+    }
+
+    @Override
+    public String getPathForLocalMetadata( ProjectBuildingRequest buildingRequest, ArtifactMetadata metadata )
+    {
+        if ( metadata instanceof ProjectArtifactMetadata )
+        {
+            DefaultArtifactCoordinate pomCoordinate = new DefaultArtifactCoordinate();
+            pomCoordinate.setGroupId( metadata.getGroupId() );
+            pomCoordinate.setArtifactId( metadata.getArtifactId() );
+            pomCoordinate.setVersion( metadata.getBaseVersion() );
+            pomCoordinate.setExtension( "pom" );
+            return getPathForLocalArtifact( buildingRequest, pomCoordinate );
+        }
+        
+        try
+        {
+            
+            String hint = isMaven31() ? "maven31" : "maven3";
+            
+            RepositoryManager effectiveRepositoryManager = container.lookup( RepositoryManager.class, hint );
+            
+            return effectiveRepositoryManager.getPathForLocalMetadata( buildingRequest, metadata );
         }
         catch ( ComponentLookupException e )
         {

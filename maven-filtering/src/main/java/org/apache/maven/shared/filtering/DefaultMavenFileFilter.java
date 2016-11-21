@@ -145,6 +145,10 @@ public class DefaultMavenFileFilter
                 Reader src = readerFilter.filter( fileReader, true, wrappers );
 
                 IOUtil.copy( src, fileWriter );
+                fileReader.close();
+                fileReader = null;
+                fileWriter.close();
+                fileWriter = null;
             }
             finally
             {

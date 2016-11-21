@@ -161,10 +161,13 @@ public class IncrementalResourceFilteringTest
     {
         Properties properties = new Properties();
 
-        InputStream is = new FileInputStream( new File( outputDirectory, relpath ) );
+        InputStream is = null;
         try
         {
+            is = new FileInputStream( new File( outputDirectory, relpath ) );
             properties.load( is );
+            is.close();
+            is = null;
         }
         finally
         {

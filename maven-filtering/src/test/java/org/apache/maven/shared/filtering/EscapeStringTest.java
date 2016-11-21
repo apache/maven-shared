@@ -91,8 +91,10 @@ public class EscapeStringTest
         FileInputStream in = null;
         try
         {
-            String content = IOUtil.toString( new FileInputStream( new File( outputDirectory, "content.xml" ) ) );
-
+            in = new FileInputStream( new File( outputDirectory, "content.xml" ) );
+            String content = IOUtil.toString( in );
+            in.close();
+            in = null;
             assertTrue( content.contains( "<broken-tag>Content with replacement: I am the replacement !</broken-tag>" ) );
             assertTrue( content.contains( "<broken-tag>Content with escaped replacement: Do not ${replaceThis} !</broken-tag>" ) );
         }

@@ -48,7 +48,7 @@ public final class PropertyUtils
      * The properties are resolved iteratively, so if the value of property A refers to property B, then after
      * resolution the value of property B will contain the value of property B.
      * </p>
-     * 
+     *
      * @param propFile The property file to load.
      * @param baseProps Properties containing the initial values to substitute into the properties file.
      * @return Properties object containing the properties in the file with their values fully resolved.
@@ -63,10 +63,13 @@ public final class PropertyUtils
         }
 
         final Properties fileProps = new Properties();
-        final FileInputStream inStream = new FileInputStream( propFile );
+        FileInputStream inStream = null;
         try
         {
+            inStream = new FileInputStream( propFile );
             fileProps.load( inStream );
+            inStream.close();
+            inStream = null;
         }
         finally
         {

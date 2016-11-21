@@ -96,6 +96,8 @@ public class MuliLinesMavenResourcesFilteringTest
         {
             in = new FileInputStream( new File( outputDirectory, "test.properties" ) );
             result.load( in );
+            in.close();
+            in = null;
         }
         finally
         {

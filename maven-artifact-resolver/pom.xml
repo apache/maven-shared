@@ -25,7 +25,7 @@ under the License.
   <parent>
     <artifactId>maven-shared-components</artifactId>
     <groupId>org.apache.maven.shared</groupId>
-    <version>21</version>
+    <version>30</version>
     <relativePath>../../pom/maven/maven-shared-components/pom.xml</relativePath>
   </parent>
 
@@ -138,7 +138,7 @@ under the License.
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-metadata</artifactId>
-        <version>1.6</version>
+        <version>1.7.1</version>
         <executions>
           <execution>
             <id>create-component-descriptor</id>

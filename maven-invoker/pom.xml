@@ -107,7 +107,7 @@ under the License.
         <!--
           ! Can be removed if update to maven-shared-components parent to version 31
         -->
-        <version>1.7</version>
+        <version>1.7.1</version>
         <executions>
           <execution>
             <id>create-component-descriptor</id>

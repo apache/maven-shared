@@ -670,6 +670,8 @@ public class DefaultMavenRuntimeTest extends PlexusTestCase
         
         File pom = getTestFile( "target/test-classes/", pomPath );
         Properties properties = new Properties();
+        properties.put( "maven.compiler.source", "1.6" );
+        properties.put( "maven.compiler.target", "1.6" );
         List<String> goals = Arrays.asList( new String[] { "clean", "package" } );
         File log = new File( pom.getParentFile(), "build.log" );
 

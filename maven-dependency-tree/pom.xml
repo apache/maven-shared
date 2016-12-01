@@ -154,6 +154,10 @@
             <pomExclude>reactor/pom.xml</pomExclude>
             <pomExclude>verbose/pom.xml</pomExclude>
           </pomExcludes>
+          <properties>
+            <maven.compiler.source>${maven.compiler.source}</maven.compiler.source>
+            <maven.compiler.target>${maven.compiler.target}</maven.compiler.target>
+          </properties>
         </configuration>
         <executions>
           <execution>

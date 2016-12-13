@@ -89,7 +89,6 @@ Set Up The Classpath
 
 +-----+
 Manifest-Version: 1.0
-Archiver-Version: Plexus Archiver
 Created-By: Apache Maven ${maven.version}
 Built-By: ${user.name}
 Build-Jdk: ${java.version}
@@ -149,7 +148,6 @@ Class-Path: plexus-utils-1.1.jar commons-lang-2.1.jar
 
 +-----+
 Manifest-Version: 1.0
-Archiver-Version: Plexus Archiver
 Created-By: Apache Maven ${maven.version}
 Built-By: ${user.name}
 Build-Jdk: ${java.version}

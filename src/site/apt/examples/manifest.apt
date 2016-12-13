@@ -32,7 +32,6 @@ Manifest
 
 +-----+
 Manifest-Version: 1.0
-Archiver-Version: Plexus Archiver
 Created-By: Apache Maven ${maven.version}
 Built-By: ${user.name}
 Build-Jdk: ${java.version}
@@ -79,7 +78,6 @@ Build-Jdk: ${java.version}
 
 +-----+
 Manifest-Version: 1.0
-Archiver-Version: Plexus Archiver
 Created-By: Apache Maven ${maven.version}
 Built-By: ${user.name}
 Build-Jdk: ${java.version}

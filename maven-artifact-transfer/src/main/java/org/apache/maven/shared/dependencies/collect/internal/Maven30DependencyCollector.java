@@ -159,10 +159,10 @@ public class Maven30DependencyCollector
                                             ArtifactTypeRegistry typeRegistry )
         throws DependencyCollectorException
     {
-        Class<?>[] argClasses = new Class<?>[] { Dependency.class, ArtifactTypeRegistry.class };
+        Class<?>[] argClasses = new Class<?>[] { org.apache.maven.model.Dependency.class, ArtifactTypeRegistry.class };
 
         Object[] args = new Object[] { mavenDependency, typeRegistry };
 
         return (Dependency) Invoker.invoke( RepositoryUtils.class, "toDependency", argClasses, args );
-    }                
+    }
 }

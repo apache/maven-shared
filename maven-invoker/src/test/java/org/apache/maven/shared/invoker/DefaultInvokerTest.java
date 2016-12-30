@@ -113,6 +113,33 @@ public class DefaultInvokerTest
     }
 
     @Test
+    public void testSpaceAndSpecialCharPom()
+        throws Exception
+    {
+        logTestStart();
+
+        File basedir = getBasedirForBuild();
+
+        Invoker invoker = newInvoker();
+
+        InvocationRequest request = new DefaultInvocationRequest();
+        request.setBaseDirectory( basedir );
+
+        request.setPomFileName( "pom with spaces & special char.xml" );
+
+        request.setDebug( true );
+
+        List<String> goals = new ArrayList<String>();
+        goals.add( "clean" );
+
+        request.setGoals( goals );
+
+        InvocationResult result = invoker.execute( request );
+
+        assertEquals( 0, result.getExitCode() );
+    }
+
+    @Test
     public void testSpaceSettings()
         throws Exception
     {

@@ -32,6 +32,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.utils.WriterFactory;
 import org.apache.maven.shared.utils.io.IOUtil;
 import org.codehaus.plexus.util.ReaderFactory;
 
@@ -48,7 +49,7 @@ import java.util.Map;
  * The basis for a Maven report which can be generated both as part of a site generation or
  * as a direct standalone goal invocation.
  * Both invocations are delegated to <code>abstract executeReport( Locale )</code> from:
- * <ul> 
+ * <ul>
  * <li>Mojo's <code>execute()</code> method, see maven-plugin-api</li>
  * <li>MavenMultiPageReport's <code>generate( Sink, SinkFactory, Locale )</code>, see maven-reporting-api</li>
  * </ul>
@@ -56,7 +57,7 @@ import java.util.Map;
  * @author <a href="evenisse@apache.org">Emmanuel Venisse</a>
  * @version $Id$
  * @since 2.0
- * @see #execute() <code>Mojo.execute()</code>, from maven-plugin-api 
+ * @see #execute() <code>Mojo.execute()</code>, from maven-plugin-api
  * @see #generate(Sink, SinkFactory, Locale) <code>MavenMultiPageReport.generate( Sink, SinkFactory, Locale )</code>,
  *  from maven-reporting-api
  * @see #executeReport(Locale) <code>abstract executeReport( Locale )</code>
@@ -306,7 +307,7 @@ public abstract class AbstractMavenReport
      */
     protected String getInputEncoding()
     {
-        return ( inputEncoding == null ) ? ReaderFactory.ISO_8859_1 : inputEncoding;
+        return ( inputEncoding == null ) ? ReaderFactory.FILE_ENCODING : inputEncoding;
     }
 
     /**
@@ -316,7 +317,7 @@ public abstract class AbstractMavenReport
      */
     protected String getOutputEncoding()
     {
-        return ( outputEncoding == null ) ? ReaderFactory.UTF_8 : outputEncoding;
+        return ( outputEncoding == null ) ? WriterFactory.UTF_8 : outputEncoding;
     }
 
     /**

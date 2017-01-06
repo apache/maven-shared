@@ -237,11 +237,6 @@ public abstract class AbstractMavenReport
     public void generate( Sink sink, SinkFactory sinkFactory, Locale locale )
         throws MavenReportException
     {
-        if ( sink == null )
-        {
-            throw new MavenReportException( "You must specify a sink." );
-        }
-
         if ( !canGenerateReport() )
         {
             getLog().info( "This report cannot be generated as part of the current build. "

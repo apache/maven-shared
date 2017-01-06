@@ -200,44 +200,44 @@ public abstract class AbstractMavenReport
     /**
      * Generate a report.
      *
-     * @param aSink the sink to use for the generation.
-     * @param aLocale the wanted locale to generate the report, could be null.
+     * @param sink the sink to use for the generation.
+     * @param locale the wanted locale to generate the report, could be null.
      * @throws MavenReportException if any
      * @deprecated use {@link #generate(Sink, SinkFactory, Locale)} instead.
      */
-    public void generate( org.codehaus.doxia.sink.Sink aSink, Locale aLocale )
+    public void generate( org.codehaus.doxia.sink.Sink sink, Locale locale )
         throws MavenReportException
     {
-        generate( aSink, null, aLocale );
+        generate( sink, null, locale );
     }
 
     /**
      * Generate a report.
      *
-     * @param aSink
-     * @param aLocale
+     * @param sink
+     * @param locale
      * @throws MavenReportException
      * @see org.apache.maven.reporting.MavenReport#generate(org.apache.maven.doxia.sink.Sink, java.util.Locale)
      * @deprecated use {@link #generate(Sink, SinkFactory, Locale)} instead.
      */
-    public void generate( Sink aSink, Locale aLocale )
+    public void generate( Sink sink, Locale locale )
         throws MavenReportException
     {
-        generate( aSink, null, aLocale );
+        generate( sink, null, locale );
     }
 
     /**
      * This method is called when the report generation is invoked by maven-site-plugin.
      *
-     * @param aSink
-     * @param aSinkFactory
-     * @param aLocale
+     * @param sink
+     * @param sinkFactory
+     * @param locale
      * @throws MavenReportException
      */
-    public void generate( Sink aSink, SinkFactory aSinkFactory, Locale aLocale )
+    public void generate( Sink sink, SinkFactory sinkFactory, Locale locale )
         throws MavenReportException
     {
-        if ( aSink == null )
+        if ( sink == null )
         {
             throw new MavenReportException( "You must specify a sink." );
         }
@@ -249,11 +249,11 @@ public abstract class AbstractMavenReport
             return;
         }
 
-        this.sink = aSink;
+        this.sink = sink;
 
-        this.sinkFactory = aSinkFactory;
+        this.sinkFactory = sinkFactory;
 
-        executeReport( aLocale );
+        executeReport( locale );
 
         closeReport();
     }

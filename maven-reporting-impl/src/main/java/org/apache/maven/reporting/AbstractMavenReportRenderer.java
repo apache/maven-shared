@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -623,7 +624,7 @@ public abstract class AbstractMavenReportRenderer
         {
             return "mailto:" + href;
         }
-        else if ( href.toLowerCase().startsWith( "mailto:" ) )
+        else if ( href.toLowerCase( Locale.ROOT ).startsWith( "mailto:" ) )
         {
             return href;
         }

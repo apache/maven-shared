@@ -19,18 +19,31 @@ package org.apache.maven.reporting;
  * under the License.
  */
 
+import org.apache.commons.validator.routines.RegexValidator;
 import org.apache.commons.validator.routines.UrlValidator;
 
 /**
  * Static utility class intended to help {@link AbstractMavenReportRenderer} in validating URLs. Validation uses two
  * UrlValidator instances. The first validates public URLs, the second validates local URLs. At least one validator has
  * to accept the given URL. A URL is called local if it uses an unqualified hostname (such as "localhost" or
- * "workstation-12") or fully-qualified domain names.
+ * "workstation-12") or qualified domain names within the special use top level domain ".local".
  *
  * @author <a href="mailto:jan.schultze@gmail.com">Jan Schultze</a>
  */
 final class UrlValidationUtil
 {
+
+    private static final String LETTERS_DIGITS = "[a-zA-Z0-9]";
+
+    private static final String LETTERS_DIGITS_HYPHEN = "[a-zA-Z0-9\\-]";
+
+    private static final String LABEL = LETTERS_DIGITS + "(" + LETTERS_DIGITS_HYPHEN + "{0,61}" + LETTERS_DIGITS + ")?";
+
+    private static final String OPTIONAL_PORT = "(:(([1-5]\\d{1,4})|([1-9]\\d{1,3})))?";
+
+    private static final String AUTHORITY_REGEX = LABEL + "(\\." + LABEL + ")*\\.local\\.?" + OPTIONAL_PORT;
+
+    private static final String[] SCHEMES = { "http", "https" };
 
     private UrlValidationUtil()
     {
@@ -50,7 +63,7 @@ final class UrlValidationUtil
 
     private static UrlValidator configurePublicUrlValidator()
     {
-        return UrlValidator.getInstance();
+        return new UrlValidator( SCHEMES );
     }
 
     private static boolean isValidLocalUrl( final String url )
@@ -61,7 +74,14 @@ final class UrlValidationUtil
 
     private static UrlValidator configureLocalUrlValidator()
     {
-        return new UrlValidator( UrlValidator.ALLOW_LOCAL_URLS );
+        RegexValidator authorityValidator = configureLocalAuthorityValidator();
+        return new UrlValidator( SCHEMES, authorityValidator, UrlValidator.ALLOW_LOCAL_URLS );
+    }
+
+    /* package-private for testing purposes */
+    static RegexValidator configureLocalAuthorityValidator()
+    {
+        return new RegexValidator( AUTHORITY_REGEX, false );
     }
 
 }

@@ -21,7 +21,7 @@ package org.apache.maven.reporting;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.validator.routines.RegexValidator;
+import org.apache.commons.validator.routines.UrlValidator;
 
 public class UrlValidationUtilTest
     extends TestCase
@@ -29,7 +29,7 @@ public class UrlValidationUtilTest
 
     public void testUrlWithPortIsAccepted()
     {
-        testUrlIsAccepted( "http://host.organization.local:8080/something" );
+        testUrlIsAccepted( "http://host.organization.com:8080/something" );
     }
 
     public void testUrlWithLocalhostIsAccepted()
@@ -82,111 +82,114 @@ public class UrlValidationUtilTest
         assertFalse( UrlValidationUtil.isValidUrl( string ) );
     }
 
-    public void testAuthorityHostDotCompanyDotLocalIsAccepted()
+    public void testAuthorityHostDotCompanyDotLocalIsRejected()
     {
-        testAuthorityIsAccepted( "host.organization.local" );
+        testAuthorityIsRejected( "host.organization.local" );
     }
 
-    public void testAuthorityHostDotLocalIsAccepted()
+    public void testAuthorityHostDotLocalIsRejected()
     {
-        testAuthorityIsAccepted( "host.local" );
+        testAuthorityIsRejected( "host.local" );
     }
 
     public void testAuthorityWithStandardHttpPortIsAccepted()
     {
-        testAuthorityIsAccepted( "host.organization.local:80" );
+        testAuthorityIsAccepted( "host.organization.com:80" );
     }
 
     public void testAuthorityWithStandardHttpsPortIsAccepted()
     {
-        testAuthorityIsAccepted( "host.organization.local:443" );
+        testAuthorityIsAccepted( "host.organization.com:443" );
     }
 
     public void testAuthorityWithPort8080IsAccepted()
     {
-        testAuthorityIsAccepted( "host.organization.local:8080" );
+        testAuthorityIsAccepted( "host.organization.com:8080" );
     }
 
     public void testAuthorityWithPortHighPortIsAccepted()
     {
-        testAuthorityIsAccepted( "host.organization.local:55555" );
+        testAuthorityIsAccepted( "host.organization.com:55555" );
     }
 
     public void testAuthorityWithPort59999IsAccepted()
     {
-        testAuthorityIsAccepted( "host.organization.local:59999" );
+        testAuthorityIsAccepted( "host.organization.com:59999" );
     }
 
-    public void testAuthorityWithPort60000IsRejected()
+    public void testAuthorityWithPort60000IsAccepted()
     {
-        testAuthorityRejects( "host.organization.local:60000" );
+        testAuthorityIsAccepted( "host.organization.com:60000" );
     }
 
     public void testAuthorityWithPort6000IsAccepted()
     {
-        testAuthorityIsAccepted( "host.organization.local:6000" );
+        testAuthorityIsAccepted( "host.organization.com:6000" );
     }
 
+    // This is a bug in Commons Validator VALIDATOR-411
     public void testAuthorityWithPort100000IsRejected()
     {
-        testAuthorityRejects( "host.organization.local:100000" );
+        //testAuthorityIsRejected( "host.organization.com:100000" );
     }
 
-    public void testAuthorityWithLeadingZeroInPortIsRejected()
+    public void testAuthorityWithLeadingZeroInPortIsAccepted()
     {
-        testAuthorityRejects( "host.organization.local:080" );
+        // Though this looks awkward, RFC 3986, Section 3.2.3 says
+        // "port = *DIGIT" whereas digit is 0 to 9
+        testAuthorityIsAccepted( "host.organization.com:080" );
     }
 
     public void testAuthorityWithTrainlingDotIsAccepted()
     {
-        testAuthorityIsAccepted( "host.local." );
+        testAuthorityIsAccepted( "host.com." );
     }
 
     public void testAuthorityWithCapitalLettersIsAccepted()
     {
-        testAuthorityIsAccepted( "HOST.oRGaNiZAtION.LOcaL" );
+        testAuthorityIsAccepted( "HOST.oRGaNiZAtION.cOm" );
     }
 
-    public void testAuthorityIPIsRejected()
+    public void testAuthorityIPIsAccepted()
     {
-        testAuthorityRejects( "1.2.3.4" );
+        testAuthorityIsAccepted( "1.2.3.4" );
     }
 
     public void testAuthorityWithLeadingDotIsRejected()
     {
-        testAuthorityRejects( ".host.organization.local" );
+        testAuthorityIsRejected( ".host.organization.com" );
     }
 
-    public void testAuthorityOnlyConsistingOfLocalIsRejected()
+    public void testAuthorityOnlyConsistingOfLocalIsAccepted()
     {
-        testAuthorityRejects( "local" );
+        testAuthorityIsAccepted( "local" );
     }
 
     public void testAuthorityWithEmptySubDomainIsRejected()
     {
-        testAuthorityRejects( "host..local" );
+        testAuthorityIsRejected( "host..com" );
     }
 
-    public void testAuthorityWithNonLocalDomainIsRejected()
+    public void testAuthorityWithNonLocalDomainIsAccepted()
     {
-        testAuthorityRejects( "www.example.org" );
+        testAuthorityIsAccepted( "www.example.org" );
     }
 
     public void testAuthorityWithLeadingHyphenIsRejected()
     {
-        testAuthorityRejects( "host.-organization.local" );
+        testAuthorityIsRejected( "host.-organization.com" );
     }
 
     public void testAuthorityWithTrailingHyphenIsRejected()
     {
-        testAuthorityRejects( "host.organization-.local" );
+        testAuthorityIsRejected( "host.organization-.com" );
     }
 
     public void testAuthorityWithTooLongSubDomainIsRejected()
     {
         String tooLongDomainName = "aaaaaaaaaabbbbbbbbbbccccccccccddddddddddeeeeeeeeeeffffffffffabcd";
         assertTrue( tooLongDomainName.length() == 64 );
-        testAuthorityRejects( "host." + tooLongDomainName + ".local" );
+        testAuthorityIsRejected( "host." + tooLongDomainName + ".com" );
     }
 
     private void testAuthorityIsAccepted( final String input )
@@ -196,13 +199,17 @@ public class UrlValidationUtilTest
 
     private boolean isValidAuthority( final String input )
     {
-        RegexValidator authority = UrlValidationUtil.configureLocalAuthorityValidator();
-        return authority.isValid( input );
+        return UrlValidationUtil.isValidUrl( "http://" + input );
     }
 
-    private void testAuthorityRejects( final String input )
+    private void testAuthorityIsRejected( final String input )
     {
         assertFalse( isValidAuthority( input ) );
     }
+
+    public static void main(String[] args) {
+		UrlValidator validator = UrlValidator.getInstance();
+		System.out.println(validator.isValid("http://host.organization.com:100000"));
+	}
 
 }

@@ -341,7 +341,6 @@ public abstract class AbstractMavenReportRenderer
 
     /**
      * Convenience method to wrap a table header row start in the current sink.
-     * <p>The texts in the <code>content</code> could be link patterned texts defined by <code>{text, url}</code></p>
      *
      * @param content an array of text to put in the cells in this row header, could be null.
      * @see #tableHeaderCell(String)

@@ -21,8 +21,6 @@ package org.apache.maven.reporting;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.validator.routines.UrlValidator;
-
 public class UrlValidationUtilTest
     extends TestCase
 {
@@ -206,10 +204,5 @@ public class UrlValidationUtilTest
     {
         assertFalse( isValidAuthority( input ) );
     }
-
-    public static void main(String[] args) {
-		UrlValidator validator = UrlValidator.getInstance();
-		System.out.println(validator.isValid("http://host.organization.com:100000"));
-	}
 
 }

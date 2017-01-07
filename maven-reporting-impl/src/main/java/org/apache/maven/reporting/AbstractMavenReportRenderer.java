@@ -632,35 +632,17 @@ public abstract class AbstractMavenReportRenderer
         {
             return href;
         }
-        else
+        else if ( href.startsWith( "./" ) )
         {
-            String hrefTmp;
-            if ( !href.endsWith( "/" ) )
+            if ( href.length() > 2 )
             {
-                hrefTmp = href + "/index.html";
-            }
-            else
-            {
-                hrefTmp = href + "index.html";
+                return href.substring( 2, href.length() );
             }
 
-            if ( UrlValidationUtil.isValidUrl( hrefTmp ) )
-            {
-                return href;
-            }
-
-            if ( href.startsWith( "./" ) )
-            {
-                if ( href.length() > 2 )
-                {
-                    return href.substring( 2, href.length() );
-                }
-
-                return ".";
-            }
-
-            return null;
+            return ".";
         }
+
+        return null;
     }
 
     /**

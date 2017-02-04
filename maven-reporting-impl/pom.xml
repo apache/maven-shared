@@ -64,7 +64,7 @@
 
   <properties>
     <mavenVersion>3.0</mavenVersion>
-    <doxiaVersion>1.6</doxiaVersion>
+    <doxiaVersion>1.7</doxiaVersion>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
   </properties>

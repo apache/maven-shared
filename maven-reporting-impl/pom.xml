@@ -65,6 +65,7 @@
   <properties>
     <mavenVersion>3.0</mavenVersion>
     <doxiaVersion>1.7</doxiaVersion>
+    <doxiaSitetoolsVersion>1.7.4</doxiaSitetoolsVersion>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
   </properties>
@@ -102,7 +103,7 @@
     <dependency>
       <groupId>org.apache.maven.doxia</groupId>
       <artifactId>doxia-decoration-model</artifactId>
-      <version>${doxiaVersion}</version>
+      <version>${doxiaSitetoolsVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.doxia</groupId>
@@ -112,7 +113,7 @@
     <dependency>
       <groupId>org.apache.maven.doxia</groupId>
       <artifactId>doxia-site-renderer</artifactId>
-      <version>${doxiaVersion}</version>
+      <version>${doxiaSitetoolsVersion}</version>
     </dependency>
 
     <!-- misc -->

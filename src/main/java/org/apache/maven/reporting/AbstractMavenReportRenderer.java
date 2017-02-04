@@ -19,8 +19,6 @@ package org.apache.maven.reporting;
  * under the License.
  */
 
-import org.apache.commons.validator.routines.EmailValidator;
-
 import org.apache.maven.doxia.sink.Sink;
 import org.apache.maven.doxia.util.HtmlTools;
 
@@ -30,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -529,14 +526,7 @@ public abstract class AbstractMavenReportRenderer
                     }
                     else
                     {
-                        if ( getValidHref( href ) != null )
-                        {
-                            link( getValidHref( href ), name );
-                        }
-                        else
-                        {
-                            text( href );
-                        }
+                       link( href, name );
                     }
                 }
             }
@@ -599,51 +589,6 @@ public abstract class AbstractMavenReportRenderer
     // ----------------------------------------------------------------------
     // Private methods
     // ----------------------------------------------------------------------
-
-    /**
-     * Return a valid href.
-     * <p>A valid href could start by <code>mailto:</code>.</p>
-     * <p>For a relative path, the href should start by <code>./</code> to be valid.</p>
-     *
-     * @param href an href, could be null.
-     * @return a valid href or <code>null</code> if the href is null or not valid.
-     */
-    private static String getValidHref( String href )
-    {
-        if ( StringUtils.isEmpty( href ) )
-        {
-            return null;
-        }
-
-        href = href.trim();
-
-        EmailValidator emailValidator = EmailValidator.getInstance();
-
-        if ( emailValidator.isValid( href )
-            || ( href.contains( "?" ) && emailValidator.isValid( href.substring( 0, href.indexOf( "?" ) ) ) ) )
-        {
-            return "mailto:" + href;
-        }
-        else if ( href.toLowerCase( Locale.ROOT ).startsWith( "mailto:" ) )
-        {
-            return href;
-        }
-        else if ( UrlValidationUtil.isValidUrl( href ) )
-        {
-            return href;
-        }
-        else if ( href.startsWith( "./" ) )
-        {
-            if ( href.length() > 2 )
-            {
-                return href.substring( 2, href.length() );
-            }
-
-            return ".";
-        }
-
-        return null;
-    }
 
     /**
      * The method parses a text and applies the given pattern <code>{text, url}</code> to create

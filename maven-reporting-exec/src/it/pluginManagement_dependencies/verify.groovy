@@ -21,6 +21,6 @@
 content = new File( basedir, 'build.log' ).text;
 
 assert !content.contains( 'com.puppycrawl.tools:checkstyle:jar:6.11.2' );
-assert content.contains( 'com.puppycrawl.tools:checkstyle:jar:7.5' );
+assert content.contains( 'com.puppycrawl.tools:checkstyle:jar:6.18' );
 
 return true;

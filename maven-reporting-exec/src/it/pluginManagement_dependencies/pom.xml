@@ -37,7 +37,7 @@ under the License.
             <dependency>
               <groupId>com.puppycrawl.tools</groupId>
               <artifactId>checkstyle</artifactId>
-              <version>7.5</version>
+              <version>6.18</version>
             </dependency>
           </dependencies>
         </plugin>

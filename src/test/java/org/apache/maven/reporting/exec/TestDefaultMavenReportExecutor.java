@@ -32,6 +32,9 @@ import org.apache.maven.execution.MavenExecutionRequestPopulator;
 import org.apache.maven.execution.MavenExecutionResult;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Build;
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Plugin;
+import org.apache.maven.model.PluginManagement;
 import org.apache.maven.plugin.testing.stubs.MavenProjectStub;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
@@ -79,7 +82,8 @@ public class TestDefaultMavenReportExecutor
         reportSet.getReports().add( "test-javadoc" );
         reportSet.getReports().add( "javadoc" );
 
-        List<MavenReportExecution> mavenReportExecutions = buildReports( reportSet );
+        MavenProject mavenProject = getMavenProject();
+        List<MavenReportExecution> mavenReportExecutions = buildReports( mavenProject, reportSet );
 
         assertNotNull( mavenReportExecutions );
         assertEquals( 2, mavenReportExecutions.size() );
@@ -96,7 +100,8 @@ public class TestDefaultMavenReportExecutor
         reportSet2.getReports().add( "test-javadoc" );
         reportSet2.getReports().add( "javadoc" );
 
-        List<MavenReportExecution> mavenReportExecutions = buildReports( reportSet, reportSet2 );
+        MavenProject mavenProject = getMavenProject();
+        List<MavenReportExecution> mavenReportExecutions = buildReports( mavenProject, reportSet, reportSet2 );
 
         assertNotNull( mavenReportExecutions );
         assertEquals( 3, mavenReportExecutions.size() );
@@ -105,7 +110,35 @@ public class TestDefaultMavenReportExecutor
         assertEquals( "apidocs/index", mavenReportExecutions.get( 2 ).getMavenReport().getOutputName() );
     }
 
-    private List<MavenReportExecution> buildReports( ReportSet... javadocReportSets )
+    public void testReportingPluginWithDependenciesInPluginManagement()
+        throws Exception
+    {
+        ReportSet reportSet = new ReportSet();
+        reportSet.getReports().add( "javadoc" );
+
+        MavenProject mavenProject = getMavenProject();
+        Plugin plugin = new Plugin();
+        plugin.setGroupId( "org.apache.maven.plugins" );
+        plugin.setArtifactId( "maven-javadoc-plugin" );
+        plugin.setVersion( "2.7" );
+        Dependency dependency = new Dependency();
+        dependency.setGroupId( "commons-lang" );
+        dependency.setArtifactId( "commons-lang" );
+        dependency.setVersion( "2.6" );
+        plugin.getDependencies().add( dependency );
+        mavenProject.getBuild().setPluginManagement( new PluginManagement() );
+        mavenProject.getBuild().getPluginManagement().addPlugin( plugin );
+        List<MavenReportExecution> mavenReportExecutions = buildReports( mavenProject, reportSet );
+
+        assertNotNull( mavenReportExecutions );
+        assertEquals( 1, mavenReportExecutions.size() );
+        List<Dependency> dependencies = mavenReportExecutions.get( 0 ).getPlugin().getDependencies();
+        assertEquals( 1, dependencies.size() );
+        assertEquals( "commons-lang", dependencies.get( 0 ).getGroupId() );
+        assertEquals( "2.6", dependencies.get( 0 ).getVersion() );
+    }
+
+    private List<MavenReportExecution> buildReports( MavenProject mavenProject, ReportSet... javadocReportSets )
         throws Exception
     {
         ClassLoader orig = Thread.currentThread().getContextClassLoader();
@@ -117,8 +150,6 @@ public class TestDefaultMavenReportExecutor
             MavenReportExecutorRequest mavenReportExecutorRequest = new MavenReportExecutorRequest();
 
             mavenReportExecutorRequest.setLocalRepository( getLocalArtifactRepository() );
-
-            MavenProject mavenProject = getMavenProject();
 
             mavenReportExecutorRequest.setProject( mavenProject );
 

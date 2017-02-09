@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.maven.lifecycle.LifecycleExecutor;
+import org.apache.maven.model.Build;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MavenPluginManager;
 import org.apache.maven.plugin.Mojo;
@@ -648,6 +649,7 @@ public class DefaultMavenReportExecutor
      * <li>dependencies</li>
      * </ul>
      * </p>
+     * The plugin could only be present in the dependency management section.
      * 
      * @param mavenReportExecutorRequest
      * @param buildPlugin
@@ -656,7 +658,12 @@ public class DefaultMavenReportExecutor
     private void mergePluginToReportPlugin( MavenReportExecutorRequest mavenReportExecutorRequest, Plugin buildPlugin,
                                             ReportPlugin reportPlugin )
     {
-        Plugin configuredPlugin = find( reportPlugin, mavenReportExecutorRequest.getProject().getBuild().getPlugins() );
+        Build build = mavenReportExecutorRequest.getProject().getBuild();
+        Plugin configuredPlugin = find( reportPlugin, build.getPlugins() );
+        if ( configuredPlugin == null && build.getPluginManagement() != null )
+        {
+            configuredPlugin = find( reportPlugin, build.getPluginManagement().getPlugins() );
+        }
         if ( configuredPlugin != null )
         {
             if ( !configuredPlugin.getDependencies().isEmpty() )

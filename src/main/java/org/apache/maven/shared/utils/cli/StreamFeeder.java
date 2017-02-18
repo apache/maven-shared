@@ -125,6 +125,7 @@ class StreamFeeder
                 if ( !isDisabled() )
                 {
                     os.write( data );
+                    os.flush();
                 }
             }
         }

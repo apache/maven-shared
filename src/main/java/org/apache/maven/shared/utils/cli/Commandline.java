@@ -387,6 +387,8 @@ public class Commandline
             {
                 ProcessBuilder builder = new ProcessBuilder( getShellCommandline() );
                 builder.environment().putAll( envVars );
+                System.out.println( System.currentTimeMillis() + " " + getClass().getSimpleName() + "#" + hashCode()
+                                          + " before starting forked JVM" );
                 return builder.start();
             }
             else
@@ -404,12 +406,19 @@ public class Commandline
 
                 ProcessBuilder builder = new ProcessBuilder( getShellCommandline() ).directory( workingDir );
                 builder.environment().putAll( envVars );
+                System.out.println( System.currentTimeMillis() + " " + getClass().getSimpleName() + "#" + hashCode()
+                                            + " before starting forked JVM" );
                 return builder.start();
             }
         }
         catch ( IOException ex )
         {
             throw new CommandLineException( "Error while executing process.", ex );
+        }
+        finally
+        {
+            System.out.println( System.currentTimeMillis() + " " + getClass().getSimpleName() + "#" + hashCode()
+                                        + " after started forked JVM" );
         }
     }
 

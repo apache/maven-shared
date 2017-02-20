@@ -19,6 +19,13 @@ package org.apache.maven.shared.utils.cli;
  * under the License.
  */
 
+import org.apache.maven.shared.utils.Os;
+import org.apache.maven.shared.utils.StringUtils;
+import org.apache.maven.shared.utils.cli.shell.BourneShell;
+import org.apache.maven.shared.utils.cli.shell.CmdShell;
+import org.apache.maven.shared.utils.cli.shell.CommandShell;
+import org.apache.maven.shared.utils.cli.shell.Shell;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,13 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
-
-import org.apache.maven.shared.utils.Os;
-import org.apache.maven.shared.utils.StringUtils;
-import org.apache.maven.shared.utils.cli.shell.BourneShell;
-import org.apache.maven.shared.utils.cli.shell.CmdShell;
-import org.apache.maven.shared.utils.cli.shell.CommandShell;
-import org.apache.maven.shared.utils.cli.shell.Shell;
 
 /**
  * <p/>
@@ -377,11 +377,7 @@ public class Commandline
     public Process execute()
         throws CommandLineException
     {
-        Process process;
-
         //addEnvironment( "MAVEN_TEST_ENVAR", "MAVEN_TEST_ENVAR_VALUE" );
-
-        String[] environment = getEnvironmentVariables();
 
         File workingDir = shell.getWorkingDirectory();
 
@@ -389,7 +385,9 @@ public class Commandline
         {
             if ( workingDir == null )
             {
-                process = Runtime.getRuntime().exec( getShellCommandline(), environment );
+                ProcessBuilder builder = new ProcessBuilder( getShellCommandline() );
+                builder.environment().putAll( envVars );
+                return builder.start();
             }
             else
             {
@@ -404,15 +402,15 @@ public class Commandline
                         "Path \"" + workingDir.getPath() + "\" does not specify a directory." );
                 }
 
-                process = Runtime.getRuntime().exec( getShellCommandline(), environment, workingDir );
+                ProcessBuilder builder = new ProcessBuilder( getShellCommandline() ).directory( workingDir );
+                builder.environment().putAll( envVars );
+                return builder.start();
             }
         }
         catch ( IOException ex )
         {
             throw new CommandLineException( "Error while executing process.", ex );
         }
-
-        return process;
     }
 
     /**

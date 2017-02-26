@@ -19,6 +19,8 @@ package org.apache.maven.shared.artifact.resolve.internal;
  * under the License.
  */
 
+import java.util.List;
+
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.ArtifactCoordinate;
@@ -71,6 +73,24 @@ public class DefaultArtifactResolver
             ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
 
             return effectiveArtifactResolver.resolveArtifact( buildingRequest, coordinate );
+        }
+        catch ( ComponentLookupException e )
+        {
+            throw new ArtifactResolverException( e.getMessage(), e );
+        }
+    }
+
+    @Override
+    public List<String> resolveArtifactVersions( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact )
+        throws ArtifactResolverException
+    {
+        try
+        {
+            String hint = isMaven31() ? "maven31" : "maven3";
+
+            ArtifactResolver effectiveArtifactResolver = container.lookup( ArtifactResolver.class, hint );
+
+            return effectiveArtifactResolver.resolveArtifactVersions( buildingRequest, mavenArtifact );
         }
         catch ( ComponentLookupException e )
         {

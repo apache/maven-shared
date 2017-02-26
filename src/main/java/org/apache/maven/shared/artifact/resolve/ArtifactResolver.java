@@ -23,6 +23,8 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.shared.artifact.ArtifactCoordinate;
 
+import java.util.List;
+
 /**
  * Resolves the artifact, i.e download the file when required and attach it to the artifact
  */
@@ -47,7 +49,17 @@ public interface ArtifactResolver
     ArtifactResult resolveArtifact( ProjectBuildingRequest buildingRequest, ArtifactCoordinate coordinate )
         throws ArtifactResolverException;
 
-//    /**
+    /**
+     * @param buildingRequest {@link ProjectBuildingRequest}
+     * @param mavenArtifact {@link Artifact}
+     * @return List of versions which have been found.
+     * @throws ArtifactResolverException in case of an error.
+     */
+    //TODO: Think about the return type. Should we really give simply plain String with the version?
+    List<String> resolveArtifactVersions( ProjectBuildingRequest buildingRequest, Artifact mavenArtifact )
+        throws ArtifactResolverException;
+    
+    //    /**
 //     * This will resolve the dependencies of the coordinate, not resolving the the artifact of the coordinate itself. 
 //     * If the coordinate needs to be resolved too, use
 //     * {@link #resolveDependencies(ProjectBuildingRequest, Collection, Collection, TransformableFilter)} passing

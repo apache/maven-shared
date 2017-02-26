@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>maven-jarsigner</artifactId>
-  <version>1.5-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
 
   <name>Apache Maven Jarsigner</name>
   <description>A component to assist in signing jars.</description>
@@ -61,7 +61,15 @@
     <dependency>
       <groupId>org.apache.maven.shared</groupId>
       <artifactId>maven-shared-utils</artifactId>
-      <version>3.0.0</version>
+      <!--
+      https://issues.apache.org/jira/browse/MSHARED-617
+      https://issues.apache.org/jira/browse/MSHARED-618
+      https://issues.apache.org/jira/browse/MSHARED-619
+      https://issues.apache.org/jira/browse/MSHARED-620
+      https://issues.apache.org/jira/browse/MSHARED-621
+      https://issues.apache.org/jira/browse/MSHARED-622
+      -->
+      <version>3.2.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>

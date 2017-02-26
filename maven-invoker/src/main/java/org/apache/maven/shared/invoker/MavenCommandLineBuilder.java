@@ -29,10 +29,10 @@ import java.util.Properties;
 
 import org.apache.maven.shared.invoker.InvocationRequest.CheckSumPolicy;
 import org.apache.maven.shared.invoker.InvocationRequest.ReactorFailureBehavior;
-import org.codehaus.plexus.util.Os;
-import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
-import org.codehaus.plexus.util.cli.Commandline;
+import org.apache.maven.shared.utils.Os;
+import org.apache.maven.shared.utils.StringUtils;
+import org.apache.maven.shared.utils.cli.CommandLineUtils;
+import org.apache.maven.shared.utils.cli.Commandline;
 
 /**
  * @version $Id$
@@ -207,11 +207,6 @@ public class MavenCommandLineBuilder
                 // MSHARED-261: Ensure M2_HOME is not inherited, but gets a
                 // proper value
                 cli.addEnvironment( "M2_HOME", getMavenHome().getAbsolutePath() );
-            }
-            catch ( IOException e )
-            {
-                throw new CommandLineConfigurationException( "Error reading shell environment variables. Reason: "
-                    + e.getMessage(), e );
             }
             catch ( Exception e )
             {

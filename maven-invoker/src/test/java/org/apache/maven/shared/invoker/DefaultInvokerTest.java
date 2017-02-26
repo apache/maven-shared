@@ -19,8 +19,6 @@ package org.apache.maven.shared.invoker;
  * under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -30,9 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.cli.CommandLineUtils;
+import org.apache.maven.shared.utils.StringUtils;
+import org.apache.maven.shared.utils.cli.CommandLineUtils;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class DefaultInvokerTest
 {

@@ -73,18 +73,29 @@ public class StreamPumper
     {
         try
         {
+            System.out.printf( "%d %s before run() %d\n",
+                                     System.currentTimeMillis(), getClass().getSimpleName(), hashCode() );
             for ( String line = in.readLine(); line != null; line = in.readLine() )
             {
+                System.out.printf( "%d %s %d line=%s\n",
+                                         System.currentTimeMillis(), getClass().getSimpleName(), hashCode(), line );
                 try
                 {
                     if ( exception == null )
                     {
+                        System.out.printf( "%d %s %d before consumeLine( line )\n",
+                                                 System.currentTimeMillis(), getClass().getSimpleName(), hashCode() );
                         consumeLine( line );
+                        System.out.printf( "%d %s %d after consumeLine( line )\n",
+                                                 System.currentTimeMillis(), getClass().getSimpleName(), hashCode() );
                     }
                 }
                 catch ( Exception t )
                 {
                     exception = t;
+                    System.out.printf( "%d %s %d exception=%s\n",
+                                             System.currentTimeMillis(), getClass().getSimpleName(), hashCode(),
+                                             exception );
                 }
 
                 if ( out != null )
@@ -99,16 +110,21 @@ public class StreamPumper
         catch ( IOException e )
         {
             exception = e;
+            System.out.printf( "%d %s %d exception=%s\n",
+                                     System.currentTimeMillis(), getClass().getSimpleName(), hashCode(),
+                                     exception );
         }
         finally
         {
+            System.out.printf( "%d %s after run() %d\n",
+                                     System.currentTimeMillis(), getClass().getSimpleName(), hashCode() );
             IOUtil.close( in );
 
-            synchronized ( this )
+            synchronized ( lock )
             {
                 setDone();
 
-                this.notifyAll();
+                lock.notifyAll();
             }
         }
     }
@@ -135,6 +151,9 @@ public class StreamPumper
     {
         if ( consumer != null && !isDisabled() )
         {
+            System.out.printf( "%d %s %d sending to %s\n",
+                                     System.currentTimeMillis(), getClass().getSimpleName(), hashCode(),
+                                     consumer.getClass().getSimpleName() );
             consumer.consumeLine( line );
         }
     }

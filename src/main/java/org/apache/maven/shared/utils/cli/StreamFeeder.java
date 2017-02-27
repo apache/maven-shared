@@ -55,6 +55,7 @@ class StreamFeeder
     @Override
     public void run()
     {
+        System.out.printf( "%d %s %d run()\n", System.currentTimeMillis(), getClass().getSimpleName(), hashCode() );
         try
         {
             feed();
@@ -67,9 +68,9 @@ class StreamFeeder
         {
             close();
 
-            synchronized ( this )
+            synchronized ( lock )
             {
-                notifyAll();
+                lock.notifyAll();
             }
         }
     }
@@ -120,12 +121,30 @@ class StreamFeeder
         OutputStream os = output.get();
         if ( is != null && os != null )
         {
+            StringBuilder line = new StringBuilder();
             for ( int data; !isDone() && ( data = is.read() ) != -1; )
             {
+                if ( data == '\n' )
+                {
+                    System.out.printf( "%d %s %d line=%s\n",
+                                             System.currentTimeMillis(), getClass().getSimpleName(), hashCode(),
+                                             line );
+                    line.setLength( 0 );
+                }
+                else
+                {
+                    line.append( (char) data );
+                }
+
                 if ( !isDisabled() )
                 {
                     os.write( data );
                     os.flush();
+                }
+                else
+                {
+                    System.out.printf( "%d %s %d disabled\n",
+                                             System.currentTimeMillis(), getClass().getSimpleName(), hashCode() );
                 }
             }
         }

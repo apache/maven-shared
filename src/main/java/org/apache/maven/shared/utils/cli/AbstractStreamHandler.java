@@ -25,6 +25,8 @@ package org.apache.maven.shared.utils.cli;
 class AbstractStreamHandler
     extends Thread
 {
+    protected final Object lock = new Object();
+
     private volatile boolean done;
 
     private volatile boolean disabled;
@@ -34,15 +36,17 @@ class AbstractStreamHandler
         return done;
     }
 
-    public synchronized void waitUntilDone()
+    public void waitUntilDone()
         throws InterruptedException
     {
-        while ( !isDone() )
+        synchronized ( lock )
         {
-            wait();
+            while ( !isDone() )
+            {
+                lock.wait();
+            }
         }
     }
-
 
     boolean isDisabled()
     {
@@ -51,6 +55,8 @@ class AbstractStreamHandler
 
     public void disable()
     {
+        System.out.printf( "%d %s %d disable()\n",
+                                 System.currentTimeMillis(), getClass().getSimpleName(), hashCode() );
         disabled = true;
     }
 

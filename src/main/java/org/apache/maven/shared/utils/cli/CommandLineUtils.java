@@ -226,13 +226,26 @@ public abstract class CommandLineUtils
             throw new IllegalArgumentException( "cl cannot be null." );
         }
 
+        System.out.printf( "%d %s before CLI execute %d\n", System.currentTimeMillis(),
+                                 CommandLineUtils.class.getSimpleName(), cl.hashCode() );
         final Process p = cl.execute();
+        System.out.printf( "%d %s after CLI execute %d \n", System.currentTimeMillis(),
+                                 CommandLineUtils.class.getSimpleName(), cl.hashCode() );
 
         final StreamFeeder inputFeeder = systemIn != null ? new StreamFeeder( systemIn, p.getOutputStream() ) : null;
 
+        System.out.printf( "%d %s after getOutputStream() %d \n", System.currentTimeMillis(),
+                                 CommandLineUtils.class.getSimpleName(), cl.hashCode() );
+
         final StreamPumper outputPumper = new StreamPumper( p.getInputStream(), systemOut );
 
+        System.out.printf( "%d %s after getInputStream() %d \n", System.currentTimeMillis(),
+                                 CommandLineUtils.class.getSimpleName(), cl.hashCode() );
+
         final StreamPumper errorPumper = new StreamPumper( p.getErrorStream(), systemErr );
+
+        System.out.printf( "%d %s after getErrorStream() %d \n", System.currentTimeMillis(),
+                                 CommandLineUtils.class.getSimpleName(), cl.hashCode() );
 
         if ( inputFeeder != null )
         {
@@ -247,6 +260,9 @@ public abstract class CommandLineUtils
 
         ShutdownHookUtils.addShutDownHook( processHook );
 
+        System.out.printf( "%d %s before return %d \n", System.currentTimeMillis(),
+                                 CommandLineUtils.class.getSimpleName(), cl.hashCode() );
+
         return new CommandLineCallable()
         {
             public Integer call()
@@ -257,7 +273,13 @@ public abstract class CommandLineUtils
                     int returnValue;
                     if ( timeoutInSeconds <= 0 )
                     {
+                        System.out.printf( "%d %s before waitFor %d \n", System.currentTimeMillis(),
+                                                 CommandLineUtils.class.getSimpleName(), cl.hashCode() );
+
                         returnValue = p.waitFor();
+
+                        System.out.printf( "%d %s after waitFor %d \n", System.currentTimeMillis(),
+                                                 CommandLineUtils.class.getSimpleName(), cl.hashCode() );
                     }
                     else
                     {
@@ -279,10 +301,24 @@ public abstract class CommandLineUtils
 
                     if ( runAfterProcessTermination != null )
                     {
+                        System.out.printf( "%d %s before runAfterProcessTermination.run() %d \n",
+                                                 System.currentTimeMillis(),
+                                                 CommandLineUtils.class.getSimpleName(), cl.hashCode() );
                         runAfterProcessTermination.run();
+                        System.out.printf( "%d %s after runAfterProcessTermination.run() %d \n",
+                                                 System.currentTimeMillis(),
+                                                 CommandLineUtils.class.getSimpleName(), cl.hashCode() );
                     }
 
+                    System.out.printf( "%d %s before waitForAllPumpers() %d \n",
+                                             System.currentTimeMillis(),
+                                             CommandLineUtils.class.getSimpleName(), cl.hashCode() );
+
                     waitForAllPumpers( inputFeeder, outputPumper, errorPumper );
+
+                    System.out.printf( "%d %s after waitForAllPumpers() %d \n",
+                                             System.currentTimeMillis(),
+                                             CommandLineUtils.class.getSimpleName(), cl.hashCode() );
 
                     if ( outputPumper.getException() != null )
                     {
@@ -298,6 +334,10 @@ public abstract class CommandLineUtils
                 }
                 catch ( InterruptedException ex )
                 {
+                    System.out.printf( "%d %s %d ex=%s\n",
+                                             System.currentTimeMillis(),
+                                             CommandLineUtils.class.getSimpleName(), cl.hashCode(), ex );
+
                     if ( inputFeeder != null )
                     {
                         inputFeeder.disable();
@@ -310,6 +350,9 @@ public abstract class CommandLineUtils
                 }
                 finally
                 {
+                    System.out.printf( "%d %s %d finally call()\n",
+                                             System.currentTimeMillis(),
+                                             CommandLineUtils.class.getSimpleName(), cl.hashCode() );
                     ShutdownHookUtils.removeShutdownHook( processHook );
 
                     processHook.run();

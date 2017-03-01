@@ -383,6 +383,8 @@ public class Commandline
 
         try
         {
+            System.out.println( System.currentTimeMillis() + " " + getClass().getSimpleName() + "#" + hashCode()
+                                        + " CLI = " + Arrays.toString( getShellCommandline() ) );
             if ( workingDir == null )
             {
                 ProcessBuilder builder = new ProcessBuilder( getShellCommandline() );

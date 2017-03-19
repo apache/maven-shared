@@ -27,7 +27,9 @@ import org.codehaus.plexus.configuration.PlexusConfiguration;
 
 /**
  * Represents a reporting plugin and its execution configuration. It basically contains similar informations as a
- * {@link org.apache.maven.model.Plugin}, but in order to decouple reporting stuff from core, some values are copied.
+ * {@link org.apache.maven.model.ReportPlugin}, but in order to decouple reporting stuff from core,
+ * some values are copied.
+ * @see org.apache.maven.model.ReportPlugin
  */
 public class ReportPlugin
 {

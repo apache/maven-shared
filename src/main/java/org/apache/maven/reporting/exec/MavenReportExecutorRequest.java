@@ -19,9 +19,14 @@ package org.apache.maven.reporting.exec;
  * under the License.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.configuration.xml.XmlPlexusConfiguration;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 /**
  * Bean which contains necessary informations to build {@link MavenReportExecution} with {@link MavenReportExecutor}: 
@@ -78,5 +83,45 @@ public class MavenReportExecutorRequest
     public void setReportPlugins( ReportPlugin[] reportPlugins )
     {
         this.reportPlugins = reportPlugins;
+    }
+
+    /**
+     * Set the report plugin directly from <code>${project.reporting.plugins}</code> parameter value.
+     *
+     * @param reportPlugins the report plugins from <code>&lt;reporting&gt;</code> section
+     * @since 1.4
+     */
+    public void setReportPlugins( org.apache.maven.model.ReportPlugin[] reportPlugins )
+    {
+        setReportPlugins( new ReportPlugin[reportPlugins.length] );
+
+        int i = 0;
+        for ( org.apache.maven.model.ReportPlugin r : reportPlugins )
+        {
+            ReportPlugin p = new ReportPlugin();
+            p.setGroupId( r.getGroupId() );
+            p.setArtifactId( r.getArtifactId() );
+            p.setVersion( r.getVersion() );
+            if ( r.getConfiguration() != null )
+            {
+                p.setConfiguration( new XmlPlexusConfiguration( (Xpp3Dom) r.getConfiguration() ) );
+            }
+
+            List<ReportSet> prs = new ArrayList<ReportSet>();
+            for ( org.apache.maven.model.ReportSet rs : r.getReportSets() )
+            {
+                ReportSet ps = new ReportSet();
+                ps.setId( rs.getId() );
+                ps.setReports( rs.getReports() );
+                if ( rs.getConfiguration() != null )
+                {
+                    ps.setConfiguration( new XmlPlexusConfiguration( (Xpp3Dom) rs.getConfiguration() ) );
+                }
+                prs.add( ps );
+            }
+            p.setReportSets( prs );
+
+            this.reportPlugins[i++] = p;
+        }
     }
 }

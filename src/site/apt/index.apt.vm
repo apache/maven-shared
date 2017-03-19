@@ -37,7 +37,7 @@ ${project.name}
 
 +----+
 <reportPlugins>
-  <plugin>
+  <reportPlugin>
     <groupId/>
     <artifactId/>
     <version/>
@@ -50,7 +50,7 @@ ${project.name}
         <reports/>
       </reportSet>
     </reportSets>
-  </plugin>
+  </reportPlugin>
 </reportPlugins>
 +----+
 
@@ -82,3 +82,32 @@ ${project.name}
   to <<<maven-site-plugin>>>'s <<<reportPlugins>>> configuration through the
   {{{/ref/current/maven-model-builder/apidocs/org/apache/maven/model/plugin/ReportingConverter.html}ReportingConverter}}
   component.
+
+  Since 1.4, the request can be populated from pom's<<<\<reporting\>>>> section,
+  injected as <<<$\{project.reporting.plugins\}>>> parameter value:
+
++----+
+<project>
+  [...]
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId/>
+        <artifactId/>
+        <version/>
+        <configuration/>
+        <reportSets>
+          <reportSet>
+            <id/>
+            <configuration/>
+            <reports/>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugin>
+    [...]
+  </reporting>
+</project>
++----+
+
+  

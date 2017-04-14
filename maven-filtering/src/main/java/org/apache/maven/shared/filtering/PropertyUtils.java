@@ -23,10 +23,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.shared.utils.StringUtils;
 import org.apache.maven.shared.utils.io.IOUtil;
+import org.codehaus.plexus.logging.Logger;
 
 /**
  * @author <a href="mailto:kenney@neonics.com">Kenney Westerhof</a>
@@ -55,6 +58,27 @@ public final class PropertyUtils
      * @throws IOException if profile does not exist, or cannot be read.
      */
     public static Properties loadPropertyFile( File propFile, Properties baseProps )
+        throws IOException
+    {
+        return loadPropertyFile( propFile, baseProps, null );
+    }
+
+    /**
+     * Reads a property file, resolving all internal variables, using the supplied base properties.
+     * <p>
+     * The properties are resolved iteratively, so if the value of property A refers to property B, then after
+     * resolution the value of property B will contain the value of property B.
+     * </p>
+     *
+     * @param propFile The property file to load.
+     * @param baseProps Properties containing the initial values to substitute into the properties file.
+     * @param logger Logger instance
+     * @return Properties object containing the properties in the file with their values fully resolved.
+     * @throws IOException if profile does not exist, or cannot be read.
+     *
+     * @since 3.1.2
+     */
+    public static Properties loadPropertyFile( File propFile, Properties baseProps, Logger logger )
         throws IOException
     {
         if ( !propFile.exists() )
@@ -92,7 +116,7 @@ public final class PropertyUtils
         for ( Object o : fileProps.keySet() )
         {
             final String k = (String) o;
-            final String propValue = getPropertyValue( k, combinedProps );
+            final String propValue = getPropertyValue( k, combinedProps, logger );
             fileProps.setProperty( k, propValue );
         }
 
@@ -111,6 +135,24 @@ public final class PropertyUtils
     public static Properties loadPropertyFile( File propfile, boolean fail, boolean useSystemProps )
         throws IOException
     {
+        return loadPropertyFile( propfile, fail, useSystemProps, null );
+    }
+
+    /**
+     * Reads a property file, resolving all internal variables.
+     *
+     * @param propfile The property file to load
+     * @param fail whether to throw an exception when the file cannot be loaded or to return null
+     * @param useSystemProps whether to incorporate System.getProperties settings into the returned Properties object.
+     * @param logger Logger instance
+     * @return the loaded and fully resolved Properties object
+     * @throws IOException if profile does not exist, or cannot be read.
+     *
+     * @since 3.1.2
+     */
+    public static Properties loadPropertyFile( File propfile, boolean fail, boolean useSystemProps, Logger logger )
+        throws IOException
+    {
 
         final Properties baseProps = new Properties();
 
@@ -122,7 +164,7 @@ public final class PropertyUtils
         final Properties resolvedProps = new Properties();
         try
         {
-            resolvedProps.putAll( loadPropertyFile( propfile, baseProps ) );
+            resolvedProps.putAll( loadPropertyFile( propfile, baseProps, logger ) );
         }
         catch ( FileNotFoundException e )
         {
@@ -147,15 +189,21 @@ public final class PropertyUtils
      *
      * @param k
      * @param p
+     * @param logger Logger instance
      * @return The filtered property value.
      */
-    private static String getPropertyValue( String k, Properties p )
+    private static String getPropertyValue( String k, Properties p, Logger logger )
     {
         // This can also be done using InterpolationFilterReader,
         // but it requires reparsing the file over and over until
         // it doesn't change.
 
+        // for cycle detection
+        List<String> valueChain = new LinkedList<String>();
+        valueChain.add( k );
+
         String v = p.getProperty( k );
+        String defaultValue = v;
         String ret = "";
         int idx, idx2;
 
@@ -180,26 +228,57 @@ public final class PropertyUtils
             v = v.substring( idx2 + 1 );
             String nv = p.getProperty( nk );
 
-            // try global environment..
-            if ( nv == null && !StringUtils.isEmpty( nk ) )
+            if ( valueChain.contains( nk ) )
             {
-                nv = System.getProperty( nk );
-            }
-
-            // if the key cannot be resolved,
-            // leave it alone ( and don't parse again )
-            // else prefix the original string with the
-            // resolved property ( so it can be parsed further )
-            // taking recursion into account.
-            if ( nv == null || nv.equals( k ) || k.equals( nk ) )
-            {
-                ret += "${" + nk + "}";
+                if ( logger != null )
+                {
+                    logCircularDetection( valueChain, nk, logger );
+                }
+                return defaultValue;
             }
             else
             {
-                v = nv + v;
+                valueChain.add( nk );
+
+                // try global environment..
+                if ( nv == null && !StringUtils.isEmpty( nk ) )
+                {
+                    nv = System.getProperty( nk );
+                }
+
+                // if the key cannot be resolved,
+                // leave it alone ( and don't parse again )
+                // else prefix the original string with the
+                // resolved property ( so it can be parsed further )
+                // taking recursion into account.
+                if ( nv == null || nv.equals( k ) || k.equals( nk ) )
+                {
+                    ret += "${" + nk + "}";
+                }
+                else
+                {
+                    v = nv + v;
+                }
             }
         }
+
         return ret + v;
+    }
+
+    /**
+     * Logs the detected cycle in properties resolution
+     * @param valueChain the secuence of properties resolved so fa
+     * @param nk the key the closes the cycle
+     * @param logger Logger instance
+     */
+    private static void logCircularDetection( List<String> valueChain, String nk, Logger logger )
+    {
+        StringBuilder sb = new StringBuilder( "Circular reference between properties detected: " );
+        for ( String key : valueChain )
+        {
+            sb.append( key ).append( " => " );
+        }
+        sb.append( nk );
+        logger.warn( sb.toString() );
     }
 }

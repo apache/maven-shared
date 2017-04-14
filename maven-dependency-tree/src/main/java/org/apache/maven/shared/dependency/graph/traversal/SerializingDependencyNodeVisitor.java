@@ -82,7 +82,7 @@ public class SerializingDependencyNodeVisitor
     /**
      * The extended ASCII tokens to use when outputing the dependency graph.
      */
-    public static final GraphTokens EXTENDED_TOKENS = new GraphTokens( "\u00c3\u00c4 ", "\u00c0\u00c4 ", "\u00b3  ",
+    public static final GraphTokens EXTENDED_TOKENS = new GraphTokens( "\u251C\u2500 ", "\u2514\u2500 ", "\u2502  ",
                                                                        "   " );
 
     // fields -----------------------------------------------------------------

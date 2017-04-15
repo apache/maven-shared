@@ -196,6 +196,14 @@ public class DefaultProjectDependencyAnalyzer
     {
         Set<String> dependencyClasses = new HashSet<String>();
 
+        File basedir = project.getBasedir();
+
+        // if project is a artifact project.
+        if ( ( basedir == null || !basedir.exists() ) && project.getArtifact() != null )
+        {
+            return buildDependencyClasses( project.getArtifact().getFile() );
+        }
+
         String outputDirectory = project.getBuild().getOutputDirectory();
         dependencyClasses.addAll( buildDependencyClasses( outputDirectory ) );
 
@@ -209,6 +217,14 @@ public class DefaultProjectDependencyAnalyzer
         throws IOException
     {
         URL url = new File( path ).toURI().toURL();
+
+        return dependencyAnalyzer.analyze( url );
+    }
+
+    private Set<String> buildDependencyClasses( File artifactFile )
+        throws IOException
+    {
+        URL url = artifactFile.toURI().toURL();
 
         return dependencyAnalyzer.analyze( url );
     }

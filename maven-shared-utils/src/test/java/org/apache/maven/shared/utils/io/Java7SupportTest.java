@@ -48,6 +48,9 @@ public class Java7SupportTest
         throws Exception
     {
         assumeThat( System.getProperty( "os.name" ), is( not( "Windows XP" ) ) );
+
+        TestPrivilegesUtil.assertElevatedPrivileges();
+
         File file = new File( "target/fzz" );
         if ( Java7Support.isAtLeastJava7() )
         {

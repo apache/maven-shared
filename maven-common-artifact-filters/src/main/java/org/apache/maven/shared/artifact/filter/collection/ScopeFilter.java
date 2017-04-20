@@ -19,7 +19,7 @@ package org.apache.maven.shared.artifact.filter.collection;
  * under the License.    
  */
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
@@ -73,7 +73,7 @@ public class ScopeFilter
                 throw new ArtifactFilterException( "Invalid Scope in includeScope: " + includeScope );
             }
 
-            results = new HashSet<Artifact>();
+            results = new LinkedHashSet<Artifact>();
 
             if ( Artifact.SCOPE_PROVIDED.equals( includeScope ) || Artifact.SCOPE_SYSTEM.equals( includeScope ) )
             {

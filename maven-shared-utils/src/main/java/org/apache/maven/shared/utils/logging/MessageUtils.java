@@ -19,6 +19,9 @@ package org.apache.maven.shared.utils.logging;
  * under the License.
  */
 
+import static org.fusesource.jansi.internal.CLibrary.STDOUT_FILENO;
+import static org.fusesource.jansi.internal.CLibrary.isatty;
+
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -72,6 +75,15 @@ public class MessageUtils
         {
             AnsiConsole.systemUninstall();
         }
+    }
+
+    /**
+     * Disable color if stdout is not a terminal, enable it otherwise.
+     */
+    public static void autoDetectColorSupport()
+    {
+        boolean isXterm = "xterm".equals( System.getenv( "TERM" ) );
+        setColorEnabled( isXterm || isatty( STDOUT_FILENO ) != 0 );
     }
 
     /**

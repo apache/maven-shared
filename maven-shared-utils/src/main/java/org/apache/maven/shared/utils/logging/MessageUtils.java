@@ -82,8 +82,11 @@ public class MessageUtils
      */
     public static void autoDetectColorSupport()
     {
-        boolean isXterm = "xterm".equals( System.getenv( "TERM" ) );
-        setColorEnabled( isXterm || isatty( STDOUT_FILENO ) != 0 );
+        if ( JANSI )
+        {
+            boolean isXterm = "xterm".equals( System.getenv( "TERM" ) );
+            setColorEnabled( isXterm || isatty( STDOUT_FILENO ) != 0 );
+        }
     }
 
     /**

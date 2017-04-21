@@ -24,10 +24,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -57,7 +60,7 @@ public class DefaultProjectDependencyAnalyzer
      * DependencyAnalyzer
      */
     @Requirement
-    private DependencyAnalyzer dependencyAnalyzer;
+    private DependencyAnalyzerWithUsages dependencyAnalyzer;
 
     // ProjectDependencyAnalyzer methods --------------------------------------
 
@@ -71,20 +74,21 @@ public class DefaultProjectDependencyAnalyzer
         {
             Map<Artifact, Set<String>> artifactClassMap = buildArtifactClassMap( project );
 
-            Set<String> dependencyClasses = buildDependencyClasses( project );
+            Set<DependencyUsage> dependencyUsages = buildDependencyUsages( project );
 
             Set<Artifact> declaredArtifacts = buildDeclaredArtifacts( project );
 
-            Set<Artifact> usedArtifacts = buildUsedArtifacts( artifactClassMap, dependencyClasses );
+            Map<Artifact, Set<DependencyUsage>> usedArtifacts = buildArtifactToUsageMap( artifactClassMap,
+                                                                                         dependencyUsages );
 
-            Set<Artifact> usedDeclaredArtifacts = new LinkedHashSet<Artifact>( declaredArtifacts );
-            usedDeclaredArtifacts.retainAll( usedArtifacts );
+            Map<Artifact, Set<DependencyUsage>> usedDeclaredArtifacts = buildMutableCopy( usedArtifacts );
+            usedDeclaredArtifacts.keySet().retainAll( declaredArtifacts );
 
-            Set<Artifact> usedUndeclaredArtifacts = new LinkedHashSet<Artifact>( usedArtifacts );
-            usedUndeclaredArtifacts = removeAll( usedUndeclaredArtifacts, declaredArtifacts );
+            Map<Artifact, Set<DependencyUsage>> usedUndeclaredArtifacts = buildMutableCopy( usedArtifacts );
+            removeAll( usedUndeclaredArtifacts.keySet(), declaredArtifacts );
 
             Set<Artifact> unusedDeclaredArtifacts = new LinkedHashSet<Artifact>( declaredArtifacts );
-            unusedDeclaredArtifacts = removeAll( unusedDeclaredArtifacts, usedArtifacts );
+            removeAll( unusedDeclaredArtifacts, usedArtifacts.keySet() );
 
             return new ProjectDependencyAnalysis( usedDeclaredArtifacts, usedUndeclaredArtifacts,
                                                   unusedDeclaredArtifacts );
@@ -101,32 +105,22 @@ public class DefaultProjectDependencyAnalyzer
      * 
      * @param start initial set
      * @param remove set to exclude
-     * @return set with remove excluded
      */
-    private Set<Artifact> removeAll( Set<Artifact> start, Set<Artifact> remove )
+    private static void removeAll( Set<Artifact> start, Set<Artifact> remove )
     {
-        Set<Artifact> results = new LinkedHashSet<Artifact>( start.size() );
-
-        for ( Artifact artifact : start )
+        for ( Iterator<Artifact> iterator = start.iterator(); iterator.hasNext(); )
         {
-            boolean found = false;
+            Artifact artifact = iterator.next();
 
             for ( Artifact artifact2 : remove )
             {
                 if ( artifact.getDependencyConflictId().equals( artifact2.getDependencyConflictId() ) )
                 {
-                    found = true;
+                    iterator.remove();
                     break;
                 }
             }
-
-            if ( !found )
-            {
-                results.add( artifact );
-            }
         }
-
-        return results;
     }
 
     protected Map<Artifact, Set<String>> buildArtifactClassMap( MavenProject project )
@@ -194,16 +188,29 @@ public class DefaultProjectDependencyAnalyzer
     {
         Set<String> dependencyClasses = new HashSet<String>();
 
-        String outputDirectory = project.getBuild().getOutputDirectory();
-        dependencyClasses.addAll( buildDependencyClasses( outputDirectory ) );
-
-        String testOutputDirectory = project.getBuild().getTestOutputDirectory();
-        dependencyClasses.addAll( buildDependencyClasses( testOutputDirectory ) );
+        for ( DependencyUsage usage : buildDependencyUsages( project ) )
+        {
+            dependencyClasses.add( usage.getDependencyClass() );
+        }
 
         return dependencyClasses;
     }
 
-    private Set<String> buildDependencyClasses( String path )
+    protected Set<DependencyUsage> buildDependencyUsages( MavenProject project )
+        throws IOException
+    {
+        Set<DependencyUsage> dependencyUsages = new HashSet<DependencyUsage>();
+
+        String outputDirectory = project.getBuild().getOutputDirectory();
+        dependencyUsages.addAll( buildDependencyUsages( outputDirectory ) );
+
+        String testOutputDirectory = project.getBuild().getTestOutputDirectory();
+        dependencyUsages.addAll( buildDependencyUsages( testOutputDirectory ) );
+
+        return dependencyUsages;
+    }
+
+    private Set<DependencyUsage> buildDependencyUsages( String path )
         throws IOException
     {
         URL url = new File( path ).toURI().toURL();
@@ -242,6 +249,31 @@ public class DefaultProjectDependencyAnalyzer
         return usedArtifacts;
     }
 
+    protected Map<Artifact, Set<DependencyUsage>> buildArtifactToUsageMap( Map<Artifact, Set<String>> artifactClassMap,
+                                                                           Set<DependencyUsage> dependencyUsages )
+    {
+        Map<String, Set<DependencyUsage>> dependencyClassToUsages = buildDependencyClassToUsageMap( dependencyUsages );
+
+        Map<Artifact, Set<DependencyUsage>> artifactToUsages = new HashMap<Artifact, Set<DependencyUsage>>();
+
+        for ( Entry<String, Set<DependencyUsage>> entry : dependencyClassToUsages.entrySet() )
+        {
+            Artifact artifact = findArtifactForClassName( artifactClassMap, entry.getKey() );
+
+            if ( artifact != null )
+            {
+                if ( !artifactToUsages.containsKey( artifact ) )
+                {
+                    artifactToUsages.put( artifact, new HashSet<DependencyUsage>() );
+                }
+
+                artifactToUsages.get( artifact ).addAll( entry.getValue() );
+            }
+        }
+
+        return artifactToUsages;
+    }
+
     protected Artifact findArtifactForClassName( Map<Artifact, Set<String>> artifactClassMap, String className )
     {
         for ( Map.Entry<Artifact, Set<String>> entry : artifactClassMap.entrySet() )
@@ -253,5 +285,36 @@ public class DefaultProjectDependencyAnalyzer
         }
 
         return null;
+    }
+
+    private Map<String, Set<DependencyUsage>> buildDependencyClassToUsageMap( Set<DependencyUsage> dependencyUsages )
+    {
+        Map<String, Set<DependencyUsage>> dependencyClassToUsages = new HashMap<String, Set<DependencyUsage>>();
+
+        for ( DependencyUsage dependencyUsage : dependencyUsages )
+        {
+            String dependencyClass = dependencyUsage.getDependencyClass();
+
+            if ( !dependencyClassToUsages.containsKey( dependencyClass ) )
+            {
+                dependencyClassToUsages.put( dependencyClass, new HashSet<DependencyUsage>() );
+            }
+
+            dependencyClassToUsages.get( dependencyClass ).add( dependencyUsage );
+        }
+
+        return dependencyClassToUsages;
+    }
+
+    private Map<Artifact, Set<DependencyUsage>> buildMutableCopy( Map<Artifact, Set<DependencyUsage>> map )
+    {
+        Map<Artifact, Set<DependencyUsage>> copy = new LinkedHashMap<Artifact, Set<DependencyUsage>>();
+
+        for ( Entry<Artifact, Set<DependencyUsage>> entry : map.entrySet() )
+        {
+            copy.put( entry.getKey(), new LinkedHashSet<DependencyUsage>( entry.getValue() ) );
+        }
+
+        return copy;
     }
 }

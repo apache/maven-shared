@@ -106,7 +106,7 @@ public class DefaultProjectDependencyAnalyzer
      * @param start initial set
      * @param remove set to exclude
      */
-    private static void removeAll( Set<Artifact> start, Set<Artifact> remove )
+    private void removeAll( Set<Artifact> start, Set<Artifact> remove )
     {
         for ( Iterator<Artifact> iterator = start.iterator(); iterator.hasNext(); )
         {

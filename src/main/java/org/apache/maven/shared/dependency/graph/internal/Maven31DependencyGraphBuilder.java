@@ -92,7 +92,7 @@ public class Maven31DependencyGraphBuilder
         throws DependencyGraphBuilderException
     {
         MavenProject project = buildingRequest.getProject();
-        
+
         RepositorySystemSession session =
             (RepositorySystemSession) Invoker.invoke( buildingRequest, "getRepositorySession" );
 
@@ -184,14 +184,15 @@ public class Maven31DependencyGraphBuilder
     private Artifact getDependencyArtifact( Dependency dep )
     {
         org.eclipse.aether.artifact.Artifact artifact = dep.getArtifact();
-        
+
         try
         {
             Artifact mavenArtifact = (Artifact) Invoker.invoke( RepositoryUtils.class, "toArtifact",
                                               org.eclipse.aether.artifact.Artifact.class, artifact );
-            
+
             mavenArtifact.setScope( dep.getScope() );
-            
+            mavenArtifact.setOptional( dep.isOptional() );
+
             return mavenArtifact;
         }
         catch ( DependencyGraphBuilderException e )

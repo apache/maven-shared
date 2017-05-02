@@ -171,10 +171,11 @@ public class Maven3DependencyGraphBuilder
     private Artifact getDependencyArtifact( Dependency dep )
     {
         Artifact mavenArtifact = RepositoryUtils.toArtifact( dep.getArtifact() );
-        
+
         mavenArtifact.setScope( dep.getScope() );
-        
-        return mavenArtifact; 
+        mavenArtifact.setOptional( dep.isOptional() );
+
+        return mavenArtifact;
     }
 
     private DependencyNode buildDependencyNode( DependencyNode parent, org.sonatype.aether.graph.DependencyNode node,

@@ -31,7 +31,7 @@
   <version>0.9.1-SNAPSHOT</version>
 
   <name>Apache Maven Artifact Transfer</name>
-  <description>An API to install, deploy and resolving artifacts with Maven3</description>
+  <description>An API to install, deploy and resolving artifacts with Maven 3</description>
 
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-artifact-transfer</connection>

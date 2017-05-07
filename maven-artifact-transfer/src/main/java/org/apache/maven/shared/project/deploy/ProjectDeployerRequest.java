@@ -53,11 +53,12 @@ public class ProjectDeployerRequest
     }
 
     /**
-     * @param updateReleaseInfo the updateReleaseInfo to set
+     * @param theUpdateReleaseInfoToBeSet the updateReleaseInfo to set
+     * @return {@link ProjectDeployerRequest} for chaining.
      */
-    public ProjectDeployerRequest setUpdateReleaseInfo( boolean updateReleaseInfo )
+    public ProjectDeployerRequest setUpdateReleaseInfo( boolean theUpdateReleaseInfoToBeSet )
     {
-        this.updateReleaseInfo = updateReleaseInfo;
+        this.updateReleaseInfo = theUpdateReleaseInfoToBeSet;
         return this;
     }
 
@@ -70,11 +71,12 @@ public class ProjectDeployerRequest
     }
 
     /**
-     * @param retryFailedDeploymentCount the retryFailedDeploymentCount to set
+     * @param theRetryFailedDeploymentCountToBeSet the retryFailedDeploymentCount to set
+     * @return {@link ProjectDeployerRequest} for chaining.
      */
-    public ProjectDeployerRequest setRetryFailedDeploymentCount( int retryFailedDeploymentCount )
+    public ProjectDeployerRequest setRetryFailedDeploymentCount( int theRetryFailedDeploymentCountToBeSet )
     {
-        this.retryFailedDeploymentCount = retryFailedDeploymentCount;
+        this.retryFailedDeploymentCount = theRetryFailedDeploymentCountToBeSet;
         return this;
     }
 
@@ -87,11 +89,12 @@ public class ProjectDeployerRequest
     }
 
     /**
-     * @param project the project to set
+     * @param theProjectToBeSet the {link {@link MavenProject project} to set
+     * @return {@link ProjectDeployerRequest} for chaining.
      */
-    public ProjectDeployerRequest setProject( MavenProject project )
+    public ProjectDeployerRequest setProject( MavenProject theProjectToBeSet )
     {
-        this.project = project;
+        this.project = theProjectToBeSet;
         return this;
     }
 
@@ -104,11 +107,12 @@ public class ProjectDeployerRequest
     }
 
     /**
-     * @param altDeploymentRepository the altDeploymentRepository to set
+     * @param theAltDeploymentRepositoryToBeSet the altDeploymentRepository to set
+     * @return {@link ProjectDeployerRequest} for chaining.
      */
-    public ProjectDeployerRequest setAltDeploymentRepository( String altDeploymentRepository )
+    public ProjectDeployerRequest setAltDeploymentRepository( String theAltDeploymentRepositoryToBeSet )
     {
-        this.altDeploymentRepository = altDeploymentRepository;
+        this.altDeploymentRepository = theAltDeploymentRepositoryToBeSet;
         return this;
     }
 
@@ -121,11 +125,12 @@ public class ProjectDeployerRequest
     }
 
     /**
-     * @param altSnapshotDeploymentRepository the altSnapshotDeploymentRepository to set
+     * @param theAltSnapshotDeploymentRepositoryToBeSet the altSnapshotDeploymentRepository to set
+     * @return {@link ProjectDeployerRequest} for chaining.
      */
-    public ProjectDeployerRequest setAltSnapshotDeploymentRepository( String altSnapshotDeploymentRepository )
+    public ProjectDeployerRequest setAltSnapshotDeploymentRepository( String theAltSnapshotDeploymentRepositoryToBeSet )
     {
-        this.altSnapshotDeploymentRepository = altSnapshotDeploymentRepository;
+        this.altSnapshotDeploymentRepository = theAltSnapshotDeploymentRepositoryToBeSet;
         return this;
     }
 
@@ -138,11 +143,12 @@ public class ProjectDeployerRequest
     }
 
     /**
-     * @param altReleaseDeploymentRepository the altReleaseDeploymentRepository to set
+     * @param theAltReleaseDeploymentRepositoryToBeSet the altReleaseDeploymentRepository to set
+     * @return {@link ProjectDeployerRequest} for chaining.
      */
-    public ProjectDeployerRequest setAltReleaseDeploymentRepository( String altReleaseDeploymentRepository )
+    public ProjectDeployerRequest setAltReleaseDeploymentRepository( String theAltReleaseDeploymentRepositoryToBeSet )
     {
-        this.altReleaseDeploymentRepository = altReleaseDeploymentRepository;
+        this.altReleaseDeploymentRepository = theAltReleaseDeploymentRepositoryToBeSet;
         return this;
     }
 }

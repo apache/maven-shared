@@ -45,11 +45,12 @@ public class ProjectInstallerRequest
     }
 
     /**
-     * @param createChecksum the createChecksum to set
+     * @param theCreateChecksumToBeSet the createChecksum to set
+     * @return {@link ProjectInstallerRequest} for chaining.
      */
-    public ProjectInstallerRequest setCreateChecksum( boolean createChecksum )
+    public ProjectInstallerRequest setCreateChecksum( boolean theCreateChecksumToBeSet )
     {
-        this.createChecksum = createChecksum;
+        this.createChecksum = theCreateChecksumToBeSet;
         return this;
     }
 
@@ -62,11 +63,12 @@ public class ProjectInstallerRequest
     }
 
     /**
-     * @param updateReleaseInfo the updateReleaseInfo to set
+     * @param theUpdateReleaseInfoToBeSet the updateReleaseInfo to set
+     * @return {@link ProjectInstallerRequest} for chaining.
      */
-    public ProjectInstallerRequest setUpdateReleaseInfo( boolean updateReleaseInfo )
+    public ProjectInstallerRequest setUpdateReleaseInfo( boolean theUpdateReleaseInfoToBeSet )
     {
-        this.updateReleaseInfo = updateReleaseInfo;
+        this.updateReleaseInfo = theUpdateReleaseInfoToBeSet;
         return this;
     }
 
@@ -79,11 +81,12 @@ public class ProjectInstallerRequest
     }
 
     /**
-     * @param project the project to set
+     * @param theProjectToBeSet the project to set
+     * @return {@link ProjectInstallerRequest} for chaining.
      */
-    public ProjectInstallerRequest setProject( MavenProject project )
+    public ProjectInstallerRequest setProject( MavenProject theProjectToBeSet )
     {
-        this.project = project;
+        this.project = theProjectToBeSet;
         return this;
     }
 

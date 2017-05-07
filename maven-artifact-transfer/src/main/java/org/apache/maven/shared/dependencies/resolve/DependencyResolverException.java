@@ -20,21 +20,33 @@ package org.apache.maven.shared.dependencies.resolve;
  */
 
 /**
- * 
+ * The Exception class in case a resolving does not work.
  */
 public class DependencyResolverException
     extends Exception
 {
+    private static final long serialVersionUID = 5320065249974323888L;
+
+    /**
+     * @param cause The {@link Exception cause} of the problem.
+     */
     protected DependencyResolverException( Exception cause )
     {
         super( cause );
     }
 
+    /**
+     * @param message The message to give.
+     * @param e The {@link Exception}.
+     */
     public DependencyResolverException( String message, Exception e )
     {
         super( message, e );
     }
-    
+
+    /**
+     * @return {@link DependencyResult}
+     */
     public DependencyResult getResult()
     {
         return null;

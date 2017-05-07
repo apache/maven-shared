@@ -27,10 +27,10 @@ import org.apache.maven.model.Plugin;
 import org.apache.maven.model.ReportPlugin;
 
 /**
- * Utility class
+ * Utility class to convert different things like {@link Dependency}, {@link Extension}, {@link Model}, {@link Parent},
+ * {@link Plugin} and {@link ReportPlugin} into {@link DependableCoordinate}.
  * 
  * @author Robert Scholte
- *
  */
 public final class TransferUtils
 {
@@ -38,6 +38,10 @@ public final class TransferUtils
     {
     }
     
+    /**
+     * @param dependency {@link Dependency} to be converted to {@link DependableCoordinate}
+     * @return {@link DependableCoordinate}
+     */
     public static DependableCoordinate toDependableCoordinate( Dependency dependency )
     {
         DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
@@ -51,6 +55,10 @@ public final class TransferUtils
         return coordinate;
     }
 
+    /**
+     * @param extension {@link Extension} to be converted to {@link DependableCoordinate}
+     * @return {@link DependableCoordinate}
+     */
     public static DependableCoordinate toDependableCoordinate( Extension extension )
     {
         DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
@@ -62,6 +70,10 @@ public final class TransferUtils
         return coordinate;
     }
 
+    /**
+     * @param model {@link Model} coordinates to be converted to {@link DependableCoordinate}.
+     * @return {@link DependableCoordinate}
+     */
     public static DependableCoordinate toDependableCoordinate( Model model )
     {
         DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
@@ -74,6 +86,10 @@ public final class TransferUtils
         return coordinate;
     }
 
+    /**
+     * @param parent {@link Parent parent} coordinates to be converted to {@link DependableCoordinate}.
+     * @return {@link DependableCoordinate}.
+     */
     public static DependableCoordinate toDependableCoordinate( Parent parent )
     {
         DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
@@ -86,6 +102,10 @@ public final class TransferUtils
         return coordinate;
     }
 
+    /**
+     * @param plugin The {@link Plugin plugin} coordiantes which should be converted. 
+     * @return {@link DependableCoordinate}.
+     */
     public static DependableCoordinate toDependableCoordinate( Plugin plugin )
     {
         DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();
@@ -97,6 +117,11 @@ public final class TransferUtils
         return coordinate;
     }
     
+    /**
+     * Convert {@link ReportPlugin plugin} coordinates to {@link DependableCoordinate}.
+     * @param plugin The {@link ReportPlugin plugin} to be converted to {@link DependableCoordinate}.
+     * @return The converted {@link DependableCoordinate} coordinates.
+     */
     public static DependableCoordinate toDependableCoordinate( ReportPlugin plugin )
     {
         DefaultDependableCoordinate coordinate = new DefaultDependableCoordinate();

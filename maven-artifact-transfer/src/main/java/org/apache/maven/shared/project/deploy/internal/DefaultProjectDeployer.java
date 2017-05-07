@@ -62,7 +62,7 @@ public class DefaultProjectDeployer
      * @param request {@link ProjectDeployerRequest}
      * @param artifactRepository {@link ArtifactRepository}
      * @throws IllegalArgumentException in case of artifact is not correctly assigned.
-     * @throws NoFileAssignedException
+     * @throws NoFileAssignedException In case no file has been assigned to main file.
      */
     public void deploy( ProjectBuildingRequest buildingRequest, ProjectDeployerRequest request,
                         ArtifactRepository artifactRepository )

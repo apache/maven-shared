@@ -70,7 +70,6 @@ public class DefaultDependencyGraphBuilder
     /**
      * Builds a dependency graph.
      *
-     * @param project the project
      * @param filter artifact filter (can be <code>null</code>)
      * @param reactorProjects Collection of those projects contained in the reactor (can be <code>null</code>)
      * @return DependencyNode containing the dependency graph.

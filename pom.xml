@@ -28,7 +28,7 @@
   </parent>
 
   <artifactId>maven-dependency-tree</artifactId>
-  <version>3.0.2-SNAPSHOT</version>
+  <version>3.0.1-SNAPSHOT</version>
 
   <name>Apache Maven Dependency Tree</name>
   <description>A tree-based API for resolution of Maven project dependencies</description>

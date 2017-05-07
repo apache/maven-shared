@@ -28,16 +28,16 @@
   </parent>
 
   <artifactId>maven-artifact-transfer</artifactId>
-  <version>0.9.1-SNAPSHOT</version>
+  <version>0.9.1</version>
 
   <name>Apache Maven Artifact Transfer</name>
   <description>An API to install, deploy and resolving artifacts with Maven 3</description>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-artifact-transfer</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-artifact-transfer
+    <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/tags/maven-artifact-transfer-0.9.1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/tags/maven-artifact-transfer-0.9.1
     </developerConnection>
-    <url>http://svn.apache.org/viewvc/maven/shared/trunk/maven-artifact-transfer</url>
+    <url>http://svn.apache.org/viewvc/maven/shared/tags/maven-artifact-transfer-0.9.1</url>
   </scm>
   <issueManagement>
     <system>jira</system>

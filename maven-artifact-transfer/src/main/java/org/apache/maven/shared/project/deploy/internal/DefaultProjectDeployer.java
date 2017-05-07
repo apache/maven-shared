@@ -20,7 +20,6 @@ package org.apache.maven.shared.project.deploy.internal;
  */
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -66,7 +65,7 @@ public class DefaultProjectDeployer
      */
     public void deploy( ProjectBuildingRequest buildingRequest, ProjectDeployerRequest request,
                         ArtifactRepository artifactRepository )
-        throws IOException, NoFileAssignedException
+        throws NoFileAssignedException, IllegalArgumentException
     {
 
         Artifact artifact = request.getProject().getArtifact();

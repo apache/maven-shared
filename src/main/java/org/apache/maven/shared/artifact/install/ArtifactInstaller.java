@@ -38,8 +38,15 @@ public interface ArtifactInstaller
      */
     void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException;
-    
+
+    /**
+     * @param request {@link ProjectBuildingRequest}.
+     * @param localRepository The location for the local repository.
+     * @param mavenArtifacts Collection of {@link Artifact MavenArtifacts}
+     * @throws ArtifactInstallerException In case of an error which can be the a given artifact can not be found or the
+     *             installation has failed.
+     */
     void install( ProjectBuildingRequest request, File localRepository, Collection<Artifact> mavenArtifacts )
-                    throws ArtifactInstallerException;
-    
+        throws ArtifactInstallerException;
+
 }

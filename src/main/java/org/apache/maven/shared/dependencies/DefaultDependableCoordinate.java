@@ -97,6 +97,9 @@ public class DefaultDependableCoordinate implements DependableCoordinate
         return groupId;
     }
 
+    /**
+     * @param groupId The groupId to be set.
+     */
     public final void setGroupId( String groupId )
     {
         this.groupId = groupId;
@@ -108,6 +111,9 @@ public class DefaultDependableCoordinate implements DependableCoordinate
         return artifactId;
     }
 
+    /**
+     * @param artifactId The artifactId to be set.
+     */
     public final void setArtifactId( String artifactId )
     {
         this.artifactId = artifactId;
@@ -119,6 +125,9 @@ public class DefaultDependableCoordinate implements DependableCoordinate
         return version;
     }
 
+    /**
+     * @param version The version to be set.
+     */
     public final void setVersion( String version )
     {
         this.version = version;
@@ -130,6 +139,9 @@ public class DefaultDependableCoordinate implements DependableCoordinate
         return type != null ? type : "jar";
     }
 
+    /**
+     * @param type The type to be set.
+     */
     public void setType( String type )
     {
         this.type = type;
@@ -141,6 +153,9 @@ public class DefaultDependableCoordinate implements DependableCoordinate
         return classifier;
     }
 
+    /**
+     * @param classifier The classifier to be set.
+     */
     public final void setClassifier( String classifier )
     {
         this.classifier = classifier;

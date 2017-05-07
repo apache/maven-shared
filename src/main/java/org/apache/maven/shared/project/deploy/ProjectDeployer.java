@@ -56,9 +56,9 @@ public interface ProjectDeployer
      * appropriate remote repository.
      * 
      * <pre class="java">
-     *  @Parameter( defaultValue = "${session}", required=true, readonly = true)
+     *  &#64;Parameter( defaultValue = "${session}", required=true, readonly = true)
      *  MavenSession session;
-     *  @Parameter( defaultValue = "${project}", required=true, readonly = true)
+     *  &#64;Parameter( defaultValue = "${project}", required=true, readonly = true)
      *  MavenProject project;
      *  ..
      *  &#64;Component
@@ -78,6 +78,7 @@ public interface ProjectDeployer
      * @throws IOException In case of problems related to checksums.
      * @throws NoFileAssignedException In case of missing file which has not been assigned to project.
      */
+    //FIXME: Need to check to remove IOException cause it looks like it's not being thrown by code.
     void deploy( ProjectBuildingRequest buildingRequest, ProjectDeployerRequest request,
                         ArtifactRepository artifactRepository )
         throws IOException, NoFileAssignedException;

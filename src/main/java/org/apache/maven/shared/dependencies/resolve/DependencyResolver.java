@@ -29,13 +29,13 @@ import org.apache.maven.shared.artifact.resolve.ArtifactResult;
 import org.apache.maven.shared.dependencies.DependableCoordinate;
 
 /**
- * 
+ * @author Robert Scholte
  */
 public interface DependencyResolver
 {
     /**
-     * This will resolve the dependencies of the coordinate, not resolving the the artifact of the coordinate itself. 
-     * If the coordinate needs to be resolved too, use
+     * This will resolve the dependencies of the coordinate, not resolving the the artifact of the coordinate itself. If
+     * the coordinate needs to be resolved too, use
      * {@link #resolveDependencies(ProjectBuildingRequest, Collection, Collection, TransformableFilter)} passing
      * {@code Collections.singletonList(coordinate)}
      * 
@@ -45,13 +45,25 @@ public interface DependencyResolver
      * @return the resolved dependencies.
      * @throws DependencyResolverException in case of an error.
      */
-    Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest, 
-                                                  DependableCoordinate coordinate,
-                                                  TransformableFilter filter ) throws DependencyResolverException;
-    
-    Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest, 
-                                                  Model model,
-                                                  TransformableFilter filter ) throws DependencyResolverException;
+    Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
+                                                  DependableCoordinate coordinate, TransformableFilter filter )
+        throws DependencyResolverException;
+
+    /**
+     * This will resolve the dependencies of the coordinate, not resolving the the artifact of the coordinate itself. If
+     * the coordinate needs to be resolved too, use
+     * {@link #resolveDependencies(ProjectBuildingRequest, Collection, Collection, TransformableFilter)} passing
+     * {@code Collections.singletonList(coordinate)}
+     * 
+     * @param buildingRequest {@link ProjectBuildingRequest}
+     * @param model {@link Model}
+     * @param filter {@link TransformableFilter}
+     * @return the resolved dependencies.
+     * @throws DependencyResolverException in case of an error.
+     */
+    Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest, Model model,
+                                                  TransformableFilter filter )
+        throws DependencyResolverException;
 
     /**
      * @param buildingRequest the project building request, never {@code null}
@@ -64,5 +76,6 @@ public interface DependencyResolver
     Iterable<ArtifactResult> resolveDependencies( ProjectBuildingRequest buildingRequest,
                                                   Collection<Dependency> dependencies,
                                                   Collection<Dependency> managedDependencies,
-                                                  TransformableFilter filter ) throws DependencyResolverException;
+                                                  TransformableFilter filter )
+        throws DependencyResolverException;
 }

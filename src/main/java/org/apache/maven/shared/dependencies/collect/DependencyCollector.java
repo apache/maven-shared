@@ -44,9 +44,23 @@ public interface DependencyCollector
     CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Dependency root )
         throws DependencyCollectorException;
 
+    /**
+     * @param buildingRequest {@link ProjectBuildingRequest}.
+     * @param root {@link DependableCoordinate}
+     * @return {@link CollectorResult}
+     * @throws DependencyCollectorException in case of an error which can be a component lookup error or
+     *  an error while trying to look up the dependencies.
+     */
     CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, DependableCoordinate root )
                     throws DependencyCollectorException;
 
+    /**
+     * @param buildingRequest {@link ProjectBuildingRequest}.
+     * @param root {@link Model}
+     * @return {@link CollectorResult}
+     * @throws DependencyCollectorException in case of an error which can be a component lookup error or
+     *  an error while trying to look up the dependencies.
+     */
     CollectorResult collectDependencies( ProjectBuildingRequest buildingRequest, Model root )
                     throws DependencyCollectorException;
 

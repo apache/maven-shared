@@ -138,12 +138,12 @@ public class ScriptRunner
     }
 
     /**
-     * Runs the specified hook script.
+     * Runs the specified hook script (after resolution).
      *
      * @param scriptDescription The description of the script to use for logging, must not be <code>null</code>.
      * @param basedir The base directory of the project, must not be <code>null</code>.
      * @param relativeScriptPath The path to the script relative to the project base directory, may be <code>null</code>
-     *            to skip the script execution.
+     *            to skip the script execution and may not have extensions (resolution will search).
      * @param context The key-value storage used to share information between hook scripts, may be <code>null</code>.
      * @param logger The logger to redirect the script output to, may be <code>null</code> to use stdout/stderr.
      * @param stage The stage of the build job the script is invoked in, must not be <code>null</code>. This is for
@@ -161,7 +161,7 @@ public class ScriptRunner
     {
         if ( relativeScriptPath == null )
         {
-            getLog().debug( "relativeScriptPath is null: not executing script" );
+            getLog().debug( scriptDescription + ": relativeScriptPath is null, not executing script" );
             return;
         }
 
@@ -169,12 +169,13 @@ public class ScriptRunner
 
         if ( !scriptFile.exists() )
         {
-            getLog().debug( "no script found in directory: " + basedir.getAbsolutePath() );
+            getLog().debug( scriptDescription + ": no script '" + relativeScriptPath + "' found in directory "
+                + basedir.getAbsolutePath() );
             return;
         }
 
-        String path = scriptFile.getAbsolutePath();
-        getLog().info( "run script " + relativeScriptPath + path.substring( path.lastIndexOf( '.' ) ) );
+        getLog().info( "run " + scriptDescription + ' ' + relativeScriptPath + '.'
+            + FileUtils.extension( scriptFile.getAbsolutePath() ) );
 
         executeRun( scriptDescription, scriptFile, context, logger, stage, failOnException );
     }
@@ -201,11 +202,12 @@ public class ScriptRunner
 
         if ( !scriptFile.exists() )
         {
-            getLog().debug( "scriptFile not found in directory: " + scriptFile.getAbsolutePath() );
+            getLog().debug( scriptDescription + ": script file not found in directory "
+                + scriptFile.getAbsolutePath() );
             return;
         }
 
-        getLog().info( "run script " + scriptFile.getAbsolutePath() );
+        getLog().info( "run " + scriptDescription + ' ' + scriptFile.getAbsolutePath() );
 
         executeRun( scriptDescription, scriptFile, context, logger, stage, failOnException );
     }

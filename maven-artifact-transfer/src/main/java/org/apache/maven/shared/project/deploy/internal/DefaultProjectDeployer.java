@@ -41,9 +41,8 @@ import org.slf4j.LoggerFactory;
 /**
  * This will deploy a whole project into the appropriate remote repository.
  * 
- * @author Karl Heinz Marbaise <a href="mailto:khmarbaise@apache.org">khmarbaise@apache.org</a> 
- * 
- * Most of the code is taken from maven-deploy-plugin.
+ * @author Karl Heinz Marbaise <a href="mailto:khmarbaise@apache.org">khmarbaise@apache.org</a> Most of the code is
+ *         taken from maven-deploy-plugin.
  */
 @Component( role = ProjectDeployer.class )
 public class DefaultProjectDeployer
@@ -124,23 +123,7 @@ public class DefaultProjectDeployer
                 }
             }
 
-            for ( Artifact attached : attachedArtifacts )
-            {
-                // This is here when AttachedArtifact is used, like m-sources-plugin:2.0.4
-                try
-                {
-                    attached.setRepository( artifactRepository );
-                }
-                catch ( UnsupportedOperationException e )
-                {
-                    LOGGER.warn( attached.getId() + " has been attached with deprecated code, "
-                        + "try to upgrade the responsible plugin" );
-                }
-
-                deployableArtifacts.add( attached );
-            }
-
-            deploy( buildingRequest, deployableArtifacts, artifactRepository, retryFailedDeploymentCount );
+            deploy( buildingRequest, attachedArtifacts, artifactRepository, retryFailedDeploymentCount );
         }
         catch ( ArtifactDeployerException e )
         {

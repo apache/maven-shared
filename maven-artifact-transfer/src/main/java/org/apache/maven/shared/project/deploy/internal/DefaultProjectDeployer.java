@@ -123,7 +123,12 @@ public class DefaultProjectDeployer
                 }
             }
 
-            deploy( buildingRequest, attachedArtifacts, artifactRepository, retryFailedDeploymentCount );
+            for ( Artifact attached : attachedArtifacts )
+            {
+                deployableArtifacts.add( attached );
+            }
+
+            deploy( buildingRequest, deployableArtifacts, artifactRepository, retryFailedDeploymentCount );
         }
         catch ( ArtifactDeployerException e )
         {

@@ -194,6 +194,23 @@ public class DefaultMavenReportExecutor
             }
         }
 
+        if ( !reports.isEmpty() )
+        {
+            // log reports, either configured or detected
+            StringBuilder buff = new StringBuilder();
+            for ( MavenReportExecution mre : reports )
+            {
+                if ( buff.length() > 0 )
+                {
+                    buff.append( ", " );
+                }
+                buff.append( mre.getGoal() );
+            }
+            logger.info( reports.size() + " report" + ( reports.size() > 1 ? "s" : "" ) + " "
+                + ( hasUserDefinedReports ? "configured" : "detected" ) + " for " + plugin.getArtifactId() + ":"
+                + plugin.getVersion() + ": " + buff );
+        }
+
         return reports;
     }
 

@@ -33,10 +33,6 @@
   <name>Apache Maven Filtering</name>
   <description>A component to assist in filtering of resource files with properties from a Maven project.</description>
 
-  <prerequisites>
-    <maven>${mavenVersion}</maven>
-  </prerequisites>
-
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-filtering</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-filtering</developerConnection>

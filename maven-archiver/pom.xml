@@ -33,6 +33,10 @@
   <name>Apache Maven Archiver</name>
   <description>Provides utility methods for creating JARs and other archive files from a Maven project.</description>
 
+  <properties>
+    <mavenVersion>3.0</mavenVersion>
+  </properties>
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/maven/shared/trunk/maven-archiver</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/maven/shared/trunk/maven-archiver</developerConnection>

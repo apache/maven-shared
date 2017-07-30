@@ -700,7 +700,7 @@ public class DefaultMavenReportExecutor
 
         private final PluginDescriptor pluginDescriptor;
 
-        public GoalWithConf( ReportPlugin reportPlugin, PluginDescriptor pluginDescriptor, String goal,
+        GoalWithConf( ReportPlugin reportPlugin, PluginDescriptor pluginDescriptor, String goal,
                              PlexusConfiguration configuration )
         {
             this.reportPlugin = reportPlugin;

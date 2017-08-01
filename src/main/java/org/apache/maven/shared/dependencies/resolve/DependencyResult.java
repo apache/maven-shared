@@ -31,7 +31,7 @@ public interface DependencyResult
     /**
      * Gets the exceptions that occurred while building the dependency graph.
      * 
-     * @return
+     * @return The list of exceptions {@link Exception}.
      */
     List<Exception> getCollectorExceptions();
 }

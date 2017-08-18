@@ -211,6 +211,13 @@ public class JarSignerCommandLineBuilder
             cli.createArg().setValue( "-signedjar" );
             cli.createArg().setValue( signedjar.getAbsolutePath() );
         }
+        
+        final File certchain = request.getCertchain();
+        if ( certchain != null )
+        {
+            cli.createArg().setValue( "-certchain" );
+            cli.createArg().setValue( certchain.getAbsolutePath() );
+        }
     }
 
     protected void build( JarSignerVerifyRequest request, Commandline cli )

@@ -57,6 +57,13 @@ public class JarSignerSignRequest
      */
     protected File signedjar;
 
+    /**
+     * Location of the extra certchain file to be used during signing.
+     * 
+     * See <a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
+     * @since TODO
+     */
+    protected File certchain;
 
     public String getKeypass()
     {
@@ -108,4 +115,23 @@ public class JarSignerSignRequest
         this.signedjar = signedjar;
     }
 
+    /**
+     * Sets certchain to be used.
+     * 
+     * @param certchain Cert Chain file path or {@code null} to remove the option
+     * @since TODO
+     */
+    public void setCertchain( File certchain )
+    {
+        this.certchain = certchain;
+    }
+
+    /**
+     * Get certificate chain.
+     * @return Path to the certificate chain file or {@code null} if undefined
+     */
+    public File getCertchain()
+    {
+        return certchain;
+    }
 }

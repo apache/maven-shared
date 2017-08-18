@@ -61,7 +61,7 @@ public class JarSignerSignRequest
      * Location of the extra certchain file to be used during signing.
      * 
      * See <a href="http://docs.oracle.com/javase/7/docs/technotes/tools/windows/jarsigner.html#Options">options</a>.
-     * @since TODO
+     * @since 3.0.0
      */
     protected File certchain;
 
@@ -119,7 +119,7 @@ public class JarSignerSignRequest
      * Sets certchain to be used.
      * 
      * @param certchain Cert Chain file path or {@code null} to remove the option
-     * @since TODO
+     * @since 3.0.0
      */
     public void setCertchain( File certchain )
     {

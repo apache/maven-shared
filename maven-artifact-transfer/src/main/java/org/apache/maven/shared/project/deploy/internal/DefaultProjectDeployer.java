@@ -75,14 +75,14 @@ public class DefaultProjectDeployer
 
         // Deploy the POM
         boolean isPomArtifact = "pom".equals( packaging );
-        if ( !isPomArtifact )
+        if ( isPomArtifact )
         {
-            ProjectArtifactMetadata metadata = new ProjectArtifactMetadata( artifact, pomFile );
-            artifact.addMetadata( metadata );
+            artifact.setFile( pomFile );
         }
         else
         {
-            artifact.setFile( pomFile );
+            ProjectArtifactMetadata metadata = new ProjectArtifactMetadata( artifact, pomFile );
+            artifact.addMetadata( metadata );
         }
 
         if ( request.isUpdateReleaseInfo() )

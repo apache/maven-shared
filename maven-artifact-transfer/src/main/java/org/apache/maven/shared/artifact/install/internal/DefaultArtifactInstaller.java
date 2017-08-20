@@ -48,18 +48,7 @@ public class DefaultArtifactInstaller
     public void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException, IllegalArgumentException
     {
-        if ( request == null )
-        {
-            throw new IllegalArgumentException( "The parameter request is not allowed to be null." );
-        }
-        if ( mavenArtifacts == null )
-        {
-            throw new IllegalArgumentException( "The parameter mavenArtifacts is not allowed to be null." );
-        }
-        if ( mavenArtifacts.isEmpty() )
-        {
-            throw new IllegalArgumentException( "The collection mavenArtifacts is not allowed to be empty." );
-        }
+        validateParameters( request, mavenArtifacts );
 
         try
         {
@@ -79,10 +68,7 @@ public class DefaultArtifactInstaller
     public void install( ProjectBuildingRequest request, File localRepositry, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException
     {
-        if ( request == null )
-        {
-            throw new IllegalArgumentException( "The parameter request is not allowed to be null." );
-        }
+        validateParameters( request, mavenArtifacts );
         if ( localRepositry == null )
         {
             throw new IllegalArgumentException( "The parameter localRepository is not allowed to be null." );
@@ -90,14 +76,6 @@ public class DefaultArtifactInstaller
         if ( !localRepositry.isDirectory() )
         {
             throw new IllegalArgumentException( "The parameter localRepository must be a directory." );
-        }
-        if ( mavenArtifacts == null )
-        {
-            throw new IllegalArgumentException( "The parameter mavenArtifacts is not allowed to be null." );
-        }
-        if ( mavenArtifacts.isEmpty() )
-        {
-            throw new IllegalArgumentException( "The collection mavenArtifacts is not allowed to be empty." );
         }
 
         try
@@ -114,6 +92,22 @@ public class DefaultArtifactInstaller
         }
     }
 
+    private void validateParameters( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
+    {
+        if ( request == null )
+        {
+            throw new IllegalArgumentException( "The parameter request is not allowed to be null." );
+        }
+        if ( mavenArtifacts == null )
+        {
+            throw new IllegalArgumentException( "The parameter mavenArtifacts is not allowed to be null." );
+        }
+        if ( mavenArtifacts.isEmpty() )
+        {
+            throw new IllegalArgumentException( "The collection mavenArtifacts is not allowed to be empty." );
+        }
+    }
+    
     /**
      * @return true if the current Maven version is Maven 3.1.
      */

@@ -48,19 +48,7 @@ public class DefaultArtifactInstaller
     public void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException, IllegalArgumentException
     {
-        if ( request == null )
-        {
-            throw new IllegalArgumentException( "The parameter request is not allowed to be null." );
-        }
-        if ( mavenArtifacts == null )
-        {
-            throw new IllegalArgumentException( "The parameter mavenArtifacts is not allowed to be null." );
-        }
-        if ( mavenArtifacts.isEmpty() )
-        {
-            throw new IllegalArgumentException( "The collection mavenArtifacts is not allowed to be empty." );
-        }
-
+        validateParameters( request, mavenArtifacts );
         try
         {
             String hint = isMaven31() ? "maven31" : "maven3";
@@ -79,10 +67,7 @@ public class DefaultArtifactInstaller
     public void install( ProjectBuildingRequest request, File localRepositry, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException
     {
-        if ( request == null )
-        {
-            throw new IllegalArgumentException( "The parameter request is not allowed to be null." );
-        }
+        validateParameters( request, mavenArtifacts );
         if ( localRepositry == null )
         {
             throw new IllegalArgumentException( "The parameter localRepository is not allowed to be null." );
@@ -91,14 +76,8 @@ public class DefaultArtifactInstaller
         {
             throw new IllegalArgumentException( "The parameter localRepository must be a directory." );
         }
-        if ( mavenArtifacts == null )
-        {
-            throw new IllegalArgumentException( "The parameter mavenArtifacts is not allowed to be null." );
-        }
-        if ( mavenArtifacts.isEmpty() )
-        {
-            throw new IllegalArgumentException( "The collection mavenArtifacts is not allowed to be empty." );
-        }
+
+        // TODO: Should we check for exists() ?
 
         try
         {
@@ -111,6 +90,22 @@ public class DefaultArtifactInstaller
         catch ( ComponentLookupException e )
         {
             throw new ArtifactInstallerException( e.getMessage(), e );
+        }
+    }
+
+    private void validateParameters( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
+    {
+        if ( request == null )
+        {
+            throw new IllegalArgumentException( "The parameter request is not allowed to be null." );
+        }
+        if ( mavenArtifacts == null )
+        {
+            throw new IllegalArgumentException( "The parameter mavenArtifacts is not allowed to be null." );
+        }
+        if ( mavenArtifacts.isEmpty() )
+        {
+            throw new IllegalArgumentException( "The collection mavenArtifacts is not allowed to be empty." );
         }
     }
 

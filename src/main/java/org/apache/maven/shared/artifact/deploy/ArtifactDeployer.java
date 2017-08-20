@@ -35,6 +35,9 @@ public interface ArtifactDeployer
      * @param request {@link ProjectBuildingRequest}
      * @param mavenArtifacts {@link Artifact}
      * @throws ArtifactDeployerException in case of an error.
+     * @throws IllegalArgumentException in case of parameter <code>request</code> is <code>null</code> or parameter
+     *             <code>mavenArtifacts</code> is <code>null</code> or <code>mavenArtifacts.isEmpty()</code> is
+     *             <code>true</code>.
      */
     void deploy( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactDeployerException;
@@ -45,9 +48,12 @@ public interface ArtifactDeployer
      *            used.
      * @param mavenArtifacts the artifacts to deploy
      * @throws ArtifactDeployerException in case of an error.
+     * @throws IllegalArgumentException in case of parameter <code>request</code> is <code>null</code> or parameter
+     *             <code>mavenArtifacts</code> is <code>null</code> or <code>mavenArtifacts.isEmpty()</code> is
+     *             <code>true</code>.
      */
     void deploy( ProjectBuildingRequest request, ArtifactRepository remoteRepository,
                  Collection<Artifact> mavenArtifacts )
-                     throws ArtifactDeployerException;
+        throws ArtifactDeployerException;
 
 }

@@ -35,6 +35,9 @@ public interface ArtifactInstaller
      * @param request {@link ProjectBuildingRequest}
      * @param mavenArtifacts {@link Artifact}
      * @throws ArtifactInstallerException in case of an error.
+     * @throws IllegalArgumentException in case of parameter <code>request</code> is <code>null</code> or parameter
+     *             <code>mavenArtifacts</code> is <code>null</code> or <code>mavenArtifacts.isEmpty()</code> is
+     *             <code>true</code>.
      */
     void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException;
@@ -45,6 +48,10 @@ public interface ArtifactInstaller
      * @param mavenArtifacts Collection of {@link Artifact MavenArtifacts}
      * @throws ArtifactInstallerException In case of an error which can be the a given artifact can not be found or the
      *             installation has failed.
+     * @throws IllegalArgumentException in case of parameter <code>request</code> is <code>null</code> or parameter
+     *             <code>localRepository</code> is <code>null</code> or <code>localRepository</code> is not a directory
+     *             or parameter <code>mavenArtifacts</code> is <code>null</code> or
+     *             <code>mavenArtifacts.isEmpty()</code> is <code>true</code>.
      */
     void install( ProjectBuildingRequest request, File localRepository, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException;

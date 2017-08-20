@@ -78,6 +78,8 @@ public class DefaultArtifactInstaller
             throw new IllegalArgumentException( "The parameter localRepository must be a directory." );
         }
 
+        // TODO: Should we check for exists() ?
+
         try
         {
             String hint = isMaven31() ? "maven31" : "maven3";
@@ -107,7 +109,7 @@ public class DefaultArtifactInstaller
             throw new IllegalArgumentException( "The collection mavenArtifacts is not allowed to be empty." );
         }
     }
-    
+
     /**
      * @return true if the current Maven version is Maven 3.1.
      */

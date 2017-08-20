@@ -43,11 +43,13 @@ public class DefaultArtifactDeployer
 {
 
     private PlexusContainer container;
-    
+
     @Override
     public void deploy( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
         throws ArtifactDeployerException
     {
+        validateParameters( request, mavenArtifacts );
+
         try
         {
             String hint = isMaven31() ? "maven31" : "maven3";
@@ -65,8 +67,9 @@ public class DefaultArtifactDeployer
     @Override
     public void deploy( ProjectBuildingRequest request, ArtifactRepository remoteRepository,
                         Collection<Artifact> mavenArtifacts )
-                            throws ArtifactDeployerException
+        throws ArtifactDeployerException
     {
+        validateParameters( request, mavenArtifacts );
         try
         {
             String hint = isMaven31() ? "maven31" : "maven3";
@@ -80,6 +83,23 @@ public class DefaultArtifactDeployer
             throw new ArtifactDeployerException( e.getMessage(), e );
         }
     }
+
+    private void validateParameters( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
+    {
+        if ( request == null )
+        {
+            throw new IllegalArgumentException( "The parameter request is not allowed to be null." );
+        }
+        if ( mavenArtifacts == null )
+        {
+            throw new IllegalArgumentException( "The parameter mavenArtifacts is not allowed to be null." );
+        }
+        if ( mavenArtifacts.isEmpty() )
+        {
+            throw new IllegalArgumentException( "The collection mavenArtifacts is not allowed to be empty." );
+        }
+    }
+
     /**
      * @return true if the current Maven version is Maven 3.1.
      */
@@ -105,7 +125,7 @@ public class DefaultArtifactDeployer
     /**
      * Injects the Plexus content.
      *
-     * @param context   Plexus context to inject.
+     * @param context Plexus context to inject.
      * @throws ContextException if the PlexusContainer could not be located.
      */
     public void contextualize( Context context )

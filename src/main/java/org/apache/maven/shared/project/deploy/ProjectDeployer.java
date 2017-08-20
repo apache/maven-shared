@@ -57,6 +57,9 @@ public interface ProjectDeployer
      * @throws NoFileAssignedException In case of missing file which has not been assigned to project.
      * @throws IllegalArgumentException in case of artifact is not correctly assigned.
      */
+    // TODO: Think about null check for projectBuildingRequest?
+    // TODO: Think about null check for projectDeployerRequest?
+    // TODO: Think about null check for artifactRepository?
     void deploy( ProjectBuildingRequest buildingRequest, ProjectDeployerRequest request,
                         ArtifactRepository artifactRepository )
         throws NoFileAssignedException, IllegalArgumentException;

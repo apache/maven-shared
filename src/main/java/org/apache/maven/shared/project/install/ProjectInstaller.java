@@ -71,6 +71,8 @@ public interface ProjectInstaller
      * @throws ArtifactInstallerException In case of problems to install artifacts.
      * @throws NoFileAssignedException If no file has been assigned to the project.
      */
+    // TODO: Think about null check for projectBuildingRequest?
+    // TODO: Think about null check for projectInstallerRequest?
     void install( ProjectBuildingRequest projectBuildingRequest, ProjectInstallerRequest projectInstallerRequest )
         throws IOException, ArtifactInstallerException, NoFileAssignedException;
 

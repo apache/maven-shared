@@ -33,11 +33,14 @@ public interface ArtifactInstaller
 
     /**
      * @param request {@link ProjectBuildingRequest}
-     * @param mavenArtifacts {@link Artifact}
+     * @param mavenArtifacts {@link Artifact} (no null or empty collection allowed.)
      * @throws ArtifactInstallerException in case of an error.
+     * @throws IllegalArgumentException in case <code>request</code> is <code>null</code>, <code>mavenArtifacts</code>
+     *             is <code>null</code> or <code>mavenArtifacts</code> is empty (<code>mavenArtifacts.isEmpty()</code>
+     *             == <code>true</code>).
      */
     void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
-        throws ArtifactInstallerException;
+        throws ArtifactInstallerException, IllegalArgumentException;
 
     /**
      * @param request {@link ProjectBuildingRequest}.

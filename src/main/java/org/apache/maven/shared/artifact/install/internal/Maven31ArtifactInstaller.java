@@ -46,7 +46,6 @@ import org.eclipse.aether.util.artifact.SubArtifact;
 public class Maven31ArtifactInstaller
     implements ArtifactInstaller
 {
-
     @Requirement
     private RepositorySystem repositorySystem;
 

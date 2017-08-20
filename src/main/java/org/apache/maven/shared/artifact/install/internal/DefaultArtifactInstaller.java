@@ -46,8 +46,21 @@ public class DefaultArtifactInstaller
 
     @Override
     public void install( ProjectBuildingRequest request, Collection<Artifact> mavenArtifacts )
-        throws ArtifactInstallerException
+        throws ArtifactInstallerException, IllegalArgumentException
     {
+        if ( request == null )
+        {
+            throw new IllegalArgumentException( "The parameter request is not allowed to be null." );
+        }
+        if ( mavenArtifacts == null )
+        {
+            throw new IllegalArgumentException( "The parameter mavenArtifacts is not allowed to be null." );
+        }
+        if ( mavenArtifacts.isEmpty() )
+        {
+            throw new IllegalArgumentException( "The collection mavenArtifacts is not allowed to be empty." );
+        }
+
         try
         {
             String hint = isMaven31() ? "maven31" : "maven3";
@@ -61,11 +74,32 @@ public class DefaultArtifactInstaller
             throw new ArtifactInstallerException( e.getMessage(), e );
         }
     }
-    
+
     @Override
     public void install( ProjectBuildingRequest request, File localRepositry, Collection<Artifact> mavenArtifacts )
         throws ArtifactInstallerException
     {
+        if ( request == null )
+        {
+            throw new IllegalArgumentException( "The parameter request is not allowed to be null." );
+        }
+        if ( localRepositry == null )
+        {
+            throw new IllegalArgumentException( "The parameter localRepository is not allowed to be null." );
+        }
+        if ( !localRepositry.isDirectory() )
+        {
+            throw new IllegalArgumentException( "The parameter localRepository must be a directory." );
+        }
+        if ( mavenArtifacts == null )
+        {
+            throw new IllegalArgumentException( "The parameter mavenArtifacts is not allowed to be null." );
+        }
+        if ( mavenArtifacts.isEmpty() )
+        {
+            throw new IllegalArgumentException( "The collection mavenArtifacts is not allowed to be empty." );
+        }
+
         try
         {
             String hint = isMaven31() ? "maven31" : "maven3";

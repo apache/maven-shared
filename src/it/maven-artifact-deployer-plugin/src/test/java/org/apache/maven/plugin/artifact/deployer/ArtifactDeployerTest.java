@@ -1,6 +1,5 @@
-package org.apache.maven.plugin.artifact.installer;
+package org.apache.maven.plugin.artifact.deployer;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -18,14 +17,14 @@ import io.takari.maven.testing.executor.junit.MavenJUnitTestRunner;
 
 /**
  * This will check if the ArtifactInstaller works for all Maven versions 3.0.5, 3.1.1, 3.2.5, 3.3.1, 3.3.9, 3.5.0. This
- * is done by using the test plugin <code>maven-artifact-installer-plugin</code> which uses the ArtifactInstaller as component.
+ * is done by using the test plugin <code>maven-artifact-deployer-plugin</code> which uses the ArtifactInstaller as component.
  * By using this way we get a real runtime environment which supports all Maven versions.
  * 
  * @author Karl Heinz Marbaise
  */
 @RunWith( MavenJUnitTestRunner.class )
 @MavenVersions( { "3.0.5", "3.1.1", "3.2.5", "3.3.1", "3.3.9", "3.5.0" } )
-public class ArtifactInstallerTest
+public class ArtifactDeployerTest
 {
 
     @Rule
@@ -33,7 +32,7 @@ public class ArtifactInstallerTest
 
     public final MavenRuntime mavenRuntime;
 
-    public ArtifactInstallerTest( MavenRuntimeBuilder builder )
+    public ArtifactDeployerTest( MavenRuntimeBuilder builder )
         throws Exception
     {
         this.mavenRuntime = builder.build();
@@ -56,11 +55,10 @@ public class ArtifactInstallerTest
 
         result.assertErrorFreeLog();
         // Check that the current plugins has been called at least once.
-        result.assertLogText( "[INFO] --- maven-artifact-installer-plugin:1.0.0:artifact-installer (id-artifact-installer) @ maven-artifact-installer-plugin-it ---" );
+        result.assertLogText( "[INFO] --- maven-artifact-deployer-plugin:1.0.0:artifact-deployer (id-artifact-deployer) @ maven-artifact-deployer-plugin-it ---" );
 
         String mvnVersion = mavenRuntime.getMavenVersion();
-        // The "." will be replaced by "/" in the running of the artifact-installer-plugin so I need to do the same
-        // here.
+        // The "." will be replaced by "/" in the running of the artifact-installer-plugin so I need to do the same here.
         // Maybe there is a more elegant way to do that?
         mvnVersion = mvnVersion.replaceAll( "\\.", "/" );
 
@@ -71,20 +69,21 @@ public class ArtifactInstallerTest
         System.out.println( "mvnVersion='" + mvnVersion + "'" );
 
         // The real checking of what should had happen..
+        
         assertTrue( new File( localRepo,
-                              "GROUPID-" + mvnVersion + "/ARTIFACTID/VERSION/ARTIFACTID-VERSION.EXTENSION" ).exists() );
-        assertFalse( new File( localRepo, "GROUPID-" + mvnVersion
-            + "/ARTIFACTID/VERSION/ARTIFACTID-VERSION.EXTENSION.md5" ).exists() );
-        assertFalse( new File( localRepo, "GROUPID-" + mvnVersion
-            + "/ARTIFACTID/VERSION/ARTIFACTID-VERSION.EXTENSION.sha1" ).exists() );
+                              "DEPLOYER-GROUPID-" + mvnVersion + "/ARTIFACTID/VERSION/ARTIFACTID-VERSION.EXTENSION" ).exists() );
+        assertTrue( new File( localRepo,
+                              "DEPLOYER-GROUPID-" + mvnVersion + "/ARTIFACTID/VERSION/ARTIFACTID-VERSION.EXTENSION.md5" ).exists() );
+        assertTrue( new File( localRepo,
+                              "DEPLOYER-GROUPID-" + mvnVersion + "/ARTIFACTID/VERSION/ARTIFACTID-VERSION.EXTENSION.sha1" ).exists() );
 
-        assertTrue( new File( localRepo, "GROUPID-" + mvnVersion
+        assertTrue( new File( localRepo, "DEPLOYER-GROUPID-" + mvnVersion
             + "/ARTIFACTID/VERSION/ARTIFACTID-VERSION-CLASSIFIER.EXTENSION" ).exists() );
-        assertFalse( new File( localRepo, "GROUPID-" + mvnVersion
-            + "/ARTIFACTID/VERSION/ARTIFACTID-VERSION-CLASSIFIER.EXTENSION.md5" ).exists() );
-        assertFalse( new File( localRepo, "GROUPID-" + mvnVersion
-            + "/ARTIFACTID/VERSION/ARTIFACTID-VERSION-CLASSIFIER.EXTENSION.sha1" ).exists() );
-        assertTrue( new File( localRepo, "GROUPID-" + mvnVersion + "/ARTIFACTID/maven-metadata-local.xml" ).exists() ); // ??
+        assertTrue( new File( localRepo, "DEPLOYER-GROUPID-" + mvnVersion
+                              + "/ARTIFACTID/VERSION/ARTIFACTID-VERSION-CLASSIFIER.EXTENSION.md5" ).exists() );
+        assertTrue( new File( localRepo, "DEPLOYER-GROUPID-" + mvnVersion
+                              + "/ARTIFACTID/VERSION/ARTIFACTID-VERSION-CLASSIFIER.EXTENSION.sha1" ).exists() );
+        assertTrue( new File( localRepo, "DEPLOYER-GROUPID-" + mvnVersion + "/ARTIFACTID/maven-metadata-local.xml" ).exists() ); // ??
 
     }
 }

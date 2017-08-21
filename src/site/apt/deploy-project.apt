@@ -1,9 +1,9 @@
  -----
- Install Project
+ Deploy Project
  -----
  Karl Heinz Marbaise
  -----
- 2017-05-07
+ 2017-08-20
  -----
 
  ~~ Licensed to the Apache Software Foundation (ASF) under one
@@ -26,11 +26,11 @@
  ~~ NOTE: For help with the syntax of this file, see:
  ~~ http://maven.apache.org/doxia/references/apt-format.html
 
-Install a Project
+Deploy a Project
 
-  If you are developing a maven plugin or other components related to Maven you need
-  often to install artifacts into the local repository which is a little bit cumbersome. 
-  This can be easily done via the following code parts.
+  If you are developing a maven plugin you need often to deploy a whole project 
+  into a repository which is a little bit cumbersome. This can be easily 
+  done via the following code parts.
 
 +---  
    @Parameter ( defaultValue = "${session}", required = true, readonly = true)
@@ -39,16 +39,16 @@ Install a Project
    private MavenProject project;
 
    @Component
-   private ProjectInstaller installer;
+   private ProjectDeployer deployer;
    ...
    public void execute() {
       
-      ProjectInstallerRequest pir =
-           new ProjectInstallerRequest()
-           //TODO: THink about setUpdateReleaseInfo()..
-             .setProject( project ).setUpdateReleaseInfo( updateReleaseInfo );
-
-      installer.install( session.getProjectBuildingRequest(), pir );
+      ProjectDeployerRequest pir =
+           new ProjectDeployerRequest()
+           //TODO: Think about setUpdateReleaseInfo()..
+             .setProject( project ).setUpdateReleaseInfo( true );
+             
+      deployer.deploy( session.getProjectBuildingRequest(), pir );
       ...
    }
    

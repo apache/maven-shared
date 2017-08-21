@@ -85,6 +85,9 @@ public class DefaultProjectDeployer
             artifact.addMetadata( metadata );
         }
 
+        //FIXME: It does not make sense to set an artifact explicitly to a "Release"
+        // cause this should be choosen only by the not existing of "-SNAPSHOT" in the
+        // version.
         if ( request.isUpdateReleaseInfo() )
         {
             artifact.setRelease( true );

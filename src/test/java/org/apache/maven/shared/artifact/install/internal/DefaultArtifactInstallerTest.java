@@ -45,8 +45,7 @@ public class DefaultArtifactInstallerTest
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void installShouldReturnIllegalArgumentExceptionForFirstParameterWithNull()
-        throws ArtifactInstallerException
+    public void installShouldReturnIllegalArgumentExceptionForFirstParameterWithNull() throws IllegalArgumentException, ArtifactInstallerException
     {
         DefaultArtifactInstaller dai = new DefaultArtifactInstaller();
 

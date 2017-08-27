@@ -57,10 +57,10 @@ public class DefaultArtifactDeployerTest
         throws ArtifactDeployerException
     {
         DefaultArtifactDeployer dap = new DefaultArtifactDeployer();
+        ProjectBuildingRequest pbr = mock( ProjectBuildingRequest.class );
 
         thrown.expect( IllegalArgumentException.class );
         thrown.expectMessage( "The parameter mavenArtifacts is not allowed to be null." );
-        ProjectBuildingRequest pbr = mock( ProjectBuildingRequest.class );
         dap.deploy( pbr, null );
     }
 
@@ -69,10 +69,10 @@ public class DefaultArtifactDeployerTest
         throws ArtifactDeployerException
     {
         DefaultArtifactDeployer dap = new DefaultArtifactDeployer();
+        ProjectBuildingRequest pbr = mock( ProjectBuildingRequest.class );
 
         thrown.expect( IllegalArgumentException.class );
         thrown.expectMessage( "The collection mavenArtifacts is not allowed to be empty." );
-        ProjectBuildingRequest pbr = mock( ProjectBuildingRequest.class );
         dap.deploy( pbr, Collections.<Artifact>emptyList() );
     }
 
@@ -93,10 +93,10 @@ public class DefaultArtifactDeployerTest
         throws ArtifactDeployerException
     {
         DefaultArtifactDeployer dap = new DefaultArtifactDeployer();
+        ProjectBuildingRequest pbr = mock( ProjectBuildingRequest.class );
 
         thrown.expect( IllegalArgumentException.class );
         thrown.expectMessage( "The parameter mavenArtifacts is not allowed to be null." );
-        ProjectBuildingRequest pbr = mock( ProjectBuildingRequest.class );
         dap.deploy( pbr, null, null );
     }
 
@@ -105,10 +105,10 @@ public class DefaultArtifactDeployerTest
         throws ArtifactDeployerException
     {
         DefaultArtifactDeployer dap = new DefaultArtifactDeployer();
+        ProjectBuildingRequest pbr = mock( ProjectBuildingRequest.class );
 
         thrown.expect( IllegalArgumentException.class );
         thrown.expectMessage( "The collection mavenArtifacts is not allowed to be empty." );
-        ProjectBuildingRequest pbr = mock( ProjectBuildingRequest.class );
         dap.deploy( pbr, null, Collections.<Artifact>emptyList() );
     }
 

@@ -115,6 +115,11 @@
       <artifactId>doxia-site-renderer</artifactId>
       <version>${doxiaSitetoolsVersion}</version>
     </dependency>
+    <dependency><!-- TODO remove dependency when upgrading Doxia Sitetools to 1.7.5 -->
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.6</version>
+    </dependency>
 
     <!-- misc -->
     <dependency>
@@ -148,6 +153,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-invoker-plugin</artifactId>
+        <version>3.0.1</version><!-- TODO remove version when upgrading parent pom -->
         <configuration>
           <debug>true</debug>
           <projectsDirectory>src/it</projectsDirectory>
@@ -192,40 +198,6 @@
           </plugin>
         </plugins>
       </reporting>
-    </profile>
-
-    <profile>
-      <id>jigsaw</id>
-      <activation>
-        <jdk>[9,)</jdk>
-      </activation>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>oss-jfrog</id>
-          <url>https://oss.jfrog.org/oss-snapshot-local/</url>
-          <releases>
-            <enabled>false</enabled>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-invoker-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>org.codehaus.groovy</groupId>
-                <artifactId>groovy-all</artifactId>
-                <version>2.4.8-SNAPSHOT</version>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 </project>

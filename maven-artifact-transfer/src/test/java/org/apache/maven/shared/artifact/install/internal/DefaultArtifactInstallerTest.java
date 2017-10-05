@@ -112,7 +112,7 @@ public class DefaultArtifactInstallerTest
         DefaultArtifactInstaller dai = new DefaultArtifactInstaller();
 
         thrown.expect( IllegalArgumentException.class );
-        thrown.expectMessage( "The parameter mavenArtifacts is not allowed to be null." );
+        thrown.expectMessage( "The parameter localRepository must be a directory." );
         ProjectBuildingRequest pbr = mock( ProjectBuildingRequest.class );
         List<Artifact> singleEntryList = Collections.singletonList( mock( Artifact.class ) );
 

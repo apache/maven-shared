@@ -19,7 +19,7 @@ package org.apache.maven.shared.artifact.filter.collection;
  * under the License.    
  */
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
@@ -57,7 +57,7 @@ public class ProjectTransitivityFilter
 
         if ( excludeTransitive )
         {
-            result = new HashSet<Artifact>();
+            result = new LinkedHashSet<Artifact>();
             for ( Artifact artifact : artifacts )
             {
                 if ( artifactIsADirectDependency( artifact ) )

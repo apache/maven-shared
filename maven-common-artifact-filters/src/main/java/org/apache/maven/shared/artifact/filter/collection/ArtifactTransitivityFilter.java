@@ -29,7 +29,7 @@ import org.apache.maven.project.ProjectBuildingRequest;
 import org.apache.maven.project.ProjectBuildingResult;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -179,7 +179,7 @@ public class ArtifactTransitivityFilter
     public Set<Artifact> filter( Set<Artifact> artifacts )
     {
 
-        Set<Artifact> result = new HashSet<Artifact>();
+        Set<Artifact> result = new LinkedHashSet<Artifact>();
         for ( Artifact artifact : artifacts )
         {
             if ( artifactIsATransitiveDependency( artifact ) )

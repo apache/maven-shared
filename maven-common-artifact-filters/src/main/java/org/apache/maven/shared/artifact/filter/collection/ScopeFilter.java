@@ -16,10 +16,10 @@ package org.apache.maven.shared.artifact.filter.collection;
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
@@ -52,10 +52,10 @@ public class ScopeFilter
     /**
      * This function determines if filtering needs to be performed. Excludes are
      * ignored if Includes are used.
-     * 
+     *
      * @param artifacts
      *            the set of artifacts to filter.
-     * 
+     *
      * @return a Set of filtered artifacts.
      * @throws ArtifactFilterException when there's an invalid included scope
      */
@@ -73,7 +73,7 @@ public class ScopeFilter
                 throw new ArtifactFilterException( "Invalid Scope in includeScope: " + includeScope );
             }
 
-            results = new HashSet<Artifact>();
+            results = new LinkedHashSet<Artifact>();
 
             if ( Artifact.SCOPE_PROVIDED.equals( includeScope ) || Artifact.SCOPE_SYSTEM.equals( includeScope ) )
             {
@@ -100,7 +100,7 @@ public class ScopeFilter
             {
                 throw new ArtifactFilterException( "Invalid Scope in excludeScope: " + excludeScope );
             }
-            results = new HashSet<Artifact>();
+            results = new LinkedHashSet<Artifact>();
             // plexus ScopeArtifactFilter doesn't handle the provided scope so
             // we
             // need special handling for it.
@@ -131,7 +131,7 @@ public class ScopeFilter
 
     private Set<Artifact> includeSingleScope( Set<Artifact> artifacts, String scope )
     {
-        Set<Artifact> results = new HashSet<Artifact>();
+        Set<Artifact> results = new LinkedHashSet<Artifact>();
         for ( Artifact artifact : artifacts )
         {
             if ( scope.equals( artifact.getScope() ) )
@@ -144,7 +144,7 @@ public class ScopeFilter
 
     private Set<Artifact> excludeSingleScope( Set<Artifact> artifacts, String scope )
     {
-        Set<Artifact> results = new HashSet<Artifact>();
+        Set<Artifact> results = new LinkedHashSet<Artifact>();
         for ( Artifact artifact : artifacts )
         {
             if ( !scope.equals( artifact.getScope() ) )

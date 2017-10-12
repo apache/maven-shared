@@ -30,8 +30,40 @@ ${project.name}
 
   Classes to prepare report plugins execution with Maven 3, through
   {{{./apidocs/org/apache/maven/reporting/exec/MavenReportExecutor.html}MavenReportExecutor}}
-  ({{{./apidocs/org/apache/maven/reporting/exec/DefaultMavenReportExecutor.html}implementation}}):
-  report plugins can be configured in <<<\<configuration\>>>> element of <<<maven-site-plugin>>> or any other
+  ({{{./apidocs/org/apache/maven/reporting/exec/DefaultMavenReportExecutor.html}implementation}}).
+
+  Since 1.4, the request can (and should) be populated from
+  {{{/ref/current/maven-model/maven.html#class_reporting}pom's <<<\<reporting\>>>> section}},
+  injected in Mojo parameter as <<<$\{project.reporting.plugins\}>>> default value:
+
++----+
+    @Parameter( defaultValue = "${esc.d}{project.reporting.plugins}", readonly = true )
+    private org.apache.maven.model.ReportPlugin[] reportingPlugins;
++----+
+
+  Contrary to Maven 2.x, report <<<\<version\>>>> explicit definition is optional:
+  if no version is specified for a report plugin, version is determined by
+
+    [[1]] searching for the plugin in the <<<build/plugins>>> section of the pom,
+ 
+    [[2]] searching for the plugin in the <<<build/pluginManagement>>> section of the pom,
+
+    [[3]] asking {{{/ref/current/maven-core/apidocs/org/apache/maven/plugin/version/PluginVersionResolver.html}PluginVersionResolver}}
+    to get a fallback version and display a warning as it's not a recommended use.
+
+    []
+
+  Since <<<maven-reporting-exec>>> 1.2 (which is used by <<<maven-site-plugin>>> 3.4), plugin configuration in
+  <<<build/pluginManagement>>> is also injected into reports.
+
+* Notice on now obsolete reportPlugin format
+
+  This section is kept to explain what happened in previous releases of the component, but this approach has been
+  abandonned so far after discovering major limitations: see
+  {{{/plugins/maven-site-plugin/maven-3.html#New_Configuration_Maven_3_only_no_reports_configuration_inheritance}Maven Site Plugin documentation}}
+  for more details.
+
+  Report plugins can be configured in <<<\<configuration\>>>> element of <<<maven-site-plugin>>> or any other
   report building plugin with following XML model corresponding to plugin's
   <<<List<{{{./apidocs/org/apache/maven/reporting/exec/ReportPlugin.html}ReportPlugin}}>>>> parameter:
 
@@ -60,54 +92,14 @@ ${project.name}
   * without <<<\<inherited\>>>> element: reporting plugins configuration inheritance is not supported at this level
   (see {{{https://issues.apache.org/jira/browse/MSITE-484}MSITE-484}}),
 
-  * with additional <<<\<reports\>>>> list outside <<<\<reportSet\>>>> that simplifies reports configuration in usual cases,
-
-  * with optional <<<\<version\>>>>: if no version is specified for a report plugin, version is determined by
-
-    [[1]] searching for the plugin in the <<<build/plugins>>> section of the pom,
- 
-    [[2]] searching for the plugin in the <<<build/pluginManagement>>> section of the pom,
-
-    [[3]] asking {{{/ref/current/maven-core/apidocs/org/apache/maven/plugin/version/PluginVersionResolver.html}PluginVersionResolver}}
-    to get a fallback version and display a warning as it's not a recommended use.
-
-    []
+  * with additional <<<\<reports\>>>> list outside <<<\<reportSet\>>>> that simplifies reports configuration in usual cases.
 
   []
-
-  Since <<<maven-reporting-exec>>> 1.2 (which is used by <<<maven-site-plugin>>> 3.4), plugin configuration in
-  <<<build/pluginManagement>>> is injected into reports.
 
   Maven 3 core makes an automatic transformation of <<<\<reporting\>>>> POM section (which supports configuration inheritance)
   to <<<maven-site-plugin>>>'s <<<reportPlugins>>> configuration through the
   {{{/ref/current/maven-model-builder/apidocs/org/apache/maven/model/plugin/ReportingConverter.html}ReportingConverter}}
   component.
 
-  Since 1.4, the request can be populated from pom's<<<\<reporting\>>>> section,
-  injected as <<<$\{project.reporting.plugins\}>>> parameter value:
-
-+----+
-<project>
-  [...]
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId/>
-        <artifactId/>
-        <version/>
-        <configuration/>
-        <reportSets>
-          <reportSet>
-            <id/>
-            <configuration/>
-            <reports/>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugin>
-    [...]
-  </reporting>
-</project>
-+----+
-
-  
+  But Maven 3 does not do the same job for any other plugin wanting to use reports, like <<<maven-pdf-plugin>>> for example:
+  this is one of the key limitations that made Maven team drop this approach.

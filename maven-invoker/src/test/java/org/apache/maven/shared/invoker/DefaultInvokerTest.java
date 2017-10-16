@@ -24,8 +24,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.maven.shared.utils.StringUtils;
@@ -47,14 +46,16 @@ public class DefaultInvokerTest
 
         InvocationRequest request = new DefaultInvocationRequest();
         request.setBaseDirectory( basedir );
-
         request.setDebug( true );
-
-        List<String> goals = new ArrayList<String>();
-        goals.add( "clean" );
-        goals.add( "package" );
-
-        request.setGoals( goals );
+        request.setGoals( Arrays.asList( "clean", "package" ) );
+        
+        if ( !System.getProperty( "java.version" ).startsWith( "1." ) )
+        {
+            Properties properties = new Properties();
+            properties.put( "maven.compiler.source", "1.6" );
+            properties.put( "maven.compiler.target", "1.6" );
+            request.setProperties( properties );
+        }
 
         InvocationResult result = invoker.execute( request );
 
@@ -71,15 +72,16 @@ public class DefaultInvokerTest
 
         InvocationRequest request = new DefaultInvocationRequest();
         request.setBaseDirectory( basedir );
-
         request.setDebug( true );
-
-        List<String> goals = new ArrayList<String>();
-        goals.add( "clean" );
-        goals.add( "package" );
-
-        request.setGoals( goals );
-
+        request.setGoals( Arrays.asList( "clean", "package" ) );
+        
+        if ( !System.getProperty( "java.version" ).startsWith( "1." ) )
+        {
+            Properties properties = new Properties();
+            properties.put( "maven.compiler.source", "1.6" );
+            properties.put( "maven.compiler.target", "1.6" );
+            request.setProperties( properties );
+        }
         InvocationResult result = invoker.execute( request );
 
         assertEquals( 1, result.getExitCode() );
@@ -97,15 +99,9 @@ public class DefaultInvokerTest
 
         InvocationRequest request = new DefaultInvocationRequest();
         request.setBaseDirectory( basedir );
-
         request.setPomFileName( "pom with spaces.xml" );
-
         request.setDebug( true );
-
-        List<String> goals = new ArrayList<String>();
-        goals.add( "clean" );
-
-        request.setGoals( goals );
+        request.setGoals( Arrays.asList( "clean" ) );
 
         InvocationResult result = invoker.execute( request );
 
@@ -124,15 +120,9 @@ public class DefaultInvokerTest
 
         InvocationRequest request = new DefaultInvocationRequest();
         request.setBaseDirectory( basedir );
-
         request.setPomFileName( "pom with spaces & special char.xml" );
-
         request.setDebug( true );
-
-        List<String> goals = new ArrayList<String>();
-        goals.add( "clean" );
-
-        request.setGoals( goals );
+        request.setGoals( Arrays.asList( "clean" ) );
 
         InvocationResult result = invoker.execute( request );
 
@@ -151,15 +141,9 @@ public class DefaultInvokerTest
 
         InvocationRequest request = new DefaultInvocationRequest();
         request.setBaseDirectory( basedir );
-
         request.setUserSettingsFile( new File( basedir, "settings with spaces.xml" ) );
-
         request.setDebug( true );
-
-        List<String> goals = new ArrayList<String>();
-        goals.add( "validate" );
-
-        request.setGoals( goals );
+        request.setGoals( Arrays.asList( "validate" ) );
 
         InvocationResult result = invoker.execute( request );
 
@@ -178,15 +162,9 @@ public class DefaultInvokerTest
 
         InvocationRequest request = new DefaultInvocationRequest();
         request.setBaseDirectory( basedir );
-
         request.setLocalRepositoryDirectory( new File( basedir, "repo with spaces" ) );
-
         request.setDebug( true );
-
-        List<String> goals = new ArrayList<String>();
-        goals.add( "validate" );
-
-        request.setGoals( goals );
+        request.setGoals( Arrays.asList( "validate" ) );
 
         InvocationResult result = invoker.execute( request );
 
@@ -210,13 +188,8 @@ public class DefaultInvokerTest
         props.setProperty( "key", "value with spaces" );
         props.setProperty( "key with spaces", "value" );
         request.setProperties( props );
-
         request.setDebug( true );
-
-        List<String> goals = new ArrayList<String>();
-        goals.add( "validate" );
-
-        request.setGoals( goals );
+        request.setGoals( Arrays.asList( "validate" ) );
 
         InvocationResult result = invoker.execute( request );
 

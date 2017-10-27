@@ -28,7 +28,7 @@ public interface MavenResourcesFiltering
 {
 
     /**
-     * return the List of the non filtered extensions (jpg,jpeg,gif,bmp,png)
+     * return the List of the non filtered extensions (jpg,jpeg,gif,bmp,png,ico)
      *
      * @return {@link List} of {@link String}
      */

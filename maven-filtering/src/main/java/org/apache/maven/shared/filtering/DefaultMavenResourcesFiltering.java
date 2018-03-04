@@ -77,6 +77,7 @@ public class DefaultMavenResourcesFiltering
         this.defaultNonFilteredFileExtensions.add( "gif" );
         this.defaultNonFilteredFileExtensions.add( "bmp" );
         this.defaultNonFilteredFileExtensions.add( "png" );
+        this.defaultNonFilteredFileExtensions.add( "ico" );
     }
 
     /** {@inheritDoc} */

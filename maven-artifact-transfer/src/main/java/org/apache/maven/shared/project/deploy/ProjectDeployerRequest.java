@@ -34,6 +34,8 @@ public class ProjectDeployerRequest
 
     private int retryFailedDeploymentCount;
 
+    private int retryFailedDeploymentDelay;
+
     // From DeployMojo
 
     private MavenProject project;
@@ -77,6 +79,23 @@ public class ProjectDeployerRequest
     public ProjectDeployerRequest setRetryFailedDeploymentCount( int theRetryFailedDeploymentCountToBeSet )
     {
         this.retryFailedDeploymentCount = theRetryFailedDeploymentCountToBeSet;
+        return this;
+    }
+
+    /**
+     * @return the retryFailedDeploymentCount
+     */
+    public int getRetryFailedDeploymentDelay()
+    {
+        return retryFailedDeploymentDelay;
+    }
+
+    /**
+     * @param retryFailedDeploymentDelay the retryFailedDeploymentDelay to set
+     */
+    public ProjectDeployerRequest setRetryFailedDeploymentDelay( int retryFailedDeploymentDelay )
+    {
+        this.retryFailedDeploymentDelay = retryFailedDeploymentDelay;
         return this;
     }
 

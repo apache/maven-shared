@@ -49,6 +49,7 @@ public class DefaultProjectDeployer
     implements ProjectDeployer
 {
     private static final Logger LOGGER = LoggerFactory.getLogger( DefaultProjectDeployer.class );
+    private static final int MAX_RETRY_DELAY = 300; // seconds
 
     @Requirement
     private ArtifactDeployer deployer;
@@ -93,6 +94,7 @@ public class DefaultProjectDeployer
         artifact.setRepository( artifactRepository );
 
         int retryFailedDeploymentCount = request.getRetryFailedDeploymentCount();
+        int retryFailedDeploymentDelay = request.getRetryFailedDeploymentDelay();
 
         try
         {
@@ -128,7 +130,8 @@ public class DefaultProjectDeployer
                 deployableArtifacts.add( attached );
             }
 
-            deploy( buildingRequest, deployableArtifacts, artifactRepository, retryFailedDeploymentCount );
+            deploy( buildingRequest, deployableArtifacts, artifactRepository, retryFailedDeploymentCount,
+                    retryFailedDeploymentDelay );
         }
         catch ( ArtifactDeployerException e )
         {
@@ -137,12 +140,14 @@ public class DefaultProjectDeployer
     }
 
     private void deploy( ProjectBuildingRequest request, Collection<Artifact> artifacts,
-                         ArtifactRepository deploymentRepository, int retryFailedDeploymentCount )
+                         ArtifactRepository deploymentRepository, int retryFailedDeploymentCount,
+                         int retryFailedDeploymentDelay )
         throws ArtifactDeployerException
     {
 
         // for now retry means redeploy the complete artifacts collection
         int retryFailedDeploymentCounter = Math.max( 1, Math.min( 10, retryFailedDeploymentCount ) );
+        int retryDelay = Math.max( 1, Math.min( MAX_RETRY_DELAY, retryFailedDeploymentDelay ) );
         ArtifactDeployerException exception = null;
         for ( int count = 0; count < retryFailedDeploymentCounter; count++ )
         {
@@ -164,6 +169,15 @@ public class DefaultProjectDeployer
                 {
                     LOGGER.warn( "Encountered issue during deployment: " + e.getLocalizedMessage() );
                     LOGGER.debug( e.getMessage() );
+                    try
+                    {
+                        LOGGER.warn( "retrying in " + retryDelay + " seconds." );
+                        Thread.sleep( retryDelay * 1000L );
+                    }
+                    catch ( InterruptedException e1 )
+                    {
+                        // ignored
+                    }
                 }
                 if ( exception == null )
                 {

@@ -3,6 +3,7 @@ package org.apache.maven.shared.dependency.analyzer;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -149,13 +150,14 @@ public class DefaultProjectDependencyAnalyzerTest
         Map<Artifact, Set<DependencyUsage>> actualDependencyUsageMap =
             actualAnalysis.getUsedDeclaredArtifactToUsageMap();
 
-        Set<DependencyUsage> expectedCommonsIoUsage =
-            Collections.singleton( new DependencyUsage( "org.apache.commons.io.FileUtils", "inlinedStaticReference.Project" ) );
-        Set<DependencyUsage> expectedCommonsLangUsage =
-            Collections.singleton( new DependencyUsage( "org.apache.commons.lang.CharUtils", "inlinedStaticReference.Project" ) );
+        Map<Artifact, Set<DependencyUsage>> expectedDependencyUsageMap =
+            new HashMap<Artifact, Set<DependencyUsage>>();
+        expectedDependencyUsageMap.put( project1, createDependencyUsage(
+            "org.apache.commons.io.FileUtils", "inlinedStaticReference.Project" ) );
+        expectedDependencyUsageMap.put( project2, createDependencyUsage(
+            "org.apache.commons.lang.CharUtils", "inlinedStaticReference.Project" ) );
 
-        assertEquals( expectedCommonsIoUsage, actualDependencyUsageMap.get( project1 ) );
-        assertEquals( expectedCommonsLangUsage, actualDependencyUsageMap.get( project2 ) );
+        assertEquals( expectedDependencyUsageMap, actualDependencyUsageMap );
     }
 
     public void testInlinedStaticReference()
@@ -185,10 +187,12 @@ public class DefaultProjectDependencyAnalyzerTest
         Map<Artifact, Set<DependencyUsage>> actualDependencyUsageMap =
             actualAnalysis.getUsedDeclaredArtifactToUsageMap();
 
-        Set<DependencyUsage> expectedDom4jUsage =
-            Collections.singleton( new DependencyUsage( "org.dom4j.Node", "inlinedStaticReference.Project" ) );
+        Map<Artifact, Set<DependencyUsage>> expectedDependencyUsageMap =
+            new HashMap<Artifact, Set<DependencyUsage>>();
+        expectedDependencyUsageMap.put( project1, createDependencyUsage(
+            "org.dom4j.Node", "inlinedStaticReference.Project" ) );
 
-        assertEquals( expectedDom4jUsage, actualDependencyUsageMap.get( project1 ) );
+        assertEquals( expectedDependencyUsageMap, actualDependencyUsageMap );
     }
 
     public void testJarWithCompileDependency()
@@ -218,10 +222,12 @@ public class DefaultProjectDependencyAnalyzerTest
         Map<Artifact, Set<DependencyUsage>> actualDependencyUsageMap =
             actualAnalysis.getUsedDeclaredArtifactToUsageMap();
 
-        Set<DependencyUsage> expectedDependency1Usage =
-            Collections.singleton( new DependencyUsage( "jarWithCompileDependency.project1.Project1", "jarWithCompileDependency.project2.Project2" ) );
+        Map<Artifact, Set<DependencyUsage>> expectedDependencyUsageMap =
+            new HashMap<Artifact, Set<DependencyUsage>>();
+        expectedDependencyUsageMap.put( project1, createDependencyUsage(
+            "jarWithCompileDependency.project1.Project1", "jarWithCompileDependency.project2.Project2" ) );
 
-        assertEquals( expectedDependency1Usage, actualDependencyUsageMap.get( project1 ) );
+        assertEquals( expectedDependencyUsageMap, actualDependencyUsageMap );
     }
 
     public void testForceDeclaredDependenciesUsage()
@@ -291,10 +297,17 @@ public class DefaultProjectDependencyAnalyzerTest
         Map<Artifact, Set<DependencyUsage>> actualDependencyUsageMap =
             actualAnalysis.getUsedDeclaredArtifactToUsageMap();
 
-        Set<DependencyUsage> expectedDependency1Usage =
-            Collections.singleton( new DependencyUsage( "jarWithTestDependency.project1.Project1", "jarWithTestDependency.project2.Project2" ) );
+        Map<Artifact, Set<DependencyUsage>> expectedDependencyUsageMap =
+            new HashMap<Artifact, Set<DependencyUsage>>();
+        expectedDependencyUsageMap.put( project1, createDependencyUsage(
+            "jarWithTestDependency.project1.Project1", "jarWithTestDependency.project2.Project2" ) );
+        if ( SystemUtils.isJavaVersionAtLeast( JavaVersion.JAVA_1_8 ) )
+        {
+            expectedDependencyUsageMap.put( junit, createDependencyUsage(
+                "junit.runner.TestRunListener", "jarWithTestDependency.project2.Project2" ) );
+        }
 
-        assertEquals( expectedDependency1Usage, actualDependencyUsageMap.get( project1 ) );
+        assertEquals( expectedDependencyUsageMap, actualDependencyUsageMap );
     }
 
     public void testJarWithXmlTransitiveDependency()
@@ -347,10 +360,12 @@ public class DefaultProjectDependencyAnalyzerTest
         Map<Artifact, Set<DependencyUsage>> actualDependencyUsageMap =
             actualAnalysis.getUsedDeclaredArtifactToUsageMap();
 
-        Set<DependencyUsage> expectedTestModule1Usage =
-            Collections.singleton( new DependencyUsage( "foo.Main", "bar.Main" ) );
+        Map<Artifact, Set<DependencyUsage>> expectedDependencyUsageMap =
+            new HashMap<Artifact, Set<DependencyUsage>>();
+        expectedDependencyUsageMap.put( junit, createDependencyUsage(
+            "foo.Main", "bar.Main" ) );
 
-        assertEquals( expectedTestModule1Usage, actualDependencyUsageMap.get( junit ) );
+        assertEquals( expectedDependencyUsageMap, actualDependencyUsageMap );
     }
 
     // private methods --------------------------------------------------------
@@ -392,5 +407,9 @@ public class DefaultProjectDependencyAnalyzerTest
         ArtifactHandler handler = new DefaultArtifactHandler();
 
         return new DefaultArtifact( groupId, artifactId, versionRange, scope, type, null, handler );
+    }
+
+    private Set<DependencyUsage> createDependencyUsage( String dependencyClass, String usedBy ) {
+        return Collections.singleton( new DependencyUsage( dependencyClass, usedBy ) );
     }
 }

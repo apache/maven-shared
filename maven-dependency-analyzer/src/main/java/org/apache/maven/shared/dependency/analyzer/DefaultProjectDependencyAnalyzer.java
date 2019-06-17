@@ -60,7 +60,7 @@ public class DefaultProjectDependencyAnalyzer
      * DependencyAnalyzer
      */
     @Requirement
-    private DependencyAnalyzerWithUsages dependencyAnalyzer;
+    private DependencyAnalyzer dependencyAnalyzer;
 
     // ProjectDependencyAnalyzer methods --------------------------------------
 
@@ -215,7 +215,7 @@ public class DefaultProjectDependencyAnalyzer
     {
         URL url = new File( path ).toURI().toURL();
 
-        return dependencyAnalyzer.analyze( url );
+        return dependencyAnalyzer.analyzeWithUsages( url );
     }
 
     protected Set<Artifact> buildDeclaredArtifacts( MavenProject project )

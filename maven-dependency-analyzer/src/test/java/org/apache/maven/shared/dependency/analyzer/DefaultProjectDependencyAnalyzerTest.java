@@ -5,11 +5,25 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.lang3.JavaVersion;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.handler.ArtifactHandler;
+import org.apache.maven.artifact.handler.DefaultArtifactHandler;
+import org.apache.maven.artifact.versioning.VersionRange;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.invoker.InvocationRequest;
+import org.apache.maven.shared.invoker.InvocationResult;
+import org.apache.maven.shared.test.plugin.BuildTool;
+import org.apache.maven.shared.test.plugin.ProjectTool;
+import org.apache.maven.shared.test.plugin.RepositoryTool;
+import org.apache.maven.shared.test.plugin.TestToolsException;
+import org.codehaus.plexus.PlexusTestCase;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -29,20 +43,6 @@ import org.apache.commons.lang3.SystemUtils;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DefaultArtifact;
-import org.apache.maven.artifact.handler.ArtifactHandler;
-import org.apache.maven.artifact.handler.DefaultArtifactHandler;
-import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.invoker.InvocationRequest;
-import org.apache.maven.shared.invoker.InvocationResult;
-import org.apache.maven.shared.test.plugin.BuildTool;
-import org.apache.maven.shared.test.plugin.ProjectTool;
-import org.apache.maven.shared.test.plugin.RepositoryTool;
-import org.apache.maven.shared.test.plugin.TestToolsException;
-import org.codehaus.plexus.PlexusTestCase;
 
 /**
  * Tests <code>DefaultProjectDependencyAnalyzer</code>.
@@ -116,6 +116,8 @@ public class DefaultProjectDependencyAnalyzerTest
         ProjectDependencyAnalysis expectedAnalysis = new ProjectDependencyAnalysis();
 
         assertEquals( expectedAnalysis, actualAnalysis );
+        assertEquals( Collections.emptyMap(), actualAnalysis.getUsedDeclaredArtifactToUsageMap() );
+        assertEquals( Collections.emptyMap(), actualAnalysis.getUsedUndeclaredArtifactToUsageMap() );
     }
 
     public void testJava8methodRefs()
@@ -141,6 +143,18 @@ public class DefaultProjectDependencyAnalyzerTest
             new ProjectDependencyAnalysis( usedDeclaredArtifacts, new HashSet<Artifact>(), new HashSet<Artifact>() );
 
         assertEquals( expectedAnalysis, actualAnalysis );
+        assertEquals( Collections.emptyMap(), actualAnalysis.getUsedUndeclaredArtifactToUsageMap() );
+
+        Map<Artifact, Set<DependencyUsage>> actualDependencyUsageMap =
+            actualAnalysis.getUsedDeclaredArtifactToUsageMap();
+
+        Set<DependencyUsage> expectedCommonsIoUsage =
+            Collections.singleton( new DependencyUsage( "org.apache.commons.io.FileUtils", "inlinedStaticReference.Project" ) );
+        Set<DependencyUsage> expectedCommonsLangUsage =
+            Collections.singleton( new DependencyUsage( "org.apache.commons.lang.CharUtils", "inlinedStaticReference.Project" ) );
+
+        assertEquals( expectedCommonsIoUsage, actualDependencyUsageMap.get( project1 ) );
+        assertEquals( expectedCommonsLangUsage, actualDependencyUsageMap.get( project2 ) );
     }
 
     public void testInlinedStaticReference()
@@ -165,6 +179,15 @@ public class DefaultProjectDependencyAnalyzerTest
             new ProjectDependencyAnalysis( usedDeclaredArtifacts, new HashSet<Artifact>(), new HashSet<Artifact>() );
 
         assertEquals( expectedAnalysis, actualAnalysis );
+        assertEquals( Collections.emptyMap(), actualAnalysis.getUsedUndeclaredArtifactToUsageMap() );
+
+        Map<Artifact, Set<DependencyUsage>> actualDependencyUsageMap =
+            actualAnalysis.getUsedDeclaredArtifactToUsageMap();
+
+        Set<DependencyUsage> expectedDom4jUsage =
+            Collections.singleton( new DependencyUsage( "org.dom4j.Node", "inlinedStaticReference.Project" ) );
+
+        assertEquals( expectedDom4jUsage, actualDependencyUsageMap.get( project1 ) );
     }
 
     public void testJarWithCompileDependency()
@@ -189,6 +212,15 @@ public class DefaultProjectDependencyAnalyzerTest
         ProjectDependencyAnalysis expectedAnalysis = new ProjectDependencyAnalysis( usedDeclaredArtifacts, null, null );
 
         assertEquals( expectedAnalysis, actualAnalysis );
+        assertEquals( Collections.emptyMap(), actualAnalysis.getUsedUndeclaredArtifactToUsageMap() );
+
+        Map<Artifact, Set<DependencyUsage>> actualDependencyUsageMap =
+            actualAnalysis.getUsedDeclaredArtifactToUsageMap();
+
+        Set<DependencyUsage> expectedDependency1Usage =
+            Collections.singleton( new DependencyUsage( "jarWithCompileDependency.project1.Project1", "jarWithCompileDependency.project2.Project2" ) );
+
+        assertEquals( expectedDependency1Usage, actualDependencyUsageMap.get( project1 ) );
     }
 
     public void testForceDeclaredDependenciesUsage()
@@ -253,6 +285,15 @@ public class DefaultProjectDependencyAnalyzerTest
         }
 
         assertEquals( expectedAnalysis, actualAnalysis );
+        assertEquals( Collections.emptyMap(), actualAnalysis.getUsedUndeclaredArtifactToUsageMap() );
+
+        Map<Artifact, Set<DependencyUsage>> actualDependencyUsageMap =
+            actualAnalysis.getUsedDeclaredArtifactToUsageMap();
+
+        Set<DependencyUsage> expectedDependency1Usage =
+            Collections.singleton( new DependencyUsage( "jarWithTestDependency.project1.Project1", "jarWithTestDependency.project2.Project2" ) );
+
+        assertEquals( expectedDependency1Usage, actualDependencyUsageMap.get( project1 ) );
     }
 
     public void testJarWithXmlTransitiveDependency()
@@ -300,6 +341,15 @@ public class DefaultProjectDependencyAnalyzerTest
         ProjectDependencyAnalysis expectedAnalysis = new ProjectDependencyAnalysis( usedDeclaredArtifacts, null, null );
 
         assertEquals( expectedAnalysis, actualAnalysis );
+        assertEquals( Collections.emptyMap(), actualAnalysis.getUsedUndeclaredArtifactToUsageMap() );
+
+        Map<Artifact, Set<DependencyUsage>> actualDependencyUsageMap =
+            actualAnalysis.getUsedDeclaredArtifactToUsageMap();
+
+        Set<DependencyUsage> expectedTestModule1Usage =
+            Collections.singleton( new DependencyUsage( "foo.Main", "bar.Main" ) );
+
+        assertEquals( expectedTestModule1Usage, actualDependencyUsageMap.get( junit ) );
     }
 
     // private methods --------------------------------------------------------

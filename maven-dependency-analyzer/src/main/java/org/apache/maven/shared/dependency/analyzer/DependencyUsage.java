@@ -23,7 +23,6 @@ package org.apache.maven.shared.dependency.analyzer;
  * Usage of a dependency class by a project class.
  *
  * @author <a href="mailto:hijon89@gmail.com">Jonathan Haber</a>
- * @version $Id$
  */
 public class DependencyUsage
 {

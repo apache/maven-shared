@@ -20,6 +20,7 @@ package org.apache.maven.shared.dependency.analyzer.asm;
  */
 
 import org.apache.maven.shared.dependency.analyzer.ClassFileVisitor;
+import org.apache.maven.shared.dependency.analyzer.DependencyUsage;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -29,6 +30,7 @@ import org.objectweb.asm.signature.SignatureVisitor;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -44,7 +46,9 @@ public class DependencyClassFileVisitor
 {
     // fields -----------------------------------------------------------------
 
-    private final ResultCollector resultCollector = new ResultCollector();
+    private final Set<String> dependencies = new HashSet<String>();
+
+    private final Set<DependencyUsage> dependencyUsages = new HashSet<DependencyUsage>();
 
     // constructors -----------------------------------------------------------
 
@@ -60,6 +64,7 @@ public class DependencyClassFileVisitor
      */
     public void visitClass( String className, InputStream in )
     {
+        ResultCollector resultCollector = new ResultCollector();
         try
         {
             ClassReader reader = new ClassReader( in );
@@ -89,6 +94,12 @@ public class DependencyClassFileVisitor
             // this happens when the class isn't valid.
             System.out.println( "Unable to process: " + className );
         }
+
+        for ( String dependencyClass : resultCollector.getDependencies() )
+        {
+            dependencies.add( dependencyClass );
+            dependencyUsages.add( new DependencyUsage( dependencyClass, className ) );
+        }
     }
 
     // public methods ---------------------------------------------------------
@@ -98,6 +109,14 @@ public class DependencyClassFileVisitor
      */
     public Set<String> getDependencies()
     {
-        return resultCollector.getDependencies();
+        return dependencies;
+    }
+
+    /**
+     * @return the set of dependency usages for visited class files
+     */
+    public Set<DependencyUsage> getDependencyUsages()
+    {
+        return dependencyUsages;
     }
 }

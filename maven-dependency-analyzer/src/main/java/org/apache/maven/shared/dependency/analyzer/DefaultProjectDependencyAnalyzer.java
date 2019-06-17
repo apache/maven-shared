@@ -183,19 +183,6 @@ public class DefaultProjectDependencyAnalyzer
         return artifactClassMap;
     }
 
-    protected Set<String> buildDependencyClasses( MavenProject project )
-        throws IOException
-    {
-        Set<String> dependencyClasses = new HashSet<String>();
-
-        for ( DependencyUsage usage : buildDependencyUsages( project ) )
-        {
-            dependencyClasses.add( usage.getDependencyClass() );
-        }
-
-        return dependencyClasses;
-    }
-
     protected Set<DependencyUsage> buildDependencyUsages( MavenProject project )
         throws IOException
     {
@@ -229,24 +216,6 @@ public class DefaultProjectDependencyAnalyzer
         }
 
         return declaredArtifacts;
-    }
-
-    protected Set<Artifact> buildUsedArtifacts( Map<Artifact, Set<String>> artifactClassMap,
-                                              Set<String> dependencyClasses )
-    {
-        Set<Artifact> usedArtifacts = new HashSet<Artifact>();
-
-        for ( String className : dependencyClasses )
-        {
-            Artifact artifact = findArtifactForClassName( artifactClassMap, className );
-
-            if ( artifact != null )
-            {
-                usedArtifacts.add( artifact );
-            }
-        }
-
-        return usedArtifacts;
     }
 
     protected Map<Artifact, Set<DependencyUsage>> buildArtifactToUsageMap( Map<Artifact, Set<String>> artifactClassMap,

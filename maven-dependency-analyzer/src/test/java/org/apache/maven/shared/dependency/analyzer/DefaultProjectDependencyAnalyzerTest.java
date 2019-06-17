@@ -9,22 +9,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.lang3.JavaVersion;
-import org.apache.commons.lang3.SystemUtils;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DefaultArtifact;
-import org.apache.maven.artifact.handler.ArtifactHandler;
-import org.apache.maven.artifact.handler.DefaultArtifactHandler;
-import org.apache.maven.artifact.versioning.VersionRange;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.shared.invoker.InvocationRequest;
-import org.apache.maven.shared.invoker.InvocationResult;
-import org.apache.maven.shared.test.plugin.BuildTool;
-import org.apache.maven.shared.test.plugin.ProjectTool;
-import org.apache.maven.shared.test.plugin.RepositoryTool;
-import org.apache.maven.shared.test.plugin.TestToolsException;
-import org.codehaus.plexus.PlexusTestCase;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -43,6 +27,22 @@ import org.codehaus.plexus.PlexusTestCase;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import org.apache.commons.lang3.JavaVersion;
+import org.apache.commons.lang3.SystemUtils;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.handler.ArtifactHandler;
+import org.apache.maven.artifact.handler.DefaultArtifactHandler;
+import org.apache.maven.artifact.versioning.VersionRange;
+import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.invoker.InvocationRequest;
+import org.apache.maven.shared.invoker.InvocationResult;
+import org.apache.maven.shared.test.plugin.BuildTool;
+import org.apache.maven.shared.test.plugin.ProjectTool;
+import org.apache.maven.shared.test.plugin.RepositoryTool;
+import org.apache.maven.shared.test.plugin.TestToolsException;
+import org.codehaus.plexus.PlexusTestCase;
 
 /**
  * Tests <code>DefaultProjectDependencyAnalyzer</code>.
